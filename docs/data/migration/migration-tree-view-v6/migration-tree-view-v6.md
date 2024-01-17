@@ -232,7 +232,7 @@ you need to use the new `endIcon` slot on this component:
 
 #### Define `icon`
 
-The icon rendered next to item
+The icon rendered next to an item
 is now defined as a slot on the Tree Item component.
 
 If you were passing an icon to your Tree Item component,
