@@ -115,10 +115,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Classificar por ordem decrescente',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1
-      ? `$columnHeaderFiltersTooltipActiveMany}`
-      : `$columnHeaderFiltersTooltipActiveOne}`,
+  // columnHeaderFiltersTooltipActive: count => count !== 1 ? `${count} active filters` : `${count} active filter`,
   columnHeaderFiltersLabel: 'Mostrar filtros',
   columnHeaderSortIconLabel: 'Organizar',
 
