@@ -197,7 +197,7 @@ you need to use the new `parentIcon` slot on this component:
 
 #### Define `endIcon`
 
-The icon rendered next to item without children
+The icon rendered next to an item without children
 is now defined as a slot both on the Tree View and the Tree Item components.
 
 If you were passing an icon to your Tree View component,
