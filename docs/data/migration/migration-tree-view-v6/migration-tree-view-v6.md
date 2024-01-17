@@ -233,7 +233,7 @@ you need to use the new `endIcon` slot on this component:
 #### Define `icon`
 
 The icon rendered next to item
-is now defined as a slot both on the Tree View component.
+is now defined as a slot on the Tree Item component.
 
 If you were passing an icon to your Tree Item component,
 you need to use the new `icon` slot on this component:
