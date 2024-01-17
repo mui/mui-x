@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { GridColumnMenuItemProps } from '@mui/x-data-grid';
-import { GridPinnedPosition } from '../hooks/features/columnPinning';
+import { GridPinnedColumnPosition, GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -16,7 +15,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const theme = useTheme();
 
   const pinColumn = React.useCallback(
-    (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
+    (side: GridPinnedColumnPosition) => (event: React.MouseEvent<HTMLElement>) => {
       apiRef.current.pinColumn(colDef.field, side);
       onClick(event);
     },
@@ -28,7 +27,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     onClick(event);
   };
   const pinToLeftMenuItem = (
-    <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
+    <MenuItem onClick={pinColumn(GridPinnedColumnPosition.LEFT)}>
       <ListItemIcon>
         <rootProps.slots.columnMenuPinLeftIcon fontSize="small" />
       </ListItemIcon>
@@ -37,7 +36,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   );
 
   const pinToRightMenuItem = (
-    <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
+    <MenuItem onClick={pinColumn(GridPinnedColumnPosition.RIGHT)}>
       <ListItemIcon>
         <rootProps.slots.columnMenuPinRightIcon fontSize="small" />
       </ListItemIcon>
@@ -53,10 +52,12 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
 
   if (side) {
     const otherSide =
-      side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
-    const label = otherSide === GridPinnedPosition.right ? 'pinToRight' : 'pinToLeft';
+      side === GridPinnedColumnPosition.RIGHT
+        ? GridPinnedColumnPosition.LEFT
+        : GridPinnedColumnPosition.RIGHT;
+    const label = otherSide === GridPinnedColumnPosition.RIGHT ? 'pinToRight' : 'pinToLeft';
     const Icon =
-      side === GridPinnedPosition.right
+      side === GridPinnedColumnPosition.RIGHT
         ? rootProps.slots.columnMenuPinLeftIcon
         : rootProps.slots.columnMenuPinRightIcon;
     return (

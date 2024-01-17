@@ -41,6 +41,11 @@ export interface MultiSectionDigitalClockProps<TDate>
   extends ExportedMultiSectionDigitalClockProps<TDate>,
     BaseClockProps<TDate, TimeViewWithMeridiem> {
   /**
+   * Available views.
+   * @default ['hours', 'minutes']
+   */
+  views?: readonly TimeViewWithMeridiem[];
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MultiSectionDigitalClockClasses>;

@@ -3,13 +3,21 @@ import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/base/utils';
 import { SxProps } from '@mui/system';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
-import { SimpleTreeViewPluginParameters } from './SimpleTreeView.plugins';
+import {
+  SimpleTreeViewPluginParameters,
+  SimpleTreeViewPluginSlotProps,
+  SimpleTreeViewPluginSlots,
+} from './SimpleTreeView.plugins';
 
-export interface SimpleTreeViewSlots {
-  root: React.ElementType;
+export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
+  /**
+   * Element rendered at the root.
+   * @default SimpleTreeViewRoot
+   */
+  root?: React.ElementType;
 }
 
-export interface SimpleTreeViewSlotProps {
+export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 
@@ -28,9 +36,6 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The props used for each component slot.
    */
   slotProps?: SimpleTreeViewSlotProps;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

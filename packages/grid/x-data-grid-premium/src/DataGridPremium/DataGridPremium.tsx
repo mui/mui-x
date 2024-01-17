@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
-import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -9,16 +8,27 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
-  useGridSelector,
-  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
+import {
+  propValidatorsDataGrid,
+  propValidatorsDataGridPro,
+  PropValidator,
+  validateProps,
+} from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
+import {
+  DataGridPremiumProcessedProps,
+  DataGridPremiumProps,
+} from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
+
+const dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[] = [
+  ...propValidatorsDataGrid,
+  ...propValidatorsDataGridPro,
+];
 
 const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
@@ -29,8 +39,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
-
+  validateProps(props, dataGridPremiumPropValidators);
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -41,10 +50,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody
-          VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{ pinnedColumns }}
-        >
+        <GridBody>
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
         </GridBody>
         <GridFooterPlaceholder />
@@ -52,7 +58,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     </GridContextProvider>
   );
 });
-
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
@@ -113,19 +118,7 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
-  autoPageSize: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.autoHeight && props.autoPageSize) {
-      return new Error(
-        [
-          'MUI: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
-          'You can not use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
-          '',
-          'Please remove one of these two props.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  autoPageSize: PropTypes.bool,
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
@@ -164,14 +157,7 @@ DataGridPremiumRaw.propTypes = {
    * It only works if the pagination is enabled.
    * @default false
    */
-  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
-      return new Error(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-      );
-    }
-    return null;
-  }),
+  checkboxSelectionVisibleOnly: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -193,7 +179,7 @@ DataGridPremiumRaw.propTypes = {
    */
   columnHeaderHeight: PropTypes.number,
   /**
-   * Set of columns of type [[GridColDef[]]].
+   * Set of columns of type [[GridColDef]][].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -279,6 +265,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableColumnSelector: PropTypes.bool,
   /**
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -294,7 +285,7 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleColumnsFiltering: PropTypes.bool,
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, the sorting with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsSorting: PropTypes.bool,
@@ -344,14 +335,7 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: chainPropTypes(PropTypes.oneOf(['client', 'server']), (props: any) => {
-    if (props.treeData && props.filterMode === 'server') {
-      return new Error(
-        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-      );
-    }
-    return null;
-  }),
+  filterMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Set the filter model of the Data Grid.
    */
@@ -463,14 +447,7 @@ DataGridPremiumRaw.propTypes = {
    * It has no effect if the pagination is enabled.
    * @default false
    */
-  hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.pagination && props.hideFooterRowCount) {
-      return new Error(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-      );
-    }
-    return null;
-  }),
+  hideFooterRowCount: PropTypes.bool,
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false
@@ -739,7 +716,7 @@ DataGridPremiumRaw.propTypes = {
   onPaginationModelChange: PropTypes.func,
   /**
    * Callback fired when the pinned columns have changed.
-   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridPinnedColumnFields} pinnedColumns The changed pinned columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,

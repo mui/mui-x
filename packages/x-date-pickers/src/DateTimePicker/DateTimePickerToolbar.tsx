@@ -390,9 +390,6 @@ DateTimePickerToolbar.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root component.
-   */
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**

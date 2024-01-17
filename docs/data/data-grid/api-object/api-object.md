@@ -60,6 +60,37 @@ If you try to use it in the first render of the component, it will crash because
 
 ## Common use cases
 
+### Access the disabled column features
+
+You can control the disabled features of a column (e.g. hiding, sorting, filtering, pinning, grouping, etc) programmatically using `initialState`, controlled models, or the API object.
+
+In the example below, API object is used to build a custom sorting for the _firstName_ column which is not sortable by the default grid UI (i.e `colDef.sortable` property is set to `false`).
+
+```tsx
+const columns = [{ field: 'rating', sortable: false }, ...otherColumns];
+
+function CustomDataGrid(props) {
+  const apiRef = useGridApiRef();
+
+  return (
+    <div>
+      <Button onClick={() => apiRef.current.sortColumn('firstName', 'asc')}>
+        Sort by ASC
+      </Button>
+      <Button onClick={() => apiRef.current.sortColumn('firstName', 'desc')}>
+        Sort by DESC
+      </Button>
+      <Button onClick={() => apiRef.current.sortColumn('firstName', null)}>
+        Clear sort
+      </Button>
+      <DataGrid columns={columns} apiRef={apiRef} {...other} />
+    </div>
+  );
+}
+```
+
+{{"demo": "AccessDisabledColumnFeatures.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Retrieve data from the state
 
 You can find a detailed example on the [State page](/x/react-data-grid/state/#access-the-state).

@@ -40,9 +40,23 @@ import 'dayjs/locale/de';
 
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
+:::info
+Both `date-fns` major versions (v2.x and v3.x) are supported.
+
+A single adapter can not work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
+
+To use `date-fns` v3.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+:::
+
 ```tsx
+// with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// with date-fns v3.x
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+// with date-fns v2.x
 import de from 'date-fns/locale/de';
+// with date-fns v3.x
+import { de } from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
   {children}
@@ -280,7 +294,10 @@ dayjs.updateLocale('en', {
 For `date-fns`, use the `setDefaultOptions` utility:
 
 ```ts
+// with date-fns v2.x
 import setDefaultOptions from 'date-fns/setDefaultOptions';
+// with date-fns v3.x
+import { setDefaultOptions } from 'date-fns/setDefaultOptions';
 
 setDefaultOptions({
   // Sunday = 0, Monday = 1.

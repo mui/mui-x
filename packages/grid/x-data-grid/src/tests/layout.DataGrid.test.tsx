@@ -6,13 +6,26 @@ import {
   DataGrid,
   GridToolbar,
   DataGridProps,
-  ptBR,
   GridColDef,
   gridClasses,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
+import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
+import {
+  $,
+  grid,
+  gridVar,
+  getColumnHeaderCell,
+  getColumnValues,
+  getCell,
+  getRow,
+  sleep,
+} from 'test/utils/helperFn';
+
+const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
   const { clock, render } = createRenderer();
@@ -195,7 +208,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty height.',
+          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty height.',
         );
       });
 
@@ -211,7 +224,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
+          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty width',
         );
       });
     });
@@ -663,11 +676,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const rowsHeight = rowHeight * baselineProps.rows.length;
-        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(columnHeaderHeight + rowsHeight);
+        expect($('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
           columnHeaderHeight + rowsHeight,
-        );
-        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
-          rowsHeight,
         );
       });
 
@@ -685,11 +696,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const rowsHeight = rowHeight * baselineProps.rows.length;
-        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+        expect($('.MuiDataGrid-main')!.clientHeight).to.equal(columnHeaderHeight + rowsHeight);
+        expect($('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
           columnHeaderHeight + rowsHeight,
-        );
-        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
-          rowsHeight,
         );
       });
 
@@ -700,22 +709,29 @@ describe('<DataGrid /> - Layout & warnings', () => {
         }
         const columnHeaderHeight = 40;
         const rowHeight = 30;
-        render(
-          <div style={{ width: 150 }}>
-            <DataGrid
-              {...baselineProps}
-              columnHeaderHeight={columnHeaderHeight}
-              rowHeight={rowHeight}
-              columns={[{ field: 'brand' }, { field: 'year' }]}
-              autoHeight
-            />
-          </div>,
-        );
-        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
-        const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
-        expect(scrollBarSize).not.to.equal(0);
-        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          scrollBarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+
+        let apiRef!: React.MutableRefObject<GridApi>;
+        function Test() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 150 }}>
+              <DataGrid
+                {...baselineProps}
+                apiRef={apiRef}
+                columnHeaderHeight={columnHeaderHeight}
+                rowHeight={rowHeight}
+                columns={[{ field: 'brand' }, { field: 'year' }]}
+                autoHeight
+              />
+            </div>
+          );
+        }
+        render(<Test />);
+
+        const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
+        expect(scrollbarSize).not.to.equal(0);
+        expect(grid('main')!.clientHeight).to.equal(
+          scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -726,9 +742,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
-          rowHeight * 2,
-        );
+        expect($('.MuiDataGrid-overlay')!.clientHeight).to.equal(rowHeight * 2);
       });
 
       it('should allow to override the noRows overlay height', () => {
@@ -754,7 +768,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid {...baselineProps} rowHeight={rowHeight} autoHeight loading />
           </div>,
         );
-        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+        expect($('.MuiDataGrid-overlay')!.clientHeight).to.equal(
           rowHeight * baselineProps.rows.length,
         );
       });
@@ -780,9 +794,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
       render(<TestCase />);
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       // It should not have a horizontal scrollbar
-      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+      expect(gridVar('--DataGrid-hasScrollX')).to.equal('0');
     });
 
     it('should have a horizontal scrollbar when there are more columns to show and no rows', function test() {
@@ -795,48 +808,40 @@ describe('<DataGrid /> - Layout & warnings', () => {
           <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
         </div>,
       );
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).not.to.equal(0);
+      expect(gridVar('--DataGrid-hasScrollX')).to.equal('1');
     });
 
     it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
       const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
-      render(
-        <div style={{ width: 100 + 2 * border, height: height + 2 * border }}>
-          <DataGrid
-            rows={[]}
-            columns={[{ field: 'brand' }, { field: 'price' }]}
-            columnHeaderHeight={columnHeaderHeight}
-            hideFooter
-          />
-        </div>,
-      );
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
-      const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
+      let apiRef!: React.MutableRefObject<GridApi>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 100 + 2 * border, height: height + 2 * border }}>
+            <DataGrid
+              apiRef={apiRef}
+              rows={[]}
+              columns={[{ field: 'brand' }, { field: 'price' }]}
+              columnHeaderHeight={columnHeaderHeight}
+              hideFooter
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const overlayWrapper = screen.getByText('No rows').parentElement;
-      const expectedHeight = height - columnHeaderHeight - scrollBarSize;
+      const expectedHeight = height - columnHeaderHeight - scrollbarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
-    });
-
-    // See https://github.com/mui/mui-x/issues/3795#issuecomment-1028001939
-    it('should expand content height when there are no rows', () => {
-      render(
-        <div style={{ width: 150, height: 300 }}>
-          <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
-        </div>,
-      );
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller') as Element;
-      const virtualScrollerContent = document.querySelector(
-        '.MuiDataGrid-virtualScrollerContent',
-      ) as Element;
-      expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
     });
   });
 
   describe('warnings', () => {
-    it('should raise a warning if trying to use an enterprise feature', () => {
+    // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
@@ -844,7 +849,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid pagination={false} columns={[]} rows={[]} />
           </div>,
         );
-      }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
+      }).toErrorDev('MUI X: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
     it('should throw if the rows has no id', function test() {
@@ -1133,11 +1138,11 @@ describe('<DataGrid /> - Layout & warnings', () => {
       </div>,
     );
 
-    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    const virtualScroller = $('.MuiDataGrid-virtualScroller')!;
     const initialVirtualScrollerWidth = virtualScroller.clientWidth;
 
     // It should not have a horizontal scrollbar
-    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+    expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
     await sleep(200);
     // The width should not increase infinitely
@@ -1157,11 +1162,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
       </div>,
     );
 
-    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
     // It should not have a horizontal scrollbar
-    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+    expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
     // It should not have a vertical scrollbar
-    expect(virtualScroller.scrollHeight - virtualScroller.clientHeight).to.equal(0);
+    expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
   });
 
   // See https://github.com/mui/mui-x/issues/9510
@@ -1198,6 +1202,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
     }).toErrorDev([
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
       'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
       'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
     ]);

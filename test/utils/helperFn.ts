@@ -1,7 +1,32 @@
 import { spy } from 'sinon';
 import { act, screen } from '@mui-internal/test-utils';
+import { gridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
+
+export function $(selector: string): HTMLElement | null;
+export function $(target: HTMLElement, selector: string): HTMLElement | null;
+export function $(a: unknown, b?: unknown): HTMLElement | null {
+  const target = (b === undefined ? document : a) as HTMLElement;
+  const selector = (b === undefined ? a : b) as string;
+  return target.querySelector(selector);
+}
+
+export function $$(selector: string): HTMLElement[];
+export function $$(target: HTMLElement, selector: string): HTMLElement[];
+export function $$(a: unknown, b?: unknown): HTMLElement[] {
+  const target = (b === undefined ? document : a) as HTMLElement;
+  const selector = (b === undefined ? a : b) as string;
+  return Array.from(target.querySelectorAll(selector));
+}
+
+export function grid(klass: keyof typeof gridClasses) {
+  return $(`.${gridClasses[klass]}`);
+}
+
+export function gridVar(name: string) {
+  return $(`.${gridClasses.root}`)!.style.getPropertyValue(name);
+}
 
 export function sleep(duration: number): Promise<void> {
   return new Promise<void>((resolve) => {

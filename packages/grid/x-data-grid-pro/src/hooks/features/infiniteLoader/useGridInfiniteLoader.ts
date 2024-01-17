@@ -37,7 +37,7 @@ export const useGridInfiniteLoader = (
       const dimensions = apiRef.current.getRootDimensions();
 
       // Prevent the infite loading working in combination with lazy loading
-      if (!dimensions || props.rowsLoadingMode !== 'client') {
+      if (!dimensions.isReady || props.rowsLoadingMode !== 'client') {
         return;
       }
 

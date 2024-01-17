@@ -4,12 +4,13 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
-import { RichTreeViewProps } from './RichTreeView.types';
+import { RichTreeViewProps, RichTreeViewSlotProps, RichTreeViewSlots } from './RichTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProps<R, Multiple>,
@@ -59,7 +60,7 @@ function WrappedTreeItem<R extends {}>({
 }
 
 const childrenWarning = buildWarning([
-  'MUI: The `RichTreeView` component does not support JSX children.',
+  'MUI X: The `RichTreeView` component does not support JSX children.',
   'If you want to add items, you need to use the `items` prop',
   'Check the documentation for more details: https://next.mui.com/x/react-tree-view/rich-tree-view/items/',
 ]);
@@ -80,66 +81,24 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id: treeId,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    getItemId,
-    getItemLabel,
-    isItemDisabled,
-    // Component implementation
-    slots,
-    slotProps,
-    ...other
-  } = props as RichTreeViewProps<any, any>;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       childrenWarning();
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id: treeId,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items,
-    getItemId,
-    getItemLabel,
-    isItemDisabled,
+  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
+    typeof DEFAULT_TREE_VIEW_PLUGINS,
+    RichTreeViewSlots,
+    RichTreeViewSlotProps<R, Multiple>,
+    RichTreeViewProps<R, Multiple>
+  >({
+    props,
     plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 
@@ -147,7 +106,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: other,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProps<any, any>,
@@ -191,14 +150,7 @@ RichTreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
   /**
    * The default icon displayed next to a end node. This is applied to all
    * tree nodes and can be overridden by the TreeItem `icon` prop.
@@ -210,10 +162,6 @@ RichTreeView.propTypes = {
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
   /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.

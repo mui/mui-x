@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.0.0-alpha.7",
+  "version": "7.0.0-alpha.8",
   "description": "The community edition of the tree view components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,7 +43,7 @@
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.7",
+    "@babel/runtime": "^7.23.8",
     "@mui/base": "^5.0.0-beta.29",
     "@mui/system": "^5.15.2",
     "@mui/utils": "^5.15.2",
@@ -55,7 +55,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.8.6",
+    "@mui/material": "^5.15.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

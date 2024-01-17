@@ -6,7 +6,6 @@ export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterModel';
 export * from './gridPaginationProps';
-export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
 export * from './gridRowSelectionModel';

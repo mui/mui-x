@@ -543,6 +543,7 @@ TimeClock.propTypes = {
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Available views.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

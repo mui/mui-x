@@ -277,19 +277,19 @@ export const useGridCellSelection = (
 
       const dimensions = apiRef.current.getRootDimensions();
 
-      if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+      if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollY) {
         // When scrolling up, the multiplier increases going closer to the top edge
         factor = (AUTO_SCROLL_SENSITIVITY - mouseY) / -AUTO_SCROLL_SENSITIVITY;
         deltaY = AUTO_SCROLL_SPEED;
-      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollY) {
         // When scrolling down, the multiplier increases going closer to the bottom edge
         factor = (mouseY - (height - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
         deltaY = AUTO_SCROLL_SPEED;
-      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollX) {
         // When scrolling left, the multiplier increases going closer to the left edge
         factor = (AUTO_SCROLL_SENSITIVITY - mouseX) / -AUTO_SCROLL_SENSITIVITY;
         deltaX = AUTO_SCROLL_SPEED;
-      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollX) {
         // When scrolling right, the multiplier increases going closer to the right edge
         factor = (mouseX - (width - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
         deltaX = AUTO_SCROLL_SPEED;
