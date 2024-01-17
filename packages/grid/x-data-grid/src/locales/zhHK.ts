@@ -115,7 +115,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: '按降序排序',
 
   // Column header text
-  // columnHeaderFiltersTooltipActive: count => count !== 1 ? `${count} active filters` : `${count} active filter`,
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} 個有效過濾器` : `${count} 個活動過濾器`,
   columnHeaderFiltersLabel: '顯示過濾器',
   columnHeaderSortIconLabel: '種類',
 
