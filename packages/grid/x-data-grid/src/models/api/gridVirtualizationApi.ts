@@ -1,5 +1,3 @@
-import { GridRenderContext } from '../params';
-
 export interface GridVirtualizationApi {
   /**
    * Enable/disable virtualization.
@@ -15,8 +13,8 @@ export interface GridVirtualizationApi {
 
 export interface GridVirtualizationPrivateApi {
   /**
-   * Get the current grid rendering context.
+   * Update grid rendering context.
    * @returns {GridRenderContext} The `GridRenderContext`.
    */
-  getRenderContext: () => GridRenderContext;
+  updateRenderContext?: () => void;
 }

@@ -6,8 +6,8 @@ export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;
 }
 
-export function findHeaderElementFromField(elem: Element, field: string): Element | null {
-  return elem.querySelector(`[data-field="${field}"]`);
+export function findHeaderElementFromField(elem: Element, field: string): HTMLDivElement {
+  return elem.querySelector(`[data-field="${field}"]`)!;
 }
 
 export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
@@ -32,11 +32,7 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
     return [];
   }
 
-  const renderedRowElements = api.virtualScrollerRef?.current.querySelectorAll(
-    `:scope > div > div > .${gridClasses.row}`, // Use > to ignore rows from nested data grids (e.g. in detail panel)
-  );
-
-  renderedRowElements.forEach((rowElement) => {
+  queryRows(api).forEach((rowElement) => {
     const rowId = rowElement.getAttribute('data-id');
     if (!rowId) {
       return;
@@ -57,6 +53,62 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   return cells;
 }
 
+export function findGridElement(api: GridPrivateApiPro, klass: keyof typeof gridClasses) {
+  return api.rootElementRef.current!.querySelector(`.${gridClasses[klass]}`)! as HTMLElement;
+}
+
+export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  if (colIndex === null) {
+    return [];
+  }
+
+  const cells: HTMLElement[] = [];
+
+  queryRows(api).forEach((rowElement) => {
+    const rowId = rowElement.getAttribute('data-id');
+    if (!rowId) {
+      return;
+    }
+
+    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
+    rightPinnedCells.forEach((cell) => {
+      const currentColIndex = parseCellColIndex(cell);
+      if (currentColIndex !== null && currentColIndex > colIndex) {
+        cells.push(cell as HTMLElement);
+      }
+    });
+  });
+
+  return cells;
+}
+
+export function findRightPinnedCellsBeforeCol(api: GridPrivateApiPro, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  if (colIndex === null) {
+    return [];
+  }
+
+  const cells: HTMLElement[] = [];
+
+  queryRows(api).forEach((rowElement) => {
+    const rowId = rowElement.getAttribute('data-id');
+    if (!rowId) {
+      return;
+    }
+
+    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedRight']}`);
+    rightPinnedCells.forEach((cell) => {
+      const currentColIndex = parseCellColIndex(cell);
+      if (currentColIndex !== null && currentColIndex < colIndex) {
+        cells.push(cell as HTMLElement);
+      }
+    });
+  });
+
+  return cells;
+}
+
 export function findGridHeader(api: GridPrivateApiPro, field: string) {
   const headers = api.columnHeadersContainerElementRef!.current!;
   return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
@@ -70,4 +122,19 @@ export function findGridCells(api: GridPrivateApiPro, field: string) {
   return Array.from(
     container.querySelectorAll(`${selectorFor('cell')}, ${selectorFor('gridcell')}`),
   );
+}
+
+function queryRows(api: GridPrivateApiPro) {
+  return api.virtualScrollerRef.current!.querySelectorAll(
+    // Use > to ignore rows from nested data grids (e.g. in detail panel)
+    `:scope > div > div > .${gridClasses.row}`,
+  );
+}
+
+function parseCellColIndex(col: Element) {
+  const ariaColIndex = col.getAttribute('aria-colindex');
+  if (!ariaColIndex) {
+    return null;
+  }
+  return Number(ariaColIndex) - 1;
 }

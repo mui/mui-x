@@ -7,9 +7,11 @@ import {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
-import { GridColumnTypesRecord } from '../../../models';
-import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import {
+  DEFAULT_GRID_COL_TYPE_KEY,
+  GRID_STRING_COL_DEF,
+  getGridDefaultColumnTypes,
+} from '../../../colDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
@@ -22,6 +24,8 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridCo
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
+
+const COLUMN_TYPES = getGridDefaultColumnTypes();
 
 /**
  * Computes width for flex columns.
@@ -276,10 +280,10 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(columnTypes: GridColumnTypesRecord, type: GridColDef['type']) {
-  let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-  if (type && columnTypes[type]) {
-    colDef = columnTypes[type];
+function getDefaultColTypeDef(type: GridColDef['type']) {
+  let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
+  if (type && COLUMN_TYPES[type]) {
+    colDef = COLUMN_TYPES[type];
   }
   return colDef;
 }
@@ -288,13 +292,11 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   initialState,
-  columnTypes,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
-  columnTypes: GridColumnTypesRecord;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
@@ -336,7 +338,7 @@ export const createColumnsState = ({
 
     if (existingState == null) {
       existingState = {
-        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        ...getDefaultColTypeDef(newColumn.type),
         field,
         hasBeenResized: false,
       };
@@ -348,7 +350,7 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        ...getDefaultColTypeDef(newColumn.type),
         field,
       };
     }
@@ -391,16 +393,9 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.()?.viewportInnerSize.width ?? 0,
+    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
   );
 };
-
-export const mergeColumnsState =
-  (columnsState: GridColumnsState) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    columns: columnsState,
-  });
 
 export function getFirstNonSpannedColumnToRender({
   firstColumnToRender,

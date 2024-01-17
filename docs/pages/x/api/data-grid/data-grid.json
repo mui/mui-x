@@ -514,6 +514,18 @@
       "isGlobal": false
     },
     {
+      "key": "cell--pinnedLeft",
+      "className": "MuiDataGrid-cell--pinnedLeft",
+      "description": "Styles applied to the cell element if it is pinned to the left.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--pinnedRight",
+      "className": "MuiDataGrid-cell--pinnedRight",
+      "description": "Styles applied to the cell element if it is pinned to the right.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--rangeBottom",
       "className": "MuiDataGrid-cell--rangeBottom",
       "description": "Styles applied to the cell element if it is at the bottom edge of a cell selection range.",
@@ -562,6 +574,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--withLeftBorder",
+      "className": "MuiDataGrid-cell--withLeftBorder",
+      "description": "Styles applied the cell if `showColumnVerticalBorder={true}`.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--withRenderer",
       "className": "MuiDataGrid-cell--withRenderer",
       "description": "Styles applied to the cell element if the cell has a custom renderer.",
@@ -583,6 +601,12 @@
       "key": "cellContent",
       "className": "MuiDataGrid-cellContent",
       "description": "Styles applied to the element that wraps the cell content.",
+      "isGlobal": false
+    },
+    {
+      "key": "cellEmpty",
+      "className": "MuiDataGrid-cellEmpty",
+      "description": "Styles applied to the empty cell element.",
       "isGlobal": false
     },
     {
@@ -784,6 +808,18 @@
       "isGlobal": false
     },
     {
+      "key": "container--bottom",
+      "className": "MuiDataGrid-container--bottom",
+      "description": "Styles applied to the bottom container.",
+      "isGlobal": false
+    },
+    {
+      "key": "container--top",
+      "className": "MuiDataGrid-container--top",
+      "description": "Styles applied to the top container.",
+      "isGlobal": false
+    },
+    {
       "key": "detailPanel",
       "className": "MuiDataGrid-detailPanel",
       "description": "Styles applied to the detail panel element.",
@@ -817,6 +853,24 @@
       "key": "editInputCell",
       "className": "MuiDataGrid-editInputCell",
       "description": "Styles applied to the root of the input component.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler",
+      "className": "MuiDataGrid-filler",
+      "description": "Styles applied to the filler row.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler--pinnedLeft",
+      "className": "MuiDataGrid-filler--pinnedLeft",
+      "description": "Styles applied to the filler row pinned left section.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler--pinnedRight",
+      "className": "MuiDataGrid-filler--pinnedRight",
+      "description": "Styles applied to the filler row pinned right section.",
       "isGlobal": false
     },
     {
@@ -907,6 +961,12 @@
       "key": "main",
       "className": "MuiDataGrid-main",
       "description": "Styles applied to the main container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "main--hasPinnedRight",
+      "className": "MuiDataGrid-main--hasPinnedRight",
+      "description": "Styles applied to the main container element when it has right pinned columns.",
       "isGlobal": false
     },
     {
@@ -1018,18 +1078,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumns--left",
-      "className": "MuiDataGrid-pinnedColumns--left",
-      "description": "Styles applied to the left pinned columns.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumns--right",
-      "className": "MuiDataGrid-pinnedColumns--right",
-      "description": "Styles applied to the right pinned columns.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedRows",
       "className": "MuiDataGrid-pinnedRows",
       "description": "Styles applied to the pinned rows container.",
@@ -1120,6 +1168,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--firstVisible",
+      "className": "MuiDataGrid-row--firstVisible",
+      "description": "Styles applied to the first visible row element on every page of the grid.",
+      "isGlobal": false
+    },
+    {
       "key": "row--lastVisible",
       "className": "MuiDataGrid-row--lastVisible",
       "description": "Styles applied to the last visible row element on every page of the grid.",
@@ -1171,6 +1225,24 @@
       "key": "scrollArea--right",
       "className": "MuiDataGrid-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbar",
+      "className": "MuiDataGrid-scrollbar",
+      "description": "Styles applied to the scrollbars.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbar--horizontal",
+      "className": "MuiDataGrid-scrollbar--horizontal",
+      "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbar--vertical",
+      "className": "MuiDataGrid-scrollbar--vertical",
+      "description": "Styles applied to the horizontal scrollbar.",
       "isGlobal": false
     },
     {
@@ -1237,6 +1309,12 @@
       "key": "withBorderColor",
       "className": "MuiDataGrid-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",
+      "isGlobal": false
+    },
+    {
+      "key": "withVerticalBorder",
+      "className": "MuiDataGrid-withVerticalBorder",
+      "description": "Styles applied the grid if `showColumnVerticalBorder={true}`.",
       "isGlobal": false
     }
   ],

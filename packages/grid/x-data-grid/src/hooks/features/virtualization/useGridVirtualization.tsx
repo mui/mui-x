@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GridRenderContext } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -9,12 +10,21 @@ type RootProps = Pick<DataGridProcessedProps, 'disableVirtualization'>;
 export type GridVirtualizationState = {
   enabled: boolean;
   enabledForColumns: boolean;
+  renderContext: GridRenderContext;
+};
+
+export const EMPTY_RENDER_CONTEXT = {
+  firstRowIndex: 0,
+  lastRowIndex: 0,
+  firstColumnIndex: 0,
+  lastColumnIndex: 0,
 };
 
 export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (state, props) => {
   const virtualization = {
     enabled: !props.disableVirtualization,
     enabledForColumns: true,
+    renderContext: EMPTY_RENDER_CONTEXT,
   };
 
   return {

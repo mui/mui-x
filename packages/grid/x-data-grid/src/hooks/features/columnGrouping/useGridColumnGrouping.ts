@@ -65,7 +65,6 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
     columnFields,
     unwrappedGroupingModel,
-    // @ts-expect-error Move this part to `Pro` package
     apiRef.current.state.pinnedColumns ?? {},
   );
   const maxDepth =
@@ -126,7 +125,6 @@ export const useGridColumnGrouping = (
     apiRef.current.setState((state) => {
       const orderedFields = state.columns?.orderedFields ?? [];
 
-      // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = state.pinnedColumns ?? {};
 
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(

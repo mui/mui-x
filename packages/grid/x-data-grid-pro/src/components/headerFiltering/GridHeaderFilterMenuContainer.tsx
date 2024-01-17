@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import {
   GridFilterItem,
   GridFilterOperator,
-  useGridApiContext,
   GridColDef,
+  useGridApiContext,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import { refType, unstable_useId as useId } from '@mui/utils';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
@@ -40,9 +41,8 @@ function GridHeaderFilterMenuContainer(props: {
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const open = Boolean(
-    gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
-  );
+  const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
+  const open = Boolean(menuOpenField === field && headerFilterMenuRef.current);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     headerFilterMenuRef.current = event.currentTarget;

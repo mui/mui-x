@@ -1,7 +1,4 @@
-<TreeView
-  defaultCollapseIcon={<ExpandMoreIcon />}
-  defaultExpandIcon={<ChevronRightIcon />}
->
+<SimpleTreeView>
   <TreeItem nodeId="grid" label="Data Grid">
     <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
     <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
@@ -11,4 +8,4 @@
     <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
     <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
   </TreeItem>
-</TreeView>
+</SimpleTreeView>
