@@ -53,6 +53,10 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
 > = (state, props, apiRef) => {
+  if (!props.columnGroupingModel) {
+    return state;
+  }
+
   const columnFields = gridColumnFieldsSelector(apiRef);
   const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
 
@@ -85,7 +89,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  */
 export const useGridColumnGrouping = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
+  props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
   /**
    * API METHODS
@@ -136,6 +140,9 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
+      if (!columnGroupingModel) {
+        return;
+      }
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
