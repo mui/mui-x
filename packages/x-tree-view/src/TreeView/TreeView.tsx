@@ -34,7 +34,7 @@ const warn = () => {
   if (!warnedOnce) {
     console.warn(
       [
-        'MUI: The TreeView component was renamed SimpleTreeView.',
+        'MUI X: The TreeView component was renamed SimpleTreeView.',
         'The component with the old naming will be removed in the version v8.0.0.',
         '',
         "You should use `import { SimpleTreeView } from '@mui/x-tree-view'`",
@@ -94,14 +94,7 @@ TreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
   /**
    * The default icon displayed next to a end node. This is applied to all
    * tree nodes and can be overridden by the TreeItem `icon` prop.
@@ -113,10 +106,6 @@ TreeView.propTypes = {
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
   /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.

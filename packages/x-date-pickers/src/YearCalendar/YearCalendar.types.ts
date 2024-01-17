@@ -18,9 +18,6 @@ export interface YearCalendarProps<TDate>
     BaseDateValidationProps<TDate>,
     TimezoneProps {
   autoFocus?: boolean;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

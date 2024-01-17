@@ -1,8 +1,4 @@
-<SimpleTreeView
-  aria-label="icon expansion"
-  defaultCollapseIcon={<ExpandMoreIcon />}
-  defaultExpandIcon={<ChevronRightIcon />}
->
+<SimpleTreeView aria-label="icon expansion">
   <CustomTreeItem nodeId="1" label="Applications">
     <CustomTreeItem nodeId="2" label="Calendar" />
   </CustomTreeItem>

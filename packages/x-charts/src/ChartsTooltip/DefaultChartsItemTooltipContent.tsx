@@ -10,6 +10,7 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
+import { CommonSeriesType } from '../models/seriesType/common';
 
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
@@ -30,9 +31,10 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
           displayedLabel: series.label,
         };
 
-  // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
-  // @ts-ignore
-  const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
+  const value = series.data[itemData.dataIndex];
+  const formattedValue = (
+    series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
+  )?.(value);
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>

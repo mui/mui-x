@@ -88,10 +88,6 @@ function ApiRefPrivateMethods() {
     apiRef.current.getLastMeasuredRowIndex;
     // @ts-expect-error Property 'getViewportPageSize' does not exist on type 'GridApiPremium'
     apiRef.current.getViewportPageSize;
-    // @ts-expect-error Property 'updateGridDimensionsRef' does not exist on type 'GridApiPremium'
-    apiRef.current.updateGridDimensionsRef;
-    // @ts-expect-error Property 'getRenderContext' does not exist on type 'GridApiPremium'
-    apiRef.current.getRenderContext;
     // @ts-expect-error Property 'setCellEditingEditCellValue' does not exist on type 'GridApiPremium'
     apiRef.current.setCellEditingEditCellValue;
     // @ts-expect-error Property 'getRowWithUpdatedValuesFromCellEditing' does not exist on type 'GridApiPremium'

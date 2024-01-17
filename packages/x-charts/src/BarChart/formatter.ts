@@ -32,7 +32,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
     } else if (dataset === undefined) {
       throw new Error(
         [
-          `MUI-X-Charts: bar series with id='${id}' has no data.`,
+          `MUI X Charts: bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -86,7 +86,9 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) =>
+      v === null ? '' : v.toLocaleString(),
+    ),
   };
 };
 

@@ -77,19 +77,19 @@ export const cleanFilterItem = (
 
 const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
   [
-    'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+    'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
     'If you are using the community version of the `DataGrid`, this prop is always `true`.',
   ],
   'error',
 );
 
 const filterModelMissingItemIdWarning = buildWarning(
-  'MUI: The `id` field is required on `filterModel.items` when you use multiple filters.',
+  'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
   'error',
 );
 
 const filterModelMissingItemOperatorWarning = buildWarning(
-  'MUI: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+  'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
   'error',
 );
 
@@ -188,7 +188,7 @@ const getFilterCallbackFromItem = (
 
   const filterOperators = column.filterOperators;
   if (!filterOperators?.length) {
-    throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
+    throw new Error(`MUI X: No filter operators found for column '${column.field}'.`);
   }
 
   const filterOperator = filterOperators.find(
@@ -196,7 +196,7 @@ const getFilterCallbackFromItem = (
   )!;
   if (!filterOperator) {
     throw new Error(
-      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
+      `MUI X: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
     );
   }
 

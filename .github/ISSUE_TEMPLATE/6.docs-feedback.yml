@@ -41,8 +41,8 @@ body:
       description: |
         Let us know what went wrong when you were using this documentation and what we could do to improve it.
       value: |
-        I was looking for ... and it appears that ...
+        I was looking for … and it appears that …
   - type: textarea
     attributes:
-      label: Context 🔦
+      label: Context
       description: What are you trying to accomplish? What brought you to this page? Your context can help us to come up with solutions that benefit the community as a whole.

@@ -18,11 +18,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
 
-  const isNodeSelected = (nodeId: string) =>
-    Array.isArray(models.selectedNodes.value)
-      ? models.selectedNodes.value.indexOf(nodeId) !== -1
-      : models.selectedNodes.value === nodeId;
-
   const setSelectedNodes = (
     event: React.SyntheticEvent,
     newSelectedNodes: typeof params.defaultSelectedNodes,
@@ -57,8 +52,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       params.onSelectedNodesChange(event, newSelectedNodes);
     }
 
-    models.selectedNodes.setValue(newSelectedNodes);
+    models.selectedNodes.setControlledValue(newSelectedNodes);
   };
+
+  const isNodeSelected = (nodeId: string) =>
+    Array.isArray(models.selectedNodes.value)
+      ? models.selectedNodes.value.indexOf(nodeId) !== -1
+      : models.selectedNodes.value === nodeId;
 
   const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
     if (params.disableSelection) {
@@ -125,7 +125,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       base.push(next);
       currentRangeSelection.current.push(current, next);
     }
-
     setSelectedNodes(event, base);
   };
 
@@ -145,7 +144,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-
     setSelectedNodes(event, newSelected);
   };
 
@@ -201,11 +199,18 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     getRootProps: () => ({
       'aria-multiselectable': params.multiSelect,
     }),
+    contextValue: {
+      selection: {
+        multiSelect: params.multiSelect,
+      },
+    },
   };
 };
 
 useTreeViewSelection.models = {
-  selectedNodes: { controlledProp: 'selectedNodes', defaultProp: 'defaultSelectedNodes' },
+  selectedNodes: {
+    getDefaultValue: (params) => params.defaultSelectedNodes,
+  },
 };
 
 const DEFAULT_SELECTED_NODES: string[] = [];
@@ -217,3 +222,12 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   defaultSelectedNodes:
     params.defaultSelectedNodes ?? (params.multiSelect ? DEFAULT_SELECTED_NODES : null),
 });
+
+useTreeViewSelection.params = {
+  disableSelection: true,
+  multiSelect: true,
+  defaultSelectedNodes: true,
+  selectedNodes: true,
+  onSelectedNodesChange: true,
+  onNodeSelectionToggle: true,
+};

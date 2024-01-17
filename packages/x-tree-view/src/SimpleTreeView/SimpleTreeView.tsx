@@ -4,11 +4,16 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import {
+  SimpleTreeViewProps,
+  SimpleTreeViewSlotProps,
+  SimpleTreeViewSlots,
+} from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
 import { buildWarning } from '../internals/utils/warning';
+import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: SimpleTreeViewProps<Multiple>,
@@ -40,7 +45,7 @@ type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefine
 const EMPTY_ITEMS: any[] = [];
 
 const itemsPropWarning = buildWarning([
-  'MUI: The `SimpleTreeView` component does not support the `items` prop.',
+  'MUI X: The `SimpleTreeView` component does not support the `items` prop.',
   'If you want to add items, you need to pass them as JSX children.',
   'Check the documentation for more details: https://next.mui.com/x/react-tree-view/simple-tree-view/items/',
 ]);
@@ -61,68 +66,32 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
   const ownerState = props as SimpleTreeViewProps<any>;
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    slots,
-    slotProps,
-    ...other
-  } = props as SimpleTreeViewProps<any>;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
       itemsPropWarning();
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expandedNodes,
-    defaultExpandedNodes,
-    onExpandedNodesChange,
-    onNodeExpansionToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelectedNodes,
-    selectedNodes,
-    multiSelect,
-    onSelectedNodesChange,
-    onNodeSelectionToggle,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    items: EMPTY_ITEMS,
+  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
+    typeof SIMPLE_TREE_VIEW_PLUGINS,
+    SimpleTreeViewSlots,
+    SimpleTreeViewSlotProps,
+    SimpleTreeViewProps<Multiple> & { items: any }
+  >({
+    props: { ...props, items: EMPTY_ITEMS },
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
+
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? SimpleTreeViewRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: {},
-    externalForwardedProps: other,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState,
@@ -130,7 +99,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{children}</Root>
+      <Root {...rootProps} />
     </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;
@@ -148,14 +117,7 @@ SimpleTreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
   /**
    * The default icon displayed next to a end node. This is applied to all
    * tree nodes and can be overridden by the TreeItem `icon` prop.
@@ -167,10 +129,6 @@ SimpleTreeView.propTypes = {
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
   /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.

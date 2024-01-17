@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import {
   GridColDef,
@@ -11,7 +10,7 @@ import {
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
   height: 400,
   width: '100%',
   '& .MuiDataGrid-cell--editable': {

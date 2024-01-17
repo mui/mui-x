@@ -191,6 +191,18 @@ In the example below, the `director` column can not be grouped. And in all examp
 
 {{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Grouping non-groupable columns programmatically
+
+To apply row grouping programmatically on non-groupable columns (columns with `groupable: false` in the [column definition](/x/api/data-grid/grid-col-def/)), you can provide row grouping model in one of the following ways:
+
+1. Pass `rowGrouping.model` to the `initialState` prop. This will [initialize the grouping](/x/react-data-grid/row-grouping/#initialize-the-row-grouping) with the provided model.
+2. Provide the `rowGroupingModel` prop. This will [control the grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
+3. Call the API method `setRowGroupingModel`. This will set the aggregation with the provided model.
+
+In the following example, the column `company` is not groupable from the UI but the `rowGroupingModel` prop is passed to generate a read-only row group.
+
+{{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Using `groupingValueGetter` for complex grouping value
 
 The grouping value has to be either a `string`, a `number`, `null`, or `undefined`.

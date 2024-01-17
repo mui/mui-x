@@ -60,18 +60,29 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  let contextValue = {} as TreeViewContextValue<Signatures>;
+  const contextValue = {
+    instance: instance as TreeViewInstance<any>,
+  } as TreeViewContextValue<Signatures>;
 
-  const runPlugin = (plugin: TreeViewPlugin<any>) => {
+  const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse =
-      plugin({ instance, params, state, setState, rootRef: innerRootRef, models }) || {};
+      plugin({
+        instance,
+        params,
+        slots: params.slots,
+        slotProps: params.slotProps,
+        state,
+        setState,
+        rootRef: innerRootRef,
+        models,
+      }) || {};
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
     }
 
     if (pluginResponse.contextValue) {
-      contextValue = pluginResponse.contextValue;
+      Object.assign(contextValue, pluginResponse.contextValue);
     }
   };
 
@@ -130,5 +141,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return rootProps;
   };
 
-  return { getRootProps, rootRef: handleRootRef, contextValue, instance: instance as any };
+  return {
+    getRootProps,
+    rootRef: handleRootRef,
+    contextValue: contextValue as any,
+    instance: instance as any,
+  };
 };

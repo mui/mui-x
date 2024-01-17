@@ -10,7 +10,7 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -92,9 +92,6 @@ DesktopDateRangePicker.propTypes = {
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.

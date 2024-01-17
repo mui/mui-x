@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import useForkRef from '@mui/utils/useForkRef';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {

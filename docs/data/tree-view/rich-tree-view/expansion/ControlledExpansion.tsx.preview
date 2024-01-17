@@ -8,7 +8,5 @@
     items={MUI_X_PRODUCTS}
     expandedNodes={expandedNodes}
     onExpandedNodesChange={handleExpandedNodesChange}
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
   />
 </Box>

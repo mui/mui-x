@@ -50,7 +50,6 @@ export default function AggregationColDefAggregable() {
           aggregation: {
             model: {
               gross: 'sum',
-              year: 'sum',
             },
           },
         }}

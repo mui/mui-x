@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -194,6 +195,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const showSortIcon =
+    (colDef.sortable || sortDirection != null) &&
+    !colDef.hideSortIcons &&
+    !rootProps.disableColumnSorting;
 
   const columnTitleIconButtons = (
     <React.Fragment>
@@ -205,11 +210,12 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         />
       )}
 
-      {colDef.sortable && !colDef.hideSortIcons && (
+      {showSortIcon && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
+          disabled={!colDef.sortable}
         />
       )}
     </React.Fragment>
@@ -283,4 +289,6 @@ GridColumnHeaderItem.propTypes = {
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 } as any;
 
-export { GridColumnHeaderItem };
+const Memoized = fastMemo(GridColumnHeaderItem);
+
+export { Memoized as GridColumnHeaderItem };

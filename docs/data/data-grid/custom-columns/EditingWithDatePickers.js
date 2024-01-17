@@ -16,7 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase from '@mui/material/InputBase';
-import locale from 'date-fns/locale/en-US';
+import { enUS as locale } from 'date-fns/locale';
 import { styled } from '@mui/material/styles';
 
 const dateAdapter = new AdapterDateFns({ locale });
