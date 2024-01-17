@@ -1,10 +1,27 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
+
+interface TreeItemSlots {
+  /**
+   * The icon used to collapse the node.
+   */
+  collapseIcon?: React.ElementType;
+  /**
+   * The icon used to expand the node.
+   */
+  expandIcon?: React.ElementType;
+}
+
+interface TreeItemSlotProps {
+  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
+  expandIcon?: SlotComponentProps<'svg', {}, {}>;
+}
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
@@ -17,9 +34,15 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   classes?: Partial<TreeItemClasses>;
   /**
-   * The icon used to collapse the node.
+   * Overridable component slots.
+   * @default {}
    */
-  collapseIcon?: React.ReactNode;
+  slots?: TreeItemSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: TreeItemSlotProps;
   /**
    * The component used for the content node.
    * @default TreeItemContent
@@ -38,10 +61,6 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The icon displayed next to an end node.
    */
   endIcon?: React.ReactNode;
-  /**
-   * The icon used to expand the node.
-   */
-  expandIcon?: React.ReactNode;
   /**
    * The icon to display next to the tree node's label.
    */

@@ -1,7 +1,4 @@
 import * as React from 'react';
-import IndeterminateCheckBoxRoundedIcon from '@mui/icons-material/IndeterminateCheckBoxRounded';
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
@@ -34,11 +31,6 @@ export default function CustomAnimation() {
     <SimpleTreeView
       aria-label="customized"
       defaultExpandedNodes={['1']}
-      defaultCollapseIcon={
-        <IndeterminateCheckBoxRoundedIcon sx={{ opacity: 0.8 }} />
-      }
-      defaultExpandIcon={<AddBoxRoundedIcon sx={{ opacity: 0.8 }} />}
-      defaultEndIcon={<DisabledByDefaultRoundedIcon sx={{ opacity: 0.3 }} />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <CustomTreeItem nodeId="1" label="Main">

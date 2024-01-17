@@ -1,13 +1,11 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultCollapseIcon": { "type": { "name": "node" } },
     "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultExpandIcon": { "type": { "name": "node" } },
     "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },

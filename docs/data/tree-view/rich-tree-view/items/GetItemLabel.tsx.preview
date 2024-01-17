@@ -1,6 +1,1 @@
-<RichTreeView
-  items={MUI_X_PRODUCTS}
-  getItemLabel={getItemLabel}
-  defaultCollapseIcon={<ExpandMoreIcon />}
-  defaultExpandIcon={<ChevronRightIcon />}
-/>
+<RichTreeView items={MUI_X_PRODUCTS} getItemLabel={getItemLabel} />
