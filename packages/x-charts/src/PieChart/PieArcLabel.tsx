@@ -105,6 +105,7 @@ function PieArcLabel(props: PieArcLabelProps) {
     startAngle,
     endAngle,
     paddingAngle,
+    arcLabelRadius,
     innerRadius,
     outerRadius,
     cornerRadius,
