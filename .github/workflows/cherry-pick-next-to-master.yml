@@ -18,7 +18,7 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'needs cherry-pick') && github.event.pull_request.merged == true }}
     steps:
       - name: Checkout
-        uses: actions/checkout@722adc63f1aa60a57ec37892e133b1d319cae598 # v2.0.0
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
         with:
           fetch-depth: 0
       - name: Cherry pick and create the new PR
