@@ -264,8 +264,8 @@ This will help create a new headless version of the `TreeItem` component based o
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled }  = useTreeItem(props.nodeId);
-+  const { disabled }  = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.nodeId);
++  const { disabled } = useTreeItemState(props.nodeId);
 
    // Render some UI
  });
