@@ -113,7 +113,7 @@ export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
 
 export interface TreeViewItemPluginOptions {
   props: TreeItemProps;
-  ref: React.Ref<HTMLLIElement>;
+  ref: React.Ref<HTMLLIElement> | undefined;
 }
 
 export interface TreeViewItemPluginResponse {
@@ -124,7 +124,7 @@ export interface TreeViewItemPluginResponse {
   /**
    * Ref enriched by the plugin
    */
-  ref?: React.Ref<HTMLLIElement>;
+  ref?: React.RefCallback<HTMLLIElement>;
   /**
    * Render function used to add React wrappers around the TreeItem.
    * @param {React.ReactNode} children The TreeItem node before this plugin execution.
