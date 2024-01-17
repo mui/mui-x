@@ -36,8 +36,8 @@ export default function CustomIcons() {
       slots={{
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
+        endIcon: CloseSquare,
       }}
-      defaultEndIcon={<CloseSquare />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <CustomTreeItem nodeId="1" label="Main">

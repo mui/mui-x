@@ -95,6 +95,10 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
   );
 });
 
+function EndIcon() {
+  return <div style={{ width: 24 }} />;
+}
+
 export default function GmailTreeView() {
   return (
     <SimpleTreeView
@@ -104,8 +108,8 @@ export default function GmailTreeView() {
       slots={{
         expandIcon: ArrowRightIcon,
         collapseIcon: ArrowDropDownIcon,
+        endIcon: EndIcon,
       }}
-      defaultEndIcon={<div style={{ width: 24 }} />}
       sx={{ flexGrow: 1, maxWidth: 400 }}
     >
       <StyledTreeItem nodeId="1" labelText="All Mail" labelIcon={MailIcon} />

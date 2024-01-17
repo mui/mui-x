@@ -178,6 +178,81 @@ you need to use the new `collapseIcon` slot on this component:
   </SimpleTreeView>
 ```
 
+#### Define `parentIcon`
+
+The icon rendered next to item with children
+is now defined as a slot on the Tree View components.
+
+If you were passing an icon to your Tree View component,
+you need to use the new `parentIcon` slot on this component:
+
+```diff
+  <SimpleTreeView
+-   defaultParentIcon={<MyCustomParentIcon />}
++   slots={{ parentIcon: MyCustomParentIcon }}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+#### Define `endIcon`
+
+The icon rendered next to item without children
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+If you were passing an icon to your Tree View component,
+you need to use the new `endIcon` slot on this component:
+
+```diff
+  <SimpleTreeView
+-   defaultEndIcon={<MyCustomEndIcon />}
++   slots={{ endIcon: MyCustomEndIcon }}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
+If you were passing an icon to your Tree Item component,
+you need to use the new `endIcon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     endIcon={<MyCustomEndIcon />}
++     slots={{ endIcon: MyCustomEndIcon }}
+    />
+  </SimpleTreeView>
+```
+
+#### Define `icon`
+
+The icon rendered next to item
+is now defined as a slot both on the Tree View component.
+
+If you were passing an icon to your Tree Item component,
+you need to use the new `endIcon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     icon={<MyCustomIcon />}
++     slots={{ icon: MyCustomIcon }}
+    />
+  </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
 ### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
 The expansion props have been renamed to better describe their behaviors:

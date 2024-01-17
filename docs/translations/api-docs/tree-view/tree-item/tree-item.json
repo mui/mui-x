@@ -9,8 +9,6 @@
     },
     "ContentProps": { "description": "Props applied to ContentComponent." },
     "disabled": { "description": "If <code>true</code>, the node is disabled." },
-    "endIcon": { "description": "The icon displayed next to an end node." },
-    "icon": { "description": "The icon to display next to the tree node&#39;s label." },
     "label": { "description": "The tree node label." },
     "nodeId": { "description": "The id of the node." },
     "onFocus": {

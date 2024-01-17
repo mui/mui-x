@@ -433,7 +433,7 @@ describe('<SimpleTreeView />', () => {
 
       const { getByTestId } = render(
         <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
-          <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
+          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
         </SimpleTreeView>,

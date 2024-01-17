@@ -3,14 +3,8 @@
   "propDescriptions": {
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "defaultEndIcon": {
-      "description": "The default icon displayed next to a end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> prop."
-    },
     "defaultExpandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
-    },
-    "defaultParentIcon": {
-      "description": "The default icon displayed next to a parent node. This is applied to all parent nodes and can be overridden by the TreeItem <code>icon</code> prop."
     },
     "defaultSelectedNodes": {
       "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."

@@ -33,6 +33,10 @@ function CollapseIcon(
   return <IndeterminateCheckBoxRoundedIcon {...props} sx={{ opacity: 0.8 }} />;
 }
 
+function EndIcon(props: React.PropsWithoutRef<typeof DisabledByDefaultRoundedIcon>) {
+  return <DisabledByDefaultRoundedIcon {...props} sx={{ opacity: 0.3 }} />;
+}
+
 export default function BorderedTreeView() {
   return (
     <SimpleTreeView
@@ -41,8 +45,8 @@ export default function BorderedTreeView() {
       slots={{
         expandIcon: ExpandIcon,
         collapseIcon: CollapseIcon,
+        endIcon: EndIcon,
       }}
-      defaultEndIcon={<DisabledByDefaultRoundedIcon sx={{ opacity: 0.3 }} />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <CustomTreeItem nodeId="1" label="Main">
