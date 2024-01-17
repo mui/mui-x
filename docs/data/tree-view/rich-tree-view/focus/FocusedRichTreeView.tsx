@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
@@ -68,8 +66,6 @@ export default function FocusedRichTreeView() {
           focusedNode={focusedNode}
           onFocusedNodeChange={handleExpandedNodesChange}
           defaultExpandedNodes={['grid', 'charts']}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
     </Box>

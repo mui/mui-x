@@ -9,7 +9,5 @@
     focusedNode={focusedNode}
     onFocusedNodeChange={handleExpandedNodesChange}
     defaultExpandedNodes={['grid', 'charts']}
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
   />
 </Box>
