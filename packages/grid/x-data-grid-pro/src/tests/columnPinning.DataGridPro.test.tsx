@@ -664,7 +664,6 @@ describe('<DataGridPro /> - Column pinning', () => {
           columns={columns}
           rows={rows}
           columnGroupingModel={columnGroupingModel}
-          experimentalFeatures={{ columnGrouping: true }}
           initialState={{ pinnedColumns: { right: ['age'] } }}
         />,
       );

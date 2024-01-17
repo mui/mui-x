@@ -157,7 +157,14 @@ Here's the list of affected features, colDef flags and props to disable them and
   ```
 
 - The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
+
 - The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
 <!-- ### Rows
 

@@ -434,12 +434,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
@@ -478,7 +473,6 @@ describe('<DataGridPro /> - Columns reorder', () => {
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGridPro
-                experimentalFeatures={{ columnGrouping: true }}
                 rows={rows}
                 columns={columns}
                 columnGroupingModel={columnGroupingModel}
@@ -520,7 +514,6 @@ describe('<DataGridPro /> - Columns reorder', () => {
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGridPro
-                experimentalFeatures={{ columnGrouping: true }}
                 rows={rows}
                 columns={columns}
                 columnGroupingModel={columnGroupingModel}
@@ -559,12 +552,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
@@ -600,12 +588,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
@@ -659,12 +642,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
@@ -720,12 +698,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
@@ -790,12 +763,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              experimentalFeatures={{ columnGrouping: true }}
-              rows={rows}
-              columns={columns}
-              columnGroupingModel={columnGroupingModel}
-            />
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       }
