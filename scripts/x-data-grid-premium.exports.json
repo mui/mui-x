@@ -587,6 +587,7 @@
   { "name": "gridVisibleRowsLookupSelector", "kind": "Variable" },
   { "name": "GridWorkspacesIcon", "kind": "Variable" },
   { "name": "heIL", "kind": "Variable" },
+  { "name": "hrHR", "kind": "Variable" },
   { "name": "huHU", "kind": "Variable" },
   { "name": "isGroupingColumn", "kind": "Variable" },
   { "name": "isLeaf", "kind": "Function" },
@@ -608,6 +609,7 @@
   { "name": "plPL", "kind": "Variable" },
   { "name": "PreferencesPanelPropsOverrides", "kind": "Interface" },
   { "name": "ptBR", "kind": "Variable" },
+  { "name": "ptPT", "kind": "Variable" },
   { "name": "renderActionsCell", "kind": "Variable" },
   { "name": "renderBooleanCell", "kind": "Variable" },
   { "name": "renderEditBooleanCell", "kind": "Variable" },
@@ -656,5 +658,6 @@
   { "name": "virtualizationStateInitializer", "kind": "Variable" },
   { "name": "viVN", "kind": "Variable" },
   { "name": "zhCN", "kind": "Variable" },
+  { "name": "zhHK", "kind": "Variable" },
   { "name": "zhTW", "kind": "Variable" }
 ]
