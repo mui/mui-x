@@ -3,7 +3,11 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/base/utils';
 import { RichTreeViewClasses } from './richTreeViewClasses';
-import { DefaultTreeViewPluginParameters } from '../internals/plugins/defaultPlugins';
+import {
+  DefaultTreeViewPluginParameters,
+  DefaultTreeViewPluginSlotProps,
+  DefaultTreeViewPluginSlots,
+} from '../internals/plugins/defaultPlugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { TreeViewItemId } from '../models';
 
@@ -12,10 +16,10 @@ interface RichTreeViewItemSlotOwnerState {
   label: string;
 }
 
-export interface RichTreeViewSlotsComponent {
+export interface RichTreeViewSlots extends DefaultTreeViewPluginSlots {
   /**
    * Element rendered at the root.
-   * @default TreeViewRoot
+   * @default RichTreeViewRoot
    */
   root?: React.ElementType;
   /**
@@ -25,10 +29,8 @@ export interface RichTreeViewSlotsComponent {
   item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
-export interface RichTreeViewSlotsComponentsProps<
-  R extends {},
-  Multiple extends boolean | undefined,
-> {
+export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
+  extends DefaultTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemSlotOwnerState>;
 }
@@ -52,10 +54,10 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    * Overridable component slots.
    * @default {}
    */
-  slots?: RichTreeViewSlotsComponent;
+  slots?: RichTreeViewSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RichTreeViewSlotsComponentsProps<R, Multiple>;
+  slotProps?: RichTreeViewSlotProps<R, Multiple>;
 }

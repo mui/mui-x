@@ -1,6 +1,4 @@
 import * as React from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
@@ -55,12 +53,7 @@ const isItemDisabled = (item: MuiXProduct) => !!item.disabled;
 export default function DisabledPropItem() {
   return (
     <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView
-        items={MUI_X_PRODUCTS}
-        isItemDisabled={isItemDisabled}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      />
+      <RichTreeView items={MUI_X_PRODUCTS} isItemDisabled={isItemDisabled} />
     </Box>
   );
 }

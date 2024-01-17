@@ -23,15 +23,25 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   },
 }));
 
+function ExpandIcon(props: React.PropsWithoutRef<typeof AddBoxRoundedIcon>) {
+  return <AddBoxRoundedIcon {...props} sx={{ opacity: 0.8 }} />;
+}
+
+function CollapseIcon(
+  props: React.PropsWithoutRef<typeof IndeterminateCheckBoxRoundedIcon>,
+) {
+  return <IndeterminateCheckBoxRoundedIcon {...props} sx={{ opacity: 0.8 }} />;
+}
+
 export default function BorderedTreeView() {
   return (
     <SimpleTreeView
       aria-label="customized"
       defaultExpandedNodes={['1', '3']}
-      defaultCollapseIcon={
-        <IndeterminateCheckBoxRoundedIcon sx={{ opacity: 0.8 }} />
-      }
-      defaultExpandIcon={<AddBoxRoundedIcon sx={{ opacity: 0.8 }} />}
+      slots={{
+        expandIcon: ExpandIcon,
+        collapseIcon: CollapseIcon,
+      }}
       defaultEndIcon={<DisabledByDefaultRoundedIcon sx={{ opacity: 0.3 }} />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >

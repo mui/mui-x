@@ -2,14 +2,12 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "defaultCollapseIcon": { "description": "The default icon used to collapse the node." },
     "defaultEndIcon": {
       "description": "The default icon displayed next to a end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> prop."
     },
     "defaultExpandedNodes": {
       "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
     },
-    "defaultExpandIcon": { "description": "The default icon used to expand the node." },
     "defaultParentIcon": {
       "description": "The default icon displayed next to a parent node. This is applied to all parent nodes and can be overridden by the TreeItem <code>icon</code> prop."
     },

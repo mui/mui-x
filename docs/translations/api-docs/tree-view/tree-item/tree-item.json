@@ -3,7 +3,6 @@
   "propDescriptions": {
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "collapseIcon": { "description": "The icon used to collapse the node." },
     "ContentComponent": {
       "description": "The component used for the content node.",
       "requiresRef": true
@@ -11,13 +10,14 @@
     "ContentProps": { "description": "Props applied to ContentComponent." },
     "disabled": { "description": "If <code>true</code>, the node is disabled." },
     "endIcon": { "description": "The icon displayed next to an end node." },
-    "expandIcon": { "description": "The icon used to expand the node." },
     "icon": { "description": "The icon to display next to the tree node&#39;s label." },
     "label": { "description": "The tree node label." },
     "nodeId": { "description": "The id of the node." },
     "onFocus": {
       "description": "This prop isn&#39;t supported. Use the <code>onNodeFocus</code> callback on the tree if you need to monitor a node&#39;s focus."
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },

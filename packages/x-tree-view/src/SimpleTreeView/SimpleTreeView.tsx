@@ -4,7 +4,11 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import {
+  SimpleTreeViewProps,
+  SimpleTreeViewSlotProps,
+  SimpleTreeViewSlots,
+} from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
@@ -68,10 +72,12 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     }
   }
 
-  const {
-    pluginParams,
-    otherProps: { slots, slotProps, ...otherProps },
-  } = extractPluginParamsFromProps({
+  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
+    typeof SIMPLE_TREE_VIEW_PLUGINS,
+    SimpleTreeViewSlots,
+    SimpleTreeViewSlotProps,
+    SimpleTreeViewProps<Multiple> & { items: any }
+  >({
     props: { ...props, items: EMPTY_ITEMS },
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
@@ -84,7 +90,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const Root = slots?.root ?? SimpleTreeViewRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: {},
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
@@ -113,10 +119,6 @@ SimpleTreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
-  /**
    * The default icon displayed next to a end node. This is applied to all
    * tree nodes and can be overridden by the TreeItem `icon` prop.
    */
@@ -127,10 +129,6 @@ SimpleTreeView.propTypes = {
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
   /**
    * The default icon displayed next to a parent node. This is applied to all
    * parent nodes and can be overridden by the TreeItem `icon` prop.

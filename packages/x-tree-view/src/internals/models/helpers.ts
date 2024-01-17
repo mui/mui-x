@@ -39,6 +39,8 @@ export interface MergePlugins<TPlugins extends readonly any[]> {
   defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
   dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;
   contextValue: MergePluginsProperty<TPlugins, 'contextValue'>;
+  slots: MergePluginsProperty<TPlugins, 'slots'>;
+  slotProps: MergePluginsProperty<TPlugins, 'slotProps'>;
   events: MergePluginsProperty<TPlugins, 'events'>;
   models: MergePluginsProperty<TPlugins, 'models'>;
 }

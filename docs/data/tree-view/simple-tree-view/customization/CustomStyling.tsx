@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
@@ -36,8 +34,6 @@ export default function CustomStyling() {
     <SimpleTreeView
       aria-label="customized"
       defaultExpandedNodes={['1']}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <StyledTreeItem nodeId="1" label="Main">

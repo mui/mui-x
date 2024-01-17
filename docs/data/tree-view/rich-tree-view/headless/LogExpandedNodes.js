@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -36,7 +34,7 @@ useTreeViewLogExpanded.params = {
   logMessage: true,
 };
 
-const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
+const TREE_VIEW_PLUGINS = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
 function TreeView(inProps) {
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
@@ -44,7 +42,7 @@ function TreeView(inProps) {
 
   const { pluginParams, otherProps } = extractPluginParamsFromProps({
     props: themeProps,
-    plugins,
+    plugins: TREE_VIEW_PLUGINS,
   });
 
   const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
@@ -99,8 +97,6 @@ export default function LogExpandedNodes() {
     <Stack spacing={2}>
       <TreeView
         aria-label="file system navigator"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         items={ITEMS}
         areLogsEnabled

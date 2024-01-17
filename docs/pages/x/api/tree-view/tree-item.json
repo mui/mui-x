@@ -3,7 +3,6 @@
     "nodeId": { "type": { "name": "string" }, "required": true },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "collapseIcon": { "type": { "name": "node" } },
     "ContentComponent": {
       "type": { "name": "custom", "description": "element type" },
       "default": "TreeItemContent"
@@ -11,10 +10,15 @@
     "ContentProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "endIcon": { "type": { "name": "node" } },
-    "expandIcon": { "type": { "name": "node" } },
     "icon": { "type": { "name": "node" } },
     "label": { "type": { "name": "node" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
@@ -14,23 +12,21 @@ export default function DisabledItemsFocusable() {
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={disabledItemsFocusable}
-            onChange={handleToggle}
-            name="disabledItemsFocusable"
-          />
-        }
-        label="Allow focusing disabled items"
-      />
-      <Box sx={{ flexGrow: 1, mt: 2 }}>
-        <SimpleTreeView
-          disabledItemsFocusable={disabledItemsFocusable}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-        >
+    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
+      <Box sx={{ mb: 1 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={disabledItemsFocusable}
+              onChange={handleToggle}
+              name="disabledItemsFocusable"
+            />
+          }
+          label="Allow focusing disabled items"
+        />
+      </Box>
+      <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+        <SimpleTreeView disabledItemsFocusable={disabledItemsFocusable}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
             <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />

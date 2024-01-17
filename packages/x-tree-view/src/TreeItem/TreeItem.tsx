@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
@@ -11,6 +12,7 @@ import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -164,11 +166,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     children,
     className,
-    collapseIcon,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
     endIcon,
-    expandIcon,
     icon,
     nodeId,
     id,
@@ -179,6 +181,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     TransitionProps,
     ...other
   } = props;
+
+  const slots = {
+    expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
+    collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
+  };
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
   const expanded = instance.isNodeExpanded(nodeId);
@@ -196,17 +203,29 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const classes = useUtilityClasses(ownerState);
 
+  const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
+  const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
+    elementType: ExpansionIcon,
+    ownerState: undefined,
+    externalSlotProps: (tempOwnerState: any) => {
+      if (expanded) {
+        return {
+          ...resolveComponentProps(contextIcons.slotProps.collapseIcon, tempOwnerState),
+          ...resolveComponentProps(inSlotProps?.collapseIcon, tempOwnerState),
+        };
+      }
+
+      return {
+        ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
+        ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
+      };
+    },
+  });
+
+  const expansionIcon =
+    expandable && !!ExpansionIcon ? <ExpansionIcon {...expansionIconProps} /> : null;
+
   let displayIcon: React.ReactNode;
-  let expansionIcon: React.ReactNode;
-
-  if (expandable) {
-    if (!expanded) {
-      expansionIcon = expandIcon || contextIcons.defaultExpandIcon;
-    } else {
-      expansionIcon = collapseIcon || contextIcons.defaultCollapseIcon;
-    }
-  }
-
   if (expandable) {
     displayIcon = contextIcons.defaultParentIcon;
   } else {
@@ -309,10 +328,6 @@ TreeItem.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The icon used to collapse the node.
-   */
-  collapseIcon: PropTypes.node,
-  /**
    * The component used for the content node.
    * @default TreeItemContent
    */
@@ -331,10 +346,6 @@ TreeItem.propTypes = {
    */
   endIcon: PropTypes.node,
   /**
-   * The icon used to expand the node.
-   */
-  expandIcon: PropTypes.node,
-  /**
    * The icon to display next to the tree node's label.
    */
   icon: PropTypes.node,
@@ -351,6 +362,16 @@ TreeItem.propTypes = {
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
