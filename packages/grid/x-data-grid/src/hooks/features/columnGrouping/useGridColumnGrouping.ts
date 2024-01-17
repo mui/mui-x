@@ -53,7 +53,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
 > = (state, props, apiRef) => {
-  if (!props.experimentalFeatures?.columnGrouping) {
+  if (!props.columnGroupingModel) {
     return state;
   }
 
@@ -89,14 +89,12 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  */
 export const useGridColumnGrouping = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
+  props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
   /**
    * API METHODS
    */
-  const getColumnGroupPath = React.useCallback<
-    GridColumnGroupingApi['unstable_getColumnGroupPath']
-  >(
+  const getColumnGroupPath = React.useCallback<GridColumnGroupingApi['getColumnGroupPath']>(
     (field) => {
       const unwrappedGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
 
@@ -105,16 +103,14 @@ export const useGridColumnGrouping = (
     [apiRef],
   );
 
-  const getAllGroupDetails = React.useCallback<
-    GridColumnGroupingApi['unstable_getAllGroupDetails']
-  >(() => {
+  const getAllGroupDetails = React.useCallback<GridColumnGroupingApi['getAllGroupDetails']>(() => {
     const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
     return columnGroupLookup;
   }, [apiRef]);
 
   const columnGroupingApi: GridColumnGroupingApi = {
-    unstable_getColumnGroupPath: getColumnGroupPath,
-    unstable_getAllGroupDetails: getAllGroupDetails,
+    getColumnGroupPath,
+    getAllGroupDetails,
   };
 
   useGridApiMethod(apiRef, columnGroupingApi, 'public');
@@ -144,9 +140,6 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
-      if (!props.experimentalFeatures?.columnGrouping) {
-        return;
-      }
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
@@ -177,7 +170,7 @@ export const useGridColumnGrouping = (
         };
       });
     },
-    [apiRef, props.experimentalFeatures?.columnGrouping],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
