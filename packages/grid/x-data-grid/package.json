@@ -50,7 +50,7 @@
     "@babel/runtime": "^7.23.8",
     "@mui/system": "^5.15.2",
     "@mui/utils": "^5.15.2",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
   },

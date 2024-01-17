@@ -48,7 +48,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "clean-css": "^5.3.3",
     "clipboard-copy": "^4.0.1",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.0",
     "core-js": "^2.6.12",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
