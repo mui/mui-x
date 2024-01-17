@@ -28,7 +28,7 @@ To avoid a confusing grid layout, consider disabling the following features for 
 - [filtering](/x/react-data-grid/filtering/#disable-the-filters)
 - [column reorder](/x/react-data-grid/column-ordering/)
 - [hiding columns](/x/react-data-grid/column-visibility/)
-- [column pinning](/x/react-data-grid/column-pinning/#blocking-column-unpinning)
+- [column pinning](/x/react-data-grid/column-pinning/#disable-column-pinning)
 
 :::
 
