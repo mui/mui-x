@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 
 const CustomContentRoot = styled('div')(({ theme }) => ({
@@ -86,8 +84,6 @@ export default function CustomContentTreeView() {
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
       <SimpleTreeView
         aria-label="icon expansion"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
         sx={{ position: 'relative' }}
         defaultExpandedNodes={['3']}
       >

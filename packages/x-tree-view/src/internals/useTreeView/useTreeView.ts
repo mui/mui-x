@@ -66,7 +66,16 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse =
-      plugin({ instance, params, state, setState, rootRef: innerRootRef, models }) || {};
+      plugin({
+        instance,
+        params,
+        slots: params.slots,
+        slotProps: params.slotProps,
+        state,
+        setState,
+        rootRef: innerRootRef,
+        models,
+      }) || {};
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);

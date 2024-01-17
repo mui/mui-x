@@ -114,7 +114,11 @@ The layout of the grid has been substantially altered to use CSS sticky position
 
 ### Behavioral changes
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
+
+Here's the list of affected features, colDef flags and props to disable them and the related props and API methods to control them programmatically.
+
+{{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 

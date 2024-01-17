@@ -29,8 +29,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   disabledItemsFocusable: false,
   icons: {
-    defaultCollapseIcon: null,
-    defaultExpandIcon: null,
+    slots: {},
+    slotProps: {},
     defaultParentIcon: null,
     defaultEndIcon: null,
   },
@@ -109,8 +109,6 @@ describe('<TreeItem />', () => {
 
   it('should display the right icons', () => {
     const defaultEndIcon = <div data-test="defaultEndIcon" />;
-    const defaultExpandIcon = <div data-test="defaultExpandIcon" />;
-    const defaultCollapseIcon = <div data-test="defaultCollapseIcon" />;
     const defaultParentIcon = <div data-test="defaultParentIcon" />;
     const icon = <div data-test="icon" />;
     const endIcon = <div data-test="endIcon" />;
@@ -118,8 +116,10 @@ describe('<TreeItem />', () => {
     const { getByTestId } = render(
       <SimpleTreeView
         defaultEndIcon={defaultEndIcon}
-        defaultExpandIcon={defaultExpandIcon}
-        defaultCollapseIcon={defaultCollapseIcon}
+        slots={{
+          expandIcon: () => <div data-test="defaultExpandIcon" />,
+          collapseIcon: () => <div data-test="defaultCollapseIcon" />,
+        }}
         defaultParentIcon={defaultParentIcon}
         defaultExpandedNodes={['1']}
       >

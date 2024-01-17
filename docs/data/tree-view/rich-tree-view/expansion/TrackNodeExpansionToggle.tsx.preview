@@ -9,7 +9,5 @@
   <RichTreeView
     items={MUI_X_PRODUCTS}
     onNodeExpansionToggle={handleNodeExpansionToggle}
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
   />
 </Box>

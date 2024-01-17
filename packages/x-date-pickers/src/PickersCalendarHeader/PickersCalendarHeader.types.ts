@@ -69,9 +69,6 @@ export interface PickersCalendarHeaderProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersCalendarHeaderClasses>;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

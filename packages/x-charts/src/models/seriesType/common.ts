@@ -9,7 +9,7 @@ export type CommonSeriesType<TValue> = {
    * @param {TValue} value The series' value to render.
    * @returns {string} The string to dispaly.
    */
-  valueFormatter?: (value: TValue) => string;
+  valueFormatter?: <V extends TValue>(value: V) => string;
   highlightScope?: Partial<HighlightScope>;
 };
 

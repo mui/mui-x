@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Label from '@mui/icons-material/Label';
 import FolderRounded from '@mui/icons-material/FolderRounded';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
@@ -161,8 +159,6 @@ export default function CustomizedTreeView() {
       aria-label="gmail"
       defaultExpandedNodes={['3']}
       defaultSelectedNodes="3"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
       <StyledTreeItem nodeId="1" labelText="All Documents" labelIcon={FolderRounded}>
