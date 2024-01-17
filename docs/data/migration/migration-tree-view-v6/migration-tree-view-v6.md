@@ -180,7 +180,7 @@ you need to use the new `collapseIcon` slot on this component:
 
 #### Define `parentIcon`
 
-The icon rendered next to item with children
+The icon rendered next to an item with children
 is now defined as a slot on the Tree View components.
 
 If you were passing an icon to your Tree View component,
