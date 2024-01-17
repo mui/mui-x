@@ -20,17 +20,40 @@
     },
     "timeIcon": { "type": { "name": "element" }, "default": "TimeIcon" }
   },
-  "slots": [],
   "name": "DateTimeRangePickerTabs",
   "imports": [
     "import { DateTimeRangePickerTabs } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
     "import { DateTimeRangePickerTabs } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "tabButton", "navigationButton", "filler"],
-    "globalClasses": {},
-    "name": "MuiDateTimeRangePickerTabs"
-  },
+  "classes": [
+    {
+      "key": "filler",
+      "className": "MuiDateTimeRangePickerTabs-filler",
+      "description": "Styles applied to the filler element, shown instead of a navigation arrow.",
+      "isGlobal": false
+    },
+    {
+      "key": "navigationButton",
+      "className": "MuiDateTimeRangePickerTabs-navigationButton",
+      "description": "Styles applied to the tab navigation button elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateTimeRangePickerTabs-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "tabButton",
+      "className": "MuiDateTimeRangePickerTabs-tabButton",
+      "description": "Styles applied to the tab button element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimeRangePickerTabs",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerTabs.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "cssComponent": false
 }

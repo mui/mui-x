@@ -1,10 +1,6 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "calendars": {
-      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "2"
-    },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
@@ -205,12 +201,6 @@
       "class": null
     },
     {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
-      "class": null
-    },
-    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -253,6 +243,12 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
       "class": null
     },
     {

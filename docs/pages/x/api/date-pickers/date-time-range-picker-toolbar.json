@@ -12,22 +12,38 @@
       },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "DateTimeRangePickerToolbar",
   "imports": [
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "startToolbar", "endToolbar"],
-    "globalClasses": {},
-    "name": "MuiDateTimeRangePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "endToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
+      "description": "Styles applied to the end toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateTimeRangePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "startToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-startToolbar",
+      "description": "Styles applied to the start toolbar element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimeRangePickerToolbar",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerToolbar.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "cssComponent": false
 }

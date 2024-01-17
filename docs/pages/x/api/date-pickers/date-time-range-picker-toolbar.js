@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers',
+    'docsx/translations/api-docs/date-pickers/date-time-range-picker-toolbar',
     false,
-    /\.\/date-time-range-picker-toolbar(-[a-z]{2})?\.json$/,
+    /\.\/date-time-range-picker-toolbar.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

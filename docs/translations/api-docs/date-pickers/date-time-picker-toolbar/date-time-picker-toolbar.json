@@ -3,6 +3,9 @@
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
+    "markSelected": {
+      "description": "If <code>true</code>, will toggle the <code>selected</code> state for the currently active view. Used by <code>DateTimeRangePickerToolbar</code> to mark only the currently selected <code>rangePosition</code> as active."
+    },
     "onViewChange": {
       "description": "Callback called when a toolbar is clicked",
       "typeDescriptions": { "view": "The view to open" }
@@ -10,6 +13,9 @@
     "toolbarFormat": { "description": "Toolbar date format." },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
+    },
+    "toolbarTitle": {
+      "description": "If provided, it will be used instead of <code>dateTimePickerToolbarTitle</code> from localization."
     },
     "view": { "description": "Currently visible picker view." }
   },

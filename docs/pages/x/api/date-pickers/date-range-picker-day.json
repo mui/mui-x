@@ -166,6 +166,6 @@
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

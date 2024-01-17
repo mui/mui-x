@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "ampm": { "description": "12h/24h view for hour selection clock." },
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
@@ -34,6 +35,9 @@
     "disableHighlightToday": {
       "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
     },
+    "disableIgnoringDatePartForTimeValidation": {
+      "description": "Do not ignore date part when validating min/max time."
+    },
     "disableOpenPicker": {
       "description": "If <code>true</code>, the open picker button will not be rendered (renders only the field)."
     },
@@ -63,7 +67,14 @@
       "description": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>."
     },
     "maxDate": { "description": "Maximal selectable date." },
+    "maxTime": {
+      "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+    },
     "minDate": { "description": "Minimal selectable date." },
+    "minTime": {
+      "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+    },
+    "minutesStep": { "description": "Step over minutes." },
     "name": {
       "description": "Name attribute used by the <code>input</code> element in the Field. Ignored if the field has several inputs."
     },
@@ -103,7 +114,14 @@
       "description": "Callback fired when the selected sections change.",
       "typeDescriptions": { "newValue": "The new selected sections." }
     },
+    "onViewChange": {
+      "description": "Callback fired on view change.",
+      "typeDescriptions": { "view": "The new view." }
+    },
     "open": { "description": "Control the popup or dialog open state." },
+    "openTo": {
+      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
+    },
     "rangePosition": {
       "description": "The position in the currently edited date range. Used when the component position is controlled."
     },
@@ -126,25 +144,47 @@
         "boolean": "Returns <code>true</code> if the date should be disabled."
       }
     },
+    "shouldDisableTime": {
+      "description": "Disable specific time.",
+      "typeDescriptions": {
+        "value": "The value to check.",
+        "view": "The clock type of the timeValue.",
+        "boolean": "If <code>true</code> the time will be disabled."
+      }
+    },
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
+    },
+    "skipDisabled": {
+      "description": "If <code>true</code>, disabled digital clock items will not be rendered."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
+    "thresholdToRenderTimeInASingleColumn": {
+      "description": "Amount of time options below or at which the single column time renderer is used."
+    },
+    "timeSteps": {
+      "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used."
+    },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
       "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
+    "view": {
+      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+    },
     "viewRenderers": {
       "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
-    }
+    },
+    "views": { "description": "Available views." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "tabs": "Tabs enabling toggling between date and time pickers.",
     "toolbar": "Custom component for the toolbar rendered above the views.",
     "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
     "day": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
@@ -154,6 +194,8 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+    "digitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "shortcuts": "Custom component for the shortcuts.",
     "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
