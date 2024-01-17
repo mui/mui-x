@@ -34,7 +34,7 @@ useTreeViewLogExpanded.params = {
   logMessage: true,
 };
 
-const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
+const TREE_VIEW_PLUGINS = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
 function TreeView(inProps) {
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
@@ -42,7 +42,7 @@ function TreeView(inProps) {
 
   const { pluginParams, otherProps } = extractPluginParamsFromProps({
     props: themeProps,
-    plugins,
+    plugins: TREE_VIEW_PLUGINS,
   });
 
   const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
