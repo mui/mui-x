@@ -10,7 +10,7 @@ import {
   UseTreeViewNodesState,
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import { TreeViewBaseItem } from '../../../models';
 
 const updateState = ({
   items,
