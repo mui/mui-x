@@ -17,7 +17,19 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   setState,
 }) => {
   const insertJSXNode = useEventCallback((node: TreeViewNode) => {
-    setState((prevState) => ({ ...prevState, nodeMap: { ...prevState.nodeMap, [node.id]: node } }));
+    setState((prevState) => {
+      if (prevState.nodeMap[node.id] != null) {
+        throw new Error(
+          [
+            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+            'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+            `Tow items were provided with the same id in the \`items\` prop: "${node.id}"`,
+          ].join('\n'),
+        );
+      }
+
+      return { ...prevState, nodeMap: { ...prevState.nodeMap, [node.id]: node } };
+    });
   });
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
