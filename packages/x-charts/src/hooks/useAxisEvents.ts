@@ -58,8 +58,8 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
           if (v <= valueAsNumber) {
             if (
               index === axisData.length - 1 ||
-              // @ts-ignore
-              Math.abs(value - v) < Math.abs(value - getAsANumber(axisData[index + 1]))
+              Math.abs(getAsANumber(value) - v) <
+                Math.abs(getAsANumber(value) - getAsANumber(axisData[index + 1]))
             ) {
               return true;
             }

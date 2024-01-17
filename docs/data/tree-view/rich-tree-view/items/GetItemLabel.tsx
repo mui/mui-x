@@ -1,7 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
@@ -35,12 +33,7 @@ const getItemLabel = (item: MuiXProduct) => item.name;
 export default function GetItemLabel() {
   return (
     <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView
-        items={MUI_X_PRODUCTS}
-        getItemLabel={getItemLabel}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      />
+      <RichTreeView items={MUI_X_PRODUCTS} getItemLabel={getItemLabel} />
     </Box>
   );
 }

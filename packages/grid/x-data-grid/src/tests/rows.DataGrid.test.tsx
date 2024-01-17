@@ -24,7 +24,14 @@ import {
   GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import {
+  grid,
+  gridVar,
+  getColumnValues,
+  getRow,
+  getActiveCell,
+  getCell,
+} from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
@@ -33,6 +40,8 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
+
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -492,9 +501,10 @@ describe('<DataGrid /> - Rows', () => {
       const ROW_HEIGHT = 52;
       function TestCase(props: Partial<DataGridProps>) {
         const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+            <DataGrid apiRef={apiRef} {...baselineProps} {...props} getRowId={getRowId} />
           </div>
         );
       }
@@ -763,15 +773,21 @@ describe('<DataGrid /> - Rows', () => {
             height={columnHeaderHeight + 52 + border * 2}
           />,
         );
-        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52));
+        const virtualScroller = grid('virtualScroller')!;
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52),
+        );
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52),
+        );
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101),
+        );
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
@@ -827,15 +843,10 @@ describe('<DataGrid /> - Rows', () => {
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(virtualScrollerRenderZone).toHaveInlineStyle({
-            transform: 'translate3d(0px, 0px, 0px)',
-          });
+          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         });
       });
 
@@ -859,16 +870,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         setProps({ pageSize: 5 });
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
@@ -896,14 +900,9 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
 
-        const virtualScrollerRenderZone = document.querySelector(
-          '.MuiDataGrid-virtualScrollerRenderZone',
-        )!;
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
-        });
+        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
 
-        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        const virtualScroller = grid('virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
@@ -911,9 +910,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(virtualScrollerRenderZone).toHaveInlineStyle({
-            transform: 'translate3d(0px, 0px, 0px)',
-          });
+          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
         });
       });
     });
@@ -1055,8 +1052,6 @@ describe('<DataGrid /> - Rows', () => {
       { id: 2, brand: 'Puma' },
     ];
     const columns = [{ field: 'brand', headerName: 'Brand' }];
-
-    let apiRef: React.MutableRefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProps>) {
       apiRef = useGridApiRef();

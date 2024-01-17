@@ -2,8 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   TreeItem,
@@ -91,11 +89,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 export default function IconExpansionTreeView() {
   return (
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
-        aria-label="icon expansion"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
+      <SimpleTreeView aria-label="icon expansion">
         <CustomTreeItem nodeId="1" label="Applications">
           <CustomTreeItem nodeId="2" label="Calendar" />
         </CustomTreeItem>

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
@@ -74,8 +72,6 @@ export default function ControlledExpansion() {
           items={MUI_X_PRODUCTS}
           expandedNodes={expandedNodes}
           onExpandedNodesChange={handleExpandedNodesChange}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
     </Box>

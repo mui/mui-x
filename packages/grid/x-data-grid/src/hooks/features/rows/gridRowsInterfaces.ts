@@ -134,3 +134,5 @@ export interface GridPinnedRowsState {
   top?: GridRowEntry[];
   bottom?: GridRowEntry[];
 }
+
+export type GridPinnedRowsPosition = keyof GridPinnedRowsState;

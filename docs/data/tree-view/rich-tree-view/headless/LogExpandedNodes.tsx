@@ -1,35 +1,26 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeView } from '@mui/x-tree-view/internals/useTreeView';
-import { TreeViewProvider } from '@mui/x-tree-view/internals/TreeViewProvider';
 import {
   RichTreeViewPropsBase,
   RichTreeViewRoot,
 } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
+  UseTreeViewExpansionSignature,
   TreeViewPlugin,
   TreeViewPluginSignature,
-} from '@mui/x-tree-view/internals/models';
-/* eslint-disable */
-import {
   DefaultTreeViewPluginParameters,
+  DefaultTreeViewPluginSlotProps,
+  DefaultTreeViewPluginSlots,
   DEFAULT_TREE_VIEW_PLUGINS,
-} from '@mui/x-tree-view/internals/plugins/defaultPlugins';
-import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
-import { extractPluginParamsFromProps } from '@mui/x-tree-view/internals/utils/extractPluginParamsFromProps';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-if (false) {
-  console.log(
-    'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
-  );
-}
-/* eslint-enable */
+  extractPluginParamsFromProps,
+  useTreeView,
+  TreeViewProvider,
+} from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
   areLogsEnabled?: boolean;
@@ -77,9 +68,15 @@ useTreeViewLogExpanded.params = {
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
-    RichTreeViewPropsBase {}
+    RichTreeViewPropsBase {
+  slots?: DefaultTreeViewPluginSlots;
+  slotProps?: DefaultTreeViewPluginSlotProps;
+}
 
-const plugins = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded] as const;
+const TREE_VIEW_PLUGINS = [
+  ...DEFAULT_TREE_VIEW_PLUGINS,
+  useTreeViewLogExpanded,
+] as const;
 
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
   inProps: TreeViewProps<R, Multiple>,
@@ -87,9 +84,14 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
   const ownerState = themeProps as TreeViewProps<any, any>;
 
-  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+  const { pluginParams, otherProps } = extractPluginParamsFromProps<
+    typeof TREE_VIEW_PLUGINS,
+    DefaultTreeViewPluginSlots,
+    DefaultTreeViewPluginSlotProps,
+    TreeViewProps<R, Multiple>
+  >({
     props: themeProps,
-    plugins,
+    plugins: TREE_VIEW_PLUGINS,
   });
 
   const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
@@ -140,15 +142,13 @@ const ITEMS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function HeadlessTreeView() {
+export default function LogExpandedNodes() {
   const [logs, setLogs] = React.useState<string[]>([]);
 
   return (
     <Stack spacing={2}>
       <TreeView
         aria-label="file system navigator"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         items={ITEMS}
         areLogsEnabled

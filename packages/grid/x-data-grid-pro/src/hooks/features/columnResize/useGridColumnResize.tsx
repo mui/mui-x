@@ -9,6 +9,7 @@ import {
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
+  GridPinnedColumnPosition,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   useGridApiMethod,
@@ -31,6 +32,9 @@ import {
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
+  findGridElement,
+  findLeftPinnedCellsAfterCol,
+  findRightPinnedCellsBeforeCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
   findGroupHeaderElementsFromField,
@@ -125,8 +129,8 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(element: HTMLElement, direction: Direction) {
-  const side = element.classList.contains(gridClasses['columnSeparator--sideRight'])
+function getResizeDirection(separator: HTMLElement, direction: Direction) {
+  const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
   if (direction === 'rtl') {
@@ -276,14 +280,18 @@ export const useGridColumnResize = (
     | 'onColumnWidthChange'
   >,
 ) => {
+  const theme = useTheme();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const colElementRef = React.useRef<HTMLDivElement>();
+  const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
-  const colGroupingElementRef = React.useRef<Element[]>();
-  const colCellElementsRef = React.useRef<Element[]>();
-  const theme = useTheme();
+  const groupHeaderElementsRef = React.useRef<Element[]>([]);
+  const cellElementsRef = React.useRef<Element[]>([]);
+  const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
+  const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
+  const fillerLeftRef = React.useRef<HTMLElement>();
+  const fillerRightRef = React.useRef<HTMLElement>();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -297,26 +305,25 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
-    const prevWidth = colElementRef.current!.offsetWidth;
+    const prevWidth = columnHeaderElementRef.current!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
 
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
     colDefRef.current!.flex = 0;
 
-    colElementRef.current!.style.width = `${newWidth}px`;
-    colElementRef.current!.style.minWidth = `${newWidth}px`;
-    colElementRef.current!.style.maxWidth = `${newWidth}px`;
+    columnHeaderElementRef.current!.style.width = `${newWidth}px`;
+    columnHeaderElementRef.current!.style.minWidth = `${newWidth}px`;
+    columnHeaderElementRef.current!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = headerFilterElementRef.current;
-
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
       headerFilterElement.style.minWidth = `${newWidth}px`;
       headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
-    [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
+    groupHeaderElementsRef.current!.forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -332,6 +339,39 @@ export const useGridColumnResize = (
       div.style.minWidth = finalWidth;
       div.style.maxWidth = finalWidth;
     });
+
+    cellElementsRef.current!.forEach((element) => {
+      const div = element as HTMLDivElement;
+      let finalWidth: `${number}px`;
+
+      if (div.getAttribute('aria-colspan') === '1') {
+        finalWidth = `${newWidth}px`;
+      } else {
+        // Cell with colspan > 1 cannot be just updated width new width.
+        // Instead, we add width diff to the current width.
+        finalWidth = `${div.offsetWidth + widthDiff}px`;
+      }
+
+      div.style.setProperty('--width', finalWidth);
+    });
+
+    const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
+
+    if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+      updateProperty(fillerLeftRef.current!, 'width', widthDiff);
+
+      leftPinnedCellsAfterRef.current.forEach((cell) => {
+        updateProperty(cell, 'left', widthDiff);
+      });
+    }
+
+    if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
+      updateProperty(fillerRightRef.current!, 'width', widthDiff);
+
+      rightPinnedCellsBeforeRef.current.forEach((cell) => {
+        updateProperty(cell, 'right', widthDiff);
+      });
+    }
   };
 
   const finishResize = (nativeEvent: MouseEvent) => {
@@ -350,6 +390,56 @@ export const useGridColumnResize = (
     });
   };
 
+  const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
+    const root = apiRef.current.rootElementRef.current!;
+
+    colDefRef.current = colDef as GridStateColDef;
+
+    columnHeaderElementRef.current = findHeaderElementFromField(
+      apiRef.current.columnHeadersContainerElementRef!.current!,
+      colDef.field,
+    );
+
+    const headerFilterElement = root.querySelector(
+      `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+    );
+    if (headerFilterElement) {
+      headerFilterElementRef.current = headerFilterElement as HTMLDivElement;
+    }
+
+    groupHeaderElementsRef.current = findGroupHeaderElementsFromField(
+      apiRef.current.columnHeadersContainerElementRef?.current!,
+      colDef.field,
+    );
+
+    cellElementsRef.current = findGridCellElementsFromCol(
+      columnHeaderElementRef.current,
+      apiRef.current,
+    );
+
+    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
+    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
+
+    const pinnedPosition = apiRef.current.isColumnPinned(colDef.field);
+
+    leftPinnedCellsAfterRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.LEFT
+        ? []
+        : findLeftPinnedCellsAfterCol(apiRef.current, columnHeaderElementRef.current);
+    rightPinnedCellsBeforeRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.RIGHT
+        ? []
+        : findRightPinnedCellsBeforeCol(apiRef.current, columnHeaderElementRef.current);
+
+    resizeDirection.current = getResizeDirection(separator, theme.direction);
+
+    initialOffsetToSeparator.current = computeOffsetToSeparator(
+      xStart,
+      columnHeaderElementRef.current!.getBoundingClientRect(),
+      resizeDirection.current,
+    );
+  };
+
   const handleResizeMouseUp = useEventCallback(finishResize);
 
   const handleResizeMouseMove = useEventCallback((nativeEvent: MouseEvent) => {
@@ -362,7 +452,7 @@ export const useGridColumnResize = (
     let newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       nativeEvent.clientX,
-      colElementRef.current!.getBoundingClientRect(),
+      columnHeaderElementRef.current!.getBoundingClientRect(),
       resizeDirection.current!,
     );
 
@@ -370,7 +460,7 @@ export const useGridColumnResize = (
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
-      element: colElementRef.current,
+      element: columnHeaderElementRef.current,
       colDef: colDefRef.current!,
       width: newWidth,
     };
@@ -402,7 +492,7 @@ export const useGridColumnResize = (
     let newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       (finger as CursorCoordinates).x,
-      colElementRef.current!.getBoundingClientRect(),
+      columnHeaderElementRef.current!.getBoundingClientRect(),
       resizeDirection.current!,
     );
 
@@ -410,7 +500,7 @@ export const useGridColumnResize = (
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
-      element: colElementRef.current,
+      element: columnHeaderElementRef.current,
       colDef: colDefRef.current!,
       width: newWidth,
     };
@@ -421,7 +511,7 @@ export const useGridColumnResize = (
     const cellSeparator = findParentElementFromClassName(
       event.target,
       gridClasses['columnSeparator--resizable'],
-    );
+    ) as HTMLElement | null;
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) {
       return;
@@ -437,34 +527,17 @@ export const useGridColumnResize = (
       touchId.current = touch.identifier;
     }
 
-    colElementRef.current = findParentElementFromClassName(
+    const columnHeaderElement = findParentElementFromClassName(
       event.target,
       gridClasses.columnHeader,
     ) as HTMLDivElement;
-    const field = getFieldFromHeaderElem(colElementRef.current!);
+    const field = getFieldFromHeaderElem(columnHeaderElement);
     const colDef = apiRef.current.getColumn(field);
 
-    colGroupingElementRef.current = findGroupHeaderElementsFromField(
-      apiRef.current.columnHeadersContainerElementRef?.current!,
-      field,
-    );
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
 
-    colDefRef.current = colDef as GridStateColDef;
-    colElementRef.current = findHeaderElementFromField(
-      apiRef.current.columnHeadersElementRef?.current!,
-      colDef.field,
-    ) as HTMLDivElement;
-    colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
-
-    resizeDirection.current = getResizeDirection(event.target, theme.direction);
-
-    initialOffsetToSeparator.current = computeOffsetToSeparator(
-      touch.clientX,
-      colElementRef.current!.getBoundingClientRect(),
-      resizeDirection.current!,
-    );
+    storeReferences(colDef, cellSeparator, touch.clientX);
 
     const doc = ownerDocument(event.currentTarget as HTMLElement);
     doc.addEventListener('touchmove', handleTouchMove);
@@ -483,12 +556,12 @@ export const useGridColumnResize = (
     setTimeout(() => {
       doc.removeEventListener('click', preventClick, true);
     }, 100);
-    if (colElementRef.current) {
-      colElementRef.current!.style.pointerEvents = 'unset';
+    if (columnHeaderElementRef.current) {
+      columnHeaderElementRef.current!.style.pointerEvents = 'unset';
     }
   }, [
     apiRef,
-    colElementRef,
+    columnHeaderElementRef,
     handleResizeMouseMove,
     handleResizeMouseUp,
     handleTouchMove,
@@ -532,40 +605,10 @@ export const useGridColumnResize = (
       logger.debug(`Start Resize on col ${colDef.field}`);
       apiRef.current.publishEvent('columnResizeStart', { field: colDef.field }, event);
 
-      colDefRef.current = colDef as GridStateColDef;
-      colElementRef.current =
-        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
-          `[data-field="${colDef.field}"]`,
-        )!;
-
-      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
-
-      if (headerFilterRowElement) {
-        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
-          `[data-field="${colDef.field}"]`,
-        ) as HTMLDivElement;
-      }
-
-      colGroupingElementRef.current = findGroupHeaderElementsFromField(
-        apiRef.current.columnHeadersContainerElementRef?.current!,
-        colDef.field,
-      );
-
-      colCellElementsRef.current = findGridCellElementsFromCol(
-        colElementRef.current,
-        apiRef.current,
-      );
+      storeReferences(colDef, event.currentTarget, event.clientX);
 
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
-
-      resizeDirection.current = getResizeDirection(event.currentTarget, theme.direction);
-
-      initialOffsetToSeparator.current = computeOffsetToSeparator(
-        event.clientX,
-        colElementRef.current!.getBoundingClientRect(),
-        resizeDirection.current,
-      );
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
@@ -646,7 +689,7 @@ export const useGridColumnResize = (
               total + (widthByField[column.field] ?? column.computedWidth ?? column.width),
             0,
           );
-          const availableWidth = apiRef.current.getRootDimensions()?.viewportInnerSize.width ?? 0;
+          const availableWidth = apiRef.current.getRootDimensions().viewportInnerSize.width;
           const remainingWidth = availableWidth - totalWidth;
 
           if (remainingWidth > 0) {
@@ -705,3 +748,7 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
+
+function updateProperty(element: HTMLElement, property: 'right' | 'left' | 'width', delta: number) {
+  element.style[property] = `${parseInt(element.style[property], 10) + delta}px`;
+}

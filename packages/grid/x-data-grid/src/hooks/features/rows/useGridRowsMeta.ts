@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_debounce as debounce, unstable_capitalize as capitalize } from '@mui/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -15,6 +15,8 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
+
+// TODO: I think the row heights can now be encoded as a single `size` instead of `sizes.baseXxxx`
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -264,17 +266,16 @@ export const useGridRowsMeta = (
   const storeMeasuredRowHeight = React.useCallback<
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
-    (id, height, position) => {
+    (id, height) => {
       if (!rowsHeightLookup.current[id] || !rowsHeightLookup.current[id].autoHeight) {
         return;
       }
 
       // Only trigger hydration if the value is different, otherwise we trigger a loop
-      const needsHydration =
-        rowsHeightLookup.current[id].sizes[`base${capitalize(position)}`] !== height;
+      const needsHydration = rowsHeightLookup.current[id].sizes.baseCenter !== height;
 
       rowsHeightLookup.current[id].needsFirstMeasurement = false;
-      rowsHeightLookup.current[id].sizes[`base${capitalize(position)}`] = height;
+      rowsHeightLookup.current[id].sizes.baseCenter = height;
 
       if (needsHydration) {
         debouncedHydrateRowsMeta();

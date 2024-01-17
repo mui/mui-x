@@ -20,12 +20,15 @@ import {
   waitFor,
 } from '@mui-internal/test-utils';
 import {
+  $,
+  grid,
   getActiveCell,
   getActiveColumnHeader,
   getCell,
   getColumnHeaderCell,
   getColumnValues,
   getRows,
+  microtasks,
 } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -34,19 +37,11 @@ describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
 
   function getRowById(id: number | string) {
-    return document.querySelector(`[data-id="${id}"]`);
-  }
-
-  function getTopPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
-  }
-  function getBottomPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
+    return $(`[data-id="${id}"]`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
-    const container =
-      section === 'top' ? getTopPinnedRowsContainer() : getBottomPinnedRowsContainer();
+    const container = section === 'top' ? grid('pinnedRows--top') : grid('pinnedRows--bottom');
     if (!row || !container) {
       return false;
     }
@@ -506,27 +501,34 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    render(
-      <BaselineTestCase
-        rowCount={20}
-        colCount={5}
-        getRowHeight={(row) => {
-          if (row.id === 0) {
-            return 100;
-          }
-          if (row.id === 1) {
-            return 20;
-          }
-          return undefined;
-        }}
-      />,
-    );
+    let apiRef!: React.MutableRefObject<GridApi>;
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <BaselineTestCase
+          apiRef={apiRef}
+          rowCount={20}
+          colCount={5}
+          getRowHeight={(row) => {
+            if (row.id === 0) {
+              return 100;
+            }
+            if (row.id === 1) {
+              return 20;
+            }
+            return undefined;
+          }}
+        />
+      );
+    }
+
+    render(<TestCase />);
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
     expect(getRowById(1)?.clientHeight).to.equal(20);
   });
 
-  it('should always update on `rowHeight` change', function test() {
+  it('should always update on `rowHeight` change', async function test() {
     if (isJSDOM) {
       // Need layouting
       this.skip();
@@ -534,27 +536,33 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const defaultRowHeight = 52;
 
-    const { setProps } = render(
-      <BaselineTestCase rowCount={10} colCount={5} rowHeight={defaultRowHeight} />,
-    );
+    let apiRef!: React.MutableRefObject<GridApi>;
+    function TestCase({ rowHeight }: { rowHeight?: number }) {
+      apiRef = useGridApiRef();
+      return (
+        <BaselineTestCase
+          apiRef={apiRef}
+          rowCount={10}
+          colCount={5}
+          rowHeight={rowHeight ?? defaultRowHeight}
+        />
+      );
+    }
 
-    expect(getRowById(0)?.clientHeight).to.equal(defaultRowHeight);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(
-      defaultRowHeight,
-    );
-    expect(getRowById(1)?.clientHeight).to.equal(defaultRowHeight);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
-      defaultRowHeight,
-    );
+    const { setProps } = render(<TestCase />);
+    await microtasks();
+
+    expect(getRowById(0)!.offsetHeight).to.equal(defaultRowHeight);
+    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(defaultRowHeight);
+    expect(getRowById(1)!.clientHeight).to.equal(defaultRowHeight);
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(defaultRowHeight);
 
     setProps({ rowHeight: 36 });
 
     expect(getRowById(0)?.clientHeight).to.equal(36);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(36);
+    expect(grid('pinnedRows--top')!.offsetHeight).to.equal(36);
     expect(getRowById(1)?.clientHeight).to.equal(36);
-    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
-      36,
-    );
+    expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
   });
 
   it('should work with `autoHeight`', function test() {
@@ -578,9 +586,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       />,
     );
 
-    expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
-      columnHeaderHeight + rowHeight * rowCount,
-    );
+    expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
   it('should work with `autoPageSize`', function test() {

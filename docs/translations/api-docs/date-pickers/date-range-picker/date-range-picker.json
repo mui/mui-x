@@ -7,7 +7,6 @@
     "calendars": {
       "description": "The number of calendars to render on <strong>desktop</strong>."
     },
-    "className": { "description": "Class name applied to the root element." },
     "closeOnSelect": {
       "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
     },

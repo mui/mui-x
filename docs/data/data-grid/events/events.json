@@ -273,8 +273,8 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "renderedRowsIntervalChange",
-    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderedRowsIntervalChangeParams object.",
-    "params": "GridRenderedRowsIntervalChangeParams",
+    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderContext object.",
+    "params": "GridRenderContext",
     "event": "MuiEvent<{}>"
   },
   {

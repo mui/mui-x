@@ -7,9 +7,8 @@ import {
   unstable_capitalize as capitalize,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
-import { SxProps } from '@mui/system';
+import { SxProps, styled } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -32,7 +31,7 @@ type OwnerState = DataGridProcessedProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { autoHeight, density, classes } = ownerState;
+  const { autoHeight, density, classes, showCellVerticalBorder } = ownerState;
 
   const slots = {
     root: [
@@ -40,19 +39,26 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       autoHeight && 'autoHeight',
       `root--density${capitalize(density)}`,
       'withBorderColor',
+      showCellVerticalBorder && 'withVerticalBorder',
     ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridPanelAnchor = styled('div')({
+  position: 'absolute',
+  top: `var(--DataGrid-headersTotalHeight)`,
+  left: 0,
+});
+
 const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(rootContainerRef, ref);
+  const rootElementRef = apiRef.current.rootElementRef;
+  const handleRef = useForkRef(rootElementRef, ref);
 
   const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
     ? null
@@ -65,8 +71,6 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   };
 
   const classes = useUtilityClasses(ownerState);
-
-  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
@@ -86,6 +90,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       {...ariaAttributes}
       {...other}
     >
+      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
       {children}
     </GridRootStyles>
   );
