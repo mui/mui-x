@@ -115,10 +115,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Poredaj silaznim redom',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1
-      ? `$columnHeaderFiltersTooltipActiveMany}`
-      : `$columnHeaderFiltersTooltipActiveOne}`,
+  // columnHeaderFiltersTooltipActive: count => count !== 1 ? `${count} active filters` : `${count} active filter`,
   columnHeaderFiltersLabel: 'Prikaži filtre',
   columnHeaderSortIconLabel: 'Vrsta',
 
