@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 #### Breaking changes
 
-- Non-filterable columns could now be filtered programmatically by controlling or initialing `filterModel`, or by updating the `filterModel` by API method `apiRef.current.setFilterModel`.
+- Non-filterable columns can now be filtered programmatically by controlling or initialing `filterModel` or by updating the `filterModel` by API method `apiRef.current.setFilterModel`.
 
 - The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
   If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
