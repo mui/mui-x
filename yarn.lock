@@ -7387,12 +7387,7 @@ flow-parser@0.*:
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.226.0.tgz#d552ab6762342e0e2b112fc937dd70b59e5e5d05"
   integrity sha512-YlH+Y/P/5s0S7Vg14RwXlJMF/JsGfkG7gcKB/zljyoqaPNX9YVsGzx+g6MLTbhZaWbPhs4347aTpmSb9GgiPtw==
 
-follow-redirects@^1.0.0:
-  version "1.15.4"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
-  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
-
-follow-redirects@^1.15.4:
+follow-redirects@^1.0.0, follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
@@ -12945,17 +12940,7 @@ rxjs@^7.5.5, rxjs@^7.8.1:
   dependencies:
     tslib "^2.1.0"
 
-safe-array-concat@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/safe-array-concat/-/safe-array-concat-1.0.1.tgz#91686a63ce3adbea14d61b14c99572a8ff84754c"
-  integrity sha512-6XbUAseYE2KtOuGueyeobCySj9L4+66Tn6KQMOPQJrAJEowYKW/YR/MGJZl7FdydUdaFu4LYyDZjxf4/Nmo23Q==
-  dependencies:
-    call-bind "^1.0.2"
-    get-intrinsic "^1.2.1"
-    has-symbols "^1.0.3"
-    isarray "^2.0.5"
-
-safe-array-concat@^1.0.1:
+safe-array-concat@^1.0.0, safe-array-concat@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/safe-array-concat/-/safe-array-concat-1.1.0.tgz#8d0cae9cb806d6d1c06e08ab13d847293ebe0692"
   integrity sha512-ZdQ0Jeb9Ofti4hbt5lX3T2JcAamT9hfzYU1MNB+z/jaEbB6wfFfPIR/zEORmZqobkCCJhSjodobH6WHNmJ97dg==
