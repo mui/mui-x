@@ -248,6 +248,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
 - [docs] Improve codemod for v7 (#11650) @oliviertassinari
 - [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
+- [docs] Parse markdown on API docs demo titles (#11728) @LukasTy
 - [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
 - [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
 - [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
