@@ -42,7 +42,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
      </div>
     ```
 
-  - When the [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
 - Non-groupable columns can now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
@@ -125,7 +125,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
 #### Breaking changes
 
-- The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when this node is collapsed),
+- The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when it is collapsed),
 is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ChevronRight` icon from `@mui/icons-material`,
@@ -167,7 +167,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
     </SimpleTreeView>
   ```
 
-- The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when this node is expanded),
+- The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when it is expanded),
 is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ExpandMore` icon from `@mui/icons-material`,
