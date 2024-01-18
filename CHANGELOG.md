@@ -10,6 +10,7 @@ _Jan 18, 2024_
 We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+- 🐞 Bugfixes
 
 ### Data Grid
 
