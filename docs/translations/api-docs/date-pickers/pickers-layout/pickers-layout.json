@@ -18,9 +18,9 @@
   },
   "slotDescriptions": {
     "tabs": "Tabs enabling toggling between views.",
-    "toolbar": "Custom component for the toolbar.\nIt is placed above the picker views.",
+    "toolbar": "Custom component for the toolbar. It is placed above the picker views.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "shortcuts": "Custom component for the shortcuts.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
   }
 }
