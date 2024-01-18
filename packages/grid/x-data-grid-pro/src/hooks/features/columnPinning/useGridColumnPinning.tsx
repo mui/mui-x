@@ -25,16 +25,14 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridColumnPinningApi } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
+  Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
   };
 
   let model: GridPinnedColumnFields;
-  if (props.disableColumnPinning) {
-    model = {};
-  } else if (props.pinnedColumns) {
+  if (props.pinnedColumns) {
     model = props.pinnedColumns;
   } else if (props.initialState?.pinnedColumns) {
     model = props.initialState.pinnedColumns;
@@ -67,10 +65,6 @@ export const useGridColumnPinning = (
    */
   const calculateScrollLeft = React.useCallback<GridPipeProcessor<'scrollToIndexes'>>(
     (initialValue, params) => {
-      if (props.disableColumnPinning) {
-        return initialValue;
-      }
-
       const visiblePinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
 
       if (
@@ -106,7 +100,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, props.disableColumnPinning],
+    [apiRef],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -201,21 +195,8 @@ export const useGridColumnPinning = (
     changeEvent: 'pinnedColumnsChange',
   });
 
-  const checkIfEnabled = React.useCallback(
-    (methodName: keyof GridColumnPinningApi) => {
-      if (props.disableColumnPinning) {
-        throw new Error(
-          `MUI X: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,
-        );
-      }
-    },
-    [props.disableColumnPinning],
-  );
-
   const pinColumn = React.useCallback<GridColumnPinningApi['pinColumn']>(
     (field: string, side: GridPinnedColumnPosition) => {
-      checkIfEnabled('pinColumn');
-
       if (apiRef.current.isColumnPinned(field) === side) {
         return;
       }
@@ -232,37 +213,33 @@ export const useGridColumnPinning = (
 
       apiRef.current.setPinnedColumns(newPinnedColumns);
     },
-    [apiRef, checkIfEnabled, pinnedColumns],
+    [apiRef, pinnedColumns],
   );
 
   const unpinColumn = React.useCallback<GridColumnPinningApi['unpinColumn']>(
     (field: string) => {
-      checkIfEnabled('unpinColumn');
       apiRef.current.setPinnedColumns({
         left: (pinnedColumns.left || []).filter((column) => column !== field),
         right: (pinnedColumns.right || []).filter((column) => column !== field),
       });
     },
-    [apiRef, checkIfEnabled, pinnedColumns.left, pinnedColumns.right],
+    [apiRef, pinnedColumns.left, pinnedColumns.right],
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
-    checkIfEnabled('getPinnedColumns');
     return gridPinnedColumnsSelector(apiRef.current.state);
-  }, [apiRef, checkIfEnabled]);
+  }, [apiRef]);
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
-      checkIfEnabled('setPinnedColumns');
       setState(apiRef, newPinnedColumns);
       apiRef.current.forceUpdate();
     },
-    [apiRef, checkIfEnabled],
+    [apiRef],
   );
 
   const isColumnPinned = React.useCallback<GridColumnPinningApi['isColumnPinned']>(
     (field) => {
-      checkIfEnabled('isColumnPinned');
       const leftPinnedColumns = pinnedColumns.left || [];
       if (leftPinnedColumns.includes(field)) {
         return GridPinnedColumnPosition.LEFT;
@@ -273,7 +250,7 @@ export const useGridColumnPinning = (
       }
       return false;
     },
-    [pinnedColumns.left, pinnedColumns.right, checkIfEnabled],
+    [pinnedColumns.left, pinnedColumns.right],
   );
 
   const columnPinningApi: GridColumnPinningApi = {

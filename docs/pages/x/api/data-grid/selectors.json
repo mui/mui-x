@@ -235,6 +235,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFocusColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusColumnHeaderFilterSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -445,6 +451,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridTabIndexColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridTabIndexColumnHeaderFilterSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -525,18 +537,6 @@
   {
     "name": "selectedIdsLookupSelector",
     "returnType": "Record<GridRowId, GridRowId>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridFocusColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
     "description": "",
     "supportsApiRef": true
   }

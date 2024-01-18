@@ -16,7 +16,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
-import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
+import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
   gridHeaderFilteringEditFieldSelector,
@@ -415,7 +415,7 @@ export const useGridKeyboardNavigation = (
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
     (params, event) => {
-      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+      const focusedColumnGroup = gridFocusColumnGroupHeaderSelector(apiRef);
       if (focusedColumnGroup === null) {
         return;
       }
