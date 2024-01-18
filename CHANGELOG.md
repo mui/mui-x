@@ -13,7 +13,9 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
 
-### Breaking changes
+### Data Grid
+
+#### Breaking changes
 
 - Non-filterable columns could now be filtered programmatically by controlling or initialing `filterModel`, or by updating the `filterModel` by API method `apiRef.current.setFilterModel`.
 
@@ -73,8 +75,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
 - The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](https://next.mui.com/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
-
-### Data Grid
 
 #### `@mui/x-data-grid@7.0.0-alpha.9`
 
