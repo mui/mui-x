@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
@@ -17,6 +17,7 @@ import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models'
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { MakeOptional } from '../internals/models/helpers';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -25,18 +26,12 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
+    MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
-  /**
-   * If `true`, will toggle the `selected` state for the currently active view.
-   * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
-   * @default true
-   */
-  markSelected?: boolean;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -179,7 +174,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
     styles.ampmSelection,
   ],
 })<{
-  ownerState: BaseToolbarProps<any, any>;
+  ownerState: DateTimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -222,7 +217,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
     disabled,
     readOnly,
     toolbarVariant = 'mobile',
-    markSelected = true,
     toolbarTitle: inToolbarTitle,
     className,
     ...other
@@ -269,7 +263,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant="subtitle1"
             data-mui-test="datetimepicker-toolbar-year"
             onClick={() => onViewChange('year')}
-            selected={markSelected && view === 'year'}
+            selected={view === 'year'}
             value={value ? utils.format(value, 'year') : '–'}
           />
         )}
@@ -280,7 +274,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant={isDesktop ? 'h5' : 'h4'}
             data-mui-test="datetimepicker-toolbar-day"
             onClick={() => onViewChange('day')}
-            selected={markSelected && view === 'day'}
+            selected={view === 'day'}
             value={dateText}
           />
         )}
@@ -297,7 +291,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="hours"
                 onClick={() => onViewChange('hours')}
-                selected={markSelected && view === 'hours'}
+                selected={view === 'hours'}
                 value={value ? formatHours(value) : '--'}
               />
               <DateTimePickerToolbarSeparator
@@ -311,10 +305,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
-                selected={
-                  markSelected &&
-                  (view === 'minutes' || (!views.includes('minutes') && view === 'hours'))
-                }
+                selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
                 value={value ? utils.format(value, 'minutes') : '--'}
                 disabled={!views.includes('minutes')}
               />
@@ -334,7 +325,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="seconds"
                 onClick={() => onViewChange('seconds')}
-                selected={markSelected && view === 'seconds'}
+                selected={view === 'seconds'}
                 value={value ? utils.format(value, 'seconds') : '--'}
               />
             </React.Fragment>
@@ -347,7 +338,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           >
             <PickersToolbarButton
               variant="subtitle2"
-              selected={markSelected && meridiemMode === 'am'}
+              selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
               value={formatMeridiem(utils, 'am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
@@ -355,7 +346,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             />
             <PickersToolbarButton
               variant="subtitle2"
-              selected={markSelected && meridiemMode === 'pm'}
+              selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
               value={formatMeridiem(utils, 'pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
@@ -369,7 +360,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant="h5"
             data-mui-test="am-pm-view-button"
             onClick={() => onViewChange('meridiem')}
-            selected={markSelected && view === 'meridiem'}
+            selected={view === 'meridiem'}
             value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />

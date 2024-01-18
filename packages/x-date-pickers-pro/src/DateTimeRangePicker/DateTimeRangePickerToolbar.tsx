@@ -113,6 +113,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarVariant,
     onChange,
     classes: inClasses,
+    view,
     ...other
   } = props;
 
@@ -175,7 +176,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         toolbarTitle={localeText.start}
         ownerState={ownerState}
         toolbarVariant="desktop"
-        markSelected={rangePosition === 'start'}
+        view={rangePosition === 'start' ? view : undefined}
         className={classes.startToolbar}
         onChange={handleOnChange}
       />
@@ -186,7 +187,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         toolbarTitle={localeText.end}
         ownerState={ownerState}
         toolbarVariant="desktop"
-        markSelected={rangePosition === 'end'}
+        view={rangePosition === 'end' ? view : undefined}
         className={classes.endToolbar}
         onChange={handleOnChange}
       />
