@@ -3,6 +3,7 @@ Broken links found by `yarn docs:link-check` that exist:
 - https://mui.com/base-ui/react-autocomplete/hooks-api/#use-autocomplete
 - https://mui.com/base-ui/react-portal/components-api/
 - https://mui.com/blog/material-ui-v4-is-out/#premium-themes-store-✨
+- https://mui.com/material-ui/guides/styled-components
 - https://mui.com/material-ui/api/button/#props
 - https://mui.com/material-ui/api/input-base/#InputBase-prop-disableInjectingGlobalStyles
 - https://mui.com/material-ui/api/menu-item/#css
