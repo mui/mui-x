@@ -9,7 +9,7 @@ _Jan 18, 2024_
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
-- 🚀 Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
+- 🚀 Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
 
