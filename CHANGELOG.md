@@ -336,6 +336,8 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
 - [core] Make `karma` run in parallel (#11571) @romgrk
 - [core] make `karma-parallel` run under a new command (#11716) @romgrk
+- [code-infra] Migrate all prettier APIs to the async version (#11732) @Janpot
+- [code-infra] Update the Babel macro path (#11479) @michaldudak
 - [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
 - [test] Fix flaky Data Grid test (#11725) @cherniavskii
 
