@@ -42,7 +42,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
      </div>
     ```
 
-  - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - When the [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
 - Non-groupable columns could now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
