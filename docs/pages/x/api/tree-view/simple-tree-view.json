@@ -97,6 +97,11 @@
       "name": "expandIcon",
       "description": "The default icon used to expand the node.",
       "class": null
+    },
+    {
+      "name": "endIcon",
+      "description": "The default icon displayed next to an end node.\nThis is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
     }
   ],
   "classes": [],
