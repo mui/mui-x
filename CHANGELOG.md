@@ -360,8 +360,8 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
       id: 'node-1',
       label: 'Node 1',
       children: [
-        { id: 'node-1-1', label: Node 1.1' },
-        { id: 'node-1-2', label: Node 1.2' },
+        { id: 'node-1-1', label: 'Node 1.1' },
+        { id: 'node-1-2', label: 'Node 1.2' },
       ],
     },
     {
