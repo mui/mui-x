@@ -22,10 +22,7 @@ export interface AddPathToDemoDataOptions {
 }
 
 export interface DemoTreeDataValue
-  extends Pick<
-      DataGridPremiumProps,
-      'getTreeDataPath' | 'treeData' | 'groupingColDef' | 'experimentalFeatures'
-    >,
+  extends Pick<DataGridPremiumProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
     GridDemoData {}
 
 interface RowWithParentIndex {
@@ -41,7 +38,7 @@ export const addTreeDataOptionsToDemoData = (
 
   const hasTreeData = maxDepth > 1 && groupingField != null;
   if (!hasTreeData) {
-    return { ...data, experimentalFeatures: { ariaV7: true } };
+    return data;
   }
 
   if (data.rows.length > 1000) {
@@ -110,6 +107,5 @@ export const addTreeDataOptionsToDemoData = (
     },
     getTreeDataPath: (row) => row.path,
     treeData: true,
-    experimentalFeatures: { ariaV7: true },
   };
 };

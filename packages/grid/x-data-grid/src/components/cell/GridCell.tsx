@@ -430,14 +430,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
-  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
-
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classNames, classes.root)}
-      role={ariaV7 ? 'gridcell' : 'cell'}
+      role="gridcell"
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}

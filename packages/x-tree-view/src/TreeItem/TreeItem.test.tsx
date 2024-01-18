@@ -31,8 +31,6 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   icons: {
     slots: {},
     slotProps: {},
-    defaultParentIcon: null,
-    defaultEndIcon: null,
   },
   selection: {
     multiSelect: false,
@@ -108,25 +106,29 @@ describe('<TreeItem />', () => {
   });
 
   it('should display the right icons', () => {
-    const defaultEndIcon = <div data-test="defaultEndIcon" />;
-    const defaultParentIcon = <div data-test="defaultParentIcon" />;
-    const icon = <div data-test="icon" />;
-    const endIcon = <div data-test="endIcon" />;
-
     const { getByTestId } = render(
       <SimpleTreeView
-        defaultEndIcon={defaultEndIcon}
         slots={{
           expandIcon: () => <div data-test="defaultExpandIcon" />,
           collapseIcon: () => <div data-test="defaultCollapseIcon" />,
+          endIcon: () => <div data-test="defaultEndIcon" />,
         }}
-        defaultParentIcon={defaultParentIcon}
         defaultExpandedNodes={['1']}
       >
         <TreeItem nodeId="1" label="1" data-testid="1">
           <TreeItem nodeId="2" label="2" data-testid="2" />
-          <TreeItem nodeId="5" label="5" data-testid="5" icon={icon} />
-          <TreeItem nodeId="6" label="6" data-testid="6" endIcon={endIcon} />
+          <TreeItem
+            nodeId="5"
+            label="5"
+            data-testid="5"
+            slots={{ icon: () => <div data-test="icon" /> }}
+          />
+          <TreeItem
+            nodeId="6"
+            label="6"
+            data-testid="6"
+            slots={{ endIcon: () => <div data-test="endIcon" /> }}
+          />
         </TreeItem>
         <TreeItem nodeId="3" label="3" data-testid="3">
           <TreeItem nodeId="4" label="4" data-testid="4" />

@@ -315,7 +315,6 @@ describe('<DataGridPremium /> - Export Excel', () => {
                   ],
                 },
               ]}
-              experimentalFeatures={{ columnGrouping: true }}
               apiRef={apiRef}
             />
           </div>

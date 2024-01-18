@@ -1,12 +1,10 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -94,14 +92,31 @@
     "import { RichTreeView } from '@mui/x-tree-view/RichTreeView';",
     "import { RichTreeView } from '@mui/x-tree-view';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiRichTreeView-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "RichTreeViewRoot",
+      "class": "MuiRichTreeView-root"
+    },
+    {
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem.",
+      "class": null
+    },
+    {
+      "name": "collapseIcon",
+      "description": "The default icon used to collapse the node.",
+      "class": null
+    },
+    {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the node.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeView",
