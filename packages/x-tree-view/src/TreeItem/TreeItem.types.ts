@@ -7,7 +7,7 @@ import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
 
-interface TreeItemSlots {
+export interface TreeItemSlots {
   /**
    * The icon used to collapse the node.
    */
@@ -18,7 +18,7 @@ interface TreeItemSlots {
   expandIcon?: React.ElementType;
 }
 
-interface TreeItemSlotProps {
+export interface TreeItemSlotProps {
   collapseIcon?: SlotComponentProps<'svg', {}, {}>;
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
 }
