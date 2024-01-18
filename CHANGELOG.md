@@ -9,7 +9,8 @@ _Jan 18, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
+- 🎁 The Data Grid headers are now sticky - which brings immense improvements to scrolling, state management, and overall performance of the grid
+- ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
 - 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
@@ -19,8 +20,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 ### Data Grid
 
 #### Breaking changes
-
-- Non-filterable columns can now be filtered programmatically by controlling or initialing `filterModel` or by updating the `filterModel` by API method `apiRef.current.setFilterModel`.
 
 - The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
   If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
@@ -47,8 +46,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-  - Non-groupable columns can now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
-
   - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
 
     ```diff
@@ -69,15 +66,18 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
       }
     ```
 
-- Non-aggregable columns can now be aggregated programmatically to create read-only aggregation rules by controlling or initializing `aggregationModel`, or by updating the `aggregationModel` by API method `apiRef.current.setAggregationModel`.
-
 - Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ columnGrouping: true }} />
+  +<DataGrid />
+  ```
 
 - The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
 
 - The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](https://next.mui.com/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
 
 #### `@mui/x-data-grid@7.0.0-alpha.9`
 
