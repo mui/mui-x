@@ -14,7 +14,7 @@ let warnedOnce = false;
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: Formatter<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  const stackingGroups = getStackingGroups(params);
+  const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
   // Create a data set with format adapted to d3
   const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];

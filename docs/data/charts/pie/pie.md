@@ -45,12 +45,18 @@ Pie series shape is described by multiple properties:
 
 - `innerRadius` The radius between the center and the beginning of the arc. The default is set to 0.
 - `outerRadius` The radius between the center and the end of the arc. The default is the largest value available in the drawing area.
+- `arcLabelRadius` The radius between the center and the arc label.
 - `paddingAngle` The angle (in degrees) between two arcs.
 - `cornerRadius` Similar to the CSS `border-radius`.
 - `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
 - `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
 
 {{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
+The following properties accept percentage string (for example `'50%'`).
+
+- `innerRadius`/`outerRadius`/`arcLabelRadius` with `'100%'` equivalent to maximal radius fitting in the drawing area.
+- `cx`, `cy` with `'100%'` equivalent to the drawing area width/height.
 
 ## Labels
 

@@ -80,8 +80,9 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
     slots,
     slotProps,
-    innerRadius = 0,
+    innerRadius,
     outerRadius,
+    arcLabelRadius,
     cornerRadius = 0,
     paddingAngle = 0,
     id,
@@ -98,6 +99,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
+    arcLabelRadius,
     cornerRadius,
     paddingAngle,
     id,
@@ -127,6 +129,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
             paddingAngle: pA,
             innerRadius: iR,
             outerRadius: oR,
+            arcLabelRadius: aLR,
             cornerRadius: cR,
             ...style
           },
@@ -139,6 +142,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
               paddingAngle={pA}
               innerRadius={iR}
               outerRadius={oR}
+              arcLabelRadius={aLR}
               cornerRadius={cR}
               style={style}
               id={id}
@@ -172,6 +176,11 @@ PieArcLabelPlot.propTypes = {
    */
   arcLabelMinAngle: PropTypes.number,
   /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius: PropTypes.number,
+  /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
    */
@@ -194,6 +203,7 @@ PieArcLabelPlot.propTypes = {
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -205,6 +215,7 @@ PieArcLabelPlot.propTypes = {
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
