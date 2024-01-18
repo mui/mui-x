@@ -104,18 +104,18 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
-    const prettierConfig = prettier.resolveConfig.sync(jsPath, {
+    const prettierConfig = await prettier.resolveConfig(jsPath, {
       config: path.join(workspaceRoot, 'prettier.config.js'),
     });
-    const prettierFormat = (jsSource) =>
+    const prettierFormat = async (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
 
-    const prettified = prettierFormat(code);
+    const prettified = await prettierFormat(code);
     const formatted = fixBabelGeneratorIssues(prettified);
     const correctedLineEndings = fixLineEndings(source, formatted);
 
     // removed blank lines change potential formatting
-    await fse.writeFile(jsPath, prettierFormat(correctedLineEndings));
+    await fse.writeFile(jsPath, await prettierFormat(correctedLineEndings));
     return TranspileResult.Success;
   } catch (err) {
     console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);

@@ -86,12 +86,15 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridAggregationFunction',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: XTypeScriptProject): ParsedProperty => ({
+const parseProperty = async (
+  propertySymbol: ts.Symbol,
+  project: XTypeScriptProject,
+): Promise<ParsedProperty> => ({
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
   isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
-  typeStr: stringifySymbol(propertySymbol, project),
+  typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
 
@@ -102,11 +105,11 @@ interface ProjectInterface {
   declaration: ts.InterfaceDeclaration;
 }
 
-const parseInterfaceSymbol = (
+const parseInterfaceSymbol = async (
   interfaceName: string,
   documentedInterfaces: DocumentedInterfaces,
   projects: XTypeScriptProjects,
-): ParsedObject | null => {
+): Promise<ParsedObject | null> => {
   const projectInterfaces = documentedInterfaces
     .get(interfaceName)!
     .map((projectName) => {
@@ -148,17 +151,20 @@ const parseInterfaceSymbol = (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  projectInterfaces.forEach(({ type, project }) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    propertiesOnProject.forEach((propertySymbol) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
       } else {
-        properties[propertySymbol.name] = parseProperty(propertySymbol, project);
+        // eslint-disable-next-line no-await-in-loop
+        properties[propertySymbol.name] = await parseProperty(propertySymbol, project);
       }
-    });
-  });
+    }
+  }
 
   parsedInterface.properties = Object.values(properties)
     .filter((property) => !property.tags.ignore)
@@ -224,7 +230,7 @@ function generateMarkdownFromProperties(
   return text;
 }
 
-function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptProjects) {
+async function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptProjects) {
   let imports = '```js\n';
 
   const projectImports = Array.from(projects.values())
@@ -245,7 +251,7 @@ function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptP
     // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.length - a.length);
 
-  imports += prettier.format(projectImports.join('\n// or\n'), {
+  imports += await prettier.format(projectImports.join('\n// or\n'), {
     singleQuote: true,
     semi: false,
     trailingComma: 'none',
@@ -256,14 +262,14 @@ function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptP
   return imports;
 }
 
-function generateMarkdown(
+async function generateMarkdown(
   object: ParsedObject,
   projects: XTypeScriptProjects,
   documentedInterfaces: DocumentedInterfaces,
 ) {
   const demos = object.tags.demos;
   const description = linkify(object.description, documentedInterfaces, 'html');
-  const imports = generateImportStatement([object], projects);
+  const imports = await generateImportStatement([object], projects);
 
   let text = `# ${object.name} Interface\n`;
   text += `<p class="description">${description}</p>\n\n`;
@@ -291,7 +297,9 @@ interface BuildInterfacesDocumentationOptions {
   apiPagesFolder: string;
 }
 
-export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
+export default async function buildInterfacesDocumentation(
+  options: BuildInterfacesDocumentationOptions,
+) {
   const { projects, apiPagesFolder } = options;
 
   const allProjectsName = Array.from(projects.keys());
@@ -312,11 +320,19 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [interfaceName, packagesWithThisInterface] of Array.from(
+    documentedInterfaces.entries(),
+  )) {
     const project = projects.get(packagesWithThisInterface[0])!;
-    const parsedInterface = parseInterfaceSymbol(interfaceName, documentedInterfaces, projects);
+    // eslint-disable-next-line no-await-in-loop
+    const parsedInterface = await parseInterfaceSymbol(
+      interfaceName,
+      documentedInterfaces,
+      projects,
+    );
     if (!parsedInterface) {
-      return;
+      continue;
     }
 
     const slug = kebabCase(parsedInterface.name);
@@ -331,7 +347,8 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
           type: property.typeStr,
         })),
       };
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
@@ -339,14 +356,17 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', parsedInterface.name);
     } else {
-      const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      const markdown = await generateMarkdown(parsedInterface, projects, documentedInterfaces);
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.md`),
         markdown,
         project,
       );
 
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
@@ -362,7 +382,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       // eslint-disable-next-line no-console
       console.log('Built API docs for', parsedInterface.name);
     }
-  });
+  }
 
   return documentedInterfaces;
 }
