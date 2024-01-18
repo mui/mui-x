@@ -120,7 +120,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
 - [charts] Remove a TS ignore (#11688) @alexfauquette
 
-### Tree View / `@mui/x-tree-view@7.0.0-alpha.9`
+### Tree View
 
 #### Breaking changes
 
