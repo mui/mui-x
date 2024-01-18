@@ -389,12 +389,6 @@ DateTimePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  /**
-   * If `true`, will toggle the `selected` state for the currently active view.
-   * Used by `DateTimeRangePickerToolbar` to mark only the currently selected `rangePosition` as active.
-   * @default true
-   */
-  markSelected: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -427,8 +421,7 @@ DateTimePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
-    .isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
