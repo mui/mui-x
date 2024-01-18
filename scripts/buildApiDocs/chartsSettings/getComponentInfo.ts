@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
-import { getHeaders, getTitle } from '@mui/markdown';
+import { getHeaders, getTitle, renderMarkdown } from '@mui/markdown';
 import {
   ComponentInfo,
   extractPackageFile,
@@ -46,7 +46,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         .filter((page) => page.pathname.startsWith('/charts') && page.components.includes(name))
         .map((page) => {
           return {
-            demoPageTitle: getTitle(page.markdownContent),
+            demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/charts', '/x/react-charts')}/`,
           };
         });
