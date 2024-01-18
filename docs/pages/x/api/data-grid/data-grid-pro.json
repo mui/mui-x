@@ -67,7 +67,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ ariaV7?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },

@@ -96,11 +96,6 @@ TreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The default icon displayed next to a end node. This is applied to all
-   * tree nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultEndIcon: PropTypes.node,
-  /**
    * Expanded node ids.
    * Used when the item's expansion is not controlled.
    * @default []
@@ -112,11 +107,6 @@ TreeView.propTypes = {
    * @default undefined
    */
   defaultFocusedNodeId: PropTypes.string,
-  /**
-   * The default icon displayed next to a parent node. This is applied to all
-   * parent nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultParentIcon: PropTypes.node,
   /**
    * Selected node ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

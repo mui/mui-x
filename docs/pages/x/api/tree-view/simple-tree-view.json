@@ -2,13 +2,11 @@
   "props": {
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
     "defaultFocusedNodeId": { "type": { "name": "string" }, "default": "undefined" },
-    "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -85,14 +83,30 @@
     "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
     "import { SimpleTreeView } from '@mui/x-tree-view';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiSimpleTreeView-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "SimpleTreeViewRoot",
+      "class": "MuiSimpleTreeView-root"
+    },
+    {
+      "name": "collapseIcon",
+      "description": "The default icon used to collapse the node.",
+      "class": null
+    },
+    {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the node.",
+      "class": null
+    },
+    {
+      "name": "endIcon",
+      "description": "The default icon displayed next to an end node.\nThis is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiSimpleTreeView",

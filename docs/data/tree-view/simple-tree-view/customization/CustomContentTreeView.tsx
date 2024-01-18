@@ -7,7 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   TreeItem,
-  useTreeItem,
+  useTreeItemState,
   TreeItemProps,
   TreeItemContentProps,
 } from '@mui/x-tree-view/TreeItem';
@@ -38,7 +38,7 @@ const CustomContent = React.forwardRef(function CustomContent(
     handleExpansion,
     handleSelection,
     preventSelection,
-  } = useTreeItem(nodeId);
+  } = useTreeItemState(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 
