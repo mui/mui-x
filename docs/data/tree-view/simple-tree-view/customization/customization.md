@@ -36,7 +36,7 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 ### Adding custom content
 
-Use the `ContentComponent` prop and the `useTreeItem` hook to replace the Tree Item content with an entirely custom component.
+Use the `ContentComponent` prop and the `useTreeItemState` hook to replace the Tree Item content with an entirely custom component.
 The demo below shows how to add an avatar and custom typography elements.
 
 {{"demo": "CustomContentTreeView.js"}}

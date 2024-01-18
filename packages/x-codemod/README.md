@@ -218,6 +218,7 @@ npx @mui/x-codemod@next v7.0.0/tree-view/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
 
@@ -239,6 +240,30 @@ Renames the `TreeView` component to `SimpleTreeView`
 -    </TreeView>
 +    </SimpleTreeView>
    );
+```
+
+#### `rename-use-tree-item`
+
+Renames the `useTreeItem` hook to `useTreeItemState`
+
+```diff
+-import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
++import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
+
+ const CustomContent = React.forwardRef((props, ref) => {
+-  const { disabled } = useTreeItem(props.nodeId);
++  const { disabled } = useTreeItemState(props.nodeId);
+
+   // Render some UI
+ });
+
+ function App() {
+   return (
+     <SimpleTreeView>
+       <TreeItem ContentComponent={CustomContent} />
+     </SimpleTreeView>
+   )
+ }
 ```
 
 #### `rename-expansion-props`

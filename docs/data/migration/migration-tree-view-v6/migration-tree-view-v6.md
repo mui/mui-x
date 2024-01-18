@@ -178,7 +178,7 @@ you need to use the new `collapseIcon` slot on this component:
   </SimpleTreeView>
 ```
 
-### Rename `onNodeToggle`, `expanded` and `defaultExpanded`
+### ✅ Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
 The expansion props have been renamed to better describe their behaviors:
 
@@ -216,7 +216,7 @@ you can use the new `onNodeExpansionToggle` prop which is called whenever a node
 
 :::
 
-### Rename `onNodeSelect`, `selected`, and `defaultSelected`
+### ✅ Rename `onNodeSelect`, `selected`, and `defaultSelected`
 
 The selection props have been renamed to better describe their behaviors:
 
@@ -253,3 +253,28 @@ you can use the new `onNodeSelectionToggle` prop which is called whenever a node
 ```
 
 :::
+
+### ✅ Use `useTreeItemState` instead of `useTreeItem`
+
+The `useTreeItem` hook has been renamed `useTreeItemState`.
+This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+
+```diff
+-import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
++import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
+
+ const CustomContent = React.forwardRef((props, ref) => {
+-  const { disabled } = useTreeItem(props.nodeId);
++  const { disabled } = useTreeItemState(props.nodeId);
+
+   // Render some UI
+ });
+
+ function App() {
+   return (
+     <SimpleTreeView>
+       <TreeItem ContentComponent={CustomContent} />
+     </SimpleTreeView>
+   )
+ }
+```
