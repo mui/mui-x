@@ -6,6 +6,9 @@ export type {
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
+export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
+export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
+export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
@@ -22,24 +25,20 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
-export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export * from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
-export type {
-  UseGridColumnHeadersProps,
-  GetHeadersParams,
-} from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
-export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
+export * from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
-export { gridColumnsStateSelector } from '../hooks/features/columns/gridColumnsSelector';
+export * from '../hooks/features/columns/gridColumnsSelector';
 export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
@@ -49,6 +48,9 @@ export type {
   GridColumnRawLookup,
   GridColumnsRawState,
   GridHydrateColumnsValue,
+  GridPinnedColumns,
+  GridPinnedColumnFields,
+  GridColumnPinningState,
 } from '../hooks/features/columns/gridColumnsInterfaces';
 export { useGridDensity, densityStateInitializer } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
@@ -107,12 +109,15 @@ export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorti
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
-export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
+export {
+  dimensionsStateInitializer,
+  useGridDimensions,
+} from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {
   useGridVirtualScroller,
-  getRenderableIndexes,
+  EMPTY_DETAIL_PANELS,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
 
@@ -142,13 +147,14 @@ export {
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
+export * from '../utils/utils';
+export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-export * from '../hooks/utils/useOnMount';
+export * from '../hooks/utils';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

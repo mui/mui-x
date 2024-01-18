@@ -31,8 +31,10 @@
   { "name": "treeViewClasses", "kind": "Variable" },
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
+  { "name": "TreeViewCollapseIcon", "kind": "Variable" },
+  { "name": "TreeViewExpandIcon", "kind": "Variable" },
   { "name": "TreeViewItemId", "kind": "TypeAlias" },
   { "name": "TreeViewProps", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
-  { "name": "useTreeItem", "kind": "Function" }
+  { "name": "useTreeItemState", "kind": "Function" }
 ]

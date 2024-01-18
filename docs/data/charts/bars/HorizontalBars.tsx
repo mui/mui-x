@@ -97,7 +97,7 @@ const dataset = [
   },
 ];
 
-const valueFormatter = (value: number) => `${value}mm`;
+const valueFormatter = (value: number | null) => `${value}mm`;
 
 export default function HorizontalBars() {
   return (

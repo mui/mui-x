@@ -1,43 +1,53 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import {
+  GridPinnedColumnFields,
+  GridPipeProcessor,
+  gridPinnedColumnsSelector,
+  useGridRegisterPipeProcessor,
+  eslintUseValue,
+  gridVisiblePinnedColumnDefinitionsSelector,
+} from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
-import { columnPinningStateInitializer } from './useGridColumnPinning';
-import { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
-import { filterColumns } from '../../../components/DataGridProVirtualScroller';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
-  const theme = useTheme();
-  let pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
-  if (pinnedColumns == null) {
-    // Since the state is not ready yet lets use the initializer to get which
-    // columns should be pinned initially.
-    const initializedState = columnPinningStateInitializer(
-      apiRef.current.state,
-      { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState },
-      apiRef,
-    ) as GridApiPro['state'];
-    pinnedColumns = gridPinnedColumnsSelector(initializedState);
+  const { disableColumnPinning } = props;
+
+  let pinnedColumns: GridPinnedColumnFields | null;
+  if (apiRef.current.state.columns) {
+    pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
+  } else {
+    pinnedColumns = null;
   }
 
   const prevAllPinnedColumns = React.useRef<string[]>([]);
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      eslintUseValue(pinnedColumns);
+
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }
 
-      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-        pinnedColumns,
-        columnsState.orderedFields,
-        theme.direction === 'rtl',
-      );
+      // HACK: This is a hack needed because the pipe processors aren't pure enough. What
+      // they should be is `gridState -> gridState` transformers, but they only transform a slice
+      // of the state, not the full state. So if they need access to other parts of the state (like
+      // the `state.columns.orderedFields` in this case), they might lag behind because the selectors
+      // are selecting the old state in `apiRef`, not the state being computed in the current pipe processor.
+      const savedState = apiRef.current.state;
+      apiRef.current.state = { ...savedState, columns: columnsState as unknown as any };
+
+      const visibleColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+
+      apiRef.current.state = savedState;
+      // HACK: Ends here //
+
+      const leftPinnedColumns = visibleColumns.left.map((c) => c.field);
+      const rightPinnedColumns = visibleColumns.right.map((c) => c.field);
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
@@ -121,7 +131,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns, theme.direction],
+    [apiRef, disableColumnPinning, pinnedColumns],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

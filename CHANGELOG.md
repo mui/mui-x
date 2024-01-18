@@ -1119,10 +1119,20 @@ And if you need the exact same output you can apply the following transformation
 - The `adapter.toISO` method have been removed, you can directly use your date library:
 
   ```diff
+   // For Day.js
   -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
+  
+   // For Luxon
+  -const isoString = adapter.toISO(value);
   +const isoString = value.toUTC().toISO({ format: 'extended' });
+  
+   // For DateFns
+  -const isoString = adapter.toISO(value);
   +const isoString = dateFns.formatISO(value, { format: 'extended' });
+  
+   // For Moment
+  -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
   ```
 

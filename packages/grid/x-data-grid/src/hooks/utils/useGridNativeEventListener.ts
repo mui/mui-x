@@ -17,6 +17,8 @@ export const useGridNativeEventListener = <
   const [added, setAdded] = React.useState(false);
   const handlerRef = React.useRef(handler);
 
+  const targetElement = isFunction(ref) ? ref() : ref?.current ?? null;
+
   const wrapHandler = React.useCallback((event: HTMLElementEventMap[K]) => {
     return handlerRef.current && handlerRef.current(event);
   }, []);
@@ -26,26 +28,18 @@ export const useGridNativeEventListener = <
   }, [handler]);
 
   React.useEffect(() => {
-    let targetElement: HTMLElement | null | undefined;
-
-    if (isFunction(ref)) {
-      targetElement = ref();
-    } else {
-      targetElement = ref && ref.current ? ref.current : null;
-    }
-
     if (targetElement && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
-      const boundElem = targetElement;
+
       setAdded(true);
 
       const unsubscribe = () => {
         logger.debug(`Clearing native ${eventName} event`);
-        boundElem.removeEventListener(eventName, wrapHandler, options);
+        targetElement.removeEventListener(eventName, wrapHandler, options);
       };
 
       apiRef.current.subscribeEvent('unmount', unsubscribe);
     }
-  }, [ref, wrapHandler, eventName, added, logger, options, apiRef]);
+  }, [targetElement, wrapHandler, eventName, added, logger, options, apiRef]);
 };

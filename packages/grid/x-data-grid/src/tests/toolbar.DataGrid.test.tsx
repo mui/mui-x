@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
-import { getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -46,6 +46,23 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('density selector', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
+        this.skip();
+      }
+    });
+
+    function expectHeight(value: number) {
+      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(value)}px`,
+      });
+
+      expect(getComputedStyle(screen.getAllByRole('gridcell')[1]).height).to.equal(
+        `${Math.floor(value)}px`,
+      );
+    }
+
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
@@ -64,13 +81,7 @@ describe('<DataGrid /> - Toolbar', () => {
       clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density when selecting comfortable density', () => {
@@ -90,13 +101,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Comfortable'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
     it('should increase grid density even if toolbar is not enabled', () => {
@@ -107,13 +112,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density even if toolbar is not enabled', () => {
@@ -124,13 +123,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
+      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
     it('should apply to the root element a class corresponding to the current density', () => {
@@ -142,11 +135,11 @@ describe('<DataGrid /> - Toolbar', () => {
         );
       }
       const { setProps } = render(<Test />);
-      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityStandard']);
+      expect(grid('root')).to.have.class(gridClasses['root--densityStandard']);
       setProps({ density: 'compact' });
-      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityCompact']);
+      expect(grid('root')).to.have.class(gridClasses['root--densityCompact']);
       setProps({ density: 'comfortable' });
-      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityComfortable']);
+      expect(grid('root')).to.have.class(gridClasses['root--densityComfortable']);
     });
   });
 

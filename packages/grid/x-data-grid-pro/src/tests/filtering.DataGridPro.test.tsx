@@ -20,7 +20,7 @@ import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/te
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues, getSelectInput } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
@@ -627,7 +627,7 @@ describe('<DataGridPro /> - Filter', () => {
         />
       </div>,
     );
-    screen.getByRole('grid').scrollIntoView();
+    grid('root')!.scrollIntoView();
     const initialScrollPosition = window.scrollY;
     expect(initialScrollPosition).not.to.equal(0);
     fireEvent.click(screen.getAllByRole('button', { name: /delete/i })[1]);
@@ -660,7 +660,7 @@ describe('<DataGridPro /> - Filter', () => {
       </div>,
     );
 
-    screen.getByRole('grid').scrollIntoView();
+    grid('root')!.scrollIntoView();
     const initialScrollPosition = window.scrollY;
     expect(initialScrollPosition).not.to.equal(0);
     act(() => apiRef.current.hidePreferences());

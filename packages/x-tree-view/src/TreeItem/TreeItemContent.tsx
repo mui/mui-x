@@ -2,12 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Checkbox from '@mui/material/Checkbox';
-import { useTreeItem } from './useTreeItem';
+import { useTreeItemState } from './useTreeItemState';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -85,7 +82,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleExpansion,
     handleSelection,
     preventSelection,
-  } = useTreeItem(nodeId);
+  } = useTreeItemState(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
@@ -157,9 +154,6 @@ TreeItemContent.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object.isRequired,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * The icon to display next to the tree node's label. Either a parent or end icon.

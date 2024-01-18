@@ -32,11 +32,7 @@ export interface GridRowsMetaApi {
    * @param {string} position The position to it the row belongs to.
    * @ignore - do not document.
    */
-  unstable_storeRowHeightMeasurement: (
-    id: GridRowId,
-    height: number,
-    position: 'left' | 'center' | 'right',
-  ) => void;
+  unstable_storeRowHeightMeasurement: (id: GridRowId, height: number) => void;
   /**
    * Updates the index of the last row measured.
    * @param {number} index The row index.
