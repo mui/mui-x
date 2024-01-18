@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.0.0-alpha.9
+_Jan 18, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
+- 🚀 Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
+- 🐞 Bugfixes
+
+### Breaking changes
+
+- Non-filterable columns could now be filtered programmatically by controlling or initialing `filterModel`, or by updating the `filterModel` by API method `apiRef.current.setFilterModel`.
+
+- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+  If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ ariaV7: true }} />
+  +<DataGrid />
+  ```
+
+  The most notable changes that might affect your application or tests are:
+
+  - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
+
+    ```diff
+    -<div class="MuiDataGrid-root" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false">
+    +<div class="MuiDataGrid-root">
+       <div class="MuiDataGrid-toolbarContainer"></div>
+    -    <div class="MuiDataGrid-main"></div>
+    +    <div class="MuiDataGrid-main" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false"></div>
+       <div class="MuiDataGrid-footerContainer"></div>
+     </div>
+    ```
+
+  - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
+
+- Non-groupable columns could now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
+
+- The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
+
+```diff
+ function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton
+-       title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
++       slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+      />
+      <GridToolbarDensitySelector
+-       variant="outlined"    // 🛑 This was previously forwarded to the button component
++       slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+      />
+    </GridToolbarContainer>
+  );
+ }
+```
+
+- Non-aggregable columns can now be aggregated programmatically to create read-only aggregation rules by controlling or initializing `aggregationModel`, or by updating the `aggregationModel` by API method `apiRef.current.setAggregationModel`.
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](https://next.mui.com/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.0.0-alpha.9`
+
+- [DataGrid] Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
+- [DataGrid] Allow to programmatically sort unsortable columns (#11512) @MBilalShafi
+- [DataGrid] Fix incorrect default value for `filterModel.logicOperator` (#11673) @MBilalShafi
+- [DataGrid] Make `column grouping` feature stable (#11698) @MBilalShafi
+- [DataGrid] Remove the `ariaV7` experimental flag (#11428) @cherniavskii
+- [DataGrid] Start the FAQ page (#11686) @MBilalShafi
+- [DataGrid] Sticky headers (#10059) @romgrk
+- [DataGrid] Wrap toolbar buttons with tooltip (#11357) @MBilalShafi
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) @BCaspari
+
+#### `@mui/x-data-grid-pro@v7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.0.0-alpha.9`, plus:
+
+- [DataGridPro] Allow non-pinnable columns to be pinned programmatically (#11680) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@v7.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.0.0-alpha.9`, plus:
+
+- [DataGridPremium] Allow aggregation to be applied for non-aggregable columns (#11574) @MBilalShafi
+- [DataGridPremium] Allow programmatically grouping non-groupable columns (#11539) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v7.0.0-alpha.9`
+
+- [fields] Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
+- [fields] Support farsi digits (#11639) @flaviendelangle
+- [pickers] Fix AdapterLuxon `getWeekNumber` behavior (#11697) @LukasTy
+- [pickers] Stop root exporting `locales` (#11612) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v7.0.0-alpha.9`.
+
+### Charts / `@mui/x-charts@v7.0.0-alpha.9`
+
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
+- [charts] Remove a TS ignore (#11688) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@v7.0.0-alpha.9`
+
+- [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
+- [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
+- [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
+- [TreeView] Pass through `Theme` generic to variants (#11480) @dhulme
+- [TreeView] Rename `useTreeItem` to `useTreeItemState` (#11712) @flaviendelangle
+
+### Docs
+
+- [docs] Clean the pickers migration guide (#11694) @flaviendelangle
+- [docs] Cleanup and fix Pickers Playground styling (#11700) @LukasTy
+- [docs] First draft of the Tree View custom plugin doc (#11564) @flaviendelangle
+- [docs] Fix Pickers migration syntax and diffs (#11695) @LukasTy
+- [docs] Improve codemod for v7 (#11650) @oliviertassinari
+- [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
+- [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
+- [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
+- [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
+
+### Core
+
+- [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+- [core] Make `karma` run in parallel (#11571) @romgrk
+- [core] make karma-parallel run under a new command (#11716) @romgrk
+- [tree view] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
+- [tree view] Explore a better plugin model API (#11567) @flaviendelangle
+- [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
+- [test] Fix flaky Data Grid test (#11725) @cherniavskii
+
 ## 7.0.0-alpha.8
 
 _Jan 11, 2024_
