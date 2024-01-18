@@ -155,6 +155,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     getLabelProps,
     getGroupProps,
     status,
+    wrapItem,
     fallbackIcon,
     fallbackIconProps,
   } = useTreeItem({
@@ -250,7 +251,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     className: classes.group,
   });
 
-  return (
+  const node = (
     <Root {...rootProps}>
       <Content {...contentProps}>
         <IconContainer {...iconContainerProps}>
@@ -261,4 +262,6 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
       {children && <Group {...groupProps} />}
     </Root>
   );
+
+  return wrapItem(node);
 });

@@ -106,7 +106,7 @@ export interface UseTreeItemReturnValue {
    * @param {React.ReactNode} children The TreeItem node before this plugin execution.
    * @returns {React.ReactNode} The wrapped TreeItem.
    */
-  wrapItem?: (children: React.ReactNode) => React.ReactNode;
+  wrapItem: (children: React.ReactNode) => React.ReactNode;
   /**
    * Current status of the item.
    */

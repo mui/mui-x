@@ -106,6 +106,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   return {
     props: {
       ...props,
+      // TODO: Make compatible with TreeItemNext
       ContentProps: {
         ...inContentProps,
         ref: contentRef,
