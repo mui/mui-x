@@ -13,6 +13,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
+- 💔 Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+  The minimum required version of `@mui/material` is now `5.15.0`.
 
 ### Data Grid
 
@@ -49,23 +51,23 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
 
-```diff
- function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
+  ```diff
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton
--       title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
-+       slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+  -     title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
+  +     slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
       />
       <GridToolbarDensitySelector
--       variant="outlined"    // 🛑 This was previously forwarded to the button component
-+       slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+  -     variant="outlined"    // 🛑 This was previously forwarded to the button component
+  +     slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
       />
-    </GridToolbarContainer>
-  );
- }
-```
+      </GridToolbarContainer>
+    );
+  }
+  ```
 
 - Non-aggregable columns can now be aggregated programmatically to create read-only aggregation rules by controlling or initializing `aggregationModel`, or by updating the `aggregationModel` by API method `apiRef.current.setAggregationModel`.
 
@@ -103,6 +105,16 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.9`, plus:
 - [DataGridPremium] Allow programmatically grouping non-groupable columns (#11539) @MBilalShafi
 
 ### Date Pickers
+
+#### Breaking changes
+
+- The `locales` export has been removed from the root of the packages.
+  If you were importing locales from the root, be sure to update it:
+
+  ```diff
+  -import { frFR } from '@mui/x-date-pickers';
+  +import { frFR } from '@mui/x-date-pickers/locales';
+  ```
 
 #### `@mui/x-date-pickers@7.0.0-alpha.9`
 
