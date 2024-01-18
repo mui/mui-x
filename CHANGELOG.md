@@ -236,6 +236,8 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
 - [TreeView] Pass through `Theme` generic to variants (#11480) @dhulme
 - [TreeView] Rename `useTreeItem` to `useTreeItemState` (#11712) @flaviendelangle
+- [TreeView] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
+- [TreeView] Explore a better plugin model API (#11567) @flaviendelangle
 
 ### Docs
 
@@ -254,8 +256,6 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
 - [core] Make `karma` run in parallel (#11571) @romgrk
 - [core] make `karma-parallel` run under a new command (#11716) @romgrk
-- [tree view] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
-- [tree view] Explore a better plugin model API (#11567) @flaviendelangle
 - [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
 - [test] Fix flaky Data Grid test (#11725) @cherniavskii
 
