@@ -192,10 +192,10 @@ describe('<DataGridPro /> - Columns', () => {
       const nonPinnedCell = getCell(1, 0);
       const columnHeaderCell = getColumnHeaderCell(0);
       const topPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--top']} [role="cell"][data-colindex="0"]`,
+        `.${gridClasses['pinnedRows--top']} [role="gridcell"][data-colindex="0"]`,
       );
       const bottomPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--bottom']} [role="cell"][data-colindex="0"]`,
+        `.${gridClasses['pinnedRows--bottom']} [role="gridcell"][data-colindex="0"]`,
       );
 
       fireEvent.mouseDown(separator, { clientX: 100 });

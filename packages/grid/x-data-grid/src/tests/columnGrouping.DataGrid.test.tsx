@@ -19,7 +19,6 @@ const getDefaultProps = (nbColumns: number) => {
     columns,
     rows: [{ id: 0, ...row }],
     autoHeight: isJSDOM,
-    experimentalFeatures: { columnGrouping: true },
   };
 };
 

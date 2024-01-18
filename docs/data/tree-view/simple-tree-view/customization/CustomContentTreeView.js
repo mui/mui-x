@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
 const CustomContentRoot = styled('div')(({ theme }) => ({
   '&': { padding: theme.spacing(0.5, 1) },
@@ -30,7 +30,7 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
     handleExpansion,
     handleSelection,
     preventSelection,
-  } = useTreeItem(nodeId);
+  } = useTreeItemState(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 

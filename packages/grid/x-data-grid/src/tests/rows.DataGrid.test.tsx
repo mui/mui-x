@@ -165,7 +165,9 @@ describe('<DataGrid /> - Rows', () => {
       );
 
       // click on the cell in the nested grid in the column that is not defined in the parent grid
-      const cell = document.querySelector('[data-rowindex="0"] [role="cell"][data-field="age"]')!;
+      const cell = document.querySelector(
+        '[data-rowindex="0"] [role="gridcell"][data-field="age"]',
+      )!;
       fireEvent.click(cell);
     }).not.toErrorDev();
   });
