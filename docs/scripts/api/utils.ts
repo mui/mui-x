@@ -33,7 +33,7 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
-export const formatType = (rawType: string) => {
+export const formatType = async (rawType: string) => {
   if (!rawType) {
     return '';
   }
@@ -41,7 +41,7 @@ export const formatType = (rawType: string) => {
   const prefix = 'type FakeType = ';
   const signatureWithTypeName = `${prefix}${rawType}`;
 
-  const prettifiedSignatureWithTypeName = prettier.format(signatureWithTypeName, {
+  const prettifiedSignatureWithTypeName = await prettier.format(signatureWithTypeName, {
     printWidth: 999,
     singleQuote: true,
     semi: false,
@@ -52,7 +52,7 @@ export const formatType = (rawType: string) => {
   return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
 };
 
-export const stringifySymbol = (symbol: ts.Symbol, project: XTypeScriptProject) => {
+export const stringifySymbol = async (symbol: ts.Symbol, project: XTypeScriptProject) => {
   let rawType: string;
 
   const declaration = symbol.declarations?.[0];
@@ -88,8 +88,12 @@ export function linkify(
   });
 }
 
-export function writePrettifiedFile(filename: string, data: string, project: XTypeScriptProject) {
-  const prettierConfig = prettier.resolveConfig.sync(filename, {
+export async function writePrettifiedFile(
+  filename: string,
+  data: string,
+  project: XTypeScriptProject,
+) {
+  const prettierConfig = await prettier.resolveConfig(filename, {
     config: project.prettierConfigPath,
   });
   if (prettierConfig === null) {
@@ -98,9 +102,13 @@ export function writePrettifiedFile(filename: string, data: string, project: XTy
     );
   }
 
-  fse.writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
-    encoding: 'utf8',
-  });
+  fse.writeFileSync(
+    filename,
+    await prettier.format(data, { ...prettierConfig, filepath: filename }),
+    {
+      encoding: 'utf8',
+    },
+  );
 }
 
 /**

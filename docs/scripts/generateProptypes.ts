@@ -9,10 +9,6 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
-  config: path.join(__dirname, '../../prettier.config.js'),
-});
-
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const components = getPropTypesFromFile({
     filePath: sourceFile,
@@ -120,7 +116,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     throw new Error('Unable to produce inject propTypes into code.');
   }
 
-  const prettified = prettier.format(result, { ...prettierConfig, filepath: sourceFile });
+  const prettierConfig = await prettier.resolveConfig(process.cwd(), {
+    config: path.join(__dirname, '../../prettier.config.js'),
+  });
+
+  const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });
   const formatted = fixBabelGeneratorIssues(prettified);
   const correctedLineEndings = fixLineEndings(sourceContent, formatted);
 
