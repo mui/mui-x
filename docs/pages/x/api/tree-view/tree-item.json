@@ -34,6 +34,10 @@
     "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
     "import { TreeItem } from '@mui/x-tree-view';"
   ],
+  "slots": [
+    { "name": "collapseIcon", "description": "The icon used to collapse the node.", "class": null },
+    { "name": "expandIcon", "description": "The icon used to expand the node.", "class": null }
+  ],
   "classes": [
     {
       "key": "content",

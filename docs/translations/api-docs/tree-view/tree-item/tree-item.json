@@ -63,5 +63,9 @@
       "nodeName": "the content element",
       "conditions": "selected"
     }
+  },
+  "slotDescriptions": {
+    "collapseIcon": "The icon used to collapse the node.",
+    "expandIcon": "The icon used to expand the node."
   }
 }

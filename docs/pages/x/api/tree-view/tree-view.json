@@ -83,14 +83,25 @@
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
     "import { TreeView } from '@mui/x-tree-view';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiTreeView-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "SimpleTreeViewRoot",
+      "class": "MuiTreeView-root"
+    },
+    {
+      "name": "collapseIcon",
+      "description": "The default icon used to collapse the node.",
+      "class": null
+    },
+    {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the node.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiTreeView",
