@@ -1,15 +1,35 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { UseTreeItemParameters } from '../useTreeItem';
-import { UseTreeItemStatus } from '@mui/x-tree-view/internals/useTreeItem/useTreeItem.types';
-import { TreeItemClasses } from '@mui/x-tree-view';
+import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
+import { TreeItemClasses } from '../../TreeItem';
 
 export interface TreeItemNextSlots {
   /**
-   * Element rendered at the root.
+   * The component that renders the root.
    * @default TreeItemNextRoot
    */
   root?: React.ElementType;
+  /**
+   * The component that renders the content of the item.
+   * (e.g.: everything related to this item, not to its children).
+   * @default TreeItemNextContent
+   */
+  content?: React.ElementType;
+  /**
+   * The component that renders the children of the item.
+   * @default TreeItemNextGroup
+   */
+  group?: React.ElementType;
+  /**
+   * The component that renders the icon
+   * @default TreeItemNextIconContainer
+   */
+  iconContainer?: React.ElementType;
+  /**
+   * The component that renders the item label
+   * @default TreeItemNextLabel
+   */
+  label?: React.ElementType;
   /**
    * The icon used to collapse the node.
    */
@@ -30,6 +50,10 @@ export interface TreeItemNextSlots {
 
 export interface TreeItemNextSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
+  content?: SlotComponentProps<'div', {}, {}>;
+  group?: SlotComponentProps<'div', {}, {}>;
+  iconContainer?: SlotComponentProps<'div', {}, {}>;
+  label?: SlotComponentProps<'div', {}, {}>;
   collapseIcon?: SlotComponentProps<'svg', {}, {}>;
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
   endIcon?: SlotComponentProps<'svg', {}, {}>;

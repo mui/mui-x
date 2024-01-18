@@ -1,2 +1,6 @@
 export { useTreeItem } from './useTreeItem';
-export type { UseTreeItemParameters, UseTreeItemReturnValue } from './useTreeItem.types';
+export type {
+  UseTreeItemParameters,
+  UseTreeItemReturnValue,
+  UseTreeItemStatus,
+} from './useTreeItem.types';

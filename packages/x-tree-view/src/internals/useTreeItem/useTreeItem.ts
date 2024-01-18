@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
+import { EventHandlers, extractEventHandlers, SlotComponentProps } from '@mui/base/utils';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -7,17 +7,19 @@ import {
   UseTreeItemRootSlotProps,
   UseTreeItemContentSlotOwnProps,
   UseTreeItemContentSlotProps,
-  UseTreeItemTransitionSlotOwnProps,
-  UseTreeItemTransitionSlotProps,
+  UseTreeItemGroupSlotOwnProps,
+  UseTreeItemGroupSlotProps,
   UseTreeItemStatus,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
+import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../../icons';
+import { useTreeItemInteractions } from '../useTreeItemInteractions';
 
 export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemReturnValue => {
   const {
-    icons: contextIcons,
+    icons,
     runItemPlugins,
     selection: { multiSelect },
     disabledItemsFocusable,
@@ -30,20 +32,23 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     wrapItem,
   } = runItemPlugins({ props: inParameters, ref: inParameters.rootRef });
 
-  const { id, nodeId, children } = parameters;
+  const { id, nodeId, label, children } = parameters;
 
+  const status: UseTreeItemStatus = {
+    expandable: Boolean(Array.isArray(children) ? children.length : children),
+    expanded: instance.isNodeExpanded(nodeId),
+    focused: instance.isNodeFocused(nodeId),
+    selected: instance.isNodeSelected(nodeId),
+    disabled: instance.isNodeDisabled(nodeId),
+  };
+
+  const interactions = useTreeItemInteractions(nodeId, status);
   const idAttribute = instance.getTreeItemId(nodeId, id);
-
-  const expandable = Boolean(Array.isArray(children) ? children.length : children);
-  const expanded = instance.isNodeExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
-  const disabled = instance.isNodeDisabled(nodeId);
 
   let ariaSelected;
   if (multiSelect) {
-    ariaSelected = selected;
-  } else if (selected) {
+    ariaSelected = status.selected;
+  } else if (status.selected) {
     /* single-selection trees unset aria-selected on un-selected items.
      *
      * If the tree does not support multiple selection, aria-selected
@@ -67,10 +72,35 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
         instance.focusRoot();
       }
 
-      const canBeFocused = !disabled || disabledItemsFocusable;
-      if (!focused && canBeFocused && event.currentTarget === event.target) {
+      const canBeFocused = !status.disabled || disabledItemsFocusable;
+      if (!status.focused && canBeFocused && event.currentTarget === event.target) {
         instance.focusNode(event, nodeId);
       }
+    };
+
+  const createContentHandleClick =
+    (otherHandlers: EventHandlers) =>
+    (event: React.MouseEvent<HTMLDivElement> & MuiCancellableEvent) => {
+      otherHandlers.onClick?.(event);
+
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      interactions.handleExpansion(event);
+      interactions.handleSelection(event);
+    };
+
+  const createContentHandleMouseDown =
+    (otherHandlers: EventHandlers) =>
+    (event: React.MouseEvent<HTMLDivElement> & MuiCancellableEvent) => {
+      otherHandlers.onMouseDown?.(event);
+
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      interactions.preventSelection(event);
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -85,9 +115,9 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       role: 'treeitem',
       tabIndex: -1,
       id: idAttribute,
-      'aria-expanded': expandable ? expanded : undefined,
+      'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
-      'aria-disabled': disabled || undefined,
+      'aria-disabled': status.disabled || undefined,
     };
 
     return {
@@ -112,44 +142,77 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       ...externalEventHandlers,
       ...contentOwnProps,
       ...externalProps,
+      onClick: createContentHandleClick(externalEventHandlers),
+      onMouseDown: createContentHandleMouseDown(externalEventHandlers),
     };
   };
 
-  const getTransitionProps = <ExternalProps extends Record<string, any> = {}>(
+  const getLabelProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemTransitionSlotProps<ExternalProps> => {
+  ): UseTreeItemContentSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
     };
 
-    const transitionOwnProps: UseTreeItemTransitionSlotOwnProps = {
-      unmountOnExit: true,
-      component: 'ul',
-      role: 'group',
-      in: expanded,
+    const contentOwnProps: UseTreeItemContentSlotOwnProps = {
+      children: label,
     };
 
     return {
       ...externalEventHandlers,
-      ...transitionOwnProps,
+      ...contentOwnProps,
       ...externalProps,
     };
   };
 
-  const status: UseTreeItemStatus = {
-    expanded,
-    focused,
-    selected,
-    disabled,
+  const getGroupProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItemGroupSlotProps<ExternalProps> => {
+    const externalEventHandlers = {
+      ...extractEventHandlers(parameters),
+      ...extractEventHandlers(externalProps),
+    };
+
+    const groupOwnProps: UseTreeItemGroupSlotOwnProps = {
+      unmountOnExit: true,
+      component: 'ul',
+      role: 'group',
+      in: status.expanded,
+      children,
+    };
+
+    return {
+      ...externalEventHandlers,
+      ...groupOwnProps,
+      ...externalProps,
+    };
   };
+
+  let fallbackIcon: React.ElementType | undefined;
+  let fallbackIconProps: SlotComponentProps<'svg', {}, {}> | undefined;
+  if (status.expandable) {
+    if (status.expanded) {
+      fallbackIcon = icons.slots.collapseIcon ?? TreeViewCollapseIcon;
+      fallbackIconProps = icons.slotProps.collapseIcon;
+    } else {
+      fallbackIcon = icons.slots.expandIcon ?? TreeViewExpandIcon;
+      fallbackIconProps = icons.slotProps.expandIcon;
+    }
+  } else {
+    fallbackIcon = icons.slots.endIcon;
+    fallbackIconProps = icons.slotProps.endIcon;
+  }
 
   return {
     getRootProps,
     getContentProps,
-    getTransitionProps,
+    getGroupProps,
+    getLabelProps,
     rootRef: ref,
     wrapItem,
     status,
+    fallbackIcon,
+    fallbackIconProps,
   };
 };

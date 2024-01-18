@@ -77,7 +77,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
-    if (instance && index !== -1) {
+    if (index !== -1) {
       instance.insertJSXNode({
         id: nodeId,
         idAttribute: id,
@@ -94,7 +94,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   }, [instance, parentId, index, nodeId, expandable, disabled, id]);
 
   React.useEffect(() => {
-    if (instance && label) {
+    if (label) {
       return instance.mapFirstCharFromJSX(
         nodeId,
         (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
