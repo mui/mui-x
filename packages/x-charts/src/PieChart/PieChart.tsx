@@ -326,6 +326,7 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       arcLabelMinAngle: PropTypes.number,
+      arcLabelRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       color: PropTypes.string,
       cornerRadius: PropTypes.number,
       cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -341,6 +342,7 @@ PieChart.propTypes = {
       endAngle: PropTypes.number,
       faded: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        arcLabelRadius: PropTypes.number,
         color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
@@ -349,6 +351,7 @@ PieChart.propTypes = {
       }),
       highlighted: PropTypes.shape({
         additionalRadius: PropTypes.number,
+        arcLabelRadius: PropTypes.number,
         color: PropTypes.string,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,

@@ -3,6 +3,9 @@
   "propDescriptions": {
     "arcLabel": { "description": "The label displayed into the arc." },
     "arcLabelMinAngle": { "description": "The minimal angle required to display the arc label." },
+    "arcLabelRadius": {
+      "description": "The radius between circle center and the arc label in px."
+    },
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius)."
     },

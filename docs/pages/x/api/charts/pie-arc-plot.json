@@ -1,18 +1,22 @@
 {
   "props": {
     "outerRadius": { "type": { "name": "number" }, "required": true },
+    "arcLabelRadius": {
+      "type": { "name": "number" },
+      "default": "(innerRadius - outerRadius) / 2"
+    },
     "cornerRadius": { "type": { "name": "number" }, "default": "0" },
     "faded": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       },
       "default": "{ additionalRadius: -5 }"
     },
     "highlighted": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       }
     },
     "innerRadius": { "type": { "name": "number" }, "default": "0" },
