@@ -332,7 +332,7 @@ export default async function buildInterfacesDocumentation(
       projects,
     );
     if (!parsedInterface) {
-      return;
+      continue;
     }
 
     const slug = kebabCase(parsedInterface.name);
