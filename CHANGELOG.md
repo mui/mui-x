@@ -245,6 +245,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [docs] Cleanup and fix Pickers Playground styling (#11700) @LukasTy
 - [docs] First draft of the Tree View custom plugin doc (#11564) @flaviendelangle
 - [docs] Fix Pickers migration syntax and diffs (#11695) @LukasTy
+- [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
 - [docs] Improve codemod for v7 (#11650) @oliviertassinari
 - [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
 - [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
