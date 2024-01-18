@@ -290,7 +290,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       />
     </SimpleTreeView>
   ```
-
+#### `@mui/x-tree-view@7.0.0-alpha.9`
 
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
 - [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
