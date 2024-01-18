@@ -47,27 +47,27 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-- Non-groupable columns can now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
+  - Non-groupable columns can now be grouped programmatically to create read-only row groups by controlling or initializing `rowGroupingModel`, or by updating the `rowGroupingModel` by API method `apiRef.current.setRowGroupingModel`.
 
-- The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
+  - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
 
-  ```diff
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton
-  -     title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
-  +     slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
-      />
-      <GridToolbarDensitySelector
-  -     variant="outlined"    // 🛑 This was previously forwarded to the button component
-  +     slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
-      />
-      </GridToolbarContainer>
-    );
-  }
-  ```
+    ```diff
+      function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton
+      -     title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
+      +     slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+          />
+          <GridToolbarDensitySelector
+      -     variant="outlined"    // 🛑 This was previously forwarded to the button component
+      +     slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+          />
+          </GridToolbarContainer>
+        );
+      }
+    ```
 
 - Non-aggregable columns can now be aggregated programmatically to create read-only aggregation rules by controlling or initializing `aggregationModel`, or by updating the `aggregationModel` by API method `apiRef.current.setAggregationModel`.
 
