@@ -1,9 +1,25 @@
 import * as React from 'react';
+import { TreeViewItemId } from '@mui/x-tree-view';
 
 export interface UseTreeItemParameters {
+  /**
+   * The id attribute of the node. If not provided, it will be generated.
+   */
   id?: string;
-  nodeId: string;
+  /**
+   * The id of the node.
+   * Must be unique.
+   */
+  nodeId: TreeViewItemId;
+  /**
+   * The label of the node.
+   */
+  label?: React.ReactNode;
   rootRef?: React.Ref<HTMLLIElement>;
+  /**
+   * The content of the component.
+   */
+  children?: React.ReactNode;
 }
 
 export interface UseTreeItemRootSlotOwnProps {
@@ -32,6 +48,13 @@ export interface UseTreeItemTransitionSlotOwnProps {
 
 export type UseTreeItemTransitionSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemTransitionSlotOwnProps;
+
+export interface UseTreeItemStatus {
+  expanded: boolean;
+  focused: boolean;
+  selected: boolean;
+  disabled: boolean;
+}
 
 export interface UseTreeItemReturnValue {
   /**
@@ -68,4 +91,8 @@ export interface UseTreeItemReturnValue {
    * @returns {React.ReactNode} The wrapped TreeItem.
    */
   wrapItem?: (children: React.ReactNode) => React.ReactNode;
+  /**
+   * Current status of the item.
+   */
+  status: UseTreeItemStatus;
 }

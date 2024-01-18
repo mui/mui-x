@@ -9,6 +9,7 @@ import {
   UseTreeItemContentSlotProps,
   UseTreeItemTransitionSlotOwnProps,
   UseTreeItemTransitionSlotProps,
+  UseTreeItemStatus,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
@@ -29,7 +30,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     wrapItem,
   } = runItemPlugins({ props: inParameters, ref: inParameters.rootRef });
 
-  const { id, nodeId } = parameters;
+  const { id, nodeId, children } = parameters;
 
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
@@ -136,11 +137,19 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
   };
 
+  const status: UseTreeItemStatus = {
+    expanded,
+    focused,
+    selected,
+    disabled,
+  };
+
   return {
     getRootProps,
     getContentProps,
     getTransitionProps,
     rootRef: ref,
     wrapItem,
+    status,
   };
 };
