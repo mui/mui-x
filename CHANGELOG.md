@@ -122,6 +122,115 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
 ### Tree View / `@mui/x-tree-view@7.0.0-alpha.9`
 
+#### Breaking changes
+
+- The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when this node is collapsed),
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ChevronRight` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+  
+  ```diff
+  -import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+  
+   <SimpleTreeView
+  -  defaultExpandIcon={<ChevronRightIcon />}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+  
+  If you were passing another icon to your Tree View component,
+  you need to use the new `expandIcon` slot on this component:
+  
+  ```diff
+   <SimpleTreeView
+  -  defaultExpandIcon={<MyCustomExpandIcon />}
+  +  slots={{ expandIcon: MyCustomExpandIcon }}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+  
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `expandIcon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     expandIcon={<MyCustomExpandIcon />}
+  +     slots={{ expandIcon: MyCustomExpandIcon }}
+      />
+    </SimpleTreeView>
+  ```
+- The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when this node is expanded),
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ExpandMore` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+  
+  ```diff
+  - import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+  
+    <SimpleTreeView
+  -   defaultCollapseIcon={<ExpandMoreIcon />}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+  
+  If you were passing another icon to your Tree View component,
+  you need to use the new `collapseIcon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView
+  -   defaultCollapseIcon={<MyCustomCollapseIcon />}
+  +   slots={{ collapseIcon: MyCustomCollapseIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+  
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `collapseIcon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     collapseIcon={<MyCustomCollapseIcon />}
+  +     slots={{ collapseIcon: MyCustomCollapseIcon }}
+      />
+    </SimpleTreeView>
+```
+
+- The `useTreeItem` hook has been renamed `useTreeItemState`.
+  This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+  
+  ```diff
+  -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
+  +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
+  
+   const CustomContent = React.forwardRef((props, ref) => {
+  -  const { disabled } = useTreeItem(props.nodeId);
+  +  const { disabled } = useTreeItemState(props.nodeId);
+  
+     // Render some UI
+   });
+  
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+  ```
+
+
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
 - [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
 - [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
