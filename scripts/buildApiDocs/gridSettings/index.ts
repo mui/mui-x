@@ -4,7 +4,12 @@ import { ProjectSettings } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
 import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_isGlobalState as isGlobalState,
+} from '@mui/utils';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import { slotsSort } from '../utils';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -74,5 +79,10 @@ export default ${JSON.stringify(pages, null, 2)} as MuiPage[];
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['debounceMs', 'quickFilterParser'],
+  },
+  generateClassName: generateUtilityClass,
+  isGlobalClassName: isGlobalState,
+  sortingStrategies: {
+    slotsSort
   },
 };
