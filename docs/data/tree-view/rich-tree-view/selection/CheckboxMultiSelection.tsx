@@ -1,7 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
@@ -37,13 +35,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 export default function CheckboxMultiSelection() {
   return (
     <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView
-        multiSelect
-        checkboxSelection
-        items={MUI_X_PRODUCTS}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      />
+      <RichTreeView multiSelect checkboxSelection items={MUI_X_PRODUCTS} />
     </Box>
   );
 }
