@@ -106,6 +106,7 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
+            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
             ...style
@@ -150,6 +151,11 @@ PieArcPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * The radius between circle center and the arc label in px.
+   * @default (innerRadius - outerRadius) / 2
+   */
+  arcLabelRadius: PropTypes.number,
+  /**
    * The radius applied to arc corners (similar to border radius).
    * @default 0
    */
@@ -172,6 +178,7 @@ PieArcPlot.propTypes = {
    */
   faded: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
@@ -183,6 +190,7 @@ PieArcPlot.propTypes = {
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
+    arcLabelRadius: PropTypes.number,
     color: PropTypes.string,
     cornerRadius: PropTypes.number,
     innerRadius: PropTypes.number,
