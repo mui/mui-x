@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v7.0.0-alpha.9
+## 7.0.0-alpha.9
 _Jan 18, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -76,7 +76,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@v7.0.0-alpha.9`
+#### `@mui/x-data-grid@7.0.0-alpha.9`
 
 - [DataGrid] Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
 - [DataGrid] Allow to programmatically sort unsortable columns (#11512) @MBilalShafi
@@ -88,39 +88,39 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Wrap toolbar buttons with tooltip (#11357) @MBilalShafi
 - [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) @BCaspari
 
-#### `@mui/x-data-grid-pro@v7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@v7.0.0-alpha.9`, plus:
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.9`, plus:
 
 - [DataGridPro] Allow non-pinnable columns to be pinned programmatically (#11680) @MBilalShafi
 
-#### `@mui/x-data-grid-premium@v7.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@v7.0.0-alpha.9`, plus:
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.9`, plus:
 
 - [DataGridPremium] Allow aggregation to be applied for non-aggregable columns (#11574) @MBilalShafi
 - [DataGridPremium] Allow programmatically grouping non-groupable columns (#11539) @MBilalShafi
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@v7.0.0-alpha.9`
+#### `@mui/x-date-pickers@7.0.0-alpha.9`
 
 - [fields] Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
 - [fields] Support farsi digits (#11639) @flaviendelangle
 - [pickers] Fix AdapterLuxon `getWeekNumber` behavior (#11697) @LukasTy
 - [pickers] Stop root exporting `locales` (#11612) @LukasTy
 
-#### `@mui/x-date-pickers-pro@v7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@v7.0.0-alpha.9`.
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
-### Charts / `@mui/x-charts@v7.0.0-alpha.9`
+### Charts / `@mui/x-charts@7.0.0-alpha.9`
 
 - [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
 - [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
 - [charts] Remove a TS ignore (#11688) @alexfauquette
 
-### Tree View / `@mui/x-tree-view@v7.0.0-alpha.9`
+### Tree View / `@mui/x-tree-view@7.0.0-alpha.9`
 
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
 - [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
