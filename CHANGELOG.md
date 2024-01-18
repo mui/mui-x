@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 7.0.0-alpha.9
+
 _Jan 18, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -129,7 +130,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ChevronRight` icon from `@mui/icons-material`,
   you can stop passing it to your component because it is now the default value:
-  
+
   ```diff
   -import ChevronRightIcon from '@mui/icons-material/ChevronRight';
   
@@ -139,10 +140,10 @@ is now defined as a slot both on the Tree View and the Tree Item components.
      {items}
    </SimpleTreeView>
   ```
-  
+
   If you were passing another icon to your Tree View component,
   you need to use the new `expandIcon` slot on this component:
-  
+
   ```diff
    <SimpleTreeView
   -  defaultExpandIcon={<MyCustomExpandIcon />}
@@ -151,10 +152,10 @@ is now defined as a slot both on the Tree View and the Tree Item components.
      {items}
    </SimpleTreeView>
   ```
-  
+
   If you were passing another icon to your Tree Item component,
   you need to use the new `expandIcon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView>
       <TreeItem
@@ -165,12 +166,13 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       />
     </SimpleTreeView>
   ```
+
 - The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when this node is expanded),
 is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ExpandMore` icon from `@mui/icons-material`,
   you can stop passing it to your component because it is now the default value:
-  
+
   ```diff
   - import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   
@@ -180,10 +182,10 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       {items}
     </SimpleTreeView>
   ```
-  
+
   If you were passing another icon to your Tree View component,
   you need to use the new `collapseIcon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView
   -   defaultCollapseIcon={<MyCustomCollapseIcon />}
@@ -192,10 +194,10 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       {items}
     </SimpleTreeView>
   ```
-  
+
   If you were passing another icon to your Tree Item component,
   you need to use the new `collapseIcon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView>
       <TreeItem
@@ -205,11 +207,11 @@ is now defined as a slot both on the Tree View and the Tree Item components.
   +     slots={{ collapseIcon: MyCustomCollapseIcon }}
       />
     </SimpleTreeView>
-```
+  ```
 
 - The `useTreeItem` hook has been renamed `useTreeItemState`.
   This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
-  
+
   ```diff
   -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
   +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
@@ -229,13 +231,13 @@ is now defined as a slot both on the Tree View and the Tree Item components.
      )
    }
   ```
-  
+
 - The `parentIcon` prop has been removed from the Tree View components.
-  
+
   If you were passing an icon to your Tree View component,
   you can achieve the same behavior
   by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
-  
+
   ```diff
     <SimpleTreeView
   -   defaultParentIcon={<MyCustomParentIcon />}
@@ -244,13 +246,13 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       {items}
     </SimpleTreeView>
   ```
-    
+
 - The `endIcon` / `defaultEndIcon` props, rendered next to an item without children,
   is now defined as a slot both on the Tree View and the Tree Item components.
-  
+
   If you were passing an icon to your Tree View component,
   you need to use the new `endIcon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView
   -   defaultEndIcon={<MyCustomEndIcon />}
@@ -259,10 +261,10 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       {items}
     </SimpleTreeView>
   ```
-  
+
   If you were passing an icon to your Tree Item component,
   you need to use the new `endIcon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView>
       <TreeItem
@@ -273,13 +275,13 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       />
     </SimpleTreeView>
   ```
-  
+
 - The `icon` prop, rendered next to an item without children,
   is now defined as a slot on the Tree Item component.
-  
+
   If you were passing an icon to your Tree Item component,
   you need to use the new `icon` slot on this component:
-  
+
   ```diff
     <SimpleTreeView>
       <TreeItem
@@ -290,6 +292,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
       />
     </SimpleTreeView>
   ```
+
 #### `@mui/x-tree-view@7.0.0-alpha.9`
 
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
