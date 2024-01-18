@@ -36,12 +36,6 @@ module.exports = function getBabelConfig(api) {
     ],
     plugins: [
       ...baseConfig.plugins,
-      [
-        'babel-plugin-transform-rename-import',
-        {
-          replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
-        },
-      ],
       // for IE 11 support
       '@babel/plugin-transform-object-assign',
       'babel-plugin-preval',
