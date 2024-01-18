@@ -6,7 +6,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultFocusedNodeId": { "type": { "name": "string" }, "default": "undefined" },
+    "defaultFocusedNode": { "type": { "name": "string" }, "default": "undefined" },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },

@@ -22,13 +22,13 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   disableSelection?: boolean;
   /**
-   * Selected node ids. (Uncontrolled)
+   * Ids of the currently selected nodes. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
   defaultSelectedNodes?: TreeViewSelectionValue<Multiple>;
   /**
-   * Selected node ids. (Controlled)
+   * Ids of the currently selected nodes. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selectedNodes?: TreeViewSelectionValue<Multiple>;

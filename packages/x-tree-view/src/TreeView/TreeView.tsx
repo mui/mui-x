@@ -96,19 +96,19 @@ TreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Expanded node ids.
+   * Ids of the currently expanded nodes.
    * Used when the item's expansion is not controlled.
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Focused node id.
-   * Used when the item's focus is controlled.
+   * Id of the currently focused node.
+   * Used when the item's focus is not controlled.
    * @default undefined
    */
-  defaultFocusedNodeId: PropTypes.string,
+  defaultFocusedNode: PropTypes.string,
   /**
-   * Selected node ids. (Uncontrolled)
+   * Ids of the currently selected nodes. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
@@ -124,12 +124,12 @@ TreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Ids of the currently expanded nodes.
    * Used when the item's expansion is controlled.
    */
   expandedNodes: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Focused node id.
+   * Id of the currently focused node.
    * Used when the item's focus is controlled.
    */
   focusedNode: PropTypes.string,
@@ -196,7 +196,7 @@ TreeView.propTypes = {
    */
   onSelectedNodesChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Ids of the currently selected nodes. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selectedNodes: PropTypes.any,

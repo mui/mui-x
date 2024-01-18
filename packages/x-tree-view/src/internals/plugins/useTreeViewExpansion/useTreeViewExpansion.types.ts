@@ -11,12 +11,12 @@ export interface UseTreeViewExpansionInstance {
 
 export interface UseTreeViewExpansionParameters {
   /**
-   * Expanded node ids.
+   * Ids of the currently expanded nodes.
    * Used when the item's expansion is controlled.
    */
   expandedNodes?: string[];
   /**
-   * Expanded node ids.
+   * Ids of the currently expanded nodes.
    * Used when the item's expansion is not controlled.
    * @default []
    */
