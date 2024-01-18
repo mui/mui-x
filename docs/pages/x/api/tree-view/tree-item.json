@@ -9,8 +9,6 @@
     },
     "ContentProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
-    "endIcon": { "type": { "name": "node" } },
-    "icon": { "type": { "name": "node" } },
     "label": { "type": { "name": "node" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

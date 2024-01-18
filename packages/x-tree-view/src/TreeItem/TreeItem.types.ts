@@ -16,11 +16,21 @@ export interface TreeItemSlots {
    * The icon used to expand the node.
    */
   expandIcon?: React.ElementType;
+  /**
+   * The icon displayed next to an end node.
+   */
+  endIcon?: React.ElementType;
+  /**
+   * The icon to display next to the tree node's label.
+   */
+  icon?: React.ElementType;
 }
 
 export interface TreeItemSlotProps {
   collapseIcon?: SlotComponentProps<'svg', {}, {}>;
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
+  icon?: SlotComponentProps<'svg', {}, {}>;
 }
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
@@ -57,14 +67,6 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * @default false
    */
   disabled?: boolean;
-  /**
-   * The icon displayed next to an end node.
-   */
-  endIcon?: React.ReactNode;
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon?: React.ReactNode;
   /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
