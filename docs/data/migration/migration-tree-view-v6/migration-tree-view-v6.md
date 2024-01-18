@@ -197,7 +197,7 @@ by passing the same icon to both the `collapseIcon` and the `expandIcon` slots o
 
 #### Define `endIcon`
 
-The icon rendered next to item without children
+The icon rendered next to an item without children
 is now defined as a slot both on the Tree View and the Tree Item components.
 
 If you were passing an icon to your Tree View component,
@@ -232,11 +232,11 @@ you need to use the new `endIcon` slot on this component:
 
 #### Define `icon`
 
-The icon rendered next to item
-is now defined as a slot both on the Tree View component.
+The icon rendered next to an item
+is now defined as a slot on the Tree Item component.
 
 If you were passing an icon to your Tree Item component,
-you need to use the new `endIcon` slot on this component:
+you need to use the new `icon` slot on this component:
 
 ```diff
   <SimpleTreeView>

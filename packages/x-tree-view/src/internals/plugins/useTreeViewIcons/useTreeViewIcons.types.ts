@@ -19,7 +19,7 @@ interface UseTreeViewIconsSlots {
   expandIcon?: React.ElementType;
   /**
    * The default icon displayed next to an end node.
-   * This is applied to all tree nodes and can be overridden by the TreeItem `icon` prop.
+   * This is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.
    */
   endIcon?: React.ElementType;
 }
