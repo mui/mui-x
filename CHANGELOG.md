@@ -144,7 +144,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
 - [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
 - [core] Make `karma` run in parallel (#11571) @romgrk
-- [core] make karma-parallel run under a new command (#11716) @romgrk
+- [core] make `karma-parallel` run under a new command (#11716) @romgrk
 - [tree view] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
 - [tree view] Explore a better plugin model API (#11567) @flaviendelangle
 - [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
