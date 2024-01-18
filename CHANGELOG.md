@@ -234,6 +234,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
 - [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
 - [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
+- [TreeView] Migrate remaining icon props to slots (#11713) @flaviendelangle
 - [TreeView] Pass through `Theme` generic to variants (#11480) @dhulme
 - [TreeView] Rename `useTreeItem` to `useTreeItemState` (#11712) @flaviendelangle
 - [TreeView] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
