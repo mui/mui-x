@@ -229,6 +229,67 @@ is now defined as a slot both on the Tree View and the Tree Item components.
      )
    }
   ```
+  
+- The `parentIcon` prop has been removed from the Tree View components.
+  
+  If you were passing an icon to your Tree View component,
+  you can achieve the same behavior
+  by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
+  
+  ```diff
+    <SimpleTreeView
+  -   defaultParentIcon={<MyCustomParentIcon />}
+  +   slots={{ collapseIcon: MyCustomParentIcon, expandIcon: MyCustomParentIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+    
+- The `endIcon` / `defaultEndIcon` props, rendered next to an item without children,
+  is now defined as a slot both on the Tree View and the Tree Item components.
+  
+  If you were passing an icon to your Tree View component,
+  you need to use the new `endIcon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView
+  -   defaultEndIcon={<MyCustomEndIcon />}
+  +   slots={{ endIcon: MyCustomEndIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+  
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `endIcon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     endIcon={<MyCustomEndIcon />}
+  +     slots={{ endIcon: MyCustomEndIcon }}
+      />
+    </SimpleTreeView>
+  ```
+  
+- The `icon` prop, rendered next to an item without children,
+  is now defined as a slot on the Tree Item component.
+  
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `icon` slot on this component:
+  
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     icon={<MyCustomIcon />}
+  +     slots={{ icon: MyCustomIcon }}
+      />
+    </SimpleTreeView>
+  ```
 
 
 - [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
