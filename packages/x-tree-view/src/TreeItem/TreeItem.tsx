@@ -183,7 +183,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
     collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
-    parentIcon: contextIcons.slots.parentIcon,
     endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
     icon: inSlots?.icon,
   };
@@ -225,13 +224,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const expansionIcon =
     expandable && !!ExpansionIcon ? <ExpansionIcon {...expansionIconProps} /> : null;
 
-  const DisplayIcon = expandable ? slots.parentIcon : slots.endIcon;
+  const DisplayIcon = expandable ? undefined : slots.endIcon;
   const { ownerState: displayIconOwnerState, ...displayIconProps } = useSlotProps({
     elementType: DisplayIcon,
     ownerState: {},
     externalSlotProps: (tempOwnerState: any) => {
       if (expandable) {
-        return resolveComponentProps(contextIcons.slotProps.parentIcon, tempOwnerState);
+        return {};
       }
 
       return {

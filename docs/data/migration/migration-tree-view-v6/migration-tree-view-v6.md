@@ -178,18 +178,18 @@ you need to use the new `collapseIcon` slot on this component:
   </SimpleTreeView>
 ```
 
-#### Define `parentIcon`
+#### Replace `parentIcon`
 
-The icon rendered next to item with children
-is now defined as a slot on the Tree View components.
+The `parentIcon` prop has been removed from the Tree View components.
 
 If you were passing an icon to your Tree View component,
-you need to use the new `parentIcon` slot on this component:
+you can achieve the same behavior
+by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
 
 ```diff
   <SimpleTreeView
 -   defaultParentIcon={<MyCustomParentIcon />}
-+   slots={{ parentIcon: MyCustomParentIcon }}
++   slots={{ collapseIcon: MyCustomParentIcon, expandIcon: MyCustomParentIcon }}
   >
     {items}
   </SimpleTreeView>

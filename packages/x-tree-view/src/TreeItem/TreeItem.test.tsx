@@ -112,7 +112,6 @@ describe('<TreeItem />', () => {
           expandIcon: () => <div data-test="defaultExpandIcon" />,
           collapseIcon: () => <div data-test="defaultCollapseIcon" />,
           endIcon: () => <div data-test="defaultEndIcon" />,
-          parentIcon: () => <div data-test="defaultParentIcon" />,
         }}
         defaultExpandedNodes={['1']}
       >
