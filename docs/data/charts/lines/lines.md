@@ -1,6 +1,6 @@
 ---
 title: React Line chart
-components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, ChartsOnAxisClickHandler
 ---
 
 # Charts - Lines
