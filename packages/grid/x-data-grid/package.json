@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "7.0.0-alpha.8",
+  "version": "7.0.0-alpha.9",
   "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",

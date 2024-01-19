@@ -5,7 +5,7 @@
 
 <h1 align="center">MUI X</h1>
 
-MUI X is a collection of advanced UI components that are significantly more complex than the ones found in the [MUI Core](https://github.com/mui/material-ui/) libraries.
+MUI X is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
 They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
