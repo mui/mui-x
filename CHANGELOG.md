@@ -1772,6 +1772,35 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.19.1
+
+_Jan 19, 2024_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.1`
+
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+
+#### `@mui/x-data-grid-pro@6.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.1`.
+
+#### `@mui/x-data-grid-premium@6.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.1`.
+
+### Charts / `@mui/x-charts@6.19.1`
+
+- [charts] Add `arcLabelRadius` property (#11563) @alexfauquette
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11719) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11703) @alexfauquette
+
 ## 6.19.0
 
 _Jan 11, 2024_
