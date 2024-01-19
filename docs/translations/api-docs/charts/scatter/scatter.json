@@ -1,1 +1,13 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when clicking on a scatter item.",
+      "typeDescriptions": {
+        "event": "Mouse event catched at the svg level",
+        "scatterItemIdentifier": "Identify whihc item got clicked"
+      }
+    }
+  },
+  "classDescriptions": {}
+}

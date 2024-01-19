@@ -1,6 +1,13 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when a bar item is clicked.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "barItemIdentifier": "The pie item identifier."
+      }
+    },
     "skipAnimation": { "description": "If <code>true</code>, animations are skiped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }

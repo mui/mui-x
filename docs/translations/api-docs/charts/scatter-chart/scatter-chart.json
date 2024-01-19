@@ -23,6 +23,13 @@
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
+    "onItemClick": {
+      "description": "Callback fired when clicking on a scatter item.",
+      "typeDescriptions": {
+        "event": "Mouse event catched at the svg level if using voronoid cells. Or Mouse event from the scatter element <code>disableVoronoi=true</code>.",
+        "scatterItemIdentifier": "Identify whihc item got clicked"
+      }
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },

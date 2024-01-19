@@ -1,7 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "onClick": {
+    "onItemClick": {
       "description": "Callback fired when a pie item is clicked.",
       "typeDescriptions": {
         "event": "The event source of the callback.",

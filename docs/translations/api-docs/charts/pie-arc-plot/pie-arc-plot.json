@@ -12,7 +12,7 @@
     "innerRadius": {
       "description": "The radius between circle center and the begining of the arc."
     },
-    "onClick": {
+    "onItemClick": {
       "description": "Callback fired when a pie item is clicked.",
       "typeDescriptions": {
         "event": "The event source of the callback.",

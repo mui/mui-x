@@ -1,0 +1,13 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event catched by <code>&lt;svg/&gt;</code>.",
+        "data": "The data about the axis clicked and associated items."
+      }
+    }
+  },
+  "classDescriptions": {}
+}
