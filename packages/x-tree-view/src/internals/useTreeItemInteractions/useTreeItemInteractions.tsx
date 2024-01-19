@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins';
-import { UseTreeItemStatus } from '../useTreeItem';
+import type { UseTreeItemStatus } from '../useTreeItem';
 
 export const useTreeItemInteractions = (nodeId: string, status: UseTreeItemStatus) => {
   const {

@@ -34,7 +34,13 @@
   ],
   "slots": [
     { "name": "collapseIcon", "description": "The icon used to collapse the node.", "class": null },
-    { "name": "expandIcon", "description": "The icon used to expand the node.", "class": null }
+    { "name": "expandIcon", "description": "The icon used to expand the node.", "class": null },
+    { "name": "endIcon", "description": "The icon displayed next to an end node.", "class": null },
+    {
+      "name": "icon",
+      "description": "The icon to display next to the tree node's label.",
+      "class": null
+    }
   ],
   "classes": [
     {
