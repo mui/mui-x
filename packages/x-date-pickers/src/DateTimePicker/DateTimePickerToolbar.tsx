@@ -18,6 +18,7 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
+import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -70,6 +71,12 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       : undefined,
   justifyContent: 'space-around',
   position: 'relative',
+  ...(ownerState.toolbarVariant === 'desktop' && {
+    [`& .${pickersToolbarTextClasses.selected}`]: {
+      color: (theme.vars || theme).palette.primary.main,
+      fontWeight: theme.typography.fontWeightBold,
+    },
+  }),
 }));
 
 DateTimePickerToolbarRoot.propTypes = {

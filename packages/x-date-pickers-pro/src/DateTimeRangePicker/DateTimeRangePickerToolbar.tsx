@@ -8,14 +8,12 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
   useUtils,
-  pickersToolbarTextClasses,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
 import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
-  dateTimePickerToolbarClasses,
 } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -71,7 +69,7 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ theme, ownerState }) => ({
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
   borderBottom: 'none',
   ...(ownerState?.toolbarVariant !== 'desktop'
     ? {
@@ -80,22 +78,14 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
     : {
         paddingBottom: 0,
       }),
-  [`&.${dateTimePickerToolbarClasses.root} .${pickersToolbarTextClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightBold,
-  },
 })) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ theme, ownerState }) => ({
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
   padding: ownerState?.toolbarVariant !== 'desktop' ? '12px 8px 12px 12px' : undefined,
-  [`&.${dateTimePickerToolbarClasses.root} .${pickersToolbarTextClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightBold,
-  },
 })) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
