@@ -3,6 +3,344 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.9
+
+_Jan 19, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The Data Grid headers have been refactored to bring immense improvements to scrolling, state management, and overall performance of the grid.
+- ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+- 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
+- 🐞 Bugfixes
+- 💔 Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+  The minimum required version of `@mui/material` is now `5.15.0`.
+
+### Data Grid
+
+#### Breaking changes
+
+- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+  If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ ariaV7: true }} />
+  +<DataGrid />
+  ```
+
+  The most notable changes that might affect your application or tests are:
+
+  - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
+
+    ```diff
+    -<div class="MuiDataGrid-root" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false">
+    +<div class="MuiDataGrid-root">
+       <div class="MuiDataGrid-toolbarContainer"></div>
+    -    <div class="MuiDataGrid-main"></div>
+    +    <div class="MuiDataGrid-main" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false"></div>
+       <div class="MuiDataGrid-footerContainer"></div>
+     </div>
+    ```
+
+  - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
+
+  - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
+
+    ```diff
+      function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton
+      -     title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
+      +     slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+          />
+          <GridToolbarDensitySelector
+      -     variant="outlined"    // 🛑 This was previously forwarded to the button component
+      +     slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+          />
+          </GridToolbarContainer>
+        );
+      }
+    ```
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ columnGrouping: true }} />
+  +<DataGrid />
+  ```
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are no longer prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are no longer prefixed with `unstable_`.
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+
+#### `@mui/x-data-grid@7.0.0-alpha.9`
+
+- [DataGrid] Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
+- [DataGrid] Allow to programmatically sort unsortable columns (#11512) @MBilalShafi
+- [DataGrid] Fix incorrect default value for `filterModel.logicOperator` (#11673) @MBilalShafi
+- [DataGrid] Make `column grouping` feature stable (#11698) @MBilalShafi
+- [DataGrid] Remove the `ariaV7` experimental flag (#11428) @cherniavskii
+- [DataGrid] Start the FAQ page (#11686) @MBilalShafi
+- [DataGrid] Sticky headers (#10059) @romgrk
+- [DataGrid] Wrap toolbar buttons with tooltip (#11357) @MBilalShafi
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) @BCaspari
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.9`, plus:
+
+- [DataGridPro] Allow non-pinnable columns to be pinned programmatically (#11680) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.9`, plus:
+
+- [DataGridPremium] Allow aggregation to be applied for non-aggregable columns (#11574) @MBilalShafi
+- [DataGridPremium] Allow programmatically grouping non-groupable columns (#11539) @MBilalShafi
+
+### Date Pickers
+
+#### Breaking changes
+
+- The `locales` export has been removed from the root of the packages.
+  If you were importing locales from the root, be sure to update it:
+
+  ```diff
+  -import { frFR } from '@mui/x-date-pickers';
+  +import { frFR } from '@mui/x-date-pickers/locales';
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.9`
+
+- [fields] Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
+- [fields] Support farsi digits (#11639) @flaviendelangle
+- [pickers] Fix AdapterLuxon `getWeekNumber` behavior (#11697) @LukasTy
+- [pickers] Stop root exporting `locales` (#11612) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.9`
+
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
+- [charts] Remove a TS ignore (#11688) @alexfauquette
+
+### Tree View
+
+#### Breaking changes
+
+- The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when it is collapsed),
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ChevronRight` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+
+  ```diff
+  -import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+  
+   <SimpleTreeView
+  -  defaultExpandIcon={<ChevronRightIcon />}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree View component,
+  you need to use the new `expandIcon` slot on this component:
+
+  ```diff
+   <SimpleTreeView
+  -  defaultExpandIcon={<MyCustomExpandIcon />}
+  +  slots={{ expandIcon: MyCustomExpandIcon }}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `expandIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     expandIcon={<MyCustomExpandIcon />}
+  +     slots={{ expandIcon: MyCustomExpandIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when it is expanded),
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ExpandMore` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+
+  ```diff
+  - import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+  
+    <SimpleTreeView
+  -   defaultCollapseIcon={<ExpandMoreIcon />}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree View component,
+  you need to use the new `collapseIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultCollapseIcon={<MyCustomCollapseIcon />}
+  +   slots={{ collapseIcon: MyCustomCollapseIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `collapseIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     collapseIcon={<MyCustomCollapseIcon />}
+  +     slots={{ collapseIcon: MyCustomCollapseIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `useTreeItem` hook has been renamed `useTreeItemState`.
+  This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+
+  ```diff
+  -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
+  +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
+  
+   const CustomContent = React.forwardRef((props, ref) => {
+  -  const { disabled } = useTreeItem(props.nodeId);
+  +  const { disabled } = useTreeItemState(props.nodeId);
+  
+     // Render some UI
+   });
+  
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+  ```
+
+- The `parentIcon` prop has been removed from the Tree View components.
+
+  If you were passing an icon to your Tree View component,
+  you can achieve the same behavior
+  by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultParentIcon={<MyCustomParentIcon />}
+  +   slots={{ collapseIcon: MyCustomParentIcon, expandIcon: MyCustomParentIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+- The `endIcon` / `defaultEndIcon` props, rendered next to an item without children,
+  is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were passing an icon to your Tree View component,
+  you need to use the new `endIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultEndIcon={<MyCustomEndIcon />}
+  +   slots={{ endIcon: MyCustomEndIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `endIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     endIcon={<MyCustomEndIcon />}
+  +     slots={{ endIcon: MyCustomEndIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `icon` prop, rendered next to an item without children,
+  is now defined as a slot on the Tree Item component.
+
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `icon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     icon={<MyCustomIcon />}
+  +     slots={{ icon: MyCustomIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+#### `@mui/x-tree-view@7.0.0-alpha.9`
+
+- [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
+- [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
+- [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
+- [TreeView] Migrate remaining icon props to slots (#11713) @flaviendelangle
+- [TreeView] Pass through `Theme` generic to variants (#11480) @dhulme
+- [TreeView] Rename `useTreeItem` to `useTreeItemState` (#11712) @flaviendelangle
+- [TreeView] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
+- [TreeView] Explore a better plugin model API (#11567) @flaviendelangle
+
+### Docs
+
+- [docs] Clean the pickers migration guide (#11694) @flaviendelangle
+- [docs] Cleanup and fix Pickers Playground styling (#11700) @LukasTy
+- [docs] First draft of the Tree View custom plugin doc (#11564) @flaviendelangle
+- [docs] Fix Pickers migration syntax and diffs (#11695) @LukasTy
+- [docs] Fix generated tree view API docs (#11737) @LukasTy
+- [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
+- [docs] Improve codemod for v7 (#11650) @oliviertassinari
+- [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
+- [docs] Parse markdown on API docs demo titles (#11728) @LukasTy
+- [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
+- [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
+- [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
+
+### Core
+
+- [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+- [core] Make `karma` run in parallel (#11571) @romgrk
+- [core] make `karma-parallel` run under a new command (#11716) @romgrk
+- [code-infra] Migrate all prettier APIs to the async version (#11732) @Janpot
+- [code-infra] Update the Babel macro path (#11479) @michaldudak
+- [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
+- [test] Fix flaky Data Grid test (#11725) @cherniavskii
+
 ## 7.0.0-alpha.8
 
 _Jan 11, 2024_
@@ -103,8 +441,8 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
       id: 'node-1',
       label: 'Node 1',
       children: [
-        { id: 'node-1-1', label: Node 1.1' },
-        { id: 'node-1-2', label: Node 1.2' },
+        { id: 'node-1-1', label: 'Node 1.1' },
+        { id: 'node-1-2', label: 'Node 1.2' },
       ],
     },
     {
@@ -1433,6 +1771,35 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.1
+
+_Jan 19, 2024_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.1`
+
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+
+#### `@mui/x-data-grid-pro@6.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.1`.
+
+#### `@mui/x-data-grid-premium@6.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.1`.
+
+### Charts / `@mui/x-charts@6.19.1`
+
+- [charts] Add `arcLabelRadius` property (#11563) @alexfauquette
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11719) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11703) @alexfauquette
 
 ## 6.19.0
 
