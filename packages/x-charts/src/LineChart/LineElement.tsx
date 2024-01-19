@@ -121,7 +121,16 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighli
  * - [LineElement API](https://mui.com/x/api/charts/line-element/)
  */
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    onClick,
+    ...other
+  } = props;
 
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
@@ -148,6 +157,8 @@ function LineElement(props: LineElementProps) {
       ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
     },
     ownerState,
   });

@@ -90,6 +90,50 @@ However, it cannot extrapolate the curve before the first non-null data point or
 
 {{"demo": "ConnectNulls.js"}}
 
+## Click event
+
+Line charts provides multiple click handlers:
+
+- `onAreaClick` for click on a specific area.
+- `onLineClick` for click on a specific line.
+- `onMarkClick` for click on a specific mark.
+- `onAxisClick` for a click anywhere in the chart
+
+They all provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identify clicked elements.
+) => {};
+```
+
+{{"demo": "LineClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onAxisClick` and the others:
+
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
+  :::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <LinePlot onItemClick={onLineClick} />
+  <AreaPlot onItemClick={onAreaClick} />
+</ChartContainer>;
+```
+
 ## Styling
 
 ### Interpolation

@@ -5,6 +5,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { LineItemIdentifier } from '../models/seriesType/line';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -25,6 +26,15 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
    * @default {}
    */
   slotProps?: MarkPlotSlotProps;
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    lineItemIdentifier: LineItemIdentifier,
+  ) => void;
 }
 
 /**
@@ -38,7 +48,7 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, onItemClick, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -138,6 +148,10 @@ function MarkPlot(props: MarkPlotProps) {
                   x={x}
                   y={y!} // Don't knwo why TS don't get from the filter that y can't be null
                   highlightScope={series[seriesId].highlightScope}
+                  onClick={
+                    onItemClick &&
+                    ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
+                  }
                   {...slotProps?.mark}
                 />
               );
@@ -153,6 +167,12 @@ MarkPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

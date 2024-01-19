@@ -121,6 +121,7 @@ function MarkElement(props: MarkElementProps) {
     shape,
     dataIndex,
     highlightScope,
+    onClick,
     ...other
   } = props;
 
@@ -151,6 +152,8 @@ function MarkElement(props: MarkElementProps) {
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
+      onClick={onClick}
+      cursor={onClick ? 'pointer' : 'unset'}
       {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
     />
   );

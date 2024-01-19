@@ -7,6 +7,7 @@ import { LineElement, LineElementProps } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { LineItemIdentifier } from '../models/seriesType/line';
 
 export interface LinePlotSlots {
   line?: React.JSXElementConstructor<LineElementProps>;
@@ -18,7 +19,17 @@ export interface LinePlotSlotProps {
 
 export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
-    Pick<LineElementProps, 'slots' | 'slotProps'> {}
+    Pick<LineElementProps, 'slots' | 'slotProps'> {
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    lineItemIdentifier: LineItemIdentifier,
+  ) => void;
+}
 
 /**
  * Demos:
@@ -31,7 +42,7 @@ export interface LinePlotProps
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, onItemClick, ...other } = props;
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -99,6 +110,7 @@ function LinePlot(props: LinePlotProps) {
               highlightScope={series[seriesId].highlightScope}
               slots={slots}
               slotProps={slotProps}
+              onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
             />
           );
         });
@@ -112,6 +124,12 @@ LinePlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

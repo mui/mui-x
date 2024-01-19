@@ -7,6 +7,7 @@ import { AreaElement, AreaElementProps } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { LineItemIdentifier } from '../models/seriesType/line';
 
 export interface AreaPlotSlots {
   area?: React.JSXElementConstructor<AreaElementProps>;
@@ -18,7 +19,17 @@ export interface AreaPlotSlotProps {
 
 export interface AreaPlotProps
   extends React.SVGAttributes<SVGSVGElement>,
-    Pick<AreaElementProps, 'slots' | 'slotProps'> {}
+    Pick<AreaElementProps, 'slots' | 'slotProps'> {
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    lineItemIdentifier: LineItemIdentifier,
+  ) => void;
+}
 
 /**
  * Demos:
@@ -32,7 +43,7 @@ export interface AreaPlotProps
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, onItemClick, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -103,6 +114,7 @@ function AreaPlot(props: AreaPlotProps) {
                 highlightScope={series[seriesId].highlightScope}
                 slots={slots}
                 slotProps={slotProps}
+                onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
               />
             )
           );
@@ -117,6 +129,12 @@ AreaPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a pie item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

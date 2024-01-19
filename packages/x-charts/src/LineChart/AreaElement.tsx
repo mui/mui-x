@@ -119,7 +119,16 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
  * - [AreaElement API](https://mui.com/x/api/charts/area-element/)
  */
 function AreaElement(props: AreaElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    onClick,
+    ...other
+  } = props;
 
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
@@ -145,6 +154,8 @@ function AreaElement(props: AreaElementProps) {
       ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
     },
     ownerState,
   });
