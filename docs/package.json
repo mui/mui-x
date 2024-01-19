@@ -70,7 +70,7 @@
     "moment-timezone": "^0.5.44",
     "next": "^13.5.6",
     "nprogress": "^0.2.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.33",
     "prismjs": "^1.29.0",
     "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
