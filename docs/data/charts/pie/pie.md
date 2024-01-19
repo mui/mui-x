@@ -90,6 +90,20 @@ This value can be negative to reduce arc size.
 
 {{"demo": "PieActiveArc.js"}}
 
+## Click event
+
+Pie charts provides a click handler `onItemClick` for click on a specific pie arc.
+It provides the following signature.
+
+```js
+const onItemClick = (
+  event, // The mouse event.
+  params, // An object that identify clicked element.
+) => {};
+```
+
+{{"demo": "PieClickNoSnap.js"}}
+
 ## Animation
 
 To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
