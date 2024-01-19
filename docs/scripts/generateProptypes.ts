@@ -6,7 +6,7 @@ import {
   getPropTypesFromFile,
   injectPropTypesInFile,
 } from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utilities';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
