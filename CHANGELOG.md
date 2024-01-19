@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.19.1
 
-_Jan 18, 2024_
+_Jan 19, 2024_
 
 We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
 
@@ -21,18 +21,14 @@ We'd like to offer a big thanks to the 1 contributors who made this release poss
 #### `@mui/x-data-grid-pro@6.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@6.19.1`.
-
-
 #### `@mui/x-data-grid-premium@6.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@6.19.1`.
-
-
 ### Charts / `@mui/x-charts@6.19.1`
 
-- [charts] Add `arcLabelRadius` property (@alexfauquette) (#11563) @github-actions[bot]
-- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (@alexfauquette) (#11719) @github-actions[bot]
-- [charts] Fix default `stackOffset` for `LineChart` (@alexfauquette) (#11703) @github-actions[bot]
+- [charts] Add `arcLabelRadius` property (#11563) @alexfauquette
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11719) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11703) @alexfauquette
 
 ## 6.19.0
 
