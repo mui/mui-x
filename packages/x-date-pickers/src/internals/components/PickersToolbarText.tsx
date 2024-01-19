@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
   pickersToolbarTextClasses,
@@ -43,7 +43,8 @@ const PickersToolbarTextRoot = styled(Typography, {
   transition: theme.transitions.create('color'),
   color: (theme.vars || theme).palette.text.secondary,
   [`&.${pickersToolbarTextClasses.selected}`]: {
-    color: (theme.vars || theme).palette.text.primary,
+    color: (theme.vars || theme).palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
   },
 }));
 
