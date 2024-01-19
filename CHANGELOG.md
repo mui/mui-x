@@ -5,11 +5,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.0.0-alpha.9
 
-_Jan 18, 2024_
+_Jan 19, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 The Data Grid headers are now sticky - which brings immense improvements to scrolling, state management, and overall performance of the grid
+- 🎁 The Data Grid headers have been refactored to bring immense improvements to scrolling, state management, and overall performance of the grid.
 - ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
 - 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
