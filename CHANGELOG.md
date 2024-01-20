@@ -145,7 +145,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 
   ```diff
   -import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-  
+
    <SimpleTreeView
   -  defaultExpandIcon={<ChevronRightIcon />}
    >
@@ -187,7 +187,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
 
   ```diff
   - import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-  
+
     <SimpleTreeView
   -   defaultCollapseIcon={<ExpandMoreIcon />}
     >
@@ -227,14 +227,14 @@ is now defined as a slot both on the Tree View and the Tree Item components.
   ```diff
   -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
   +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
-  
+
    const CustomContent = React.forwardRef((props, ref) => {
   -  const { disabled } = useTreeItem(props.nodeId);
   +  const { disabled } = useTreeItemState(props.nodeId);
-  
+
      // Render some UI
    });
-  
+
    function App() {
      return (
        <SimpleTreeView>
@@ -412,7 +412,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11628) @LukasTy
 - [docs] Improve `git diff` format @oliviertassinari
-- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
 - [docs] Remove old data grid translation files (#11646) @cherniavskii
 - [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
 - [docs] Improve charts landing page (#11570) @oliviertassinari
@@ -422,8 +422,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 - [core] Lock `jsdom` version (#11652) @cherniavskii
 - [core] Remove PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD (#11608) @oliviertassinari
 - [core] Simplify isSsr logic (#11606) @oliviertassinari
-- [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
-- [core] Use MUI X official name in errors (#11645) @oliviertassinari
+- [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
+- [core] Use MUI X official name in errors (#11645) @oliviertassinari
 
 ## 7.0.0-alpha.7
 
@@ -559,10 +559,10 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 
 - [core] Fix release changelog (#11496) @romgrk
 - [core] Fix use of ::before & ::after (#11515) @oliviertassinari
-- [core] Localize the issue template to MUI X (#11511) @oliviertassinari
+- [core] Localize the issue template to MUI X (#11511) @oliviertassinari
 - [core] Regen api files (#11542) @flaviendelangle
 - [core] Remove issue emoji @oliviertassinari
-- [core] Sync the release instructions with MUI Core @oliviertassinari
+- [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
 
 ## 7.0.0-alpha.6
@@ -1071,7 +1071,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [docs] Polish Next.js header description @oliviertassinari
 - [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
 - [docs] Simplify a bit chart demo (#11173) @oliviertassinari
-- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
+- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
 - [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
 
 ### Core
@@ -1460,15 +1460,15 @@ And if you need the exact same output you can apply the following transformation
    // For Day.js
   -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
-  
+
    // For Luxon
   -const isoString = adapter.toISO(value);
   +const isoString = value.toUTC().toISO({ format: 'extended' });
-  
+
    // For DateFns
   -const isoString = adapter.toISO(value);
   +const isoString = dateFns.formatISO(value, { format: 'extended' });
-  
+
    // For Moment
   -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
@@ -1836,7 +1836,7 @@ Same changes as in `@mui/x-date-pickers@6.19.0`.
 
 - [docs] Add missing component @oliviertassinari
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11637) @LukasTy
-- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
 - [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
 - [docs] Add demo to the charts overview page (#11586) @danilo-leal
 - [docs] Fix 404 links in the docs @oliviertassinari
@@ -2690,7 +2690,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [docs] Add missing MIT packages on the Licensing page (#10348) @flaviendelangle
 - [docs] Clearer component pattern @oliviertassinari
 - [docs] Easier to understand demo (#10370) @oliviertassinari
-- [docs] Fix `301` to Material UI @oliviertassinari
+- [docs] Fix `301` to Material UI @oliviertassinari
 - [docs] Improve the column visibility section (#10327) @MBilalShafi
 - [docs] Improve the documentation section `rowIdentifier` (#10326) @MBilalShafi
 - [docs] Improve pickers localization documentation (#10202) @flaviendelangle
@@ -2768,12 +2768,12 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 - [docs] Add conditional range picker props example (#10227) @LukasTy
 - [docs] Add toolbar to the multi-filters demo (#10223) @MBilalShafi
 - [docs] Avoid the use of "We" @oliviertassinari
-- [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
+- [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
 - [docs] Enable `ariaV7` flag for demos using `useDemoData` hook (#10204) @cherniavskii
 - [docs] Fix Tree View link to API references (#10282) @oliviertassinari
 - [docs] Fix image layout shift (#10313) @oliviertassinari
-- [docs] Fix link to MUI X from readme logo @oliviertassinari
-- [docs] Fix redirection to Base UI URLs @oliviertassinari
+- [docs] Fix link to MUI X from readme logo @oliviertassinari
+- [docs] Fix redirection to Base UI URLs @oliviertassinari
 - [docs] Improve Tree View demos (#10268) @oliviertassinari
 - [docs] Improve docs for ref type props (#10273) @michelengelen
 - [docs] Improve npm package README (#10269) @oliviertassinari
@@ -2857,7 +2857,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [docs] Improve the week picker example (#8257) @flaviendelangle
 - [docs] Include code links in the data grid demo (#10219) @cherniavskii
 - [docs] Polish page for SEO (#10216) @oliviertassinari
-- [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
+- [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
 
 ### Core
 
@@ -3118,7 +3118,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - ⌚️ Move the tree view component from `@mui/lab` package
 
-  The `<TreeView />` component has been moved to the MUI X repository.
+  The `<TreeView />` component has been moved to the MUI X repository.
   It is now accessible from its own package: `@mui/x-tree-view`.
 
 - 🌍 Improve Hebrew (he-IL), Finnish (fi-FI), and Italian (it-IT) locales on the data grid
@@ -3180,7 +3180,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 
 - [docs] Add Tree View doc (#9825) @flaviendelangle
 - [docs] Add charts nav item (#9821) @LukasTy
-- [docs] Add charts to MUI X introduction pages (#9704) @joserodolfofreitas
+- [docs] Add charts to MUI X introduction pages (#9704) @joserodolfofreitas
 - [docs] Add example for avoiding picker views layout shift (#9781) @noraleonte
 - [docs] Consistency of Next.js App Router @oliviertassinari
 - [docs] Fix API page regression: bring back slots section (#9866) @alexfauquette
@@ -3249,7 +3249,7 @@ Same changes as in `@mui/x-date-pickers@6.10.2`.
 ### Docs
 
 - [docs] Add `pnpm` in more places @oliviertassinari
-- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
+- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
 - [docs] Align pickers "uncontrolled vs controlled" sections (#9772) @LukasTy
 - [docs] Apply style guide to the data grid Layout page (#9673) @richbustos
 - [docs] Differentiate between packages in `slotProps` docs (#9668) @cherniavskii
@@ -3610,7 +3610,7 @@ Same changes as in `@mui/x-date-pickers@6.9.0`.
 
 - [docs] Add examples of using different time view renderers (#9360) @LukasTy
 - [docs] Add recipe for single-click editing (#8365) @m4theushw
-- [docs] Fix Base UI references (#9349) @oliviertassinari
+- [docs] Fix Base UI references (#9349) @oliviertassinari
 - [docs] Fix random screenshot generation (#9364) @cherniavskii
 - [docs] Remove random generation from chart doc example (#9343) @flaviendelangle
 - [docs] Sync h1 with sidenav link (#9252) @oliviertassinari
@@ -4405,7 +4405,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Add a warning for `luxon` macro tokens (#8245) @flaviendelangle
 - [docs] Complete pickers customization pages (#8066) @alexfauquette
 - [docs] Fix 301 redirection @oliviertassinari
-- [docs] Fix 404 links to customization Material UI APIs (#8200) @oliviertassinari
+- [docs] Fix 404 links to customization Material UI APIs (#8200) @oliviertassinari
 - [docs] Fix `moment-hijri` demo (#8255) @LukasTy
 - [docs] Improve migration diff (#8240) @oliviertassinari
 - [docs] Change **What's new** page url to point to announcement blog post (#8186) @joserodolfofreitas
@@ -4836,7 +4836,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 
 _Jan 19, 2023_
 
-After a long period in alpha, we're glad to announce the first MUI X v6 beta!
+After a long period in alpha, we're glad to announce the first MUI X v6 beta!
 We encourage you to try out this version, packed with improvements, bug fixes, and a few highlighted features ✨:
 
 **Data Grid**
@@ -6092,7 +6092,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Breaking changes
 
 - The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
-  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props):
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props):
 
   ```diff
    // Same on all other pickers
@@ -6243,7 +6243,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   Some of the names have also been prefixed by `desktop` when it was unclear that the behavior was only applied on the desktop version of the pickers (or the responsive version when used on a desktop).
 
@@ -6432,7 +6432,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Breaking changes
 
 - The `renderDay` prop has been replaced by a `Day` component slot.
-  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   ```diff
    // Same for any other date, date time or date range picker.

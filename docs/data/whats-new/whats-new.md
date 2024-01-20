@@ -1,4 +1,4 @@
-# What's new in MUI X
+# What's new in MUI X
 
 <p class="description">Discover what's new in the latest versions.</p>
 
