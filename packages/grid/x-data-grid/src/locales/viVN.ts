@@ -38,12 +38,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'In',
   toolbarExportExcel: 'Xuất Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Tìm kiếm',
-  columnsPanelTextFieldPlaceholder: 'Tiêu đề cột',
-  columnsPanelDragIconLabel: 'Sắp xếp',
-  columnsPanelShowAllButton: 'Hiện tất cả',
-  columnsPanelHideAllButton: 'Ẩn tất cả',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',

@@ -38,12 +38,9 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'הדפסה',
   toolbarExportExcel: 'ייצוא ל- Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'חפש עמודה',
-  columnsPanelTextFieldPlaceholder: 'כותרת עמודה',
-  columnsPanelDragIconLabel: 'סדר עמודות מחדש',
-  columnsPanelShowAllButton: 'הצג הכל',
-  columnsPanelHideAllButton: 'הסתר הכל',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',

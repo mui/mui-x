@@ -38,12 +38,9 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Imprimir',
   toolbarExportExcel: 'Descargar como Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Columna de búsqueda',
-  columnsPanelTextFieldPlaceholder: 'Título de columna',
-  columnsPanelDragIconLabel: 'Reordenar columna',
-  columnsPanelShowAllButton: 'Mostrar todo',
-  columnsPanelHideAllButton: 'Ocultar todo',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',

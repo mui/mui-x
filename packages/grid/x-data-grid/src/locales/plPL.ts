@@ -37,12 +37,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Drukuj',
   toolbarExportExcel: 'Pobierz jako plik Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Znajdź kolumnę',
-  columnsPanelTextFieldPlaceholder: 'Tytuł kolumny',
-  columnsPanelDragIconLabel: 'Zmień kolejność kolumn',
-  columnsPanelShowAllButton: 'Pokaż wszystko',
-  columnsPanelHideAllButton: 'Ukryj wszystko',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',

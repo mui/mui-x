@@ -37,12 +37,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Yazdır',
   toolbarExportExcel: 'Excel olarak aktar',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Sütun ara',
-  columnsPanelTextFieldPlaceholder: 'Sütun adı',
-  columnsPanelDragIconLabel: 'Sütunları yeniden sırala',
-  columnsPanelShowAllButton: 'Hepsini göster',
-  columnsPanelHideAllButton: 'Hepsini gizle',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',

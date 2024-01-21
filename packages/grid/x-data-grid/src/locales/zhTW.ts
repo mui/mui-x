@@ -37,12 +37,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '列印',
   toolbarExportExcel: '匯出 Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: '欄位搜尋',
-  columnsPanelTextFieldPlaceholder: '欄位名稱',
-  columnsPanelDragIconLabel: '排序欄位',
-  columnsPanelShowAllButton: '顯示所有',
-  columnsPanelHideAllButton: '隱藏所有',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',

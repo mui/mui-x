@@ -38,12 +38,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Ispis',
   toolbarExportExcel: 'Preuzmite kao Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Pronađi stupac',
-  columnsPanelTextFieldPlaceholder: 'Naslov stupca',
-  columnsPanelDragIconLabel: 'Promijeni redoslijed stupca',
-  columnsPanelShowAllButton: 'Pokaži sve',
-  columnsPanelHideAllButton: 'Sakrij sve',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodajte filter',

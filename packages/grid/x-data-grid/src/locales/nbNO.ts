@@ -38,12 +38,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Skriv ut',
   toolbarExportExcel: 'Last ned som Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Finn kolonne',
-  columnsPanelTextFieldPlaceholder: 'Kolonne tittel',
-  columnsPanelDragIconLabel: 'Reorganiser kolonne',
-  columnsPanelShowAllButton: 'Vis alle',
-  columnsPanelHideAllButton: 'Skjul alle',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',

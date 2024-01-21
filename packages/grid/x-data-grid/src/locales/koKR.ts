@@ -37,12 +37,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '프린트',
   toolbarExportExcel: 'Excel로 내보내기',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: '열 검색',
-  columnsPanelTextFieldPlaceholder: '열 이름',
-  columnsPanelDragIconLabel: '열 정렬',
-  columnsPanelShowAllButton: '모두 보기',
-  columnsPanelHideAllButton: '모두 숨기기',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
