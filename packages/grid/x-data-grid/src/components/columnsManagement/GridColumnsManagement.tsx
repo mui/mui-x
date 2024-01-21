@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
@@ -263,6 +264,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           ) : (
             <span />
           )}
+
           {!disableResetButton ? (
             <rootProps.slots.baseButton
               onClick={() => apiRef.current.setColumnVisibilityModel(initialColumnVisibilityModel)}
@@ -277,6 +279,40 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     </React.Fragment>
   );
 }
+
+GridColumnsManagement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If `true`, the column search field will be focused automatically.
+   * If `false`, the first column switch input will be focused automatically.
+   * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   * @default true
+   */
+  autoFocusSearchField: PropTypes.bool,
+  /**
+   * If `true`, the `Reset` button will not be disabled
+   * @default false
+   */
+  disableResetButton: PropTypes.bool,
+  /**
+   * If `true`, the `Show/Hide all` toggle checkbox will not be displayed.
+   * @default false
+   */
+  disableShowHideToggle: PropTypes.bool,
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns: PropTypes.func,
+  searchPredicate: PropTypes.func,
+  sort: PropTypes.oneOf(['asc', 'desc']),
+} as any;
 
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
