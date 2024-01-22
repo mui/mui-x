@@ -6,6 +6,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "className": {
+      "description": "Class name applied to the root element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "closeOnSelect": {
       "description": "If <code>true</code>, the popover or modal will close after submitting the full date.",
       "deprecated": "",
