@@ -21,7 +21,7 @@ import { randomInt } from '../services/random-generator';
 const apiRef = {} as any;
 
 const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
-  return colDef.valueGetter?.(row[row.id], row, colDef, apiRef) || row[field];
+  return colDef.valueGetter?.(row[row.id] as never, row, colDef, apiRef) || row[field];
 };
 
 const getRowComparator = (

@@ -985,7 +985,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             field: 'size',
             type: 'singleSelect',
             valueOptions: sizes,
-            valueGetter: (value) => value.size,
+            valueGetter: (value: { size: number }) => value.size,
             valueSetter: (value: string, row) => {
               const size = sizes.find((option) => option.size === value);
               return { ...row, size };

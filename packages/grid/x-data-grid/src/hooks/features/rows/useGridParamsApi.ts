@@ -107,7 +107,7 @@ export function useGridParamsApi(
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
       const value = row[colDef.field];
-      return colDef.valueGetter(value, row, colDef, apiRef);
+      return colDef.valueGetter(value as never, row, colDef, apiRef);
     },
     [apiRef],
   );
@@ -121,7 +121,7 @@ export function useGridParamsApi(
       }
 
       const value = row[colDef.field];
-      return colDef.valueGetter(value, row, colDef, apiRef);
+      return colDef.valueGetter(value as never, row, colDef, apiRef);
     },
     [apiRef],
   );
