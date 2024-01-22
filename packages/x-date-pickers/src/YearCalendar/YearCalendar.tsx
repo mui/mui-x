@@ -283,9 +283,9 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
-  const yearRange = utils.getYearRange([minDate, maxDate])
+  const yearRange = utils.getYearRange([minDate, maxDate]);
   if (yearsReversed) {
-    yearRange.reverse()
+    yearRange.reverse();
   }
 
   return (

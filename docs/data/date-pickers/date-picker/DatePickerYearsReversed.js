@@ -8,7 +8,12 @@ export default function DatePickerYearsReversed() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
-        <DatePicker label="Years in reverse" views={["year"]} openTo="year" yearsReversed />
+        <DatePicker
+          label="Years in reverse"
+          views={['year']}
+          openTo="year"
+          yearsReversed
+        />
       </DemoContainer>
     </LocalizationProvider>
   );

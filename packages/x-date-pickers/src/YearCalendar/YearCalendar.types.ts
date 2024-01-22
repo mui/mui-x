@@ -13,7 +13,7 @@ export interface ExportedYearCalendarProps {
   /**
    * Display years from newest to oldest (used on year only picker)
    */
-  yearsReversed?: boolean
+  yearsReversed?: boolean;
 }
 
 export interface YearCalendarProps<TDate>

@@ -30,7 +30,7 @@ export interface DesktopDatePickerProps<TDate>
   /**
    * Years displayed in reverse order (used on year only picker)
    */
-  yearsReversed?: boolean,
+  yearsReversed?: boolean;
   /**
    * Overridable component slots.
    * @default {}

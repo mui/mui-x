@@ -88,6 +88,11 @@
       "description": "Years rendered per row.",
       "deprecated": "",
       "typeDescriptions": {}
+    },
+    "yearsReversed": {
+      "description": "Display years from newest to oldest (used on year only picker)",
+      "deprecated": "",
+      "typeDescriptions": {}
     }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },

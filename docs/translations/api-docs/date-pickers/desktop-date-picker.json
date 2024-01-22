@@ -265,6 +265,11 @@
       "description": "Years rendered per row.",
       "deprecated": "",
       "typeDescriptions": {}
+    },
+    "yearsReversed": {
+      "description": "Years displayed in reverse order (used on year only picker)",
+      "deprecated": "",
+      "typeDescriptions": {}
     }
   },
   "classDescriptions": {},
