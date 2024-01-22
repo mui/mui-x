@@ -6,11 +6,6 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "calendars": {
-      "description": "The number of calendars to render on <strong>desktop</strong>.",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
     "className": {
       "description": "Class name applied to the root element.",
       "deprecated": "",
