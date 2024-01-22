@@ -164,7 +164,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Salary',
     generateData: () => randomInt(30000, 80000),
     type: 'number',
-    valueFormatter: (value) => {
+    valueFormatter: (value?: number) => {
       if (!value || typeof value !== 'number') {
         return value;
       }

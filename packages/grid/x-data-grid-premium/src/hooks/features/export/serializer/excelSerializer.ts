@@ -50,7 +50,7 @@ const getFormattedValueOptions = (
         return option;
       }
 
-      return String(colDef.valueFormatter!(option, row, colDef, { current: api }));
+      return String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
     });
   }
   return valueOptionsFormatted.map((option) =>

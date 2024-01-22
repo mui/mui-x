@@ -200,3 +200,46 @@ function ValueGetter() {
     },
   ];
 }
+
+function ValueFormatter() {
+  const oldSignatureValueFormatter: GridColDef[] = [
+    {
+      field: 'brand',
+      valueFormatter: (params) => {
+        type Test = Expect<Equal<typeof params, never>>;
+        return '';
+      },
+    },
+    {
+      field: 'brand',
+      valueFormatter: ({ value, row }) => {
+        type Tests = [Expect<Equal<typeof value, never>>, Expect<Equal<typeof row, never>>];
+        return '';
+      },
+    },
+  ];
+
+  const currentSignatureValueFormatter: GridColDef[] = [
+    {
+      field: 'brand',
+      valueFormatter: (value) => {
+        type Test = Expect<Equal<typeof value, never>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      valueFormatter: (value: number) => {
+        type Test = Expect<Equal<typeof value, number>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      valueFormatter: (value: 'foo' | 'bar') => {
+        type Test = Expect<Equal<typeof value, 'foo' | 'bar'>>;
+        return value;
+      },
+    },
+  ];
+}

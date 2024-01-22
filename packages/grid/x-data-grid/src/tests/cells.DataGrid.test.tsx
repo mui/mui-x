@@ -145,7 +145,9 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   it('should call the valueFormatter with the correct params', () => {
-    const valueFormatter = spy<GridValueFormatter>((value) => (value ? 'Yes' : 'No'));
+    const valueFormatter = spy<GridValueFormatter<{ id: number; isActive: boolean }>>((value) =>
+      value ? 'Yes' : 'No',
+    );
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid

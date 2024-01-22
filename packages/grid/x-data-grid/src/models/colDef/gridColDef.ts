@@ -53,8 +53,13 @@ export type GridValueGetter<
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => V;
 
-export type GridValueFormatter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
-  value: any,
+export type GridValueFormatter<
+  R extends GridValidRowModel = GridValidRowModel,
+  V = any,
+  F = V,
+  TValue = never,
+> = (
+  value: TValue,
   row: R,
   column: GridColDef<R, V, F>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -181,7 +186,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Function that allows to apply a formatter before rendering its value.
    */
-  valueFormatter?: GridValueFormatter;
+  valueFormatter?: GridValueFormatter<R, V, F>;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
    * @returns {V} The converted value to use internally.

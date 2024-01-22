@@ -79,7 +79,7 @@ export function useGridParamsApi(
         isEditable: false,
       };
       if (colDef && colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter(value, row, colDef, apiRef);
+        params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
       }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
@@ -134,7 +134,7 @@ export function useGridParamsApi(
         return value;
       }
 
-      return colDef.valueFormatter(value, row, colDef, apiRef);
+      return colDef.valueFormatter(value as never, row, colDef, apiRef);
     },
     [apiRef, getRowValue],
   );

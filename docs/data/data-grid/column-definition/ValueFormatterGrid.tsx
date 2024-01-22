@@ -33,7 +33,7 @@ export default function ValueFormatterGrid() {
               }
               return value * 100;
             },
-            valueFormatter: (value) => {
+            valueFormatter: (value?: number) => {
               if (value == null) {
                 return '';
               }
