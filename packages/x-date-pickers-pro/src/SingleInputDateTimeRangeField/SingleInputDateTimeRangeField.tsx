@@ -11,10 +11,11 @@ import {
   SingleInputDateTimeRangeFieldSlotProps,
 } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
+import { FieldType } from '../internals/models';
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
+) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
  * Demos:

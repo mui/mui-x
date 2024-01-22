@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { FieldRef } from '@mui/x-date-pickers/models';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
@@ -8,7 +7,7 @@ import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internals/models/dateTimeRange';
-import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputFieldRefs } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
@@ -18,10 +17,8 @@ export type UseMultiInputDateTimeRangeFieldParams<
 > = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-}
+  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'>,
+    MultiInputFieldRefs {}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
