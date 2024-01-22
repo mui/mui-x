@@ -8,7 +8,7 @@ productId: x-data-grid
 
 ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
 
 ## Start using the new release
 
@@ -478,7 +478,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
   | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
@@ -491,7 +491,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, data grid support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.

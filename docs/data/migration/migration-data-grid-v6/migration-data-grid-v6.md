@@ -10,7 +10,7 @@ productId: x-data-grid
 
 <!-- ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
 
 ## Start using the new release
 
@@ -34,14 +34,14 @@ Please update your `@mui/material` package to this or a newer version.
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
-You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
 // Data Grid specific
 npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
-// Target other MUI X components as well
+// Target other MUI X components as well
 npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
@@ -340,7 +340,7 @@ Here's the list of affected features, colDef flags and props to disable them and
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
+  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
   | :------------------------------------------ | :--------------- | :--------------------- | --- |
   | `.Mui-hovered`                              | `:hover`         | For rows               |
   | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |

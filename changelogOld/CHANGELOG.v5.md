@@ -51,7 +51,7 @@ _Feb 9, 2023_
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Brazilian Portuguese (pt-BR) locale
-- 🎉 Add banner and callouts to inform about MUI X v6 beta
+- 🎉 Add banner and callouts to inform about MUI X v6 beta
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.17.23` / `@mui/x-data-grid-pro@v5.17.23` / `@mui/x-data-grid-premium@v5.17.23`
@@ -649,7 +649,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 _Sep 9, 2022_
 
 This release will the last regular release for our `v5` packages.
-From now on, we'll be focusing on developing MUI X v6.
+From now on, we'll be focusing on developing MUI X v6.
 You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
 
 And if you'd like to help, please consider volunteering to give us a [user interview](https://forms.gle/vsBv6CLPz9h57xg8A).
@@ -1104,7 +1104,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
 - [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
 - [docs] Update pickers README files (#5456) @cherniavskii
-- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
 
 ### Core
 
@@ -1343,7 +1343,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add generics to `GridActionsColDef` to match `GridColDef` (#4982) @subvertallchris
 - [DataGrid] Disable drag event handlers when row or column reorder are disabled (#4857) @DanailH
 - [DataGrid] Allow other attempts to stop edit mode if the first failed (#5016) @m4theushw
-- [DataGrid] Better reflect the dependency on Material UI (#4795) @oliviertassinari
+- [DataGrid] Better reflect the dependency on Material UI (#4795) @oliviertassinari
 - [DataGrid] Add an id to the filter item created when opening the filter panel (#5014) @flaviendelangle
 - [DataGrid] Use column visibility model on Hide All / Show All when enabled (#5050) @flaviendelangle
 - [DataGridPro] Unpin columns back to original position (#4512) @m4theushw
@@ -1497,7 +1497,7 @@ _May 13, 2022_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 **Premium plan release**. We're happy to announce that the Premium plan is [finally out](https://mui.com/blog/premium-plan-release/)! With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
+- 🚀 **Premium plan release**. We're happy to announce that the Premium plan is [finally out](https://mui.com/blog/premium-plan-release/)! With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
 
   This plan is available through the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
 
@@ -1685,7 +1685,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
   <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
 
-- 📚 New standalone documentation for MUI X (#4313) @siriwatknp
+- 📚 New standalone documentation for MUI X (#4313) @siriwatknp
 
   Each MUI product now has its own documentation.
   More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
@@ -1759,7 +1759,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - ⌚️ Move date and time picker components from the lab (#3451) @flaviendelangle
 
-  Date and time picker components have been moved to the MUI X repository.
+  Date and time picker components have been moved to the MUI X repository.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
   For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/migration/migration-pickers-lab/).
 
@@ -2352,7 +2352,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Add language to markdown code block (#3651) @m4theushw
 - [core] Add typing to the pre-processors methods (#3595) @flaviendelangle
 - [core] Don't bump peer dependency ranges on dependency updates (#3646) @oliviertassinari
-- [core] Rename more instances of Material UI to MUI (#3525) @oliviertassinari
+- [core] Rename more instances of Material UI to MUI (#3525) @oliviertassinari
 - [core] Renovate should not try to update node (#3645) @oliviertassinari
 - [core] Report performance test results on each PR (#3551) @m4theushw
 - [core] Update monorepo (#3653) @m4theushw
@@ -2683,7 +2683,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 _Nov 23, 2021_
 
-🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
+🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
 If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/x/migration/migration-data-grid-v4/).
 This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/x/migration/migration-data-grid-v4/#using-mui-x-v5-with-mui-core-v4).
@@ -2816,7 +2816,7 @@ _Nov 4, 2021_
 ### Core
 
 - [core] Adapt `useDemoData` for Tree Data (#2978) @flaviendelangle
-- [core] Group update of MUI Core (#3055) @oliviertassinari
+- [core] Group update of MUI Core (#3055) @oliviertassinari
 - [core] Ignore `*.tsbuildinfo` files (#3068) @m4theushw
 - [core] Implement tree-based row management (#2996) @flaviendelangle
 - [core] Invert Codesandbox examples on README (#3073) @flaviendelangle
@@ -2927,7 +2927,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 ### Docs
 
-- [docs] Explain how to use MUI X v5 with MUI Core v4 (#2846) @m4theushw
+- [docs] Explain how to use MUI X v5 with MUI Core v4 (#2846) @m4theushw
 - [docs] Generate docs for components (#2465) @m4theushw
 - [docs] Improve `scrollEndThreshold` API docs (#3001) @ZeeshanTamboli
 - [docs] Fix CodeSandbox and feature request templates (#2986) @flaviendelangle
@@ -2949,7 +2949,7 @@ _Oct 22, 2021_
 
 A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 💅 Remove dependency on `@mui/styles` and use the same styling solution from MUI Core (#2784) @DanailH
+- 💅 Remove dependency on `@mui/styles` and use the same styling solution from MUI Core (#2784) @DanailH
 - ✨ Add support for generics in `GridRowParams`, `GridCellParams` and `GridRenderCellParams` (#2436) @ZeeshanTamboli
 - 👁 Rework the virtualization engine (#2673) @m4theushw
 - 💡 Enhance internal code structure
@@ -3403,10 +3403,10 @@ This is a hotfix to fix an important regression with `v5.0.0-beta.0`.
 
 _Sep 17, 2021_
 
-🎉 This is the first release with support for the new MUI v5 🎉!
-In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
+🎉 This is the first release with support for the new Material UI v5 🎉!
+In the next releases, we will be working to bring all the cool features from Material UI v5 to the advanced components.
 
-This beta version of MUI X drops support for MUI v4. We encourage everyone to upgrade to MUI v5 to be able to continue to get all the upcoming features and fixes of MUI X. New versions of MUI X v4, containing only fixes, will still be released, but in a slower pace.
+This beta version of MUI X drops support for Material UI v4. We encourage everyone to upgrade to Material UI v5 to be able to continue to get all the upcoming features and fixes of MUI X. New versions of MUI X v4, containing only fixes, will still be released, but in a slower pace.
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 

@@ -5,7 +5,7 @@ packageName: '@mui/x-data-grid'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 ---
 
-# MUI X Data Grid
+# MUI X Data Grid
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
