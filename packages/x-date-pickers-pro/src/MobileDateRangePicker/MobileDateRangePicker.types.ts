@@ -22,6 +22,18 @@ export interface MobileDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps<TDate> {
   /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components?: MobileDateRangePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
+  /**
    * Overridable component slots.
    * @default {}
    */

@@ -27,6 +27,18 @@ export interface StaticDateRangePickerProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components?: StaticDateRangePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
+  /**
    * Overridable component slots.
    * @default {}
    */
