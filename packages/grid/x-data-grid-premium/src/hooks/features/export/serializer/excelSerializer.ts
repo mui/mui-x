@@ -409,7 +409,7 @@ export async function buildExcel(
 
   if (includeColumnGroupsHeaders) {
     const columnGroupPaths = columns.reduce<Record<string, string[]>>((acc, column) => {
-      acc[column.field] = api.unstable_getColumnGroupPath(column.field);
+      acc[column.field] = api.getColumnGroupPath(column.field);
       return acc;
     }, {});
 
@@ -417,7 +417,7 @@ export async function buildExcel(
       worksheet,
       serializedColumns,
       columnGroupPaths,
-      api.unstable_getAllGroupDetails(),
+      api.getAllGroupDetails(),
     );
   }
 

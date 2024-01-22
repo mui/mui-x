@@ -4,18 +4,7 @@ import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
-export interface UseTreeViewIconsParameters {
-  /**
-   * The default icon displayed next to a end node. This is applied to all
-   * tree nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultEndIcon?: React.ReactNode;
-  /**
-   * The default icon displayed next to a parent node. This is applied to all
-   * parent nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultParentIcon?: React.ReactNode;
-}
+export interface UseTreeViewIconsParameters {}
 
 export type UseTreeViewIconsDefaultizedParameters = UseTreeViewIconsParameters;
 
@@ -28,19 +17,23 @@ interface UseTreeViewIconsSlots {
    * The default icon used to expand the node.
    */
   expandIcon?: React.ElementType;
+  /**
+   * The default icon displayed next to an end node.
+   * This is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.
+   */
+  endIcon?: React.ElementType;
 }
 
 interface UseTreeViewIconsSlotProps {
   collapseIcon?: SlotComponentProps<'svg', {}, {}>;
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
 }
 
 interface UseTreeViewIconsContextValue {
   icons: {
     slots: UseTreeViewIconsSlots;
     slotProps: UseTreeViewIconsSlotProps;
-    defaultParentIcon: React.ReactNode;
-    defaultEndIcon: React.ReactNode;
   };
 }
 

@@ -24,6 +24,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/bgBG.ts"
   },
   {
+    "languageTag": "zh-HK",
+    "importName": "zhHK",
+    "localeName": "Chinese (Hong Kong)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 119,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/zhHK.ts"
+  },
+  {
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
@@ -38,6 +46,14 @@
     "missingKeysCount": 0,
     "totalKeysCount": 119,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/zhTW.ts"
+  },
+  {
+    "languageTag": "hr-HR",
+    "importName": "hrHR",
+    "localeName": "Croatian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 119,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/hrHR.ts"
   },
   {
     "languageTag": "cs-CZ",
@@ -158,6 +174,14 @@
     "missingKeysCount": 27,
     "totalKeysCount": 119,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/plPL.ts"
+  },
+  {
+    "languageTag": "pt-PT",
+    "importName": "ptPT",
+    "localeName": "Portuguese",
+    "missingKeysCount": 0,
+    "totalKeysCount": 119,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/ptPT.ts"
   },
   {
     "languageTag": "pt-BR",

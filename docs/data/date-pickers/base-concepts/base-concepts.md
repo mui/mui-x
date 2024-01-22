@@ -180,7 +180,7 @@ expect(cleanText(input.value)).to.equal('04-17-2022');
 Date and Time Pickers are complex components built using many subcomponents known as **slots**.
 Slots are commonly filled by React components that you can override using the `slots` prop.
 You can also pass additional props to the available slots using the `slotProps` prop.
-Learn more about the mental model of slots in the Base UI documentation: [Overriding component structure](/base-ui/guides/overriding-component-structure/).
+Learn more about the mental model of slots in the Base UI documentation: [Overriding component structure](/base-ui/guides/overriding-component-structure/).
 
 You can find the list of available slots for each component in its respective [API reference](/x/api/date-pickers/date-picker/#slots) doc.
 
