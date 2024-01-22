@@ -25,7 +25,7 @@ All fields to edit a range are available in a single input version and in a mult
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
-## DOM structure
+## Accessible DOM structure
 
 ### Without accessible DOM structure
 
