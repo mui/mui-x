@@ -24,9 +24,9 @@ export function DesktopDateTimeRangePickerLayout<TDate>(
       ref={ref}
       className={clsx(className, pickersLayoutClasses.root)}
       sx={{
-        ...sx,
         [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 3, gridColumn: '1 / 4' },
         [`& .${pickersLayoutClasses.actionBar}`]: { gridRow: 4 },
+        ...sx,
       }}
       ownerState={props}
     >
