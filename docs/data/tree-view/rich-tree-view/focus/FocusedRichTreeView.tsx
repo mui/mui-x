@@ -39,7 +39,7 @@ export default function FocusedRichTreeView() {
 
   const handleExpandedNodesChange = (
     event: React.SyntheticEvent,
-    nodeId: string,
+    nodeId: string | null,
   ) => {
     setFocusedNode(nodeId);
   };

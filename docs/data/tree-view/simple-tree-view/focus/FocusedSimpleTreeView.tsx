@@ -9,7 +9,7 @@ export default function FocusedSimpleTreeView() {
 
   const handleExpandedNodesChange = (
     event: React.SyntheticEvent,
-    nodeId: string,
+    nodeId: string | null,
   ) => {
     setFocusedNode(nodeId);
   };
