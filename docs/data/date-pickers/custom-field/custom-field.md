@@ -75,7 +75,7 @@ Pass the `enableAccessibleFieldDOMStructure` to any field or picker component to
 {{"demo": "MaterialV7Field.js"}}
 
 :::success
-Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#dom-structure)
+Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 :::
 
 You can import the `PickersTextField` component to create custom wrappers:
