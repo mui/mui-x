@@ -27,7 +27,6 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## Accessible DOM structure
 
-
 By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
 
 From version v7.0.0, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
@@ -41,45 +40,6 @@ From version v7.0.0, you can opt-in for a new and experimental DOM structure on 
 This new feature allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
 {{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
-
-```html
-<input value="MM/DD/YYYY" />
-```
-
-The field component would then tweak the selected part of the input value
-to allow navigation across sections and edition.
-
-{{"demo": "BasicV6DOMStructure.js", "defaultCodeOpen": false }}
-
-### With accessible DOM structure
-
-Version v7.0.0 introduces a new DOM structure which aims at improving those accessibility problems.
-It is now composed of one `<span />` element per section:
-
-```html
-<span>
-  <span contenteditable="true">MM</span>
-  <span contenteditable="true">DD</span>
-  <span contenteditable="true">YYYY</span>
-</span>
-```
-
-This new DOM structure allows the field component to set aria attributes on individual sections,
-providing a far better experience with screen readers.
-
-{{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
-
-### Migrating to the accessible DOM structure
-
-#### How to enable the accessible DOM structure?
-
-You can enable the accessible DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop:
-
-```tsx
-<DateField enableAccessibleFieldDOMStructure />
-<DatePicker enableAccessibleFieldDOMStructure />
-<DateRangePicker enableAccessibleFieldDOMStructure />
-```
 
 #### Usage with `slotProps.field`
 
