@@ -43,3 +43,5 @@ export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEvents
     $$subscribeEvent: subscribeEvent,
   });
 };
+
+useTreeViewInstanceEvents.params = {};

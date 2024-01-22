@@ -13,8 +13,12 @@ import {
   GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
+  useGridSelector,
+  gridFilterModelSelector,
+  gridFilterableColumnLookupSelector,
 } from '@mui/x-data-grid';
 import {
+  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -32,7 +36,6 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   sortIndex?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  filterOperators?: GridFilterOperator[];
   width: number;
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -70,7 +73,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       colIndex,
       height,
       hasFocus,
-      filterOperators,
       width,
       headerClassName,
       colDef,
@@ -82,19 +84,37 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     } = props;
 
     const apiRef = useGridPrivateApiContext();
-    const columnFields = gridVisibleColumnFieldsSelector(apiRef);
+    const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
     const rootProps = useGridRootProps();
     const cellRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(ref, cellRef);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const editingField = useGridSelector(apiRef, gridHeaderFilteringEditFieldSelector);
+    const isEditing = editingField === colDef.field;
+
+    const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
+    const isMenuOpen = menuOpenField === colDef.field;
+
+    // TODO: Support for `isAnyOf` operator
+    const filterOperators =
+      colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
+    const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
+
+    const isFilterReadOnly = React.useMemo(() => {
+      if (!filterModel?.items.length) {
+        return false;
+      }
+      const filterModelItem = filterModel.items.find((it) => it.field === colDef.field);
+      return filterModelItem ? !filterableColumnsLookup[filterModelItem.field] : false;
+    }, [colDef.field, filterModel, filterableColumnsLookup]);
 
     const currentOperator = filterOperators![0];
 
-    const InputComponent = colDef.filterable ? currentOperator!.InputComponent : null;
+    const InputComponent =
+      colDef.filterable || isFilterReadOnly ? currentOperator!.InputComponent : null;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
@@ -130,7 +150,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (isMenuOpen || isNavigationKey(event.key)) {
+        if (isMenuOpen || isNavigationKey(event.key) || isFilterReadOnly) {
           return;
         }
         switch (event.key) {
@@ -172,7 +192,16 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             break;
         }
       },
-      [apiRef, colDef.field, colIndex, columnFields, headerFilterMenuRef, isEditing, isMenuOpen],
+      [
+        apiRef,
+        colDef.field,
+        colIndex,
+        columnFields,
+        headerFilterMenuRef,
+        isEditing,
+        isFilterReadOnly,
+        isMenuOpen,
+      ],
     );
 
     const publish = React.useCallback(
@@ -277,10 +306,13 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               isFilterActive={isFilterActive}
               clearButton={
                 showClearIcon && isApplied ? (
-                  <GridHeaderFilterClearButton onClick={clearFilterItem} />
+                  <GridHeaderFilterClearButton
+                    onClick={clearFilterItem}
+                    disabled={isFilterReadOnly}
+                  />
                 ) : null
               }
-              disabled={isNoInputOperator}
+              disabled={isFilterReadOnly || isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
               sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
@@ -292,6 +324,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               operators={filterOperators!}
               item={item}
               field={colDef.field}
+              disabled={isFilterReadOnly}
               applyFilterChanges={applyFilterChanges}
               headerFilterMenuRef={headerFilterMenuRef}
               buttonRef={buttonRef}
@@ -310,18 +343,6 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  filterOperators: PropTypes.arrayOf(
-    PropTypes.shape({
-      getApplyFilterFn: PropTypes.func.isRequired,
-      getValueAsString: PropTypes.func,
-      headerLabel: PropTypes.string,
-      InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
-      label: PropTypes.string,
-      requiresFilterValue: PropTypes.bool,
-      value: PropTypes.string.isRequired,
-    }),
-  ),
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.
@@ -344,4 +365,6 @@ GridHeaderFilterCell.propTypes = {
   width: PropTypes.number.isRequired,
 } as any;
 
-export { GridHeaderFilterCell };
+const Memoized = fastMemo(GridHeaderFilterCell);
+
+export { Memoized as GridHeaderFilterCell };

@@ -42,9 +42,9 @@ import {
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
-    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
+    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -85,7 +85,7 @@ export const useGridCellEditing = (
     (id: GridRowId, field: string) => {
       const params = apiRef.current.getCellParams(id, field);
       if (!apiRef.current.isCellEditable(params)) {
-        throw new Error(`MUI: The cell with id=${id} and field=${field} is not editable.`);
+        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not editable.`);
       }
     },
     [apiRef],
@@ -94,7 +94,7 @@ export const useGridCellEditing = (
   const throwIfNotInMode = React.useCallback(
     (id: GridRowId, field: string, mode: GridCellModes) => {
       if (apiRef.current.getCellMode(id, field) !== mode) {
-        throw new Error(`MUI: The cell with id=${id} and field=${field} is not in ${mode} mode.`);
+        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not in ${mode} mode.`);
       }
     },
     [apiRef],
@@ -399,7 +399,7 @@ export const useGridCellEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             missingOnProcessRowUpdateErrorWarning();
           }
         };

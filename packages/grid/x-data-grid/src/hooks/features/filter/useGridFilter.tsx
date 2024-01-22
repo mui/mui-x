@@ -12,7 +12,7 @@ import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
@@ -471,9 +471,9 @@ export const useGridFilter = (
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
-    const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
+    const columnsLookup = gridColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
-      (item) => item.field && filterableColumnsLookup[item.field],
+      (item) => item.field && columnsLookup[item.field],
     );
     if (newFilterItems.length < filterModel.items.length) {
       apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });

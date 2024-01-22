@@ -1,5 +1,6 @@
 ---
 title: Charts - Axis
+components: ChartsAxis, ChartsReferenceLine, ChartsText
 ---
 
 # Charts - Axis

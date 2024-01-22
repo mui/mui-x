@@ -116,7 +116,9 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
 
   const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
+    view && Tabs ? (
+      <Tabs view={view} onViewChange={onViewChange} className={classes.tabs} {...slotProps?.tabs} />
+    ) : null;
 
   // Shortcuts
 

@@ -33,7 +33,7 @@ import {
   CustomizationLabelType,
 } from '../utils/useCustomizationPlayground';
 
-const PlaygroundWrapper = styled(Box)(({ theme }) => ({
+const PlaygroundWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${grey[200]}`,
@@ -44,14 +44,14 @@ const PlaygroundWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('lg')]: { flexWrap: 'wrap-reverse' },
 }));
 
-const PlaygroundDemoArea = styled(Box)(({ theme }) => ({
+const PlaygroundDemoArea = styled('div')(({ theme }) => ({
   minWidth: 320,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
 }));
 
-const PlaygroundConfigArea = styled(Box)(({ theme }) => ({
+const PlaygroundConfigArea = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: alpha(theme.palette.primary.light, 0.05),
   border: `1px solid ${grey[200]}`,
@@ -68,7 +68,7 @@ const ComponentsSelect = styled(Select)(({ theme }) => ({
   ...theme.typography.caption,
 }));
 
-const ConfigSectionWrapper = styled(Box)(({ theme }) => ({
+const ConfigSectionWrapper = styled('div')(({ theme }) => ({
   gap: theme.spacing(0.5),
   width: 250,
 }));
@@ -91,7 +91,7 @@ const ConfigItemLabel = styled(Typography)(({ theme }) => ({
   fontweight: 600,
 }));
 
-const SlotItemsWrapper = styled(Box)(({ theme }) => ({
+const SlotItemsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(0.5),
   flexWrap: 'wrap',
@@ -104,7 +104,7 @@ const SlotItem = styled(Button)(({ theme }) => ({
   padding: theme.spacing(0.1, 1),
 }));
 
-const TabsWrapper = styled(Box)(({ theme }) => ({
+const TabsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',

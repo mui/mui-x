@@ -10,7 +10,10 @@ import { GridFilterForm, GridFilterFormProps } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
-import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import {
+  gridFilterableColumnDefinitionsSelector,
+  gridFilterableColumnLookupSelector,
+} from '../../../hooks/features/columns/gridColumnsSelector';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GetColumnForNewFilterArgs {
@@ -73,6 +76,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const rootProps = useGridRootProps();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
     const lastFilterRef = React.useRef<any>(null);
     const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 
@@ -165,32 +169,51 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 
     const hasMultipleFilters = items.length > 1;
 
-    const addNewFilter = () => {
+    const { readOnlyFilters, validFilters } = React.useMemo<{
+      readOnlyFilters: GridFilterItem[];
+      validFilters: GridFilterItem[];
+    }>(
+      () =>
+        items.reduce(
+          (acc, item) => {
+            if (filterableColumnsLookup[item.field]) {
+              acc.validFilters.push(item);
+            } else {
+              acc.readOnlyFilters.push(item);
+            }
+            return acc;
+          },
+          { readOnlyFilters: [] as GridFilterItem[], validFilters: [] as GridFilterItem[] },
+        ),
+      [items, filterableColumnsLookup],
+    );
+
+    const addNewFilter = React.useCallback(() => {
       const newFilter = getNewFilter();
       if (!newFilter) {
         return;
       }
       apiRef.current.upsertFilterItems([...items, newFilter]);
-    };
+    }, [apiRef, getNewFilter, items]);
 
     const deleteFilter = React.useCallback(
       (item: GridFilterItem) => {
-        const shouldCloseFilterPanel = items.length === 1;
+        const shouldCloseFilterPanel = validFilters.length === 1;
         apiRef.current.deleteFilterItem(item);
         if (shouldCloseFilterPanel) {
           apiRef.current.hideFilterPanel();
         }
       },
-      [apiRef, items.length],
+      [apiRef, validFilters.length],
     );
 
-    const handleRemoveAll = () => {
-      if (items.length === 1 && items[0].value === undefined) {
-        apiRef.current.deleteFilterItem(items[0]);
-        apiRef.current.hideFilterPanel();
+    const handleRemoveAll = React.useCallback(() => {
+      if (validFilters.length === 1 && validFilters[0].value === undefined) {
+        apiRef.current.deleteFilterItem(validFilters[0]);
+        return apiRef.current.hideFilterPanel();
       }
-      apiRef.current.setFilterModel({ ...filterModel, items: [] });
-    };
+      return apiRef.current.setFilterModel({ ...filterModel, items: readOnlyFilters });
+    }, [apiRef, readOnlyFilters, filterModel, validFilters]);
 
     React.useEffect(() => {
       if (
@@ -203,15 +226,15 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     }, [logicOperators, applyFilterLogicOperator, filterModel.logicOperator]);
 
     React.useEffect(() => {
-      if (items.length > 0) {
+      if (validFilters.length > 0) {
         lastFilterRef.current!.focus();
       }
-    }, [items.length]);
+    }, [validFilters.length]);
 
     return (
       <GridPanelWrapper ref={ref} {...other}>
         <GridPanelContent>
-          {items.map((item, index) => (
+          {readOnlyFilters.map((item, index) => (
             <GridFilterForm
               key={item.id == null ? index : item.id}
               item={item}
@@ -219,10 +242,26 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               deleteFilter={deleteFilter}
               hasMultipleFilters={hasMultipleFilters}
               showMultiFilterOperators={index > 0}
-              multiFilterOperator={filterModel.logicOperator}
               disableMultiFilterOperator={index !== 1}
               applyMultiFilterOperatorChanges={applyFilterLogicOperator}
-              focusElementRef={index === items.length - 1 ? lastFilterRef : null}
+              focusElementRef={null}
+              readOnly
+              logicOperators={logicOperators}
+              columnsSort={columnsSort}
+              {...filterFormProps}
+            />
+          ))}
+          {validFilters.map((item, index) => (
+            <GridFilterForm
+              key={item.id == null ? index + readOnlyFilters.length : item.id}
+              item={item}
+              applyFilterChanges={applyFilter}
+              deleteFilter={deleteFilter}
+              hasMultipleFilters={hasMultipleFilters}
+              showMultiFilterOperators={readOnlyFilters.length + index > 0}
+              disableMultiFilterOperator={readOnlyFilters.length + index !== 1}
+              applyMultiFilterOperatorChanges={applyFilterLogicOperator}
+              focusElementRef={index === validFilters.length - 1 ? lastFilterRef : null}
               logicOperators={logicOperators}
               columnsSort={columnsSort}
               {...filterFormProps}
@@ -244,7 +283,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               <span />
             )}
 
-            {!disableRemoveAllButton ? (
+            {!disableRemoveAllButton && validFilters.length > 0 ? (
               <rootProps.slots.baseButton
                 onClick={handleRemoveAll}
                 startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}

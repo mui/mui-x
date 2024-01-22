@@ -45,6 +45,14 @@ import {
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
 import { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import {
+  PickersTextFieldProps,
+  PickersInputBaseProps,
+  PickersOutlinedInputProps,
+  PickersInputProps,
+  PickersFilledInputProps,
+} from '../PickersTextField';
+import { PickersSectionListProps } from '../PickersSectionList';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -97,6 +105,14 @@ export interface PickersComponentsPropsList {
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown>;
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
+
+  // V7 Picker's TextField
+  MuiPickersTextField: PickersTextFieldProps;
+  MuiPickersInputBase: PickersInputBaseProps;
+  MuiPickersInput: PickersInputProps;
+  MuiPickersFilledInput: PickersFilledInputProps;
+  MuiPickersOutlinedInput: PickersOutlinedInputProps;
+  MuiPickersSectionList: PickersSectionListProps;
 }
 
 declare module '@mui/material/styles' {

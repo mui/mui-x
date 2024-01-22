@@ -10,14 +10,14 @@ productId: x-data-grid
 
 <!-- ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
 
 ## Start using the new release
 
 In `package.json`, change the version of the data grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^6.0.0",
+-"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
 ```
 
@@ -25,22 +25,28 @@ Since v7 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
 
+## Update `@mui/material` package
+
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+It is a change in minor version only, so it should not cause any breaking changes.
+Please update your `@mui/material` package to this or a newer version.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
-You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
 // Data Grid specific
 npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
-// Target other MUI X components as well
+// Target other MUI X components as well
 npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -68,6 +74,14 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 Since v7 is a major release, it contains some changes that affect the public API.
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v6 to v7.
+
+### DOM changes
+
+The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
+
+- The main element now corresponds to the virtal scroller element.
+- Headers are now contained in the virtual scroller.
+- Pinned row and column sections are now contained in the virtual scroller.
 
 <!-- ### Renamed props
 
@@ -97,6 +111,14 @@ Below are described the steps you need to make to migrate from v6 to v7.
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
+### Behavioral changes
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
+
+Here's the list of affected features, colDef flags and props to disable them and the related props and API methods to control them programmatically.
+
+{{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 
@@ -133,6 +155,16 @@ Below are described the steps you need to make to migrate from v6 to v7.
   const columns = [{ type: 'number' as const, field: 'id' }];
   <DataGrid columns={columns} />;
   ```
+
+- The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
+
+- The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
 <!-- ### Rows
 
@@ -233,28 +265,99 @@ Below are described the steps you need to make to migrate from v6 to v7.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
 
+### Accessibility
+
+- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+  If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ ariaV7: true }} />
+  +<DataGrid />
+  ```
+
+  The most notable changes that might affect your application or tests are:
+
+  - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
+
+    ```diff
+    -<div class="MuiDataGrid-root" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false">
+    +<div class="MuiDataGrid-root">
+       <div class="MuiDataGrid-toolbarContainer"></div>
+    -    <div class="MuiDataGrid-main"></div>
+    +    <div class="MuiDataGrid-main" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false"></div>
+       <div class="MuiDataGrid-footerContainer"></div>
+     </div>
+    ```
+
+  - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
+
 <!-- ### Editing
 
 - -->
 
 ### Other exports
 
+- The import path for locales has been changed:
+
+  ```diff
+  -import { enUS } from '@mui/x-data-grid';
+  +import { enUS } from '@mui/x-data-grid/locales';
+
+  -import { enUS } from '@mui/x-data-grid-pro';
+  +import { enUS } from '@mui/x-data-grid-pro/locales';
+
+  -import { enUS } from '@mui/x-data-grid-premium';
+  +import { enUS } from '@mui/x-data-grid-premium/locales';
+  ```
+
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
   Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
-<!-- ### CSS classes
+- The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. In order to override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](/x/react-data-grid/components/#toolbar) for more details.
+
+```diff
+ function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton
+-       title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
++       slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+      />
+      <GridToolbarDensitySelector
+-       variant="outlined"    // 🛑 This was previously forwarded to the button component
++       slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+      />
+    </GridToolbarContainer>
+  );
+ }
+```
+
+### CSS classes
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v6 classes | MUI X v7 classes | Note |
-  | :--------------- | :--------------- | :--- |
-  |                  |                  |      |
-  |                  |                  |      | -->
+  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
+  | :------------------------------------------ | :--------------- | :--------------------- | --- |
+  | `.Mui-hovered`                              | `:hover`         | For rows               |
+  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
 
-<!-- ### Removals from the public API
+### Changes to the public API
 
-- -->
+- The method `getRootDimensions()` now returns a non-null value.
+- The field `mainElementRef` is now always non-null.
+- The field `rootElementRef` is now always non-null.
+- The field `virtualScrollerRef` is now always non-null.
+- The event `renderedRowsIntervalChange` params changed from `GridRenderedRowsIntervalChangeParams` to `GridRenderContext`, and the former has been removed.
+
+### Changes to slots
+
+- The slot `columnHeaders` has had these props removed: `columnPositions`, `densityFactor`, `minColumnIndex`.
+- The slot `row` has had these props removed: `containerWidth`, `position`.
+- The slot `row` has typed props now.
+- The slot `headerFilterCell` has had these props removed: `filterOperators`.
 
 <!-- ### Rename `components` to `slots` -->

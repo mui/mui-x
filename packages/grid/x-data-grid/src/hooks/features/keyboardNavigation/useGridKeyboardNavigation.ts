@@ -16,7 +16,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
-import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
+import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
   gridHeaderFilteringEditFieldSelector,
@@ -191,11 +191,6 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
@@ -310,11 +305,6 @@ export const useGridKeyboardNavigation = (
 
   const handleHeaderFilterKeyDown = React.useCallback<GridEventListener<'headerFilterKeyDown'>>(
     (params, event) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
       const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
       const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
@@ -425,12 +415,7 @@ export const useGridKeyboardNavigation = (
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
     (params, event) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
-      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+      const focusedColumnGroup = gridFocusColumnGroupHeaderSelector(apiRef);
       if (focusedColumnGroup === null) {
         return;
       }
@@ -543,8 +528,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const dimensions = apiRef.current.getRootDimensions();
-      if (currentPageRows.length === 0 || !dimensions) {
+      if (currentPageRows.length === 0) {
         return;
       }
 

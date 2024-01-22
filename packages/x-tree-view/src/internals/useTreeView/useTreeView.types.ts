@@ -11,17 +11,22 @@ import {
 
 export type UseTreeViewParameters<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = {
+> = UseTreeViewBaseParameters<TPlugins> &
+  MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+
+export interface UseTreeViewBaseParameters<
+  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
+> {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
   plugins: TPlugins;
-} & MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+  slots: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slots'>;
+  slotProps: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slotProps'>;
+}
 
 export type UseTreeViewDefaultizedParameters<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = {
-  rootRef?: React.Ref<HTMLUListElement> | undefined;
-  plugins: TPlugins;
-} & MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>;
+> = UseTreeViewBaseParameters<TPlugins> &
+  MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>;
 
 export interface UseTreeViewRootSlotProps
   extends Pick<

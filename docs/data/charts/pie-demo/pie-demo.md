@@ -1,5 +1,6 @@
 ---
 title: Charts - Pie demonstration
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ---
 
 # Charts - Pie demonstration

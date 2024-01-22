@@ -28,6 +28,11 @@ export interface DigitalClockProps<TDate>
   extends ExportedDigitalClockProps<TDate>,
     BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
   /**
+   * Available views.
+   * @default ['hours']
+   */
+  views?: readonly 'hours'[];
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DigitalClockClasses>;
