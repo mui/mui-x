@@ -19,7 +19,7 @@
   },
   "slotDescriptions": {
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",

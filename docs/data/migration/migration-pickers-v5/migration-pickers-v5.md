@@ -8,7 +8,7 @@ productId: x-date-pickers
 
 ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
 
 ## Start using the new release
 
@@ -447,7 +447,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
-You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
 These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.
@@ -954,7 +954,7 @@ To do so please refer to the corresponding [docs example](/x/react-date-pickers/
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, pickers support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.

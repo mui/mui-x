@@ -1,7 +1,7 @@
-# MUI X Charts
+# MUI X Charts
 
 This package is the community edition of the chart components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 

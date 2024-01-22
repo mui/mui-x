@@ -1,13 +1,13 @@
-# Contributing to MUI X
+# Contributing to MUI X
 
-## MUI X vs. MUI Core
+## MUI X vs. Material UI, Base UI, MUI System, Joy UI
 
-MUI X is an extension of MUI Core.
+MUI X is an extension of the core open-source libraries of MUI (Material UI, Base UI, MUI System, Joy UI).
 The repositories are part of the same codebase.
 `mui/mui-x` imports the code infrastructure from [`mui/material-ui`](https://github.com/mui/material-ui).
 You can find the "contributing" guide for the main repository in [mui/material-ui/CONTRIBUTING.md](https://github.com/mui/material-ui/blob/HEAD/CONTRIBUTING.md).
 
-Most of the content in the MUI "contributing" guide applies to this repository.
+Most of the content in the main repository "contributing" guide applies to this repository.
 There are, however, a few differences:
 
 - The default GitHub branch might be different.
