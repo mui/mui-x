@@ -18,7 +18,6 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import Divider from '@mui/material/Divider';
-import { styled } from '@mui/material/styles';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
@@ -34,11 +33,7 @@ import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/s
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
-
-const DesktopDateTimeRangeContainer = styled('div')({
-  display: 'flex',
-  margin: '0 auto',
-});
+import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
 const rendererInterceptor = function rendererInterceptor<TDate>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
@@ -66,7 +61,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
   };
   const isTimeViewActive = isInternalTimeView(popperView);
   return (
-    <DesktopDateTimeRangeContainer>
+    <React.Fragment>
       {inViewRenderers.day?.({
         ...rendererProps,
         availableRangePositions: [rangePosition],
@@ -87,7 +82,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
           >
         }
       />
-    </DesktopDateTimeRangeContainer>
+    </React.Fragment>
   );
 };
 
@@ -139,6 +134,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     calendars: defaultizedProps.calendars ?? 1,
     slots: {
       field: MultiInputDateTimeRangeField,
+      layout: DesktopDateTimeRangePickerLayout,
       ...defaultizedProps.slots,
     },
     slotProps: {

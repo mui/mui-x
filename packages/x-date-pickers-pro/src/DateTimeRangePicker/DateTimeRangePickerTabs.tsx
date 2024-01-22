@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -118,6 +119,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
     rangePosition,
     onRangePositionChange,
+    className,
   } = props;
 
   const localeText = useLocaleText();
@@ -165,7 +167,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   }
 
   return (
-    <DateTimeRangePickerTabsRoot ownerState={props} className={classes.root}>
+    <DateTimeRangePickerTabsRoot ownerState={props} className={clsx(classes.root, className)}>
       {!isPreviousHidden ? (
         <IconButton
           onClick={changeToPreviousTab}
