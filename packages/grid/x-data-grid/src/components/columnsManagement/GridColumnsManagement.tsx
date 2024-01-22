@@ -60,7 +60,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: ['columnsManagement'],
     header: ['columnsManagementHeader'],
     footer: ['columnsManagementFooter'],
-    columnsManagementRow: ['columnsManagementRow'],
+    row: ['columnsManagementRow'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -221,7 +221,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
         {currentColumns.map((column) => (
           <FormControlLabel
             key={column.field}
-            className={classes.columnsManagementRow}
+            className={classes.row}
             control={
               <rootProps.slots.baseCheckbox
                 disabled={column.hideable === false}
@@ -238,7 +238,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           />
         ))}
         {currentColumns.length === 0 && (
-          <NoColumnsText ownerState={rootProps}>No columns</NoColumnsText>
+          <GridColumnsManagementEmptyText ownerState={rootProps}>
+            No columns
+          </GridColumnsManagementEmptyText>
         )}
       </GridColumnsManagementBody>
       {!disableShowHideToggle && !disableResetButton && currentColumns.length > 0 ? (
@@ -316,8 +318,8 @@ GridColumnsManagement.propTypes = {
 
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ColumnsPanel',
-  overridesResolver: (props, styles) => styles.columnsPanel,
+  slot: 'ColumnsManagement',
+  overridesResolver: (props, styles) => styles.columnsManagement,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0, 3, 1.5),
   display: 'flex',
@@ -329,16 +331,16 @@ const GridColumnsManagementBody = styled('div', {
 
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ColumnsPanelHeader',
-  overridesResolver: (props, styles) => styles.columnsPanel,
+  slot: 'ColumnsManagementHeader',
+  overridesResolver: (props, styles) => styles.columnsManagementHeader,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
 }));
 
 const GridColumnsManagementFooter = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ColumnsPanel',
-  overridesResolver: (props, styles) => styles.columnsPanel,
+  slot: 'ColumnsManagementFooter',
+  overridesResolver: (props, styles) => styles.columnsManagementFooter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1, 0.5, 3),
   display: 'flex',
@@ -346,11 +348,7 @@ const GridColumnsManagementFooter = styled('div', {
   borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const NoColumnsText = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ColumnsPanel',
-  overridesResolver: (props, styles) => styles.columnsPanel,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 0),
   color: theme.palette.grey[500],
 }));
