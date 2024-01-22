@@ -11,6 +11,7 @@ export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem> {
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
+  className?: string;
 }
 
 export interface ExportedBaseTabsProps {}
