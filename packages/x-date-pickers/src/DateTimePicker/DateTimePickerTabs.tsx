@@ -147,6 +147,7 @@ DateTimePickerTabs.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * Date tab icon.
    * @default DateRange
