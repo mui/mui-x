@@ -43,7 +43,7 @@ export const serializeCellValue = (
 };
 
 const objectFormattedValueWarning = buildWarning([
-  'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+  'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
@@ -155,13 +155,13 @@ export function buildCSV(options: BuildCSVOptions): string {
   const headerRows: CSVRow[] = [];
 
   if (includeColumnGroupsHeaders) {
-    const columnGroupLookup = apiRef.current.unstable_getAllGroupDetails();
+    const columnGroupLookup = apiRef.current.getAllGroupDetails();
 
     let maxColumnGroupsDepth = 0;
     const columnGroupPathsLookup = filteredColumns.reduce<
       Record<GridStateColDef['field'], GridColumnGroup['groupId'][]>
     >((acc, column) => {
-      const columnGroupPath = apiRef.current.unstable_getColumnGroupPath(column.field);
+      const columnGroupPath = apiRef.current.getColumnGroupPath(column.field);
       acc[column.field] = columnGroupPath;
       maxColumnGroupsDepth = Math.max(maxColumnGroupsDepth, columnGroupPath.length);
       return acc;

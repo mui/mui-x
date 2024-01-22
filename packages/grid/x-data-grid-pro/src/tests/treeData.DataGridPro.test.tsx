@@ -540,7 +540,7 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(() => {
         render(<Test filterMode="server" />);
       }).toErrorDev(
-        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+        'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
       );
     });
 

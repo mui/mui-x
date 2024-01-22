@@ -14,6 +14,7 @@ export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
+  disabled?: boolean;
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -50,7 +51,7 @@ function getIcon(
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index, sortingOrder } = props;
+  const { direction, index, sortingOrder, disabled } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -67,6 +68,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
+      disabled={disabled}
       {...rootProps.slotProps?.baseIconButton}
     >
       {iconElement}
@@ -94,6 +96,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
+  disabled: PropTypes.bool,
   index: PropTypes.number,
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;

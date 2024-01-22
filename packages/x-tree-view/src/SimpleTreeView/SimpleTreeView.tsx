@@ -4,7 +4,11 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import {
+  SimpleTreeViewProps,
+  SimpleTreeViewSlotProps,
+  SimpleTreeViewSlots,
+} from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
@@ -41,7 +45,7 @@ type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefine
 const EMPTY_ITEMS: any[] = [];
 
 const itemsPropWarning = buildWarning([
-  'MUI: The `SimpleTreeView` component does not support the `items` prop.',
+  'MUI X: The `SimpleTreeView` component does not support the `items` prop.',
   'If you want to add items, you need to pass them as JSX children.',
   'Check the documentation for more details: https://next.mui.com/x/react-tree-view/simple-tree-view/items/',
 ]);
@@ -68,10 +72,12 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     }
   }
 
-  const {
-    pluginParams,
-    otherProps: { slots, slotProps, ...otherProps },
-  } = extractPluginParamsFromProps({
+  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
+    typeof SIMPLE_TREE_VIEW_PLUGINS,
+    SimpleTreeViewSlots,
+    SimpleTreeViewSlotProps,
+    SimpleTreeViewProps<Multiple> & { items: any }
+  >({
     props: { ...props, items: EMPTY_ITEMS },
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
@@ -84,7 +90,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   const Root = slots?.root ?? SimpleTreeViewRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: {},
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
@@ -111,34 +117,13 @@ SimpleTreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
-  /**
-   * The default icon displayed next to a end node. This is applied to all
-   * tree nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultEndIcon: PropTypes.node,
   /**
    * Expanded node ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
-  /**
-   * The default icon displayed next to a parent node. This is applied to all
-   * parent nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultParentIcon: PropTypes.node,
   /**
    * Selected node ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
@@ -160,24 +145,6 @@ SimpleTreeView.propTypes = {
    * Used when the item's expansion is controlled.
    */
   expandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The id of the item.
-   * @default `(item) => item.id`
-   */
-  getItemId: PropTypes.func,
-  /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The label of the item.
-   * @default `(item) => item.label`
-   */
-  getItemLabel: PropTypes.func,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

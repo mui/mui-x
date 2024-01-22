@@ -18,7 +18,7 @@ function getSelectedRowIds() {
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
-        row.querySelector(`[role="cell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
+        row.querySelector(`[role="gridcell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
       ),
     );
 }
@@ -142,7 +142,7 @@ describe('<DataGridPro /> - Row selection', () => {
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
       }).toErrorDev(
-        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+        'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     });
 

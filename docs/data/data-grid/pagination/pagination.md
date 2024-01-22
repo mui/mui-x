@@ -11,14 +11,20 @@ By default, each page contains 100 rows. The user can change the size of the pag
 
 ### Page size options
 
-You can configure the page size the user can choose from with the `pageSizeOptions` prop.
+You can customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
+You should provide an array of items, each item should be one of these types:
 
-It's possible to customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
-You should either provide an array of:
+- **number**, each number will be used for the option's label and value.
 
-- **numbers**, each number will be used for the option's label and value.
+  ```jsx
+  <DataGrid pageSizeOptions={[5, 10, 25]}>
+  ```
 
-- **objects**, the `value` and `label` keys will be used respectively for the value and label of the option (useful for language strings such as 'All').
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+
+  ```jsx
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
 
@@ -32,7 +38,7 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
-## Pagination on Pro and Premium
+## Pagination on Pro and Premium [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The default pagination behavior depends on your plan.
 

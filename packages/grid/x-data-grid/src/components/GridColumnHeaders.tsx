@@ -9,26 +9,25 @@ import {
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
-interface GridColumnHeadersProps
+export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
+  ref?: React.Ref<HTMLDivElement>;
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
 const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
-  function GridColumnsHeaders(props, ref) {
+  function GridColumnHeaders(props, ref) {
     const {
       innerRef,
       className,
       visibleColumns,
       sortColumnLookup,
       filterColumnLookup,
-      columnPositions,
       columnHeaderTabIndexState,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
       columnGroupHeaderFocus,
-      densityFactor,
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
@@ -37,18 +36,16 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
+    const { isDragging, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
       useGridColumnHeaders({
         innerRef,
         visibleColumns,
         sortColumnLookup,
         filterColumnLookup,
-        columnPositions,
         columnHeaderTabIndexState,
         columnGroupHeaderTabIndexState,
         columnHeaderFocus,
         columnGroupHeaderFocus,
-        densityFactor,
         headerGroupingMaxDepth,
         columnMenuState,
         columnVisibility,
@@ -57,7 +54,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       });
 
     return (
-      <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
+      <GridBaseColumnHeaders ref={ref} {...other}>
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
           {getColumnGroupHeaders()}
           {getColumnHeaders()}
@@ -98,14 +95,11 @@ GridColumnHeaders.propTypes = {
     field: PropTypes.string,
     open: PropTypes.bool.isRequired,
   }).isRequired,
-  columnPositions: PropTypes.arrayOf(PropTypes.number).isRequired,
   columnVisibility: PropTypes.object.isRequired,
-  densityFactor: PropTypes.number.isRequired,
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: refType,
-  minColumnIndex: PropTypes.number,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

@@ -98,41 +98,41 @@ const useCompletedData = (): CompletedBarData[] => {
       if (verticalLayout) {
         if (!isBandScaleConfig(xAxisConfig)) {
           throw new Error(
-            `MUI-X-Charts: ${
+            `MUI X Charts: ${
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}"`,
+            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
         if (xAxis[xAxisKey].data === undefined) {
           throw new Error(
-            `MUI-X-Charts: ${
+            `MUI X Charts: ${
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud have data property`,
+            } shoud have data property.`,
           );
         }
         baseScaleConfig = xAxisConfig;
       } else {
         if (!isBandScaleConfig(yAxisConfig)) {
           throw new Error(
-            `MUI-X-Charts: ${
+            `MUI X Charts: ${
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}"`,
+            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
 
         if (yAxis[yAxisKey].data === undefined) {
           throw new Error(
-            `MUI-X-Charts: ${
+            `MUI X Charts: ${
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud have data property`,
+            } shoud have data property.`,
           );
         }
         baseScaleConfig = yAxisConfig;

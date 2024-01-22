@@ -45,6 +45,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableEval: false,
   disableMultipleColumnsFiltering: false,
   disableMultipleRowSelection: false,
+  disableColumnSorting: false,
   disableMultipleColumnsSorting: false,
   disableRowSelectionOnClick: false,
   disableVirtualization: false,

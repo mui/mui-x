@@ -8,7 +8,6 @@
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
-    "className": { "description": "Class name applied to the root element." },
     "closeOnSelect": {
       "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
     },
@@ -129,10 +128,10 @@
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "shortcuts": "Custom component for the shortcuts.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
-    "textField": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
-    "mobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
-    "mobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+    "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "field": "Component used to enter the date with the keyboard."
   }
 }

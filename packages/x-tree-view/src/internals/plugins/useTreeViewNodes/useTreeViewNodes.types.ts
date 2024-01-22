@@ -71,14 +71,16 @@ export interface UseTreeViewNodesState {
   nodeMap: TreeViewNodeMap;
 }
 
-export type UseTreeViewNodesSignature = TreeViewPluginSignature<
-  UseTreeViewNodesParameters<any>,
-  UseTreeViewNodesDefaultizedParameters<any>,
-  UseTreeViewNodesInstance,
-  UseTreeViewNodesEventLookup,
-  UseTreeViewNodesState,
-  never,
-  []
->;
+interface UseTreeViewNodesContextValue
+  extends Pick<UseTreeViewNodesDefaultizedParameters<any>, 'disabledItemsFocusable'> {}
+
+export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
+  params: UseTreeViewNodesParameters<any>;
+  defaultizedParams: UseTreeViewNodesDefaultizedParameters<any>;
+  instance: UseTreeViewNodesInstance;
+  events: UseTreeViewNodesEventLookup;
+  state: UseTreeViewNodesState;
+  contextValue: UseTreeViewNodesContextValue;
+}>;
 
 export type TreeViewNodeMap = { [nodeId: string]: TreeViewNode };

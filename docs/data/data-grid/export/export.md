@@ -311,7 +311,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 :::warning
 This feature only works with `@mui/styled-engine` v5.11.8 or newer.
-Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.

@@ -32,4 +32,4 @@ You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](h
 
 ## Unsupported libraries
 
-If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
+If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.

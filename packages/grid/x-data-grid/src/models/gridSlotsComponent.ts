@@ -1,6 +1,11 @@
 import * as React from 'react';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { GridRowProps } from '../components/GridRow';
+import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
+import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
+import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
 
+// TODO: Convert all `any` to `Props & PropsOverrides`
 export interface GridBaseSlots {
   /**
    * The custom Checkbox component used in the grid for both header and cells.
@@ -107,7 +112,12 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component responsible for rendering the column headers.
    * @default DataGridColumnHeaders
    */
-  columnHeaders: React.JSXElementConstructor<any>;
+  columnHeaders: React.JSXElementConstructor<GridColumnHeadersProps>;
+  /**
+   * Component responsible for rendering the detail panels.
+   * @default GridDetailPanels
+   */
+  detailPanels: React.JSXElementConstructor<GridDetailPanelsProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter
@@ -123,6 +133,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default null
    */
   toolbar: React.JSXElementConstructor<any> | null;
+  /**
+   * Pinned rows container.
+   * @ignore - do not document
+   */
+  pinnedRows: React.JSXElementConstructor<GridPinnedRowsProps>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    * @default GridLoadingOverlay
@@ -162,5 +177,5 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * Component rendered for each row.
    * @default GridRow
    */
-  row: React.JSXElementConstructor<any>;
+  row: React.JSXElementConstructor<GridRowProps>;
 }

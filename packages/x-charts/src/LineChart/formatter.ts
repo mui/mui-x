@@ -14,7 +14,7 @@ let warnedOnce = false;
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: Formatter<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  const stackingGroups = getStackingGroups(params);
+  const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
   // Create a data set with format adapted to d3
   const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
@@ -31,7 +31,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         [
-          `MUI-X-Charts: line series with id='${id}' has no data.`,
+          `MUI X Charts: line series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -83,7 +83,9 @@ const formatter: Formatter<'line'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) =>
+      v === null ? '' : v.toLocaleString(),
+    ),
   };
 };
 

@@ -128,9 +128,6 @@ DateRangePickerToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  /**
-   * className applied to the root component.
-   */
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**

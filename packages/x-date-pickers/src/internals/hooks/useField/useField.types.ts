@@ -253,6 +253,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the direction is "right to left".
    * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
@@ -261,6 +262,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
+    localizedDigits: string[],
     isRTL: boolean,
     getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
@@ -268,10 +270,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getValueStrFromSections: (
+    sections: TSection[],
+    localizedDigits: string[],
+    isRTL: boolean,
+  ) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection

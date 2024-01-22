@@ -42,19 +42,19 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: theme.spacing(0, 1),
 }));
 
-export interface GridToolbarFilterButtonProps
-  extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
+export interface GridToolbarFilterButtonProps {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: { button?: ButtonProps };
+  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
-    const { componentsProps = {}, ...other } = props;
-    const buttonProps = componentsProps.button || {};
+    const { slotProps = {} } = props;
+    const buttonProps = slotProps.button || {};
+    const tooltipProps = slotProps.tooltip || {};
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
@@ -132,7 +132,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       <rootProps.slots.baseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
-        {...other}
+        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
       >
         <rootProps.slots.baseButton
@@ -168,9 +168,7 @@ GridToolbarFilterButton.propTypes = {
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps: PropTypes.shape({
-    button: PropTypes.object,
-  }),
+  slotProps: PropTypes.object,
 } as any;
 
 export { GridToolbarFilterButton };

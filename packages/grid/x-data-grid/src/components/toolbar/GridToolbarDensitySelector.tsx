@@ -1,7 +1,9 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
+import { TooltipProps } from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
@@ -14,87 +16,105 @@ import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
 
-export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function GridToolbarDensitySelector(props, ref) {
-    const { onClick, ...other } = props;
-    const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-    const densityButtonId = useId();
-    const densityMenuId = useId();
+interface GridToolbarDensitySelectorProps {
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+}
 
-    const [open, setOpen] = React.useState(false);
-    const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const handleRef = useForkRef(ref, buttonRef);
+const GridToolbarDensitySelector = React.forwardRef<
+  HTMLButtonElement,
+  GridToolbarDensitySelectorProps
+>(function GridToolbarDensitySelector(props, ref) {
+  const { slotProps = {} } = props;
+  const buttonProps = slotProps.button || {};
+  const tooltipProps = slotProps.tooltip || {};
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const densityButtonId = useId();
+  const densityMenuId = useId();
 
-    const densityOptions: GridDensityOption[] = [
-      {
-        icon: <rootProps.slots.densityCompactIcon />,
-        label: apiRef.current.getLocaleText('toolbarDensityCompact'),
-        value: 'compact',
-      },
-      {
-        icon: <rootProps.slots.densityStandardIcon />,
-        label: apiRef.current.getLocaleText('toolbarDensityStandard'),
-        value: 'standard',
-      },
-      {
-        icon: <rootProps.slots.densityComfortableIcon />,
-        label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
-        value: 'comfortable',
-      },
-    ];
+  const [open, setOpen] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const handleRef = useForkRef(ref, buttonRef);
 
-    const startIcon = React.useMemo<React.ReactElement>(() => {
-      switch (densityValue) {
-        case 'compact':
-          return <rootProps.slots.densityCompactIcon />;
-        case 'comfortable':
-          return <rootProps.slots.densityComfortableIcon />;
-        default:
-          return <rootProps.slots.densityStandardIcon />;
-      }
-    }, [densityValue, rootProps]);
+  const densityOptions: GridDensityOption[] = [
+    {
+      icon: <rootProps.slots.densityCompactIcon />,
+      label: apiRef.current.getLocaleText('toolbarDensityCompact'),
+      value: 'compact',
+    },
+    {
+      icon: <rootProps.slots.densityStandardIcon />,
+      label: apiRef.current.getLocaleText('toolbarDensityStandard'),
+      value: 'standard',
+    },
+    {
+      icon: <rootProps.slots.densityComfortableIcon />,
+      label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
+      value: 'comfortable',
+    },
+  ];
 
-    const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setOpen((prevOpen) => !prevOpen);
-      onClick?.(event);
-    };
-    const handleDensitySelectorClose = () => {
-      setOpen(false);
-    };
-    const handleDensityUpdate = (newDensity: GridDensity) => {
-      apiRef.current.setDensity(newDensity);
-      setOpen(false);
-    };
-
-    const handleListKeyDown = (event: React.KeyboardEvent) => {
-      if (isTabKey(event.key)) {
-        event.preventDefault();
-      }
-      if (isHideMenuKey(event.key)) {
-        setOpen(false);
-      }
-    };
-
-    // Disable the button if the corresponding is disabled
-    if (rootProps.disableDensitySelector) {
-      return null;
+  const startIcon = React.useMemo<React.ReactElement>(() => {
+    switch (densityValue) {
+      case 'compact':
+        return <rootProps.slots.densityCompactIcon />;
+      case 'comfortable':
+        return <rootProps.slots.densityComfortableIcon />;
+      default:
+        return <rootProps.slots.densityStandardIcon />;
     }
+  }, [densityValue, rootProps]);
 
-    const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
-      <MenuItem
-        key={index}
-        onClick={() => handleDensityUpdate(option.value)}
-        selected={option.value === densityValue}
+  const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setOpen((prevOpen) => !prevOpen);
+    buttonProps.onClick?.(event);
+  };
+  const handleDensitySelectorClose = () => {
+    setOpen(false);
+  };
+  const handleDensityUpdate = (newDensity: GridDensity) => {
+    apiRef.current.setDensity(newDensity);
+    setOpen(false);
+  };
+
+  const handleListKeyDown = (event: React.KeyboardEvent) => {
+    if (isTabKey(event.key)) {
+      event.preventDefault();
+    }
+    if (isHideMenuKey(event.key)) {
+      setOpen(false);
+    }
+  };
+
+  // Disable the button if the corresponding is disabled
+  if (rootProps.disableDensitySelector) {
+    return null;
+  }
+
+  const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
+    <MenuItem
+      key={index}
+      onClick={() => handleDensityUpdate(option.value)}
+      selected={option.value === densityValue}
+    >
+      <ListItemIcon>{option.icon}</ListItemIcon>
+      {option.label}
+    </MenuItem>
+  ));
+
+  return (
+    <React.Fragment>
+      <rootProps.slots.baseTooltip
+        title={apiRef.current.getLocaleText('toolbarDensityLabel')}
+        enterDelay={1000}
+        {...tooltipProps}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        <ListItemIcon>{option.icon}</ListItemIcon>
-        {option.label}
-      </MenuItem>
-    ));
-
-    return (
-      <React.Fragment>
         <rootProps.slots.baseButton
           ref={handleRef}
           size="small"
@@ -104,29 +124,43 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           aria-expanded={open}
           aria-controls={open ? densityMenuId : undefined}
           id={densityButtonId}
-          {...other}
+          {...buttonProps}
           onClick={handleDensitySelectorOpen}
           {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
         </rootProps.slots.baseButton>
-        <GridMenu
-          open={open}
-          target={buttonRef.current}
-          onClose={handleDensitySelectorClose}
-          position="bottom-start"
+      </rootProps.slots.baseTooltip>
+      <GridMenu
+        open={open}
+        target={buttonRef.current}
+        onClose={handleDensitySelectorClose}
+        position="bottom-start"
+      >
+        <MenuList
+          id={densityMenuId}
+          className={gridClasses.menuList}
+          aria-labelledby={densityButtonId}
+          onKeyDown={handleListKeyDown}
+          autoFocusItem={open}
         >
-          <MenuList
-            id={densityMenuId}
-            className={gridClasses.menuList}
-            aria-labelledby={densityButtonId}
-            onKeyDown={handleListKeyDown}
-            autoFocusItem={open}
-          >
-            {densityElements}
-          </MenuList>
-        </GridMenu>
-      </React.Fragment>
-    );
-  },
-);
+          {densityElements}
+        </MenuList>
+      </GridMenu>
+    </React.Fragment>
+  );
+});
+
+GridToolbarDensitySelector.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+} as any;
+
+export { GridToolbarDensitySelector };

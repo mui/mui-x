@@ -31,7 +31,7 @@ const getExcelJs = async () => {
 };
 
 const warnInvalidFormattedValue = buildWarning([
-  'MUI: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+  'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
@@ -451,7 +451,7 @@ export async function buildExcel(
 
   if (includeColumnGroupsHeaders) {
     const columnGroupPaths = columns.reduce<Record<string, string[]>>((acc, column) => {
-      acc[column.field] = api.unstable_getColumnGroupPath(column.field);
+      acc[column.field] = api.getColumnGroupPath(column.field);
       return acc;
     }, {});
 
@@ -459,7 +459,7 @@ export async function buildExcel(
       worksheet,
       serializedColumns,
       columnGroupPaths,
-      api.unstable_getAllGroupDetails(),
+      api.getAllGroupDetails(),
     );
   }
 

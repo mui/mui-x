@@ -5,7 +5,6 @@ import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridP
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
-import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 import {
   PropValidator,
@@ -20,7 +19,7 @@ const propValidators: PropValidator<DataGridProcessedProps>[] = [
     (props.columns &&
       props.columns.some((column) => column.resizable) &&
       [
-        `MUI: \`column.resizable = true\` is not a valid prop.`,
+        `MUI X: \`column.resizable = true\` is not a valid prop.`,
         'Column resizing is not available in the MIT version.',
         '',
         'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
@@ -47,7 +46,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
+        <GridBody />
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
@@ -163,6 +162,11 @@ DataGridRaw.propTypes = {
    */
   disableColumnSelector: PropTypes.bool,
   /**
+   * If `true`, the column sorting feature will be disabled.
+   * @default false
+   */
+  disableColumnSorting: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -198,8 +202,6 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    ariaV7: PropTypes.bool,
-    columnGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
