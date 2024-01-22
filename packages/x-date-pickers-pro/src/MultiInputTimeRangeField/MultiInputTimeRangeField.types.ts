@@ -3,10 +3,9 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection, MultiInputRangeFieldClasses, RangePosition } from '../models';
+import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputTimeRangeFieldParams<
   TDate,
@@ -21,12 +20,10 @@ export interface UseMultiInputTimeRangeFieldProps<
   TDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-    UseTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    'unstableFieldRef' | 'clearable' | 'onClear'
-  > {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-}
+      UseTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+      'unstableFieldRef' | 'clearable' | 'onClear'
+    >,
+    MultiInputFieldRefs {}
 
 export type UseMultiInputTimeRangeFieldComponentProps<
   TDate,
