@@ -27,11 +27,6 @@ export interface MobileDateRangePickerProps<
 > extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps {
   /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
-   */
-  calendars?: 1 | 2 | 3;
-  /**
    * Overridable component slots.
    * @default {}
    */

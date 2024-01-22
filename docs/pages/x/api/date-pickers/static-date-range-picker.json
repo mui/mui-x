@@ -3,7 +3,7 @@
     "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "2"
+      "default": "1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise."
     },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
