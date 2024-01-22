@@ -27,7 +27,6 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## Accessible DOM structure
 
-### Without accessible DOM structure
 
 Until version v7.0.0, the only DOM structure available consisted of an `<input />` containing the whole value:
 
