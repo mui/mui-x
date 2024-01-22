@@ -28,7 +28,7 @@ apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
 :::info
-The free version of the `DataGrid` is limited to a single row update per `apiRef.current.updateRows` call.
+The community version of the Data Grid is limited to a single row update per `apiRef.current.updateRows` call.
 Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 :::
 
