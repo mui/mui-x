@@ -41,7 +41,7 @@ This new feature allows the field component to set aria attributes on individual
 
 {{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
 
-#### Usage with `slotProps.field`
+### Usage with `slotProps.field`
 
 When using `slotProps.field` to pass props to your field component,
 the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
@@ -75,7 +75,7 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   />
   ```
 
-#### Usage with `slotProps.textField`
+### Usage with `slotProps.textField`
 
 If you are passing props to `slotProps.textField`,
 these props will now be received by `PickersTextField` and should keep working the same way as before.
@@ -97,7 +97,7 @@ If you are passing `inputProps` to `slotProps.textField`,
 this props will now be passed to the hidden `<input />` element.
 :::
 
-#### Usage with `slots.field`
+### Usage with `slots.field`
 
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
@@ -109,7 +109,7 @@ If your custom field was used to create a Joy UI design component,
 you may want to wait a few weeks for us to release an out-of-the-box Joy `PickersTextField` component instead of implement it yourself.
 :::
 
-#### Usage with `slots.textField`
+### Usage with `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the accessible DOM structure.
@@ -122,7 +122,7 @@ please consider having a look at the [custom PickersTextField](/x/react-date-pic
 This approach can be more appropriate for deeper changes.
 :::
 
-#### Usage with theme `defaultProps`
+### Usage with theme `defaultProps`
 
 If you are using the theme to set default props to `MuiTextField`,
 you need to set the same default props to `MuiPickersTextField`:
@@ -185,7 +185,7 @@ const theme = createTheme({
 });
 ```
 
-#### Usage with theme `styleOverrides`
+### Usage with theme `styleOverrides`
 
 If you are using the theme to set style overrides to `MuiTextField`,
 you need to set the same style overrides to `MuiPickersTextField`:
