@@ -18,7 +18,7 @@ export default function RowGroupingGroupingValueGetter() {
         field: 'composer',
         headerName: 'Composer',
         valueGetter: (value: { name: string }) => value.name,
-        groupingValueGetter: (value) => value.name,
+        groupingValueGetter: (value: { name: string }) => value.name,
         width: 200,
       } as GridColDef<Movie, string>,
       {

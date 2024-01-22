@@ -219,7 +219,7 @@ export const getCellGroupingCriteria = ({
 }) => {
   let key: GridKeyValue | null | undefined;
   if (groupingRule.groupingValueGetter) {
-    key = groupingRule.groupingValueGetter(row[groupingRule.field], row, colDef, apiRef);
+    key = groupingRule.groupingValueGetter(row[groupingRule.field] as never, row, colDef, apiRef);
   } else {
     key = row[groupingRule.field] as GridKeyValue | null | undefined;
   }

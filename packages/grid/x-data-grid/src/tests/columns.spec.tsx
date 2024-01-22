@@ -243,3 +243,46 @@ function ValueFormatter() {
     },
   ];
 }
+
+function GroupingValueGetter() {
+  const oldSignatureGroupingValueGetter: GridColDef[] = [
+    {
+      field: 'brand',
+      groupingValueGetter: (params) => {
+        type Test = Expect<Equal<typeof params, never>>;
+        return '';
+      },
+    },
+    {
+      field: 'brand',
+      groupingValueGetter: ({ value, row }) => {
+        type Tests = [Expect<Equal<typeof value, never>>, Expect<Equal<typeof row, never>>];
+        return '';
+      },
+    },
+  ];
+
+  const currentSignatureGroupingValueGetter: GridColDef[] = [
+    {
+      field: 'brand',
+      groupingValueGetter: (value) => {
+        type Test = Expect<Equal<typeof value, never>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      groupingValueGetter: (value: number) => {
+        type Test = Expect<Equal<typeof value, number>>;
+        return value;
+      },
+    },
+    {
+      field: 'brand',
+      groupingValueGetter: (value: 'foo' | 'bar') => {
+        type Test = Expect<Equal<typeof value, 'foo' | 'bar'>>;
+        return value;
+      },
+    },
+  ];
+}
