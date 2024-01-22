@@ -22,17 +22,10 @@ export interface StaticDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
+   * The number of calendars to render.
+   * @default 1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise.
    */
-  components?: StaticDateRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
+  calendars?: 1 | 2 | 3;
   /**
    * Overridable component slots.
    * @default {}
