@@ -10,7 +10,7 @@ productId: x-data-grid
 
 <!-- ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
 
 ## Start using the new release
 
@@ -25,17 +25,23 @@ Since v7 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
 
+## Update `@mui/material` package
+
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+It is a change in minor version only, so it should not cause any breaking changes.
+Please update your `@mui/material` package to this or a newer version.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
-You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
 // Data Grid specific
 npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
-// Target other MUI X components as well
+// Target other MUI X components as well
 npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
@@ -69,6 +75,14 @@ Since v7 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v6 to v7.
 
+### DOM changes
+
+The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
+
+- The main element now corresponds to the virtal scroller element.
+- Headers are now contained in the virtual scroller.
+- Pinned row and column sections are now contained in the virtual scroller.
+
 <!-- ### Renamed props
 
 - -->
@@ -100,7 +114,11 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Behavioral changes
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/). See [Sorting non-sortable columns programmatically](/x/react-data-grid/sorting/#sorting-non-sortable-columns-programmatically) for example.
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
+
+Here's the list of affected features, colDef flags and props to disable them and the related props and API methods to control them programmatically.
+
+{{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 
@@ -137,6 +155,16 @@ Below are described the steps you need to make to migrate from v6 to v7.
   const columns = [{ type: 'number' as const, field: 'id' }];
   <DataGrid columns={columns} />;
   ```
+
+- The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
+
+- The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
 <!-- ### Rows
 
@@ -237,6 +265,33 @@ Below are described the steps you need to make to migrate from v6 to v7.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
 
+### Accessibility
+
+- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+  If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ ariaV7: true }} />
+  +<DataGrid />
+  ```
+
+  The most notable changes that might affect your application or tests are:
+
+  - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
+
+    ```diff
+    -<div class="MuiDataGrid-root" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false">
+    +<div class="MuiDataGrid-root">
+       <div class="MuiDataGrid-toolbarContainer"></div>
+    -    <div class="MuiDataGrid-main"></div>
+    +    <div class="MuiDataGrid-main" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false"></div>
+       <div class="MuiDataGrid-footerContainer"></div>
+     </div>
+    ```
+
+  - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
+
 <!-- ### Editing
 
 - -->
@@ -281,17 +336,28 @@ Below are described the steps you need to make to migrate from v6 to v7.
  }
 ```
 
-<!-- ### CSS classes
+### CSS classes
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v6 classes | MUI X v7 classes | Note |
-  | :--------------- | :--------------- | :--- |
-  |                  |                  |      |
-  |                  |                  |      | -->
+  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
+  | :------------------------------------------ | :--------------- | :--------------------- | --- |
+  | `.Mui-hovered`                              | `:hover`         | For rows               |
+  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
 
-<!-- ### Removals from the public API
+### Changes to the public API
 
-- -->
+- The method `getRootDimensions()` now returns a non-null value.
+- The field `mainElementRef` is now always non-null.
+- The field `rootElementRef` is now always non-null.
+- The field `virtualScrollerRef` is now always non-null.
+- The event `renderedRowsIntervalChange` params changed from `GridRenderedRowsIntervalChangeParams` to `GridRenderContext`, and the former has been removed.
+
+### Changes to slots
+
+- The slot `columnHeaders` has had these props removed: `columnPositions`, `densityFactor`, `minColumnIndex`.
+- The slot `row` has had these props removed: `containerWidth`, `position`.
+- The slot `row` has typed props now.
+- The slot `headerFilterCell` has had these props removed: `filterOperators`.
 
 <!-- ### Rename `components` to `slots` -->

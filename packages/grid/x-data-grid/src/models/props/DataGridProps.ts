@@ -34,20 +34,10 @@ import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridExperimentalFeatures {
   /**
-   * Enables the column grouping.
-   */
-  columnGrouping: boolean;
-  /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
-  /**
-   * Enables accessibility improvements that will be enabled by default in v7.
-   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
-   * @default false
-   */
-  ariaV7: boolean;
 }
 
 /**

@@ -1,18 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function MultiSelectTreeView() {
   return (
     <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
-      <SimpleTreeView
-        multiSelect
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
+      <SimpleTreeView multiSelect>
         <TreeItem nodeId="grid" label="Data Grid">
           <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
           <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />

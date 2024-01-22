@@ -86,7 +86,7 @@ You can import the `PickersTextField` component to create custom wrappers:
 
 ### Using Joy `Input`
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 {{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 

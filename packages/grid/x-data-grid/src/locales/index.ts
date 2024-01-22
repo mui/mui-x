@@ -30,3 +30,6 @@ export * from './urPK';
 export * from './viVN';
 export * from './zhCN';
 export * from './zhTW';
+export * from './hrHR';
+export * from './ptPT';
+export * from './zhHK';

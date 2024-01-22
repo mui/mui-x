@@ -1,53 +1,105 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/system';
+import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridDimensions, gridDimensionsSelector } from '../../hooks/features/dimensions';
+import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
+import { GridOverlays } from '../base/GridOverlays';
+import { GridHeaders } from '../GridHeaders';
+import { GridMainContainer as Container } from './GridMainContainer';
+import { GridTopContainer as TopContainer } from './GridTopContainer';
+import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
+import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
+import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
+import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
+import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: OwnerState, dimensions: GridDimensions) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['virtualScroller'],
+    root: ['main', dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight'],
+    scroller: ['virtualScroller'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const VirtualScrollerRoot = styled('div', {
+const Scroller = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
 })<{ ownerState: OwnerState }>({
-  overflow: 'auto',
-  height: '100%',
-  // See https://github.com/mui/mui-x/issues/4360
   position: 'relative',
+  height: '100%',
+  overflow: 'scroll',
+  scrollbarWidth: 'none' /* Firefox */,
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Safari and Chrome */,
+  },
+
   '@media print': {
     overflow: 'hidden',
   },
-  zIndex: 0, // See https://github.com/mui/mui-x/issues/10547
+
+  // See https://github.com/mui/mui-x/issues/10547
+  zIndex: 0,
 });
 
-const GridVirtualScroller = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
->(function GridVirtualScroller(props, ref) {
+export interface GridVirtualScrollerProps {
+  children?: React.ReactNode;
+}
+
+function GridVirtualScroller(props: GridVirtualScrollerProps) {
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const classes = useUtilityClasses(rootProps, dimensions);
+
+  const virtualScroller = useGridVirtualScroller();
+  const {
+    getContainerProps,
+    getScrollerProps,
+    getContentProps,
+    getRenderZoneProps,
+    getScrollbarVerticalProps,
+    getScrollbarHorizontalProps,
+  } = virtualScroller;
 
   return (
-    <VirtualScrollerRoot
-      ref={ref}
-      {...props}
-      className={clsx(classes.root, props.className)}
-      ownerState={rootProps}
-    />
+    <Container className={classes.root} {...getContainerProps()}>
+      <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
+        <TopContainer>
+          <GridHeaders />
+          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+        </TopContainer>
+
+        <GridOverlays />
+
+        <Content {...getContentProps()}>
+          <RenderZone {...getRenderZoneProps()}>
+            {virtualScroller.getRows()}
+            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+          </RenderZone>
+        </Content>
+
+        <SpaceFiller />
+
+        <BottomContainer>
+          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+        </BottomContainer>
+      </Scroller>
+      <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
+      <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      {props.children}
+    </Container>
   );
-});
+}
 
 export { GridVirtualScroller };

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRefs } from './useGridRefs';
+import { useGridTheme } from './useGridTheme';
 import { useGridLoggerFactory } from './useGridLoggerFactory';
 import { useGridApiInitialization } from './useGridApiInitialization';
 import { useGridLocaleText } from './useGridLocaleText';
@@ -19,6 +21,9 @@ export const useGridInitialization = <
   props: DataGridProcessedProps,
 ) => {
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);
+
+  useGridRefs(privateApiRef);
+  useGridTheme(privateApiRef);
   useGridLoggerFactory(privateApiRef, props);
   useGridStateInitialization(privateApiRef, props);
   useGridPipeProcessing(privateApiRef);

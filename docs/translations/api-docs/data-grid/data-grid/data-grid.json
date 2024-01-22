@@ -498,6 +498,16 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
+    "cell--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is pinned to the left"
+    },
+    "cell--pinnedRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is pinned to the right"
+    },
     "cell--rangeBottom": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -538,6 +548,9 @@
       "nodeName": "the cell element",
       "conditions": "<code>align=\"right\"</code>"
     },
+    "cell--withLeftBorder": {
+      "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
+    },
     "cell--withRenderer": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -553,6 +566,10 @@
     "cellContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the element that wraps the cell content"
+    },
+    "cellEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty cell element"
     },
     "cellSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
@@ -701,6 +718,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns panel row element"
     },
+    "container--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom container"
+    },
+    "container--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top container"
+    },
     "detailPanel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the detail panel element"
@@ -725,6 +750,15 @@
     "editInputCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
+    },
+    "filler": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the filler row" },
+    "filler--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the filler row pinned left section"
+    },
+    "filler--pinnedRight": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the filler row pinned right section"
     },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
@@ -783,6 +817,11 @@
     "main": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the main container element"
+    },
+    "main--hasPinnedRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the main container element",
+      "conditions": "it has right pinned columns"
     },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
@@ -848,14 +887,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"
     },
-    "pinnedColumns--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned columns"
-    },
-    "pinnedColumns--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned columns"
-    },
     "pinnedRows": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned rows container"
@@ -919,6 +950,10 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
+    "row--firstVisible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the first visible row element on every page of the grid"
+    },
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the last visible row element on every page of the grid"
@@ -952,6 +987,15 @@
     "scrollArea--right": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right scroll area element"
+    },
+    "scrollbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the scrollbars" },
+    "scrollbar--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scrollbar"
+    },
+    "scrollbar--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scrollbar"
     },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
@@ -998,6 +1042,9 @@
       "description": "Styles applied to {{nodeName}}, {{conditions}}. Sets border color only.",
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
+    },
+    "withVerticalBorder": {
+      "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
   }
 }

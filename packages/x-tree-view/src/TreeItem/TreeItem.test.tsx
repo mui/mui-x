@@ -29,10 +29,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   disabledItemsFocusable: false,
   icons: {
-    defaultCollapseIcon: null,
-    defaultExpandIcon: null,
-    defaultParentIcon: null,
-    defaultEndIcon: null,
+    slots: {},
+    slotProps: {},
   },
   selection: {
     multiSelect: false,
@@ -108,25 +106,29 @@ describe('<TreeItem />', () => {
   });
 
   it('should display the right icons', () => {
-    const defaultEndIcon = <div data-test="defaultEndIcon" />;
-    const defaultExpandIcon = <div data-test="defaultExpandIcon" />;
-    const defaultCollapseIcon = <div data-test="defaultCollapseIcon" />;
-    const defaultParentIcon = <div data-test="defaultParentIcon" />;
-    const icon = <div data-test="icon" />;
-    const endIcon = <div data-test="endIcon" />;
-
     const { getByTestId } = render(
       <SimpleTreeView
-        defaultEndIcon={defaultEndIcon}
-        defaultExpandIcon={defaultExpandIcon}
-        defaultCollapseIcon={defaultCollapseIcon}
-        defaultParentIcon={defaultParentIcon}
+        slots={{
+          expandIcon: () => <div data-test="defaultExpandIcon" />,
+          collapseIcon: () => <div data-test="defaultCollapseIcon" />,
+          endIcon: () => <div data-test="defaultEndIcon" />,
+        }}
         defaultExpandedNodes={['1']}
       >
         <TreeItem nodeId="1" label="1" data-testid="1">
           <TreeItem nodeId="2" label="2" data-testid="2" />
-          <TreeItem nodeId="5" label="5" data-testid="5" icon={icon} />
-          <TreeItem nodeId="6" label="6" data-testid="6" endIcon={endIcon} />
+          <TreeItem
+            nodeId="5"
+            label="5"
+            data-testid="5"
+            slots={{ icon: () => <div data-test="icon" /> }}
+          />
+          <TreeItem
+            nodeId="6"
+            label="6"
+            data-testid="6"
+            slots={{ endIcon: () => <div data-test="endIcon" /> }}
+          />
         </TreeItem>
         <TreeItem nodeId="3" label="3" data-testid="3">
           <TreeItem nodeId="4" label="4" data-testid="4" />
