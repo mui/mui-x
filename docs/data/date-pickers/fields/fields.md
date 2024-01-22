@@ -28,7 +28,19 @@ All fields to edit a range are available in a single input version and in a mult
 ## Accessible DOM structure
 
 
-Until version v7.0.0, the only DOM structure available consisted of an `<input />` containing the whole value:
+By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+
+From version v7.0.0, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
+
+```tsx
+<DateField enableAccessibleFieldDOMStructure />
+<DatePicker enableAccessibleFieldDOMStructure />
+<DateRangePicker enableAccessibleFieldDOMStructure />
+```
+
+This new feature allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+
+{{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
 
 ```html
 <input value="MM/DD/YYYY" />
