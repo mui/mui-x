@@ -7,7 +7,7 @@ import {
   DataGridProps,
   GridToolbar,
   gridClasses,
-  GridColumnsPanelProps,
+  GridColumnsManagementProps,
 } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
@@ -251,7 +251,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const columnSearchPredicate: GridColumnsPanelProps['searchPredicate'] = (
+      const columnSearchPredicate: GridColumnsManagementProps['searchPredicate'] = (
         column,
         searchValue,
       ) => {
@@ -270,7 +270,7 @@ describe('<DataGrid /> - Toolbar', () => {
               toolbar: GridToolbar,
             }}
             slotProps={{
-              columnsPanel: {
+              columnsManagement: {
                 searchPredicate: columnSearchPredicate,
               },
             }}
