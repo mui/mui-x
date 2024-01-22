@@ -344,7 +344,7 @@ then you can look at the page to see all the examples improved and updated to us
 
 #### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
 
-The headless field hooks (e.g.: `useDateField`) are returning a new prop called `enableAccessibleFieldDOMStructure`.
+The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
 Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
