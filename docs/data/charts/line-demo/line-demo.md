@@ -1,5 +1,6 @@
 ---
 title: Charts - Line demonstration
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot
 ---
 
 # Charts - Line demonstration

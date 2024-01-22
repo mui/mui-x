@@ -1,0 +1,85 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "areAllSectionsEmpty": {
+      "description": "Is <code>true</code> if the current values equals the empty value. For a single item value, it means that <code>value === null</code> For a range value, it means that <code>value === [null, null]</code>",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "color": {
+      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "contentEditable": {
+      "description": "If true, the whole element is editable. Useful when all the sections are selected.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "elements": {
+      "description": "The elements to render. Each element contains the prop to edit a section of the value.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "focused": {
+      "description": "If <code>true</code>, the component is displayed in focused state.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "helperText": {
+      "description": "The helper text content.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "hiddenLabel": {
+      "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "InputProps": {
+      "description": "Props applied to the Input element. It will be a <a href=\"/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "margin": {
+      "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "required": {
+      "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "size": {
+      "description": "The size of the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "variant": { "description": "The variant to use.", "deprecated": "", "typeDescriptions": {} }
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "marginNormal": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>margin=\"normal\"</code>"
+    },
+    "marginDense": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>margin=\"dense\"</code>"
+    },
+    "fullWidth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>fullWidth={true}</code>"
+    }
+  },
+  "slotDescriptions": {}
+}

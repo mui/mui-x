@@ -105,7 +105,7 @@ export function verifyLicense({
   acceptedScopes: LicenseScope[];
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
-    throw new Error('MUI: The release information is missing. Not able to validate license.');
+    throw new Error('MUI X: The release information is missing. Not able to validate license.');
   }
 
   if (!licenseKey) {
@@ -122,24 +122,24 @@ export function verifyLicense({
   const license = decodeLicense(encoded);
 
   if (license == null) {
-    console.error('Error checking license. Key version not found!');
+    console.error('MUI X: Error checking license. Key version not found!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
   if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
-    console.error('Error checking license. Licensing model not found or invalid!');
+    console.error('MUI X: Error checking license. Licensing model not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
   if (license.expiryTimestamp == null) {
-    console.error('Error checking license. Expiry timestamp not found or invalid!');
+    console.error('MUI X: Error checking license. Expiry timestamp not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
   if (license.licensingModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
-      throw new Error('MUI: The release information is invalid. Not able to validate license.');
+      throw new Error('MUI X: The release information is invalid. Not able to validate license.');
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {

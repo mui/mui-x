@@ -14,6 +14,7 @@ const alias = {
   '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
   '@mui/markdown': '../node_modules/@mui/monorepo/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
+  '@mui/material-nextjs': '../node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': '../node_modules/@mui/monorepo/packages/api-docs-builder',
   '@mui-internal/docs-utilities': '../node_modules/@mui/monorepo/packages/docs-utilities',
   docs: '../node_modules/@mui/monorepo/docs',
@@ -35,12 +36,6 @@ module.exports = function getBabelConfig(api) {
     ],
     plugins: [
       ...baseConfig.plugins,
-      [
-        'babel-plugin-transform-rename-import',
-        {
-          replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
-        },
-      ],
       // for IE 11 support
       '@babel/plugin-transform-object-assign',
       'babel-plugin-preval',

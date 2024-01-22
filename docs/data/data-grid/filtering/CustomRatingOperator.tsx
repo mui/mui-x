@@ -45,7 +45,6 @@ function RatingInputValue(props: GridFilterInputValueProps) {
     >
       <Rating
         name="custom-rating-filter-operator"
-        placeholder="Filter value"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}

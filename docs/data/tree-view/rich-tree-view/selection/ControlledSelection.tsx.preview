@@ -9,7 +9,5 @@
     selectedNodes={selectedNodes}
     onSelectedNodesChange={handleSelectedNodesChange}
     multiSelect
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
   />
 </Box>

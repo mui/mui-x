@@ -1,6 +1,7 @@
 export * from './beBY';
 export * from './caES';
 export * from './csCZ';
+export * from './daDK';
 export * from './deDE';
 export * from './elGR';
 export * from './enUS';

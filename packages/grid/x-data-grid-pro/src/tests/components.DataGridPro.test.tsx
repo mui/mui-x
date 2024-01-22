@@ -35,7 +35,7 @@ describe('<DataGridPro/> - Components', () => {
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
       expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
-        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+        'MUI X: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
       );
     });
   });

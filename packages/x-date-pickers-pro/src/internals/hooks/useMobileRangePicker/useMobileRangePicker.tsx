@@ -12,10 +12,12 @@ import {
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
+import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
+  UseMobileRangePickerSlotProps,
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
@@ -88,7 +90,27 @@ export const useMobileRangePicker = <
     TDate,
     RangeFieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseMobileRangePickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {

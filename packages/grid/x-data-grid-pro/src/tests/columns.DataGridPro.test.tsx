@@ -99,7 +99,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
+      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
     it('should allow to resize columns with the touch', function test() {
@@ -120,7 +120,7 @@ describe('<DataGridPro /> - Columns', () => {
         changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
       });
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
+      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
     it('should call onColumnResize during resizing', () => {
@@ -172,7 +172,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(0, 0)).toHaveInlineStyle({ width: '110px' });
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(110);
       expect(screen.getByTestId('dummy-row').firstElementChild).toHaveInlineStyle({
         width: '90px',
       });
@@ -192,24 +192,24 @@ describe('<DataGridPro /> - Columns', () => {
       const nonPinnedCell = getCell(1, 0);
       const columnHeaderCell = getColumnHeaderCell(0);
       const topPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--top']} [role="cell"][data-colindex="0"]`,
+        `.${gridClasses['pinnedRows--top']} [role="gridcell"][data-colindex="0"]`,
       );
       const bottomPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--bottom']} [role="cell"][data-colindex="0"]`,
+        `.${gridClasses['pinnedRows--bottom']} [role="gridcell"][data-colindex="0"]`,
       );
 
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
 
-      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
-      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(columnHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(nonPinnedCell.getBoundingClientRect().width).to.equal(150);
       expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
       expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
 
       fireEvent.mouseUp(separator);
 
-      expect(columnHeaderCell).toHaveInlineStyle({ width: '150px' });
-      expect(nonPinnedCell).toHaveInlineStyle({ width: '150px' });
+      expect(columnHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(nonPinnedCell.getBoundingClientRect().width).to.equal(150);
       expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
       expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
     });

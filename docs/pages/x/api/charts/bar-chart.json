@@ -14,7 +14,8 @@
       "default": "xAxisIds[0] The id of the first provided axis"
     },
     "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -42,7 +43,11 @@
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "topAxis": {
       "type": {
         "name": "union",
@@ -64,23 +69,26 @@
       }
     }
   },
-  "slots": [
-    { "class": null, "name": "axisContent", "description": "" },
-    { "class": null, "name": "axisLabel", "description": "" },
-    { "class": null, "name": "axisLine", "description": "" },
-    { "class": null, "name": "axisTick", "description": "" },
-    { "class": null, "name": "axisTickLabel", "description": "" },
-    { "class": null, "name": "bar", "description": "" },
-    { "class": null, "name": "itemContent", "description": "" },
-    { "class": null, "name": "legend", "description": "" },
-    { "class": null, "name": "popper", "description": "" }
-  ],
   "name": "BarChart",
   "imports": [
     "import { BarChart } from '@mui/x-charts/BarChart';",
     "import { BarChart } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarChart" },
+  "slots": [
+    { "name": "axisLine", "description": "", "class": null },
+    { "name": "axisTick", "description": "", "class": null },
+    { "name": "axisTickLabel", "description": "", "class": null },
+    { "name": "axisLabel", "description": "", "class": null },
+    { "name": "bar", "description": "", "class": null },
+    { "name": "legend", "description": "", "class": null },
+    { "name": "popper", "description": "", "class": null },
+    { "name": "axisContent", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiBarChart",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
 }

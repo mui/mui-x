@@ -15,9 +15,10 @@ import {
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
 import { TreeViewBaseItem } from '../../../models';
+import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 
 function isPrintableCharacter(string: string) {
-  return string && string.length === 1 && string.match(/\S/);
+  return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
 function findNextFirstChar(firstChars: string[], startIndex: number, char: string) {
@@ -33,7 +34,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
   const theme = useTheme();
-  const isRtl = theme.direction === 'rtl';
+  const isRTL = theme.direction === 'rtl';
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
   const hasFirstCharMapBeenUpdatedImperatively = React.useRef(false);
 
@@ -66,43 +67,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     updateFirstCharMap,
   });
 
-  const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    if (state.focusedNodeId != null && instance.isNodeExpandable(state.focusedNodeId)) {
-      if (instance.isNodeExpanded(state.focusedNodeId)) {
-        instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-      } else if (!instance.isNodeDisabled(state.focusedNodeId)) {
-        instance.toggleNodeExpansion(event, state.focusedNodeId);
-      }
-    }
-    return true;
-  };
-
-  const handlePreviousArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    if (state.focusedNodeId == null) {
-      return false;
-    }
-
-    if (
-      instance.isNodeExpanded(state.focusedNodeId) &&
-      !instance.isNodeDisabled(state.focusedNodeId)
-    ) {
-      instance.toggleNodeExpansion(event, state.focusedNodeId!);
-      return true;
-    }
-
-    const parent = instance.getNode(state.focusedNodeId).parentId;
-    if (parent) {
-      instance.focusNode(event, parent);
-      return true;
-    }
-    return false;
-  };
-
-  const focusByFirstCharacter = (
-    event: React.KeyboardEvent<HTMLUListElement>,
-    nodeId: string,
-    firstChar: string,
-  ) => {
+  const getFirstMatchingNode = (nodeId: string, firstChar: string) => {
     let start: number;
     let index: number;
     const lowercaseChar = firstChar.toLowerCase();
@@ -137,44 +102,29 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       index = findNextFirstChar(firstChars, 0, lowercaseChar);
     }
 
-    // If match was found...
+    // If a match was found...
     if (index > -1) {
-      instance.focusNode(event, firstCharIds[index]);
+      return firstCharIds[index];
     }
+
+    return null;
   };
 
-  const selectNextNode = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
-    if (!instance.isNodeDisabled(getNextNode(instance, id))) {
-      instance.selectRange(
-        event,
-        {
-          end: getNextNode(instance, id),
-          current: id,
-        },
-        true,
-      );
-    }
-  };
+  const canToggleNodeSelection = (nodeId: string) =>
+    !params.disableSelection && !instance.isNodeDisabled(nodeId);
 
-  const selectPreviousNode = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    if (!instance.isNodeDisabled(getPreviousNode(instance, nodeId))) {
-      instance.selectRange(
-        event,
-        {
-          end: getPreviousNode(instance, nodeId)!,
-          current: nodeId,
-        },
-        true,
-      );
-    }
-  };
+  const canToggleNodeExpansion = (nodeId: string) =>
+    !instance.isNodeDisabled(nodeId) && instance.isNodeExpandable(nodeId);
 
+  // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const createHandleKeyDown =
-    (otherHandlers: EventHandlers) => (event: React.KeyboardEvent<HTMLUListElement>) => {
+    (otherHandlers: EventHandlers) =>
+    (event: React.KeyboardEvent<HTMLUListElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
 
-      let flag = false;
-      const key = event.key;
+      if (event.defaultMuiPrevented) {
+        return;
+      }
 
       // If the tree is empty there will be no focused node
       if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
@@ -182,114 +132,190 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       }
 
       const ctrlPressed = event.ctrlKey || event.metaKey;
-      switch (key) {
-        case ' ':
-          if (!params.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
-            flag = true;
-            if (params.multiSelect && event.shiftKey) {
-              instance.selectRange(event, { end: state.focusedNodeId });
-            } else if (params.multiSelect) {
+      const key = event.key;
+
+      // eslint-disable-next-line default-case
+      switch (true) {
+        // Select the node when pressing "Space"
+        case key === ' ' && canToggleNodeSelection(state.focusedNodeId): {
+          event.preventDefault();
+          if (params.multiSelect && event.shiftKey) {
+            instance.selectRange(event, { end: state.focusedNodeId });
+          } else if (params.multiSelect) {
+            instance.selectNode(event, state.focusedNodeId, true);
+          } else {
+            instance.selectNode(event, state.focusedNodeId);
+          }
+          break;
+        }
+
+        // If the focused node has children, we expand it.
+        // If the focused node has no children, we select it.
+        case key === 'Enter': {
+          if (canToggleNodeExpansion(state.focusedNodeId)) {
+            instance.toggleNodeExpansion(event, state.focusedNodeId);
+            event.preventDefault();
+          } else if (canToggleNodeSelection(state.focusedNodeId)) {
+            if (params.multiSelect) {
+              event.preventDefault();
               instance.selectNode(event, state.focusedNodeId, true);
-            } else {
+            } else if (!instance.isNodeSelected(state.focusedNodeId)) {
               instance.selectNode(event, state.focusedNodeId);
+              event.preventDefault();
             }
           }
-          event.stopPropagation();
+
           break;
-        case 'Enter':
-          if (!instance.isNodeDisabled(state.focusedNodeId)) {
-            if (instance.isNodeExpandable(state.focusedNodeId)) {
-              instance.toggleNodeExpansion(event, state.focusedNodeId);
-              flag = true;
-            } else if (!params.disableSelection) {
-              flag = true;
-              if (params.multiSelect) {
-                instance.selectNode(event, state.focusedNodeId, true);
-              } else {
-                instance.selectNode(event, state.focusedNodeId);
-              }
+        }
+
+        // Focus the next focusable node
+        case key === 'ArrowDown': {
+          const nextNode = getNextNode(instance, state.focusedNodeId);
+          if (nextNode) {
+            event.preventDefault();
+            instance.focusNode(event, nextNode);
+
+            // Multi select behavior when pressing Shift + ArrowDown
+            // Toggles the selection state of the next node
+            if (params.multiSelect && event.shiftKey && canToggleNodeSelection(nextNode)) {
+              instance.selectRange(
+                event,
+                {
+                  end: nextNode,
+                  current: state.focusedNodeId,
+                },
+                true,
+              );
             }
           }
-          event.stopPropagation();
+
           break;
-        case 'ArrowDown':
-          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
-            selectNextNode(event, state.focusedNodeId);
+        }
+
+        // Focuses the previous focusable node
+        case key === 'ArrowUp': {
+          const previousNode = getPreviousNode(instance, state.focusedNodeId);
+          if (previousNode) {
+            event.preventDefault();
+            instance.focusNode(event, previousNode);
+
+            // Multi select behavior when pressing Shift + ArrowUp
+            // Toggles the selection state of the previous node
+            if (params.multiSelect && event.shiftKey && canToggleNodeSelection(previousNode)) {
+              instance.selectRange(
+                event,
+                {
+                  end: previousNode,
+                  current: state.focusedNodeId,
+                },
+                true,
+              );
+            }
           }
-          instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-          flag = true;
+
           break;
-        case 'ArrowUp':
-          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
-            selectPreviousNode(event, state.focusedNodeId);
+        }
+
+        // If the focused node is expanded, we move the focus to its first child
+        // If the focused node is collapsed and has children, we expand it
+        case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
+          if (instance.isNodeExpanded(state.focusedNodeId)) {
+            instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
+            event.preventDefault();
+          } else if (canToggleNodeExpansion(state.focusedNodeId)) {
+            instance.toggleNodeExpansion(event, state.focusedNodeId);
+            event.preventDefault();
           }
-          instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
-          flag = true;
+
           break;
-        case 'ArrowRight':
-          if (isRtl) {
-            flag = handlePreviousArrow(event);
-          } else {
-            flag = handleNextArrow(event);
-          }
-          break;
-        case 'ArrowLeft':
-          if (isRtl) {
-            flag = handleNextArrow(event);
-          } else {
-            flag = handlePreviousArrow(event);
-          }
-          break;
-        case 'Home':
+        }
+
+        // If the focused node is expanded, we collapse it
+        // If the focused node is collapsed and has a parent, we move the focus to this parent
+        case (key === 'ArrowLeft' && !isRTL) || (key === 'ArrowRight' && isRTL): {
           if (
+            canToggleNodeExpansion(state.focusedNodeId) &&
+            instance.isNodeExpanded(state.focusedNodeId)
+          ) {
+            instance.toggleNodeExpansion(event, state.focusedNodeId!);
+            event.preventDefault();
+          } else {
+            const parent = instance.getNode(state.focusedNodeId).parentId;
+            if (parent) {
+              instance.focusNode(event, parent);
+              event.preventDefault();
+            }
+          }
+
+          break;
+        }
+
+        // Focuses the first node in the tree
+        case key === 'Home': {
+          instance.focusNode(event, getFirstNode(instance));
+
+          // Multi select behavior when pressing Ctrl + Shift + Home
+          // Selects the focused node and all nodes up to the first node.
+          if (
+            canToggleNodeSelection(state.focusedNodeId) &&
             params.multiSelect &&
             ctrlPressed &&
-            event.shiftKey &&
-            !params.disableSelection &&
-            !instance.isNodeDisabled(state.focusedNodeId)
+            event.shiftKey
           ) {
             instance.rangeSelectToFirst(event, state.focusedNodeId);
           }
-          instance.focusNode(event, getFirstNode(instance));
-          flag = true;
+
+          event.preventDefault();
           break;
-        case 'End':
+        }
+
+        // Focuses the last node in the tree
+        case key === 'End': {
+          instance.focusNode(event, getLastNode(instance));
+
+          // Multi select behavior when pressing Ctrl + Shirt + End
+          // Selects the focused node and all the nodes down to the last node.
           if (
+            canToggleNodeSelection(state.focusedNodeId) &&
             params.multiSelect &&
             ctrlPressed &&
-            event.shiftKey &&
-            !params.disableSelection &&
-            !instance.isNodeDisabled(state.focusedNodeId)
+            event.shiftKey
           ) {
             instance.rangeSelectToLast(event, state.focusedNodeId);
           }
-          instance.focusNode(event, getLastNode(instance));
-          flag = true;
-          break;
-        default:
-          if (key === '*') {
-            instance.expandAllSiblings(event, state.focusedNodeId);
-            flag = true;
-          } else if (
-            params.multiSelect &&
-            ctrlPressed &&
-            key.toLowerCase() === 'a' &&
-            !params.disableSelection
-          ) {
-            instance.selectRange(event, {
-              start: getFirstNode(instance),
-              end: getLastNode(instance),
-            });
-            flag = true;
-          } else if (!ctrlPressed && !event.shiftKey && isPrintableCharacter(key)) {
-            focusByFirstCharacter(event, state.focusedNodeId, key);
-            flag = true;
-          }
-      }
 
-      if (flag) {
-        event.preventDefault();
-        event.stopPropagation();
+          event.preventDefault();
+          break;
+        }
+
+        // Expand all siblings that are at the same level as the focused node
+        case key === '*': {
+          instance.expandAllSiblings(event, state.focusedNodeId);
+          event.preventDefault();
+          break;
+        }
+
+        // Multi select behavior when pressing Ctrl + a
+        // Selects all the nodes
+        case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+          instance.selectRange(event, {
+            start: getFirstNode(instance),
+            end: getLastNode(instance),
+          });
+          event.preventDefault();
+          break;
+        }
+
+        // Type-ahead
+        // TODO: Support typing multiple characters
+        case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+          const matchingNode = getFirstMatchingNode(state.focusedNodeId, key);
+          if (matchingNode != null) {
+            instance.focusNode(event, matchingNode);
+            event.preventDefault();
+          }
+          break;
+        }
       }
     };
 

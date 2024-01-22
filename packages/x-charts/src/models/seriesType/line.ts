@@ -1,4 +1,5 @@
 import { DefaultizedProps } from '../helpers';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonDefaultizedProps,
@@ -40,7 +41,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'line';
@@ -72,6 +73,11 @@ export interface LineSeriesType
    * @default false
    */
   connectNulls?: boolean;
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**

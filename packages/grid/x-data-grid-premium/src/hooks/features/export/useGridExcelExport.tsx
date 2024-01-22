@@ -101,22 +101,23 @@ export const useGridExcelExport = (
         return;
       }
 
-      if (exceljsPostProcess && process.env.NODE_ENV !== 'production') {
-        console.warn(
-          [
-            `MUI: The exceljsPostProcess option is not supported when a web worker is used.`,
-            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
-          ].join('\n'),
-        );
-      }
-
-      if (exceljsPreProcess && process.env.NODE_ENV !== 'production') {
-        console.warn(
-          [
-            `MUI: The exceljsPreProcess option is not supported when a web worker is used.`,
-            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
-          ].join('\n'),
-        );
+      if (process.env.NODE_ENV !== 'production') {
+        if (exceljsPostProcess) {
+          console.warn(
+            [
+              `MUI X: The exceljsPostProcess option is not supported when a web worker is used.`,
+              'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+            ].join('\n'),
+          );
+        }
+        if (exceljsPreProcess) {
+          console.warn(
+            [
+              `MUI X: The exceljsPreProcess option is not supported when a web worker is used.`,
+              'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+            ].join('\n'),
+          );
+        }
       }
 
       const worker = workerFn();
@@ -144,7 +145,7 @@ export const useGridExcelExport = (
       );
 
       const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
-        acc[column.field] = apiRef.current.unstable_getColumnGroupPath(column.field);
+        acc[column.field] = apiRef.current.getColumnGroupPath(column.field);
         return acc;
       }, {});
 
@@ -153,7 +154,7 @@ export const useGridExcelExport = (
         serializedRows,
         valueOptionsData,
         columnGroupPaths,
-        columnGroupDetails: apiRef.current.unstable_getAllGroupDetails(),
+        columnGroupDetails: apiRef.current.getAllGroupDetails(),
         options: cloneableOptions,
         valueOptionsSheetName,
       };

@@ -592,6 +592,7 @@ MultiSectionDigitalClock.propTypes = {
   view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Available views.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired),
 } as any;

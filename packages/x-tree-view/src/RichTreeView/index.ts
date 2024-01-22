@@ -1,3 +1,8 @@
 export * from './RichTreeView';
 export * from './richTreeViewClasses';
-export type { RichTreeViewProps, RichTreeViewPropsBase } from './RichTreeView.types';
+export type {
+  RichTreeViewProps,
+  RichTreeViewPropsBase,
+  RichTreeViewSlots,
+  RichTreeViewSlotProps,
+} from './RichTreeView.types';

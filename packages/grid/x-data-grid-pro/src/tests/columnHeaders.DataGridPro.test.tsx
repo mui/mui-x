@@ -176,6 +176,9 @@ describe('<DataGridPro /> - Column headers', () => {
       fireEvent.mouseDown(separator);
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
+      // cleanup
+      fireEvent.mouseUp(separator);
+      clock.runToLast();
     });
 
     it('should close the menu of a column when pressing the Escape key', () => {

@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current.startRowEditMode({ id: 0 }))).to.throw(
-          'MUI: The row with id=0 is not in view mode.',
+          'MUI X: The row with id=0 is not in view mode.',
         );
       });
 
@@ -397,7 +397,7 @@ describe('<DataGridPro /> - Row editing', () => {
       it('should reject when the cell is not in edit mode', async () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopRowEditMode({ id: 0 })).to.throw(
-          'MUI: The row with id=0 is not in edit mode.',
+          'MUI X: The row with id=0 is not in edit mode.',
         );
       });
 
@@ -547,7 +547,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current.stopRowEditMode({ id: 0 }))).toErrorDev(
-          'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });

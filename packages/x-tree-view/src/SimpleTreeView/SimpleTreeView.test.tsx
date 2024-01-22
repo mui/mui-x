@@ -36,7 +36,7 @@ describe('<SimpleTreeView />', () => {
       expect(() => {
         setProps({ expandedNodes: undefined });
       }).toErrorDev(
-        'MUI: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
       );
     });
 
@@ -50,7 +50,7 @@ describe('<SimpleTreeView />', () => {
       expect(() => {
         setProps({ selectedNodes: undefined });
       }).toErrorDev(
-        'MUI: A component is changing the controlled selectedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled selectedNodes state of TreeView to be uncontrolled.',
       );
     });
 
@@ -433,7 +433,7 @@ describe('<SimpleTreeView />', () => {
 
       const { getByTestId } = render(
         <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
-          <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
+          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
         </SimpleTreeView>,

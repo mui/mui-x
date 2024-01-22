@@ -517,7 +517,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef.current.getDataAsCsv();
       }).toWarnDev(
         [
-          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
           'You can provide a `valueFormatter` with a string representation to be used.',
         ].join('\n'),
       );
@@ -549,13 +549,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300 }}>
-            <DataGridPro
-              apiRef={apiRef}
-              autoHeight
-              {...defaultProps}
-              experimentalFeatures={{ columnGrouping: true }}
-              {...props}
-            />
+            <DataGridPro apiRef={apiRef} autoHeight {...defaultProps} {...props} />
           </div>
         );
       }

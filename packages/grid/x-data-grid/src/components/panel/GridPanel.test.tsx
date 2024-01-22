@@ -5,7 +5,6 @@ import {
   gridPanelClasses as classes,
   useGridApiRef,
   GridApiContext,
-  gridClasses,
 } from '@mui/x-data-grid';
 import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext';
 import Popper from '@mui/material/Popper';
@@ -39,7 +38,7 @@ describe('<GridPanel />', () => {
       (node: React.ReactNode) => {
         const wrapper = baseMount(
           <Wrapper>
-            <div className={gridClasses.columnHeaders} />
+            <div data-id="gridPanelAnchor" />
             <span>{node}</span>
           </Wrapper>,
         );
