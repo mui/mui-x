@@ -17,8 +17,11 @@ export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWi
   extends UseRangePickerSlots<TDate, TView>,
     PickersModalDialogSlots {}
 
-export interface UseMobileRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlotProps<TDate, TView>,
+export interface UseMobileRangePickerSlotProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  Tabs extends boolean = true,
+> extends UseRangePickerSlotProps<TDate, TView, Tabs>,
     PickersModalDialogSlotProps {}
 
 export interface MobileRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {}

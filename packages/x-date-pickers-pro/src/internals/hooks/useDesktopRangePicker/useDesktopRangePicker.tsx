@@ -31,11 +31,12 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps, Tabs>,
+  Tabs extends boolean = true,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopRangePickerParams<TDate, TView, TExternalProps, Tabs>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {

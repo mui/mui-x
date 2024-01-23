@@ -25,10 +25,13 @@ export interface UseRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeri
   extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlots {}
 
-export interface UseRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
+export interface UseRangePickerSlotProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  Tabs extends boolean = true,
+> extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotProps<TDate> {
-  tabs?: ExportedBaseTabsProps;
+  tabs?: Tabs extends true ? ExportedBaseTabsProps : never;
   toolbar?: ExportedBaseToolbarProps;
 }
 
