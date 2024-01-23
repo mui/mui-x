@@ -16,7 +16,7 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Toolbar', () => {
+describe('<DataGrid /> - Toolbar', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
