@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
   height: 300,
   width: '100%',
   '& .MuiDataGrid-cell--editing': {
