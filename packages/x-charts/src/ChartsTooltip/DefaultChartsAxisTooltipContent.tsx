@@ -72,37 +72,7 @@ DefaultChartsAxisTooltipContent.propTypes = {
   /**
    * The properties of the triggered axis.
    */
-  axis: PropTypes.shape({
-    axisId: PropTypes.string,
-    classes: PropTypes.object,
-    data: PropTypes.array,
-    dataKey: PropTypes.string,
-    disableLine: PropTypes.bool,
-    disableTicks: PropTypes.bool,
-    fill: PropTypes.string,
-    hideTooltip: PropTypes.bool,
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    labelFontSize: PropTypes.number,
-    labelStyle: PropTypes.object,
-    max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-    scale: PropTypes.func.isRequired,
-    scaleType: PropTypes.oneOf(['time']).isRequired,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    stroke: PropTypes.string,
-    tickFontSize: PropTypes.number,
-    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
-    tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-    tickLabelStyle: PropTypes.object,
-    tickMaxStep: PropTypes.number,
-    tickMinStep: PropTypes.number,
-    tickNumber: PropTypes.number.isRequired,
-    tickSize: PropTypes.number,
-    valueFormatter: PropTypes.func,
-  }).isRequired,
+  axis: PropTypes.object.isRequired,
   /**
    * Data identifying the triggered axis.
    */
@@ -131,47 +101,7 @@ DefaultChartsAxisTooltipContent.propTypes = {
   /**
    * The series linked to the triggered axis.
    */
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      area: PropTypes.bool,
-      color: PropTypes.string.isRequired,
-      connectNulls: PropTypes.bool,
-      curve: PropTypes.oneOf([
-        'catmullRom',
-        'linear',
-        'monotoneX',
-        'monotoneY',
-        'natural',
-        'step',
-        'stepAfter',
-        'stepBefore',
-      ]),
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
-      dataKey: PropTypes.string,
-      disableHighlight: PropTypes.bool,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string,
-      showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['line']).isRequired,
-      valueFormatter: PropTypes.func.isRequired,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
