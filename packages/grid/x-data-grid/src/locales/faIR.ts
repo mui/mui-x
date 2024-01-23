@@ -40,6 +40,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text

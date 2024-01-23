@@ -239,7 +239,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
         ))}
         {currentColumns.length === 0 && (
           <GridColumnsManagementEmptyText ownerState={rootProps}>
-            No columns
+            {apiRef.current.getLocaleText('columnsManagementNoColumns')}
           </GridColumnsManagementEmptyText>
         )}
       </GridColumnsManagementBody>
