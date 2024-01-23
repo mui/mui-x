@@ -22,18 +22,18 @@ export default function RowGroupingSortByChildRows() {
           },
           sorting: {
             sortModel: [
-              // TODO: this doesn't work
               { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'desc' },
             ],
           },
         }}
         groupingColDef={{
+          width: 275,
           sortComparator: (v1, v2, cellParams1, cellParams2) => {
             if (
               cellParams1.rowNode.type === 'group' &&
               cellParams2.rowNode.type === 'group'
             ) {
-              // We want to sort values of each group, but only inside the group
+              // Sort the values, but only within the same group
               if (
                 cellParams1.rowNode.groupingField ===
                 cellParams2.rowNode.groupingField
