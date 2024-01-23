@@ -71,12 +71,12 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': 'שווה',
+  'filterOperator!=': 'שונה',
+  'filterOperator>': 'גדול מ',
+  'filterOperator>=': 'גדול או שווה ל',
+  'filterOperator<': 'קטן מ',
+  'filterOperator<=': 'קטן או שווה ל',
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
@@ -161,7 +161,7 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'הצג/הסתר פרטים',
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 
