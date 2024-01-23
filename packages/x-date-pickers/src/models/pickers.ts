@@ -8,3 +8,8 @@ export interface PickerChangeHandlerContext<TError> {
    */
   shortcut?: PickersShortcutsItemContext;
 }
+
+
+export interface PickerValidDateLookup {}
+
+export type PickerValidDate = PickerValidDateLookup[keyof PickerValidDateLookup]

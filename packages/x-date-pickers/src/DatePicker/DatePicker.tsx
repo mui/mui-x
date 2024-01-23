@@ -7,8 +7,9 @@ import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import {PickerValidDate} from "../models";
 
-type DatePickerComponent = (<TDate>(
+type DatePickerComponent = (<TDate extends PickerValidDate>(
   props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -22,7 +23,7 @@ type DatePickerComponent = (<TDate>(
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-const DatePicker = React.forwardRef(function DatePicker<TDate>(
+const DatePicker = React.forwardRef(function DatePicker<TDate extends PickerValidDate>(
   inProps: DatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
