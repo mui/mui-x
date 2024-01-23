@@ -313,6 +313,31 @@ describe('<DataGridPro /> - Columns visibility', () => {
     expect(queryByRole('button', { name: 'Reset' })).to.equal(null);
   });
 
+  it('should reset the columns to initial columns state when `Reset` button is clicked in columns management panel', () => {
+    const { getByRole } = render(
+      <TestDataGrid
+        slots={{
+          toolbar: GridToolbar,
+        }}
+      />,
+    );
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    const resetButton = getByRole('button', { name: 'Reset' });
+    expect(resetButton).to.have.attribute('disabled');
+
+    // Hide `idBis` column
+    fireEvent.click(screen.getByRole('checkbox', { name: 'idBis' }));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    expect(resetButton).not.to.have.attribute('disabled');
+
+    // Reset columns
+    fireEvent.click(resetButton);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    expect(resetButton).to.have.attribute('disabled');
+  });
+
   describe('prop: `getTogglableColumns`', () => {
     it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
       const getTogglableColumns = (cols: GridColDef[]) =>
