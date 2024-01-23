@@ -165,21 +165,21 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "CalendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
-    "Day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "CalendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+    "Day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "Field": "Component used to enter the date with the keyboard.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "Layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "MobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
-    "MobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "Shortcuts": "Custom component for the shortcuts.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
-    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
-    "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "TextField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }
