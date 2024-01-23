@@ -12,6 +12,14 @@
     "import { LineElement } from '@mui/x-charts/LineChart';",
     "import { LineElement } from '@mui/x-charts';"
   ],
+  "slots": [
+    {
+      "name": "line",
+      "description": "The component that renders the root.",
+      "default": "LineElementPath",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "faded",

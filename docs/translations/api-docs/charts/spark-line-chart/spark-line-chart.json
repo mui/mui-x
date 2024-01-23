@@ -41,7 +41,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "area": "",
-    "line": "",
+    "line": "The component that renders the root.",
     "mark": "",
     "lineHighlight": "",
     "bar": "",

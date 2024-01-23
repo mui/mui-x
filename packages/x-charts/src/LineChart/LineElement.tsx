@@ -89,38 +89,41 @@ LineElementPath.propTypes = {
   ]),
 } as any;
 
-export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  AnimatedComponent<'path'> & {
-    d: string;
-    highlightScope?: Partial<HighlightScope>;
-    /**
-     * The props used for each component slot.
-     * @default {}
-     */
-    slotProps?: {
-      line?: SlotComponentProps<
-        AnimatedComponent<'path'>,
-        // Added to make TS pass in useSotsProps
-        {
-          className?: string;
-          style?: React.CSSProperties;
-          ref?: React.Ref<any>;
-        },
-        LineElementOwnerState
-      >;
-    };
-    /**
-     * Overridable component slots.
-     * @default {}
-     */
-    slots?: {
-      /**
-       * The component that renders the root.
-       * @default LineElementPath
-       */
-      line?: AnimatedComponent<any>;
-    };
-  };
+export interface LineElementSlots {
+  /**
+   * The component that renders the root.
+   * @default LineElementPath
+   */
+  line?: AnimatedComponent<'path'>;
+}
+
+export interface LineElementSlotProps {
+  line?: SlotComponentProps<
+    AnimatedComponent<'path'>,
+    // Added to make TS pass in useSotsProps
+    {
+      className?: string;
+      style?: React.CSSProperties;
+      ref?: React.Ref<any>;
+    },
+    LineElementOwnerState
+  >;
+}
+
+export interface LineElementProps extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> {
+  d: string;
+  highlightScope?: Partial<HighlightScope>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LineElementSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: LineElementSlots;
+}
 
 /**
  * Demos:
@@ -173,10 +176,13 @@ LineElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
+  d: PropTypes.string.isRequired,
   highlightScope: PropTypes.shape({
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.string.isRequired,
   /**
    * The props used for each component slot.
    * @default {}

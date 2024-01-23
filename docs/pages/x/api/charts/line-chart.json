@@ -81,7 +81,12 @@
     { "name": "axisTickLabel", "description": "", "class": null },
     { "name": "axisLabel", "description": "", "class": null },
     { "name": "area", "description": "", "class": null },
-    { "name": "line", "description": "", "class": null },
+    {
+      "name": "line",
+      "description": "The component that renders the root.",
+      "default": "LineElementPath",
+      "class": null
+    },
     { "name": "mark", "description": "", "class": null },
     { "name": "lineHighlight", "description": "", "class": null },
     { "name": "legend", "description": "", "class": null },

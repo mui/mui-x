@@ -16,5 +16,6 @@
       "conditions": "higlighted"
     },
     "root": { "description": "Styles applied to the root element." }
-  }
+  },
+  "slotDescriptions": { "line": "The component that renders the root." }
 }

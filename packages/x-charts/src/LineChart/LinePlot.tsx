@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import { line as d3Line } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { LineElement, LineElementProps } from './LineElement';
+import {
+  LineElement,
+  LineElementProps,
+  LineElementSlotProps,
+  LineElementSlots,
+} from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 
-export interface LinePlotSlots {
-  line?: React.JSXElementConstructor<LineElementProps>;
-}
+export interface LinePlotSlots extends LineElementSlots {}
 
-export interface LinePlotSlotProps {
-  line?: Partial<LineElementProps>;
-}
+export interface LinePlotSlotProps extends LineElementSlotProps {}
 
 export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
