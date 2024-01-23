@@ -13,7 +13,7 @@ export const GRID_MULTIPLE_SELECT_COL_DEF: Omit<GridMultipleSelectColDef, 'field
     const colDef = params.api.getColumn(field);
 
     if (!isMultipleSelectColDef(colDef)) {
-      return [];
+      return '';
     }
 
     let valueOptions: Array<ValueOptions>;
@@ -24,7 +24,7 @@ export const GRID_MULTIPLE_SELECT_COL_DEF: Omit<GridMultipleSelectColDef, 'field
     }
 
     if (value == null) {
-      return [];
+      return '';
     }
 
     if (!valueOptions) {
