@@ -79,6 +79,6 @@ export default ${JSON.stringify(pages, null, 2)} as MuiPage[];
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
   sortingStrategies: {
-    slotsSort
+    slotsSort,
   },
 };
