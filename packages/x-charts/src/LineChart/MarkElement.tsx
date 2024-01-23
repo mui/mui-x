@@ -5,6 +5,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
+import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
@@ -30,8 +31,6 @@ interface MarkElementOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  x: number;
-  y: number;
   classes?: Partial<MarkElementClasses>;
 }
 
@@ -54,13 +53,11 @@ const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   return composeClasses(slots, getMarkElementUtilityClass, classes);
 };
 
-const MarkElementPath = styled('path', {
+const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
-  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
@@ -78,8 +75,6 @@ MarkElementPath.propTypes = {
     id: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
@@ -134,20 +129,23 @@ function MarkElement(props: MarkElementProps) {
   const isFaded =
     !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
 
+  const position = useSpring({ x, y });
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted,
     isFaded,
     color,
-    x,
-    y,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
     <MarkElementPath
       {...other}
+      style={{
+        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
+        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+      }}
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
