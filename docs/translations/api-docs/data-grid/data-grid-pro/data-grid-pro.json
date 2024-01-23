@@ -844,13 +844,21 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
-    "columnsPanel": {
+    "columnsManagement": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the columns panel element"
+      "nodeName": "the columns management body"
     },
-    "columnsPanelRow": {
+    "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the columns panel row element"
+      "nodeName": "the columns management footer element"
+    },
+    "columnsManagementHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management header element"
+    },
+    "columnsManagementRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management row element"
     },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
