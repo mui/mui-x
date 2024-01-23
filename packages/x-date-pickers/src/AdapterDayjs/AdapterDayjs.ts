@@ -113,7 +113,7 @@ const withLocale = (dayjs: any, locale?: string): Constructor =>
 
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
-    dayjs: Dayjs
+    dayjs: Dayjs;
   }
 }
 

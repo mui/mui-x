@@ -7,7 +7,7 @@ import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
-import {PickerValidDate} from "../models";
+import { PickerValidDate } from '../models';
 
 type DatePickerComponent = (<TDate extends PickerValidDate>(
   props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
