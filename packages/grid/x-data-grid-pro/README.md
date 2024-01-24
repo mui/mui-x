@@ -1,7 +1,7 @@
-# MUI X Data Grid Pro
+# MUI X Data Grid Pro
 
 This package is the Pro plan edition of the data grid component.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
 

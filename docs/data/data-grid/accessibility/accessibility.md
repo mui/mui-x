@@ -14,7 +14,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what MUI aims to support very well.
+This is the most common target for organizations so what we aims to support very well.
 
 The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 

@@ -33,5 +33,5 @@
       "nodeName": "the valueCell element"
     }
   },
-  "slotDescriptions": { "popper": "", "axisContent": "", "itemContent": "" }
+  "slotDescriptions": { "axisContent": "", "itemContent": "", "popper": "" }
 }

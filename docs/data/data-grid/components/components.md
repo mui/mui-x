@@ -205,7 +205,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 ```tsx Pro
@@ -229,7 +229,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 ```tsx Premium
@@ -253,7 +253,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 </codeblock>

@@ -81,7 +81,7 @@ StaticDateRangePicker.propTypes = {
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render.
-   * @default 2
+   * @default 1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise.
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
