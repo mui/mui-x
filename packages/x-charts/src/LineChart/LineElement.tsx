@@ -114,6 +114,11 @@ export interface LineElementSlotProps {
 
 export interface LineElementProps extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> {
   d: string;
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation?: boolean;
   highlightScope?: Partial<HighlightScope>;
   /**
    * The props used for each component slot.
@@ -138,7 +143,17 @@ export interface LineElementProps extends Omit<LineElementOwnerState, 'isFaded' 
  * - [LineElement API](https://mui.com/x/api/charts/line-element/)
  */
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    d,
+    skipAnimation,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
   const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
 
@@ -169,13 +184,13 @@ function LineElement(props: LineElementProps) {
     ownerState,
   });
 
-  const path = useAnimatedPath(d);
+  const path = useAnimatedPath(d, skipAnimation);
 
   const { animatedWidth } = useSpring({
     from: { animatedWidth: left },
     to: { animatedWidth: width + left + right },
     reset: false,
-    // immediate: skipAnimation,
+    immediate: skipAnimation,
   });
 
   const clipId = cleanId(`${chartId}-${id}-area-clip`);

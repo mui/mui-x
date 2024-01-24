@@ -86,6 +86,11 @@ MarkElementPath.propTypes = {
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
+     * If `true`, animations are skiped.
+     * @default false
+     */
+    skipAnimation?: boolean;
+    /**
      * The shape of the marker.
      */
     shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
@@ -116,6 +121,7 @@ function MarkElement(props: MarkElementProps) {
     shape,
     dataIndex,
     highlightScope,
+    skipAnimation,
     ...other
   } = props;
 
@@ -129,7 +135,7 @@ function MarkElement(props: MarkElementProps) {
   const isFaded =
     !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
 
-  const position = useSpring({ x, y });
+  const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,

@@ -16,7 +16,9 @@ export interface MarkPlotSlotProps {
   mark?: Partial<MarkElementProps>;
 }
 
-export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
+export interface MarkPlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<MarkElementProps, 'skipAnimation'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -40,7 +42,7 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, skipAnimation, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -142,6 +144,7 @@ function MarkPlot(props: MarkPlotProps) {
                     x={x}
                     y={y!} // Don't knwo why TS don't get from the filter that y can't be null
                     highlightScope={series[seriesId].highlightScope}
+                    skipAnimation={skipAnimation}
                     {...slotProps?.mark}
                   />
                 </g>

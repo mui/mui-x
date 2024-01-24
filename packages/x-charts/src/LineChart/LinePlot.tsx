@@ -19,7 +19,7 @@ export interface LinePlotSlotProps extends LineElementSlotProps {}
 
 export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
-    Pick<LineElementProps, 'slots' | 'slotProps'> {}
+    Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {}
 
 const useCompletedData = () => {
   const seriesData = React.useContext(SeriesContext).line;
@@ -97,7 +97,7 @@ const useCompletedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, skipAnimation, ...other } = props;
 
   const completedData = useCompletedData();
 
@@ -111,6 +111,7 @@ function LinePlot(props: LinePlotProps) {
             d={d}
             color={color}
             highlightScope={highlightScope}
+            skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}
           />

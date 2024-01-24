@@ -91,6 +91,11 @@ AreaElementPath.propTypes = {
 
 export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
+    /**
+     * If `true`, animations are skiped.
+     * @default false
+     */
+    skipAnimation?: boolean;
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
@@ -123,7 +128,17 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
  * - [AreaElement API](https://mui.com/x/api/charts/area-element/)
  */
 function AreaElement(props: AreaElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    d,
+    skipAnimation,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
   const { left, top, right, bottom, width, height, chartId } = React.useContext(DrawingContext);
 
@@ -154,13 +169,13 @@ function AreaElement(props: AreaElementProps) {
     ownerState,
   });
 
-  const path = useAnimatedPath(d!);
+  const path = useAnimatedPath(d!, skipAnimation);
 
   const { animatedWidth } = useSpring({
     from: { animatedWidth: left },
     to: { animatedWidth: width + left + right },
     reset: false,
-    // immediate: skipAnimation,
+    immediate: skipAnimation,
   });
   const clipId = cleanId(`${chartId}-${id}-area-clip`);
   return (

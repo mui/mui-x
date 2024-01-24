@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { mangoFusionPalette } from '@mui/x-charts/colorPalettes';
 
@@ -24,6 +26,8 @@ const defaultSeries = [
 export default function LineAnimation() {
   const [series, setSeries] = React.useState(defaultSeries);
   const [nbSeries, setNbSeries] = React.useState(3);
+  const [skipAnimation, setSkipAnimation] = React.useState(false);
+
   return (
     <div
       style={{
@@ -39,6 +43,7 @@ export default function LineAnimation() {
             ...series.slice(0, Math.min(nbSeries, 8)),
             ...series.slice(8, 10),
           ]}
+          skipAnimation={skipAnimation}
           height={400}
         />
       </div>
@@ -70,6 +75,14 @@ export default function LineAnimation() {
         >
           add
         </Button>
+        <FormControlLabel
+          checked={skipAnimation}
+          control={
+            <Checkbox onChange={(event) => setSkipAnimation(event.target.checked)} />
+          }
+          label="skipAnimation"
+          labelPlacement="end"
+        />
       </Stack>
     </div>
   );

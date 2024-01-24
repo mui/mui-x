@@ -18,7 +18,7 @@ export interface AreaPlotSlotProps {
 
 export interface AreaPlotProps
   extends React.SVGAttributes<SVGSVGElement>,
-    Pick<AreaElementProps, 'slots' | 'slotProps'> {}
+    Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {}
 
 const useCompletedData = () => {
   const seriesData = React.useContext(SeriesContext).line;
@@ -99,7 +99,7 @@ const useCompletedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, skipAnimation, ...other } = props;
 
   const completedData = useCompletedData();
 
@@ -116,6 +116,7 @@ function AreaPlot(props: AreaPlotProps) {
               highlightScope={highlightScope}
               slots={slots}
               slotProps={slotProps}
+              skipAnimation={skipAnimation}
             />
           ),
       )}
