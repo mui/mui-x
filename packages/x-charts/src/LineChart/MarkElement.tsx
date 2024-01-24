@@ -179,6 +179,11 @@ MarkElement.propTypes = {
    */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
+  /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
 } as any;
 
 export { MarkElement };

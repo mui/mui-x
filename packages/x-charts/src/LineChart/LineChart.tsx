@@ -355,6 +355,11 @@ LineChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

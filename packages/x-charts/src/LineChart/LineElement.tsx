@@ -220,6 +220,11 @@ LineElement.propTypes = {
   }),
   id: PropTypes.string.isRequired,
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

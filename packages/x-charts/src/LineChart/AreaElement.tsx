@@ -201,6 +201,11 @@ AreaElement.propTypes = {
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   /**
+   * If `true`, animations are skiped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
