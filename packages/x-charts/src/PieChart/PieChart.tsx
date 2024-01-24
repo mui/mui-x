@@ -319,62 +319,7 @@ PieChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      arcLabel: PropTypes.oneOfType([
-        PropTypes.oneOf(['formattedValue', 'label', 'value']),
-        PropTypes.func,
-      ]),
-      arcLabelMinAngle: PropTypes.number,
-      arcLabelRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      color: PropTypes.string,
-      cornerRadius: PropTypes.number,
-      cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      data: PropTypes.arrayOf(
-        PropTypes.shape({
-          color: PropTypes.string,
-          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-          label: PropTypes.string,
-          value: PropTypes.number.isRequired,
-        }),
-      ).isRequired,
-      endAngle: PropTypes.number,
-      faded: PropTypes.shape({
-        additionalRadius: PropTypes.number,
-        arcLabelRadius: PropTypes.number,
-        color: PropTypes.string,
-        cornerRadius: PropTypes.number,
-        innerRadius: PropTypes.number,
-        outerRadius: PropTypes.number,
-        paddingAngle: PropTypes.number,
-      }),
-      highlighted: PropTypes.shape({
-        additionalRadius: PropTypes.number,
-        arcLabelRadius: PropTypes.number,
-        color: PropTypes.string,
-        cornerRadius: PropTypes.number,
-        innerRadius: PropTypes.number,
-        outerRadius: PropTypes.number,
-        paddingAngle: PropTypes.number,
-      }),
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      innerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      paddingAngle: PropTypes.number,
-      sortingValues: PropTypes.oneOfType([
-        PropTypes.oneOf(['asc', 'desc', 'none']),
-        PropTypes.func,
-      ]),
-      startAngle: PropTypes.number,
-      type: PropTypes.oneOf(['pie']),
-      valueFormatter: PropTypes.func,
-    }),
-  ).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skiped.
    * @default false
