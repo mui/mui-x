@@ -206,7 +206,7 @@ const useCustomPlugin = ({ params }) => {
 You can use the `contextValue` property in the returned object to pass elements to the Tree Item:
 
 :::warning
-For now the context is private and cannot be accessed outside our own plugins.
+The context is private for now and cannot be accessed outside of our own plugins.
 You need to modify the `useTreeItem` hook to return the new value returned by your plugin.
 :::
 
