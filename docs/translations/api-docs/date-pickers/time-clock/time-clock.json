@@ -91,9 +91,9 @@
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
-    "previousIconButton": "Button allowing to switch to the left view.",
-    "nextIconButton": "Button allowing to switch to the right view.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button."
   }
 }

@@ -132,17 +132,17 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "toolbar": "Custom component for the toolbar rendered above the views.",
+    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
+    "rightArrowIcon": "Icon displayed in the right view switch button.",
+    "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "previousIconButton": "Button allowing to switch to the left view.",
-    "nextIconButton": "Button allowing to switch to the right view.",
-    "leftArrowIcon": "Icon displayed in the left view switch button.",
-    "rightArrowIcon": "Icon displayed in the right view switch button.",
-    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "shortcuts": "Custom component for the shortcuts.",
-    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
+    "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }
