@@ -12,7 +12,7 @@ import { validateDateTime } from '../internals/utils/validation/validateDateTime
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '../models';
 
 const useDefaultizedDateTimeField = <TDate extends PickerValidDate, AdditionalProps extends {}>(
   props: UseDateTimeFieldProps<TDate>,
