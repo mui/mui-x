@@ -78,7 +78,30 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   series: PropTypes.shape({
     color: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.number).isRequired,
+    data: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+          x: PropTypes.number.isRequired,
+          y: PropTypes.number.isRequired,
+        }),
+      ),
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          color: PropTypes.string.isRequired,
+          endAngle: PropTypes.number.isRequired,
+          formattedValue: PropTypes.string.isRequired,
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+          index: PropTypes.number.isRequired,
+          label: PropTypes.string,
+          padAngle: PropTypes.number.isRequired,
+          startAngle: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired,
+        }),
+      ),
+    ]).isRequired,
     highlightScope: PropTypes.shape({
       faded: PropTypes.oneOf(['global', 'none', 'series']),
       highlighted: PropTypes.oneOf(['item', 'none', 'series']),

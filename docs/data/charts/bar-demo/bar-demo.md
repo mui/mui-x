@@ -1,5 +1,6 @@
 ---
 title: Charts - Bar demonstration
+components: BarChart, BarElement, BarPlot
 ---
 
 # Charts - Bar demonstration

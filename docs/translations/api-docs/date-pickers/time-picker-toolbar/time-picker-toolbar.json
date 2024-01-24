@@ -1,0 +1,26 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "className": { "description": "className applied to the root component." },
+    "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
+    "onViewChange": {
+      "description": "Callback called when a toolbar is clicked",
+      "typeDescriptions": { "view": "The view to open" }
+    },
+    "toolbarFormat": { "description": "Toolbar date format." },
+    "toolbarPlaceholder": {
+      "description": "Toolbar value placeholder—it is displayed when the value is empty."
+    },
+    "view": { "description": "Currently visible picker view." }
+  },
+  "classDescriptions": {
+    "ampmLabel": { "description": "" },
+    "ampmLandscape": { "description": "" },
+    "ampmSelection": { "description": "" },
+    "hourMinuteLabel": { "description": "" },
+    "hourMinuteLabelLandscape": { "description": "" },
+    "hourMinuteLabelReverse": { "description": "" },
+    "root": { "description": "" },
+    "separator": { "description": "" }
+  }
+}

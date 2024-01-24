@@ -52,12 +52,16 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
    * @returns {any[]} The array of value on which quick filter is applied
+   * @default (searchText: string) => searchText
+   *   .split(' ')
+   *   .filter((word) => word !== '')
    */
   quickFilterParser?: (input: string) => any[];
   /**
    * Function responsible for formatting values of quick filter in a string when the model is modified
    * @param {any[]} values The new values passed to the quick filter model
    * @returns {string} The string to display in the text field
+   * @default (values: string[]) => values.join(' ')
    */
   quickFilterFormatter?: (values: NonNullable<GridFilterModel['quickFilterValues']>) => string;
   /**
@@ -172,12 +176,16 @@ GridToolbarQuickFilter.propTypes = {
    * Function responsible for formatting values of quick filter in a string when the model is modified
    * @param {any[]} values The new values passed to the quick filter model
    * @returns {string} The string to display in the text field
+   * @default (values: string[]) => values.join(' ')
    */
   quickFilterFormatter: PropTypes.func,
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
    * @returns {any[]} The array of value on which quick filter is applied
+   * @default (searchText: string) => searchText
+   *   .split(' ')
+   *   .filter((word) => word !== '')
    */
   quickFilterParser: PropTypes.func,
 } as any;

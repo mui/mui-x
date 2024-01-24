@@ -38,29 +38,62 @@
       }
     }
   },
-  "slots": [],
   "name": "PickersDay",
   "imports": [
     "import { PickersDay } from '@mui/x-date-pickers/PickersDay';",
     "import { PickersDay } from '@mui/x-date-pickers';",
     "import { PickersDay } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "dayWithMargin",
-      "dayOutsideMonth",
-      "hiddenDaySpacingFiller",
-      "today",
-      "selected",
-      "disabled"
-    ],
-    "globalClasses": { "selected": "Mui-selected", "disabled": "Mui-disabled" },
-    "name": "MuiPickersDay"
-  },
+  "classes": [
+    {
+      "key": "dayOutsideMonth",
+      "className": "MuiPickersDay-dayOutsideMonth",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "dayWithMargin",
+      "className": "MuiPickersDay-dayWithMargin",
+      "description": "Styles applied to the root element if `disableMargin=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "hiddenDaySpacingFiller",
+      "className": "MuiPickersDay-hiddenDaySpacingFiller",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersDay-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `selected=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "today",
+      "className": "MuiPickersDay-today",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiPickersDay",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "cssComponent": false
 }

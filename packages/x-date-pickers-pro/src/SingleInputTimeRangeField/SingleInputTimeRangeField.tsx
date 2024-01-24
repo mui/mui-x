@@ -42,7 +42,12 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: SingleInputTimeRangeFieldProps<TDate> =
-    useSlotProps({
+    useSlotProps<
+      typeof TextField,
+      SingleInputTimeRangeFieldSlotsComponentsProps<TDate>['textField'],
+      SingleInputTimeRangeFieldProps<TDate>,
+      SingleInputTimeRangeFieldProps<TDate>
+    >({
       elementType: TextField,
       externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
       externalForwardedProps: other,

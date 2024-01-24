@@ -1,5 +1,6 @@
 ---
 title: Charts - Custom components
+components: ChartsClipPath, ChartsSurface, CartesianContextProvider, DrawingProvider, HighlightProvider, InteractionProvider, SeriesContextProvider
 ---
 
 # Charts - Custom components

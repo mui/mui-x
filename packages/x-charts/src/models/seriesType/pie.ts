@@ -65,6 +65,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   arcLabel?: 'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) => string);
   /**
    * The minimal angle required to display the arc label.
+   * @default 0
    */
   arcLabelMinAngle?: number;
   /**

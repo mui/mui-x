@@ -24,6 +24,7 @@ export type SeriesContextProviderProps = {
   series: AllSeriesType[];
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
   children: React.ReactNode;
@@ -82,12 +83,9 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
   return formattedSeries;
 };
 
-export function SeriesContextProvider({
-  series,
-  dataset,
-  colors = blueberryTwilightPalette,
-  children,
-}: SeriesContextProviderProps) {
+function SeriesContextProvider(props: SeriesContextProviderProps) {
+  const { series, dataset, colors = blueberryTwilightPalette, children } = props;
+
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
@@ -102,3 +100,5 @@ export function SeriesContextProvider({
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
 }
+
+export { SeriesContextProvider };

@@ -1,7 +1,13 @@
 {
   "props": {
     "adapterLocale": { "type": { "name": "any" } },
-    "dateAdapter": { "type": { "name": "func" } },
+    "dateAdapter": {
+      "type": { "name": "func" },
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter",
+        "text": "date adapter setup section"
+      }
+    },
     "dateFormats": {
       "type": {
         "name": "shape",
@@ -11,15 +17,18 @@
     "dateLibInstance": { "type": { "name": "any" } },
     "localeText": { "type": { "name": "object" } }
   },
-  "slots": [],
   "name": "LocalizationProvider",
   "imports": [
     "import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';",
     "import { LocalizationProvider } from '@mui/x-date-pickers';",
     "import { LocalizationProvider } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiLocalizationProvider",
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/adapters-locale/\">Date format and localization</a></li>\n<li><a href=\"/x/react-date-pickers/calendar-systems/\">Calendar systems</a></li>\n<li><a href=\"/x/react-date-pickers/localization/\">Translated components</a></li>\n<li><a href=\"/x/react-date-pickers/timezone/\">UTC and timezones</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/adapters-locale/\">Date format and localization</a></li>\n<li><a href=\"/x/react-date-pickers/calendar-systems/\">Calendar systems</a></li>\n<li><a href=\"/x/react-date-pickers/localization/\">Translated components</a></li>\n<li><a href=\"/x/react-date-pickers/timezone/\">UTC and timezones</a></li></ul>",
+  "cssComponent": false
 }

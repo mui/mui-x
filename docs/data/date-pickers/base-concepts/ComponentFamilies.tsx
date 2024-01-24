@@ -29,7 +29,10 @@ function ProLabel({ children }: { children: React.ReactNode }) {
   return (
     <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
-        <a href="https://mui.com/x/introduction/licensing/#pro-plan">
+        <a
+          href="https://mui.com/x/introduction/licensing/#pro-plan"
+          aria-label="Included in Pro package"
+        >
           <ProSpan />
         </a>
       </Tooltip>

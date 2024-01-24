@@ -10,19 +10,20 @@ type ChartsReferenceLineProps<TValue extends string | number | Date = string | n
 >;
 
 function ChartsReferenceLine(props: ChartsReferenceLineProps) {
-  if (props.x !== undefined && props.y !== undefined) {
+  const { x, y } = props;
+  if (x !== undefined && y !== undefined) {
     throw new Error(
       'MUI-X-Charts: The ChartsReferenceLine can not have both `x` and `y` props set.',
     );
   }
 
-  if (props.x === undefined && props.y === undefined) {
+  if (x === undefined && y === undefined) {
     throw new Error(
       'MUI-X-Charts: The ChartsReferenceLine should have a value in `x` or `y` prop.',
     );
   }
 
-  if (props.x !== undefined) {
+  if (x !== undefined) {
     return <ChartsXReferenceLine {...props} />;
   }
   return <ChartsYReferenceLine {...props} />;

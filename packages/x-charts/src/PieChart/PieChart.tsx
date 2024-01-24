@@ -23,7 +23,12 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot, PiePlotProps, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
-import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+import {
+  ChartsAxisSlotsComponent,
+  ChartsAxisSlotComponentProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+} from '../models/axis';
 
 export interface PieChartSlotsComponent
   extends ChartsAxisSlotsComponent,
@@ -38,9 +43,21 @@ export interface PieChartSlotComponentProps
     ChartsTooltipSlotComponentProps {}
 
 export interface PieChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
+  /**
+   * Indicate which axis to display the bottom of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
+   * @default null
+   */
+  bottomAxis?: null | string | ChartsXAxisProps;
+  /**
+   * Indicate which axis to display the left of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
+   * @default null
+   */
+  leftAxis?: null | string | ChartsYAxisProps;
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -153,7 +170,7 @@ PieChart.propTypes = {
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default xAxisIds[0] The id of the first provided axis
+   * @default null
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
@@ -188,6 +205,7 @@ PieChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -209,7 +227,7 @@ PieChart.propTypes = {
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default yAxisIds[0] The id of the first provided axis
+   * @default null
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({

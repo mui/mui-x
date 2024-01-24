@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -8,7 +7,7 @@ import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 
-const DetailPanel = styled(Box, {
+const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
@@ -38,7 +37,7 @@ interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, style: styleProp = {}, ...other } = props;
   const apiRef = useGridPrivateApiContext();
-  const ref = React.useRef<HTMLDivElement>();
+  const ref = React.useRef<HTMLDivElement | null>(null);
   const rootProps = useGridRootProps();
   const ownerState = rootProps;
 

@@ -41,7 +41,12 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
-  const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
+  const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    TimeFieldSlotsComponentsProps<TDate>['textField'],
+    TimeFieldProps<TDate>,
+    TimeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
