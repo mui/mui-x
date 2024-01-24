@@ -7,7 +7,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# MUI X Date and Time Pickers
+# MUI X Date and Time Pickers
 
 <p class="description">These react date picker and time picker components let users select date or time values.</p>
 
@@ -51,7 +51,7 @@ If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refe
 If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
-If you don't have your own requirements or don't manipulate dates outside of MUI components, then the recommendation is to use `dayjs` because it has the smallest impact on your application's bundle size.
+If you don't have your own requirements or don't manipulate dates outside of MUI X components, then the recommendation is to use `dayjs` because it has the smallest impact on your application's bundle size.
 
 Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 

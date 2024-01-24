@@ -102,6 +102,6 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
     "shortcuts": "Custom component for the shortcuts.",
-    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
   }
 }

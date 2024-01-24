@@ -123,24 +123,6 @@ TreeView.propTypes = {
    */
   expandedNodes: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The id of the item.
-   * @default `(item) => item.id`
-   */
-  getItemId: PropTypes.func,
-  /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The label of the item.
-   * @default `(item) => item.label`
-   */
-  getItemLabel: PropTypes.func,
-  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */

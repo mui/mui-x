@@ -1,6 +1,6 @@
 # Support
 
-<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and technical support from the team.</p>
+<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and technical support from the team.</p>
 
 ## GitHub
 
@@ -8,21 +8,21 @@ We use GitHub issues as a bug and feature request tracker.
 If you think you've found a bug, or you have a new feature idea, please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
 You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
-[Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
+[Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
 ## Stack Overflow
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ## Technical support
 
 :::info
-The technical support covers only MUI X components.
+The technical support covers only MUI X components.
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
+When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
@@ -30,9 +30,9 @@ Support is available on multiple channels, but the recommended channels are:
 
 Including your Order ID (or Support key) in the issue helps us prioritize the issues based on the following support levels:
 
-1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
-2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
+2. MUI X Premium: The same as MUI X Pro, but with higher priority.
+3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
 
 ### Long-term support (LTS)
 
@@ -42,10 +42,10 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
-- MUI X v6: ✅ Stable major (Continuous support)
-- MUI X v5: ⚠️ Long term support (Guaranteed Support for security issues and regressions).
-- MUI X v4: 🅧 No longer supported.
-- MUI X v3: 🅧 Never existed.
-- MUI X v2: 🅧 Never existed.
-- MUI X v1: 🅧 Never existed.
+- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
+- MUI X v6: ✅ Stable major (Continuous support)
+- MUI X v5: ⚠️ Long term support (Guaranteed Support for security issues and regressions).
+- MUI X v4: 🅧 No longer supported.
+- MUI X v3: 🅧 Never existed.
+- MUI X v2: 🅧 Never existed.
+- MUI X v1: 🅧 Never existed.
