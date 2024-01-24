@@ -22,6 +22,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
 const releaseInfo = getReleaseInfo();
 

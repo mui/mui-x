@@ -37,7 +37,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   loadingOverlay: GridLoadingOverlay,
   noResultsOverlay: GridNoResultsOverlay,
   noRowsOverlay: GridNoRowsOverlay,
-  pagination: GridPagination,
+  pagination: GridPagination as React.JSXElementConstructor<any> /* FIXME: typing error */,
   filterPanel: GridFilterPanel,
   columnsPanel: GridColumnsPanel,
   panel: GridPanel,

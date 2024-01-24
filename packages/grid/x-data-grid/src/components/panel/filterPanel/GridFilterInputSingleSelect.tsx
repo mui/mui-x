@@ -104,7 +104,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
-    (event: SelectChangeEvent) => {
+    (event: SelectChangeEvent<any>) => {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
@@ -137,7 +137,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           label={label}
           labelId={labelId}
           value={filterValue}
-          onChange={onFilterChange}
+          onChange={onFilterChange as any /* FIXME: typing error */}
           variant="standard"
           type={type || 'text'}
           inputProps={{
@@ -146,7 +146,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
-          {...others}
+          {...others as any /* FIXME: typing error */}
           {...rootProps.slotProps?.baseSelect}
         >
           {renderSingleSelectOptions({

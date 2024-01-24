@@ -439,13 +439,13 @@ const joySlots: Partial<GridSlotsComponent> = {
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
-  baseSwitch: Switch,
-  baseSelect: Select,
+  baseSwitch: Switch as any /* FIXME: typing error */,
+  baseSelect: Select as any /* FIXME: typing error */,
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
-  baseFormControl: JoyFormControl,
-  baseTooltip: JoyTooltip,
-  pagination: Pagination,
+  baseFormControl: JoyFormControl as any /* FIXME: typing error */,
+  baseTooltip: JoyTooltip as any /* FIXME: typing error */,
+  pagination: Pagination as any /* FIXME: typing error */,
   loadingOverlay: LoadingOverlay,
 };
 

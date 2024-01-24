@@ -80,12 +80,12 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           id={selectId}
           label={label}
           value={filterValueState}
-          onChange={onFilterChange}
+          onChange={onFilterChange as any /* FIXME: typing error */}
           variant="standard"
           native={isSelectNative}
           displayEmpty
           inputProps={{ ref: focusElementRef, tabIndex }}
-          {...others}
+          {...others as any /* FIXME: typing error */}
           {...baseSelectProps}
         >
           <rootProps.slots.baseSelectOption

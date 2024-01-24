@@ -131,7 +131,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={ref}
+        ref={ref as any /* FIXME: typing error */}
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}

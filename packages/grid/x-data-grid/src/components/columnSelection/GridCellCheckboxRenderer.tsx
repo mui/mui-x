@@ -96,7 +96,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={handleRef}
+        ref={handleRef as any /* FIXME: typing error */}
         tabIndex={tabIndex}
         checked={isChecked}
         onChange={handleChange}
@@ -104,7 +104,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        touchRippleRef={rippleRef}
+        touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
