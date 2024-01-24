@@ -23,11 +23,13 @@ export function DesktopDateTimeRangePickerLayout<TDate>(
     <PickersLayoutRoot
       ref={ref}
       className={clsx(className, pickersLayoutClasses.root)}
-      sx={{
-        [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 3, gridColumn: '1 / 4' },
-        [`& .${pickersLayoutClasses.actionBar}`]: { gridRow: 4 },
+      sx={[
+        {
+          [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 3, gridColumn: '1 / 4' },
+          [`& .${pickersLayoutClasses.actionBar}`]: { gridRow: 4 },
+        },
         ...(Array.isArray(sx) ? sx : [sx]),
-      }}
+      ]}
       ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}

@@ -48,16 +48,18 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     ...otherProps,
     rangePosition,
     focusedView: null,
-    sx: {
-      borderBottom: 0,
-      width: 'auto',
-      [`&.${multiSectionDigitalClockClasses.root},
+    sx: [
+      {
+        borderBottom: 0,
+        width: 'auto',
+        [`&.${multiSectionDigitalClockClasses.root},
        .${multiSectionDigitalClockSectionClasses.root},
         &.${digitalClockClasses.root}`]: {
-        maxHeight: RANGE_VIEW_HEIGHT,
+          maxHeight: RANGE_VIEW_HEIGHT,
+        },
       },
       ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
-    },
+    ],
   };
   const isTimeViewActive = isInternalTimeView(popperView);
   return (

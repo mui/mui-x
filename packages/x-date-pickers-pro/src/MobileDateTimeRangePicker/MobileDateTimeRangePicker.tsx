@@ -48,28 +48,30 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     ...otherRendererProps,
     rangePosition,
     focusedView: null,
-    sx: {
-      width: DIALOG_WIDTH,
-      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-        flex: 1,
-        // account for the border on `MultiSectionDigitalClock`
-        maxHeight: VIEW_HEIGHT - 1,
-        [`.${multiSectionDigitalClockSectionClasses.item}`]: {
-          width: 'auto',
+    sx: [
+      {
+        width: DIALOG_WIDTH,
+        [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+          flex: 1,
+          // account for the border on `MultiSectionDigitalClock`
+          maxHeight: VIEW_HEIGHT - 1,
+          [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+            width: 'auto',
+          },
         },
-      },
-      [`&.${digitalClockClasses.root}`]: {
-        maxHeight: RANGE_VIEW_HEIGHT,
-        [`.${digitalClockClasses.item}`]: {
-          justifyContent: 'center',
+        [`&.${digitalClockClasses.root}`]: {
+          maxHeight: RANGE_VIEW_HEIGHT,
+          [`.${digitalClockClasses.item}`]: {
+            justifyContent: 'center',
+          },
         },
-      },
-      [`&.${multiSectionDigitalClockClasses.root},
+        [`&.${multiSectionDigitalClockClasses.root},
         .${multiSectionDigitalClockSectionClasses.root}`]: {
-        maxHeight: RANGE_VIEW_HEIGHT - 1,
+          maxHeight: RANGE_VIEW_HEIGHT - 1,
+        },
       },
       ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
-    },
+    ],
   };
   const isTimeView = isInternalTimeView(popperView);
   const viewRenderer = inViewRenderers[popperView];
