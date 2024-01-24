@@ -34,19 +34,17 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'column',
         'groupingColDef',
         'rowNode',
+        'pinnedColumns',
         'localeText',
         'columnGroupingModel',
         'unstableFieldRef',
         'unstableStartFieldRef',
         'unstableEndFieldRef',
+        'series',
+        'axis',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
-      }
-      if (project.name.includes('x-charts') && sourceFile.includes('AxisTooltip')) {
-        if (['series', 'axis'].includes(name)) {
-          return false;
-        }
       }
 
       return undefined;
