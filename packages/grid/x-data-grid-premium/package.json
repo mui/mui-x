@@ -51,7 +51,7 @@
     "@mui/x-license-pro": "7.0.0-alpha.9",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.0",
-    "exceljs": "^4.3.0",
+    "exceljs": "^4.4.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
   },
