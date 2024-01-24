@@ -12,13 +12,7 @@
       },
       "required": true
     },
-    "series": {
-      "type": {
-        "name": "shape",
-        "description": "{ color?: string, data: Array&lt;number&gt;<br>&#124;&nbsp;Array&lt;{ id: number<br>&#124;&nbsp;string, x: number, y: number }&gt;<br>&#124;&nbsp;Array&lt;{ color: string, endAngle: number, formattedValue: string, id: number<br>&#124;&nbsp;string, index: number, label?: string, padAngle: number, startAngle: number, value: number }&gt;, highlightScope?: { faded?: 'global'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series', highlighted?: 'item'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series' }, id: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'scatter', valueFormatter: func }"
-      },
-      "required": true
-    }
+    "series": { "type": { "name": "object" }, "required": true }
   },
   "name": "DefaultChartsItemTooltipContent",
   "imports": [

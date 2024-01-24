@@ -480,12 +480,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
-    "pinnedColumns": {
-      "type": {
-        "name": "shape",
-        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
-      }
-    },
+    "pinnedColumns": { "type": { "name": "object" } },
     "pinnedRows": {
       "type": {
         "name": "shape",

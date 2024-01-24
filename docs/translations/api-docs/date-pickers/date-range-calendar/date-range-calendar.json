@@ -106,9 +106,9 @@
   "slotDescriptions": {
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
-    "previousIconButton": "Button allowing to switch to the left view.",
-    "nextIconButton": "Button allowing to switch to the right view.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;."
