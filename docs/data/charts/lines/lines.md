@@ -145,4 +145,20 @@ sx={{
 
 ## Animation
 
+To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+```jsx
+// For a single component chart
+<LineChart skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <LinePlot skipAnimation />
+  <AreaPlot skipAnimation />
+</ResponsiveChartContainer>
+```
+
 {{"demo": "LineAnimation.js"}}
