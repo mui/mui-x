@@ -197,8 +197,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
       {plotType === 'line' && (
         <React.Fragment>
-          <AreaPlot slots={slots} slotProps={slotProps} />
-          <LinePlot slots={slots} slotProps={slotProps} />
+          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
           <LineHighlightPlot slots={slots} slotProps={slotProps} />
         </React.Fragment>
       )}
