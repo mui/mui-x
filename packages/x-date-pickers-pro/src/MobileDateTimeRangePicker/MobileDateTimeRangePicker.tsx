@@ -43,7 +43,7 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
     'rangePosition' | 'onRangePositionChange' | 'openTo'
   >,
 ) {
-  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
+  const { view, openTo, rangePosition, sx, ...otherRendererProps } = rendererProps;
   const finalProps = {
     ...otherRendererProps,
     rangePosition,
@@ -65,12 +65,12 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
             justifyContent: 'center',
           },
         },
-        [`&.${multiSectionDigitalClockClasses.root},
-        .${multiSectionDigitalClockSectionClasses.root}`]: {
-          maxHeight: RANGE_VIEW_HEIGHT - 1,
-        },
+        [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}`]:
+          {
+            maxHeight: RANGE_VIEW_HEIGHT - 1,
+          },
       },
-      ...(Array.isArray(rendererProps.sx) ? rendererProps.sx : [rendererProps.sx]),
+      ...(Array.isArray(sx) ? sx : [sx]),
     ],
   };
   const isTimeView = isInternalTimeView(popperView);
