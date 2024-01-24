@@ -40,9 +40,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} seç.  ${
-      time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} seç.  ${time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,

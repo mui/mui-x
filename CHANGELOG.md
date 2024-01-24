@@ -3,6 +3,344 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-alpha.9
+
+_Jan 19, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The Data Grid headers have been refactored to bring immense improvements to scrolling, state management, and overall performance of the grid.
+- ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+- 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
+- 🐞 Bugfixes
+- 💔 Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+  The minimum required version of `@mui/material` is now `5.15.0`.
+
+### Data Grid
+
+#### Breaking changes
+
+- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+  If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ ariaV7: true }} />
+  +<DataGrid />
+  ```
+
+  The most notable changes that might affect your application or tests are:
+
+  - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
+
+    ```diff
+    -<div class="MuiDataGrid-root" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false">
+    +<div class="MuiDataGrid-root">
+       <div class="MuiDataGrid-toolbarContainer"></div>
+    -    <div class="MuiDataGrid-main"></div>
+    +    <div class="MuiDataGrid-main" role="grid" aria-colcount="5" aria-rowcount="101" aria-multiselectable="false"></div>
+       <div class="MuiDataGrid-footerContainer"></div>
+     </div>
+    ```
+
+  - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
+
+  - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
+
+    ```diff
+      function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton
+      -     title="Custom filter" // 🛑 This was previously forwarded to the tooltip component
+      +     slotProps={{ tooltip: { title: 'Custom filter' } }} // ✅ This is the correct way now
+          />
+          <GridToolbarDensitySelector
+      -     variant="outlined"    // 🛑 This was previously forwarded to the button component
+      +     slotProps={{ button: { variant: 'outlined' } }} // ✅ This is the correct way now
+          />
+          </GridToolbarContainer>
+        );
+      }
+    ```
+
+- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
+
+  ```diff
+  -<DataGrid experimentalFeatures={{ columnGrouping: true }} />
+  +<DataGrid />
+  ```
+
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are no longer prefixed with `unstable_`.
+
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are no longer prefixed with `unstable_`.
+
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+
+#### `@mui/x-data-grid@7.0.0-alpha.9`
+
+- [DataGrid] Allow to filter non-filterable columns programmatically (#11538) @MBilalShafi
+- [DataGrid] Allow to programmatically sort unsortable columns (#11512) @MBilalShafi
+- [DataGrid] Fix incorrect default value for `filterModel.logicOperator` (#11673) @MBilalShafi
+- [DataGrid] Make `column grouping` feature stable (#11698) @MBilalShafi
+- [DataGrid] Remove the `ariaV7` experimental flag (#11428) @cherniavskii
+- [DataGrid] Start the FAQ page (#11686) @MBilalShafi
+- [DataGrid] Sticky headers (#10059) @romgrk
+- [DataGrid] Wrap toolbar buttons with tooltip (#11357) @MBilalShafi
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) @BCaspari
+
+#### `@mui/x-data-grid-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-alpha.9`, plus:
+
+- [DataGridPro] Allow non-pinnable columns to be pinned programmatically (#11680) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.9`, plus:
+
+- [DataGridPremium] Allow aggregation to be applied for non-aggregable columns (#11574) @MBilalShafi
+- [DataGridPremium] Allow programmatically grouping non-groupable columns (#11539) @MBilalShafi
+
+### Date Pickers
+
+#### Breaking changes
+
+- The `locales` export has been removed from the root of the packages.
+  If you were importing locales from the root, be sure to update it:
+
+  ```diff
+  -import { frFR } from '@mui/x-date-pickers';
+  +import { frFR } from '@mui/x-date-pickers/locales';
+  ```
+
+#### `@mui/x-date-pickers@7.0.0-alpha.9`
+
+- [fields] Make `PickersTextField` and its dependencies public (#11581) @flaviendelangle
+- [fields] Support farsi digits (#11639) @flaviendelangle
+- [pickers] Fix AdapterLuxon `getWeekNumber` behavior (#11697) @LukasTy
+- [pickers] Stop root exporting `locales` (#11612) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
+
+### Charts / `@mui/x-charts@7.0.0-alpha.9`
+
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
+- [charts] Remove a TS ignore (#11688) @alexfauquette
+
+### Tree View
+
+#### Breaking changes
+
+- The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when it is collapsed),
+  is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ChevronRight` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+
+  ```diff
+  -import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+   <SimpleTreeView
+  -  defaultExpandIcon={<ChevronRightIcon />}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree View component,
+  you need to use the new `expandIcon` slot on this component:
+
+  ```diff
+   <SimpleTreeView
+  -  defaultExpandIcon={<MyCustomExpandIcon />}
+  +  slots={{ expandIcon: MyCustomExpandIcon }}
+   >
+     {items}
+   </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `expandIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     expandIcon={<MyCustomExpandIcon />}
+  +     slots={{ expandIcon: MyCustomExpandIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when it is expanded),
+  is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were using the `ExpandMore` icon from `@mui/icons-material`,
+  you can stop passing it to your component because it is now the default value:
+
+  ```diff
+  - import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+    <SimpleTreeView
+  -   defaultCollapseIcon={<ExpandMoreIcon />}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree View component,
+  you need to use the new `collapseIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultCollapseIcon={<MyCustomCollapseIcon />}
+  +   slots={{ collapseIcon: MyCustomCollapseIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing another icon to your Tree Item component,
+  you need to use the new `collapseIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     collapseIcon={<MyCustomCollapseIcon />}
+  +     slots={{ collapseIcon: MyCustomCollapseIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `useTreeItem` hook has been renamed `useTreeItemState`.
+  This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+
+  ```diff
+  -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
+  +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
+
+   const CustomContent = React.forwardRef((props, ref) => {
+  -  const { disabled } = useTreeItem(props.nodeId);
+  +  const { disabled } = useTreeItemState(props.nodeId);
+
+     // Render some UI
+   });
+
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+  ```
+
+- The `parentIcon` prop has been removed from the Tree View components.
+
+  If you were passing an icon to your Tree View component,
+  you can achieve the same behavior
+  by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultParentIcon={<MyCustomParentIcon />}
+  +   slots={{ collapseIcon: MyCustomParentIcon, expandIcon: MyCustomParentIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+- The `endIcon` / `defaultEndIcon` props, rendered next to an item without children,
+  is now defined as a slot both on the Tree View and the Tree Item components.
+
+  If you were passing an icon to your Tree View component,
+  you need to use the new `endIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView
+  -   defaultEndIcon={<MyCustomEndIcon />}
+  +   slots={{ endIcon: MyCustomEndIcon }}
+    >
+      {items}
+    </SimpleTreeView>
+  ```
+
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `endIcon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     endIcon={<MyCustomEndIcon />}
+  +     slots={{ endIcon: MyCustomEndIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+- The `icon` prop, rendered next to an item without children,
+  is now defined as a slot on the Tree Item component.
+
+  If you were passing an icon to your Tree Item component,
+  you need to use the new `icon` slot on this component:
+
+  ```diff
+    <SimpleTreeView>
+      <TreeItem
+        nodeId="1"
+        label="Node 1"
+  -     icon={<MyCustomIcon />}
+  +     slots={{ icon: MyCustomIcon }}
+      />
+    </SimpleTreeView>
+  ```
+
+#### `@mui/x-tree-view@7.0.0-alpha.9`
+
+- [TreeView] Adjust expansion and selection docs (#11723) @noraleonte
+- [TreeView] Improve plugin signature definition (#11665) @flaviendelangle
+- [TreeView] Make each plugin responsible for its context value (#11623) @flaviendelangle
+- [TreeView] Migrate remaining icon props to slots (#11713) @flaviendelangle
+- [TreeView] Pass through `Theme` generic to variants (#11480) @dhulme
+- [TreeView] Rename `useTreeItem` to `useTreeItemState` (#11712) @flaviendelangle
+- [TreeView] Add `slots` and `slotProps` on the Tree View components (#11664) @flaviendelangle
+- [TreeView] Explore a better plugin model API (#11567) @flaviendelangle
+
+### Docs
+
+- [docs] Clean the pickers migration guide (#11694) @flaviendelangle
+- [docs] Cleanup and fix Pickers Playground styling (#11700) @LukasTy
+- [docs] First draft of the Tree View custom plugin doc (#11564) @flaviendelangle
+- [docs] Fix Pickers migration syntax and diffs (#11695) @LukasTy
+- [docs] Fix generated tree view API docs (#11737) @LukasTy
+- [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
+- [docs] Improve codemod for v7 (#11650) @oliviertassinari
+- [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
+- [docs] Parse markdown on API docs demo titles (#11728) @LukasTy
+- [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
+- [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
+- [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
+
+### Core
+
+- [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
+- [core] Make `karma` run in parallel (#11571) @romgrk
+- [core] make `karma-parallel` run under a new command (#11716) @romgrk
+- [code-infra] Migrate all prettier APIs to the async version (#11732) @Janpot
+- [code-infra] Update the Babel macro path (#11479) @michaldudak
+- [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
+- [test] Fix flaky Data Grid test (#11725) @cherniavskii
+
 ## 7.0.0-alpha.8
 
 _Jan 11, 2024_
@@ -74,7 +412,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11628) @LukasTy
 - [docs] Improve `git diff` format @oliviertassinari
-- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
 - [docs] Remove old data grid translation files (#11646) @cherniavskii
 - [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
 - [docs] Improve charts landing page (#11570) @oliviertassinari
@@ -84,8 +422,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 - [core] Lock `jsdom` version (#11652) @cherniavskii
 - [core] Remove PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD (#11608) @oliviertassinari
 - [core] Simplify isSsr logic (#11606) @oliviertassinari
-- [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
-- [core] Use MUI X official name in errors (#11645) @oliviertassinari
+- [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
+- [core] Use MUI X official name in errors (#11645) @oliviertassinari
 
 ## 7.0.0-alpha.7
 
@@ -103,8 +441,8 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
       id: 'node-1',
       label: 'Node 1',
       children: [
-        { id: 'node-1-1', label: Node 1.1' },
-        { id: 'node-1-2', label: Node 1.2' },
+        { id: 'node-1-1', label: 'Node 1.1' },
+        { id: 'node-1-2', label: 'Node 1.2' },
       ],
     },
     {
@@ -117,7 +455,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
     items={MUI_X_PRODUCTS}
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
-  />
+  />;
   ```
 
 - 🌍 Improve Czech (cs-CZ) locale on the Data Grid
@@ -221,10 +559,10 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 
 - [core] Fix release changelog (#11496) @romgrk
 - [core] Fix use of ::before & ::after (#11515) @oliviertassinari
-- [core] Localize the issue template to MUI X (#11511) @oliviertassinari
+- [core] Localize the issue template to MUI X (#11511) @oliviertassinari
 - [core] Regen api files (#11542) @flaviendelangle
 - [core] Remove issue emoji @oliviertassinari
-- [core] Sync the release instructions with MUI Core @oliviertassinari
+- [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
 
 ## 7.0.0-alpha.6
@@ -262,6 +600,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
@@ -355,7 +694,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 #### Breaking changes
 
 - The slot interfaces got renamed to match with `@mui/base` naming.
-The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
+  The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
   ```diff
   -DateCalendarSlotsComponent
@@ -733,7 +1072,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [docs] Polish Next.js header description @oliviertassinari
 - [docs] Remove the `newFeature` flag on v6 features (#11168) @flaviendelangle
 - [docs] Simplify a bit chart demo (#11173) @oliviertassinari
-- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
+- [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
 - [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
 
 ### Core
@@ -1122,15 +1461,15 @@ And if you need the exact same output you can apply the following transformation
    // For Day.js
   -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
-  
+
    // For Luxon
   -const isoString = adapter.toISO(value);
   +const isoString = value.toUTC().toISO({ format: 'extended' });
-  
+
    // For DateFns
   -const isoString = adapter.toISO(value);
   +const isoString = dateFns.formatISO(value, { format: 'extended' });
-  
+
    // For Moment
   -const isoString = adapter.toISO(value);
   +const isoString = value.toISOString();
@@ -1434,6 +1773,35 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.19.1
+
+_Jan 19, 2024_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.1`
+
+- [l10n] Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11717) @BCaspari
+
+#### `@mui/x-data-grid-pro@6.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.1`.
+
+#### `@mui/x-data-grid-premium@6.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.1`.
+
+### Charts / `@mui/x-charts@6.19.1`
+
+- [charts] Add `arcLabelRadius` property (#11563) @alexfauquette
+- [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11719) @alexfauquette
+- [charts] Fix default `stackOffset` for `LineChart` (#11703) @alexfauquette
+
 ## 6.19.0
 
 _Jan 11, 2024_
@@ -1469,7 +1837,7 @@ Same changes as in `@mui/x-date-pickers@6.19.0`.
 
 - [docs] Add missing component @oliviertassinari
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11637) @LukasTy
-- [docs] Push up the MUI X brand (#11533) @oliviertassinari
+- [docs] Push up the MUI X brand (#11533) @oliviertassinari
 - [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
 - [docs] Add demo to the charts overview page (#11586) @danilo-leal
 - [docs] Fix 404 links in the docs @oliviertassinari
@@ -1829,7 +2197,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 🥧 Pie charts are now animated.
 - 📈 Line charts now support partial data, and can interpolate missing data https://mui.com/x/react-charts/lines/#skip-missing-points.
 
- <img src="https://github.com/mui/mui-x/assets/3165635/d2d50b1b-ee29-4e4c-9ebe-629c06f3093e" width="683" height="436" />
+ <img src="https://github.com/mui/mui-x/assets/3165635/d2d50b1b-ee29-4e4c-9ebe-629c06f3093e" width="683" height="436" alt="Charts partial data" />
 
 - ✨ The data grid allows to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering.
 - 📚 Documentation improvements
@@ -2323,7 +2691,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [docs] Add missing MIT packages on the Licensing page (#10348) @flaviendelangle
 - [docs] Clearer component pattern @oliviertassinari
 - [docs] Easier to understand demo (#10370) @oliviertassinari
-- [docs] Fix `301` to Material UI @oliviertassinari
+- [docs] Fix `301` to Material UI @oliviertassinari
 - [docs] Improve the column visibility section (#10327) @MBilalShafi
 - [docs] Improve the documentation section `rowIdentifier` (#10326) @MBilalShafi
 - [docs] Improve pickers localization documentation (#10202) @flaviendelangle
@@ -2401,12 +2769,12 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 - [docs] Add conditional range picker props example (#10227) @LukasTy
 - [docs] Add toolbar to the multi-filters demo (#10223) @MBilalShafi
 - [docs] Avoid the use of "We" @oliviertassinari
-- [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
+- [docs] Clarify MUI vs. MUI Core difference @oliviertassinari
 - [docs] Enable `ariaV7` flag for demos using `useDemoData` hook (#10204) @cherniavskii
 - [docs] Fix Tree View link to API references (#10282) @oliviertassinari
 - [docs] Fix image layout shift (#10313) @oliviertassinari
-- [docs] Fix link to MUI X from readme logo @oliviertassinari
-- [docs] Fix redirection to Base UI URLs @oliviertassinari
+- [docs] Fix link to MUI X from readme logo @oliviertassinari
+- [docs] Fix redirection to Base UI URLs @oliviertassinari
 - [docs] Improve Tree View demos (#10268) @oliviertassinari
 - [docs] Improve docs for ref type props (#10273) @michelengelen
 - [docs] Improve npm package README (#10269) @oliviertassinari
@@ -2490,7 +2858,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [docs] Improve the week picker example (#8257) @flaviendelangle
 - [docs] Include code links in the data grid demo (#10219) @cherniavskii
 - [docs] Polish page for SEO (#10216) @oliviertassinari
-- [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
+- [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
 
 ### Core
 
@@ -2751,7 +3119,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - ⌚️ Move the tree view component from `@mui/lab` package
 
-  The `<TreeView />` component has been moved to the MUI X repository.
+  The `<TreeView />` component has been moved to the MUI X repository.
   It is now accessible from its own package: `@mui/x-tree-view`.
 
 - 🌍 Improve Hebrew (he-IL), Finnish (fi-FI), and Italian (it-IT) locales on the data grid
@@ -2813,7 +3181,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 
 - [docs] Add Tree View doc (#9825) @flaviendelangle
 - [docs] Add charts nav item (#9821) @LukasTy
-- [docs] Add charts to MUI X introduction pages (#9704) @joserodolfofreitas
+- [docs] Add charts to MUI X introduction pages (#9704) @joserodolfofreitas
 - [docs] Add example for avoiding picker views layout shift (#9781) @noraleonte
 - [docs] Consistency of Next.js App Router @oliviertassinari
 - [docs] Fix API page regression: bring back slots section (#9866) @alexfauquette
@@ -2882,7 +3250,7 @@ Same changes as in `@mui/x-date-pickers@6.10.2`.
 ### Docs
 
 - [docs] Add `pnpm` in more places @oliviertassinari
-- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
+- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
 - [docs] Align pickers "uncontrolled vs controlled" sections (#9772) @LukasTy
 - [docs] Apply style guide to the data grid Layout page (#9673) @richbustos
 - [docs] Differentiate between packages in `slotProps` docs (#9668) @cherniavskii
@@ -3191,7 +3559,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🚀 Introducing UTC and timezone support for pickers.
 
-  <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348">
+  <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348" alt="Pickers time zone switching">
 
   Visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
 
@@ -3243,7 +3611,7 @@ Same changes as in `@mui/x-date-pickers@6.9.0`.
 
 - [docs] Add examples of using different time view renderers (#9360) @LukasTy
 - [docs] Add recipe for single-click editing (#8365) @m4theushw
-- [docs] Fix Base UI references (#9349) @oliviertassinari
+- [docs] Fix Base UI references (#9349) @oliviertassinari
 - [docs] Fix random screenshot generation (#9364) @cherniavskii
 - [docs] Remove random generation from chart doc example (#9343) @flaviendelangle
 - [docs] Sync h1 with sidenav link (#9252) @oliviertassinari
@@ -3427,7 +3795,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New date time picking UI on [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
 
-  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" />
+  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" alt="Desktop Date Time Picker example" />
 
 - 🚀 Performance improvements
 - 🐞 Bugfixes
@@ -3503,7 +3871,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
-  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" />
+  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" alt="Filtering on column headers example" />
 
   See [the documentation](https://mui.com/x/react-data-grid/filtering/header-filters/) for more information
 
@@ -3662,7 +4030,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
 
-  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" />
+  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" alt="New digital clock time picker" />
 
 - ✨ Picker fields [now always include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
 - 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales
@@ -4038,7 +4406,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Add a warning for `luxon` macro tokens (#8245) @flaviendelangle
 - [docs] Complete pickers customization pages (#8066) @alexfauquette
 - [docs] Fix 301 redirection @oliviertassinari
-- [docs] Fix 404 links to customization Material UI APIs (#8200) @oliviertassinari
+- [docs] Fix 404 links to customization Material UI APIs (#8200) @oliviertassinari
 - [docs] Fix `moment-hijri` demo (#8255) @LukasTy
 - [docs] Improve migration diff (#8240) @oliviertassinari
 - [docs] Change **What's new** page url to point to announcement blog post (#8186) @joserodolfofreitas
@@ -4469,7 +4837,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 
 _Jan 19, 2023_
 
-After a long period in alpha, we're glad to announce the first MUI X v6 beta!
+After a long period in alpha, we're glad to announce the first MUI X v6 beta!
 We encourage you to try out this version, packed with improvements, bug fixes, and a few highlighted features ✨:
 
 **Data Grid**
@@ -5725,7 +6093,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Breaking changes
 
 - The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
-  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props):
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props):
 
   ```diff
    // Same on all other pickers
@@ -5876,7 +6244,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   Some of the names have also been prefixed by `desktop` when it was unclear that the behavior was only applied on the desktop version of the pickers (or the responsive version when used on a desktop).
 
@@ -6065,7 +6433,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Breaking changes
 
 - The `renderDay` prop has been replaced by a `Day` component slot.
-  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   ```diff
    // Same for any other date, date time or date range picker.

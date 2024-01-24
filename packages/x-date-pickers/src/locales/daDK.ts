@@ -41,11 +41,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${
-      time === null
-        ? 'Intet tidspunkt valgt'
-        : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,

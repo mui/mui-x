@@ -40,9 +40,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `בחירת ${views[view]}. ${
-      time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`
-    }`,
+    `בחירת ${views[view]}. ${time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,

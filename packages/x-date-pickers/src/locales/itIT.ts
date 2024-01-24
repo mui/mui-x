@@ -40,11 +40,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleziona ${views[view]}. ${
-      time === null
-        ? 'Nessun orario selezionato'
-        : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleziona ${views[view]}. ${time === null ? 'Nessun orario selezionato' : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,

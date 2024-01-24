@@ -41,9 +41,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybraný. ${
-      time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} vybraný. ${time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodín`,
   minutesClockNumberText: (minutes) => `${minutes} minút`,
   secondsClockNumberText: (seconds) => `${seconds} sekúnd`,

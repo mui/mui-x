@@ -16,7 +16,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ### Custom icons
 
 Use the `collapseIcon` slot, the `expandIcon` slot and the `defaultEndIcon` prop to customize the Tree View icons.
-The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
+The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
@@ -24,7 +24,7 @@ The demo below shows how to add icons using both an existing icon library, such 
 
 Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
 
-The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
+The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 

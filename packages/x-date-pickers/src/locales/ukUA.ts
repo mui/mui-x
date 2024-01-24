@@ -40,9 +40,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Вибрати ${timeViews[view]}. ${
-      time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Вибрати ${timeViews[view]}. ${time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

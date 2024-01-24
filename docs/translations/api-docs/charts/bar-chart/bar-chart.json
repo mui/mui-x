@@ -44,14 +44,14 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "axisContent": "",
+    "axisLabel": "",
     "axisLine": "",
     "axisTick": "",
     "axisTickLabel": "",
-    "axisLabel": "",
     "bar": "",
+    "itemContent": "",
     "legend": "",
-    "popper": "",
-    "axisContent": "",
-    "itemContent": ""
+    "popper": ""
   }
 }

@@ -31,6 +31,7 @@ import {
   getRow,
   getActiveCell,
   getCell,
+  microtasks,
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
@@ -311,6 +312,7 @@ describe('<DataGrid /> - Rows', () => {
       await waitFor(() => {
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
+      await microtasks();
     });
 
     it('should not select the row when opening the menu', async () => {
