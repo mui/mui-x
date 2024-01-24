@@ -10,6 +10,7 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -22,21 +23,25 @@ import {
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersPopperSlots,
+export interface UseDesktopRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersPopperSlots,
     ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlots {}
 
-export interface UseDesktopRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersPopperSlotProps,
+export interface UseDesktopRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface DesktopRangeOnlyPickerProps<TDate>
+export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
+    UsePickerValueNonStaticProps<DateRange<TDate>, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {
@@ -47,7 +52,7 @@ export interface DesktopRangeOnlyPickerProps<TDate>
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
@@ -76,7 +81,7 @@ export interface DesktopRangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseDesktopRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<

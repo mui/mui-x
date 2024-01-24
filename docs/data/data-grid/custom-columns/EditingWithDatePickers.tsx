@@ -70,7 +70,7 @@ function GridEditDateCell({
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<any, Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;

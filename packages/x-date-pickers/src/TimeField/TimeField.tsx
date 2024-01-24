@@ -101,7 +101,7 @@ TimeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -194,12 +194,12 @@ TimeField.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Step over minutes.
    * @default 1
@@ -247,7 +247,7 @@ TimeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -343,7 +343,7 @@ TimeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * The variant to use.
    * @default 'outlined'

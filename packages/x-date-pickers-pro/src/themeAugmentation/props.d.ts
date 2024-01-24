@@ -1,8 +1,8 @@
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
-
 import { DateRangePickerProps, DateRangePickerToolbarProps } from '../DateRangePicker';
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
@@ -13,25 +13,25 @@ import { SingleInputDateTimeRangeFieldProps } from '../SingleInputDateTimeRangeF
 import { SingleInputTimeRangeFieldProps } from '../SingleInputTimeRangeField';
 
 export interface PickersProComponentsPropsList {
-  MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
-  MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
-  MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
+  MuiDateRangeCalendar: DateRangeCalendarProps<PickerValidDate>;
+  MuiDateRangePickerDay: DateRangePickerDayProps<PickerValidDate>;
+  MuiDateRangePickerToolbar: DateRangePickerToolbarProps<PickerValidDate>;
 
   // Multi input range fields
-  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown>;
-  MuiMultiInputDateTimeRangeField: MultiInputDateTimeRangeFieldProps<unknown>;
-  MuiMultiInputTimeRangeField: MultiInputTimeRangeFieldProps<unknown>;
+  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<PickerValidDate>;
+  MuiMultiInputDateTimeRangeField: MultiInputDateTimeRangeFieldProps<PickerValidDate>;
+  MuiMultiInputTimeRangeField: MultiInputTimeRangeFieldProps<PickerValidDate>;
 
   // Single input range fields
-  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown>;
-  MuiSingleInputDateTimeRangeField: SingleInputDateTimeRangeFieldProps<unknown>;
-  MuiSingleInputTimeRangeField: SingleInputTimeRangeFieldProps<unknown>;
+  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<PickerValidDate>;
+  MuiSingleInputDateTimeRangeField: SingleInputDateTimeRangeFieldProps<PickerValidDate>;
+  MuiSingleInputTimeRangeField: SingleInputTimeRangeFieldProps<PickerValidDate>;
 
   // Date Range Pickers
-  MuiDateRangePicker: DateRangePickerProps<unknown>;
-  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown>;
-  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown>;
-  MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown>;
+  MuiDateRangePicker: DateRangePickerProps<PickerValidDate>;
+  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<PickerValidDate>;
+  MuiMobileDateRangePicker: MobileDateRangePickerProps<PickerValidDate>;
+  MuiStaticDateRangePicker: StaticDateRangePickerProps<PickerValidDate>;
 }
 
 declare module '@mui/material/styles' {

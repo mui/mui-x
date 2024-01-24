@@ -11,6 +11,7 @@ import {
   useLocaleText,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
@@ -28,7 +29,7 @@ import { useRangePosition } from '../useRangePosition';
 const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({

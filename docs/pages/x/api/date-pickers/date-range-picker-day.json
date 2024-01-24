@@ -1,6 +1,12 @@
 {
   "props": {
-    "day": { "type": { "name": "any" }, "required": true },
+    "day": {
+      "type": {
+        "name": "union",
+        "description": "Date<br>&#124;&nbsp;object<br>&#124;&nbsp;{ add: func, clone: func, date: func, day: func, daysInMonth: func, diff: func, endOf: func, format: func, get: func, hour: func, isAfter: func, isBefore: func, isBetween: func, isSame: func, isUTC: func, isValid: func, local: func, locale: func, millisecond: func, minute: func, month: func, offsetName: func, second: func, set: func, startOf: func, subtract: func, toDate: func, toISOString: func, toJSON: func, toString: func, tz: func, unix: func, utc: func, utcOffset: func, valueOf: func, week: func, year: func }"
+      },
+      "required": true
+    },
     "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
     "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
     "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },

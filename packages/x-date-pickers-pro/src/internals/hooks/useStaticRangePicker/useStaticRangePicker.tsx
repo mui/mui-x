@@ -9,6 +9,7 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
@@ -28,7 +29,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticDateRangePicker
  */
 export const useStaticRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({

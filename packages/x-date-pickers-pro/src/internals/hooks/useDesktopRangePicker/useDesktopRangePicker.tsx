@@ -13,6 +13,7 @@ import {
   BaseFieldProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   DesktopRangePickerAdditionalViewProps,
@@ -29,7 +30,7 @@ import { useRangePosition } from '../useRangePosition';
 const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({

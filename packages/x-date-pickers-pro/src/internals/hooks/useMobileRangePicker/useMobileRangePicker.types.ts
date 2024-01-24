@@ -10,6 +10,7 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -22,19 +23,23 @@ import {
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlots,
+export interface UseMobileRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersModalDialogSlots,
     ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlots {}
 
-export interface UseMobileRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlotProps,
+export interface UseMobileRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface MobileRangeOnlyPickerProps<TDate>
+export interface MobileRangeOnlyPickerProps<TDate extends PickerValidDate>
   extends BaseNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
@@ -42,7 +47,7 @@ export interface MobileRangeOnlyPickerProps<TDate>
     UseRangePositionProps {}
 
 export interface UseMobileRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
@@ -71,7 +76,7 @@ export interface MobileRangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseMobileRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<

@@ -32,6 +32,7 @@ import {
   buildWarning,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -114,7 +115,7 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   },
 })) as typeof DayCalendar;
 
-function useDateRangeCalendarDefaultizedProps<TDate>(
+function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
   name: string,
 ): DateRangeCalendarDefaultizedProps<TDate> {
@@ -152,7 +153,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
   return composeClasses(slots, getDateRangeCalendarUtilityClass, classes);
 };
 
-type DateRangeCalendarComponent = (<TDate>(
+type DateRangeCalendarComponent = (<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -166,10 +167,9 @@ type DateRangeCalendarComponent = (<TDate>(
  *
  * - [DateRangeCalendar API](https://mui.com/x/api/date-pickers/date-range-calendar/)
  */
-const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
-  inProps: DateRangeCalendarProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
+  TDate extends PickerValidDate,
+>(inProps: DateRangeCalendarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
   const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
     defaultMatches: false,
@@ -650,7 +650,9 @@ DateRangeCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  ),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -700,11 +702,11 @@ DateRangeCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -742,7 +744,7 @@ DateRangeCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -801,7 +803,7 @@ DateRangeCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object])),
 } as any;
 
 export { DateRangeCalendar };

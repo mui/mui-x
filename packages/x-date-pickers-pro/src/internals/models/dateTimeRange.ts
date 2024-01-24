@@ -6,11 +6,12 @@ import {
   UseFieldInternalProps,
   DateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateTimeRangeValidationError, DateRange } from '../../models';
 import { RangeFieldSection } from './fields';
 
-export interface UseDateTimeRangeFieldProps<TDate>
+export interface UseDateTimeRangeFieldProps<TDate extends PickerValidDate>
   extends MakeOptional<
       UseFieldInternalProps<
         DateRange<TDate>,
@@ -32,7 +33,7 @@ export interface UseDateTimeRangeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+export type UseDateTimeRangeFieldDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
   UseDateTimeRangeFieldProps<TDate>,
   keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;
