@@ -32,7 +32,8 @@ But the same props are available on:
 - the view components;
 
   For example—the validation props showcased with `TimePicker` are also available on `TimeClock` and `DigitalClock`.
-  :::
+
+:::
 
 ## Invalid values feedback
 

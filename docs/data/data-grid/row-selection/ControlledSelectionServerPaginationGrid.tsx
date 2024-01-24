@@ -4,9 +4,12 @@ import { GridDemoData, useDemoData, randomInt } from '@mui/x-data-grid-generator
 
 function loadServerRows(page: number, data: GridDemoData): Promise<any> {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(data.rows.slice(page * 5, (page + 1) * 5));
-    }, randomInt(100, 600)); // simulate network latency
+    setTimeout(
+      () => {
+        resolve(data.rows.slice(page * 5, (page + 1) * 5));
+      },
+      randomInt(100, 600),
+    ); // simulate network latency
   });
 }
 

@@ -41,9 +41,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} таңдау. ${
-      time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} таңдау. ${time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} сағат`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

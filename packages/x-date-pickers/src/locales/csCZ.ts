@@ -41,9 +41,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybrány. ${
-      time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} vybrány. ${time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,

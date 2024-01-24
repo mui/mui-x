@@ -442,7 +442,7 @@ export const useGridVirtualScroller = () => {
       ({
         overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
         overflowY: rootProps.autoHeight ? 'hidden' : undefined,
-      } as React.CSSProperties),
+      }) as React.CSSProperties,
     [needsHorizontalScrollbar, rootProps.autoHeight],
   );
 

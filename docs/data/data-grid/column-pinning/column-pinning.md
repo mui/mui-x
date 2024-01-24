@@ -111,7 +111,8 @@ Another alternate option to disable pinning actions on the UI is to disable the 
 
 1. Use [`disableColumnMenu` prop](/x/react-data-grid/column-menu/#disable-column-menu) to completely disable the column menu.
 2. Use column menu API to hide the pinning options in the column menu. See [Column Menu - Hiding a menu item](/x/react-data-grid/column-menu/#hiding-a-menu-item) for more details.
-   :::
+
+:::
 
 ## Pinning the checkbox selection column
 
