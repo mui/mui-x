@@ -146,7 +146,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
-          {...others as any /* FIXME: typing error */}
+          {
+            ...(others as any) /* FIXME: typing error */
+          }
           {...rootProps.slotProps?.baseSelect}
         >
           {renderSingleSelectOptions({
