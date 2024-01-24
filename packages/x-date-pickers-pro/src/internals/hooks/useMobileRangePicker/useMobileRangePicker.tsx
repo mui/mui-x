@@ -10,9 +10,9 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
   DateOrTimeViewWithMeridiem,
+  UsePickerValueFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,

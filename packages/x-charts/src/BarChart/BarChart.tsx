@@ -337,34 +337,7 @@ BarChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number),
-      dataKey: PropTypes.string,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      layout: PropTypes.oneOf(['horizontal', 'vertical']),
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['bar']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skiped.
    * @default false
