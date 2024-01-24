@@ -17,11 +17,8 @@ export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewW
   extends UseRangePickerSlots<TDate, TView>,
     PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-  Tabs extends boolean = true,
-> extends UseRangePickerSlotProps<TDate, TView, Tabs>,
+export interface UseDesktopRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends UseRangePickerSlotProps<TDate, TView>,
     PickersPopperSlotProps {}
 
 export interface DesktopRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {
@@ -36,7 +33,6 @@ export interface UseDesktopRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-  Tabs extends boolean = true,
 > extends UseRangePickerProps<
     TDate,
     TView,
@@ -53,7 +49,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, Tabs>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
@@ -61,8 +57,7 @@ export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditi
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps, Tabs>,
-  Tabs extends boolean = true,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends UseRangePickerParams<
     TDate,
     TView,
