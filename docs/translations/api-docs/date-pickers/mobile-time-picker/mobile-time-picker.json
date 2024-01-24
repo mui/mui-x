@@ -120,18 +120,18 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "toolbar": "Custom component for the toolbar rendered above the views.",
-    "previousIconButton": "Button allowing to switch to the left view.",
-    "nextIconButton": "Button allowing to switch to the right view.",
-    "leftArrowIcon": "Icon displayed in the left view switch button.",
-    "rightArrowIcon": "Icon displayed in the right view switch button.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "shortcuts": "Custom component for the shortcuts.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
-    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
+    "field": "Component used to enter the date with the keyboard.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-    "field": "Component used to enter the date with the keyboard."
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
+    "rightArrowIcon": "Icon displayed in the right view switch button.",
+    "shortcuts": "Custom component for the shortcuts.",
+    "textField": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
+    "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }
