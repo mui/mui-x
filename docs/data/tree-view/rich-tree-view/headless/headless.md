@@ -207,7 +207,7 @@ You can use the `contextValue` property in the returned object to pass elements 
 
 :::warning
 For now the context is private and cannot be accessed outside our own plugins.
-You need to modify the `useTreeItem` hook to return the value newly returned by your plugin.
+You need to modify the `useTreeItem` hook to return the new value returned by your plugin.
 :::
 
 ```tsx
