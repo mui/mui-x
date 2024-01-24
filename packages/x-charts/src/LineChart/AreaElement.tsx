@@ -6,7 +6,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
-import { animated } from '@react-spring/web';
+import { animated, useSpring } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -15,6 +15,8 @@ import {
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
+import { DrawingContext } from '../context/DrawingProvider';
+import { cleanId } from '../internals/utils';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -64,7 +66,7 @@ export const AreaElementPath = styled(animated.path, {
     ? d3Color(ownerState.color)!.brighter(1).formatHex()
     : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: ownerState.isFaded ? 0.3 : 1,
+  opacity: ownerState.isFaded ? 0.3 : 0.7,
 }));
 
 AreaElementPath.propTypes = {
@@ -123,6 +125,7 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
 function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const { left, top, right, bottom, width, height, chartId } = React.useContext(DrawingContext);
 
   const { item } = React.useContext(InteractionContext);
 
@@ -153,7 +156,23 @@ function AreaElement(props: AreaElementProps) {
 
   const path = useAnimatedPath(d!);
 
-  return <Area {...areaProps} d={path} />;
+  const { animatedWidth } = useSpring({
+    from: { animatedWidth: left },
+    to: { animatedWidth: width + left + right },
+    reset: false,
+    // immediate: skipAnimation,
+  });
+  const clipId = cleanId(`${chartId}-${id}-area-clip`);
+  return (
+    <React.Fragment>
+      <clipPath id={clipId}>
+        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
+      </clipPath>
+      <g clipPath={`url(#${clipId})`}>
+        <Area {...areaProps} d={path} />
+      </g>
+    </React.Fragment>
+  );
 }
 
 AreaElement.propTypes = {

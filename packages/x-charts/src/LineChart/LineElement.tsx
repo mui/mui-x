@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { AnimatedComponent, animated } from '@react-spring/web';
+import { AnimatedComponent, animated, useSpring } from '@react-spring/web';
 import { color as d3Color } from 'd3-color';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
@@ -15,6 +15,8 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
+import { DrawingContext } from '../context/DrawingProvider';
+import { cleanId } from '../internals/utils';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -138,6 +140,7 @@ export interface LineElementProps extends Omit<LineElementOwnerState, 'isFaded' 
 function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
 
   const { item } = React.useContext(InteractionContext);
 
@@ -168,7 +171,24 @@ function LineElement(props: LineElementProps) {
 
   const path = useAnimatedPath(d);
 
-  return <Line {...lineProps} d={path} />;
+  const { animatedWidth } = useSpring({
+    from: { animatedWidth: left },
+    to: { animatedWidth: width + left + right },
+    reset: false,
+    // immediate: skipAnimation,
+  });
+
+  const clipId = cleanId(`${chartId}-${id}-area-clip`);
+  return (
+    <React.Fragment>
+      <clipPath id={clipId}>
+        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
+      </clipPath>
+      <g clipPath={`url(#${clipId})`}>
+        <Line {...lineProps} d={path} />
+      </g>
+    </React.Fragment>
+  );
 }
 
 LineElement.propTypes = {

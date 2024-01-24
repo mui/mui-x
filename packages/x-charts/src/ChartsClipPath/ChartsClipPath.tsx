@@ -18,6 +18,7 @@ function ChartsClipPath(props: ChartsClipPathProps) {
 
   const offset = { top: 0, right: 0, bottom: 0, left: 0, ...offsetProps };
   return (
+    
     <clipPath id={id}>
       <rect
         x={left - offset.left}

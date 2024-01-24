@@ -5,6 +5,8 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DrawingContext } from '../context/DrawingProvider';
+import { cleanId } from '../internals/utils';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -42,6 +44,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
+  const { chartId } = React.useContext(DrawingContext);
 
   const Mark = slots?.mark ?? MarkElement;
 
@@ -128,18 +131,20 @@ function MarkPlot(props: MarkPlotProps) {
               });
             })
             .map(({ x, y, index }) => {
+              const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
               return (
-                <Mark
-                  key={`${seriesId}-${index}`}
-                  id={seriesId}
-                  dataIndex={index}
-                  shape="circle"
-                  color={series[seriesId].color}
-                  x={x}
-                  y={y!} // Don't knwo why TS don't get from the filter that y can't be null
-                  highlightScope={series[seriesId].highlightScope}
-                  {...slotProps?.mark}
-                />
+                <g key={`${seriesId}-${index}`} clipPath={`url(#${clipId})`}>
+                  <Mark
+                    id={seriesId}
+                    dataIndex={index}
+                    shape="circle"
+                    color={series[seriesId].color}
+                    x={x}
+                    y={y!} // Don't knwo why TS don't get from the filter that y can't be null
+                    highlightScope={series[seriesId].highlightScope}
+                    {...slotProps?.mark}
+                  />
+                </g>
               );
             });
         });
