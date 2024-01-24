@@ -40,11 +40,7 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${
-      time === null
-        ? 'Sense temps seleccionat'
-        : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleccione ${views[view]}. ${time === null ? 'Sense temps seleccionat' : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hores`,
   minutesClockNumberText: (minutes) => `${minutes} minuts`,
   secondsClockNumberText: (seconds) => `${seconds} segons`,

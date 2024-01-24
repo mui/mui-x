@@ -41,9 +41,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Абярыце ${views[view]}. ${
-      time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Абярыце ${views[view]}. ${time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
