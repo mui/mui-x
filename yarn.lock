@@ -6749,10 +6749,10 @@ eslint-plugin-import@^2.29.1:
     semver "^6.3.1"
     tsconfig-paths "^3.15.0"
 
-eslint-plugin-jsdoc@^46.9.1:
-  version "46.10.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-46.10.1.tgz#77c871309c4ed93758a3b2fdf384dc6189cf8605"
-  integrity sha512-x8wxIpv00Y50NyweDUpa+58ffgSAI5sqe+zcZh33xphD0AVh+1kqr1ombaTRb7Fhpove1zfUuujlX9DWWBP5ag==
+eslint-plugin-jsdoc@^48.0.2:
+  version "48.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-48.0.2.tgz#b843107e8caec57b8b463f04797be3b30d6a52da"
+  integrity sha512-CBFl5Jc7+jlV36RwDm+PQ8Uw5r28pn2/uW/OaB+Gw5bFwn4Py/1eYMZ3hGf9S4meUFZ/sRvS+hVif2mRAp6WqQ==
   dependencies:
     "@es-joy/jsdoccomment" "~0.41.0"
     are-docs-informative "^0.0.2"
@@ -10210,7 +10210,7 @@ markdown-it@13.0.1:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
-markdown-to-jsx@^7.3.2:
+markdown-to-jsx@^7.4.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.4.0.tgz#4606c5c549a6f6cb87604c35f5ee4f42959ffb6b"
   integrity sha512-zilc+MIkVVXPyTb4iIUTIz9yyqfcWjszGXnwF9K/aiBWcHXFcmdEMTkG01/oQhwSCH7SY1BnG6+ev5BzWmbPrg==
