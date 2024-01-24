@@ -347,47 +347,7 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      area: PropTypes.bool,
-      color: PropTypes.string,
-      connectNulls: PropTypes.bool,
-      curve: PropTypes.oneOf([
-        'catmullRom',
-        'linear',
-        'monotoneX',
-        'monotoneY',
-        'natural',
-        'step',
-        'stepAfter',
-        'stepBefore',
-      ]),
-      data: PropTypes.arrayOf(PropTypes.number),
-      dataKey: PropTypes.string,
-      disableHighlight: PropTypes.bool,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['line']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * The props used for each component slot.
    * @default {}

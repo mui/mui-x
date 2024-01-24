@@ -294,30 +294,7 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-          x: PropTypes.number.isRequired,
-          y: PropTypes.number.isRequired,
-        }),
-      ).isRequired,
-      disableHover: PropTypes.bool,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      markerSize: PropTypes.number,
-      type: PropTypes.oneOf(['scatter']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * The props used for each component slot.
    * @default {}

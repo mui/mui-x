@@ -34,11 +34,14 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'column',
         'groupingColDef',
         'rowNode',
+        'pinnedColumns',
         'localeText',
         'columnGroupingModel',
         'unstableFieldRef',
         'unstableStartFieldRef',
         'unstableEndFieldRef',
+        'series',
+        'axis',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
