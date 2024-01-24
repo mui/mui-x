@@ -3,4 +3,5 @@ export type {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
+  UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';

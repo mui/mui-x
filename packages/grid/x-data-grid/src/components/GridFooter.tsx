@@ -9,46 +9,45 @@ import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(function GridFooter(
-  props,
-  ref,
-) {
-  const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
-  const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
+const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
+  function GridFooter(props, ref) {
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
+    const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
+    const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
-  const selectedRowCountElement =
-    !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
-      <GridSelectedRowCount selectedRowCount={selectedRowCount} />
-    ) : (
-      <div />
+    const selectedRowCountElement =
+      !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
+        <GridSelectedRowCount selectedRowCount={selectedRowCount} />
+      ) : (
+        <div />
+      );
+
+    const rowCountElement =
+      !rootProps.hideFooterRowCount && !rootProps.pagination ? (
+        <rootProps.slots.footerRowCount
+          {...rootProps.slotProps?.footerRowCount}
+          rowCount={totalTopLevelRowCount}
+          visibleRowCount={visibleTopLevelRowCount}
+        />
+      ) : null;
+
+    const paginationElement = rootProps.pagination &&
+      !rootProps.hideFooterPagination &&
+      rootProps.slots.pagination && (
+        <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
+      );
+
+    return (
+      <GridFooterContainer ref={ref} {...props}>
+        {selectedRowCountElement}
+        {rowCountElement}
+        {paginationElement}
+      </GridFooterContainer>
     );
-
-  const rowCountElement =
-    !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-      <rootProps.slots.footerRowCount
-        {...rootProps.slotProps?.footerRowCount}
-        rowCount={totalTopLevelRowCount}
-        visibleRowCount={visibleTopLevelRowCount}
-      />
-    ) : null;
-
-  const paginationElement = rootProps.pagination &&
-    !rootProps.hideFooterPagination &&
-    rootProps.slots.pagination && (
-      <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
-    );
-
-  return (
-    <GridFooterContainer ref={ref} {...props}>
-      {selectedRowCountElement}
-      {rowCountElement}
-      {paginationElement}
-    </GridFooterContainer>
-  );
-});
+  },
+);
 
 GridFooter.propTypes = {
   // ----------------------------- Warning --------------------------------

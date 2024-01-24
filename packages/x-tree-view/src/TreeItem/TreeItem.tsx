@@ -170,8 +170,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    endIcon,
-    icon,
     nodeId,
     id,
     label,
@@ -185,6 +183,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
     collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
+    endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
+    icon: inSlots?.icon,
   };
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
@@ -206,7 +206,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
-    ownerState: undefined,
+    ownerState: {},
     externalSlotProps: (tempOwnerState: any) => {
       if (expanded) {
         return {
@@ -221,16 +221,33 @@ export const TreeItem = React.forwardRef(function TreeItem(
       };
     },
   });
-
   const expansionIcon =
     expandable && !!ExpansionIcon ? <ExpansionIcon {...expansionIconProps} /> : null;
 
-  let displayIcon: React.ReactNode;
-  if (expandable) {
-    displayIcon = contextIcons.defaultParentIcon;
-  } else {
-    displayIcon = endIcon || contextIcons.defaultEndIcon;
-  }
+  const DisplayIcon = expandable ? undefined : slots.endIcon;
+  const { ownerState: displayIconOwnerState, ...displayIconProps } = useSlotProps({
+    elementType: DisplayIcon,
+    ownerState: {},
+    externalSlotProps: (tempOwnerState: any) => {
+      if (expandable) {
+        return {};
+      }
+
+      return {
+        ...resolveComponentProps(contextIcons.slotProps.endIcon, tempOwnerState),
+        ...resolveComponentProps(inSlotProps?.endIcon, tempOwnerState),
+      };
+    },
+  });
+  const displayIcon = DisplayIcon ? <DisplayIcon {...displayIconProps} /> : null;
+
+  const Icon = slots.icon;
+  const { ownerState: iconOwnerState, ...iconProps } = useSlotProps({
+    elementType: Icon,
+    ownerState: {},
+    externalSlotProps: inSlotProps?.icon,
+  });
+  const icon = Icon ? <Icon {...iconProps} /> : null;
 
   let ariaSelected;
   if (multiSelect) {
@@ -341,14 +358,6 @@ TreeItem.propTypes = {
    * @default false
    */
   disabled: PropTypes.bool,
-  /**
-   * The icon displayed next to an end node.
-   */
-  endIcon: PropTypes.node,
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon: PropTypes.node,
   /**
    * The tree node label.
    */

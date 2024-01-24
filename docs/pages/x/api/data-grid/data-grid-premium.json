@@ -81,7 +81,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -533,12 +533,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
-    "pinnedColumns": {
-      "type": {
-        "name": "shape",
-        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
-      }
-    },
+    "pinnedColumns": { "type": { "name": "object" } },
     "pinnedRows": {
       "type": {
         "name": "shape",

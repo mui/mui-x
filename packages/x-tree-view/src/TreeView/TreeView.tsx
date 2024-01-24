@@ -96,21 +96,11 @@ TreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The default icon displayed next to a end node. This is applied to all
-   * tree nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultEndIcon: PropTypes.node,
-  /**
    * Expanded node ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
   defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * The default icon displayed next to a parent node. This is applied to all
-   * parent nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultParentIcon: PropTypes.node,
   /**
    * Selected node ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
@@ -132,24 +122,6 @@ TreeView.propTypes = {
    * Used when the item's expansion is controlled.
    */
   expandedNodes: PropTypes.arrayOf(PropTypes.string),
-  /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The id of the item.
-   * @default `(item) => item.id`
-   */
-  getItemId: PropTypes.func,
-  /**
-   * Used to determine the string label for a given item.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {string} The label of the item.
-   * @default `(item) => item.label`
-   */
-  getItemLabel: PropTypes.func,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

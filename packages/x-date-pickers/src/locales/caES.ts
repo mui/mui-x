@@ -15,16 +15,20 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Pròxim mes',
 
   // View navigation
-  openPreviousView: "obrir l'última vista",
+  openPreviousView: "Obrir l'última vista",
   openNextView: 'obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? "la vista de l'any està oberta, canvie a la vista de calendari"
       : "la vista de calendari està oberta, canvie a la vista de l'any",
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Començar',
   end: 'Terminar',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancel·lar',
@@ -40,11 +44,7 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${
-      time === null
-        ? 'Sense temps seleccionat'
-        : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleccione ${views[view]}. ${time === null ? 'Sense temps seleccionat' : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hores`,
   minutesClockNumberText: (minutes) => `${minutes} minuts`,
   secondsClockNumberText: (seconds) => `${seconds} segons`,

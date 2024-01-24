@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
 
-# MUI X Tree View
+# MUI X Tree View
 
 <p class="description">The Tree View component displays a hierarchical list of content where you can expand or collapse each parent or child item.</p>
 

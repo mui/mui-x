@@ -15,16 +15,20 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Volgende maand',
 
   // View navigation
-  openPreviousView: 'open vorige view',
-  openNextView: 'open volgende view',
+  openPreviousView: 'Open vorige view',
+  openNextView: 'Open volgende view',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Einde',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
@@ -40,11 +44,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecteer ${timeViews[view]}. ${
-      time === null
-        ? 'Geen tijd geselecteerd'
-        : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Selecteer ${timeViews[view]}. ${time === null ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} uren`,
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,

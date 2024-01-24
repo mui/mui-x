@@ -2,7 +2,7 @@
 
 <p class="description">The data grid allows to support users from different locales, with formatting, and localized strings.</p>
 
-The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 ## Translation keys
 
@@ -14,7 +14,7 @@ In the following example, the labels of the density selector are customized.
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
 :::warning
-It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
+It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
 
 One example is the table pagination component used in the Data Grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [Table Pagination](/material-ui/api/table-pagination/) component.
 
@@ -34,7 +34,7 @@ One example is the table pagination component used in the Data Grid footer when 
 
 ## Locale text
 
-The default locale of MUI is English (United States).
+The default locale of MUI X is English (United States).
 
 You can use the theme to configure the locale text:
 

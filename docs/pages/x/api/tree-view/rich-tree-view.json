@@ -1,12 +1,10 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -94,20 +92,42 @@
     "import { RichTreeView } from '@mui/x-tree-view/RichTreeView';",
     "import { RichTreeView } from '@mui/x-tree-view';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiRichTreeView-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "RichTreeViewRoot",
+      "class": "MuiRichTreeView-root"
+    },
+    {
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem.",
+      "class": null
+    },
+    {
+      "name": "collapseIcon",
+      "description": "The default icon used to collapse the node.",
+      "class": null
+    },
+    {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the node.",
+      "class": null
+    },
+    {
+      "name": "endIcon",
+      "description": "The default icon displayed next to an end node.\nThis is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeView",
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/overview/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/overview/\">MUI X Tree View</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
   "cssComponent": false
 }

@@ -40,9 +40,13 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
 
-  // DateRange placeholders
+  // DateRange labels
   start: string;
   end: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
 
   // Action bar
   cancelButtonLabel: string;

@@ -6,12 +6,8 @@ import {
   getPropTypesFromFile,
   injectPropTypesInFile,
 } from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utilities';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
-
-const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
-  config: path.join(__dirname, '../../prettier.config.js'),
-});
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const components = getPropTypesFromFile({
@@ -38,15 +34,19 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'column',
         'groupingColDef',
         'rowNode',
+        'pinnedColumns',
         'localeText',
         'columnGroupingModel',
         'unstableFieldRef',
         'unstableStartFieldRef',
         'unstableEndFieldRef',
+        'series',
+        'axis',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
       }
+
       return undefined;
     },
   });
@@ -120,7 +120,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     throw new Error('Unable to produce inject propTypes into code.');
   }
 
-  const prettified = prettier.format(result, { ...prettierConfig, filepath: sourceFile });
+  const prettierConfig = await prettier.resolveConfig(process.cwd(), {
+    config: path.join(__dirname, '../../prettier.config.js'),
+  });
+
+  const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });
   const formatted = fixBabelGeneratorIssues(prettified);
   const correctedLineEndings = fixLineEndings(sourceContent, formatted);
 

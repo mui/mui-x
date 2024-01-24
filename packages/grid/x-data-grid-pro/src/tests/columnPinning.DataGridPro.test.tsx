@@ -251,10 +251,10 @@ describe('<DataGridPro /> - Column pinning', () => {
           onPinnedColumnsChange={handlePinnedColumnsChange}
         />,
       );
-      expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
+      expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       act(() => apiRef.current.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
-      expect($$(`[role="cell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
+      expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair', 'price17M'],
         right: [],
@@ -664,7 +664,6 @@ describe('<DataGridPro /> - Column pinning', () => {
           columns={columns}
           rows={rows}
           columnGroupingModel={columnGroupingModel}
-          experimentalFeatures={{ columnGrouping: true }}
           initialState={{ pinnedColumns: { right: ['age'] } }}
         />,
       );

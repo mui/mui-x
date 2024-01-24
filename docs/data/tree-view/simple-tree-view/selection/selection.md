@@ -26,8 +26,8 @@ You can also use the `onNodeSelect` prop to listen to changes in the selected it
 
 :::info
 
-- The selection is **controlled** when its parent manages it by providing a `selected` prop.
-- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelected` prop.
+- The selection is **controlled** when its parent manages it by providing a `selectedNodes` prop.
+- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelectedNodes` prop.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
