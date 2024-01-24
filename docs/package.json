@@ -92,10 +92,11 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "@mui-internal/docs-utils": "https://pkg.csb.dev/mui/material-ui/commit/a7883c38/@mui-internal/docs-utils",
+    "@mui-internal/typescript-to-proptypes": "https://pkg.csb.dev/mui/material-ui/commit/a7883c38/@mui-internal/typescript-to-proptypes",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",
     "cpy-cli": "^5.0.0",
-    "gm": "^1.25.0",
-    "typescript-to-proptypes": "^2.2.1"
+    "gm": "^1.25.0"
   }
 }
