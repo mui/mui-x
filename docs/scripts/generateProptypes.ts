@@ -25,12 +25,12 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       ];
 
       if (T_DATE_PROPS.includes(name)) {
-        return true
+        return true;
       }
     }
 
-    return false
-  }
+    return false;
+  };
 
   const components = getPropTypesFromFile({
     filePath: sourceFile,
@@ -70,7 +70,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       }
 
       if (isTDate(name)) {
-        return false
+        return false;
       }
 
       return undefined;
