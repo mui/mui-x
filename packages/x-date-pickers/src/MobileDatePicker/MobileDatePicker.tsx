@@ -8,14 +8,14 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TDate>(
+type MobileDatePickerComponent = (<TDate extends PickerValidDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -29,7 +29,7 @@ type MobileDatePickerComponent = (<TDate>(
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
+const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate extends PickerValidDate>(
   inProps: MobileDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

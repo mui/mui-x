@@ -16,13 +16,14 @@ import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models'
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
 }
 
-export interface DateTimePickerToolbarProps<TDate>
+export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   extends ExportedDateTimePickerToolbarProps,
     BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
   /**
@@ -195,7 +196,9 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  *
  * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
  */
-function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
+function DateTimePickerToolbar<TDate extends PickerValidDate>(
+  inProps: DateTimePickerToolbarProps<TDate>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,

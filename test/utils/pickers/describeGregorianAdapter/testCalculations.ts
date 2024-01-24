@@ -1,16 +1,19 @@
 import { expect } from 'chai';
-import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
 /**
- * To check if the date has the right offset even after changing it's date parts,
+ * To check if the date has the right offset even after changing its date parts,
  * we convert it to a different timezone that always has the same offset,
  * then we check that both dates have the same hour value.
  */
 // We change to
-const expectSameTimeInMonacoTZ = <TDate>(adapter: MuiPickersAdapter<TDate>, value: TDate) => {
+const expectSameTimeInMonacoTZ = <TDate extends PickerValidDate>(
+  adapter: MuiPickersAdapter<TDate>,
+  value: TDate,
+) => {
   const valueInMonacoTz = adapter.setTimezone(value, 'Europe/Monaco');
   expect(adapter.getHours(value)).to.equal(adapter.getHours(valueInMonacoTz));
 };

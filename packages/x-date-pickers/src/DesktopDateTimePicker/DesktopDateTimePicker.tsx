@@ -20,8 +20,9 @@ import {
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
+import { PickerValidDate } from '../models';
 
-type DesktopDateTimePickerComponent = (<TDate>(
+type DesktopDateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -35,10 +36,9 @@ type DesktopDateTimePickerComponent = (<TDate>(
  *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
-const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
-  inProps: DesktopDateTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
+  TDate extends PickerValidDate,
+>(inProps: DesktopDateTimePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 

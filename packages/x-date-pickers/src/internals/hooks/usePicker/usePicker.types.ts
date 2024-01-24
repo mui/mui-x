@@ -11,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -19,7 +19,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  */
 export interface UsePickerBaseProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
@@ -30,7 +30,7 @@ export interface UsePickerBaseProps<
 
 export interface UsePickerProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
   TError,
@@ -42,7 +42,7 @@ export interface UsePickerProps<
 
 export interface UsePickerParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
   TExternalProps extends UsePickerProps<TValue, TDate, TView, TSection, any, any, any>,

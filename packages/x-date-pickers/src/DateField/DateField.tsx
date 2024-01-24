@@ -8,8 +8,9 @@ import { DateFieldProps, DateFieldSlotProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { PickerValidDate } from '../models';
 
-type DateFieldComponent = (<TDate>(
+type DateFieldComponent = (<TDate extends PickerValidDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +24,7 @@ type DateFieldComponent = (<TDate>(
  *
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
-const DateField = React.forwardRef(function DateField<TDate>(
+const DateField = React.forwardRef(function DateField<TDate extends PickerValidDate>(
   inProps: DateFieldProps<TDate>,
   inRef: React.Ref<HTMLDivElement>,
 ) {

@@ -22,6 +22,7 @@ import {
   PickersCalendarHeaderOwnerState,
   PickersCalendarHeaderProps,
 } from './PickersCalendarHeader.types';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
@@ -105,7 +106,7 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   transform: 'rotate(0deg)',
 }));
 
-type PickersCalendarHeaderComponent = (<TDate>(
+type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
   props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -120,10 +121,9 @@ type PickersCalendarHeaderComponent = (<TDate>(
  *
  * - [PickersCalendarHeader API](https://mui.com/x/api/date-pickers/pickers-calendar-header/)
  */
-const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TDate>(
-  inProps: PickersCalendarHeaderProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
+  TDate extends PickerValidDate,
+>(inProps: PickersCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 

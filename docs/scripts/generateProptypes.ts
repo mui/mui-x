@@ -43,6 +43,25 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       if (propsToNotResolve.includes(name)) {
         return false;
       }
+
+      if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
+        const PICKERS_PROPS_TO_NOT_RESOLVE = [
+          'value',
+          'defaultValue',
+          'minDate',
+          'maxDate',
+          'minDateTime',
+          'maxDateTime',
+          'minTime',
+          'maxTime',
+          'referenceDate',
+        ];
+
+        if (PICKERS_PROPS_TO_NOT_RESOLVE.includes(name)) {
+          return false;
+        }
+      }
+
       return undefined;
     },
   });

@@ -5,11 +5,11 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
-type StaticDatePickerComponent = (<TDate>(
+type StaticDatePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +23,7 @@ type StaticDatePickerComponent = (<TDate>(
  *
  * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
  */
-const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
+const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate extends PickerValidDate>(
   inProps: StaticDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

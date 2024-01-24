@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
@@ -9,7 +9,7 @@ import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
-type StaticTimePickerComponent = (<TDate>(
+type StaticTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +23,7 @@ type StaticTimePickerComponent = (<TDate>(
  *
  * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
  */
-const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
+const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate extends PickerValidDate>(
   inProps: StaticTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

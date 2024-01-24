@@ -14,7 +14,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -81,7 +81,7 @@ const DigitalClockItem = styled(MenuItem, {
   },
 }));
 
-type DigitalClockComponent = (<TDate>(
+type DigitalClockComponent = (<TDate extends PickerValidDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -95,7 +95,7 @@ type DigitalClockComponent = (<TDate>(
  *
  * - [DigitalClock API](https://mui.com/x/api/date-pickers/digital-clock/)
  */
-export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends unknown>(
+export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends PickerValidDate>(
   inProps: DigitalClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

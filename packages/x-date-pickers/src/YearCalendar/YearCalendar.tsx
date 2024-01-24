@@ -19,6 +19,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -30,7 +31,7 @@ const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   return composeClasses(slots, getYearCalendarUtilityClass, classes);
 };
 
-function useYearCalendarDefaultizedProps<TDate>(
+function useYearCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: YearCalendarProps<TDate>,
   name: string,
 ): DefaultizedProps<
@@ -72,7 +73,9 @@ const YearCalendarRoot = styled('div', {
   position: 'relative',
 });
 
-type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
+type YearCalendarComponent = (<TDate extends PickerValidDate>(
+  props: YearCalendarProps<TDate>,
+) => React.JSX.Element) & {
   propTypes?: any;
 };
 
@@ -85,7 +88,7 @@ type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.
  *
  * - [YearCalendar API](https://mui.com/x/api/date-pickers/year-calendar/)
  */
-export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
+export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends PickerValidDate>(
   inProps: YearCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

@@ -29,6 +29,7 @@ import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -40,7 +41,7 @@ const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   return composeClasses(slots, getDateCalendarUtilityClass, classes);
 };
 
-function useDateCalendarDefaultizedProps<TDate>(
+function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate>,
   name: string,
 ): DateCalendarDefaultizedProps<TDate> {
@@ -83,7 +84,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: DateCalendarProps<any> }>({});
 
-type DateCalendarComponent = (<TDate>(
+type DateCalendarComponent = (<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -98,7 +99,7 @@ type DateCalendarComponent = (<TDate>(
  *
  * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
-export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
+export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends PickerValidDate>(
   inProps: DateCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

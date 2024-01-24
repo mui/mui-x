@@ -17,7 +17,7 @@ import {
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { TimeStepOptions, TimeView } from '../models';
+import { PickerValidDate, TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -44,7 +44,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-type MultiSectionDigitalClockComponent = (<TDate>(
+type MultiSectionDigitalClockComponent = (<TDate extends PickerValidDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -59,7 +59,7 @@ type MultiSectionDigitalClockComponent = (<TDate>(
  * - [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)
  */
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
 

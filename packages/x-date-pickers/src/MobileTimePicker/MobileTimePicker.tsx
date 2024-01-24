@@ -9,13 +9,13 @@ import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TDate>(
+type MobileTimePickerComponent = (<TDate extends PickerValidDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -29,7 +29,7 @@ type MobileTimePickerComponent = (<TDate>(
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
+const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate extends PickerValidDate>(
   inProps: MobileTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

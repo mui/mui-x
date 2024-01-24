@@ -9,23 +9,23 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView, PickerValidDate } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 export interface MobileDateTimePickerSlots<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
 > extends BaseDateTimePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
 
 export interface MobileDateTimePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
 > extends BaseDateTimePickerSlotProps<TDate>,
     ExportedUseMobilePickerSlotProps<TDate, TView> {}
 
 export interface MobileDateTimePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
 > extends BaseDateTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps<TDate> {

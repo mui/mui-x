@@ -7,7 +7,7 @@ import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
@@ -16,7 +16,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type DesktopDatePickerComponent = (<TDate>(
+type DesktopDatePickerComponent = (<TDate extends PickerValidDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -30,10 +30,9 @@ type DesktopDatePickerComponent = (<TDate>(
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
-  inProps: DesktopDatePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
+  TDate extends PickerValidDate,
+>(inProps: DesktopDatePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 

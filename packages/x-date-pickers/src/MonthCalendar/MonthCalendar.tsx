@@ -18,6 +18,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -29,7 +30,7 @@ const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   return composeClasses(slots, getMonthCalendarUtilityClass, classes);
 };
 
-export function useMonthCalendarDefaultizedProps<TDate>(
+export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: MonthCalendarProps<TDate>,
   name: string,
 ): DefaultizedProps<
@@ -66,7 +67,7 @@ const MonthCalendarRoot = styled('div', {
   boxSizing: 'border-box',
 });
 
-type MonthCalendarComponent = (<TDate>(
+type MonthCalendarComponent = (<TDate extends PickerValidDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -79,7 +80,7 @@ type MonthCalendarComponent = (<TDate>(
  *
  * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
  */
-export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
+export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate extends PickerValidDate>(
   inProps: MonthCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

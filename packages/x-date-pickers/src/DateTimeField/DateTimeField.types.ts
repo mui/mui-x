@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { DateTimeValidationError, FieldSection } from '../models';
+import { DateTimeValidationError, FieldSection, PickerValidDate } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
@@ -16,7 +16,7 @@ import {
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
 
-export interface UseDateTimeFieldProps<TDate>
+export interface UseDateTimeFieldProps<TDate extends PickerValidDate>
   extends MakeOptional<
       UseFieldInternalProps<TDate | null, TDate, FieldSection, DateTimeValidationError>,
       'format'
@@ -35,18 +35,17 @@ export interface UseDateTimeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
+export type UseDateTimeFieldDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
   keyof BaseDateValidationProps<any> | keyof BaseTimeValidationProps | 'format'
 >;
 
-export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseDateTimeFieldProps<TDate>
-> &
-  UseDateTimeFieldProps<TDate>;
+export type UseDateTimeFieldComponentProps<
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseDateTimeFieldProps<TDate>> & UseDateTimeFieldProps<TDate>;
 
-export interface DateTimeFieldProps<TDate>
+export interface DateTimeFieldProps<TDate extends PickerValidDate>
   extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
    * Overridable component slots.
@@ -60,7 +59,7 @@ export interface DateTimeFieldProps<TDate>
   slotProps?: DateTimeFieldSlotProps<TDate>;
 }
 
-export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
+export type DateTimeFieldOwnerState<TDate extends PickerValidDate> = DateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -71,6 +70,7 @@ export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
+export interface DateTimeFieldSlotProps<TDate extends PickerValidDate>
+  extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }
