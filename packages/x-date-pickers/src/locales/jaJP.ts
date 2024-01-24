@@ -41,11 +41,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view}を選択してください ${
-      time === null
-        ? '時間が選択されていません'
-        : `選択した時間は ${adapter.format(time, 'fullTime')} です`
-    }`,
+    `${timeViews[view] ?? view}を選択してください ${time === null ? '時間が選択されていません' : `選択した時間は ${adapter.format(time, 'fullTime')} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,

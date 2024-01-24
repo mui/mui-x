@@ -34,9 +34,7 @@ const mkPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
-      time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Select ${view}. ${time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,

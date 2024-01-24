@@ -40,11 +40,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${views[view]} 선택하세요. ${
-      time === null
-        ? '시간을 선택하지 않았습니다.'
-        : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`
-    }`,
+    `${views[view]} 선택하세요. ${time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시간`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,

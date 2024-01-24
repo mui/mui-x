@@ -40,11 +40,7 @@ const euPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Aukeratu ${views[view]}. ${
-      time === null
-        ? 'Ez da ordurik aukertau'
-        : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`
-    }`,
+    `Aukeratu ${views[view]}. ${time === null ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,
