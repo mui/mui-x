@@ -1,0 +1,21 @@
+name: Add comment
+on:
+  issues:
+    types:
+      - closed
+jobs:
+  add-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        run: gh issue comment "$NUMBER" --body "$BODY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          BODY: >
+            :warning: This issue has been closed.
+            If you have a similar problem, please open a [new issue](https://github.com/mui/mui-x/issues/new/choose) and provide details about your specific problem.
+            When you can provide additional information related to this topic that could help future readers, please feel free to leave a comment.
