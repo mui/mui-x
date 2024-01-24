@@ -10,24 +10,6 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
-    "getItemId": {
-      "type": { "name": "func" },
-      "default": "`(item) => item.id`",
-      "signature": {
-        "type": "function(item: R) => string",
-        "describedArgs": ["item"],
-        "returned": "string"
-      }
-    },
-    "getItemLabel": {
-      "type": { "name": "func" },
-      "default": "`(item) => item.label`",
-      "signature": {
-        "type": "function(item: R) => string",
-        "describedArgs": ["item"],
-        "returned": "string"
-      }
-    },
     "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedNodesChange": {

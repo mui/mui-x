@@ -64,8 +64,8 @@
   },
   "slotDescriptions": {
     "collapseIcon": "The icon used to collapse the node.",
-    "expandIcon": "The icon used to expand the node.",
     "endIcon": "The icon displayed next to an end node.",
+    "expandIcon": "The icon used to expand the node.",
     "icon": "The icon to display next to the tree node&#39;s label."
   }
 }

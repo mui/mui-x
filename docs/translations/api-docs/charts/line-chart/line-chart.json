@@ -46,17 +46,17 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "area": "",
+    "axisContent": "",
+    "axisLabel": "",
     "axisLine": "",
     "axisTick": "",
     "axisTickLabel": "",
-    "axisLabel": "",
-    "area": "",
-    "line": "The component that renders the root.",
-    "mark": "",
-    "lineHighlight": "",
+    "itemContent": "",
     "legend": "",
-    "popper": "",
-    "axisContent": "",
-    "itemContent": ""
+    "line": "The component that renders the root.",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
   }
 }

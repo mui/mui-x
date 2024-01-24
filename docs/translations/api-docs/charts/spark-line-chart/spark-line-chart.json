@@ -41,12 +41,12 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "area": "",
-    "line": "The component that renders the root.",
-    "mark": "",
-    "lineHighlight": "",
-    "bar": "",
-    "popper": "",
     "axisContent": "",
-    "itemContent": ""
+    "bar": "",
+    "itemContent": "",
+    "line": "The component that renders the root.",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
   }
 }

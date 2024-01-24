@@ -768,10 +768,7 @@ DataGridProRaw.propTypes = {
   /**
    * The column fields to display pinned to left or right.
    */
-  pinnedColumns: PropTypes.shape({
-    left: PropTypes.arrayOf(PropTypes.string),
-    right: PropTypes.arrayOf(PropTypes.string),
-  }),
+  pinnedColumns: PropTypes.object,
   /**
    * Rows data to pin on top or bottom.
    */
