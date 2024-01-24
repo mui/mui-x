@@ -23,6 +23,9 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
     to: { value: 1 },
     reset: true,
     immediate: skipAnimation,
+    config: {
+      friction: 100,
+    },
   });
 
   return to([value], interpolator);

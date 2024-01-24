@@ -6,6 +6,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -14,7 +15,6 @@ import {
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { animated } from '@react-spring/web';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -122,10 +122,10 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
  */
 function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, highlightScope, slots, slotProps, d, ...other } = props;
-
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
+
   const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
   const isFaded =
     !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
@@ -152,6 +152,7 @@ function AreaElement(props: AreaElementProps) {
   });
 
   const path = useAnimatedPath(d!);
+
   return <Area {...areaProps} d={path} />;
 }
 

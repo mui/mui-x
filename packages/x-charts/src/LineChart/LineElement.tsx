@@ -167,6 +167,7 @@ function LineElement(props: LineElementProps) {
   });
 
   const path = useAnimatedPath(d);
+
   return <Line {...lineProps} d={path} />;
 }
 
