@@ -59,11 +59,12 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 ## Column visibility panel
 
-The column visibility panel could be used to show or hide the columns. It reuses columns management component internally. It can be opened through the Data Grid toolbar. It exposes slotProps for both the panel (`slotProps.columnsPanel`) and the columns management component (`slotProps.columnsManagement`).
+The column visibility panel allows the user to control which columns are visible in the Data Grid.
 
-To enable it, you need to add `toolbar: GridToolbar` to the Data Grid `slots` prop. Or it could also be opened from the columns menu by clicking `Manage columns` item if its visible in the columns menu.
+The panel can be opened by:
 
-When the panel is open, the user can toggle the visibility of hideable columns by clicking the checkbox next to the column name. The user can also click the _Reset_ button to reset the visibility of all the columns to the initial state.
+- Clicking the _Columns_ button in the [toolbar](/x/react-data-grid/components/#toolbar).
+- Clicking the _Manage columns_ button in the [column menu](/x/react-data-grid/column-menu/).
 
 {{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
 

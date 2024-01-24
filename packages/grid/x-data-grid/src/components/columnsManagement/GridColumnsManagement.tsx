@@ -211,7 +211,12 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           variant="outlined"
           size="small"
           InputProps={{
-            startAdornment: <rootProps.slots.quickFilterIcon sx={{ pr: 1 }} />,
+            startAdornment: (
+              <rootProps.slots.baseInputAdornment position="start">
+                <rootProps.slots.quickFilterIcon />
+              </rootProps.slots.baseInputAdornment>
+            ),
+            sx: { pl: 1.5 },
           }}
           fullWidth
           {...rootProps.slotProps?.baseTextField}
@@ -228,8 +233,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 checked={columnVisibilityModel[column.field] !== false}
                 onClick={toggleColumn}
                 name={column.field}
-                size="small"
-                sx={{ py: 0.5 }}
+                sx={{ p: 0.5 }}
                 inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
                 {...rootProps.slotProps?.baseCheckbox}
               />
@@ -254,7 +258,6 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                   indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
                   onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
                   name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
-                  size="small"
                   {...rootProps.slotProps?.baseCheckbox}
                 />
               }
@@ -327,6 +330,7 @@ const GridColumnsManagementBody = styled('div', {
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
+  alignItems: 'flex-start',
 }));
 
 const GridColumnsManagementHeader = styled('div', {
@@ -342,7 +346,7 @@ const GridColumnsManagementFooter = styled('div', {
   slot: 'ColumnsManagementFooter',
   overridesResolver: (props, styles) => styles.columnsManagementFooter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 1, 0.5, 3),
+  padding: theme.spacing(0.5, 1, 0.5, 2.4),
   display: 'flex',
   justifyContent: 'space-between',
   borderTop: `1px solid ${theme.palette.divider}`,
