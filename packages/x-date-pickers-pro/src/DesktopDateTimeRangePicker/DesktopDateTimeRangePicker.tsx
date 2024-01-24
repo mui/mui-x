@@ -19,6 +19,7 @@ import {
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -126,6 +127,8 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const views = !shouldHoursRendererContainMeridiemView
     ? defaultizedProps.views.filter((view) => view !== 'meridiem')
     : defaultizedProps.views;
+  const actionBarActions: PickersActionBarAction[] =
+    defaultizedProps.shouldRenderTimeInASingleColumn ? [] : ['accept'];
 
   const props = {
     ...defaultizedProps,
@@ -155,6 +158,10 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: any) => ({
+        actions: actionBarActions,
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 

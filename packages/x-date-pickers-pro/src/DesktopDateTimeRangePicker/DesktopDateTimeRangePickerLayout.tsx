@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import Divider from '@mui/material/Divider';
 import {
   PickersLayoutContentWrapper,
   PickersLayoutProps,
@@ -18,6 +19,7 @@ export function DesktopDateTimeRangePickerLayout<TDate>(
 ) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref } = props;
+  const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
 
   return (
     <PickersLayoutRoot
@@ -25,8 +27,8 @@ export function DesktopDateTimeRangePickerLayout<TDate>(
       className={clsx(className, pickersLayoutClasses.root)}
       sx={[
         {
-          [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 3, gridColumn: '1 / 4' },
-          [`& .${pickersLayoutClasses.actionBar}`]: { gridRow: 4 },
+          [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },
+          [`& .${pickersLayoutClasses.actionBar}`]: { gridRow: 5 },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
@@ -40,6 +42,7 @@ export function DesktopDateTimeRangePickerLayout<TDate>(
       >
         {content}
       </PickersLayoutContentWrapper>
+      {isActionBarVisible && <Divider sx={{ gridRow: 3, gridColumn: '1/4' }} />}
       {tabs}
       {actionBar}
     </PickersLayoutRoot>
