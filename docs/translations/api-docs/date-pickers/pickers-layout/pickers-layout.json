@@ -17,10 +17,10 @@
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
-    "tabs": "Tabs enabling toggling between views.",
-    "toolbar": "Custom component for the toolbar. It is placed above the picker views.",
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "shortcuts": "Custom component for the shortcuts.",
-    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
+    "tabs": "Tabs enabling toggling between views.",
+    "toolbar": "Custom component for the toolbar. It is placed above the picker views."
   }
 }

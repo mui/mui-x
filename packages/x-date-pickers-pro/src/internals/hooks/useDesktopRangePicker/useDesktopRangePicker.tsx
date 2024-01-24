@@ -12,7 +12,6 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
-  UsePickerValueFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import {
   DesktopRangePickerAdditionalViewProps,
