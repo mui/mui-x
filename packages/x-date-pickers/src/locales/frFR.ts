@@ -40,11 +40,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Choix des ${views[view]}. ${
-      time === null
-        ? 'Aucune heure choisie'
-        : `L'heure choisie est ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Choix des ${views[view]}. ${time === null ? 'Aucune heure choisie' : `L'heure choisie est ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} heures`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,

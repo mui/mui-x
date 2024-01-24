@@ -41,9 +41,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${
-      time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

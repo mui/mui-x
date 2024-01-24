@@ -38,9 +38,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `选择 ${views[view]}. ${
-      time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`
-    }`,
+    `选择 ${views[view]}. ${time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,

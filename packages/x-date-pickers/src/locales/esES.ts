@@ -40,11 +40,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${
-      time === null
-        ? 'No hay hora seleccionada'
-        : `La hora seleccionada es ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleccione ${views[view]}. ${time === null ? 'No hay hora seleccionada' : `La hora seleccionada es ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,

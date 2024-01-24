@@ -40,11 +40,7 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Chọn ${views[view]}. ${
-      time === null
-        ? 'Không có giờ được chọn'
-        : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Chọn ${views[view]}. ${time === null ? 'Không có giờ được chọn' : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} giờ`,
   minutesClockNumberText: (minutes) => `${minutes} phút`,
   secondsClockNumberText: (seconds) => `${seconds} giây`,

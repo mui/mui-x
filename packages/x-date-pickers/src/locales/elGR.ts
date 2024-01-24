@@ -40,11 +40,7 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Επιλέξτε ${views[view]}. ${
-      time === null
-        ? 'Δεν έχει επιλεγεί ώρα'
-        : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Επιλέξτε ${views[view]}. ${time === null ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
