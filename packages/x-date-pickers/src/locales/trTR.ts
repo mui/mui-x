@@ -15,16 +15,20 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Sonraki ay',
 
   // View navigation
-  openPreviousView: 'sonraki görünüm',
-  openNextView: 'önceki görünüm',
+  openPreviousView: 'Sonraki görünüm',
+  openNextView: 'Önceki görünüm',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Başlangıç',
   end: 'Bitiş',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'iptal',

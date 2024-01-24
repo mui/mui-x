@@ -14,7 +14,6 @@ import {
 import {
   applyDefaultDate,
   BaseDateValidationProps,
-  DAY_MARGIN,
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
@@ -31,6 +30,7 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
+  useViews,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
@@ -55,6 +55,7 @@ import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
+import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 
 const releaseInfo = getReleaseInfo();
 
@@ -84,7 +85,6 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
@@ -134,10 +134,13 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
+    openTo: themeProps.openTo ?? 'day',
+    views: themeProps.views ?? ['day'],
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
+    availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
   };
 }
 
@@ -208,6 +211,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing,
     displayWeekNumber,
     timezone: timezoneProp,
+    availableRangePositions,
+    views,
+    view: inView,
+    openTo,
+    onViewChange,
     ...other
   } = props;
 
@@ -222,6 +230,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
+  });
+
+  const { setValueAndGoToNextView, view } = useViews({
+    view: inView,
+    views,
+    openTo,
+    onChange: handleValueChange,
+    onViewChange,
+    autoFocus,
   });
 
   const utils = useUtils<TDate>();
@@ -252,12 +269,20 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         range: value,
         rangePosition,
         allowRangeFlip,
+        shouldMergeDateAndTime: true,
       });
 
-      onRangePositionChange(nextSelection);
+      const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
+      if (isNextSectionAvailable) {
+        onRangePositionChange(nextSelection);
+      }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
-      handleValueChange(newRange, isFullRangeSelected ? 'finish' : 'partial');
+      setValueAndGoToNextView(
+        newRange,
+        isFullRangeSelected || !isNextSectionAvailable ? 'finish' : 'partial',
+        view,
+      );
     },
   );
 
@@ -622,6 +647,14 @@ DateRangeCalendar.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
+   * Range positions available for selection.
+   * This list is checked against when checking if a next range position can be selected.
+   *
+   * Used on Date Time Range pickers with current `rangePosition` to force a `finish` selection after just one range position selection.
+   * @default ['start', 'end']
+   */
+  availableRangePositions: PropTypes.arrayOf(PropTypes.oneOf(['end', 'start']).isRequired),
+  /**
    * The number of calendars to render.
    * @default 2
    */
@@ -692,6 +725,10 @@ DateRangeCalendar.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['day']),
+  /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
@@ -707,11 +744,20 @@ DateRangeCalendar.propTypes = {
   minDate: PropTypes.any,
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {DateRange<TDate>} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired on month change.
    * @template TDate
@@ -723,6 +769,18 @@ DateRangeCalendar.propTypes = {
    * @param {RangePosition} rangePosition The new range position.
    */
   onRangePositionChange: PropTypes.func,
+  /**
+   * Callback fired on view change.
+   * @template TView
+   * @param {TView} view The new view.
+   */
+  onViewChange: PropTypes.func,
+  /**
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
+   */
+  openTo: PropTypes.oneOf(['day']),
   /**
    * The position in the currently edited date range.
    * Used when the component position is controlled.
@@ -802,6 +860,16 @@ DateRangeCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day']),
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])),
 } as any;
 
 export { DateRangeCalendar };

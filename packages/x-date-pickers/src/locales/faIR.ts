@@ -22,9 +22,13 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
       ? 'نمای سال باز است، رفتن به نمای تقویم'
       : 'نمای تقویم باز است، رفتن به نمای سال',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'شروع',
   end: 'پایان',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'لغو',

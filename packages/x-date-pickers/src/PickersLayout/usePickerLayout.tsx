@@ -36,11 +36,11 @@ interface PickersLayoutPropsWithValueRequired<
 > extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
-interface UsePickerLayoutResponse extends SubComponents {}
+interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
 const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TDate, TView>,
-): UsePickerLayoutResponse => {
+): UsePickerLayoutResponse<TValue> => {
   const {
     wrapperVariant,
     onAccept,

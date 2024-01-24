@@ -23,9 +23,13 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
       ? 'Vizualizarea anuală este deschisă, comutați la vizualizarea calendarului'
       : 'Vizualizarea calendarului este deschisă, comutați la vizualizarea anuală',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Început',
   end: 'Sfârșit',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Anulare',

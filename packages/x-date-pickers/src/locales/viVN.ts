@@ -15,16 +15,20 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Tháng sau',
 
   // View navigation
-  openPreviousView: 'mở xem trước',
-  openNextView: 'mở xem sau',
+  openPreviousView: 'Mở xem trước',
+  openNextView: 'Mở xem sau',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'đang mở xem năm, chuyển sang xem lịch'
       : 'đang mở xem lịch, chuyển sang xem năm',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Bắt đầu',
   end: 'Kết thúc',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Hủy',

@@ -163,27 +163,31 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
                   view: 'hours',
                   views: ['hours'],
                   focusedView: focusedView && isInternalTimeView(focusedView) ? 'hours' : null,
-                  sx: {
-                    width: 'auto',
-                    [`&.${digitalClockClasses.root}`]: {
-                      maxHeight: VIEW_HEIGHT,
+                  sx: [
+                    {
+                      width: 'auto',
+                      [`&.${digitalClockClasses.root}`]: {
+                        maxHeight: VIEW_HEIGHT,
+                      },
                     },
                     ...(Array.isArray(sx) ? sx : [sx]),
-                  },
+                  ],
                 })
               : renderMultiSectionDigitalClockTimeView({
                   ...commonTimeProps,
                   view: isInternalTimeView(view) ? view : 'hours',
                   views: views.filter(isInternalTimeView),
                   focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
-                  sx: {
-                    borderBottom: 0,
-                    width: 'auto',
-                    [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-                      maxHeight: '100%',
+                  sx: [
+                    {
+                      borderBottom: 0,
+                      width: 'auto',
+                      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+                        maxHeight: '100%',
+                      },
                     },
                     ...(Array.isArray(sx) ? sx : [sx]),
-                  },
+                  ],
                 })}
           </React.Fragment>
         )}

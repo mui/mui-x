@@ -15,16 +15,20 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næsti mánuður',
 
   // View navigation
-  openPreviousView: 'opna fyrri skoðun',
-  openNextView: 'opna næstu skoðun',
+  openPreviousView: 'Opna fyrri skoðun',
+  openNextView: 'Opna næstu skoðun',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Upphaf',
   end: 'Endir',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Hætta við',

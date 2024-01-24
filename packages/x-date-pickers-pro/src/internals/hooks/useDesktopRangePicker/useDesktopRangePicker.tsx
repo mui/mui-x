@@ -60,6 +60,7 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
+  const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
 
@@ -81,12 +82,19 @@ export const useDesktopRangePicker = <
     ...pickerParams,
     props,
     wrapperVariant: 'desktop',
-    autoFocusView: true,
+    autoFocusView: false,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
     },
   });
+
+  React.useEffect(() => {
+    if (layoutProps.view) {
+      initialView.current = layoutProps.view;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
@@ -169,10 +177,18 @@ export const useDesktopRangePicker = <
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
+    initialView: initialView.current ?? undefined,
+    onViewChange: layoutProps.onViewChange,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
+    tabs: {
+      ...slotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    },
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

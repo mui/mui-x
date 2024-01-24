@@ -15,16 +15,20 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Próximo mes',
 
   // View navigation
-  openPreviousView: 'abrir la última vista',
-  openNextView: 'abrir la siguiente vista',
+  openPreviousView: 'Abrir la última vista',
+  openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Empezar',
   end: 'Terminar',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',

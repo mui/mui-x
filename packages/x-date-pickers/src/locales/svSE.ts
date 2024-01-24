@@ -15,16 +15,20 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Nästa månad',
 
   // View navigation
-  openPreviousView: 'öppna föregående vy',
-  openNextView: 'öppna nästa vy',
+  openPreviousView: 'Öppna föregående vy',
+  openNextView: 'Öppna nästa vy',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvyn är öppen, byt till kalendervy'
       : 'kalendervyn är öppen, byt till årsvy',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',

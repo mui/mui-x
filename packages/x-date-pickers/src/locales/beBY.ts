@@ -16,16 +16,20 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Наступны месяц',
 
   // View navigation
-  openPreviousView: 'адкрыць папярэдні выгляд',
-  openNextView: 'адкрыць наступны выгляд',
+  openPreviousView: 'Aдкрыць папярэдні выгляд',
+  openNextView: 'Aдкрыць наступны выгляд',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'гадавы выгляд адкрыты, перайсці да каляндарнага выгляду'
       : 'каляндарны выгляд адкрыты, перайсці да гадавога выгляду',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Пачатак',
   end: 'Канец',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Адмена',

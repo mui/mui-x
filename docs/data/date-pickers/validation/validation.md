@@ -116,7 +116,7 @@ Please note that `shouldDisableDate` will execute on every date rendered in the 
 
 #### Disable specific dates in range components [<span class="pro-premium"></span>](/x/introduction/licensing/#pro-plan)
 
-For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker` 🚧)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
+For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker`)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
 
 In the example below—the start date can't be in the weekend but the end date can.
 
