@@ -12,9 +12,9 @@ import {
   ExportedBaseToolbarProps,
   BaseFieldProps,
   DateOrTimeViewWithMeridiem,
+  UsePickerValueFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
