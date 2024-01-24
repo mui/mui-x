@@ -62,7 +62,7 @@ export interface UseMobilePickerSlotProps<
 > extends ExportedUseMobilePickerSlotProps<TDate, TView>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface MobileOnlyPickerProps<TDate>
+export interface MobileOnlyPickerProps<TDate extends PickerValidDate>
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null, FieldSection>,
