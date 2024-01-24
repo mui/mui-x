@@ -97,7 +97,7 @@ StaticTimePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -132,12 +132,12 @@ StaticTimePicker.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -199,7 +199,7 @@ StaticTimePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * Disable specific time.
    * @template TDate
@@ -238,7 +238,7 @@ StaticTimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

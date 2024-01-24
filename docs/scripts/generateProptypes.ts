@@ -10,6 +10,28 @@ import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-util
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
+  const isTDate = (name: string) => {
+    if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
+      const T_DATE_PROPS = [
+        'value',
+        'defaultValue',
+        'minDate',
+        'maxDate',
+        'minDateTime',
+        'maxDateTime',
+        'minTime',
+        'maxTime',
+        'referenceDate',
+      ];
+
+      if (T_DATE_PROPS.includes(name)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   const components = getPropTypesFromFile({
     filePath: sourceFile,
     project,
@@ -47,26 +69,13 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         return false;
       }
 
-      if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
-        const PICKERS_PROPS_TO_NOT_RESOLVE = [
-          'value',
-          'defaultValue',
-          'minDate',
-          'maxDate',
-          'minDateTime',
-          'maxDateTime',
-          'minTime',
-          'maxTime',
-          'referenceDate',
-        ];
-
-        if (PICKERS_PROPS_TO_NOT_RESOLVE.includes(name)) {
-          return false;
-        }
+      if (isTDate(name)) {
+        return false
       }
 
       return undefined;
     },
+    shouldUseObjectForDate: ({ name }) => isTDate(name),
   });
 
   if (components.length === 0) {
