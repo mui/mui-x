@@ -11,17 +11,18 @@ import { MultiInputDateTimeRangeFieldProps } from '../MultiInputDateTimeRangeFie
 import { MultiInputTimeRangeFieldProps } from '../MultiInputTimeRangeField';
 import { SingleInputDateTimeRangeFieldProps } from '../SingleInputDateTimeRangeField';
 import { SingleInputTimeRangeFieldProps } from '../SingleInputTimeRangeField';
-import { DateTimeRangePickerProps, DateTimeRangePickerToolbarProps } from '../DateTimeRangePicker';
+import { DateTimeRangePickerProps } from '../DateTimeRangePicker';
 import { DesktopDateTimeRangePickerProps } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicker';
 import { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
+import { ExportedDateTimeRangePickerToolbarProps } from '../DateTimeRangePicker/DateTimeRangePickerToolbar';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
   MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
-  MuiDateTimeRangePickerToolbar: DateTimeRangePickerToolbarProps<unknown>;
+  MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
 
   // Multi input range fields
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown>;

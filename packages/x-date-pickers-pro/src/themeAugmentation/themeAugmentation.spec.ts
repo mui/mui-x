@@ -94,7 +94,7 @@ createTheme({
 
     MuiDateTimeRangePickerToolbar: {
       defaultProps: {
-        toolbarVariant: 'desktop',
+        toolbarPlaceholder: 'empty',
         // @ts-expect-error invalid MuiDateTimeRangePickerToolbar prop
         someRandomProp: true,
       },
