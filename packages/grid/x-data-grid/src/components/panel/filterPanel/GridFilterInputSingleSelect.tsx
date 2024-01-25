@@ -137,7 +137,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           label={label}
           labelId={labelId}
           value={filterValue}
-          onChange={onFilterChange as any /* FIXME: typing error */}
+          onChange={onFilterChange}
           variant="standard"
           type={type || 'text'}
           inputProps={{

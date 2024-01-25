@@ -80,7 +80,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           id={selectId}
           label={label}
           value={filterValueState}
-          onChange={onFilterChange as any /* FIXME: typing error */}
+          onChange={onFilterChange}
           variant="standard"
           native={isSelectNative}
           displayEmpty
