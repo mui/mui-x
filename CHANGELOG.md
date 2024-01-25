@@ -14,29 +14,29 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@__6.19.2__`
+#### `@mui/x-date-pickers@6.19.2`
 
 - [pickers] Apply the `layout.tabs` class to `Tabs` slot (@LukasTy) (#11782)
 
-#### `@mui/x-date-pickers-pro@__6.19.2__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.19.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@__6.19.2__`, plus:
+Same changes as in `@mui/x-date-pickers@6.19.2`, plus:
 
 - [DateRangePicker] Remove `calendars` prop on `Mobile` (@LukasTy) (#11771)
 
 ### Data Grid
 
-#### `@mui/x-data-grid@__6.19.2__`
+#### `@mui/x-data-grid@6.19.2`
 
-- [data grid] Fix support for tree with > 50,000 children (@zenazn) (#11808)
+- [DataGrid] Fix support for tree with > 50,000 children (@zenazn) (#11808)
 
-#### `@mui/x-data-grid-pro@__6.19.2__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@6.19.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@__6.19.2__`.
+Same changes as in `@mui/x-data-grid@6.19.2`.
 
-#### `@mui/x-data-grid-premium@__6.19.2__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@6.19.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@__6.19.2__`.
+Same changes as in `@mui/x-data-grid-pro@6.19.2`.
 
 ## 6.19.1
 
