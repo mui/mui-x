@@ -36,7 +36,7 @@ The component API is almost the same as that of Columns Panel, with a few except
 - The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://next.mui.com/material-ui/react-popper/) component under the hood.
 
   ```diff
-  <DataGrid
+   <DataGrid
     slotProps={{
   -   columnsPanel: {
   +   columnsManagement: {
@@ -44,6 +44,7 @@ The component API is almost the same as that of Columns Panel, with a few except
         autoFocusSearchField: false,
       },
     }}
+   />
   ```
 
 - `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
