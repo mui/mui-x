@@ -14,12 +14,12 @@ import { SingleInputTimeRangeFieldProps } from '../SingleInputTimeRangeField';
 import { DateTimeRangePickerProps, DateTimeRangePickerToolbarProps } from '../DateTimeRangePicker';
 import { DesktopDateTimeRangePickerProps } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicker';
-import { DateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
+import { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
-  MuiDateTimeRangePickerTabs: DateTimeRangePickerTabsProps;
+  MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
   MuiDateTimeRangePickerToolbar: DateTimeRangePickerToolbarProps<unknown>;
 
