@@ -25,6 +25,7 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid } from '../ChartsGrid';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -149,6 +150,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
+      <ChartsGrid vertical horizontal />
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       </g>
@@ -160,6 +162,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         slots={slots}
         slotProps={slotProps}
       />
+
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...defaultizedAxisHighlight} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />

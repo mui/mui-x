@@ -26,6 +26,7 @@ import {
   ChartsVoronoiHandler,
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import { ChartsGrid } from '../ChartsGrid';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -120,6 +121,8 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         slots={slots}
         slotProps={slotProps}
       />
+
+      <ChartsGrid vertical horizontal />
       <ScatterPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />

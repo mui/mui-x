@@ -32,6 +32,7 @@ import {
   LineHighlightPlotSlots,
   LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
+import { ChartsGrid } from '../ChartsGrid';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -152,6 +153,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
+      <ChartsGrid vertical horizontal />
       <g clipPath={`url(#${clipPathId})`}>
         <AreaPlot slots={slots} slotProps={slotProps} />
         <LinePlot slots={slots} slotProps={slotProps} />

@@ -1,6 +1,6 @@
 ---
 title: React Scatter chart
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
+components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
 ---
 
 # Charts - Scatter
