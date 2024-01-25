@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.2
+
+_Jan 25, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Apply the `layout.tabs` class to `Tabs` slot (@LukasTy) (#11782)
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.2`
+
+- [pickers] Apply the `layout.tabs` class to `Tabs` slot (@LukasTy) (#11782)
+
+#### `@mui/x-date-pickers-pro@6.19.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.2`, plus:
+
+- [DateRangePicker] Remove `calendars` prop on `Mobile` (@LukasTy) (#11771)
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.2`
+
+- [DataGrid] Fix support for tree with more than 50,000 children (@zenazn) (#11808)
+
+#### `@mui/x-data-grid-pro@6.19.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.2`.
+
+#### `@mui/x-data-grid-premium@6.19.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.2`.
+
 ## 6.19.1
 
 _Jan 19, 2024_
