@@ -61,7 +61,7 @@ function MarkPlot(props: MarkPlotProps) {
   return (
     <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.flatMap((seriesId) => {
+        return groupIds.map((seriesId) => {
           const {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
@@ -101,55 +101,59 @@ function MarkPlot(props: MarkPlotProps) {
             );
           }
 
-          return xData
-            ?.map((x, index) => {
-              const value = data[index] == null ? null : stackedData[index][1];
-              return {
-                x: xScale(x),
-                y: value === null ? null : yScale(value)!,
-                position: x,
-                value,
-                index,
-              };
-            })
-            .filter(({ x, y, index, position, value }) => {
-              if (value === null || y === null) {
-                // Remove missing data point
-                return false;
-              }
-              if (!isInRange({ x, y })) {
-                // Remove out of range
-                return false;
-              }
-              if (showMark === true) {
-                return true;
-              }
-              return showMark({
-                x,
-                y,
-                index,
-                position,
-                value,
-              });
-            })
-            .map(({ x, y, index }) => {
-              const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
-              return (
-                <g key={`${seriesId}-${index}`} clipPath={`url(#${clipId})`}>
-                  <Mark
-                    id={seriesId}
-                    dataIndex={index}
-                    shape="circle"
-                    color={series[seriesId].color}
-                    x={x}
-                    y={y!} // Don't knwo why TS don't get from the filter that y can't be null
-                    highlightScope={series[seriesId].highlightScope}
-                    skipAnimation={skipAnimation}
-                    {...slotProps?.mark}
-                  />
-                </g>
-              );
-            });
+          const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
+
+          return (
+            <g key={seriesId} clipPath={`url(#${clipId})`}>
+              {xData
+                ?.map((x, index) => {
+                  const value = data[index] == null ? null : stackedData[index][1];
+                  return {
+                    x: xScale(x),
+                    y: value === null ? null : yScale(value)!,
+                    position: x,
+                    value,
+                    index,
+                  };
+                })
+                .filter(({ x, y, index, position, value }) => {
+                  if (value === null || y === null) {
+                    // Remove missing data point
+                    return false;
+                  }
+                  if (!isInRange({ x, y })) {
+                    // Remove out of range
+                    return false;
+                  }
+                  if (showMark === true) {
+                    return true;
+                  }
+                  return showMark({
+                    x,
+                    y,
+                    index,
+                    position,
+                    value,
+                  });
+                })
+                .map(({ x, y, index }) => {
+                  return (
+                    <Mark
+                      key={`${seriesId}-${index}`}
+                      id={seriesId}
+                      dataIndex={index}
+                      shape="circle"
+                      color={series[seriesId].color}
+                      x={x}
+                      y={y!} // Don't knwo why TS don't get from the filter that y can't be null
+                      highlightScope={series[seriesId].highlightScope}
+                      skipAnimation={skipAnimation}
+                      {...slotProps?.mark}
+                    />
+                  );
+                })}
+            </g>
+          );
         });
       })}
     </g>
