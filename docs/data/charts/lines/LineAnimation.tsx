@@ -16,7 +16,6 @@ const defaultSeries = [
   { data: [7, 6, 1, 6, 4, 4, 6], area: true, stack: '1' },
   { data: [4, 3, 1, 6, 6, 3, 5], area: true, stack: '1' },
   { data: [7, 6, 2, 7, 4, 2, 7], area: true, stack: '1' },
-  // { data: [5, 3, 4, 4, 4, 4, 7], area: true, stack: '1' },
 ].map((item, index) => ({
   ...item,
   id: index.toString(),
