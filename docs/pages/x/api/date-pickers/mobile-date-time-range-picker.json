@@ -23,7 +23,9 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "defaultValue": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Date<br>&#124;&nbsp;object&gt;" }
+    },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -45,10 +47,10 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "any" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
+    "maxTime": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
+    "minDate": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
+    "minTime": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
@@ -106,7 +108,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
@@ -171,7 +173,9 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Date<br>&#124;&nbsp;object&gt;" }
+    },
     "view": {
       "type": {
         "name": "enum",
