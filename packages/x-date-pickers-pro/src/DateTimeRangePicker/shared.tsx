@@ -15,6 +15,7 @@ import {
   TimeViewWithMeridiem,
   resolveTimeViewsResponse,
   UseViewsOptions,
+  DateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
@@ -86,7 +87,8 @@ export interface BaseDateTimeRangePickerProps<TDate>
     DesktopOnlyTimePickerProps<TDate>,
     Partial<
       Pick<UseViewsOptions<DateRange<TDate>, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
-    > {
+    >,
+    DateTimeValidationProps<TDate> {
   /**
    * Overridable component slots.
    * @default {}
