@@ -54,6 +54,21 @@ const apiPages: MuiPage[] = [
     title: 'DateTimePickerToolbar',
   },
   {
+    pathname: '/x/api/date-pickers/date-time-range-picker',
+    title: 'DateTimeRangePicker',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/date-time-range-picker-tabs',
+    title: 'DateTimeRangePickerTabs',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/date-time-range-picker-toolbar',
+    title: 'DateTimeRangePickerToolbar',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/day-calendar-skeleton',
     title: 'DayCalendarSkeleton',
   },
@@ -69,6 +84,11 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/desktop-date-time-picker',
     title: 'DesktopDateTimePicker',
+  },
+  {
+    pathname: '/x/api/date-pickers/desktop-date-time-range-picker',
+    title: 'DesktopDateTimeRangePicker',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/date-pickers/desktop-time-picker',
@@ -94,6 +114,11 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/mobile-date-time-picker',
     title: 'MobileDateTimePicker',
+  },
+  {
+    pathname: '/x/api/date-pickers/mobile-date-time-range-picker',
+    title: 'MobileDateTimeRangePicker',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/date-pickers/mobile-time-picker',

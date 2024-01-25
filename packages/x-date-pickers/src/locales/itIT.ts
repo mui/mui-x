@@ -15,16 +15,20 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Mese successivo',
 
   // View navigation
-  openPreviousView: 'apri la vista precedente',
-  openNextView: 'apri la vista successiva',
+  openPreviousView: 'Apri la vista precedente',
+  openNextView: 'Apri la vista successiva',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Inizio',
   end: 'Fine',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancellare',

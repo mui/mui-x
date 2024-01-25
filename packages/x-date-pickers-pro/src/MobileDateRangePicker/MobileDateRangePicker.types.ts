@@ -19,7 +19,7 @@ export interface MobileDateRangePickerSlotProps<
   TDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure>, 'tabs'> {}
 
 export interface MobileDateRangePickerProps<
   TDate,

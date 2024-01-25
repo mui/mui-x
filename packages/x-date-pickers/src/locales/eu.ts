@@ -22,9 +22,13 @@ const euPickers: Partial<PickersLocaleText<any>> = {
       ? 'urteko bista irekita dago, aldatu egutegi bistara'
       : 'egutegi bista irekita dago, aldatu urteko bistara',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Hasi',
   end: 'Bukatu',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Utxi',

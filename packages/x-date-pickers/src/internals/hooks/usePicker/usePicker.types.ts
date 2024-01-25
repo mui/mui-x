@@ -52,7 +52,7 @@ export interface UsePickerParams<
     >,
     Pick<
       UsePickerViewParams<TValue, TDate, TView, TSection, TExternalProps, TAdditionalProps>,
-      'additionalViewProps' | 'autoFocusView' | 'fieldRef'
+      'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     > {
   props: TExternalProps;
 }

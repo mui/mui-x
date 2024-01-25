@@ -26,7 +26,7 @@ export type PickerViewsRendererProps<
     onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
   };
 
-type PickerViewRenderer<
+export type PickerViewRenderer<
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
@@ -122,6 +122,21 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   autoFocusView: boolean;
   fieldRef: React.RefObject<FieldRef<TSection>> | undefined;
+  /**
+   * A function that intercepts the regular picker rendering.
+   * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
+   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
+   * @param {TView} popperView The current picker view.
+   * @param {any} rendererProps All the props that are being passed down to the renderer.
+   * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
+   */
+  rendererInterceptor?: (
+    viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
+    popperView: TView,
+    rendererProps: Omit<TExternalProps, 'className' | 'sx'> &
+      TAdditionalProps &
+      UsePickerValueViewsResponse<TValue>,
+  ) => React.ReactNode;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
@@ -159,6 +174,7 @@ export const usePickerViews = <
   propsFromPickerValue,
   additionalViewProps,
   autoFocusView,
+  rendererInterceptor,
   fieldRef,
 }: UsePickerViewParams<
   TValue,
@@ -287,7 +303,7 @@ export const usePickerViews = <
         return null;
       }
 
-      return renderer({
+      const rendererProps = {
         ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,
@@ -300,7 +316,13 @@ export const usePickerViews = <
         onFocusedViewChange: setFocusedView,
         showViewSwitcher: timeViewsCount > 1,
         timeViewsCount,
-      });
+      };
+
+      if (rendererInterceptor) {
+        return rendererInterceptor(viewRenderers, popperView, rendererProps);
+      }
+
+      return renderer(rendererProps);
     },
   };
 };

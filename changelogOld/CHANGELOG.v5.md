@@ -791,7 +791,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
   You can now group columns using the `columnGroupingModel` prop. This lets you to display more structured data.
 
-  <img src="https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png" width="800" />
+  <img src="https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png" width="800" alt="Column grouping example" />
 
   To enable this feature, add `experimentalFeatures={{ columnGrouping: true }}`.
   The grouping header can be fully customized.
@@ -1326,7 +1326,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/row-height/#dynamic-row-height) (#4859) @m4theushw
 
-  <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
+  <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800" alt="Dynamic row height example">
 
 - ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
 
@@ -1411,7 +1411,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - 📃 Add support for column spanning when exporting to Excel (#4830) @cherniavskii
 
-  <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800">
+  <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800" alt="Column spanning in Excel export example">
 
 - 🐞 Bugs fixes
 
@@ -1517,7 +1517,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🔎 **Quick filtering**. You can now add a quick filtering search bar to your grid. To do so, either pass `showQuickFilter` prop to the `<GridToolbar />` or use the `<GridToolbarQuickFilter />` component in your custom toolbar. More information about how to customize the filtering logic is in the [documentation](https://mui.com/x/react-data-grid/filtering/quick-filter/).
 
-  <img src="https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png" width="724">
+  <img src="https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png" width="724" alt="Quick filtering example">
 
 - 🐞 Bugs fixes
 
@@ -1643,7 +1643,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/row-ordering/) (#4034) @DanailH
 
-  <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800">
+  <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800" alt="Row reordering example">
 
 - 🐞 Bug fixes
 
@@ -1683,7 +1683,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 🎁 Add support for [Column spanning](https://mui.com/x/react-data-grid/column-spanning/) (#4020) @cherniavskii
 
-  <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
+  <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788" alt="Column spanning example">
 
 - 📚 New standalone documentation for MUI X (#4313) @siriwatknp
 
@@ -2109,7 +2109,7 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 
 - 🎁 Add support for [master/detail](https://mui.com/x/react-data-grid/group-pivot/#master-detail) (#3387) @m4theushw
 
-  <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814">
+  <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814" alt="Data Grid master/detail example">
 
 - 🌍 Add Danish (da-DK) locale (#3800) @kasperfilstrup
 - 📚 Documentation improvements
@@ -2256,7 +2256,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
   The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
 
-  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770">
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770" alt="Is any of filter operator example">
 
 - ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
 
@@ -2462,7 +2462,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - 🚀 Introduce the [column pinning](https://mui.com/x/react-data-grid/column-pinning/) feature (#2946) @m4theushw
 
-  <img src="https://user-images.githubusercontent.com/42154031/145425635-b6314fbe-2f1e-4b73-908f-33ee1fda20c7.gif" width="964" height="657">
+  <img src="https://user-images.githubusercontent.com/42154031/145425635-b6314fbe-2f1e-4b73-908f-33ee1fda20c7.gif" width="964" height="657" alt="Column pinning example">
 
 - 🔥 Add ability to disable export options (#3270) @alexfauquette
 
@@ -2542,7 +2542,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 
 - 🚀 Introduce the [tree data](https://mui.com/x/react-data-grid/group-pivot/#tree-data) feature (#2725) @flaviendelangle
 
-  <img src="https://user-images.githubusercontent.com/42154031/144259216-fc4f90ac-4d8b-4253-bc95-009204349a4c.gif" width="854" height="453" />
+  <img src="https://user-images.githubusercontent.com/42154031/144259216-fc4f90ac-4d8b-4253-bc95-009204349a4c.gif" width="854" height="453" alt="Data Grid tree data example" />
 
 - 💅 Add support for `sx` prop in the DataGrid and DataGridPro (#3281) @m4theushw
 - 🔦 Improve focus management in the filter panel (#3004) @alexfauquette

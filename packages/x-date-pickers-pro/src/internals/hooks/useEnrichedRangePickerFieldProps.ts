@@ -7,8 +7,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import {
   BaseSingleInputFieldProps,
-  FieldRef,
   FieldSelectedSections,
+  FieldRef,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
@@ -113,6 +113,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  currentView?: TView | null;
+  initialView?: TView;
+  onViewChange?: (view: TView) => void;
   startFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
   endFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
 }
@@ -137,6 +140,9 @@ const useMultiInputFieldSlotProps = <
   pickerSlots,
   fieldProps,
   anchorRef,
+  currentView,
+  initialView,
+  onViewChange,
   startFieldRef,
   endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
@@ -164,17 +170,28 @@ const useMultiInputFieldSlotProps = <
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 
+  const previousRangePosition = React.useRef<RangePosition>(rangePosition);
+
   React.useEffect(() => {
     if (!open) {
       return;
     }
 
-    if (rangePosition === 'start') {
-      startFieldRef.current?.focusField();
-    } else if (rangePosition === 'end') {
-      endFieldRef.current?.focusField();
+    const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
+    currentFieldRef.current?.focusField();
+    if (!currentFieldRef.current || !currentView) {
+      // could happen when the user is switching between the inputs
+      previousRangePosition.current = rangePosition;
+      return;
     }
-  }, [rangePosition, open, startFieldRef, endFieldRef]);
+
+    // bring back focus to the field
+    currentFieldRef.current.setSelectedSections(
+      // use the current view or `0` when the range position has just been swapped
+      previousRangePosition.current === rangePosition ? currentView : 0,
+    );
+    previousRangePosition.current = rangePosition;
+  }, [rangePosition, open, currentView, startFieldRef, endFieldRef]);
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
@@ -195,12 +212,18 @@ const useMultiInputFieldSlotProps = <
   const handleFocusStart = () => {
     if (open) {
       onRangePositionChange('start');
+      if (previousRangePosition.current !== 'start' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
   const handleFocusEnd = () => {
     if (open) {
       onRangePositionChange('end');
+      if (previousRangePosition.current !== 'end' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
@@ -306,6 +329,7 @@ const useSingleInputFieldSlotProps = <
   pickerSlotProps,
   fieldProps,
   anchorRef,
+  currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -338,10 +362,16 @@ const useSingleInputFieldSlotProps = <
       return;
     }
 
-    const newSelectedSection =
-      rangePosition === 'start' ? 0 : startFieldRef.current.getSections().length / 2;
-    startFieldRef.current?.focusField(newSelectedSection);
-  }, [rangePosition, open, startFieldRef]);
+    // bring back focus to the field with the current view section selected
+    if (currentView) {
+      const sections = startFieldRef.current.getSections().map((section) => section.type);
+      const newSelectedSection =
+        rangePosition === 'start'
+          ? sections.indexOf(currentView)
+          : sections.lastIndexOf(currentView);
+      startFieldRef.current?.focusField(newSelectedSection);
+    }
+  }, [rangePosition, open, currentView, startFieldRef]);
 
   const updateRangePosition = () => {
     if (!startFieldRef.current?.isFieldFocused()) {

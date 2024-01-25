@@ -16,16 +16,20 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Predchádzajúci mesiac',
 
   // View navigation
-  openPreviousView: 'otvoriť predchádzajúce zobrazenie',
-  openNextView: 'otvoriť ďalšie zobrazenie',
+  openPreviousView: 'Otvoriť predchádzajúce zobrazenie',
+  openNextView: 'Otvoriť ďalšie zobrazenie',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ročné zobrazenie otvorené, prepnite do zobrazenia kalendára'
       : 'zobrazenie kalendára otvorené, prepnite do zobrazenia roka',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začiatok',
   end: 'Koniec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Zrušiť',

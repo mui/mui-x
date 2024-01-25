@@ -22,9 +22,13 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
       ? 'תצוגת שנה פתוחה, מעבר לתצוגת לוח שנה'
       : 'תצוגת לוח שנה פתוחה, מעבר לתצוגת שנה',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'תחילה',
   end: 'סיום',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'ביטול',

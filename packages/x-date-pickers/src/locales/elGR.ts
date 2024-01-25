@@ -15,16 +15,20 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Επόμενος μήνας',
 
   // View navigation
-  openPreviousView: 'ανοίγμα προηγούμενης προβολή',
-  openNextView: 'ανοίγμα επόμενης προβολή',
+  openPreviousView: 'Άνοίγμα προηγούμενης προβολή',
+  openNextView: 'Άνοίγμα επόμενης προβολή',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'η προβολή έτους είναι ανοιχτή, μεταβείτε στην προβολή ημερολογίου'
       : 'η προβολή ημερολογίου είναι ανοιχτή, μεταβείτε στην προβολή έτους',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Αρχή',
   end: 'Τέλος',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Άκυρο',

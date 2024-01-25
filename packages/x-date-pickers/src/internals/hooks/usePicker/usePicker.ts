@@ -28,6 +28,7 @@ export const usePicker = <
   additionalViewProps,
   validator,
   autoFocusView,
+  rendererInterceptor,
   fieldRef,
 }: UsePickerParams<
   TValue,
@@ -63,6 +64,7 @@ export const usePicker = <
     autoFocusView,
     fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,
+    rendererInterceptor,
   });
 
   const pickerLayoutResponse = usePickerLayoutProps({

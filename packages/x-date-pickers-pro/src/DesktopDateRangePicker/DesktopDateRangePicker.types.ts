@@ -19,7 +19,10 @@ export interface DesktopDateRangePickerSlotProps<
   TDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateRangePickerSlotProps<TDate>,
-    UseDesktopRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure> {}
+    Omit<
+      UseDesktopRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure>,
+      'tabs'
+    > {}
 
 export interface DesktopDateRangePickerProps<
   TDate,
