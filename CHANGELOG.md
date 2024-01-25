@@ -28,7 +28,7 @@ Same changes as in `@mui/x-date-pickers@6.19.2`, plus:
 
 #### `@mui/x-data-grid@6.19.2`
 
-- [DataGrid] Fix support for tree with > 50,000 children (@zenazn) (#11808)
+- [DataGrid] Fix support for tree with more than 50,000 children (@zenazn) (#11808)
 
 #### `@mui/x-data-grid-pro@6.19.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
