@@ -98,6 +98,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 - [docs] Fix typo in Data Grid components page (#11775) @flaviendelangle
 - [docs] Fix use of quote, should use callout (#11759) @oliviertassinari
 - [docs] Improve error message for MUI Vale rule @oliviertassinari
+- [docs] Include `DateTimeRangePicker` in relevant demos (#11815) @LukasTy
 
 ### Core
 
