@@ -429,7 +429,7 @@ DateCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -473,11 +473,11 @@ DateCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -537,7 +537,7 @@ DateCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -609,7 +609,7 @@ DateCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

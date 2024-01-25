@@ -228,8 +228,7 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]))
-    .isRequired,
+  value: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Currently visible picker view.
    */

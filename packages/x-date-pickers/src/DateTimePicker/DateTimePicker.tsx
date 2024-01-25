@@ -80,7 +80,7 @@ DateTimePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  defaultValue: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -160,29 +160,29 @@ DateTimePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxDate: PropTypes.object,
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxDateTime: PropTypes.object,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minDate: PropTypes.object,
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minDateTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -279,7 +279,7 @@ DateTimePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -408,7 +408,7 @@ DateTimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

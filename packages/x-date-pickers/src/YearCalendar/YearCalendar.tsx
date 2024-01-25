@@ -334,7 +334,7 @@ YearCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  defaultValue: PropTypes.object,
   /**
    * If `true` picker is disabled
    */
@@ -359,11 +359,11 @@ YearCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -380,7 +380,7 @@ YearCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * Disable specific year.
    * @template TDate
@@ -408,7 +408,7 @@ YearCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * Years rendered per row.
    * @default 3

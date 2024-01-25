@@ -106,9 +106,7 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
-  ),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -201,12 +199,12 @@ SingleInputTimeRangeField.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -254,7 +252,7 @@ SingleInputTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -350,7 +348,7 @@ SingleInputTimeRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object])),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The variant to use.
    * @default 'outlined'

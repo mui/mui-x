@@ -428,7 +428,7 @@ DateTimePickerToolbar.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */

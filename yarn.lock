@@ -1868,7 +1868,7 @@
 
 "@mui/monorepo@https://github.com/flaviendelangle/material-ui.git#date-resolve":
   version "5.15.6"
-  resolved "https://github.com/mui/material-ui.git#b63fb955e6cfab340fdc3597fbb399493d39d81d"
+  resolved "https://github.com/flaviendelangle/material-ui.git#5eefa3caa925d6390a52ac3b1933ed884d60c12b"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"

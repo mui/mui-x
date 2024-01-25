@@ -148,7 +148,7 @@ DatePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */

@@ -683,9 +683,7 @@ DateRangeCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
-  ),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -739,11 +737,11 @@ DateRangeCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -802,7 +800,7 @@ DateRangeCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  referenceDate: PropTypes.object,
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -861,7 +859,7 @@ DateRangeCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object])),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The visible view.
    * Used when the component view is controlled.
