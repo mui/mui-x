@@ -38,12 +38,10 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Imprimir',
   toolbarExportExcel: 'Baixe como Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Encontrar coluna',
-  columnsPanelTextFieldPlaceholder: 'Título da coluna',
-  columnsPanelDragIconLabel: 'Reordenar coluna',
-  columnsPanelShowAllButton: 'Mostre tudo',
-  columnsPanelHideAllButton: 'Esconda tudo',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',

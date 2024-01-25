@@ -15,16 +15,20 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Neste måned',
 
   // View navigation
-  openPreviousView: 'åpne forrige visning',
-  openNextView: 'åpne neste visning',
+  openPreviousView: 'Åpne forrige visning',
+  openNextView: 'Åpne neste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slutt',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -40,9 +44,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Velg ${timeViews[view]}. ${
-      time === null ? 'Ingen tid valgt' : `Valgt tid er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Velg ${timeViews[view]}. ${time === null ? 'Ingen tid valgt' : `Valgt tid er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,

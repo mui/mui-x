@@ -37,12 +37,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '打印',
   toolbarExportExcel: '导出至Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: '搜索列',
-  columnsPanelTextFieldPlaceholder: '列名',
-  columnsPanelDragIconLabel: '重排序列',
-  columnsPanelShowAllButton: '显示所有',
-  columnsPanelHideAllButton: '隐藏所有',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',

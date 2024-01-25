@@ -38,12 +38,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Imprimer',
   toolbarExportExcel: 'Télécharger pour Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Chercher une colonne',
-  columnsPanelTextFieldPlaceholder: 'Titre de la colonne',
-  columnsPanelDragIconLabel: 'Réorganiser la colonne',
-  columnsPanelShowAllButton: 'Tout afficher',
-  columnsPanelHideAllButton: 'Tout cacher',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',

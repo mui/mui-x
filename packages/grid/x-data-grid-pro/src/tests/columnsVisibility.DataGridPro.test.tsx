@@ -121,7 +121,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
   });
 
   it('should not hide column when resizing a column after hiding it and showing it again', () => {
-    const { getByText } = render(
+    const { getByRole } = render(
       <TestDataGridPro
         initialState={{
           columns: { columnVisibilityModel: {} },
@@ -130,7 +130,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    fireEvent.click(getByText('Hide all'));
+    const showHideAllCheckbox = getByRole('checkbox', { name: 'Show/Hide All' });
+    fireEvent.click(showHideAllCheckbox);
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
     fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);

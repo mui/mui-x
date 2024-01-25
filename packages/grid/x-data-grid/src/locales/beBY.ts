@@ -61,12 +61,10 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Спампаваць у фармаце Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Знайсці слупок',
-  columnsPanelTextFieldPlaceholder: 'Загаловак слупка',
-  columnsPanelDragIconLabel: 'Змяніць чарговасць слупкоў',
-  columnsPanelShowAllButton: 'Паказаць усе',
-  columnsPanelHideAllButton: 'Схаваць усе',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',

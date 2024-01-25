@@ -16,7 +16,7 @@ export interface DesktopDateRangePickerSlots<TDate>
 
 export interface DesktopDateRangePickerSlotProps<TDate>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseDesktopRangePickerSlotProps<TDate, 'day'> {}
+    Omit<UseDesktopRangePickerSlotProps<TDate, 'day'>, 'tabs'> {}
 
 export interface DesktopDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,

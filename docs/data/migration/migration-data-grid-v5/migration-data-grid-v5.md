@@ -276,7 +276,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
 - If you are using Custom Column Menu using `components.ColumnMenu` or `slots.columnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
-  :::
+
+:::
 
 ### Rows
 

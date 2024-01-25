@@ -1,0 +1,26 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
+    "onViewChange": {
+      "description": "Callback called when a toolbar is clicked",
+      "typeDescriptions": { "view": "The view to open" }
+    },
+    "toolbarFormat": { "description": "Toolbar date format." },
+    "toolbarPlaceholder": {
+      "description": "Toolbar value placeholder—it is displayed when the value is empty."
+    },
+    "view": { "description": "Currently visible picker view." }
+  },
+  "classDescriptions": {
+    "endToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the end toolbar element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "startToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the start toolbar element"
+    }
+  }
+}

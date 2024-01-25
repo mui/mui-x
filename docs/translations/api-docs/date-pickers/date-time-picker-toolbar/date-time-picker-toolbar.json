@@ -11,6 +11,9 @@
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
     },
+    "toolbarTitle": {
+      "description": "If provided, it will be used instead of <code>dateTimePickerToolbarTitle</code> from localization."
+    },
     "view": { "description": "Currently visible picker view." }
   },
   "classDescriptions": {
