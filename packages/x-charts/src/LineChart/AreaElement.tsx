@@ -66,7 +66,7 @@ export const AreaElementPath = styled(animated.path, {
     ? d3Color(ownerState.color)!.brighter(1).formatHex()
     : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: ownerState.isFaded ? 0.3 : 0.7,
+  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
 AreaElementPath.propTypes = {
@@ -176,6 +176,7 @@ function AreaElement(props: AreaElementProps) {
     to: { animatedWidth: width + left + right },
     reset: false,
     immediate: skipAnimation,
+    delay: skipAnimation ? 0 : 100,
   });
   const clipId = cleanId(`${chartId}-${id}-area-clip`);
   return (
