@@ -27,9 +27,9 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   const publish = React.useCallback(
     (
-        eventName: keyof GridHeaderFilterEventLookup,
-        propHandler?: React.EventHandler<any>,
-      ) =>
+      eventName: keyof GridHeaderFilterEventLookup,
+      propHandler?: React.EventHandler<any>,
+    ) =>
       (event: React.SyntheticEvent) => {
         apiRef.current.publishEvent(
           eventName,

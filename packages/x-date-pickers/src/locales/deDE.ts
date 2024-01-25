@@ -23,9 +23,13 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Beginn',
   end: 'Ende',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Abbrechen',
@@ -41,11 +45,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} auswählen. ${
-      time === null
-        ? 'Keine Uhrzeit ausgewählt'
-        : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} auswählen. ${time === null ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,

@@ -19,16 +19,16 @@ The Tree View also supports multi-selection:
 
 ## Controlled selection
 
-Use the `selected` prop to control the selected items.
+Use the `selectedNodes` prop to control the selected items.
 
-You can use the `onNodeSelect` prop to listen to changes in the selected items and update the prop accordingly.
+You can use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 
 :::info
 
-- The selection is **controlled** when its parent manages it by providing a `selected` prop.
-- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelected` prop.
+- The selection is **controlled** when its parent manages it by providing a `selectedNodes` prop.
+- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelectedNodes` prop.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::

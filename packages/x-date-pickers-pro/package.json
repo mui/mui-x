@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "7.0.0-alpha.8",
+  "version": "7.0.0-alpha.9",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,12 +43,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.8",
-    "@mui/base": "^5.0.0-beta.29",
-    "@mui/system": "^5.15.2",
-    "@mui/utils": "^5.15.2",
-    "@mui/x-date-pickers": "7.0.0-alpha.8",
-    "@mui/x-license-pro": "7.0.0-alpha.8",
-    "clsx": "^2.0.0",
+    "@mui/base": "^5.0.0-beta.32",
+    "@mui/system": "^5.15.5",
+    "@mui/utils": "^5.15.5",
+    "@mui/x-date-pickers": "7.0.0-alpha.9",
+    "@mui/x-license-pro": "7.0.0-alpha.9",
+    "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
   },
@@ -96,11 +96,11 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.1",
+    "@types/luxon": "^3.4.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "luxon": "^3.4.4",
-    "moment": "^2.29.4"
+    "moment": "^2.30.1"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

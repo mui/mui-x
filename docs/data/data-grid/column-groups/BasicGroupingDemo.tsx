@@ -55,7 +55,6 @@ export default function BasicGroupingDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        experimentalFeatures={{ columnGrouping: true }}
         rows={rows}
         columns={columns}
         checkboxSelection

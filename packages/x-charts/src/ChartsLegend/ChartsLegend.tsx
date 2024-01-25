@@ -171,7 +171,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
         fill: (theme.vars || theme).palette.text.primary,
         lineHeight: 1,
         ...inLabelStyle,
-      } as ChartsTextStyle), // To say to TS that the dominantBaseline and textAnchor are correct
+      }) as ChartsTextStyle, // To say to TS that the dominantBaseline and textAnchor are correct
     [inLabelStyle, theme],
   );
 

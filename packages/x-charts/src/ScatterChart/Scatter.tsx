@@ -140,28 +140,7 @@ Scatter.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
    */
   onItemClick: PropTypes.func,
-  series: PropTypes.shape({
-    color: PropTypes.string.isRequired,
-    data: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-      }),
-    ).isRequired,
-    disableHover: PropTypes.bool,
-    highlightScope: PropTypes.shape({
-      faded: PropTypes.oneOf(['global', 'none', 'series']),
-      highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-    }),
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    markerSize: PropTypes.number,
-    type: PropTypes.oneOf(['scatter']).isRequired,
-    valueFormatter: PropTypes.func.isRequired,
-    xAxisKey: PropTypes.string,
-    yAxisKey: PropTypes.string,
-  }).isRequired,
+  series: PropTypes.object.isRequired,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
 } as any;

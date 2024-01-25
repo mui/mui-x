@@ -22,9 +22,13 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Début',
   end: 'Fin',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuler',
@@ -40,11 +44,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Choix des ${views[view]}. ${
-      time === null
-        ? 'Aucune heure choisie'
-        : `L'heure choisie est ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Choix des ${views[view]}. ${time === null ? 'Aucune heure choisie' : `L'heure choisie est ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} heures`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,

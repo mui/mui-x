@@ -31,6 +31,7 @@ import {
   getRow,
   getActiveCell,
   getCell,
+  microtasks,
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
@@ -165,7 +166,9 @@ describe('<DataGrid /> - Rows', () => {
       );
 
       // click on the cell in the nested grid in the column that is not defined in the parent grid
-      const cell = document.querySelector('[data-rowindex="0"] [role="cell"][data-field="age"]')!;
+      const cell = document.querySelector(
+        '[data-rowindex="0"] [role="gridcell"][data-field="age"]',
+      )!;
       fireEvent.click(cell);
     }).not.toErrorDev();
   });
@@ -309,6 +312,7 @@ describe('<DataGrid /> - Rows', () => {
       await waitFor(() => {
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
+      await microtasks();
     });
 
     it('should not select the row when opening the menu', async () => {

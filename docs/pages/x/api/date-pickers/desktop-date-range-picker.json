@@ -205,30 +205,6 @@
       "class": null
     },
     {
-      "name": "desktopPaper",
-      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
-      "class": null
-    },
-    {
-      "name": "desktopTransition",
-      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
-      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
-      "class": null
-    },
-    {
-      "name": "desktopTrapFocus",
-      "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'.",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from '@mui/material'.",
-      "class": null
-    },
-    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -273,6 +249,30 @@
       "default": "IconButton",
       "class": null
     },
+    {
+      "name": "desktopPaper",
+      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
+      "default": "PickersPopperPaper",
+      "class": null
+    },
+    {
+      "name": "desktopTransition",
+      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
+      "class": null
+    },
+    {
+      "name": "desktopTrapFocus",
+      "description": "Custom component for trapping the focus inside the views on desktop.",
+      "default": "FocusTrap from '@mui/base'.",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the popper inside which the views are rendered on desktop.",
+      "default": "Popper from '@mui/material'.",
+      "class": null
+    },
     { "name": "field", "description": "", "class": null }
   ],
   "classes": [],
@@ -282,6 +282,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
   "cssComponent": false
 }

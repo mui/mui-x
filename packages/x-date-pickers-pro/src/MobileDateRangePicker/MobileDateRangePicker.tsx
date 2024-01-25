@@ -44,6 +44,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
@@ -87,11 +88,6 @@ MobileDateRangePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
-   */
-  calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
