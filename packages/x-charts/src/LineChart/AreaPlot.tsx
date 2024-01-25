@@ -105,21 +105,23 @@ function AreaPlot(props: AreaPlotProps) {
 
   return (
     <g {...other}>
-      {completedData.map(
-        ({ d, seriesId, color, highlightScope, area }) =>
-          !!area && (
-            <AreaElement
-              key={seriesId}
-              id={seriesId}
-              d={d}
-              color={color}
-              highlightScope={highlightScope}
-              slots={slots}
-              slotProps={slotProps}
-              skipAnimation={skipAnimation}
-            />
-          ),
-      )}
+      {completedData
+        .reverse()
+        .map(
+          ({ d, seriesId, color, highlightScope, area }) =>
+            !!area && (
+              <AreaElement
+                key={seriesId}
+                id={seriesId}
+                d={d}
+                color={color}
+                highlightScope={highlightScope}
+                slots={slots}
+                slotProps={slotProps}
+                skipAnimation={skipAnimation}
+              />
+            ),
+        )}
     </g>
   );
 }

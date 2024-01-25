@@ -176,7 +176,6 @@ function AreaElement(props: AreaElementProps) {
     to: { animatedWidth: width + left + right },
     reset: false,
     immediate: skipAnimation,
-    delay: skipAnimation ? 0 : 100,
   });
   const clipId = cleanId(`${chartId}-${id}-area-clip`);
   return (
