@@ -91,7 +91,7 @@ export interface GridSlotProps {
   loadingOverlay: GridOverlayProps & LoadingOverlayPropsOverrides;
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
-  pagination: TablePaginationProps & PaginationPropsOverrides;
+  pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
   row: GridRowProps & RowPropsOverrides;
