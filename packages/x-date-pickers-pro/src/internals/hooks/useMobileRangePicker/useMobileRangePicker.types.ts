@@ -26,7 +26,8 @@ export interface UseMobileRangePickerSlotProps<
 > extends UseRangePickerSlotProps<TDate, TView>,
     PickersModalDialogSlotProps {}
 
-export interface MobileRangeOnlyPickerProps<TDate extends PickerValidDate> extends RangeOnlyPickerProps<TDate> {}
+export interface MobileRangeOnlyPickerProps<TDate extends PickerValidDate>
+  extends RangeOnlyPickerProps<TDate> {}
 
 export interface UseMobileRangePickerProps<
   TDate extends PickerValidDate,

@@ -8,6 +8,7 @@ import {
   PickerViewRenderer,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import {
   renderDigitalClockTimeView,
@@ -36,7 +37,7 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
-const rendererInterceptor = function rendererInterceptor<TDate>(
+const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: DefaultizedProps<
@@ -88,14 +89,13 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
   );
 };
 
-type DesktopDateRangePickerComponent = (<TDate>(
+type DesktopDateRangePickerComponent = (<TDate extends PickerValidDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<TDate>(
-  inProps: DesktopDateTimeRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
+  TDate extends PickerValidDate,
+>(inProps: DesktopDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,

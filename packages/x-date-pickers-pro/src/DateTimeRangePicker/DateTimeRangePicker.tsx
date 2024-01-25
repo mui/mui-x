@@ -2,18 +2,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
 
-type DateTimeRangePickerComponent = (<TDate>(
+type DateTimeRangePickerComponent = (<TDate extends PickerValidDate>(
   props: DateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<TDate>(
-  inProps: DateTimeRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<
+  TDate extends PickerValidDate,
+>(inProps: DateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePicker' });
 
   const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;

@@ -26,7 +26,8 @@ export interface UseDesktopRangePickerSlotProps<
 > extends UseRangePickerSlotProps<TDate, TView>,
     PickersPopperSlotProps {}
 
-export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate> extends RangeOnlyPickerProps<TDate> {
+export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
+  extends RangeOnlyPickerProps<TDate> {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
