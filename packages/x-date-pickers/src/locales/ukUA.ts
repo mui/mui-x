@@ -15,16 +15,20 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Наступний місяць',
 
   // View navigation
-  openPreviousView: 'відкрити попередній вигляд',
-  openNextView: 'відкрити наступний вигляд',
+  openPreviousView: 'Відкрити попередній вигляд',
+  openNextView: 'Відкрити наступний вигляд',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'річний вигляд відкрито, перейти до календарного вигляду'
       : 'календарний вигляд відкрито, перейти до річного вигляду',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Початок',
   end: 'Кінець',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Відміна',

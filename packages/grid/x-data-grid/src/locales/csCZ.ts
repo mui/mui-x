@@ -45,12 +45,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Vytisknout',
   toolbarExportExcel: 'Stáhnout jako Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Najít sloupec',
-  columnsPanelTextFieldPlaceholder: 'Název sloupce',
-  columnsPanelDragIconLabel: 'Uspořádat sloupce',
-  columnsPanelShowAllButton: 'Zobrazit vše',
-  columnsPanelHideAllButton: 'Skrýt vše',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',

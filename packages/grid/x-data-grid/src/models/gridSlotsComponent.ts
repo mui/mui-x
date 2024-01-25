@@ -162,6 +162,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   columnsPanel: React.JSXElementConstructor<GridSlotProps['columnsPanel']>;
   /**
+   * Component used inside Grid Columns panel to manage columns.
+   * @default GridColumnsManagement
+   */
+  columnsManagement: React.JSXElementConstructor<any>;
+  /**
    * Panel component wrapping the filters and columns panels.
    * @default GridPanel
    */

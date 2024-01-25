@@ -1,4 +1,5 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { mergeDateAndTime } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../../models';
 
 interface CalculateRangeChangeOptions<TDate> {
@@ -12,6 +13,7 @@ interface CalculateRangeChangeOptions<TDate> {
    * It is used to allow dragging range `start` date past `end` date essentially becoming the new `end` date and vice versa.
    */
   allowRangeFlip?: boolean;
+  shouldMergeDateAndTime?: boolean;
 }
 
 interface CalculateRangeChangeResponse<TDate> {
@@ -25,8 +27,19 @@ export function calculateRangeChange<TDate>({
   newDate: selectedDate,
   rangePosition,
   allowRangeFlip = false,
+  shouldMergeDateAndTime = false,
 }: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
+
+  if (shouldMergeDateAndTime && selectedDate) {
+    // If there is a date already selected, then we want to keep its time
+    if (start && rangePosition === 'start') {
+      selectedDate = mergeDateAndTime(utils, selectedDate, start);
+    }
+    if (end && rangePosition === 'end') {
+      selectedDate = mergeDateAndTime(utils, selectedDate, end);
+    }
+  }
 
   if (rangePosition === 'start') {
     const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip

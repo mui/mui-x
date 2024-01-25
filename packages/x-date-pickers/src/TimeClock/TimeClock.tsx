@@ -257,6 +257,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           setValueAndGoToNextView(
             utils.setHours(valueOrReferenceDate, valueWithMeridiem),
             isFinish,
+            'hours',
           );
         };
 
@@ -278,7 +279,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'minutes': {
         const minutesValue = utils.getMinutes(valueOrReferenceDate);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setMinutes(valueOrReferenceDate, minuteValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setMinutes(valueOrReferenceDate, minuteValue),
+            isFinish,
+            'minutes',
+          );
         };
 
         return {
@@ -298,7 +303,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'seconds': {
         const secondsValue = utils.getSeconds(valueOrReferenceDate);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setSeconds(valueOrReferenceDate, secondValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setSeconds(valueOrReferenceDate, secondValue),
+            isFinish,
+            'seconds',
+          );
         };
 
         return {

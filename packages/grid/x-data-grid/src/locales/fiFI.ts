@@ -38,12 +38,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Tulosta',
   toolbarExportExcel: 'Lataa Excel-muodossa',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Etsi sarake',
-  columnsPanelTextFieldPlaceholder: 'Sarakkeen otsikko',
-  columnsPanelDragIconLabel: 'Järjestä sarake uudelleen',
-  columnsPanelShowAllButton: 'Näytä kaikki',
-  columnsPanelHideAllButton: 'Piilota kaikki',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',

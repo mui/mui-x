@@ -13,7 +13,7 @@ import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
 export type TimeViewRendererProps<
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends BaseClockProps<any, any>,
+  TComponentProps extends BaseClockProps<any, TView>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;

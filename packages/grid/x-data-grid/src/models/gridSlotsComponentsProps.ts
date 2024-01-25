@@ -26,6 +26,7 @@ import type { GridCellProps } from '../components/cell/GridCell';
 import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
+import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
 import type { GridRowCountProps } from '../components';
 
 // Overrides for module augmentation
@@ -48,6 +49,7 @@ export interface ColumnHeaderFilterIconButtonPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
+export interface ColumnsManagementPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
 export interface FooterPropsOverrides {}
 export interface FooterRowCountOverrides {}
@@ -84,6 +86,7 @@ export interface GridSlotProps {
     ColumnHeaderFilterIconButtonPropsOverrides;
   columnMenu: GridColumnMenuProps & ColumnMenuPropsOverrides;
   columnsPanel: GridColumnsPanelProps & ColumnsPanelPropsOverrides;
+  columnsManagement: GridColumnsManagementProps & ColumnsManagementPropsOverrides;
   detailPanels: GridDetailPanelsProps & DetailPanelsPropsOverrides;
   filterPanel: GridFilterPanelProps & FilterPanelPropsOverrides;
   footer: GridFooterContainerProps & FooterPropsOverrides;

@@ -38,12 +38,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Download som Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Find kolonne',
-  columnsPanelTextFieldPlaceholder: 'Kolonne titel',
-  columnsPanelDragIconLabel: 'Reorder kolonne',
-  columnsPanelShowAllButton: 'Vis alle',
-  columnsPanelHideAllButton: 'Skjul alle',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',

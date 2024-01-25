@@ -23,9 +23,13 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '開始',
   end: '終了',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'キャンセル',
