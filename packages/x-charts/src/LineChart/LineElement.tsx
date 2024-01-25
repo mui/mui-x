@@ -193,7 +193,7 @@ function LineElement(props: LineElementProps) {
     immediate: skipAnimation,
   });
 
-  const clipId = cleanId(`${chartId}-${id}-area-clip`);
+  const clipId = cleanId(`${chartId}-${id}-line-clip`);
   return (
     <React.Fragment>
       <clipPath id={clipId}>
