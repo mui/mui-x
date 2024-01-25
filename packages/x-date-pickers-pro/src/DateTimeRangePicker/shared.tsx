@@ -87,7 +87,8 @@ export interface BaseDateTimeRangePickerProps<TDate>
     DesktopOnlyTimePickerProps<TDate>,
     Partial<
       Pick<UseViewsOptions<DateRange<TDate>, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
-    >, DateTimeValidationProps<TDate> {
+    >,
+    DateTimeValidationProps<TDate> {
   /**
    * Overridable component slots.
    * @default {}
