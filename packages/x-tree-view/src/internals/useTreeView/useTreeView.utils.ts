@@ -1,6 +1,6 @@
 import { TreeViewAnyPluginSignature, TreeViewInstance, TreeViewUsedInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
-import type { UseTreeViewNodesSignature } from '../plugins/useTreeViewNodes';
+import type { UseTreeViewNodesSignature } from '../corePlugins/useTreeViewNodes';
 
 export const getPreviousNode = (
   instance: TreeViewInstance<[UseTreeViewNodesSignature, UseTreeViewExpansionSignature]>,

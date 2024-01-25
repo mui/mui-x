@@ -1,5 +1,6 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
+import type { TreeViewCorePluginsSignature } from '../corePlugins';
 
 export interface TreeViewNode {
   id: string;
@@ -28,4 +29,4 @@ export interface TreeViewModel<TValue> {
 }
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'instance'>;
+  TreeViewCorePluginsSignature['instance'] & MergePluginsProperty<TSignatures, 'instance'>;

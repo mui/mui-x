@@ -8,10 +8,12 @@ import {
   MergePluginsProperty,
   TreeViewInstance,
 } from '../models';
+import { TreeViewCorePluginsSignature } from '../corePlugins';
 
 export type UseTreeViewParameters<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 > = UseTreeViewBaseParameters<TPlugins> &
+  TreeViewCorePluginsSignature['params'] &
   MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
 
 export interface UseTreeViewBaseParameters<

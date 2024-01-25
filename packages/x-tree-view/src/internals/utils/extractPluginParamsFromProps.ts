@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ConvertPluginsIntoSignatures, MergePluginsProperty, TreeViewPlugin } from '../models';
 import { UseTreeViewBaseParameters } from '../useTreeView/useTreeView.types';
+import { TreeViewCorePluginsSignature } from '@mui/x-tree-view/internals/corePlugins';
 
 export const extractPluginParamsFromProps = <
   TPlugins extends readonly TreeViewPlugin<any>[],
@@ -16,7 +17,8 @@ export const extractPluginParamsFromProps = <
   plugins: TPlugins;
   rootRef?: React.Ref<HTMLUListElement>;
 }) => {
-  type PluginParams = MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+  type PluginParams = TreeViewCorePluginsSignature['params'] &
+    MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
 
   const paramsLookup = {} as Record<keyof PluginParams, true>;
   plugins.forEach((plugin) => {
