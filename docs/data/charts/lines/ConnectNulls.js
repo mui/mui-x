@@ -31,6 +31,7 @@ export default function ConnectNulls() {
         ]}
         height={200}
         margin={{ top: 10, bottom: 20 }}
+        skipAnimation
       />
     </Stack>
   );
