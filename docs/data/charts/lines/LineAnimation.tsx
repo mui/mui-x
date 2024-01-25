@@ -7,19 +7,18 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { mangoFusionPalette } from '@mui/x-charts/colorPalettes';
 
 const defaultSeries = [
-  { data: [4, 5, 1, 2, 3, 3, 2], area: true, stack: '1' },
-  { data: [7, 4, 6, 7, 2, 3, 5], area: true, stack: '1' },
-  { data: [6, 4, 1, 2, 6, 3, 3], area: true, stack: '1' },
-  { data: [4, 7, 6, 1, 2, 7, 7], area: true, stack: '1' },
-  { data: [2, 2, 1, 7, 1, 5, 3], area: true, stack: '1' },
-  { data: [6, 6, 1, 6, 7, 1, 1], area: true, stack: '1' },
-  { data: [7, 6, 1, 6, 4, 4, 6], area: true, stack: '1' },
-  { data: [4, 3, 1, 6, 6, 3, 5], area: true, stack: '1' },
-  { data: [7, 6, 2, 7, 4, 2, 7], area: true, stack: '1' },
+  { id: '1', data: [4, 5, 1, 2, 3, 3, 2], area: true, stack: '1' },
+  { id: '2', data: [7, 4, 6, 7, 2, 3, 5], area: true, stack: '1' },
+  { id: '3', data: [6, 4, 1, 2, 6, 3, 3], area: true, stack: '1' },
+  { id: '4', data: [4, 7, 6, 1, 2, 7, 7], area: true, stack: '1' },
+  { id: '5', data: [2, 2, 1, 7, 1, 5, 3], area: true, stack: '1' },
+  { id: '6', data: [6, 6, 1, 6, 7, 1, 1], area: true, stack: '1' },
+  { id: '7', data: [7, 6, 1, 6, 4, 4, 6], area: true, stack: '1' },
+  { id: '8', data: [4, 3, 1, 6, 6, 3, 5], area: true, stack: '1' },
+  { id: '9', data: [7, 6, 2, 7, 4, 2, 7], area: true, stack: '1' },
 ].map((item, index) => ({
   ...item,
-  id: index.toString(),
-  color: index === 3 ? 'red' : mangoFusionPalette('light')[index],
+  color: mangoFusionPalette('light')[index],
 }));
 
 export default function LineAnimation() {
