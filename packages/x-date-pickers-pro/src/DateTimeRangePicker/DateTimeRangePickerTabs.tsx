@@ -223,7 +223,7 @@ DateTimeRangePickerTabs.propTypes = {
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a tab is clicked.
    * @template TView
    * @param {TView} view The view to open
    */
