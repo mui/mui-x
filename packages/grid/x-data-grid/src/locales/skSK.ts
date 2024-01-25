@@ -45,12 +45,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Vytlačiť',
   toolbarExportExcel: 'Stiahnuť ako Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Nájsť stĺpec',
-  columnsPanelTextFieldPlaceholder: 'Názov stĺpca',
-  columnsPanelDragIconLabel: 'Usporiadť stĺpce',
-  columnsPanelShowAllButton: 'Zobraziť všetko',
-  columnsPanelHideAllButton: 'Skryť všetko',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',

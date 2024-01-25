@@ -37,12 +37,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '印刷',
   toolbarExportExcel: 'Excelダウンロード',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: '列検索',
-  columnsPanelTextFieldPlaceholder: '検索クエリを入力…',
-  columnsPanelDragIconLabel: '列並べ替え',
-  columnsPanelShowAllButton: 'すべて表示',
-  columnsPanelHideAllButton: 'すべて非表示',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',

@@ -908,15 +908,27 @@
       "isGlobal": false
     },
     {
-      "key": "columnsPanel",
-      "className": "MuiDataGridPro-columnsPanel",
-      "description": "Styles applied to the columns panel element.",
+      "key": "columnsManagement",
+      "className": "MuiDataGridPro-columnsManagement",
+      "description": "Styles applied to the columns management body.",
       "isGlobal": false
     },
     {
-      "key": "columnsPanelRow",
-      "className": "MuiDataGridPro-columnsPanelRow",
-      "description": "Styles applied to the columns panel row element.",
+      "key": "columnsManagementFooter",
+      "className": "MuiDataGridPro-columnsManagementFooter",
+      "description": "Styles applied to the columns management footer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementHeader",
+      "className": "MuiDataGridPro-columnsManagementHeader",
+      "description": "Styles applied to the columns management header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementRow",
+      "className": "MuiDataGridPro-columnsManagementRow",
+      "description": "Styles applied to the columns management row element.",
       "isGlobal": false
     },
     {

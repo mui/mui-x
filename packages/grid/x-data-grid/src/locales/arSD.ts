@@ -38,12 +38,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'طباعة',
   toolbarExportExcel: 'تحميل كملف الإكسل',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'البحث عن العمود',
-  columnsPanelTextFieldPlaceholder: 'عنوان العمود',
-  columnsPanelDragIconLabel: 'إعادة ترتيب العمود',
-  columnsPanelShowAllButton: 'إظهار الكل',
-  columnsPanelHideAllButton: 'إخفاء الكل',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
