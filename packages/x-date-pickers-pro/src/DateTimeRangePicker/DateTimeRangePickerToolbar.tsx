@@ -38,13 +38,15 @@ type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
 export interface DateTimeRangePickerToolbarProps<TDate>
   extends BaseToolbarProps<DateRange<TDate>, DateTimeRangeViews>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
-  classes?: Partial<DateTimeRangePickerToolbarClasses>;
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
+    ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
   toolbarVariant?: WrapperVariant;
 }
 
-export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {}
+export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
+  classes?: Partial<DateTimeRangePickerToolbarClasses>;
+}
 
 const DateTimeRangePickerToolbarRoot = styled('div', {
   name: 'MuiDateTimeRangePickerToolbar',

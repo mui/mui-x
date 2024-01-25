@@ -11,6 +11,7 @@ import {
   useLocaleText,
   DateOrTimeViewWithMeridiem,
   UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
 import {
@@ -157,7 +158,7 @@ export const useMobileRangePicker = <
       ...innerSlotProps?.tabs,
       rangePosition,
       onRangePositionChange,
-    },
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,
