@@ -257,6 +257,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
           setValueAndGoToNextView(
             utils.setHours(valueOrReferenceDate, valueWithMeridiem),
             isFinish,
+            'hours',
           );
         };
 
@@ -278,7 +279,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       case 'minutes': {
         const minutesValue = utils.getMinutes(valueOrReferenceDate);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setMinutes(valueOrReferenceDate, minuteValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setMinutes(valueOrReferenceDate, minuteValue),
+            isFinish,
+            'minutes',
+          );
         };
 
         return {
@@ -298,7 +303,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       case 'seconds': {
         const secondsValue = utils.getSeconds(valueOrReferenceDate);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setSeconds(valueOrReferenceDate, secondValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setSeconds(valueOrReferenceDate, secondValue),
+            isFinish,
+            'seconds',
+          );
         };
 
         return {
@@ -408,7 +417,7 @@ TimeClock.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.object,
+  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false
@@ -437,12 +446,12 @@ TimeClock.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.object,
+  maxTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.object,
+  minTime: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Step over minutes.
    * @default 1
@@ -485,7 +494,7 @@ TimeClock.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Disable specific time.
    * @template TDate
@@ -525,7 +534,7 @@ TimeClock.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * The visible view.
    * Used when the component view is controlled.

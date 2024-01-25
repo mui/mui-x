@@ -319,8 +319,8 @@ PickersCalendarHeader.propTypes = {
    */
   format: PropTypes.string,
   labelId: PropTypes.string,
-  maxDate: PropTypes.object.isRequired,
-  minDate: PropTypes.object.isRequired,
+  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]).isRequired,
+  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]).isRequired,
   onMonthChange: PropTypes.func.isRequired,
   onViewChange: PropTypes.func,
   reduceAnimations: PropTypes.bool.isRequired,

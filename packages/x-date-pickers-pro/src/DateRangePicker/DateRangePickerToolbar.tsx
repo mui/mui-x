@@ -154,7 +154,8 @@ DateRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.arrayOf(PropTypes.object).isRequired,
+  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]))
+    .isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

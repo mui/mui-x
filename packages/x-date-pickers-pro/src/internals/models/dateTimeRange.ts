@@ -5,6 +5,7 @@ import {
   MakeOptional,
   UseFieldInternalProps,
   DateTimeValidationProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
@@ -37,3 +38,7 @@ export type UseDateTimeRangeFieldDefaultizedProps<TDate extends PickerValidDate>
   UseDateTimeRangeFieldProps<TDate>,
   keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;
+
+export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
+
+export type DateTimeRangePickerViewExternal = Exclude<DateTimeRangePickerView, 'meridiem'>;

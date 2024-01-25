@@ -4,6 +4,9 @@
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
+    "availableRangePositions": {
+      "description": "Range positions available for selection. This list is checked against when checking if a next range position can be selected.<br>Used on Date Time Range pickers with current <code>rangePosition</code> to force a <code>finish</code> selection after just one range position selection."
+    },
     "calendars": { "description": "The number of calendars to render." },
     "currentMonthCalendarPosition": { "description": "Position the current month is rendered in." },
     "dayOfWeekFormatter": {
@@ -41,6 +44,7 @@
     "fixedWeekNumber": {
       "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars"
     },
+    "focusedView": { "description": "Controlled focused view." },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
     },
@@ -50,7 +54,15 @@
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
         "value": "The new value.",
-        "selectionState": "Indicates if the date range selection is complete."
+        "selectionState": "Indicates if the date selection is complete.",
+        "selectedView": "Indicates the view in which the selection has been made."
+      }
+    },
+    "onFocusedViewChange": {
+      "description": "Callback fired on focused view change.",
+      "typeDescriptions": {
+        "view": "The new view to focus or not.",
+        "hasFocus": "<code>true</code> if the view should be focused."
       }
     },
     "onMonthChange": {
@@ -60,6 +72,13 @@
     "onRangePositionChange": {
       "description": "Callback fired when the range position changes.",
       "typeDescriptions": { "rangePosition": "The new range position." }
+    },
+    "onViewChange": {
+      "description": "Callback fired on view change.",
+      "typeDescriptions": { "view": "The new view." }
+    },
+    "openTo": {
+      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
     },
     "rangePosition": {
       "description": "The position in the currently edited date range. Used when the component position is controlled."
@@ -93,7 +112,11 @@
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
       "seeMoreText": "See the {{link}} for more details."
     },
-    "value": { "description": "The selected value. Used when the component is controlled." }
+    "value": { "description": "The selected value. Used when the component is controlled." },
+    "view": {
+      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+    },
+    "views": { "description": "Available views." }
   },
   "classDescriptions": {
     "dayDragging": { "description": "Styles applied to the day calendar container when dragging" },

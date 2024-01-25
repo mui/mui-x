@@ -28,8 +28,8 @@ function DisplayEvents(props: DisplayEventsProps) {
                 value === null
                   ? 'null'
                   : value.isValid()
-                  ? value.format('DD/MM/YYYY')
-                  : 'Invalid Date'
+                    ? value.format('DD/MM/YYYY')
+                    : 'Invalid Date'
               }`,
           )
           .join('\n')}

@@ -8,7 +8,8 @@ import useForkRef from '@mui/utils/useForkRef';
 import {
   BaseSingleInputFieldProps,
   FieldSelectedSections,
-  PickerValidDate,
+  FieldRef,
+    PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
@@ -101,6 +102,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  currentView?: TView | null;
+  initialView?: TView;
+  onViewChange?: (view: TView) => void;
 }
 
 const useMultiInputFieldSlotProps = <
@@ -122,6 +126,9 @@ const useMultiInputFieldSlotProps = <
   pickerSlots,
   fieldProps,
   anchorRef,
+  currentView,
+  initialView,
+  onViewChange,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -133,18 +140,32 @@ const useMultiInputFieldSlotProps = <
   const localeText = useLocaleText<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
+  const handleEndFieldRef = useForkRef(fieldProps.unstableFieldRef, endFieldRef);
+  const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
   React.useEffect(() => {
     if (!open) {
       return;
     }
 
-    if (rangePosition === 'start') {
-      startRef.current?.focus();
-    } else if (rangePosition === 'end') {
-      endRef.current?.focus();
+    const currentRef = rangePosition === 'start' ? startRef : endRef;
+    currentRef.current?.focus();
+    const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
+    if (!currentFieldRef.current || !currentView) {
+      // could happen when the user is switching between the inputs
+      previousRangePosition.current = rangePosition;
+      return;
     }
-  }, [rangePosition, open]);
+    // bring back focus to the field
+    currentFieldRef.current.setSelectedSections(
+      // use the current view or `0` when the range position has just been swapped
+      previousRangePosition.current === rangePosition ? currentView : 0,
+    );
+    previousRangePosition.current = rangePosition;
+  }, [rangePosition, open, currentView]);
 
   const openRangeStartSelection = (
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
@@ -169,12 +190,18 @@ const useMultiInputFieldSlotProps = <
   const handleFocusStart = () => {
     if (open) {
       onRangePositionChange('start');
+      if (previousRangePosition.current !== 'start' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
   const handleFocusEnd = () => {
     if (open) {
       onRangePositionChange('end');
+      if (previousRangePosition.current !== 'end' && initialView) {
+        onViewChange?.(initialView);
+      }
     }
   };
 
@@ -253,6 +280,8 @@ const useMultiInputFieldSlotProps = <
     ...restFieldProps,
     slots,
     slotProps,
+    unstableStartFieldRef: handleStartFieldRef,
+    unstableEndFieldRef: handleEndFieldRef,
   };
 
   return enrichedFieldProps;
@@ -279,6 +308,7 @@ const useSingleInputFieldSlotProps = <
   pickerSlotProps,
   fieldProps,
   anchorRef,
+  currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -298,7 +328,15 @@ const useSingleInputFieldSlotProps = <
     }
 
     inputRef.current?.focus();
-  }, [rangePosition, open]);
+    if (!singleInputFieldRef.current || !currentView) {
+      return;
+    }
+    const sections = singleInputFieldRef.current.getSections().map((section) => section.type);
+    // bring back focus to the field with the current view section selected
+    singleInputFieldRef.current.setSelectedSections(
+      rangePosition === 'start' ? sections.indexOf(currentView) : sections.lastIndexOf(currentView),
+    );
+  }, [rangePosition, open, currentView, singleInputFieldRef]);
 
   const updateRangePosition = () => {
     if (!singleInputFieldRef.current || inputRef.current !== getActiveElement(document)) {

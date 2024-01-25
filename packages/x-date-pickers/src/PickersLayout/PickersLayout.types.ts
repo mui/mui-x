@@ -8,6 +8,7 @@ import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/useP
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
+import { ExportedPickersShortcutProps } from '../PickersShortcuts/PickersShortcuts';
 import { PickerValidDate } from '../models';
 
 export interface ExportedPickersLayoutSlots<
@@ -132,10 +133,10 @@ export interface PickersLayoutProps<
   slotProps?: PickersLayoutSlotProps<TValue, TDate, TView>;
 }
 
-export interface SubComponents {
-  toolbar: React.ReactNode;
+export interface SubComponents<TValue> {
+  toolbar: React.ReactElement<ExportedBaseToolbarProps> | null;
   content: React.ReactNode;
-  tabs: React.ReactNode;
-  actionBar: React.ReactNode;
-  shortcuts: React.ReactNode;
+  tabs: React.ReactElement<ExportedBaseTabsProps> | null;
+  actionBar: React.ReactElement<PickersActionBarProps>;
+  shortcuts: React.ReactElement<ExportedPickersShortcutProps<TValue>> | null;
 }

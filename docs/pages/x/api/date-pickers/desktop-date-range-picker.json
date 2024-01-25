@@ -26,7 +26,9 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "defaultValue": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Date<br>&#124;&nbsp;object&gt;" }
+    },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -45,8 +47,8 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
+    "minDate": { "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" } },
     "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
@@ -93,7 +95,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
@@ -141,7 +143,9 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "value": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Date<br>&#124;&nbsp;object&gt;" }
+    },
     "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "name": "DesktopDateRangePicker",
@@ -205,30 +209,6 @@
       "class": null
     },
     {
-      "name": "desktopPaper",
-      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
-      "class": null
-    },
-    {
-      "name": "desktopTransition",
-      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
-      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
-      "class": null
-    },
-    {
-      "name": "desktopTrapFocus",
-      "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'.",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from '@mui/material'.",
-      "class": null
-    },
-    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -271,6 +251,30 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "desktopPaper",
+      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
+      "default": "PickersPopperPaper",
+      "class": null
+    },
+    {
+      "name": "desktopTransition",
+      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
+      "class": null
+    },
+    {
+      "name": "desktopTrapFocus",
+      "description": "Custom component for trapping the focus inside the views on desktop.",
+      "default": "FocusTrap from '@mui/base'.",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the popper inside which the views are rendered on desktop.",
+      "default": "Popper from '@mui/material'.",
       "class": null
     },
     { "name": "field", "description": "", "class": null }

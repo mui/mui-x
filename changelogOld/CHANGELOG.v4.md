@@ -15,7 +15,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
 - 🚀 Introduce the [row editing](https://mui.com/x/react-data-grid/editing/#row-editing) feature (#2098) @m4theushw
 
-  <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" />
+  <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" alt="Row editing example" />
 
 - ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
 

@@ -154,6 +154,11 @@ export const useMobileRangePicker = <
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
+    tabs: {
+      ...innerSlotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    },
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,

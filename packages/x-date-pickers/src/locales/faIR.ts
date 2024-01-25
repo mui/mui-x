@@ -22,9 +22,13 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
       ? 'نمای سال باز است، رفتن به نمای تقویم'
       : 'نمای تقویم باز است، رفتن به نمای سال',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'شروع',
   end: 'پایان',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'لغو',
@@ -40,11 +44,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    ` را انتخاب کنید ${timeViews[view]}. ${
-      time === null
-        ? 'هیچ ساعتی انتخاب نشده است'
-        : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
-    }`,
+    ` را انتخاب کنید ${timeViews[view]}. ${time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`}`,
   hoursClockNumberText: (hours) => `${hours} ساعت ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه ها`,

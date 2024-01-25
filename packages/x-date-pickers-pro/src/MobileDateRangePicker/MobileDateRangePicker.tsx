@@ -116,7 +116,9 @@ MobileDateRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.object),
+  defaultValue: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
+  ),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -197,11 +199,11 @@ MobileDateRangePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.object,
+  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.object,
+  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Name attribute used by the `input` element in the Field.
    * Ignored if the field has several inputs.
@@ -277,7 +279,7 @@ MobileDateRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -364,7 +366,7 @@ MobileDateRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.object),
+  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object])),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

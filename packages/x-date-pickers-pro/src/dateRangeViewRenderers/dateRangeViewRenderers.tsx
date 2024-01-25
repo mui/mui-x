@@ -6,9 +6,7 @@ import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar'
 export interface DateRangeViewRendererProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends DateRangeCalendarProps<TDate> {
-  view: TView;
-  onViewChange?: (view: TView) => void;
+> extends Omit<DateRangeCalendarProps<TDate>, 'views'> {
   views: readonly TView[];
 }
 
@@ -51,7 +49,11 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   disableDragEditing,
   displayWeekNumber,
   timezone,
-}: DateRangeViewRendererProps<TDate, any>) => (
+  availableRangePositions,
+  views,
+  view,
+  onViewChange,
+}: DateRangeViewRendererProps<TDate, 'day'>) => (
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
@@ -87,5 +89,9 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
+    availableRangePositions={availableRangePositions}
+    view={view}
+    views={views}
+    onViewChange={onViewChange}
   />
 );

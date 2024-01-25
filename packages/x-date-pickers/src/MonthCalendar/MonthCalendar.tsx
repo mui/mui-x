@@ -315,7 +315,7 @@ MonthCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.object,
+  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * If `true` picker is disabled
    */
@@ -340,11 +340,11 @@ MonthCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.object,
+  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.object,
+  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Months rendered per row.
    * @default 3
@@ -366,7 +366,7 @@ MonthCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Disable specific month.
    * @template TDate
@@ -394,5 +394,5 @@ MonthCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
 } as any;

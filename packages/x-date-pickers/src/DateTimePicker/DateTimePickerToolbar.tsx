@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -16,6 +17,9 @@ import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models'
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { MakeOptional } from '../internals/models/helpers';
+import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
+import { pickersToolbarClasses } from '../internals';
 import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -25,12 +29,16 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
+    MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
+  /**
+   * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
+   */
+  toolbarTitle?: React.ReactNode;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -65,6 +73,12 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       : undefined,
   justifyContent: 'space-around',
   position: 'relative',
+  ...(ownerState.toolbarVariant === 'desktop' && {
+    [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
+      color: (theme.vars || theme).palette.primary.main,
+      fontWeight: theme.typography.fontWeightBold,
+    },
+  }),
 }));
 
 DateTimePickerToolbarRoot.propTypes = {
@@ -169,7 +183,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
     styles.ampmSelection,
   ],
 })<{
-  ownerState: BaseToolbarProps<any, any>;
+  ownerState: DateTimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -214,6 +228,8 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
     disabled,
     readOnly,
     toolbarVariant = 'mobile',
+    toolbarTitle: inToolbarTitle,
+    className,
     ...other
   } = props;
   const ownerState = props;
@@ -226,6 +242,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
   const localeText = useLocaleText<TDate>();
   const theme = useTheme();
   const classes = useUtilityClasses({ ...ownerState, theme });
+  const toolbarTitle = inToolbarTitle ?? localeText.dateTimePickerToolbarTitle;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -244,9 +261,9 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
 
   return (
     <DateTimePickerToolbarRoot
-      toolbarTitle={localeText.dateTimePickerToolbarTitle}
       isLandscape={isLandscape}
-      className={classes.root}
+      className={clsx(classes.root, className)}
+      toolbarTitle={toolbarTitle}
       {...other}
       ownerState={ownerState}
     >
@@ -279,18 +296,15 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
           ownerState={ownerState}
         >
           {views.includes('hours') && (
-            <PickersToolbarButton
-              variant={isDesktop ? 'h5' : 'h3'}
-              width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
-              data-mui-test="hours"
-              onClick={() => onViewChange('hours')}
-              selected={view === 'hours'}
-              value={value ? formatHours(value) : '--'}
-            />
-          )}
-
-          {views.includes('minutes') && (
             <React.Fragment>
+              <PickersToolbarButton
+                variant={isDesktop ? 'h5' : 'h3'}
+                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                data-mui-test="hours"
+                onClick={() => onViewChange('hours')}
+                selected={view === 'hours'}
+                value={value ? formatHours(value) : '--'}
+              />
               <DateTimePickerToolbarSeparator
                 variant={isDesktop ? 'h5' : 'h3'}
                 value=":"
@@ -302,8 +316,9 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
-                selected={view === 'minutes'}
+                selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
                 value={value ? utils.format(value, 'minutes') : '--'}
+                disabled={!views.includes('minutes')}
               />
             </React.Fragment>
           )}
@@ -408,13 +423,16 @@ DateTimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
+  /**
+   * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
+   */
+  toolbarTitle: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
-    .isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,

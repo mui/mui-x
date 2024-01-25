@@ -23,9 +23,13 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '開始',
   end: '終了',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'キャンセル',
@@ -41,11 +45,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view}を選択してください ${
-      time === null
-        ? '時間が選択されていません'
-        : `選択した時間は ${adapter.format(time, 'fullTime')} です`
-    }`,
+    `${timeViews[view] ?? view}を選択してください ${time === null ? '時間が選択されていません' : `選択した時間は ${adapter.format(time, 'fullTime')} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,

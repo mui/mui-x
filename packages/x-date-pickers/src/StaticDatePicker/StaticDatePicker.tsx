@@ -91,7 +91,7 @@ StaticDatePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.object,
+  defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -141,11 +141,11 @@ StaticDatePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.object,
+  maxDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.object,
+  minDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Months rendered per row.
    * @default 3
@@ -219,7 +219,7 @@ StaticDatePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -291,7 +291,7 @@ StaticDatePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * The visible view.
    * Used when the component view is controlled.

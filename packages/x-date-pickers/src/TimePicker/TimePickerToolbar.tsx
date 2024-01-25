@@ -303,7 +303,7 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]),
   /**
    * Currently visible picker view.
    */

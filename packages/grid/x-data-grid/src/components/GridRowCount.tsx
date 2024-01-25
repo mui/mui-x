@@ -40,35 +40,34 @@ const GridRowCountRoot = styled('div', {
   margin: theme.spacing(0, 2),
 }));
 
-const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(function GridRowCount(
-  props,
-  ref,
-) {
-  const { className, rowCount, visibleRowCount, ...other } = props;
-  const apiRef = useGridApiContext();
-  const ownerState = useGridRootProps();
-  const classes = useUtilityClasses(ownerState);
+const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
+  function GridRowCount(props, ref) {
+    const { className, rowCount, visibleRowCount, ...other } = props;
+    const apiRef = useGridApiContext();
+    const ownerState = useGridRootProps();
+    const classes = useUtilityClasses(ownerState);
 
-  if (rowCount === 0) {
-    return null;
-  }
+    if (rowCount === 0) {
+      return null;
+    }
 
-  const text =
-    visibleRowCount < rowCount
-      ? apiRef.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
-      : rowCount.toLocaleString();
+    const text =
+      visibleRowCount < rowCount
+        ? apiRef.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
+        : rowCount.toLocaleString();
 
-  return (
-    <GridRowCountRoot
-      ref={ref}
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      {...other}
-    >
-      {apiRef.current.getLocaleText('footerTotalRows')} {text}
-    </GridRowCountRoot>
-  );
-});
+    return (
+      <GridRowCountRoot
+        ref={ref}
+        className={clsx(classes.root, className)}
+        ownerState={ownerState}
+        {...other}
+      >
+        {apiRef.current.getLocaleText('footerTotalRows')} {text}
+      </GridRowCountRoot>
+    );
+  },
+);
 
 GridRowCount.propTypes = {
   // ----------------------------- Warning --------------------------------
