@@ -141,6 +141,10 @@ export function useGridApiInitialization<
 
   useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent } as any, 'public');
 
+  if (inputApiRef && !inputApiRef.current?.state) {
+    inputApiRef.current = publicApiRef.current;
+  }
+
   React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
 
   React.useEffect(() => {

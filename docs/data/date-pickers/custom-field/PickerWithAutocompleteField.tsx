@@ -115,10 +115,13 @@ function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
 
   const optionsLookup = React.useMemo(
     () =>
-      options.reduce((acc, option) => {
-        acc[option.toISOString()] = true;
-        return acc;
-      }, {} as Record<string, boolean>),
+      options.reduce(
+        (acc, option) => {
+          acc[option.toISOString()] = true;
+          return acc;
+        },
+        {} as Record<string, boolean>,
+      ),
     [options],
   );
 

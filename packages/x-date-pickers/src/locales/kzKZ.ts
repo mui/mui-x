@@ -23,9 +23,13 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
       ? 'жылдық көріністі ашу, күнтізбе көрінісіне ауысу'
       : 'күнтізбе көрінісін ашу, жылдық көрінісіне ауысу',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Бастау',
   end: 'Cоңы',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Бас тарту',
@@ -41,9 +45,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} таңдау. ${
-      time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} таңдау. ${time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} сағат`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

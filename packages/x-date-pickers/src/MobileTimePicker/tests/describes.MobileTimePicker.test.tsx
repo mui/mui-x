@@ -109,7 +109,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        userEvent.mousePress(screen.getByRole('button', { name: 'open previous view' }));
+        userEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;

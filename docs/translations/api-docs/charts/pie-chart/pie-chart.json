@@ -40,15 +40,15 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "axisContent": "",
+    "axisLabel": "",
     "axisLine": "",
     "axisTick": "",
     "axisTickLabel": "",
-    "axisLabel": "",
+    "itemContent": "",
+    "legend": "",
     "pieArc": "",
     "pieArcLabel": "",
-    "legend": "",
-    "popper": "",
-    "axisContent": "",
-    "itemContent": ""
+    "popper": ""
   }
 }

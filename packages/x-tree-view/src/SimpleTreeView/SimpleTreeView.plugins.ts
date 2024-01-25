@@ -20,4 +20,7 @@ export type SimpleTreeViewPluginSlotProps = DefaultTreeViewPluginSlotProps;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
-  extends Omit<DefaultTreeViewPluginParameters<any, Multiple>, 'items' | 'isItemDisabled'> {}
+  extends Omit<
+    DefaultTreeViewPluginParameters<any, Multiple>,
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+  > {}
