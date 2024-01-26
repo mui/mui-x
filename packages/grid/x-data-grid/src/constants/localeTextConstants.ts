@@ -36,12 +36,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Download as Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Find column',
-  columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder column',
-  columnsPanelShowAllButton: 'Show all',
-  columnsPanelHideAllButton: 'Hide all',
+  // Columns management text
+  columnsManagementSearchTitle: 'Search',
+  columnsManagementNoColumns: 'No columns',
+  columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',

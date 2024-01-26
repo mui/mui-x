@@ -7,7 +7,7 @@ import {
   DataGridProps,
   GridToolbar,
   gridClasses,
-  GridColumnsPanelProps,
+  GridColumnsManagementProps,
 } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
@@ -164,27 +164,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
-    it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-          />
-        </div>,
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
-
-      fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Hide all'));
-
-      expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    });
-
-    it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
+    it('should show and hide all columns when clicking "Show/Hide All" checkbox from the column selector', () => {
       const customColumns = [
         {
           field: 'id',
@@ -194,7 +174,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const { getByText } = render(
+      const { getByText, getByRole } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -212,9 +192,11 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show all'));
-
+      const showHideAllCheckbox = getByRole('checkbox', { name: 'Show/Hide All' });
+      fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+      fireEvent.click(showHideAllCheckbox);
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
     it('should keep the focus on the switch after toggling a column', () => {
@@ -251,7 +233,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const columnSearchPredicate: GridColumnsPanelProps['searchPredicate'] = (
+      const columnSearchPredicate: GridColumnsManagementProps['searchPredicate'] = (
         column,
         searchValue,
       ) => {
@@ -270,7 +252,7 @@ describe('<DataGrid /> - Toolbar', () => {
               toolbar: GridToolbar,
             }}
             slotProps={{
-              columnsPanel: {
+              columnsManagement: {
                 searchPredicate: columnSearchPredicate,
               },
             }}

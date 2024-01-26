@@ -17,6 +17,12 @@ Use the `multiSelect` prop on the Tree View to enable selecting multiple items a
 
 {{"demo": "MultiSelectTreeView.js"}}
 
+## Disable selection
+
+Use the `disableSelection` prop if you don't want your items to be selectable:
+
+{{"demo": "DisableSelection.js"}}
+
 ## Controlled selection
 
 Use the `selected` prop to control selected Tree View items.
@@ -34,6 +40,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track node selection change
 
-Use the `onNodeSelectionToggle` if you want to react to a node selection change:
+Use the `onNodeSelectionToggle` prop if you want to react to a node selection change:
 
 {{"demo": "TrackNodeSelectionToggle.js"}}

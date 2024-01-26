@@ -38,12 +38,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportExcel: 'Λήψη ως Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Εύρεση στήλης',
-  columnsPanelTextFieldPlaceholder: 'Επικεφαλίδα στήλης',
-  columnsPanelDragIconLabel: 'Αναδιάταξη στήλης',
-  columnsPanelShowAllButton: 'Προβολή όλων',
-  columnsPanelHideAllButton: 'Απόκρυψη όλων',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
