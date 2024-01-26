@@ -11,6 +11,7 @@ import {
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
