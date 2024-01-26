@@ -12,13 +12,7 @@
       },
       "required": true
     },
-    "series": {
-      "type": {
-        "name": "shape",
-        "description": "{ color?: string, data: Array&lt;number&gt;, highlightScope?: { faded?: 'global'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series', highlighted?: 'item'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series' }, id: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'scatter', valueFormatter: func }"
-      },
-      "required": true
-    }
+    "series": { "type": { "name": "object" }, "required": true }
   },
   "name": "DefaultChartsItemTooltipContent",
   "imports": [

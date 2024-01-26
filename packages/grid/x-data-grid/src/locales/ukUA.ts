@@ -61,12 +61,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Знайти стовпець',
-  columnsPanelTextFieldPlaceholder: 'Заголовок стовпця',
-  columnsPanelDragIconLabel: 'Змінити порядок стовпця',
-  columnsPanelShowAllButton: 'Показати всі',
-  columnsPanelHideAllButton: 'Приховати всі',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',

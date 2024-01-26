@@ -43,9 +43,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.8",
-    "@mui/base": "^5.0.0-beta.32",
-    "@mui/system": "^5.15.5",
-    "@mui/utils": "^5.15.5",
+    "@mui/base": "^5.0.0-beta.33",
+    "@mui/system": "^5.15.6",
+    "@mui/utils": "^5.15.6",
     "@mui/x-date-pickers": "7.0.0-alpha.9",
     "@mui/x-license-pro": "7.0.0-alpha.9",
     "clsx": "^2.1.0",
@@ -96,7 +96,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.1",
+    "@types/luxon": "^3.4.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "luxon": "^3.4.4",

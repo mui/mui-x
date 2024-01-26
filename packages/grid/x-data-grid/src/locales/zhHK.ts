@@ -38,12 +38,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '列印',
   toolbarExportExcel: '下載為 Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: '查找欄目',
-  columnsPanelTextFieldPlaceholder: '欄目標題',
-  columnsPanelDragIconLabel: '重新排序列',
-  columnsPanelShowAllButton: '顯示所有',
-  columnsPanelHideAllButton: '全部藏起來',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',

@@ -1,6 +1,10 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "availableRangePositions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'end'<br>&#124;&nbsp;'start'&gt;" },
+      "default": "['start', 'end']"
+    },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -31,14 +35,22 @@
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "focusedView": { "type": { "name": "enum", "description": "'day'" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: DateRange<TDate>, selectionState: PickerSelectionState | undefined) => void",
-        "describedArgs": ["value", "selectionState"]
+        "type": "function(value: TValue, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
+        "describedArgs": ["value", "selectionState", "selectedView"]
+      }
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(view: TView, hasFocus: boolean) => void",
+        "describedArgs": ["view", "hasFocus"]
       }
     },
     "onMonthChange": {
@@ -52,6 +64,11 @@
         "describedArgs": ["rangePosition"]
       }
     },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "openTo": { "type": { "name": "enum", "description": "'day'" } },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
@@ -101,7 +118,9 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "view": { "type": { "name": "enum", "description": "'day'" } },
+    "views": { "type": { "name": "arrayOf", "description": "Array&lt;'day'&gt;" } }
   },
   "name": "DateRangeCalendar",
   "imports": [
@@ -184,6 +203,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

@@ -16,7 +16,7 @@ export interface MobileDateRangePickerSlots<TDate>
 
 export interface MobileDateRangePickerSlotProps<TDate>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day'> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, 'day'>, 'tabs'> {}
 
 export interface MobileDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,

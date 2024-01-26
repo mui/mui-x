@@ -46,7 +46,7 @@ export type {
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
+export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
 
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
@@ -80,6 +80,7 @@ export type {
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
+  PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
 export { useStaticPicker } from './hooks/useStaticPicker';
@@ -164,4 +165,4 @@ export type {
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
-export { isTimeView } from './utils/time-utils';
+export { isInternalTimeView, isTimeView } from './utils/time-utils';

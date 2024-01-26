@@ -37,12 +37,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Принтиране',
   toolbarExportExcel: 'Изтегли като Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Намери колона',
-  columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
-  columnsPanelDragIconLabel: 'Пренареди на колона',
-  columnsPanelShowAllButton: 'Покажи Всички',
-  columnsPanelHideAllButton: 'Скрий Всички',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',

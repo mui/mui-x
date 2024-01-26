@@ -6,12 +6,13 @@ export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem> {
    */
   view: TView;
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a tab is clicked.
    * @template TView
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
-  className?: string;
 }
 
-export interface ExportedBaseTabsProps {}
+export interface ExportedBaseTabsProps {
+  className?: string;
+}

@@ -38,12 +38,10 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Printare',
   toolbarExportExcel: 'Download în format Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Găsește coloana',
-  columnsPanelTextFieldPlaceholder: 'Titlu coloană',
-  columnsPanelDragIconLabel: 'Resortare coloană',
-  columnsPanelShowAllButton: 'Afișează tot',
-  columnsPanelHideAllButton: 'Ascunde tot',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
