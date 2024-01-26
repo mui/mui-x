@@ -88,6 +88,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 ### Docs
 
 - [docs] Add `contextValue` to the headless tree view doc (#11705) @flaviendelangle
+- [docs] Add section for the `disableSelection` prop (#11821) @flaviendelangle
 - [docs] Fix brand name non-breaking space (#11758) @oliviertassinari
 - [docs] Fix typo in Data Grid components page (#11775) @flaviendelangle
 - [docs] Fix use of quote, should use callout (#11759) @oliviertassinari
