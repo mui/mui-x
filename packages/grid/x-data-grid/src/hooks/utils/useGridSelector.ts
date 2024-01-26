@@ -30,7 +30,7 @@ function applySelector<Api extends GridApiCommon, T>(
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare;
 
-const createRefs = () => ({ state: null, equals: null, selector: null } as any);
+const createRefs = () => ({ state: null, equals: null, selector: null }) as any;
 
 export const useGridSelector = <Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,

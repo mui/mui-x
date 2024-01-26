@@ -182,7 +182,7 @@ The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
-| **Column**                                                                             |           |                                    |
+| **Column**                                                                             |           |                                    |                                            |
 | [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |

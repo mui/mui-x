@@ -28,8 +28,8 @@ type GridEventPublisherArg<E extends GridEvents, T> = T extends {
 }
   ? PublisherArgsEvent<E, T>
   : T extends { params: any }
-  ? PublisherArgsParams<E, T>
-  : PublisherArgsNoParams<E>;
+    ? PublisherArgsParams<E, T>
+    : PublisherArgsNoParams<E>;
 
 export type GridEventPublisher = <E extends GridEvents>(
   ...params: GridEventPublisherArg<E, GridEventLookup[E]>

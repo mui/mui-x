@@ -46,17 +46,17 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "area": "",
+    "axisContent": "",
+    "axisLabel": "",
     "axisLine": "",
     "axisTick": "",
     "axisTickLabel": "",
-    "axisLabel": "",
-    "area": "",
-    "line": "",
-    "mark": "",
-    "lineHighlight": "",
+    "itemContent": "",
     "legend": "",
-    "popper": "",
-    "axisContent": "",
-    "itemContent": ""
+    "line": "",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
   }
 }

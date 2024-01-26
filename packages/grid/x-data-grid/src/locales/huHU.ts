@@ -37,12 +37,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Nyomtatás',
   toolbarExportExcel: 'Mentés Excel fájlként',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Oszlop keresése',
-  columnsPanelTextFieldPlaceholder: 'Oszlop neve',
-  columnsPanelDragIconLabel: 'Oszlop átrendezése',
-  columnsPanelShowAllButton: 'Összes megjelenítése',
-  columnsPanelHideAllButton: 'Összes elrejtése',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',

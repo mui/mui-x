@@ -41,12 +41,12 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "area": "",
-    "line": "",
-    "mark": "",
-    "lineHighlight": "",
-    "bar": "",
-    "popper": "",
     "axisContent": "",
-    "itemContent": ""
+    "bar": "",
+    "itemContent": "",
+    "line": "",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": ""
   }
 }
