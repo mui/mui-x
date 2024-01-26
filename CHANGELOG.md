@@ -5,10 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.0.0-beta.0
 
-_Jan 25, 2024_
+_Jan 26, 2024_
 
 We are glad to announce MUI X v7 beta!
-This version comes with a number of improvements, bug fixes and exciting features 🎉:
+This version has several improvements, bug fixes, and exciting features 🎉. We want to offer a big thanks to the 7 contributors who made this release possible ✨:
 
 ### 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
 
@@ -18,8 +18,6 @@ This version comes with a number of improvements, bug fixes and exciting feature
 
   <img width="310" alt="image" src="https://github.com/mui/mui-x/assets/12609561/a79dac8b-d54d-4e69-a63a-ef78f3993f37">
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible ✨:
-
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -27,7 +25,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### Breaking changes
 
-- The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://next.mui.com/material-ui/react-popper/) component under the hood.
+- The columns management component has been redesigned and the component was extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component above the headers as a panel. As a result, a new slot `columnsManagement` and the related prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://next.mui.com/material-ui/react-popper/) component under the hood.
 
   ```diff
    <DataGrid
@@ -41,7 +39,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
    />
   ```
 
-- `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
+- `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` toggle in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
 
   ```diff
    <DataGrid
@@ -56,6 +54,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Export `GridColumnTypes` interface for custom column types (#11742) @cherniavskii
 - [DataGrid] Initialize `apiRef` early (#11792) @cherniavskii
 - [DataGrid] New column management panel design (#11770) @MBilalShafi
+- [DataGrid] Fix support for tree with more than 50,000 children (#11757) @zenazn
 
 #### `@mui/x-data-grid-pro@7.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -70,7 +69,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.0`.
 #### `@mui/x-date-pickers@7.0.0-beta.0`
 
 - [pickers] Apply the `layout.tabs` class to `Tabs` slot (#11781) @LukasTy
-- [pickers] Avoid too deep imports (#11794) @LukasTy
+- [pickers] Avoid deep imports (#11794) @LukasTy
 - [pickers] Fields typing optimization (#11779) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -99,7 +98,6 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 
 - [core] Cleanup script and alias setup (#11749) @LukasTy
 - [core] Polish issue templates @oliviertassinari
-- [data grid] Fix support for tree with > 50,000 children (#11757) @zenazn
 - [code-infra] Update prettier and pretty-quick (#11735) @Janpot
 
 ## 7.0.0-alpha.9
