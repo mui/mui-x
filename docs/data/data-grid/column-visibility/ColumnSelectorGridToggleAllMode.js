@@ -15,7 +15,7 @@ export default function ColumnSelectorGridToggleAllMode() {
         {...data}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
-          columnsPanel: {
+          columnsManagement: {
             toggleAllMode: 'filteredOnly',
           },
         }}
