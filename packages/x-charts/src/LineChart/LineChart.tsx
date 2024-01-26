@@ -32,7 +32,7 @@ import {
   LineHighlightPlotSlots,
   LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
-import { ChartsGrid } from '../ChartsGrid';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -56,6 +56,10 @@ export interface LineChartProps
     Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
    * The two properties accept the following values:
@@ -110,6 +114,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     axisHighlight = { x: 'line' },
     disableLineItemHighlight,
     legend,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -153,7 +158,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
-      <ChartsGrid vertical horizontal />
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <g clipPath={`url(#${clipPathId})`}>
         <AreaPlot slots={slots} slotProps={slotProps} />
         <LinePlot slots={slots} slotProps={slotProps} />
@@ -250,6 +255,13 @@ LineChart.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined

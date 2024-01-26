@@ -1,12 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
 import useTicks from '../hooks/useTicks';
-import { ChartsGridClasses, gridClasses } from './gridClasses';
+import { ChartsGridClasses, getGridUtilityClass, gridClasses } from './gridClasses';
 
 export const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
@@ -19,10 +18,6 @@ export const GridRoot = styled('g', {
     strokeWidth: 1,
   },
 }));
-
-export function getGridUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartsGrid', slot);
-}
 
 const useUtilityClasses = ({ classes }: ChartsGridProps) => {
   const slots = {

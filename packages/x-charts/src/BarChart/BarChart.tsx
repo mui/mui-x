@@ -25,7 +25,7 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid } from '../ChartsGrid';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -44,6 +44,11 @@ export interface BarChartProps
     Pick<BarPlotProps, 'skipAnimation'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
+
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
    * The two properties accept the following values:
@@ -95,6 +100,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     tooltip,
     axisHighlight,
     legend,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -150,7 +156,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
-      <ChartsGrid vertical horizontal />
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       </g>
@@ -162,7 +168,6 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         slots={slots}
         slotProps={slotProps}
       />
-
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...defaultizedAxisHighlight} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
@@ -240,6 +245,13 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined
