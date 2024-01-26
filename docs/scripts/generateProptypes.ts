@@ -22,6 +22,8 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'minTime',
         'maxTime',
         'referenceDate',
+        'day',
+        'currentMonth',
       ];
 
       if (T_DATE_PROPS.includes(name)) {
