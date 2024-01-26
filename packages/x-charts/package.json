@@ -40,9 +40,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.8",
-    "@mui/base": "^5.0.0-beta.32",
-    "@mui/system": "^5.15.5",
-    "@mui/utils": "^5.15.5",
+    "@mui/base": "^5.0.0-beta.33",
+    "@mui/system": "^5.15.6",
+    "@mui/utils": "^5.15.6",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
     "clsx": "^2.1.0",
