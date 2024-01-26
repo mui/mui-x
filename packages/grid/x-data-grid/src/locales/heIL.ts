@@ -69,12 +69,12 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
-  'filterOperator=': 'שווה',
-  'filterOperator!=': 'שונה',
-  'filterOperator>': 'גדול מ',
-  'filterOperator>=': 'גדול או שווה ל',
-  'filterOperator<': 'קטן מ',
-  'filterOperator<=': 'קטן או שווה ל',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
