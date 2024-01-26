@@ -98,8 +98,6 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const hasUpdatedEditValueOnMount = React.useRef(false);
-
   const parseValueToDate = React.useCallback((value: string) => {
     if (value === '') {
       return null;
@@ -152,24 +150,9 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       inputRef.current!.focus();
     }
   }, [hasFocus]);
-
-  const meta = apiRef.current.unstable_getEditCellMeta(id, field);
-
-  const handleInputRef = (el: HTMLInputElement) => {
-    inputRef.current = el;
-
-    if (meta?.unstable_updateValueOnRender && !hasUpdatedEditValueOnMount.current) {
-      const inputValue = inputRef.current.value;
-      const parsedDate = parseValueToDate(inputValue);
-      setValueState({ parsed: parsedDate, formatted: inputValue });
-      apiRef.current.setEditCellValue({ id, field, value: parsedDate });
-      hasUpdatedEditValueOnMount.current = true;
-    }
-  };
-
   return (
     <StyledInputBase
-      inputRef={handleInputRef}
+      inputRef={inputRef}
       fullWidth
       className={classes.root}
       type={isDateTime ? 'datetime-local' : 'date'}

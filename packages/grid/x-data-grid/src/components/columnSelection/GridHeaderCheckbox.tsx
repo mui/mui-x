@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
@@ -138,6 +139,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         inputProps={{ 'aria-label': label }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
+        disabled={!isMultipleRowSelectionEnabled(rootProps)}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />

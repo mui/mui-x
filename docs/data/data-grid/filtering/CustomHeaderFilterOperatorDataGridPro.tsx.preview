@@ -1,1 +1,1 @@
-<DataGridPro {...data} columns={columns} unstable_headerFilters />
+<DataGridPro {...data} columns={columns} headerFilters />

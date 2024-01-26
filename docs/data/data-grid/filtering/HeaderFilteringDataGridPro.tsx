@@ -21,7 +21,7 @@ export default function HeaderFilteringDataGridPro() {
             },
           },
         }}
-        unstable_headerFilters
+        headerFilters
       />
     </div>
   );

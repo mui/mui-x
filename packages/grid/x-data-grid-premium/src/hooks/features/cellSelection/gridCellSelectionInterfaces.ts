@@ -12,27 +12,27 @@ export interface GridCellSelectionApi {
    * @param {GridColDef['field']} field The field.
    * @returns {boolean} A boolean indicating if the cell is selected.
    */
-  unstable_isCellSelected: (id: GridRowId, field: GridColDef['field']) => boolean;
+  isCellSelected: (id: GridRowId, field: GridColDef['field']) => boolean;
   /**
    * Returns an object containing the selection state of the cells.
    * The keys of the object correpond to the row IDs.
    * The value of each key is another object whose keys are the fields and values are the selection state.
    * @returns {GridCellSelectionModel} Object containing the selection state of the cells
    */
-  unstable_getCellSelectionModel: () => GridCellSelectionModel;
+  getCellSelectionModel: () => GridCellSelectionModel;
   /**
    * Updates the selected cells to be those passed to the `newModel` argument.
    * Any cell already selected will be unselected.
    * @param {GridCellSelectionModel} newModel The cells to select.
    */
-  unstable_setCellSelectionModel: (newModel: GridCellSelectionModel) => void;
+  setCellSelectionModel: (newModel: GridCellSelectionModel) => void;
   /**
    * Selects all cells that are inside the range given by `start` and `end` coordinates.
    * @param {GridCellCoordinates} start Object containing the row ID and field of the first cell to select.
    * @param {GridCellCoordinates} end Object containing the row ID and field of the last cell to select.
    * @param {boolean} keepOtherSelected Whether to keep current selected cells or discard. Default is false.
    */
-  unstable_selectCellRange: (
+  selectCellRange: (
     start: GridCellCoordinates,
     end: GridCellCoordinates,
     keepOtherSelected?: boolean,
@@ -42,5 +42,5 @@ export interface GridCellSelectionApi {
    * Each item is an object with the ID and field of the cell.
    * @returns {GridCellCoordinates[]} Array with the selected cells.
    */
-  unstable_getSelectedCellsAsArray: () => GridCellCoordinates[];
+  getSelectedCellsAsArray: () => GridCellCoordinates[];
 }

@@ -33,7 +33,7 @@ createSelector(
 createSelector(
   (state: GridStateCommunity) => state.columns.orderedFields,
   (fields) => fields,
-)({} as GridStateCommunity);
+)({} as GridStateCommunity, { id: 1 });
 
 createSelector(
   // @ts-expect-error Wrong state key

@@ -9,8 +9,8 @@ export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
 
 export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
+  type: 'custom',
   field: GRID_CHECKBOX_SELECTION_FIELD,
-  type: 'checkboxSelection',
   width: 50,
   resizable: false,
   sortable: false,
@@ -21,7 +21,6 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   disableReorder: true,
   disableExport: true,
   getApplyQuickFilterFn: undefined,
-  getApplyQuickFilterFnV7: undefined,
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(params.api.state, params.api.instanceId);
     return selectionLookup[params.id] !== undefined;

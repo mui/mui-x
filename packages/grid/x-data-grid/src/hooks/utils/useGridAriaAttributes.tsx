@@ -7,6 +7,7 @@ import {
   gridRowCountSelector,
 } from '../features/rows/gridRowsSelector';
 import { useGridPrivateApiContext } from './useGridPrivateApiContext';
+import { isMultipleRowSelectionEnabled } from '../features/rowSelection/utils';
 
 export const useGridAriaAttributes = () => {
   const apiRef = useGridPrivateApiContext();
@@ -17,7 +18,7 @@ export const useGridAriaAttributes = () => {
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   let role = 'grid';
-  if (rootProps.experimentalFeatures?.ariaV7 && (rootProps as any).treeData) {
+  if ((rootProps as any).treeData) {
     role = 'treegrid';
   }
 
@@ -25,6 +26,6 @@ export const useGridAriaAttributes = () => {
     role,
     'aria-colcount': visibleColumns.length,
     'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount,
-    'aria-multiselectable': !rootProps.disableMultipleRowSelection,
+    'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),
   };
 };

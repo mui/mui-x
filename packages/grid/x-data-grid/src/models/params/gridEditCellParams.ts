@@ -32,6 +32,7 @@ enum GridCellEditStartReasons {
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
   deleteKeyDown = 'deleteKeyDown',
+  pasteKeyDown = 'pasteKeyDown',
 }
 
 /**
@@ -45,6 +46,7 @@ export interface GridCellEditStartParams<R extends GridValidRowModel = any, V = 
   reason?: GridCellEditStartReasons;
   /**
    * If the reason is related to a keyboard event, it contains which key was pressed.
+   * @deprecated No longer needed.
    */
   key?: string;
 }

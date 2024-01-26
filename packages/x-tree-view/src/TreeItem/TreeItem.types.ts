@@ -1,27 +1,58 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
+import { TreeViewItemId } from '../models';
+
+export interface TreeItemSlots {
+  /**
+   * The icon used to collapse the node.
+   */
+  collapseIcon?: React.ElementType;
+  /**
+   * The icon used to expand the node.
+   */
+  expandIcon?: React.ElementType;
+  /**
+   * The icon displayed next to an end node.
+   */
+  endIcon?: React.ElementType;
+  /**
+   * The icon to display next to the tree node's label.
+   */
+  icon?: React.ElementType;
+}
+
+export interface TreeItemSlotProps {
+  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
+  expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
+  icon?: SlotComponentProps<'svg', {}, {}>;
+}
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
    * The content of the component.
    */
   children?: React.ReactNode;
-  /**
-   * className applied to the root element.
-   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<TreeItemClasses>;
   /**
-   * The icon used to collapse the node.
+   * Overridable component slots.
+   * @default {}
    */
-  collapseIcon?: React.ReactNode;
+  slots?: TreeItemSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: TreeItemSlotProps;
   /**
    * The component used for the content node.
    * @default TreeItemContent
@@ -37,18 +68,6 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   disabled?: boolean;
   /**
-   * The icon displayed next to an end node.
-   */
-  endIcon?: React.ReactNode;
-  /**
-   * The icon used to expand the node.
-   */
-  expandIcon?: React.ReactNode;
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon?: React.ReactNode;
-  /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
    */
@@ -60,7 +79,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   /**
    * The id of the node.
    */
-  nodeId: string;
+  nodeId: TreeViewItemId;
   /**
    * The component used for the transition.
    * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.

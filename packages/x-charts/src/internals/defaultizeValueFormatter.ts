@@ -1,4 +1,7 @@
-function defaultizeValueFormatter<ISeries extends {}, IFormatter extends (v: any) => string>(
+function defaultizeValueFormatter<
+  ISeries extends { valueFormatter?: IFormatter },
+  IFormatter extends (v: any) => string,
+>(
   series: {
     [id: string]: ISeries;
   },
@@ -15,8 +18,8 @@ function defaultizeValueFormatter<ISeries extends {}, IFormatter extends (v: any
   } = {};
   Object.keys(series).forEach((seriesId) => {
     defaultizedSeries[seriesId] = {
-      valueFormatter: defaultValueFormatter,
       ...series[seriesId],
+      valueFormatter: series[seriesId].valueFormatter ?? defaultValueFormatter,
     };
   });
   return defaultizedSeries;

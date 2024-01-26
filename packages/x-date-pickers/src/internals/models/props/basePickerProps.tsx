@@ -18,9 +18,6 @@ export interface BasePickerProps<
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerBaseProps<TValue, TDate, TView, TError, TExternalProps, TAdditionalProps> {
-  /**
-   * Class name applied to the root element.
-   */
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -77,4 +74,8 @@ export interface BaseNonRangeNonStaticPickerProps {
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name?: string;
 }

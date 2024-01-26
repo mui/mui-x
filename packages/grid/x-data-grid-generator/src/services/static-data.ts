@@ -229,7 +229,7 @@ export const COUNTRY_ISO_OPTIONS: CountryIsoOption[] = [
   { value: 'MF', code: 'MF', label: 'Saint Martin (French part)', phone: '590' },
   { value: 'MG', code: 'MG', label: 'Madagascar', phone: '261' },
   { value: 'MH', code: 'MH', label: 'Marshall Islands', phone: '692' },
-  { value: 'MK', code: 'MK', label: 'Macedonia, the Former Yugoslav Republic of', phone: '389' },
+  { value: 'MK', code: 'MK', label: 'North Macedonia', phone: '389' },
   { value: 'ML', code: 'ML', label: 'Mali', phone: '223' },
   { value: 'MM', code: 'MM', label: 'Myanmar', phone: '95' },
   { value: 'MN', code: 'MN', label: 'Mongolia', phone: '976' },

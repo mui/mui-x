@@ -8,16 +8,16 @@ import {
 import {
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
-  GridApiCommunity,
   passFilterLogic,
 } from '@mui/x-data-grid/internals';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiPro>;
 }
 
 export const TREE_DATA_STRATEGY = 'tree-data';

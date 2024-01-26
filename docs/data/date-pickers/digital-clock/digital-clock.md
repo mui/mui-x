@@ -8,13 +8,13 @@ packageName: '@mui/x-date-pickers'
 
 # Digital Clock
 
-<p class="description">The Digital Clock components let the user select a time without any input or popper / modal.</p>
+<p class="description">The Digital Clock lets the user select a time without any input or popper / modal.</p>
 
 ## Description
 
 There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
 
-The `DigitalClock` is more appropriate when there is a limited amount of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
+The `DigitalClock` is more appropriate when there is a limited number of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
 
 ## Basic usage
 
@@ -56,7 +56,7 @@ The components use the hour format of the locale's time setting, i.e. the 12-hou
 
 You can force a specific format using the `ampm` prop.
 
-You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#12h-24h-format).
+You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#meridiem-12h-24h-format).
 
 {{"demo": "DigitalClockAmPm.js"}}
 

@@ -113,7 +113,7 @@ export const useGridAggregationPreProcessors = (
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
-      if (props.disableAggregation) {
+      if (props.disableAggregation || !colDef.aggregable) {
         return columnMenuItems;
       }
 

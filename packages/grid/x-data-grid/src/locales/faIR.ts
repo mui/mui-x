@@ -38,12 +38,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'چاپ',
   toolbarExportExcel: 'دانلود به صورت اکسل',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'پیداکردن ستون',
-  columnsPanelTextFieldPlaceholder: 'عنوان ستون',
-  columnsPanelDragIconLabel: 'جا‌به‌جایی ستون',
-  columnsPanelShowAllButton: 'نمایش همه',
-  columnsPanelHideAllButton: 'مخفی همه',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',

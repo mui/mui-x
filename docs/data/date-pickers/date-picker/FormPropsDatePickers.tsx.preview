@@ -1,2 +1,3 @@
 <DatePicker label="disabled" disabled />
 <DatePicker label="readOnly" readOnly />
+<DatePicker label="name" name="startDate" />

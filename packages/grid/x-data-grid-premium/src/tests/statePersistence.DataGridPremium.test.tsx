@@ -8,7 +8,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, act } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 
@@ -47,7 +47,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
 };
 
-describe('<DataGridPremium /> - State Persistence', () => {
+describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;

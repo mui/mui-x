@@ -1,23 +1,22 @@
 import {
   DesktopDateTimePickerProps,
-  DesktopDateTimePickerSlotsComponent,
-  DesktopDateTimePickerSlotsComponentsProps,
+  DesktopDateTimePickerSlots,
+  DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDateTimePickerProps,
-  MobileDateTimePickerSlotsComponent,
-  MobileDateTimePickerSlotsComponentsProps,
+  MobileDateTimePickerSlots,
+  MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
 
-export interface DateTimePickerSlotsComponents<TDate>
-  extends DesktopDateTimePickerSlotsComponent<TDate>,
-    MobileDateTimePickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlots<TDate>
+  extends DesktopDateTimePickerSlots<TDate>,
+    MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerSlotsComponentsProps<TDate>
-  extends DesktopDateTimePickerSlotsComponentsProps<TDate>,
-    MobileDateTimePickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlotProps<TDate>
+  extends DesktopDateTimePickerSlotProps<TDate>,
+    MobileDateTimePickerSlotProps<TDate, DateOrTimeViewWithMeridiem> {}
 
 export interface DateTimePickerProps<TDate>
   extends DesktopDateTimePickerProps<TDate>,
@@ -34,25 +33,13 @@ export interface DateTimePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateTimePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateTimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateTimePickerSlotsComponents<TDate>>;
+  slots?: DateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: DateTimePickerSlotProps<TDate>;
 }

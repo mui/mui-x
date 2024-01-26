@@ -19,7 +19,6 @@ export interface UseFieldParams<
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
-  inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
@@ -116,6 +115,20 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
@@ -138,13 +151,17 @@ export interface FieldRef<TSection extends FieldSection> {
 }
 
 export interface UseFieldForwardedProps {
+  inputRef?: React.Ref<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  disabled?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -152,8 +169,8 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    ref: React.Ref<HTMLInputElement>;
+  Pick<React.InputHTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
+    inputRef: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
@@ -224,9 +241,8 @@ export type FieldSelectedSectionsIndexes = {
   endIndex: number;
   /**
    * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   * @default false
    */
-  shouldSelectBoundarySelectors?: boolean;
+  shouldSelectBoundarySelectors: boolean;
 };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
@@ -237,6 +253,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the direction is "right to left".
    * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
@@ -245,6 +262,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
+    localizedDigits: string[],
     isRTL: boolean,
     getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
@@ -252,10 +270,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getValueStrFromSections: (
+    sections: TSection[],
+    localizedDigits: string[],
+    isRTL: boolean,
+  ) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection

@@ -1,6 +1,5 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../validation';
-import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue.types';
 import { TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
@@ -36,18 +35,6 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
    * Used when the component is not controlled.
    */
   defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate, TView
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
-   */
-  onChange?: (
-    value: TDate | null,
-    selectionState?: PickerSelectionState,
-    selectedView?: TView,
-  ) => void;
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false

@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer } from '@mui-internal/test-utils';
+import { sleep } from 'test/utils/helperFn';
 import { createUseGridApiEventHandler } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 
 const noop = spy();
-
-function sleep(time: number): Promise<void> {
-  return new Promise<void>((res) => {
-    setTimeout(res, time);
-  });
-}
 
 describe('useGridApiEventHandler', () => {
   const { render } = createRenderer();

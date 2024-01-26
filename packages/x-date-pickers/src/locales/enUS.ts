@@ -9,16 +9,20 @@ const enUSPickers: PickersLocaleText<any> = {
   nextMonth: 'Next month',
 
   // View navigation
-  openPreviousView: 'open previous view',
-  openNextView: 'open next view',
+  openPreviousView: 'Open previous view',
+  openNextView: 'Open next view',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'End',
+  startDate: 'Start date',
+  startTime: 'Start time',
+  endDate: 'End date',
+  endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancel',
@@ -59,6 +63,8 @@ const enUSPickers: PickersLocaleText<any> = {
     value !== null && utils.isValid(value)
       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
+
+  fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'pick time',

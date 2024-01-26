@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
+import { GridColDef } from '../colDef';
 
 /**
  * Set the types of the texts in the grid.
@@ -39,12 +40,10 @@ export interface GridLocaleText {
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: string;
-  columnsPanelTextFieldPlaceholder: string;
-  columnsPanelDragIconLabel: string;
-  columnsPanelShowAllButton: React.ReactNode;
-  columnsPanelHideAllButton: React.ReactNode;
+  // Columns management text
+  columnsManagementSearchTitle: React.ReactNode;
+  columnsManagementNoColumns: React.ReactNode;
+  columnsManagementShowHideAllText: React.ReactNode;
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
@@ -112,8 +111,8 @@ export interface GridLocaleText {
   columnMenuFilter: React.ReactNode;
   columnMenuHideColumn: React.ReactNode;
   columnMenuUnsort: React.ReactNode;
-  columnMenuSortAsc: React.ReactNode;
-  columnMenuSortDesc: React.ReactNode;
+  columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;

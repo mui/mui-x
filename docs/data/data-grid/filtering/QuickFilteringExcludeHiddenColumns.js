@@ -41,7 +41,7 @@ export default function QuickFilteringExcludeHiddenColumns() {
         onChange={(event) =>
           setColumnVisibilityModel(() => ({ id: event.target.checked }))
         }
-        control={<Switch color="primary" size="small" />}
+        control={<Switch color="primary" />}
         label="Show ID column"
       />
       <FormControlLabel
@@ -52,7 +52,7 @@ export default function QuickFilteringExcludeHiddenColumns() {
             quickFilterExcludeHiddenColumns: event.target.checked,
           }))
         }
-        control={<Switch color="primary" size="small" />}
+        control={<Switch color="primary" />}
         label="Exclude hidden columns"
       />
       <Box sx={{ height: 400 }}>

@@ -13,7 +13,7 @@ export interface GridFilterModel {
   /**
    * - `GridLogicOperator.And`: the row must pass all the filter items.
    * - `GridLogicOperator.Or`: the row must pass at least on filter item.
-   * @default `GridLogicOperator.Or`
+   * @default `GridLogicOperator.And`
    */
   logicOperator?: GridLogicOperator;
   /**
@@ -28,8 +28,8 @@ export interface GridFilterModel {
    */
   quickFilterLogicOperator?: GridLogicOperator;
   /**
-   * If `true`, the quick filter will skip cell values from hidden columns.
-   * @default false
+   * If `false`, the quick filter will also consider cell values from hidden columns.
+   * @default true
    */
   quickFilterExcludeHiddenColumns?: boolean;
 }

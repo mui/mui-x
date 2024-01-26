@@ -24,23 +24,33 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     return sortItem?.sort;
   }, [colDef, sortModel]);
 
-  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
-        colDef!,
+        colDef!.field,
         (direction === sortDirection ? null : direction) as GridSortDirection,
       );
     },
     [apiRef, colDef, onClick, sortDirection],
   );
 
-  if (!colDef || !colDef.sortable || !sortingOrder.some((item) => !!item)) {
+  if (
+    rootProps.disableColumnSorting ||
+    !colDef ||
+    !colDef.sortable ||
+    !sortingOrder.some((item) => !!item)
+  ) {
     return null;
   }
+
+  const getLabel = (key: 'columnMenuSortAsc' | 'columnMenuSortDesc') => {
+    const label = apiRef.current.getLocaleText(key);
+    return typeof label === 'function' ? label(colDef) : label;
+  };
 
   return (
     <React.Fragment>
@@ -49,7 +59,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           <ListItemIcon>
             <rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortAsc')}</ListItemText>
+          <ListItemText>{getLabel('columnMenuSortAsc')}</ListItemText>
         </MenuItem>
       ) : null}
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
@@ -57,7 +67,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           <ListItemIcon>
             <rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortDesc')}</ListItemText>
+          <ListItemText>{getLabel('columnMenuSortDesc')}</ListItemText>
         </MenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (

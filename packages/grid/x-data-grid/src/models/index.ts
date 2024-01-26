@@ -6,7 +6,6 @@ export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterModel';
 export * from './gridPaginationProps';
-export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
 export * from './gridRowSelectionModel';
@@ -16,7 +15,7 @@ export * from './gridCell';
 export * from './gridColumnHeaderClass';
 export * from './api';
 export * from './gridIconSlotsComponent';
-export type { GridSlotsComponent, UncapitalizedGridSlotsComponent } from './gridSlotsComponent';
+export type { GridSlotsComponent } from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
 export * from './logger';
@@ -31,6 +30,7 @@ export type {
   GridFileExportOptions,
   GridGetRowsToExportParams,
   GridCsvGetRowsToExportParams,
+  GridPrintGetRowsToExportParams,
   GridCsvExportOptions,
   GridPrintExportOptions,
 } from './gridExport';

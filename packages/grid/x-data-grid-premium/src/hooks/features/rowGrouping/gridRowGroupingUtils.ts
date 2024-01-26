@@ -15,7 +15,6 @@ import {
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
   GridColumnRawLookup,
-  GridApiCommunity,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
@@ -58,7 +57,7 @@ interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
 }
 
 /**

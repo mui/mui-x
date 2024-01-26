@@ -1,5 +1,5 @@
-export function isNumber(value: any): value is number {
-  return typeof value === 'number';
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number' && !Number.isNaN(value);
 }
 
 export function isFunction(value: any): value is Function {
@@ -194,3 +194,12 @@ export function deepClone(obj: Record<string, any>) {
   }
   return JSON.parse(JSON.stringify(obj));
 }
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/**
+ * Mark a value as used so eslint doesn't complain. Use this instead
+ * of a `eslint-disable-next-line react-hooks/exhaustive-deps` because
+ * that hint disables checks on all values instead of just one.
+ */
+export function eslintUseValue(_: any) {}
+/* eslint-enable @typescript-eslint/no-unused-vars */

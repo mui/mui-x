@@ -4,17 +4,15 @@ productId: x-data-grid
 
 # Migration from v5 to v6
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
 ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `latest` or `^6.0.0`.
+In `package.json`, change the version of the data grid package to `^6.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "5.X.X",
@@ -33,9 +31,9 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
 // Target Date and Time Pickers as well
-npx @mui/x-codemod v6.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
 :::success
@@ -43,7 +41,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v600) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -73,7 +71,7 @@ These changes were done for consistency, improve stability and make room for new
 Below are described the steps you need to make to migrate from v5 to v6.
 
 :::warning
-The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/en/blog/release/v12.22.12).
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x reached end-of-life status](https://nodejs.org/en/blog/release/v12.22.12) in 2022.
 :::
 
 ### ✅ Renamed props
@@ -183,7 +181,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
         return;
       }
       // Check if the target is inside a Portal
-      if (!event.currentTarget.contains(event.target)) {
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target)
+      ) {
         event.defaultMuiPrevented = true;
       }
     }}
@@ -275,7 +276,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
 - If you are using Custom Column Menu using `components.ColumnMenu` or `slots.columnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
-  :::
+
+:::
 
 ### Rows
 
@@ -309,7 +311,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  onPageChange={handlePageChange}
   -  onPageSizeChange={handlePageSizeChange}
   +  paginationModel={{ page, pageSize }}
-  +  onPaginationModelChange={handlePaginationModelChange}
+  +  onPaginationModelChange={(paginationModel) => handlePaginationModelChange(paginationModel)}
    />
   ```
 
@@ -477,7 +479,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
   | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
@@ -490,13 +492,13 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, data grid support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
 ```bash
-npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.

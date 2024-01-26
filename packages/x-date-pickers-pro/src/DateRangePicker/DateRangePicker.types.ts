@@ -1,22 +1,21 @@
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
-  DesktopDateRangePickerSlotsComponent,
-  DesktopDateRangePickerSlotsComponentsProps,
+  DesktopDateRangePickerSlots,
+  DesktopDateRangePickerSlotProps,
 } from '../DesktopDateRangePicker';
 import {
   MobileDateRangePickerProps,
-  MobileDateRangePickerSlotsComponent,
-  MobileDateRangePickerSlotsComponentsProps,
+  MobileDateRangePickerSlots,
+  MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
 
-export interface DateRangePickerSlotsComponents<TDate>
-  extends DesktopDateRangePickerSlotsComponent<TDate>,
-    MobileDateRangePickerSlotsComponent<TDate> {}
+export interface DateRangePickerSlots<TDate>
+  extends DesktopDateRangePickerSlots<TDate>,
+    MobileDateRangePickerSlots<TDate> {}
 
-export interface DateRangePickerSlotsComponentsProps<TDate>
-  extends DesktopDateRangePickerSlotsComponentsProps<TDate>,
-    MobileDateRangePickerSlotsComponentsProps<TDate> {}
+export interface DateRangePickerSlotProps<TDate>
+  extends DesktopDateRangePickerSlotProps<TDate>,
+    MobileDateRangePickerSlotProps<TDate> {}
 
 export interface DateRangePickerProps<TDate>
   extends DesktopDateRangePickerProps<TDate>,
@@ -28,25 +27,13 @@ export interface DateRangePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DateRangePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DateRangePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateRangePickerSlotsComponents<TDate>>;
+  slots?: DateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DateRangePickerSlotProps<TDate>;
 }

@@ -13,3 +13,4 @@ export * from './sorting';
 export * from './dimensions';
 export * from './statePersistence';
 export * from './headerFiltering';
+export * from './virtualization';

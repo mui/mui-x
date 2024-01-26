@@ -6,7 +6,7 @@ import { useField } from '../internals/hooks/useField';
 import {
   UseDateTimeFieldProps,
   UseDateTimeFieldDefaultizedProps,
-  UseDateTimeFieldParams,
+  UseDateTimeFieldComponentProps,
 } from './DateTimeField.types';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -37,10 +37,9 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useDateTimeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseDateTimeFieldParams<TDate, TChildProps>) => {
+export const useDateTimeField = <TDate, TChildProps extends {}>(
+  inProps: UseDateTimeFieldComponentProps<TDate, TChildProps>,
+) => {
   const props = useDefaultizedDateTimeField<TDate, TChildProps>(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
@@ -49,7 +48,6 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
   >(props, 'date-time');
 
   return useField({
-    inputRef,
     forwardedProps,
     internalProps,
     valueManager: singleItemValueManager,

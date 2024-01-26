@@ -1,6 +1,0 @@
-<DataGrid
-  {...data}
-  slots={slots}
-  initialState={initialState}
-  experimentalFeatures={experimentalFeatures}
-/>

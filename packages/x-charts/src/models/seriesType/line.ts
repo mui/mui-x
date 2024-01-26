@@ -1,4 +1,5 @@
 import { DefaultizedProps } from '../helpers';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonDefaultizedProps,
@@ -16,7 +17,7 @@ export type CurveType =
   | 'stepBefore'
   | 'stepAfter';
 
-export interface ShowMarkParams {
+export interface ShowMarkParams<AxisValue = number | Date> {
   /**
    * The item index.
    */
@@ -32,7 +33,7 @@ export interface ShowMarkParams {
   /**
    * The item position value. It likely comes from the axis `data` property.
    */
-  position: number | Date;
+  position: AxisValue;
   /**
    * The item value. It comes from the series `data` property.
    */
@@ -40,14 +41,14 @@ export interface ShowMarkParams {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
    */
-  data?: number[];
+  data?: (number | null)[];
   /**
    * The key used to retrive data from the dataset.
    */
@@ -67,6 +68,16 @@ export interface LineSeriesType
    * @default false
    */
   disableHighlight?: boolean;
+  /**
+   * If `true`, line and area connect points separated by `null` values.
+   * @default false
+   */
+  connectNulls?: boolean;
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**

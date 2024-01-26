@@ -15,7 +15,7 @@
     { "path": "../x-license-pro/tsconfig.build.json" }
   ],
   "include": [
-    "src/**/*.ts*",
+    "./src/**/*.ts*",
     "../../node_modules/@mui/material/themeCssVarsAugmentation",
     "../../node_modules/dayjs/plugin/utc.d.ts",
     "../../node_modules/dayjs/plugin/timezone.d.ts",

@@ -1,39 +1,4 @@
 const { danger, markdown } = require('danger');
-const fse = require('fs-extra');
-const path = require('path');
-const prettier = require('prettier');
-
-const dangerCommand = process.env.DANGER_COMMAND;
-
-async function reportBundleSize() {
-  const snapshotPath = path.join(__dirname, './performance-snapshot.json');
-  const prettierConfigPath = path.join(__dirname, './prettier.config.js');
-  const snapshot = await fse.readJSON(snapshotPath);
-
-  const headers = `
-| Test case | Unit | Min | Max | Median | Mean | σ |
-| --------- | ---- | --- | --- | ------ | ---- | - |`;
-
-  let text = `These are the results for the performance tests:
-${headers}\n`;
-
-  const formatter = new Intl.NumberFormat('en');
-
-  Object.entries(snapshot).forEach(([name, values]) => {
-    const min = formatter.format(values.min);
-    const max = formatter.format(values.max);
-    const mean = formatter.format(values.mean);
-    const median = formatter.format(values.median);
-    const stdDev = formatter.format(values.stdDev);
-    text += `| ${name} | ms | ${min} | ${max} | ${median} | ${mean} | ${stdDev} |\n`;
-  });
-
-  const prettierConfig = prettier.resolveConfig.sync(snapshotPath, {
-    config: prettierConfigPath,
-  });
-
-  markdown(prettier.format(text, { prettierConfig, parser: 'markdown' }));
-}
 
 function addDeployPreviewUrls() {
   /**
@@ -59,24 +24,21 @@ function addDeployPreviewUrls() {
     .filter((file) => file.startsWith('docs/data') && file.endsWith('.md'))
     .slice(0, 5);
 
-  markdown(`
-## Netlify deploy preview
+  markdown(`**Deploy preview:** <a href="${netlifyPreview}">${netlifyPreview}</a>`);
 
-Netlify deploy preview: <a href="${netlifyPreview}">${netlifyPreview}</a>
+  if (docs.length) {
+    markdown(`
 
-### Updated pages
+**Updated pages:**
 
-${
-  docs.length
-    ? docs
-        .map((docsPath) => {
-          const formattedUrl = formatFileToLink(docsPath);
-          return `- [${docsPath}](${netlifyPreview}${formattedUrl})`;
-        })
-        .join('\n')
-    : 'No updates.'
-}
+${docs
+  .map((docsPath) => {
+    const formattedUrl = formatFileToLink(docsPath);
+    return `- [${docsPath}](${netlifyPreview}${formattedUrl})`;
+  })
+  .join('\n')}
 `);
+  }
 }
 
 function addL10nHelpMessage() {
@@ -112,14 +74,6 @@ function addL10nHelpMessage() {
 async function run() {
   addL10nHelpMessage();
   addDeployPreviewUrls();
-
-  switch (dangerCommand) {
-    case 'reportPerformance':
-      await reportBundleSize();
-      break;
-    default:
-      throw new TypeError(`Unrecognized danger command '${dangerCommand}'`);
-  }
 }
 
 run().catch((error) => {

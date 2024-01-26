@@ -37,7 +37,6 @@ function RatingInputValue(props) {
       >
         <Rating
           name="custom-rating-filter-operator"
-          placeholder="Filter value"
           value={Number(item.value)}
           onChange={handleFilterChange}
           precision={0.5}
@@ -80,7 +79,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} unstable_headerFilters />
+      <DataGridPro {...data} columns={columns} headerFilters />
     </div>
   );
 }

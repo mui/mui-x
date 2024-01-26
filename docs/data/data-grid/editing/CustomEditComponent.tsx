@@ -56,7 +56,7 @@ export default function CustomEditComponent() {
   );
 }
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'places',
     headerName: 'Places',

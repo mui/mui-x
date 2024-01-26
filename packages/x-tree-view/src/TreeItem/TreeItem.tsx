@@ -2,17 +2,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import ownerDocument from '@mui/utils/ownerDocument';
-import useForkRef from '@mui/utils/useForkRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { TreeViewContext } from '../TreeView/TreeViewContext';
-import { DescendantProvider, TreeItemDescendant, useDescendant } from '../TreeView/descendants';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -149,22 +149,30 @@ const TreeItemGroup = styled(Collapse, {
  */
 export const TreeItem = React.forwardRef(function TreeItem(
   inProps: TreeItemProps,
-  ref: React.Ref<HTMLLIElement>,
+  inRef: React.Ref<HTMLLIElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+  const {
+    icons: contextIcons,
+    runItemPlugins,
+    selection: { multiSelect },
+    disabledItemsFocusable,
+    instance,
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
+
+  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+
+  const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+
   const {
     children,
     className,
-    collapseIcon,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    endIcon,
-    expandIcon,
-    disabled: disabledProp,
-    icon,
-    id: idProp,
-    label,
     nodeId,
+    id,
+    label,
     onClick,
     onMouseDown,
     TransitionComponent = Collapse,
@@ -172,48 +180,18 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const {
-    icons: contextIcons,
-    focus,
-    isExpanded,
-    isFocused,
-    isSelected,
-    isDisabled,
-    multiSelect,
-    disabledItemsFocusable,
-    mapFirstChar,
-    unMapFirstChar,
-    registerNode,
-    unregisterNode,
-    treeId,
-  } = React.useContext(TreeViewContext);
-
-  let id: string | undefined;
-  if (idProp != null) {
-    id = idProp;
-  } else if (treeId && nodeId) {
-    id = `${treeId}-${nodeId}`;
-  }
-
-  const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(setTreeItemElement, ref);
-
-  const descendant = React.useMemo<TreeItemDescendant>(
-    () => ({
-      element: treeItemElement!,
-      id: nodeId,
-    }),
-    [nodeId, treeItemElement],
-  );
-
-  const { index, parentId } = useDescendant(descendant);
+  const slots = {
+    expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
+    collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
+    endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
+    icon: inSlots?.icon,
+  };
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
-  const expanded = isExpanded ? isExpanded(nodeId) : false;
-  const focused = isFocused ? isFocused(nodeId) : false;
-  const selected = isSelected ? isSelected(nodeId) : false;
-  const disabled = isDisabled ? isDisabled(nodeId) : false;
+  const expanded = instance.isNodeExpanded(nodeId);
+  const focused = instance.isNodeFocused(nodeId);
+  const selected = instance.isNodeSelected(nodeId);
+  const disabled = instance.isNodeDisabled(nodeId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -225,53 +203,51 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const classes = useUtilityClasses(ownerState);
 
-  let displayIcon: React.ReactNode;
-  let expansionIcon: React.ReactNode;
+  const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
+  const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
+    elementType: ExpansionIcon,
+    ownerState: {},
+    externalSlotProps: (tempOwnerState: any) => {
+      if (expanded) {
+        return {
+          ...resolveComponentProps(contextIcons.slotProps.collapseIcon, tempOwnerState),
+          ...resolveComponentProps(inSlotProps?.collapseIcon, tempOwnerState),
+        };
+      }
 
-  if (expandable) {
-    if (!expanded) {
-      expansionIcon = expandIcon || contextIcons.defaultExpandIcon;
-    } else {
-      expansionIcon = collapseIcon || contextIcons.defaultCollapseIcon;
-    }
-  }
-
-  if (expandable) {
-    displayIcon = contextIcons.defaultParentIcon;
-  } else {
-    displayIcon = endIcon || contextIcons.defaultEndIcon;
-  }
-
-  React.useEffect(() => {
-    // On the first render a node's index will be -1. We want to wait for the real index.
-    if (registerNode && unregisterNode && index !== -1) {
-      registerNode({
-        id: nodeId,
-        idAttribute: id,
-        index,
-        parentId,
-        expandable,
-        disabled: disabledProp,
-      });
-
-      return () => {
-        unregisterNode(nodeId);
+      return {
+        ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
+        ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
-    }
+    },
+  });
+  const expansionIcon =
+    expandable && !!ExpansionIcon ? <ExpansionIcon {...expansionIconProps} /> : null;
 
-    return undefined;
-  }, [registerNode, unregisterNode, parentId, index, nodeId, expandable, disabledProp, id]);
+  const DisplayIcon = expandable ? undefined : slots.endIcon;
+  const { ownerState: displayIconOwnerState, ...displayIconProps } = useSlotProps({
+    elementType: DisplayIcon,
+    ownerState: {},
+    externalSlotProps: (tempOwnerState: any) => {
+      if (expandable) {
+        return {};
+      }
 
-  React.useEffect(() => {
-    if (mapFirstChar && unMapFirstChar && label) {
-      mapFirstChar(nodeId, (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase());
-
-      return () => {
-        unMapFirstChar(nodeId);
+      return {
+        ...resolveComponentProps(contextIcons.slotProps.endIcon, tempOwnerState),
+        ...resolveComponentProps(inSlotProps?.endIcon, tempOwnerState),
       };
-    }
-    return undefined;
-  }, [mapFirstChar, unMapFirstChar, nodeId, label]);
+    },
+  });
+  const displayIcon = DisplayIcon ? <DisplayIcon {...displayIconProps} /> : null;
+
+  const Icon = slots.icon;
+  const { ownerState: iconOwnerState, ...iconProps } = useSlotProps({
+    elementType: Icon,
+    ownerState: {},
+    externalSlotProps: inSlotProps?.icon,
+  });
+  const icon = Icon ? <Icon {...iconProps} /> : null;
 
   let ariaSelected;
   if (multiSelect) {
@@ -289,40 +265,33 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     // DOM focus stays on the tree which manages focus with aria-activedescendant
     if (event.target === event.currentTarget) {
-      let rootElement: any;
-
-      if (typeof event.target.getRootNode === 'function') {
-        rootElement = event.target.getRootNode();
-      } else {
-        rootElement = ownerDocument(event.target);
-      }
-
-      rootElement.getElementById(treeId).focus({ preventScroll: true });
+      instance.focusRoot();
     }
 
-    const unfocusable = !disabledItemsFocusable && disabled;
-    if (!focused && event.currentTarget === event.target && !unfocusable) {
-      focus(event, nodeId);
+    const canBeFocused = !disabled || disabledItemsFocusable;
+    if (!focused && canBeFocused && event.currentTarget === event.target) {
+      instance.focusNode(event, nodeId);
     }
   }
 
-  return (
+  const idAttribute = instance.getTreeItemId(nodeId, id);
+
+  const item = (
     <TreeItemRoot
       className={clsx(classes.root, className)}
       role="treeitem"
       aria-expanded={expandable ? expanded : undefined}
       aria-selected={ariaSelected}
       aria-disabled={disabled || undefined}
-      id={id}
+      id={idAttribute}
       tabIndex={-1}
       {...other}
       ownerState={ownerState}
       onFocus={handleFocus}
-      ref={handleRef}
+      ref={ref}
     >
       <StyledTreeItemContent
         as={ContentComponent}
-        ref={contentRef}
         classes={{
           root: classes.content,
           expanded: classes.expanded,
@@ -343,22 +312,22 @@ export const TreeItem = React.forwardRef(function TreeItem(
         {...ContentProps}
       />
       {children && (
-        <DescendantProvider id={nodeId}>
-          <TreeItemGroup
-            as={TransitionComponent}
-            unmountOnExit
-            className={classes.group}
-            in={expanded}
-            component="ul"
-            role="group"
-            {...TransitionProps}
-          >
-            {children}
-          </TreeItemGroup>
-        </DescendantProvider>
+        <TreeItemGroup
+          as={TransitionComponent}
+          unmountOnExit
+          className={classes.group}
+          in={expanded}
+          component="ul"
+          role="group"
+          {...TransitionProps}
+        >
+          {children}
+        </TreeItemGroup>
       )}
     </TreeItemRoot>
   );
+
+  return wrapItem(item);
 });
 
 TreeItem.propTypes = {
@@ -374,14 +343,7 @@ TreeItem.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * The icon used to collapse the node.
-   */
-  collapseIcon: PropTypes.node,
   /**
    * The component used for the content node.
    * @default TreeItemContent
@@ -397,18 +359,6 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * The icon displayed next to an end node.
-   */
-  endIcon: PropTypes.node,
-  /**
-   * The icon used to expand the node.
-   */
-  expandIcon: PropTypes.node,
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon: PropTypes.node,
-  /**
    * The tree node label.
    */
   label: PropTypes.node,
@@ -421,6 +371,16 @@ TreeItem.propTypes = {
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

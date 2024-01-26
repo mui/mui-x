@@ -523,10 +523,9 @@ DateRangePickerDayRaw.propTypes = {
 } as any;
 
 /**
- *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *

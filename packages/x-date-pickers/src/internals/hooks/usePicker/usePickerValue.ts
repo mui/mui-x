@@ -183,7 +183,7 @@ export const usePickerValue = <
       if (isControlled !== (inValue !== undefined)) {
         console.error(
           [
-            `MUI: A component is changing the ${
+            `MUI X: A component is changing the ${
               isControlled ? '' : 'un'
             }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -200,7 +200,7 @@ export const usePickerValue = <
       if (!isControlled && defaultValue !== inDefaultValue) {
         console.error(
           [
-            `MUI: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
+            `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
               `To suppress this warning opt to use a controlled value.`,
           ].join('\n'),
         );
@@ -290,8 +290,7 @@ export const usePickerValue = <
         validationError,
       };
 
-      // TODO v7: Remove 2nd condition
-      if (action.name === 'setValueFromShortcut' && action.shortcut != null) {
+      if (action.name === 'setValueFromShortcut') {
         context.shortcut = action.shortcut;
       }
 
@@ -377,17 +376,16 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  // TODO v7: Make changeImportance and label mandatory.
   const handleSelectShortcut = useEventCallback(
     (
       newValue: TValue,
-      changeImportance?: PickerShortcutChangeImportance,
-      shortcut?: PickersShortcutsItemContext,
+      changeImportance: PickerShortcutChangeImportance,
+      shortcut: PickersShortcutsItemContext,
     ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
-        changeImportance: changeImportance ?? 'accept',
+        changeImportance,
         shortcut,
       }),
   );

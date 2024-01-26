@@ -1,0 +1,10 @@
+<DateField
+  label="Date Field"
+  clearable
+  slots={{ clearIcon: HighlightOffIcon }}
+/>
+<SingleInputDateRangeField
+  label="Date Range Field"
+  clearable
+  slots={{ clearIcon: BackspaceIcon }}
+/>

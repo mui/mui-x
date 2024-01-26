@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -10,8 +10,6 @@ import {
   GridPreferencePanelsValue,
   GridToolbar,
   GridFilterOperator,
-  GRID_STRING_COL_DEF,
-  getGridStringOperators,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -44,13 +42,11 @@ describe('<DataGrid /> - Filter', () => {
   let disableEval = false;
 
   function testEval(fn: Function) {
-    return () => {
-      disableEval = false;
-      fn();
-      disableEval = true;
-      fn();
-      disableEval = false;
-    };
+    disableEval = false;
+    fn();
+    disableEval = true;
+    fn();
+    disableEval = false;
   }
 
   function TestCase(props: Partial<DataGridProps>) {
@@ -77,8 +73,30 @@ describe('<DataGrid /> - Filter', () => {
           />,
         );
       }).toErrorDev(
-        'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+        'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
       );
+    });
+
+    it('should apply the model for `filterable: false` columns but the applied filter should be readonly', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'brand', filterable: false }]}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'Adidas' }] }}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      // filter has been applied
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+      // field has the applied value and is read-only
+      const valueInput = screen.getByRole('textbox', { name: 'Value' });
+      expect(valueInput).to.have.value('Adidas');
+      expect(valueInput).to.have.property('disabled', true);
     });
 
     it('should apply the model', () => {
@@ -146,6 +164,23 @@ describe('<DataGrid /> - Filter', () => {
     it('should allow to initialize the filterModel', () => {
       render(
         <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    it('should allow to initialize the filterModel for non-filterable columns', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'brand', filterable: false }]}
           initialState={{
             filter: {
               filterModel: {
@@ -412,6 +447,52 @@ describe('<DataGrid /> - Filter', () => {
         '1',
       ]);
     });
+
+    describe('ignoreDiacritics', () => {
+      function DiacriticsTestCase({
+        filterValue,
+        ...props
+      }: Partial<DataGridProps> & { filterValue: GridFilterItem['value'] }) {
+        return (
+          <TestCase
+            filterModel={{
+              items: [{ field: 'label', operator: 'contains', value: filterValue }],
+            }}
+            {...props}
+            rows={[{ id: 0, label: 'Apă' }]}
+            columns={[{ field: 'label', type: 'string' }]}
+          />
+        );
+      }
+
+      it('should not ignore diacritics by default', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" />);
+          expect(getColumnValues(0)).to.deep.equal([]);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
+
+      it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apa" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+
+        testEval(() => {
+          const { unmount } = render(<DiacriticsTestCase filterValue="apă" ignoreDiacritics />);
+          expect(getColumnValues(0)).to.deep.equal(['Apă']);
+          unmount();
+        });
+      });
+    });
   });
 
   describe('column type: number', () => {
@@ -609,6 +690,10 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'is', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -619,12 +704,19 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2000, 12:00:00 AM',
         '1/1/2002, 12:00:00 AM',
       ]);
+      expect(getRows({ operator: 'not', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+        '1/1/2002, 12:00:00 AM',
+      ]);
       expect(getRows({ operator: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'not', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "before"', () => {
       expect(getRows({ operator: 'before', value: '2001-01-01' })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+      ]);
+      expect(getRows({ operator: 'before', value: new Date('2001-01-01') })).to.deep.equal([
         '1/1/2000, 12:00:00 AM',
       ]);
       expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -637,6 +729,11 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'onOrBefore', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2000, 12:00:00 AM',
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
       expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -645,12 +742,20 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'after', value: '2001-01-01' })).to.deep.equal([
         '1/1/2002, 12:00:00 AM',
       ]);
+      expect(getRows({ operator: 'after', value: new Date('2001-01-01') })).to.deep.equal([
+        '1/1/2002, 12:00:00 AM',
+      ]);
       expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'after', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrAfter"', () => {
       expect(getRows({ operator: 'onOrAfter', value: '2001-01-01' })).to.deep.equal([
+        '1/1/2001, 12:00:00 AM',
+        '1/1/2001, 8:30:00 AM',
+        '1/1/2002, 12:00:00 AM',
+      ]);
+      expect(getRows({ operator: 'onOrAfter', value: new Date('2001-01-01') })).to.deep.equal([
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
         '1/1/2002, 12:00:00 AM',
@@ -750,6 +855,9 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'is', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 7:30:00 AM',
       ]);
+      expect(getRows({ operator: 'is', value: new Date('2001-01-01T07:30') })).to.deep.equal([
+        '1/1/2001, 7:30:00 AM',
+      ]);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -757,6 +865,10 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter with operator "not"', () => {
       // TODO: Should this filter return the invalid dates like for the numeric filters ?
       expect(getRows({ operator: 'not', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operator: 'not', value: new Date('2001-01-01T07:30') })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
@@ -768,6 +880,9 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'before', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
       ]);
+      expect(getRows({ operator: 'before', value: new Date('2001-01-01T07:30') })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+      ]);
       expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'before', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -777,12 +892,18 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 7:30:00 AM',
       ]);
+      expect(
+        getRows({ operator: 'onOrBefore', value: new Date('2001-01-01T07:30') }),
+      ).to.deep.equal(['1/1/2001, 6:30:00 AM', '1/1/2001, 7:30:00 AM']);
       expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "after"', () => {
       expect(getRows({ operator: 'after', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operator: 'after', value: new Date('2001-01-01T07:30') })).to.deep.equal([
         '1/1/2001, 8:30:00 AM',
       ]);
       expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -794,6 +915,9 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 7:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
+      expect(getRows({ operator: 'onOrAfter', value: new Date('2001-01-01T07:30') })).to.deep.equal(
+        ['1/1/2001, 7:30:00 AM', '1/1/2001, 8:30:00 AM'],
+      );
       expect(getRows({ operator: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
     });
@@ -1181,7 +1305,7 @@ describe('<DataGrid /> - Filter', () => {
               type: 'number',
             },
           ]}
-          components={{ Toolbar: GridToolbarFilterButton }}
+          slots={{ toolbar: GridToolbarFilterButton }}
         />,
       );
 
@@ -1228,24 +1352,24 @@ describe('<DataGrid /> - Filter', () => {
                     label: 'Contains',
                     value: 'contains',
                     getApplyFilterFn: (filterItem) => {
-                      return (params) => {
+                      return (value) => {
                         if (
                           !filterItem.field ||
                           !filterItem.value ||
                           !filterItem.operator ||
-                          !params.value
+                          !value
                         ) {
                           return null;
                         }
-                        return params.value.includes(filterItem.value);
+                        return value.includes(filterItem.value);
                       };
                     },
                     getValueAsString: (value) => `"${value}" text string`,
                   },
-                ],
+                ] as GridFilterOperator<any, string>[],
               },
             ]}
-            components={{ Toolbar: GridToolbarFilterButton }}
+            slots={{ toolbar: GridToolbarFilterButton }}
           />
         </div>,
       );
@@ -1260,171 +1384,6 @@ describe('<DataGrid /> - Filter', () => {
 
       expect(tooltip).toBeVisible();
       expect(tooltip.textContent).to.contain('"John" text string');
-    });
-  });
-
-  describe('v7 filter compatibility', () => {
-    const getRows = (operator: GridFilterOperator) => {
-      const { unmount } = render(
-        <TestCase
-          filterModel={{
-            items: [{ field: 'country', operator: 'equals', value: 'UK' }],
-          }}
-          rows={[
-            { id: 0, country: 'Canada' },
-            { id: 1, country: 'Spain' },
-            { id: 2, country: 'UK' },
-          ]}
-          columns={[
-            {
-              field: 'country',
-              type: 'string',
-              filterOperators: [operator],
-            },
-          ]}
-        />,
-      );
-
-      const values = getColumnValues(0);
-      unmount();
-      return values;
-    };
-
-    it('works with internal filters', () => {
-      const operator: GridFilterOperator = {
-        value: 'equals',
-        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
-          .getApplyFilterFn,
-        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
-          .getApplyFilterFnV7,
-      };
-
-      expect(getRows(operator)).to.deep.equal(['UK']);
-    });
-
-    it('works with custom getApplyFilterFn', () => {
-      const operator: GridFilterOperator = {
-        value: 'equals',
-        getApplyFilterFn: () => {
-          return (params): boolean => {
-            return params.value === 'Canada';
-          };
-        },
-        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
-          .getApplyFilterFnV7,
-      };
-
-      expect(getRows(operator)).to.deep.equal(['Canada']);
-    });
-
-    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
-      const operator: GridFilterOperator = {
-        value: 'equals',
-        getApplyFilterFn: () => {
-          return (params): boolean => {
-            return params.value === 'Canada';
-          };
-        },
-        getApplyFilterFnV7: () => {
-          return (value): boolean => {
-            return value === 'Spain';
-          };
-        },
-      };
-
-      expect(getRows(operator)).to.deep.equal(['Spain']);
-    });
-
-    it('works with custom getApplyFilterFnV7', () => {
-      const operator: GridFilterOperator = {
-        value: 'equals',
-        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
-          .getApplyFilterFn,
-        getApplyFilterFnV7: () => {
-          return (value): boolean => {
-            return value === 'Spain';
-          };
-        },
-      };
-
-      expect(getRows(operator)).to.deep.equal(['Spain']);
-    });
-  });
-
-  describe('v7 quick filter compatibility', () => {
-    const getRows = (colDef: Partial<GridColDef>) => {
-      const { unmount } = render(
-        <TestCase
-          filterModel={{
-            items: [],
-            quickFilterValues: ['UK'],
-          }}
-          rows={[
-            { id: 0, country: 'Canada' },
-            { id: 1, country: 'Spain' },
-            { id: 2, country: 'UK' },
-          ]}
-          columns={[
-            {
-              field: 'country',
-              type: 'string',
-              ...colDef,
-            },
-          ]}
-        />,
-      );
-
-      const values = getColumnValues(0);
-      unmount();
-      return values;
-    };
-
-    it('works with internal filters', () => {
-      const colDef: Partial<GridColDef> = {
-        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
-        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
-      };
-      expect(getRows(colDef)).to.deep.equal(['UK']);
-    });
-
-    it('works with custom getApplyFilterFn', () => {
-      const colDef: Partial<GridColDef> = {
-        getApplyQuickFilterFn: () => {
-          return (params) => {
-            return params.value === 'Canada';
-          };
-        },
-        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
-      };
-      expect(getRows(colDef)).to.deep.equal(['Canada']);
-    });
-
-    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
-      const colDef: Partial<GridColDef> = {
-        getApplyQuickFilterFn: () => {
-          return (params) => {
-            return params.value === 'Canada';
-          };
-        },
-        getApplyQuickFilterFnV7: () => {
-          return (value) => {
-            return value === 'Spain';
-          };
-        },
-      };
-      expect(getRows(colDef)).to.deep.equal(['Spain']);
-    });
-
-    it('works with custom getApplyFilterFnV7', () => {
-      const colDef: Partial<GridColDef> = {
-        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
-        getApplyQuickFilterFnV7: () => {
-          return (value) => {
-            return value === 'Spain';
-          };
-        },
-      };
-      expect(getRows(colDef)).to.deep.equal(['Spain']);
     });
   });
 
@@ -1450,8 +1409,8 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            components={{
-              Toolbar: GridToolbar,
+            slots={{
+              toolbar: GridToolbar,
             }}
           />
         </div>

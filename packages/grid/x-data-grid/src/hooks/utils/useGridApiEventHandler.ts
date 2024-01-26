@@ -112,7 +112,7 @@ export const unstable_resetCleanupTracking = () => {
   registryContainer.registry = null;
 };
 
-export const useGridApiEventHandler = createUseGridApiEventHandler(registryContainer!);
+export const useGridApiEventHandler = createUseGridApiEventHandler(registryContainer);
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 

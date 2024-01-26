@@ -1,7 +1,5 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface PickersLayoutClasses {
   /** Styles applied to the root element. */
@@ -28,5 +26,5 @@ export function getPickersLayoutUtilityClass(slot: string) {
 
 export const pickersLayoutClasses = generateUtilityClasses<PickersLayoutClassKey>(
   'MuiPickersLayout',
-  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar', 'shortcuts'],
+  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar', 'tabs', 'shortcuts'],
 );

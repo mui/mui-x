@@ -1,5 +1,3 @@
-export { SUBMIT_FILTER_STROKE_TIME, SUBMIT_FILTER_DATE_STROKE_TIME } from '@mui/x-data-grid';
-
 /**
  * @deprecated Import DataGridPro instead.
  */

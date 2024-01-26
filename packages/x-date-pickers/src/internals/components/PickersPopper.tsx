@@ -20,7 +20,6 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
-import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
 
@@ -28,30 +27,30 @@ interface PickersPopperOwnerState extends PickerPopperProps {
   placement: PopperPlacementType;
 }
 
-export interface PickersPopperSlotsComponent {
+export interface PickersPopperSlots {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
    */
-  DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
+  desktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
    * @default Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.
    */
-  DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
+  desktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
    * @default FocusTrap from '@mui/base'.
    */
-  DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
+  desktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
    * @default Popper from '@mui/material'.
    */
-  Popper?: React.ElementType<MuiPopperProps>;
+  popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps {
+export interface PickersPopperSlotProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -78,8 +77,8 @@ export interface PickerPopperProps extends UsePickerValueActions {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
-  slotProps?: PickersPopperSlotsComponentsProps;
+  slots?: PickersPopperSlots;
+  slotProps?: PickersPopperSlotProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;
@@ -270,7 +269,7 @@ interface PickersPopperPaperProps {
   paperClasses: string;
   onPaperClick: React.MouseEventHandler<HTMLDivElement>;
   onPaperTouchStart: React.TouchEventHandler<HTMLDivElement>;
-  paperSlotProps?: PickersPopperSlotsComponentsProps['desktopPaper'];
+  paperSlotProps?: PickersPopperSlotProps['desktopPaper'];
 }
 
 const PickersPopperPaperWrapper = React.forwardRef(

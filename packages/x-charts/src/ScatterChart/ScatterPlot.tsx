@@ -4,11 +4,11 @@ import { Scatter, ScatterProps } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-export interface ScatterPlotSlotsComponent {
+export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
 
-export interface ScatterPlotSlotComponentProps {
+export interface ScatterPlotSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
@@ -17,14 +17,24 @@ export interface ScatterPlotProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ScatterPlotSlotsComponent;
+  slots?: ScatterPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ScatterPlotSlotComponentProps;
+  slotProps?: ScatterPlotSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Scatter](https://mui.com/x/react-charts/scatter/)
+ * - [Scatter demonstration](https://mui.com/x/react-charts/scatter-demo/)
+ *
+ * API:
+ *
+ * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
+ */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).scatter;

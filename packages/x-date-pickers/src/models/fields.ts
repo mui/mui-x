@@ -9,7 +9,8 @@ export type FieldSectionType =
   | 'hours'
   | 'minutes'
   | 'seconds'
-  | 'meridiem';
+  | 'meridiem'
+  | 'empty';
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
@@ -44,12 +45,6 @@ export interface FieldSection {
    * Will determine if we should apply a digit-based editing or a letter-based editing.
    */
   contentType: FieldSectionContentType;
-  /**
-   * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
-   * For example, the value `1` should be rendered as "01" instead of "1".
-   * @deprecated Will be removed in v7, use `hasLeadingZerosInFormat` instead.
-   */
-  hasLeadingZeros: boolean;
   /**
    * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
    * For example, the value `1` should be rendered as "01" instead of "1".
@@ -136,6 +131,7 @@ export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends Field
   extends BaseFieldProps<TValue, TDate, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
+  name?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
@@ -150,4 +146,6 @@ export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends Field
   };
   slots?: {};
   slotProps?: {};
+  clearable?: boolean;
+  onClear?: React.MouseEventHandler;
 }

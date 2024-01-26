@@ -1,5 +1,6 @@
 ---
 title: React Line chart
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
 # Charts - Lines
@@ -52,6 +53,43 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
+## Partial data
+
+### Skip missing points
+
+Line series can have fewer data points than the axis.
+You can handle lines with partial data or data starting at different points by providing `null` values.
+
+By default, the tooltip does not show series if they have no value.
+To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
+
+{{"demo": "DifferentLength.js"}}
+
+:::info
+When series data length is smaller than the axis one, overflowing values are `undefined` and not `null`.
+
+The following code plots a line for x between 2 and 4.
+
+- For x<2, values are set to `null` and then not shown.
+- For x>4, values are set to `undefined` and then not shown.
+
+```jsx
+<LineChart
+  series={[{ data: [null, null, 10, 11, 12] }]}
+  xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6] }]}
+/>
+```
+
+:::
+
+### Connect missing points
+
+Line series accepts a `connectNulls` property which will continue the interpolation across points with a `null` value.
+This property can link two sets of points, with `null` data between them.
+However, it cannot extrapolate the curve before the first non-null data point or after the last one.
+
+{{"demo": "ConnectNulls.js"}}
+
 ## Styling
 
 ### Interpolation
@@ -62,7 +100,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
 
 ### Optimization
 

@@ -1,1 +1,1 @@
-export { SparkLineChart } from './SparkLineChart';
+export * from './SparkLineChart';

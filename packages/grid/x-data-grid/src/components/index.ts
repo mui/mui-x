@@ -6,6 +6,7 @@ export * from './columnSelection';
 export * from '../material/icons';
 export * from './menu';
 export * from './panel';
+export * from './columnsManagement';
 export * from './toolbar';
 
 export * from './GridApiContext';

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import {
+  unstable_useEventCallback as useEventCallback,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -46,9 +49,9 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
-    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
+    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -92,7 +95,7 @@ export const useGridRowEditing = (
     (id: GridRowId, field: string) => {
       const params = apiRef.current.getCellParams(id, field);
       if (!apiRef.current.isCellEditable(params)) {
-        throw new Error(`MUI: The cell with id=${id} and field=${field} is not editable.`);
+        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not editable.`);
       }
     },
     [apiRef],
@@ -101,7 +104,7 @@ export const useGridRowEditing = (
   const throwIfNotInMode = React.useCallback(
     (id: GridRowId, mode: GridRowModes) => {
       if (apiRef.current.getRowMode(id) !== mode) {
-        throw new Error(`MUI: The row with id=${id} is not in ${mode} mode.`);
+        throw new Error(`MUI X: The row with id=${id} is not in ${mode} mode.`);
       }
     },
     [apiRef],
@@ -257,7 +260,6 @@ export const useGridRowEditing = (
           const newParams: GridRowEditStartParams = {
             ...rowParams,
             field: params.field,
-            key: event.key,
             reason,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
@@ -269,20 +271,14 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason, key, columns } = params;
+      const { id, field, reason } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
-      if (reason === GridRowEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('17')) {
-          // In React 17, cleaning the input is enough.
-          // The sequence of events makes the key pressed by the end-users update the textbox directly.
-          startRowEditModeParams.deleteValue = !!field;
-        } else {
-          const colDef = columns.find((col) => col.field === field)!;
-          startRowEditModeParams.initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
-        }
-      } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
+      if (
+        reason === GridRowEditStartReasons.printableKeyDown ||
+        reason === GridRowEditStartReasons.deleteKeyDown
+      ) {
         startRowEditModeParams.deleteValue = !!field;
       }
 
@@ -430,18 +426,14 @@ export const useGridRowEditing = (
         }
 
         let newValue = apiRef.current.getCellValue(id, field);
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        let unstable_updateValueOnRender = false;
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           newValue = deleteValue ? '' : initialValue;
-          unstable_updateValueOnRender = true;
         }
 
         acc[field] = {
           value: newValue,
           error: false,
           isProcessingProps: false,
-          unstable_updateValueOnRender,
         };
 
         return acc;
@@ -518,7 +510,7 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             missingOnProcessRowUpdateErrorWarning();
           }
         };
@@ -710,7 +702,8 @@ export const useGridRowEditing = (
     }
   }, [rowModesModelProp, updateRowModesModel]);
 
-  React.useEffect(() => {
+  // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
+  useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { describeConformance, fireEvent, screen } from '@mui-internal/test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';

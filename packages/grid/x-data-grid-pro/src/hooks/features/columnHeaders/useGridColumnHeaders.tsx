@@ -1,19 +1,20 @@
 import * as React from 'react';
 import {
-  unstable_gridFocusColumnHeaderFilterSelector,
+  gridFocusColumnHeaderFilterSelector,
   useGridSelector,
   gridFilterModelSelector,
-  unstable_gridTabIndexColumnHeaderFilterSelector,
+  gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
+  GridFilterItem,
 } from '@mui/x-data-grid';
-import { styled } from '@mui/system';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
-  getTotalHeaderHeight,
   useGridPrivateApiContext,
   getGridFilter,
+  GridStateColDef,
+  GridColumnHeaderRow,
 } from '@mui/x-data-grid/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -32,22 +33,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-const GridHeaderFilterRow = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'HeaderFilterRow',
-  overridesResolver: (props, styles) => styles.headerFilterRow,
-})<{ ownerState: OwnerState }>(() => ({
-  display: 'flex',
-}));
+const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
   const columnHeaderFilterTabIndexState = useGridSelector(
     apiRef,
-    unstable_gridTabIndexColumnHeaderFilterSelector,
+    gridTabIndexColumnHeaderFilterSelector,
   );
-  const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity({
+  const { getColumnsToRender, ...otherProps } = useGridColumnHeadersCommunity({
     ...props,
     hasOtherElementInTabSequence:
       hasOtherElementInTabSequence || columnHeaderFilterTabIndexState !== null,
@@ -59,16 +54,32 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const disableHeaderFiltering = !rootProps.unstable_headerFilters;
-  const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
+  const disableHeaderFiltering = !rootProps.headerFilters;
+  const dimensions = apiRef.current.getRootDimensions();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const totalHeaderHeight =
-    getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
-    (disableHeaderFiltering ? 0 : headerHeight);
 
-  const columnHeaderFilterFocus = useGridSelector(
-    apiRef,
-    unstable_gridFocusColumnHeaderFilterSelector,
+  const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
+
+  const getFilterItem = React.useCallback(
+    (colDef: GridStateColDef) => {
+      const filterModelItem = filterModel?.items.find(
+        (it) => it.field === colDef.field && it.operator !== 'isAnyOf',
+      );
+      if (filterModelItem != null) {
+        // there's a valid `filterModelItem` for this column
+        return filterModelItem;
+      }
+      const defaultCachedItem = filterItemsCache[colDef.field];
+      if (defaultCachedItem != null) {
+        // there's a cached `defaultItem` for this column
+        return defaultCachedItem;
+      }
+      // there's no cached `defaultItem` for this column, let's generate one and cache it
+      const defaultItem = getGridFilter(colDef);
+      filterItemsCache[colDef.field] = defaultItem;
+      return defaultItem;
+    },
+    [filterModel],
   );
 
   const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
@@ -76,13 +87,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const columnsToRender = getColumnsToRender(params);
-
-    if (columnsToRender == null) {
-      return null;
-    }
-
-    const { renderedColumns, firstColumnToRender } = columnsToRender;
+    const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
 
     const filters: React.JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -101,26 +106,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ? colDef.headerClassName({ field: colDef.field, colDef })
           : colDef.headerClassName;
 
-      // TODO: Support for `isAnyOf` operator
-      const filterOperators =
-        colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
-
-      const item =
-        filterModel?.items.find((it) => it.field === colDef.field && it.operator !== 'isAnyOf') ??
-        getGridFilter(colDef);
+      const item = getFilterItem(colDef);
 
       filters.push(
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={headerHeight}
+          height={dimensions.headerHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           headerFilterMenuRef={headerFilterMenuRef}
           headerClassName={headerClassName}
-          filterOperators={filterOperators}
           data-field={colDef.field}
           item={item}
           {...rootProps.slotProps?.headerFilterCell}
@@ -130,29 +128,21 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridHeaderFilterRow
+      <GridColumnHeaderRow
         ref={headerFiltersRef}
-        ownerState={rootProps}
+        ownerState={{ params }}
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
       >
         {filters}
-      </GridHeaderFilterRow>
+        {otherProps.getFiller(params, true)}
+      </GridColumnHeaderRow>
     );
-  };
-
-  const rootStyle = {
-    minHeight: totalHeaderHeight,
-    maxHeight: totalHeaderHeight,
-    lineHeight: `${headerHeight}px`,
   };
 
   return {
     ...otherProps,
     getColumnFilters,
-    getRootProps: disableHeaderFiltering
-      ? getRootProps
-      : (other = {}) => ({ style: rootStyle, ...other }),
   };
 };

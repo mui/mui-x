@@ -11,7 +11,21 @@ export type HighlightOptions = 'none' | 'item' | 'series';
 export type FadeOptions = 'none' | 'series' | 'global';
 
 export type HighlightScope = {
+  /**
+   * The scope of highlighted elements.
+   * - 'none': no highlight.
+   * - 'item': only highlight the item.
+   * - 'series': highlight all elements of the same series.
+   * @default 'none'
+   */
   highlighted: HighlightOptions;
+  /**
+   * The scope of faded elements.
+   * - 'none': no fading.
+   * - 'series': only fade element of the same series.
+   * - 'global': fade all elements that are not highlighted.
+   * @default 'none'
+   */
   faded: FadeOptions;
 };
 type HighlighActions<T extends ChartSeriesType = ChartSeriesType> =
@@ -26,6 +40,9 @@ type HighlighActions<T extends ChartSeriesType = ChartSeriesType> =
     };
 
 type HighlighState = {
+  /**
+   * The item that triggers the highlight state.
+   */
   item: null | ItemHighlighData<ChartSeriesType>;
   scope: HighlightScope;
   dispatch: React.Dispatch<HighlighActions>;
@@ -68,7 +85,8 @@ const dataReducer: React.Reducer<Omit<HighlighState, 'dispatch'>, HighlighAction
   }
 };
 
-export function HighlightProvider({ children }: HighlightProviderProps) {
+function HighlightProvider(props: HighlightProviderProps) {
+  const { children } = props;
   const [data, dispatch] = React.useReducer(dataReducer, {
     item: null,
     scope: defaultScope,
@@ -84,3 +102,5 @@ export function HighlightProvider({ children }: HighlightProviderProps) {
 
   return <HighlighContext.Provider value={value}>{children}</HighlighContext.Provider>;
 }
+
+export { HighlightProvider };

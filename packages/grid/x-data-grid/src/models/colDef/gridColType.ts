@@ -1,13 +1,12 @@
-type LiteralUnion<LiteralType, BaseType> = LiteralType | (BaseType & Record<never, never>);
+export interface GridColumnTypes {
+  string: 'string';
+  number: 'number';
+  date: 'date';
+  dateTime: 'dateTime';
+  boolean: 'boolean';
+  singleSelect: 'singleSelect';
+  actions: 'actions';
+  custom: 'custom';
+}
 
-export type GridNativeColTypes =
-  | 'string'
-  | 'number'
-  | 'date'
-  | 'dateTime'
-  | 'boolean'
-  | 'singleSelect'
-  | 'actions';
-
-// Use `LiteralUnion` to get autocompletion for literal types.
-export type GridColType = LiteralUnion<GridNativeColTypes, string>;
+export type GridColType = GridColumnTypes[keyof GridColumnTypes];

@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
 2. Using the `getCellClassName` prop:
 
 This prop is called for every cell in every column.
-Different from the first option, this prop is defined at the data grid level, not column level.
+Different from the first option, this prop is defined at the Data Grid level, not column level.
 It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}
@@ -104,7 +104,7 @@ It is also called with a `GridCellParams` object.
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
 Choose between one of the following values: 'left' | 'right' | 'center'.
 
-:::info
+:::warning
 You must use `headerAlign` to align the content of the header.
 :::
 

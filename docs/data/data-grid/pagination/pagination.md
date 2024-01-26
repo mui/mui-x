@@ -11,14 +11,20 @@ By default, each page contains 100 rows. The user can change the size of the pag
 
 ### Page size options
 
-You can configure the page size the user can choose from with the `pageSizeOptions` prop.
+You can customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
+You should provide an array of items, each item should be one of these types:
 
-It's possible to customize the options shown in the "Rows per page" select using the `pageSizeOptions` prop.
-You should either provide an array of:
+- **number**, each number will be used for the option's label and value.
 
-- **numbers**, each number will be used for the option's label and value.
+  ```jsx
+  <DataGrid pageSizeOptions={[5, 10, 25]}>
+  ```
 
-- **objects**, the `value` and `label` keys will be used respectively for the value and label of the option (useful for language strings such as 'All').
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+
+  ```jsx
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
 
@@ -27,12 +33,12 @@ You should either provide an array of:
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the data grid according to the `pageSize`.
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
-## Pagination on Pro and Premium
+## Pagination on Pro and Premium [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The default pagination behavior depends on your plan.
 
@@ -91,7 +97,7 @@ This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
-For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/row-selection/#usage-with-server-side-pagination)
+Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row-selection/#usage-with-server-side-pagination) for more details.
 :::
 
 ### Basic implementation
@@ -129,10 +135,10 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

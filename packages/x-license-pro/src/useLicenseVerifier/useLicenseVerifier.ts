@@ -56,7 +56,6 @@ export function useLicenseVerifier(
       acceptedScopes,
     });
 
-    sharedLicenseStatuses[packageName] = { key: licenseKey, licenseVerifier: licenseStatus };
     const fullPackageName = `@mui/${packageName}`;
 
     if (licenseStatus.status === LICENSE_STATUS.Valid) {
@@ -77,6 +76,7 @@ export function useLicenseVerifier(
       throw new Error('missing status handler');
     }
 
+    sharedLicenseStatuses[packageName] = { key: licenseKey, licenseVerifier: licenseStatus };
     return licenseStatus;
   }, [packageName, releaseInfo, contextKey]);
 }

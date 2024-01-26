@@ -11,7 +11,7 @@ Following clicks change the column's sorting direction. You can see the applied 
 ## Single and multi-sorting
 
 :::warning
-The `DataGrid` can only sort the rows according to one criterion at a time.
+The Data Grid can only sort the rows according to one criterion at a time.
 
 To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -61,15 +61,35 @@ You can use the `onSortModelChange` prop to listen to changes in the sorting rul
 
 ## Disable the sorting
 
+### For all columns
+
+Sorting is enabled by default, but you can easily disable this feature by setting the `disableColumnSorting` prop.
+
+```jsx
+<DataGrid disableColumnSorting />
+```
+
+{{"demo": "DisableSortingGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### For some columns
+
 By default, all columns are sortable.
 To disable sorting on a column, set the `sortable` property of `GridColDef` to `false`.
-In the following demo, the user cannot use the _rating_ column as a sorting rule.
+In the following demo, the user cannot sort the _rating_ column from the UI.
 
 ```tsx
 <DataGrid columns={[...columns, { field: 'rating', sortable: false }]} />
 ```
 
 {{"demo": "DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Sorting non-sortable columns programmatically
+
+The columns with `colDef.sortable` set to `false` are not sortable from the grid UI but could still be sorted programmatically. To add a sort rule to such a column, you could initialize the `sortModel`, use the `sortModel` prop, or use the API methods `sortColumn` or `setSortModel`.
+
+In the following demo, the `firstName` column is not sortable by the default grid UI, but it is sorted programmatically by a custom built UI.
+
+{{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom comparator
 
@@ -137,7 +157,7 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 ## apiRef
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

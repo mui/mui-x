@@ -1,6 +1,6 @@
 export { DesktopDateRangePicker } from './DesktopDateRangePicker';
 export type {
   DesktopDateRangePickerProps,
-  DesktopDateRangePickerSlotsComponent,
-  DesktopDateRangePickerSlotsComponentsProps,
+  DesktopDateRangePickerSlots,
+  DesktopDateRangePickerSlotProps,
 } from './DesktopDateRangePicker.types';

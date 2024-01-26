@@ -16,7 +16,6 @@ import SvgIcon, { SvgIconProps } from '@mui/joy/SvgIcon';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridSortDirection } from '../models/gridSortModel';
 import { GridIconSlotsComponent } from '../models/gridIconSlotsComponent';
-import { UncapitalizeObjectKeys } from '../internals/utils';
 
 function createSvgIcon(path: React.ReactNode, displayName: string): typeof SvgIcon {
   const fontSizeMap = { small: 'lg', medium: 'xl', large: 'xl2', inherit: undefined } as const;
@@ -305,7 +304,7 @@ const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(
   return Icon ? <Icon {...other} /> : null;
 });
 
-const joyIconSlots: UncapitalizeObjectKeys<GridIconSlotsComponent> = {
+const joyIconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,

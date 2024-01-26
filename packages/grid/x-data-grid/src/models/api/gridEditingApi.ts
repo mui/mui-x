@@ -19,10 +19,6 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
-  /**
-   * Determines if `setEditCellValue` should be called on the first render to sync the value.
-   */
-  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
@@ -88,6 +84,7 @@ export interface GridStartCellEditModeParams {
   /**
    * The initial value for the field.
    * If `deleteValue` is also true, this value is not used.
+   * @deprecated No longer needed.
    */
   initialValue?: any;
 }
@@ -135,6 +132,7 @@ export interface GridStartRowEditModeParams {
   /**
    * The initial value for the given `fieldToFocus`.
    * If `deleteValue` is also true, this value is not used.
+   * @deprecated No longer needed.
    */
   initialValue?: string;
 }
@@ -183,7 +181,7 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
   startCellEditMode(params: GridStartCellEditModeParams): void;
   /**
    * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
-   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * If `params.ignoreModifications` is `true` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopCellEditMode(params: GridStopCellEditModeParams): void;
@@ -223,7 +221,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
   startRowEditMode(params: GridStartRowEditModeParams): void;
   /**
    * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
-   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * If `params.ignoreModifications` is `true` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopRowEditMode(params: GridStopRowEditModeParams): void;

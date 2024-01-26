@@ -3,6 +3,7 @@ productId: x-date-pickers
 title: Date and Time Pickers - Custom field
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
+components: PickersSectionList, PickersTextField
 ---
 
 # Custom field
@@ -61,7 +62,7 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 #### With the Joy UI input
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 :::info
 A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
@@ -69,11 +70,23 @@ A higher-level solution for _Joy UI_ will be provided in the near future for eve
 
 {{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
 
+{{"demo": "RangePickerWithSingleInputJoyField.js", "defaultCodeOpen": false}}
+
+{{"demo": "RangePickerWithJoyField.js", "defaultCodeOpen": false}}
+
 #### With the browser input
 
 You can also use any other input:
 
 {{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
+
+{{"demo": "RangePickerWithSingleInputBrowserField.js", "defaultCodeOpen": false}}
+
+{{"demo": "RangePickerWithBrowserField.js", "defaultCodeOpen": false}}
+
+:::warning
+You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
+:::
 
 ### Using an `Autocomplete`
 
@@ -88,6 +101,10 @@ If you only want to allow the user to pick a value through the views,
 you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
+
+The same can be applied to the `DateRangePicker`:
+
+{{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
 
 ## How to build a custom field
 

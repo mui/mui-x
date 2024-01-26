@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -182,7 +182,7 @@ describe('<DataGrid /> - Cells', () => {
 
     expect(() => {
       getCell(1, 0).focus();
-    }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
+    }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
   it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test() {

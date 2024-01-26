@@ -2,9 +2,9 @@ import type { GridPremiumIconSlotsComponent } from '../models';
 import { GridWorkspacesIcon, GridGroupWorkIcon, GridFunctionsIcon } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
-  ColumnMenuUngroupIcon: GridWorkspacesIcon,
-  ColumnMenuGroupIcon: GridGroupWorkIcon,
-  ColumnMenuAggregationIcon: GridFunctionsIcon,
+  columnMenuUngroupIcon: GridWorkspacesIcon,
+  columnMenuGroupIcon: GridGroupWorkIcon,
+  columnMenuAggregationIcon: GridFunctionsIcon,
 };
 
 const materialSlots = {

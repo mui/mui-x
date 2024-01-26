@@ -35,6 +35,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     label: labelProp,
+    InputLabelProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -44,7 +45,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const selectId = useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
+  const isSelectNative = baseSelectProps.native ?? false;
 
   const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 

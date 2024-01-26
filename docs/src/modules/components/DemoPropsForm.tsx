@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Check from '@mui/icons-material/Check';
 
+import { alpha } from '@mui/material/styles';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 
 import FormControl from '@mui/material/FormControl';
 import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
@@ -151,24 +153,35 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
   demoProps = { ...demoProps, ...props };
 
   return (
-    <Paper
-      sx={{
+    <Box
+      sx={(theme) => ({
         flexShrink: 0,
         gap: 2,
-        p: 3,
-        backdropFilter: 'blur(8px)',
-        minWidth: '280px',
-      }}
+        borderLeft: '1px solid',
+        borderColor: theme.palette.grey[200],
+        background: alpha(theme.palette.grey[50], 0.5),
+        minWidth: '250px',
+        [`:where(${theme.vars ? '[data-mui-color-scheme="dark"]' : '.mode-dark'}) &`]: {
+          borderColor: alpha(theme.palette.grey[900], 0.8),
+          backgroundColor: alpha(theme.palette.grey[900], 0.3),
+        },
+      })}
     >
       <Box
         sx={{
-          mb: 2,
+          px: 3,
+          py: 2,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
-        <Typography id="usage-props" component="h3" fontWeight="lg" sx={{ scrollMarginTop: 160 }}>
+        <Typography
+          id="usage-props"
+          component="h3"
+          fontWeight="bold"
+          sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
+        >
           Playground
         </Typography>
         <IconButton
@@ -183,11 +196,13 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           <ReplayRoundedIcon />
         </IconButton>
       </Box>
+      <Divider sx={{ opacity: 0.5 }} />
       <Box
         sx={{
+          p: 3,
           display: 'flex',
           flexDirection: 'column',
-          gap: 2.5,
+          gap: 2,
           [`& .${formLabelClasses.root}`]: {
             fontWeight: 'lg',
           },
@@ -480,6 +495,6 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           return null;
         })}
       </Box>
-    </Paper>
+    </Box>
   );
 }

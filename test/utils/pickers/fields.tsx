@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, act, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { expectInputValue } from './assertions';
 
@@ -174,7 +174,7 @@ export const buildFieldInteractions = <P extends {}>({
   return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
-export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+export const cleanText = (text: string, specialCase?: 'singleDigit' | 'RTL') => {
   const clean = text.replace(/\u202f/g, ' ');
   switch (specialCase) {
     case 'singleDigit':

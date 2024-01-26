@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, act } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium as DataGrid,
@@ -12,7 +12,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Quick Filter', () => {
+describe('<DataGrid /> - Quick filter', () => {
   const { render } = createRenderer();
 
   const baselineProps = {

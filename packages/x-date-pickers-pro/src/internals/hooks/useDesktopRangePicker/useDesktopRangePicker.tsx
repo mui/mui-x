@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  PickersLayout,
-  PickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   executeInTheNextEventLoopTick,
   getActiveElement,
@@ -14,16 +11,19 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
+  DateOrTimeViewWithMeridiem,
+  UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
+  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange } from '../../../models';
 import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
@@ -49,6 +49,7 @@ export const useDesktopRangePicker = <
     timezone,
     label,
     inputRef,
+    name,
     readOnly,
     disabled,
     autoFocus,
@@ -60,6 +61,7 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
+  const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
 
@@ -81,12 +83,19 @@ export const useDesktopRangePicker = <
     ...pickerParams,
     props,
     wrapperVariant: 'desktop',
-    autoFocusView: true,
+    autoFocusView: false,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
     },
   });
+
+  React.useEffect(() => {
+    if (layoutProps.view) {
+      initialView.current = layoutProps.view;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
@@ -109,7 +118,27 @@ export const useDesktopRangePicker = <
     TDate,
     RangeFieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
@@ -123,7 +152,7 @@ export const useDesktopRangePicker = <
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef }),
+      ...(fieldType === 'single-input' && { inputRef, name }),
     },
     ownerState: props,
   });
@@ -149,10 +178,18 @@ export const useDesktopRangePicker = <
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
+    initialView: initialView.current ?? undefined,
+    onViewChange: layoutProps.onViewChange,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
+    tabs: {
+      ...slotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

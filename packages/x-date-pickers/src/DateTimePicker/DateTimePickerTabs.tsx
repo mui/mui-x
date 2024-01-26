@@ -1,9 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
@@ -83,6 +84,16 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   },
 }));
 
+/**
+ * Demos:
+ *
+ * - [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/)
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateTimePickerTabs API](https://mui.com/x/api/date-pickers/date-time-picker-tabs/)
+ */
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
@@ -91,6 +102,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     timeIcon = <TimeIcon />,
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
+    className,
   } = props;
 
   const localeText = useLocaleText();
@@ -110,7 +122,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}
-      className={classes.root}
+      className={clsx(className, classes.root)}
     >
       <Tab
         value="date"
@@ -135,6 +147,7 @@ DateTimePickerTabs.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * Date tab icon.
    * @default DateRange
@@ -146,7 +159,7 @@ DateTimePickerTabs.propTypes = {
    */
   hidden: PropTypes.bool,
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a tab is clicked.
    * @template TView
    * @param {TView} view The view to open
    */

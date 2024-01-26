@@ -4,6 +4,7 @@ import {
   useDemoData,
   getRealGridData,
   getCommodityColumns,
+  randomInt,
 } from '@mui/x-data-grid-generator';
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -31,7 +32,7 @@ export default function InfiniteLoadingGrid() {
     setLoading(true);
     const newData = await getRealGridData(newRowLength, getCommodityColumns());
     // Simulate network throttle
-    await sleep(Math.random() * 500 + 100);
+    await sleep(randomInt(100, 600));
 
     if (mounted.current) {
       setLoading(false);

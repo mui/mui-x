@@ -1,5 +1,6 @@
 ---
 title: Charts - Pie demonstration
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ---
 
 # Charts - Pie demonstration
@@ -29,3 +30,7 @@ title: Charts - Pie demonstration
 ## PieChartWithCenterLabel
 
 {{"demo": "PieChartWithCenterLabel.js"}}
+
+## OnSeriesItemClick
+
+{{"demo": "OnSeriesItemClick.js"}}

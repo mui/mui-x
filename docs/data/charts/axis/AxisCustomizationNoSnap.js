@@ -16,8 +16,7 @@ const defaultXAxis = {
   disableLine: false,
   disableTicks: false,
   fontSize: 12,
-  label: 'my axis',
-  labelFontSize: 14,
+  label: 'My axis',
   tickSize: 6,
 };
 export default function AxisCustomizationNoSnap() {
@@ -27,9 +26,7 @@ export default function AxisCustomizationNoSnap() {
       data={[
         { propName: 'disableLine', knob: 'switch', defaultValue: false },
         { propName: 'disableTicks', knob: 'switch', defaultValue: false },
-        { propName: 'fontSize', knom: 'number', defaultValue: 12 },
         { propName: 'label', knob: 'input', defaultValue: 'my axis' },
-        { propName: 'labelFontSize', knom: 'number', defaultValue: 14 },
         { propName: 'tickSize', knob: 'number', defaultValue: 6 },
       ]}
       renderDemo={(props) => (

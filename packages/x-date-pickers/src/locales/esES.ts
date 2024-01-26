@@ -15,16 +15,20 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Próximo mes',
 
   // View navigation
-  openPreviousView: 'abrir la última vista',
-  openNextView: 'abrir la siguiente vista',
+  openPreviousView: 'Abrir la última vista',
+  openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Empezar',
   end: 'Terminar',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -40,11 +44,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${
-      time === null
-        ? 'Sin tiempo seleccionado'
-        : `El tiempo seleccionado es ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleccione ${views[view]}. ${time === null ? 'No hay hora seleccionada' : `La hora seleccionada es ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -61,19 +61,20 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
-      : 'Elige la fecha',
+      ? `Elige fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
+      : 'Elige fecha',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
-      : 'Elige la hora',
+      ? `Elige hora, la hora elegida es ${utils.format(value, 'fullTime')}`
+      : 'Elige hora',
+  fieldClearLabel: 'Limpiar valor',
 
   // Table labels
-  timeTableLabel: 'elige la fecha',
-  dateTableLabel: 'elige la hora',
+  timeTableLabel: 'elige hora',
+  dateTableLabel: 'elige fecha',
 
   // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),

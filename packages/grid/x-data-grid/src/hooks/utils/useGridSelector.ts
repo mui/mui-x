@@ -7,7 +7,7 @@ import { buildWarning } from '../../utils/warning';
 import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
 
 const stateNotInitializedWarning = buildWarning([
-  'MUI: `useGridSelector` has been called before the initialization of the state.',
+  'MUI X: `useGridSelector` has been called before the initialization of the state.',
   'This hook can only be used inside the context of the grid.',
 ]);
 
@@ -30,7 +30,7 @@ function applySelector<Api extends GridApiCommon, T>(
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare;
 
-const createRefs = () => ({ state: null, equals: null, selector: null } as any);
+const createRefs = () => ({ state: null, equals: null, selector: null }) as any;
 
 export const useGridSelector = <Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,

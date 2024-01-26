@@ -1,5 +1,4 @@
 import { GridSlotsComponent } from '@mui/x-data-grid';
-import { UncapitalizeObjectKeys } from '@mui/x-data-grid/internals';
 import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
 
 /**
@@ -11,14 +10,10 @@ export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSl
    * Component responsible for showing menu adornment in Header filter row
    * @default GridHeaderFilterCell
    */
-  HeaderFilterCell: React.JSXElementConstructor<any>;
+  headerFilterCell: React.JSXElementConstructor<any>;
   /**
    * Component responsible for showing menu in Header filter row
    * @default GridHeaderFilterMenu
    */
-  HeaderFilterMenu: React.JSXElementConstructor<any> | null;
+  headerFilterMenu: React.JSXElementConstructor<any> | null;
 }
-
-// TODO: remove in v7
-export interface UncapitalizedGridProSlotsComponent
-  extends UncapitalizeObjectKeys<GridProSlotsComponent> {}

@@ -12,7 +12,7 @@ function showError(message: string[]) {
 
 export function showInvalidLicenseKeyError() {
   showError([
-    'MUI: Invalid license key.',
+    'MUI X: Invalid license key.',
     '',
     "Your MUI X license key format isn't valid. It could be because the license key is missing a character or has a typo.",
     '',
@@ -23,7 +23,7 @@ export function showInvalidLicenseKeyError() {
 
 export function showLicenseKeyPlanMismatchError() {
   showError([
-    'MUI: License key plan mismatch.',
+    'MUI X: License key plan mismatch.',
     '',
     'Your use of MUI X is not compatible with the plan of your license key. The feature you are trying to use is not included in the plan of your license key. This happens if you try to use `DataGridPremium` with a license key for the Pro plan.',
     '',
@@ -40,7 +40,7 @@ export function showMissingLicenseKeyError({
   packageName: string;
 }) {
   showError([
-    'MUI: Missing license key.',
+    'MUI X: Missing license key.',
     '',
     `The license key is missing. You might not be allowed to use \`${packageName}\` which is part of MUI X ${plan}.`,
     '',
@@ -51,7 +51,7 @@ export function showMissingLicenseKeyError({
 
 export function showExpiredPackageVersionError({ packageName }: { packageName: string }) {
   showError([
-    'MUI: Expired package version.',
+    'MUI X: Expired package version.',
     '',
     `You have installed a version of \`${packageName}\` that is outside of the maintenance plan of your license key. By default, commercial licenses provide access to new versions released during the first year after the purchase.`,
     '',
@@ -69,7 +69,7 @@ export function showExpiredAnnualGraceLicenseKeyError({
   expiryTimestamp: number;
 }) {
   showError([
-    'MUI: Expired license key.',
+    'MUI X: Expired license key.',
     '',
     `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
     '',
@@ -97,7 +97,7 @@ export function showExpiredAnnualLicenseKeyError({
 }) {
   throw new Error(
     [
-      'MUI: Expired license key.',
+      'MUI X: Expired license key.',
       '',
       `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
       '',

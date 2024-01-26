@@ -38,12 +38,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'הדפסה',
   toolbarExportExcel: 'ייצוא ל- Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'חפש עמודה',
-  columnsPanelTextFieldPlaceholder: 'כותרת עמודה',
-  columnsPanelDragIconLabel: 'סדר עמודות מחדש',
-  columnsPanelShowAllButton: 'הצג הכל',
-  columnsPanelHideAllButton: 'הסתר הכל',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
@@ -148,7 +146,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  // unpin: 'Unpin',
+  unpin: 'הסר נעיצה',
 
   // Tree Data
   treeDataGroupingHeaderName: 'קבוצה',

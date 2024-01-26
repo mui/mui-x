@@ -29,7 +29,7 @@ const valueFormatter = (date: Date) =>
 
 const config = {
   series: [{ data: y1 }, { data: y2 }],
-  height: 400,
+  height: 300,
   topAxis: 'half days',
   leftAxis: null,
 };

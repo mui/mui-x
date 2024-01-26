@@ -4,10 +4,14 @@ import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import { screen } from '@mui-internal/test-utils/createRenderer';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+  describeJalaliAdapter,
+} from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {
@@ -39,10 +43,6 @@ describe('<AdapterMomentJalaali />', () => {
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
-      expectDate('fullDateWithWeekday', 'شنبه ۱م بهمن ۱۳۹۸');
-      expectDate('fullDateTime', '۱۳۹۸، بهمن ۱م، ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime12h', '۱۲ بهمن ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime24h', '۱۲ بهمن ۲۳:۴۴');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
@@ -59,7 +59,7 @@ describe('<AdapterMomentJalaali />', () => {
       moment.locale('en');
     });
 
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       fa: {
         placeholder: 'YYYY/MM/DD hh:mm',

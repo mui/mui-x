@@ -13,6 +13,7 @@ export interface ChartsComponents {
   };
   MuiChartsAxisHighlight?: {
     defaultProps?: ComponentsProps['MuiChartsAxisHighlight'];
+    styleOverrides?: ComponentsOverrides['MuiChartsAxisHighlight'];
   };
   MuiChartsClipPath?: {
     defaultProps?: ComponentsProps['MuiChartsClipPath'];
@@ -23,6 +24,7 @@ export interface ChartsComponents {
   };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
+    styleOverrides?: ComponentsOverrides['MuiChartsTooltip'];
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];

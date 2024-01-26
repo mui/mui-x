@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer } from '@mui-internal/test-utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
@@ -75,7 +75,7 @@ describe('<DataGrid /> - Columns', () => {
   it('should not persist valueFormatter on column type change', () => {
     const { setProps } = render(
       <TestDataGrid
-        columns={[{ field: 'price', type: 'price', valueFormatter: ({ value }) => `$${value}` }]}
+        columns={[{ field: 'price', type: 'number', valueFormatter: ({ value }) => `$${value}` }]}
         rows={[{ id: 0, price: 1 }]}
       />,
     );

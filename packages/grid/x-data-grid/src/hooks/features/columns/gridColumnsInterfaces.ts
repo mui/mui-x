@@ -1,6 +1,10 @@
-import type { GridRowId } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridColumnDimensionProperties } from './gridColumnsUtils';
+
+export enum GridPinnedColumnPosition {
+  LEFT = 'left',
+  RIGHT = 'right',
+}
 
 export type GridColumnLookup = {
   [field: string]: GridStateColDef;
@@ -16,6 +20,23 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
+export interface GridPinnedColumnFields {
+  left?: string[];
+  right?: string[];
+}
+
+export const EMPTY_PINNED_COLUMN_FIELDS = {
+  left: [] as string[],
+  right: [] as string[],
+};
+
+export interface GridPinnedColumns {
+  left: GridStateColDef[];
+  right: GridStateColDef[];
+}
+
+export type GridColumnPinningState = GridPinnedColumnFields;
+
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 
 export interface GridColumnsInitialState {
@@ -30,4 +51,4 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
 
 export type GridHydrateColumnsValue = GridColumnsRawState;
 
-export type GridColumnVisibilityModel = Record<GridRowId, boolean>;
+export type GridColumnVisibilityModel = Record<GridColDef['field'], boolean>;

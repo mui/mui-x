@@ -1,6 +1,6 @@
 <DataGridPro
   {...data}
-  components={{ Toolbar: GridToolbar }}
+  slots={{ toolbar: GridToolbar }}
   slotProps={{
     filterPanel: {
       disableAddFilterButton: true,

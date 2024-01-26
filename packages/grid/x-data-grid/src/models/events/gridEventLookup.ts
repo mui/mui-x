@@ -6,11 +6,11 @@ import type {
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
-  GridRenderedRowsIntervalChangeParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
   GridColumnGroupHeaderParams,
+  GridRenderContext,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
@@ -44,6 +44,14 @@ export interface GridRowEventLookup {
    * Fired when the mouse leaves the row. Called with a [[GridRowParams]] object.
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOut: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  /**
+   * @ignore - do not document.
+   */
+  rowMouseOver: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
    * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
    * @ignore - do not document.
@@ -174,6 +182,14 @@ export interface GridColumnHeaderEventLookup {
   columnHeaderDragEnd: {
     params: GridColumnHeaderParams;
     event: React.DragEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `dblclick` DOM event happens in the column header separator.
+   * @ignore - do not document.
+   */
+  columnSeparatorDoubleClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` DOM event happens in the column header separator.
@@ -444,9 +460,9 @@ export interface GridEventLookup
    */
   rowExpansionChange: { params: GridGroupNode };
   /**
-   * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
+   * Fired when the rendered rows index interval changes. Called with a [[GridRenderContext]] object.
    */
-  renderedRowsIntervalChange: { params: GridRenderedRowsIntervalChangeParams };
+  renderedRowsIntervalChange: { params: GridRenderContext };
 
   // Edit
   /**

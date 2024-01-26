@@ -21,6 +21,7 @@ import { GridOverlayProps } from '../components/containers/GridOverlay';
 import { GridPanelProps } from '../components/panel/GridPanel';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridCellProps } from '../components/cell/GridCell';
+import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
 import type { GridRowCountProps } from '../components';
 
 // Overrides for module augmentation
@@ -41,6 +42,7 @@ export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
+export interface ColumnsManagementPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
 export interface FooterPropsOverrides {}
 export interface FooterRowCountOverrides {}
@@ -49,7 +51,6 @@ export interface LoadingOverlayPropsOverrides {}
 export interface NoResultsOverlayPropsOverrides {}
 export interface NoRowsOverlayPropsOverrides {}
 export interface PanelPropsOverrides {}
-export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
 type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
@@ -80,6 +81,7 @@ export interface GridSlotsComponentsProps {
   >;
   columnMenu?: SlotProps<GridColumnMenuProps, ColumnMenuPropsOverrides>;
   columnsPanel?: SlotProps<GridColumnsPanelProps, ColumnsPanelPropsOverrides>;
+  columnsManagement?: SlotProps<GridColumnsManagementProps, ColumnsManagementPropsOverrides>;
   filterPanel?: SlotProps<GridFilterPanelProps, FilterPanelPropsOverrides>;
   footer?: SlotProps<GridFooterContainerProps, FooterPropsOverrides>;
   footerRowCount?: SlotProps<GridRowCountProps, FooterRowCountOverrides>;
@@ -88,10 +90,6 @@ export interface GridSlotsComponentsProps {
   noRowsOverlay?: SlotProps<GridOverlayProps, NoRowsOverlayPropsOverrides>;
   pagination?: SlotProps<TablePaginationProps, PaginationPropsOverrides>;
   panel?: SlotProps<GridPanelProps, PanelPropsOverrides>;
-  preferencesPanel?: SlotProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    PreferencesPanelPropsOverrides
-  >;
   row?: SlotProps<GridRowProps, RowPropsOverrides>;
   toolbar?: SlotProps<GridToolbarProps, ToolbarPropsOverrides>;
 }

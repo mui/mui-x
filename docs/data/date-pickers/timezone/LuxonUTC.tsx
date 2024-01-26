@@ -7,7 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function LuxonUTC() {
-  const [value, setValue] = React.useState<DateTime | null>(
+  const [value, setValue] = React.useState<DateTime<true> | DateTime<false> | null>(
     DateTime.fromISO('2022-04-17T15:30', { zone: 'UTC' }),
   );
 

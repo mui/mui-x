@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Badge from '@mui/material/Badge';
-import { UncapitalizedGridSlotsComponent } from '../../models/gridSlotsComponent';
+import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -13,7 +13,8 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
-  sortingOrder: GridSortDirection[];
+  sortingOrder: readonly GridSortDirection[];
+  disabled?: boolean;
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -31,10 +32,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function getIcon(
-  icons: UncapitalizedGridSlotsComponent,
+  icons: GridSlotsComponent,
   direction: GridSortDirection,
   className: string,
-  sortingOrder: GridSortDirection[],
+  sortingOrder: readonly GridSortDirection[],
 ) {
   let Icon;
   const iconProps: any = {};
@@ -50,7 +51,7 @@ function getIcon(
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index, sortingOrder } = props;
+  const { direction, index, sortingOrder, disabled } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -67,6 +68,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
+      disabled={disabled}
       {...rootProps.slotProps?.baseIconButton}
     >
       {iconElement}
@@ -94,6 +96,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
+  disabled: PropTypes.bool,
   index: PropTypes.number,
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;

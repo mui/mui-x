@@ -1,0 +1,20 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "dataIndex": { "description": "The index to the element in the series&#39; data array." },
+    "shape": { "description": "The shape of the marker." }
+  },
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "higlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

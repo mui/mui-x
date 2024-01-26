@@ -71,7 +71,7 @@ export default function CSSCustomization() {
           id: 'Years',
           data: years,
           scaleType: 'time',
-          valueFormatter: (date) => date.getFullYear(),
+          valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}
       series={[

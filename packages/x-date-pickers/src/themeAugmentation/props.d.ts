@@ -11,14 +11,12 @@ import { ExportedPickersYearProps, YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { PickersLayoutProps } from '../PickersLayout';
-import {
-  DayCalendarProps,
-  ExportedPickersArrowSwitcherProps,
-  PickerPopperProps,
-  PickersToolbarButtonProps,
-  PickersToolbarProps,
-  ExportedPickersToolbarTextProps,
-} from '../internals';
+import { DayCalendarProps } from '../DateCalendar/DayCalendar';
+import { ExportedPickersArrowSwitcherProps } from '../internals/components/PickersArrowSwitcher/PickersArrowSwitcher.types';
+import { PickerPopperProps } from '../internals/components/PickersPopper';
+import { PickersToolbarProps } from '../internals/components/PickersToolbar';
+import { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
+import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
 import { DateOrTimeView } from '../models';
 
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
@@ -47,6 +45,14 @@ import {
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
 import { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import {
+  PickersTextFieldProps,
+  PickersInputBaseProps,
+  PickersOutlinedInputProps,
+  PickersInputProps,
+  PickersFilledInputProps,
+} from '../PickersTextField';
+import { PickersSectionListProps } from '../PickersSectionList';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -99,6 +105,14 @@ export interface PickersComponentsPropsList {
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown>;
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
+
+  // V7 Picker's TextField
+  MuiPickersTextField: PickersTextFieldProps;
+  MuiPickersInputBase: PickersInputBaseProps;
+  MuiPickersInput: PickersInputProps;
+  MuiPickersFilledInput: PickersFilledInputProps;
+  MuiPickersOutlinedInput: PickersOutlinedInputProps;
+  MuiPickersSectionList: PickersSectionListProps;
 }
 
 declare module '@mui/material/styles' {

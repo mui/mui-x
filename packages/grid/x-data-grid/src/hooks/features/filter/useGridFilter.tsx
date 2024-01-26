@@ -12,7 +12,7 @@ import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
@@ -30,6 +30,7 @@ import {
   mergeStateWithFilterModel,
   cleanFilterItem,
   passFilterLogic,
+  shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -90,6 +91,7 @@ export const useGridFilter = (
     | 'slotProps'
     | 'disableColumnFilter'
     | 'disableEval'
+    | 'ignoreDiacritics'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -107,7 +109,7 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef, props.disableEval)
+          ? buildAggregatedFilterApplier(filterModel, apiRef, props.disableEval)
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -131,7 +133,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
+  }, [apiRef, props.filterMode, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -329,6 +331,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     setQuickFilterValues,
+    ignoreDiacritics: props.ignoreDiacritics,
   };
 
   useGridApiMethod(apiRef, filterApi, 'public');
@@ -468,9 +471,9 @@ export const useGridFilter = (
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
-    const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
+    const columnsLookup = gridColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
-      (item) => item.field && filterableColumnsLookup[item.field],
+      (item) => item.field && columnsLookup[item.field],
     );
     if (newFilterItems.length < filterModel.items.length) {
       apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
@@ -506,7 +509,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
   useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
-    if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {
+    if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed
       apiRef.current.unstable_applyFilters();
     }

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -25,7 +24,7 @@ function ButtonField(props) {
       aria-label={ariaLabel}
       onClick={() => setOpen?.((prev) => !prev)}
     >
-      {label ?? 'Pick a date'}
+      {label ? `Current date: ${label}` : 'Pick a date'}
     </Button>
   );
 }
@@ -50,15 +49,11 @@ export default function PickerWithButtonField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={1}>
-        <ButtonDatePicker
-          label={`Current date: ${
-            value == null ? 'null' : value.format('MM/DD/YYYY')
-          }`}
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-      </Stack>
+      <ButtonDatePicker
+        label={value == null ? null : value.format('MM/DD/YYYY')}
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+      />
     </LocalizationProvider>
   );
 }

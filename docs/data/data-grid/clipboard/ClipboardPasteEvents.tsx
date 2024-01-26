@@ -36,12 +36,11 @@ export default function ClipboardPasteEvents() {
         {...data}
         loading={loading}
         initialState={initialState}
-        unstable_cellSelection
+        cellSelection
         processRowUpdate={processRowUpdate}
         onClipboardPasteStart={() => setLoading(true)}
         onClipboardPasteEnd={() => setLoading(false)}
-        experimentalFeatures={{ clipboardPaste: true }}
-        unstable_ignoreValueFormatterDuringExport
+        ignoreValueFormatterDuringExport
       />
     </div>
   );

@@ -9,22 +9,6 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest(`.${className}`);
 }
 
-export function getRowEl(cell?: Element | null): HTMLElement | null {
-  if (!cell) {
-    return null;
-  }
-  return findParentElementFromClassName(cell as HTMLDivElement, gridClasses.row)! as HTMLElement;
-}
-
-// TODO remove
-export function isGridCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(gridClasses.cell);
-}
-
-export function isGridHeaderCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(gridClasses.columnHeader);
-}
-
 function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
@@ -65,3 +49,15 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 
   return activeEl;
 };
+
+export function isEventTargetInPortal(event: React.SyntheticEvent) {
+  if (
+    // The target is not an element when triggered by a Select inside the cell
+    // See https://github.com/mui/material-ui/issues/10534
+    (event.target as any).nodeType === 1 &&
+    !event.currentTarget.contains(event.target as Element)
+  ) {
+    return true;
+  }
+  return false;
+}

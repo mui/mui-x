@@ -10,7 +10,6 @@ import { GridLocaleTextApi } from './gridLocaleTextApi';
 import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
-import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
 import { GridRowSelectionApi } from './gridRowSelectionApi';
@@ -18,7 +17,7 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
+import { GridVirtualizationApi, GridVirtualizationPrivateApi } from './gridVirtualizationApi';
 import type {
   GridPipeProcessingApi,
   GridPipeProcessingPrivateApi,
@@ -34,6 +33,7 @@ import type { GridStatePersistenceApi } from '../../hooks/features/statePersiste
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
+import type { DataGridProcessedProps } from '../props/DataGridProps';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -56,7 +56,7 @@ export interface GridApiCommon<
     GridColumnMenuApi,
     GridPreferencesPanelApi,
     GridPrintExportApi,
-    GridDisableVirtualizationApi,
+    GridVirtualizationApi,
     GridLocaleTextApi,
     GridScrollApi,
     GridColumnSpanningApi,
@@ -68,19 +68,20 @@ export interface GridApiCommon<
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
   PrivateApi extends GridPrivateApiCommon,
-> extends GridCorePrivateApi<Api, PrivateApi>,
+  Props extends DataGridProcessedProps,
+> extends GridCorePrivateApi<Api, PrivateApi, Props>,
     GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
     GridColumnSpanningPrivateApi,
     GridRowsMetaPrivateApi,
     GridDimensionsPrivateApi,
-    GridVirtualScrollerApi,
     GridEditingPrivateApi,
     GridLoggerApi,
     GridFocusPrivateApi,
-    GridHeaderFilteringPrivateApi {}
+    GridHeaderFilteringPrivateApi,
+    GridVirtualizationPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
-    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon> {}
+    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon, DataGridProcessedProps> {}

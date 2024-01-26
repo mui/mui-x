@@ -45,12 +45,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Vytisknout',
   toolbarExportExcel: 'Stáhnout jako Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Najít sloupec',
-  columnsPanelTextFieldPlaceholder: 'Název sloupce',
-  columnsPanelDragIconLabel: 'Uspořádat sloupce',
-  columnsPanelShowAllButton: 'Zobrazit vše',
-  columnsPanelHideAllButton: 'Skrýt vše',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
@@ -174,8 +172,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'více',
 
   // Column pinning text
-  pinToLeft: 'Připnout na levo',
-  pinToRight: 'Připnout na pravo',
+  pinToLeft: 'Připnout vlevo',
+  pinToRight: 'Připnout vpravo',
   unpin: 'Odepnout',
 
   // Tree Data
@@ -185,8 +183,8 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: (name) => `Zeskupit podle ${name}`,
-  unGroupColumn: (name) => `Přestat zeskupovat podle ${name}`,
+  groupColumn: (name) => `Seskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat seskupovat podle ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Přepnout detail panelu',

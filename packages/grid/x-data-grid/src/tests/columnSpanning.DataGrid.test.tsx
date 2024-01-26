@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Column Spanning', () => {
+describe('<DataGrid /> - Column spanning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
