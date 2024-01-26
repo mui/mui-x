@@ -23,9 +23,13 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
       ? 'Vizualizarea anuală este deschisă, comutați la vizualizarea calendarului'
       : 'Vizualizarea calendarului este deschisă, comutați la vizualizarea anuală',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Început',
   end: 'Sfârșit',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Anulare',
@@ -41,11 +45,7 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selectați ${timeViews[view] ?? view}. ${
-      time === null
-        ? 'Nicio oră selectată'
-        : `Ora selectată este ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Selectați ${timeViews[view] ?? view}. ${time === null ? 'Nicio oră selectată' : `Ora selectată este ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,

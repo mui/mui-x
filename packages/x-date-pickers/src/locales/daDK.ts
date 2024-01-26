@@ -16,16 +16,20 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næste måned',
 
   // View navigation
-  openPreviousView: 'åben forrige visning',
-  openNextView: 'åben næste visning',
+  openPreviousView: 'Åben forrige visning',
+  openNextView: 'Åben næste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åben, skift til kalendervisning'
       : 'kalendervisning er åben, skift til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Annuller',
@@ -41,11 +45,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${
-      time === null
-        ? 'Intet tidspunkt valgt'
-        : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,

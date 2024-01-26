@@ -12,5 +12,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "root": "", "section": "", "sectionSeparator": "", "sectionContent": "" }
+  "slotDescriptions": { "root": "", "section": "", "sectionContent": "", "sectionSeparator": "" }
 }

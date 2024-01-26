@@ -38,12 +38,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Drucken',
   toolbarExportExcel: 'Download als Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Finde Spalte',
-  columnsPanelTextFieldPlaceholder: 'Spaltenüberschrift',
-  columnsPanelDragIconLabel: 'Spalte umsortieren',
-  columnsPanelShowAllButton: 'Zeige alle',
-  columnsPanelHideAllButton: 'Verberge alle',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',

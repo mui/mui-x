@@ -87,7 +87,11 @@ const COMPONENTS: Record<
   dateTimeRange: {
     field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],
     view: [],
-    picker: [],
+    picker: [
+      'DateTimeRangePicker',
+      'DesktopDateTimeRangePicker',
+      'MobileDateTimeRangePicker',
+    ],
   },
 };
 

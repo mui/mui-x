@@ -398,73 +398,77 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   const missingTranslations: Record<string, any> = {};
   const baseTranslationsNumber: Record<string, number> = {};
 
-  packagesWithL10n.forEach((packageInfo) => {
-    const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
-    const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
+  await Promise.all(
+    packagesWithL10n.map(async (packageInfo) => {
+      const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
+      const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
-    baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
+      baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
 
-    const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
-    const locales = findLocales(localesDirectory, constantsPath);
+      const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
+      const locales = findLocales(localesDirectory, constantsPath);
 
-    locales.forEach(([localePath, localeCode]) => {
-      const { translations: existingTranslations, transformedCode } =
-        extractAndReplaceTranslations(localePath);
+      await Promise.all(
+        locales.map(async ([localePath, localeCode]) => {
+          const { translations: existingTranslations, transformedCode } =
+            extractAndReplaceTranslations(localePath);
 
-      if (!transformedCode || Object.keys(existingTranslations).length === 0) {
-        return;
-      }
-
-      const codeWithNewTranslations = injectTranslations(
-        transformedCode,
-        existingTranslations,
-        baseTranslationsByGroup,
-      );
-
-      const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
-      const prettierConfig = prettier.resolveConfig.sync(localePath, {
-        config: prettierConfigPath,
-      });
-
-      const prettifiedCode = prettier.format(codeWithNewTranslations, {
-        ...prettierConfig,
-        filepath: localePath,
-      });
-
-      // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
-      if (!missingTranslations[localeCode]) {
-        missingTranslations[localeCode] = {};
-      }
-      if (!missingTranslations[localeCode][packageInfo.key]) {
-        missingTranslations[localeCode][packageInfo.key] = {
-          path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
-          missingKeys: [],
-        };
-      }
-      const lines = codeWithNewTranslations.split('\n');
-      Object.entries(baseTranslations).forEach(([key]) => {
-        if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
-          const location = lines.findIndex(
-            (line) =>
-              line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
-          );
-          // Ignore when both the translation and the placeholder are missing
-          if (location >= 0) {
-            missingTranslations[localeCode][packageInfo.key].missingKeys.push({
-              currentLineContent: lines[location].trim().slice(3),
-              lineIndex: location + 1,
-            });
+          if (!transformedCode || Object.keys(existingTranslations).length === 0) {
+            return;
           }
-        }
-      });
 
-      if (!report) {
-        fse.writeFileSync(localePath, prettifiedCode);
-        // eslint-disable-next-line no-console
-        console.log(`Wrote ${localeCode} locale.`);
-      }
-    });
-  });
+          const codeWithNewTranslations = injectTranslations(
+            transformedCode,
+            existingTranslations,
+            baseTranslationsByGroup,
+          );
+
+          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
+          const prettierConfig = await prettier.resolveConfig(localePath, {
+            config: prettierConfigPath,
+          });
+
+          const prettifiedCode = await prettier.format(codeWithNewTranslations, {
+            ...prettierConfig,
+            filepath: localePath,
+          });
+
+          // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
+          if (!missingTranslations[localeCode]) {
+            missingTranslations[localeCode] = {};
+          }
+          if (!missingTranslations[localeCode][packageInfo.key]) {
+            missingTranslations[localeCode][packageInfo.key] = {
+              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              missingKeys: [],
+            };
+          }
+          const lines = codeWithNewTranslations.split('\n');
+          Object.entries(baseTranslations).forEach(([key]) => {
+            if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
+              const location = lines.findIndex(
+                (line) =>
+                  line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
+              );
+              // Ignore when both the translation and the placeholder are missing
+              if (location >= 0) {
+                missingTranslations[localeCode][packageInfo.key].missingKeys.push({
+                  currentLineContent: lines[location].trim().slice(3),
+                  lineIndex: location + 1,
+                });
+              }
+            }
+          });
+
+          if (!report) {
+            fse.writeFileSync(localePath, prettifiedCode);
+            // eslint-disable-next-line no-console
+            console.log(`Wrote ${localeCode} locale.`);
+          }
+        }),
+      );
+    }),
+  );
 
   await generateDocReport(missingTranslations, baseTranslationsNumber);
 

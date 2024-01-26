@@ -16,16 +16,11 @@ export interface MobileDateRangePickerSlots<TDate>
 
 export interface MobileDateRangePickerSlotProps<TDate>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day'> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, 'day'>, 'tabs'> {}
 
 export interface MobileDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps<TDate> {
-  /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
-   */
-  calendars?: 1 | 2 | 3;
   /**
    * Overridable component slots.
    * @default {}
