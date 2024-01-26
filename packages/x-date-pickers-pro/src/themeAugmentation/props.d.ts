@@ -11,11 +11,18 @@ import { MultiInputDateTimeRangeFieldProps } from '../MultiInputDateTimeRangeFie
 import { MultiInputTimeRangeFieldProps } from '../MultiInputTimeRangeField';
 import { SingleInputDateTimeRangeFieldProps } from '../SingleInputDateTimeRangeField';
 import { SingleInputTimeRangeFieldProps } from '../SingleInputTimeRangeField';
+import { DateTimeRangePickerProps } from '../DateTimeRangePicker';
+import { DesktopDateTimeRangePickerProps } from '../DesktopDateTimeRangePicker';
+import { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicker';
+import { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
+import { ExportedDateTimeRangePickerToolbarProps } from '../DateTimeRangePicker/DateTimeRangePickerToolbar';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<PickerValidDate>;
   MuiDateRangePickerDay: DateRangePickerDayProps<PickerValidDate>;
+  MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<PickerValidDate>;
+  MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
 
   // Multi input range fields
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<PickerValidDate>;
@@ -32,6 +39,11 @@ export interface PickersProComponentsPropsList {
   MuiDesktopDateRangePicker: DesktopDateRangePickerProps<PickerValidDate>;
   MuiMobileDateRangePicker: MobileDateRangePickerProps<PickerValidDate>;
   MuiStaticDateRangePicker: StaticDateRangePickerProps<PickerValidDate>;
+
+  // Date Time Range Pickers
+  MuiDateTimeRangePicker: DateTimeRangePickerProps<PickerValidDate>;
+  MuiDesktopDateTimeRangePicker: DesktopDateTimeRangePickerProps<PickerValidDate>;
+  MuiMobileDateTimeRangePicker: MobileDateTimeRangePickerProps<PickerValidDate>;
 }
 
 declare module '@mui/material/styles' {

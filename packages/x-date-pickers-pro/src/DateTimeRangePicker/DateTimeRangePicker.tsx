@@ -177,6 +177,10 @@ DateTimeRangePicker.propTypes = {
    */
   maxDate: PropTypes.object,
   /**
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   */
+  maxDateTime: PropTypes.any,
+  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -185,6 +189,10 @@ DateTimeRangePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.object,
+  /**
+   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
+   */
+  minDateTime: PropTypes.any,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.

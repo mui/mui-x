@@ -18,7 +18,7 @@ export interface MobileDateTimeRangePickerSlots<TDate extends PickerValidDate>
 
 export interface MobileDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerSlotProps<TDate>,
-    Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs'> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs' | 'toolbar'> {}
 
 export interface MobileDateTimeRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerProps<TDate>,

@@ -38,12 +38,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'پرنٹ کریں',
   toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'کالم کو تلاش کریں',
-  columnsPanelTextFieldPlaceholder: 'کالم کا عنوان',
-  columnsPanelDragIconLabel: 'کالم کی ترتیب تبدیل کریں',
-  columnsPanelShowAllButton: 'سارے دکھائیں',
-  columnsPanelHideAllButton: 'سارے چھپائیں',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',

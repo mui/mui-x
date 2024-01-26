@@ -969,15 +969,27 @@
       "isGlobal": false
     },
     {
-      "key": "columnsPanel",
-      "className": "MuiDataGridPremium-columnsPanel",
-      "description": "Styles applied to the columns panel element.",
+      "key": "columnsManagement",
+      "className": "MuiDataGridPremium-columnsManagement",
+      "description": "Styles applied to the columns management body.",
       "isGlobal": false
     },
     {
-      "key": "columnsPanelRow",
-      "className": "MuiDataGridPremium-columnsPanelRow",
-      "description": "Styles applied to the columns panel row element.",
+      "key": "columnsManagementFooter",
+      "className": "MuiDataGridPremium-columnsManagementFooter",
+      "description": "Styles applied to the columns management footer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementHeader",
+      "className": "MuiDataGridPremium-columnsManagementHeader",
+      "description": "Styles applied to the columns management header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementRow",
+      "className": "MuiDataGridPremium-columnsManagementRow",
+      "description": "Styles applied to the columns management row element.",
       "isGlobal": false
     },
     {
