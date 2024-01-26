@@ -18,7 +18,7 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns visibility', () => {
+describe.only('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer();
 
   function TestDataGrid(
@@ -399,7 +399,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
             ]}
             rows={[{ id: 1, firstName: 'John', lastName: 'Doe', age: 20 }]}
             slotProps={{
-              columnsPanel: {
+              columnsManagement: {
                 toggleAllMode: 'filteredOnly',
               },
             }}
@@ -413,14 +413,15 @@ describe('<DataGridPro /> - Columns visibility', () => {
       const button = screen.getByRole('button', { name: 'Select columns' });
       act(() => button.focus());
       fireEvent.click(button);
-      const input = screen.getByRole('textbox', { name: 'Find column' });
 
+      const input = screen.getByPlaceholderText('Search');
       fireEvent.change(input, { target: { value: 'name' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Hide all' }));
+      const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
+      fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'age']);
 
       fireEvent.change(input, { target: { value: 'firstName' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Show all' }));
+      fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'age']);
     });
   });
