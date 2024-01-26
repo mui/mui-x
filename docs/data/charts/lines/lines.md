@@ -92,6 +92,15 @@ However, it cannot extrapolate the curve before the first non-null data point or
 
 ## Styling
 
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+It takes an object with properties `vertical` and `horizontal`.
+
+More info in the [axis documentation](/x/react-charts/axis/#grid).
+
+{{"demo": "GridDemo.js"}}
+
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.

@@ -34,6 +34,15 @@ To use this feature with composition, add the `ChartsVoronoiHandler`.
 
 ## Styling
 
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+It takes an object with properties `vertical` and `horizontal`.
+
+More info in the [axis documentation](/x/react-charts/axis/#grid).
+
+{{"demo": "GridDemo.js"}}
+
 ### CSS 🚧
 
 ### Shape 🚧

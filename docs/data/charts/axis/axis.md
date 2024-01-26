@@ -73,6 +73,25 @@ xAxis={[
 
 {{"demo": "MinMaxExample.js"}}
 
+## Grid
+
+You can add a grid in the background of the cartesian chart with the `grid` prop.
+
+It takes an object with properties `vertical` and `horizontal`.
+Setting those properties to `true` will display the grid lines.
+
+If you use composition you can pass those properties as props of the `<ChartsGrid />`
+
+```jsx
+<BarChart grid={{ vertical: true }}>
+
+<ChartContainer>
+  <ChartsGrid vertical >
+</ChartContainer>
+```
+
+{{"demo": "GridDemo.js"}}
+
 ## Tick position
 
 ### Automatic tick position

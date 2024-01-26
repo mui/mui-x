@@ -63,22 +63,12 @@ If you're using [composition](/x/react-charts/composition/), you should set the 
 
 {{"demo": "HorizontalBars.js"}}
 
-## Grid
+### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
-
 It takes an object with properties `vertical` and `horizontal`.
-Setting those properties to `true` will display the grid lines.
 
-If you use composition you can pass those properties as props of the `<ChartsGrid />`
-
-```jsx
-<BarChart grid={{ vertical: true }}>
-
-<ChartContainer>
-  <ChartsGrid vertical >
-</ChartContainer>
-```
+More info in the [axis documentation](/x/react-charts/axis/#grid).
 
 {{"demo": "GridDemo.js"}}
 
