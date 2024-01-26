@@ -16,20 +16,14 @@ This version comes with a number of improvements, bug fixes and exciting feature
 
 ### 🎁 New column management panel design for the Data Grid (#11770) @MBilalShafi
 
-#### Extract columns management component
+  <img width="310" alt="image" src="https://github.com/mui/mui-x/assets/12609561/a79dac8b-d54d-4e69-a63a-ef78f3993f37">
 
-The columns management component (previously part of Columns Panel) has now been extracted as a separate component and slot with its dedicated `slotProps`. The motivation behind the change is to allow it to be reused in the newly proposed pivoting design (on the right side of the grid, in its dedicated space)
+We'd like to offer a big thanks to the 7 contributors who made this release possible ✨:
 
-#### Design changes
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
-The design of the columns management component now uses the new checkboxes-based design rather than the previous toggle button-based design.
-
-#### Component API
-
-The component API is almost the same as that of Columns Panel, with a few exceptions like:
-
-- Introduction of a new Reset button and its functionality, a new prop `disableResetButton` has been introduced.
-- Show all and Hide all are combined into one `Show/Hide All` checkbox, related props are also updated.
+### Data Grid
 
 #### Breaking changes
 
@@ -48,14 +42,14 @@ The component API is almost the same as that of Columns Panel, with a few except
   ```
 
 - `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
-  From https://github.com/mui/mui-x/pull/9528
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible ✨:
-
-- 🐞 Bugfixes
-- 📚 Documentation improvements
-
-### Data Grid
+  ```diff
+   <DataGrid
+  -  disableShowAllButton
+  -  disableHideAllButton
+  +  disableShowHideToggle
+   />
+  ```
 
 #### `@mui/x-data-grid@7.0.0-beta.0`
 
