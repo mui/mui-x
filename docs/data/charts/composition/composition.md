@@ -105,6 +105,10 @@ To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in t
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
 If `axisId` is not provided it will pick the first one.
 
+### Grid
+
+To add a grid, you can use `<ChartsGrid />` as defined in the [axis page](/x/react-charts/axis/#grid).
+
 ### Additional information
 
 To add a legend to your chart, you can use `<ChartsLegend />`.
