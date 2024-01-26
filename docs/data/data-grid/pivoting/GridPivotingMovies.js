@@ -58,7 +58,6 @@ export default function GridPivotingMovies() {
           key={isPivot.toString()}
           {...props}
           apiRef={apiRef}
-          experimentalFeatures={{ columnGrouping: true }}
           autoHeight={isPivot}
         />
       </div>

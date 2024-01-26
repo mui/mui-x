@@ -5,6 +5,7 @@ import {
   unstable_useGridPivoting,
   Unstable_GridPivotModel as PivotModel,
   Unstable_GridPivotModelEditor as GridPivotModelEditor,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -17,7 +18,10 @@ export default function GridPivotingMovies() {
   const data = React.useMemo(() => {
     return {
       ...movieData,
-      columns: [...movieData.columns, { field: 'imdbRating', type: 'number' }],
+      columns: [
+        ...movieData.columns,
+        { field: 'imdbRating', type: 'number' },
+      ] as GridColDef[],
     };
   }, [movieData]);
   const [pivotModel, setPivotModel] = React.useState<PivotModel>({
@@ -59,7 +63,6 @@ export default function GridPivotingMovies() {
           key={isPivot.toString()}
           {...props}
           apiRef={apiRef}
-          experimentalFeatures={{ columnGrouping: true }}
           autoHeight={isPivot}
         />
       </div>

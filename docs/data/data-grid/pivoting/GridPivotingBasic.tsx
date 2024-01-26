@@ -57,12 +57,7 @@ export default function GridPivotingBasic() {
         />
       )}
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPremium
-          key={isPivot.toString()}
-          {...props}
-          apiRef={apiRef}
-          experimentalFeatures={{ columnGrouping: true }}
-        />
+        <DataGridPremium key={isPivot.toString()} {...props} apiRef={apiRef} />
       </div>
     </div>
   );
