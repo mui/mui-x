@@ -8,7 +8,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 _Jan 26, 2024_
 
 We are glad to announce MUI X v7 beta!
-This version has several improvements, bug fixes, and exciting features 🎉. We want to offer a big thanks to the 7 contributors who made this release possible ✨:
+This version has several improvements, bug fixes, and exciting features 🎉.
+We want to offer a big thanks to the 7 contributors who made this release possible ✨:
 
 - 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
 
