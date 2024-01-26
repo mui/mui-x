@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { gridClasses } from '@mui/x-charts/ChartsGrid';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const chartSetting = {
   yAxis: [{ label: 'rainfall (mm)' }],
   height: 300,
-  sx: {
-    [`& .${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
 };
 const dataset = [
   {
@@ -107,6 +103,12 @@ export default function GridDemo() {
       xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
       series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
       grid={{ horizontal: true }}
+      sx={{
+        [`& .${axisClasses.left} .${axisClasses.label}`]: {
+          transform: 'translateX(-10px)',
+        },
+        [`& .${gridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
+      }}
       {...chartSetting}
     />
   );
