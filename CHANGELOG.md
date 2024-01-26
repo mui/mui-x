@@ -10,11 +10,11 @@ _Jan 26, 2024_
 We are glad to announce MUI X v7 beta!
 This version has several improvements, bug fixes, and exciting features 🎉. We want to offer a big thanks to the 7 contributors who made this release possible ✨:
 
-### 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
+- 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
 
   <img src="https://github.com/mui/mui-x/assets/4941090/122bb7bc-5e72-4e11-a8e5-96f3026de922" width="510" height="652" alt="Date Time Range Picker example" />
 
-### 🎁 New column management panel design for the Data Grid (#11770) @MBilalShafi
+- 🎁 New column management panel design for the Data Grid (#11770) @MBilalShafi
 
   <img width="310" alt="image" src="https://github.com/mui/mui-x/assets/12609561/a79dac8b-d54d-4e69-a63a-ef78f3993f37">
 
