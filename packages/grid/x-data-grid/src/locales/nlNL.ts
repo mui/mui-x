@@ -38,12 +38,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Zoek kolom',
-  columnsPanelTextFieldPlaceholder: 'Kolomtitel',
-  columnsPanelDragIconLabel: 'Kolom herschikken',
-  columnsPanelShowAllButton: 'Alles tonen',
-  columnsPanelHideAllButton: 'Alles verbergen',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',

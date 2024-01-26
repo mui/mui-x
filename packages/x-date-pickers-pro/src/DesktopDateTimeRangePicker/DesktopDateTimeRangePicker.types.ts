@@ -25,7 +25,7 @@ export interface DesktopDateTimeRangePickerSlotProps<
         DateTimeRangePickerView,
         TEnableAccessibleFieldDOMStructure
       >,
-      'tabs'
+      'tabs' | 'toolbar'
     > {}
 
 export interface DesktopDateTimeRangePickerProps<

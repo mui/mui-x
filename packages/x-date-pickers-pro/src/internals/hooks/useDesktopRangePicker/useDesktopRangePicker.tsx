@@ -12,6 +12,7 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   DesktopRangePickerAdditionalViewProps,
@@ -191,7 +192,7 @@ export const useDesktopRangePicker = <
       ...slotProps?.tabs,
       rangePosition,
       onRangePositionChange,
-    },
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

@@ -73,10 +73,16 @@
       "description": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>."
     },
     "maxDate": { "description": "Maximal selectable date." },
+    "maxDateTime": {
+      "description": "Maximal selectable moment of time with binding to date, to set max time in each day use <code>maxTime</code>."
+    },
     "maxTime": {
       "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minDate": { "description": "Minimal selectable date." },
+    "minDateTime": {
+      "description": "Minimal selectable moment of time with binding to date, to set min time in each day use <code>minTime</code>."
+    },
     "minTime": {
       "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },

@@ -55,17 +55,16 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
    * @default TimeIcon
    */
   timeIcon?: React.ReactElement;
-}
-
-export interface DateTimeRangePickerTabsProps
-  extends ExportedDateTimeRangePickerTabsProps,
-    BaseTabsProps<DateOrTimeViewWithMeridiem>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimeRangePickerTabsClasses>;
 }
+
+export interface DateTimeRangePickerTabsProps
+  extends ExportedDateTimeRangePickerTabsProps,
+    BaseTabsProps<DateOrTimeViewWithMeridiem>,
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 const useUtilityClasses = (ownerState: DateTimeRangePickerTabsProps) => {
   const { classes } = ownerState;
@@ -224,7 +223,7 @@ DateTimeRangePickerTabs.propTypes = {
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a tab is clicked.
    * @template TView
    * @param {TView} view The view to open
    */
