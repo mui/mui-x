@@ -1,5 +1,6 @@
 ---
 title: Charts - Tooltip
+productId: x-charts
 components: ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent, ChartsAxisHighlight
 ---
 

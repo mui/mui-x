@@ -1,5 +1,6 @@
 ---
 title: Charts - Legend
+productId: x-charts
 components: ChartsLegend, ChartsText
 ---
 

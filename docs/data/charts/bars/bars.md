@@ -1,5 +1,6 @@
 ---
 title: React Bar chart
+productId: x-charts
 components: BarChart, BarElement, BarPlot
 ---
 

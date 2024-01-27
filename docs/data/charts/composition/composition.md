@@ -1,5 +1,6 @@
 ---
 title: React Chart composition
+productId: x-charts
 githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
 ---

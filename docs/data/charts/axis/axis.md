@@ -1,5 +1,6 @@
 ---
 title: Charts - Axis
+productId: x-charts
 components: ChartsAxis, ChartsReferenceLine, ChartsText
 ---
 
