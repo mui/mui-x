@@ -1,5 +1,6 @@
 ---
 title: React Gauge chart
+productId: x-charts
 ---
 
 # Charts - Gauge 🚧
