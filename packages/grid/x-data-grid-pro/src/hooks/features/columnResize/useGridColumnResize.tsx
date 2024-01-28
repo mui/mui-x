@@ -3,6 +3,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   GridEventListener,
   gridClasses,
@@ -284,7 +285,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const columnHeaderElementRef = React.useRef<HTMLDivElement>();
+  const columnHeaderElementRef = React.useRef<HTMLDivElement | null>(null);
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
   const cellElementsRef = React.useRef<Element[]>([]);
@@ -378,12 +379,10 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    if (colDefRef.current) {
-      apiRef.current.setColumnWidth(colDefRef.current.field, colDefRef.current.width!);
-      logger.debug(
-        `Updating col ${colDefRef.current.field} with new width: ${colDefRef.current.width}`,
-      );
-    }
+    apiRef.current.setColumnWidth(colDefRef.current!.field, colDefRef.current!.width!);
+    logger.debug(
+      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
+    );
 
     stopResizeEventTimeout.start(0, () => {
       apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
@@ -545,6 +544,11 @@ export const useGridColumnResize = (
   });
 
   const stopListening = React.useCallback(() => {
+    // Resize didn't start;
+    if (!columnHeaderElementRef.current) {
+      return;
+    }
+
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     doc.body.style.removeProperty('cursor');
     doc.removeEventListener('mousemove', handleResizeMouseMove);
@@ -556,17 +560,9 @@ export const useGridColumnResize = (
     setTimeout(() => {
       doc.removeEventListener('click', preventClick, true);
     }, 100);
-    if (columnHeaderElementRef.current) {
-      columnHeaderElementRef.current!.style.pointerEvents = 'unset';
-    }
-  }, [
-    apiRef,
-    columnHeaderElementRef,
-    handleResizeMouseMove,
-    handleResizeMouseUp,
-    handleTouchMove,
-    handleTouchEnd,
-  ]);
+    columnHeaderElementRef.current!.style.pointerEvents = 'unset';
+    columnHeaderElementRef.current = null;
+  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
@@ -714,7 +710,7 @@ export const useGridColumnResize = (
    * EFFECTS
    */
 
-  React.useEffect(() => stopListening, [stopListening]);
+  useEnhancedEffect(() => stopListening, [stopListening]);
 
   useOnMount(() => {
     if (props.autosizeOnMount) {
