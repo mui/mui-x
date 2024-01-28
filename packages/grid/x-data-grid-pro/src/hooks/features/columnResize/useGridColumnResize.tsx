@@ -284,14 +284,14 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const columnHeaderElementRef = React.useRef<HTMLDivElement>();
-  const headerFilterElementRef = React.useRef<HTMLDivElement>();
+  const columnHeaderElementRef = React.useRef<HTMLDivElement | null>(null);
+  const headerFilterElementRef = React.useRef<HTMLDivElement | null>(null);
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
   const cellElementsRef = React.useRef<Element[]>([]);
   const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
   const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
-  const fillerLeftRef = React.useRef<HTMLElement>();
-  const fillerRightRef = React.useRef<HTMLElement>();
+  const fillerLeftRef = React.useRef<HTMLElement | null>(null);
+  const fillerRightRef = React.useRef<HTMLElement | null>(null);
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
