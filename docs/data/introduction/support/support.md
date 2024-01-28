@@ -12,6 +12,16 @@ If you think you've found a bug, or you have a new feature idea:
    You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 2. Then, if no duplicates exist, [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
 
+### Bug reproductions
+
+We require bug reports to be accompanied by a minimal reproduction so we can solve the problem.
+You have a few options possible to provide it:
+
+- (Simplest) You can browse the documentation, find an example close to your use case, and then open it in a live editor:
+  [![Forking an example](https://mui.com/static/docs/forking-an-example.png)](/x/react-date-pickers/getting-started/#render-your-first-component)
+
+- You can use the [official template](https://mui.com/r/issue-template/) to build a reproduction case.
+
 ## Stack Overflow
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
