@@ -35,7 +35,7 @@ You have a few options possible to provide it:
   - [Charts](/x/react-charts/getting-started/#single-charts)
   - [Tree View](/x/react-tree-view/#simpletreeview)
 
-- You can use a starter React template to build a reproduction case with [JavaScript](https://mui.com/r/issue-template-js/) or [TypeScript](https://mui.com/r/issue-template-ts/).
+- You can use a starter React template to build a reproduction case with [JavaScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react-ts).
 
 ## Stack Overflow
 
