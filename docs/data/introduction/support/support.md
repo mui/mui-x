@@ -12,6 +12,15 @@ If you think you've found a bug, or you have a new feature idea:
    You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 2. Then, if no duplicates exist, [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
 
+### New issue guidelines
+
+- Please follow one the issue templates provided on GitHub.
+- Please begin the title with "[component-name]" (if relevant), and use a succinct description that helps others find similar issues.
+  - ❌ _"It doesn't work"_
+  - ✅ _"[button] Add support for {{new feature}}"_
+- Please don't group multiple topics in one issue.
+- Please don't comment "+1" on an issue. It spams the maintainers and doesn't help move the issue forward. Use GitHub reactions instead (👍).
+
 ## Stack Overflow
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
@@ -62,6 +71,13 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ## Community
 
+### Social media
+
+The MUI X community is active on both [X/Twitter](https://twitter.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
+These are great platforms to share what you're working on and connect with other developers.
+
+### Discord
+
 We have a [Discord Server](https://mui.com/r/discord/) to bring the MUI X community together.
 Our tools are used by thousands of developers and teams all around the world, many of whom actively engage with the community.
 
@@ -70,3 +86,13 @@ You can join Discord to engage in lively discussions, share your projects, and i
 :::warning
 How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
 :::
+
+## Custom work
+
+If your team gets stuck and needs help getting unblocked, MUI X's engineers may be available on a contract basis.
+
+Keep in mind that the work must be directly related to MUI X's products—we don't accept general web development or React work.
+
+Our contracting price starts at $200/hour or $1,500/day.
+
+[Send us an email](mailto:custom-work@mui.com) summarizing of your needs, and we'll let you know whether we can help (or else try to suggest alternatives).
