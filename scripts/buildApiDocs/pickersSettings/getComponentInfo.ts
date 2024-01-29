@@ -11,6 +11,8 @@ import {
 } from '@mui-internal/api-docs-builder/buildApiUtils';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 
+const ComponentsWithTypo = ['DatePicker', 'DateRangePicker', 'DateTimePicker', 'TimePicker'];
+
 export function getComponentInfo(filename: string): ComponentInfo {
   const { name } = extractPackageFile(filename);
   let srcInfo: null | ReturnType<ComponentInfo['readFile']> = null;
@@ -21,7 +23,9 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
-    slotInterfaceName: `${name}SlotsComponent`,
+    slotInterfaceName: ComponentsWithTypo.includes(name)
+      ? `${name}SlotsComponents`
+      : `${name}SlotsComponent`,
     apiPathname: `/x/api/date-pickers/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/date-pickers`),
     readFile: () => {
