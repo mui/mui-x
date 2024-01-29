@@ -56,8 +56,8 @@ export default function AreaChartFillByValue() {
         }}
       >
         <ColorSwich
-          color1="red"
-          color2="green"
+          color1="#11B678" // green
+          color2="#FF3143" // red
           threshold={0}
           id="swich-color-id-1"
         />
