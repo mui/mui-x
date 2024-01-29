@@ -93,7 +93,7 @@ LineElementPath.propTypes = {
 
 export interface LineElementSlots {
   /**
-   * The component that renders the root.
+   * The component that renders the line.
    * @default LineElementPath
    */
   line?: AnimatedComponent<'path'>;

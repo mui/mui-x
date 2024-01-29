@@ -110,7 +110,7 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
      */
     slots?: {
       /**
-       * The component that renders the root.
+       * The component that renders the area.
        * @default AreaElementPath
        */
       area?: React.ElementType;
