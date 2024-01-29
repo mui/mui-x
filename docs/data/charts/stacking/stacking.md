@@ -1,5 +1,6 @@
 ---
 title: Charts - Stacking
+productId: x-charts
 ---
 
 # Charts - Stacking
