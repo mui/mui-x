@@ -1,5 +1,6 @@
 ---
 title: React Sankey chart
+productId: x-charts
 ---
 
 # Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧

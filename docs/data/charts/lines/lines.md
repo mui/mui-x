@@ -1,5 +1,6 @@
 ---
 title: React Line chart
+productId: x-charts
 components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
