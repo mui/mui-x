@@ -17,10 +17,11 @@ packageName: '@mui/x-tree-view'
 
 The MUI X Tree View package exposes two different versions of the component:
 
-- `@mui/x-tree-view/TreeView`: for simpler use cases.
-- `@mui/x-tree-view/RichTreeView`: for more complex and larger uses of the Tree View component.
-
 ### Simple Tree View
+
+```jsx
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+```
 
 The simple version of the Tree View component receives its items as JSX children.
 This is the recommended version for hardcoded items.
@@ -28,6 +29,10 @@ This is the recommended version for hardcoded items.
 {{"demo": "BasicSimpleTreeView.js"}}
 
 ### Rich Tree View
+
+```jsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+```
 
 The rich version of the Tree View component receives its items dynamically from an external data source.
 This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
