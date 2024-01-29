@@ -145,7 +145,7 @@ function MarkPlot(props: MarkPlotProps) {
                       shape="circle"
                       color={series[seriesId].color}
                       x={x}
-                      y={y!} // Don't knwo why TS don't get from the filter that y can't be null
+                      y={y!} // Don't know why TS doesn't get from the filter that y can't be null
                       highlightScope={series[seriesId].highlightScope}
                       skipAnimation={skipAnimation}
                       {...slotProps?.mark}

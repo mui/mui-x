@@ -42,7 +42,7 @@ export type DrawingArea = {
 export const DrawingContext = React.createContext<
   DrawingArea & {
     /**
-     * A random id used to distinguish each chart on a same page.
+     * A random id used to distinguish each chart on the same page.
      */
     chartId: string;
   }
