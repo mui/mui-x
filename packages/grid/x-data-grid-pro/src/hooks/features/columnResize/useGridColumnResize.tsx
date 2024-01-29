@@ -285,7 +285,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const columnHeaderElementRef = React.useRef<HTMLDivElement | null>(null);
+  const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
   const cellElementsRef = React.useRef<Element[]>([]);
@@ -561,7 +561,7 @@ export const useGridColumnResize = (
       doc.removeEventListener('click', preventClick, true);
     }, 100);
     columnHeaderElementRef.current!.style.pointerEvents = 'unset';
-    columnHeaderElementRef.current = null;
+    columnHeaderElementRef.current = undefined;
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
