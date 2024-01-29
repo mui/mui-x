@@ -60,7 +60,7 @@ function sortColumnGroups(
 
 const getPivotedData = ({
   rows,
-  // columns,
+  columns,
   pivotModel,
   apiRef,
 }: {
@@ -81,6 +81,34 @@ const getPivotedData = ({
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
   const filteredRowsLookup = apiRef.current.state ? gridFilteredRowsLookupSelector(apiRef) : null;
+
+  // Returns the column definition from the initial columns array before pivoting
+  const getInitialColumn = (() => {
+    const initialColumnsLookup: Record<string, GridColDef | null> = {};
+
+    return (field: string) => {
+      if (typeof initialColumnsLookup[field] === 'undefined') {
+        initialColumnsLookup[field] = columns.find((column) => column.field === field) || null;
+      }
+      return initialColumnsLookup[field];
+    };
+  })();
+
+  const getAttributesFromInitialColumn = (field: string) => {
+    const attributes: Partial<GridColDef> = {};
+    const initialColumn = getInitialColumn(field);
+    if (!initialColumn) {
+      return attributes;
+    }
+
+    if (initialColumn.valueFormatter) {
+      attributes.valueFormatter = initialColumn.valueFormatter;
+    }
+
+    // TODO: copy other column attributes?
+
+    return attributes;
+  };
 
   pivotModel.rows.forEach((field) => {
     pivotColumns.push({
@@ -106,6 +134,7 @@ const getPivotedData = ({
         field: pivotValue.field,
         aggregable: true,
         availableAggregationFunctions: [pivotValue.aggFunc],
+        ...getAttributesFromInitialColumn(pivotValue.field),
       });
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
     });
@@ -174,6 +203,7 @@ const getPivotedData = ({
             headerName: String(valueField),
             aggregable: true,
             availableAggregationFunctions: [pivotValue.aggFunc],
+            ...getAttributesFromInitialColumn(pivotValue.field),
           });
           aggregationModel[mapValueKey] = pivotValue.aggFunc;
           if (columnGroup) {

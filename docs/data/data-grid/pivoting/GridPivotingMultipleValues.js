@@ -15,10 +15,25 @@ const initialRows = [
   { id: 4, product: 'Product 4', type: 'Type C', price: 20, quantity: 8 },
 ];
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const initialColumns = [
   { field: 'product' },
   { field: 'type' },
-  { field: 'price' },
+  {
+    field: 'price',
+    valueFormatter: ({ value }) => {
+      if (!value) {
+        return '';
+      }
+      return currencyFormatter.format(value);
+    },
+  },
   { field: 'quantity' },
 ];
 
