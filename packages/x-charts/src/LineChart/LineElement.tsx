@@ -102,7 +102,7 @@ export interface LineElementSlots {
 export interface LineElementSlotProps {
   line?: SlotComponentProps<
     AnimatedComponent<'path'>,
-    // Added to make TS pass in useSotsProps
+    // Added to make TS pass in `useSlotsProps`
     {
       className?: string;
       style?: React.CSSProperties;

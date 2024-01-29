@@ -151,10 +151,10 @@ When set to `true` it skips animation powered by `@react-spring/web`.
 Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 :::warning
-If you support interactive way to add or remove series from your chart, you have to provide series' id.
+If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
 
 Otherwise the chart will have no way to know if you are modifying, removing, or adding some series.
-Ths will lead to strange behaviors.
+This will lead to strange behaviors.
 :::
 
 ```jsx
