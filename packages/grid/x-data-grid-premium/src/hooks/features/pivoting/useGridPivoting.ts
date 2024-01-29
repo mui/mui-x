@@ -139,17 +139,17 @@ const getPivotedData = ({
             const parentGroup = columnGroupingModelLookup[parentGroupId];
             parentGroup.children.push(columnGroup);
           }
+        }
 
-          const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
+        const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
 
-          if (isLastColumnGroupLevel) {
-            pivotModel.values.forEach((pivotValue) => {
-              const valueField = pivotValue.field;
-              const valueKey = `${columnGroupPath.join('-')}-${valueField}`;
-              newRow[valueKey] = newRow[valueField];
-              delete newRow[valueField];
-            });
-          }
+        if (isLastColumnGroupLevel) {
+          pivotModel.values.forEach((pivotValue) => {
+            const valueField = pivotValue.field;
+            const valueKey = `${columnGroupPath.join('-')}-${valueField}`;
+            newRow[valueKey] = newRow[valueField];
+            delete newRow[valueField];
+          });
         }
       });
 
