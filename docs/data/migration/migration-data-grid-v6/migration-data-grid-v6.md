@@ -344,12 +344,8 @@ See [Direct state access](/x/react-data-grid/state/#direct-selector-access) page
 
 ### CSS classes
 
-Some CSS classes were removed or renamed:
-
-| MUI X v6 classes                            | MUI X v7 classes | Note                   |
-| :------------------------------------------ | :--------------- | :--------------------- |
-| `.Mui-hovered`                              | `:hover`         | For rows               |
-| `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore |
+- You can now style a row hover state using just `:hover` instead of `.Mui-hovered`.
+- The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 
 ### Changes to the public API
 
