@@ -47,7 +47,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "area": "",
+    "area": "The component that renders the area.",
     "axisContent": "",
     "axisLabel": "",
     "axisLine": "",

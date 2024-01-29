@@ -1,12 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { color as d3Color } from 'd3-color';
-import { animated, useSpring } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -14,9 +11,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
-import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { DrawingContext } from '../context/DrawingProvider';
-import { cleanId } from '../internals/utils';
+import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -29,7 +24,7 @@ export interface AreaElementClasses {
 
 export type AreaElementClassKey = keyof AreaElementClasses;
 
-interface AreaElementOwnerState {
+export interface AreaElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;
@@ -56,66 +51,34 @@ const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
   return composeClasses(slots, getAreaElementUtilityClass, classes);
 };
 
-export const AreaElementPath = styled(animated.path, {
-  name: 'MuiAreaElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
-  stroke: 'none',
-  fill: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(1).formatHex()
-    : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: ownerState.isFaded ? 0.3 : 1,
-}));
+export interface AreaElementSlots {
+  /**
+   * The component that renders the area.
+   * @default AnimatedArea
+   */
+  area?: React.JSXElementConstructor<AnimatedAreaProps>;
+}
 
-AreaElementPath.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    classes: PropTypes.object,
-    color: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
+export interface AreaElementSlotProps {
+  area?: AnimatedAreaProps;
+}
 
-export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
-    /**
-     * If `true`, animations are skipped.
-     * @default false
-     */
-    skipAnimation?: boolean;
-    highlightScope?: Partial<HighlightScope>;
-    /**
-     * The props used for each component slot.
-     * @default {}
-     */
-    slotProps?: {
-      area?: SlotComponentProps<'path', {}, AreaElementOwnerState>;
-    };
-    /**
-     * Overridable component slots.
-     * @default {}
-     */
-    slots?: {
-      /**
-       * The component that renders the area.
-       * @default AreaElementPath
-       */
-      area?: React.ElementType;
-    };
-  };
+export interface AreaElementProps
+  extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
+    Pick<AnimatedAreaProps, 'skipAnimation'> {
+  d: string;
+  highlightScope?: Partial<HighlightScope>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: AreaElementSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: AreaElementSlots;
+}
 
 /**
  * Demos:
@@ -128,19 +91,8 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighli
  * - [AreaElement API](https://mui.com/x/api/charts/area-element/)
  */
 function AreaElement(props: AreaElementProps) {
-  const {
-    id,
-    classes: innerClasses,
-    color,
-    highlightScope,
-    slots,
-    slotProps,
-    d,
-    skipAnimation,
-    ...other
-  } = props;
+  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
-  const { left, top, right, bottom, width, height, chartId } = React.useContext(DrawingContext);
 
   const { item } = React.useContext(InteractionContext);
 
@@ -157,7 +109,7 @@ function AreaElement(props: AreaElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const Area = slots?.area ?? AreaElementPath;
+  const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
     elementType: Area,
     externalSlotProps: slotProps?.area,
@@ -169,25 +121,7 @@ function AreaElement(props: AreaElementProps) {
     ownerState,
   });
 
-  const path = useAnimatedPath(d!, skipAnimation);
-
-  const { animatedWidth } = useSpring({
-    from: { animatedWidth: left },
-    to: { animatedWidth: width + left + right },
-    reset: false,
-    immediate: skipAnimation,
-  });
-  const clipId = cleanId(`${chartId}-${id}-area-clip`);
-  return (
-    <React.Fragment>
-      <clipPath id={clipId}>
-        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
-      </clipPath>
-      <g clipPath={`url(#${clipId})`}>
-        <Area {...areaProps} d={path} />
-      </g>
-    </React.Fragment>
-  );
+  return <Area {...areaProps} />;
 }
 
 AreaElement.propTypes = {
@@ -196,10 +130,13 @@ AreaElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
+  d: PropTypes.string.isRequired,
   highlightScope: PropTypes.shape({
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

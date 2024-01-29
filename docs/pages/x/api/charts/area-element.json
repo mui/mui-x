@@ -13,6 +13,14 @@
     "import { AreaElement } from '@mui/x-charts/LineChart';",
     "import { AreaElement } from '@mui/x-charts';"
   ],
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "faded",

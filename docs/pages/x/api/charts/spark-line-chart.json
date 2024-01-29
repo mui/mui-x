@@ -54,7 +54,12 @@
     "import { SparkLineChart } from '@mui/x-charts';"
   ],
   "slots": [
-    { "name": "area", "description": "", "class": null },
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
     {
       "name": "line",
       "description": "The component that renders the line.",

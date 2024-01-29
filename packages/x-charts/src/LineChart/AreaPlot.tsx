@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import { area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { AreaElement, AreaElementProps } from './AreaElement';
+import {
+  AreaElement,
+  AreaElementProps,
+  AreaElementSlotProps,
+  AreaElementSlots,
+} from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 
-export interface AreaPlotSlots {
-  area?: React.JSXElementConstructor<AreaElementProps>;
-}
+export interface AreaPlotSlots extends AreaElementSlots {}
 
-export interface AreaPlotSlotProps {
-  area?: Partial<AreaElementProps>;
-}
+export interface AreaPlotSlotProps extends AreaElementSlotProps {}
 
 export interface AreaPlotProps
   extends React.SVGAttributes<SVGSVGElement>,
@@ -77,7 +78,7 @@ const useAggregatedData = () => {
       const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
       const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
 
-      const d = areaPath.curve(curve)(d3Data) || undefined;
+      const d = areaPath.curve(curve)(d3Data) || '';
       return {
         ...series[seriesId],
         d,

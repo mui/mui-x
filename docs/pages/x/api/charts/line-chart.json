@@ -81,7 +81,12 @@
     { "name": "axisTick", "description": "", "class": null },
     { "name": "axisTickLabel", "description": "", "class": null },
     { "name": "axisLabel", "description": "", "class": null },
-    { "name": "area", "description": "", "class": null },
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
     {
       "name": "line",
       "description": "The component that renders the line.",

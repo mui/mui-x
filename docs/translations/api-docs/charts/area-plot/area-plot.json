@@ -6,5 +6,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "area": "" }
+  "slotDescriptions": { "area": "The component that renders the area." }
 }
