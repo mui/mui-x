@@ -16,7 +16,7 @@
   "slots": [
     {
       "name": "line",
-      "description": "The component that renders the root.",
+      "description": "The component that renders the line.",
       "default": "LineElementPath",
       "class": null
     }

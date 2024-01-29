@@ -3,7 +3,7 @@
   "propDescriptions": {
     "dataIndex": { "description": "The index to the element in the series&#39; data array." },
     "shape": { "description": "The shape of the marker." },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skiped." }
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
   "classDescriptions": {
     "faded": {
