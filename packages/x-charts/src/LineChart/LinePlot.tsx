@@ -127,7 +127,7 @@ LinePlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

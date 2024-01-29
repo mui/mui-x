@@ -92,7 +92,7 @@ AreaElementPath.propTypes = {
 export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
-     * If `true`, animations are skiped.
+     * If `true`, animations are skipped.
      * @default false
      */
     skipAnimation?: boolean;
@@ -201,7 +201,7 @@ AreaElement.propTypes = {
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

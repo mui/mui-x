@@ -52,7 +52,7 @@ export interface BarPlotSlotProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -248,7 +248,7 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

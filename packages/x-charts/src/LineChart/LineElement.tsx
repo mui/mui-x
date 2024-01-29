@@ -115,7 +115,7 @@ export interface LineElementSlotProps {
 export interface LineElementProps extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> {
   d: string;
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -220,7 +220,7 @@ LineElement.propTypes = {
   }),
   id: PropTypes.string.isRequired,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

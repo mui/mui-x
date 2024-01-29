@@ -339,7 +339,7 @@ BarChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,
