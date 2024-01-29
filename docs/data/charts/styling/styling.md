@@ -1,5 +1,6 @@
 ---
 title: Charts - Styling
+productId: x-charts
 ---
 
 # Charts - Styling
