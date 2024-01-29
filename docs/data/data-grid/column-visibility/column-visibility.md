@@ -129,9 +129,9 @@ To disable `Show/Hide All` checkbox or `Reset` button in the footer of the colum
 
 ### Customize action buttons behavior when search is active
 
-By default, `Hide all` and `Show all` buttons toggle the visibility of all columns, including the ones that are not visible in the current search results.
+By default, the `Show/Hide All` checkbox toggles the visibility of all columns, including the ones that are not visible in the current search results.
 
-To only toggle the visibility of the columns that are visible in the current search results, pass `toggleAllMode="filteredOnly"` to `slotProps.columnsPanel`:
+To only toggle the visibility of the columns that are present in the current search results, pass the `toggleAllMode` prop to `slotProps.columnsPanel`:
 
 {{"demo": "ColumnSelectorGridToggleAllMode.js", "bg": "inline"}}
 

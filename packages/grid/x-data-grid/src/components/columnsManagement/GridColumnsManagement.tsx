@@ -42,9 +42,9 @@ export interface GridColumnsManagementProps {
    */
   disableResetButton?: boolean;
   /**
-   * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
-   * - `all`: The buttons will toggle all columns.
-   * - `filteredOnly`: The buttons will toggle only the columns that match the search criteria.
+   * Changes the behavior of the `Show/Hide All` toggle when the search field is used:
+   * - `all`: Will toggle all columns.
+   * - `filteredOnly`: Will only toggle columns that match the search criteria.
    * @default 'all'
    */
   toggleAllMode?: 'all' | 'filteredOnly';
@@ -326,9 +326,9 @@ GridColumnsManagement.propTypes = {
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
-   * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
-   * - `all`: The buttons will toggle all columns.
-   * - `filteredOnly`: The buttons will toggle only the columns that match the search criteria.
+   * Changes the behavior of the `Show/Hide All` toggle when the search field is used:
+   * - `all`: Will toggle all columns.
+   * - `filteredOnly`: Will only toggle columns that match the search criteria.
    * @default 'all'
    */
   toggleAllMode: PropTypes.oneOf(['all', 'filteredOnly']),
