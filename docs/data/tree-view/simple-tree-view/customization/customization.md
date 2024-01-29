@@ -66,7 +66,7 @@ The demo below shows many of the previous customization examples brought togethe
 Google's Gmail side nav is potentially one of the web's most famous tree view components.
 The demo below shows how to replicate it.
 
-The Gmail sidenav is probably one of the most famous Tree View component in daily use.
-The demo below shows how to build a similar version:
+The Gmail sidebar is one of the most well known examples of a tree view.
+The demo below shows how to recreate it with the Tree View component:
 
 {{"demo": "GmailTreeView.js"}}

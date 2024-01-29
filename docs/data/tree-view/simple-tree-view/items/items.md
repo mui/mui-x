@@ -18,14 +18,14 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 ```
 
-The Simple Tree View component enables you to pass its items as a direct JSX children.
+The Simple Tree View component receives its items directly as JSX children.
 
 {{"demo": "BasicSimpleTreeView.js"}}
 
 ### Item identifier
 
 Each Tree Item must have a unique `nodeId`.
-This identifier is used internally to identify the item in the various models, and to track them across updates.
+This is used internally to identify the item in the various models, and to track it across updates.
 
 ```tsx
 <SimpleTreeView>
@@ -35,7 +35,7 @@ This identifier is used internally to identify the item in the various models, a
 
 ### Item label
 
-Use the `label` prop to the Tree Item to add a label to each one of them.
+You must pass a `label` prop to each Tree Item component, as shown below:
 
 ```tsx
 <SimpleTreeView>
@@ -52,9 +52,9 @@ Use the `disabled` prop on the Tree Item component to disable interaction and fo
 #### The disabledItemsFocusable prop
 
 Note that the demo above also includes a switch.
-It's toggling the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
+This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
-In case that prop is set to false:
+When this prop is set to false:
 
 - Navigating with keyboard arrow keys will not focus the disabled items, and the next non-disabled item will be focused instead.
 - Typing the first character of a disabled item's label will not move the focus to it.
@@ -63,7 +63,7 @@ In case that prop is set to false:
 - <kbd class="key">Shift</kbd> + arrow keys will skip disabled items, and the next non-disabled item will be selected instead.
 - Programmatic focus will not focus disabled items.
 
-But, if it's set to true:
+When it's set to true:
 
 - Navigating with keyboard arrow keys will focus disabled items.
 - Typing the first character of a disabled item's label will move focus to it.

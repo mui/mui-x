@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Multi selection
 
-Use the `multiSelect` prop on the Tree View to enable selecting multiple items at once.
+Apply the `multiSelect` prop on the Tree View to let users select multiple items.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
