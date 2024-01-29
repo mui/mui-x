@@ -20,7 +20,7 @@ export interface AreaPlotProps
   extends React.SVGAttributes<SVGSVGElement>,
     Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {}
 
-const useCompletedData = () => {
+const useAggregatedData = () => {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -101,7 +101,7 @@ const useCompletedData = () => {
 function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, skipAnimation, ...other } = props;
 
-  const completedData = useCompletedData();
+  const completedData = useAggregatedData();
 
   return (
     <g {...other}>

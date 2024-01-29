@@ -74,7 +74,7 @@ interface CompletedBarData {
   highlightScope?: Partial<HighlightScope>;
 }
 
-const useCompletedData = (): CompletedBarData[] => {
+const useAggregatedData = (): CompletedBarData[] => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
@@ -215,7 +215,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const completedData = useCompletedData();
+  const completedData = useAggregatedData();
   const { skipAnimation, ...other } = props;
 
   const transition = useTransition(completedData, {
