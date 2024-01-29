@@ -325,6 +325,13 @@ GridColumnsManagement.propTypes = {
   getTogglableColumns: PropTypes.func,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
+  /**
+   * Changes the behavior of the `Show all` and `Hide all` buttons when the search field is used.
+   * - `all`: The buttons will toggle all columns.
+   * - `filteredOnly`: The buttons will toggle only the columns that match the search criteria.
+   * @default 'all'
+   */
+  toggleAllMode: PropTypes.oneOf(['all', 'filteredOnly']),
 } as any;
 
 const GridColumnsManagementBody = styled('div', {
