@@ -175,8 +175,18 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot slots={slots} slotProps={slotProps} onItemClick={onAreaClick} skipAnimation={skipAnimation} />
-        <LinePlot slots={slots} slotProps={slotProps} onItemClick={onLineClick} skipAnimation={skipAnimation} />
+        <AreaPlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onAreaClick}
+          skipAnimation={skipAnimation}
+        />
+        <LinePlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onLineClick}
+          skipAnimation={skipAnimation}
+        />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -187,7 +197,12 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slotProps={slotProps}
       />
       <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot slots={slots} slotProps={slotProps} onItemClick={onMarkClick} skipAnimation={skipAnimation}/>
+      <MarkPlot
+        slots={slots}
+        slotProps={slotProps}
+        onItemClick={onMarkClick}
+        skipAnimation={skipAnimation}
+      />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />

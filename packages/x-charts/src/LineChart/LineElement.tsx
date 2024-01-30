@@ -65,8 +65,8 @@ export interface LineElementSlotProps {
 
 export interface LineElementProps
   extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
-    Pick<AnimatedLineProps, 'skipAnimation'> ,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'>{
+    Pick<AnimatedLineProps, 'skipAnimation'>,
+    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
