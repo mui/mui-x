@@ -179,17 +179,6 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "!packages/grid",
-      "packages/grid/*",
-      "docs"
-    ],
-    "nohoist": [
-      "**/@mui/monorepo"
-    ]
-  },
   "resolutions": {
     "react-is": "^18.2.0",
     "@types/node": "^18.19.10"
