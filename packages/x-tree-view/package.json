@@ -43,7 +43,7 @@
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.8",
+    "@babel/runtime": "^7.23.9",
     "@mui/base": "^5.0.0-beta.33",
     "@mui/system": "^5.15.6",
     "@mui/utils": "^5.15.6",
