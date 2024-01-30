@@ -35,8 +35,9 @@ import {
 
 const PlaygroundWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
+  border: '1px solid',
+  borderColor: alpha(theme.palette.grey[500], 0.2),
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${grey[200]}`,
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   justifyContent: 'space-between',
@@ -54,7 +55,8 @@ const PlaygroundDemoArea = styled('div')(({ theme }) => ({
 const PlaygroundConfigArea = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: alpha(theme.palette.primary.light, 0.05),
-  border: `1px solid ${grey[200]}`,
+  border: '1px solid',
+  borderColor: alpha(theme.palette.grey[500], 0.2),
   borderRadius: '4px',
   [theme.breakpoints.down('lg')]: {
     display: 'flex',
@@ -74,32 +76,36 @@ const ConfigSectionWrapper = styled('div')(({ theme }) => ({
 }));
 
 const ConfigLabel = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacing(4),
   marginBottom: theme.spacing(1),
   fontWeight: theme.typography.fontWeightBold,
-  fontSize: theme.typography.pxToRem(12),
-  textTransform: 'uppercase',
+  fontSize: theme.typography.pxToRem(14),
   letterSpacing: '.08rem',
+  '&:first-of-type': {
+    marginTop: theme.spacing(1),
+  },
+  '&:last-of-type': {
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const ConfigItemLabel = styled(Typography)(({ theme }) => ({
   ...theme.typography.caption,
   letterSpacing: '.08rem',
-  textTransform: 'uppercase',
   color: theme.palette.text.secondary,
-  fontSize: theme.typography.pxToRem(11),
+  fontSize: theme.typography.pxToRem(12),
   fontweight: 600,
 }));
 
 const SlotItemsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
   flexWrap: 'wrap',
 }));
 
 const SlotItem = styled(Button)(({ theme }) => ({
   borderWidth: 1,
-  borderRadius: theme.spacing(2),
+  borderRadius: '99px',
   textTransform: 'none',
   padding: theme.spacing(0.1, 1),
 }));
@@ -108,7 +114,6 @@ const TabsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginBottom: theme.spacing(1),
   gap: theme.spacing(1),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
@@ -124,8 +129,25 @@ type TabsProps = {
 
 function StylingApproachTabs({ value, onChange, options }: TabsProps) {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={onChange} aria-label="Customization option">
+    <Box>
+      <Tabs
+        value={value}
+        onChange={onChange}
+        aria-label="Customization option"
+        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        sx={{
+          '& .MuiTabs-indicator': {
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+          },
+          '& .MuiTabs-indicatorSpan': {
+            maxWidth: '60%',
+            width: '100%',
+            backgroundColor: theme.palette.primary.main,
+          },
+        }}
+      >
         {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
           <Tab value={option} key={option} label={options[option]} />
         ))}
@@ -268,6 +290,7 @@ function NumericTokensSlider({
             max={20}
             marks
             step={1}
+            valueLabelDisplay="auto"
           />
         </React.Fragment>
       ))}
