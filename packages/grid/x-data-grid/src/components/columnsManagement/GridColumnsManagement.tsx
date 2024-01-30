@@ -42,6 +42,13 @@ export interface GridColumnsManagementProps {
    */
   disableResetButton?: boolean;
   /**
+   * Changes the behavior of the `Show/Hide All` toggle when the search field is used:
+   * - `all`: Will toggle all columns.
+   * - `filteredOnly`: Will only toggle columns that match the search criteria.
+   * @default 'all'
+   */
+  toggleAllMode?: 'all' | 'filteredOnly';
+  /**
    * Returns the list of togglable columns.
    * If used, only those columns will be displayed in the panel
    * which are passed as the return value of the function.
@@ -86,6 +93,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     autoFocusSearchField = true,
     disableShowHideToggle = false,
     disableResetButton = false,
+    toggleAllMode = 'all',
     getTogglableColumns,
   } = props;
 
@@ -116,35 +124,6 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
-  const toggleAllColumns = React.useCallback(
-    (isVisible: boolean) => {
-      const currentModel = gridColumnVisibilityModelSelector(apiRef);
-      const newModel = { ...currentModel };
-      const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
-
-      columns.forEach((col) => {
-        if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
-          if (isVisible) {
-            // delete the key from the model instead of setting it to `true`
-            delete newModel[col.field];
-          } else {
-            newModel[col.field] = false;
-          }
-        }
-      });
-
-      return apiRef.current.setColumnVisibilityModel(newModel);
-    },
-    [apiRef, columns, getTogglableColumns],
-  );
-
-  const handleSearchValueChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(event.target.value);
-    },
-    [],
-  );
-
   const currentColumns = React.useMemo(() => {
     const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
 
@@ -160,6 +139,35 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       searchPredicate(column, searchValue.toLowerCase()),
     );
   }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
+
+  const toggleAllColumns = React.useCallback(
+    (isVisible: boolean) => {
+      const currentModel = gridColumnVisibilityModelSelector(apiRef);
+      const newModel = { ...currentModel };
+      const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
+
+      (toggleAllMode === 'filteredOnly' ? currentColumns : columns).forEach((col) => {
+        if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
+          if (isVisible) {
+            // delete the key from the model instead of setting it to `true`
+            delete newModel[col.field];
+          } else {
+            newModel[col.field] = false;
+          }
+        }
+      });
+
+      return apiRef.current.setColumnVisibilityModel(newModel);
+    },
+    [apiRef, columns, getTogglableColumns, toggleAllMode, currentColumns],
+  );
+
+  const handleSearchValueChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(event.target.value);
+    },
+    [],
+  );
 
   const hideableColumns = React.useMemo(
     () => currentColumns.filter((col) => col.hideable),
@@ -317,6 +325,13 @@ GridColumnsManagement.propTypes = {
   getTogglableColumns: PropTypes.func,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
+  /**
+   * Changes the behavior of the `Show/Hide All` toggle when the search field is used:
+   * - `all`: Will toggle all columns.
+   * - `filteredOnly`: Will only toggle columns that match the search criteria.
+   * @default 'all'
+   */
+  toggleAllMode: PropTypes.oneOf(['all', 'filteredOnly']),
 } as any;
 
 const GridColumnsManagementBody = styled('div', {

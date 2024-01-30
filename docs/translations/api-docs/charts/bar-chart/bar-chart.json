@@ -26,7 +26,7 @@
     "onAxisClick": {
       "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
       "typeDescriptions": {
-        "event": "The mouse event catched by <code>&lt;svg/&gt;</code>.",
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
         "data": "The data about the axis clicked and associated items."
       }
     },
@@ -40,7 +40,7 @@
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skiped." },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "topAxis": {

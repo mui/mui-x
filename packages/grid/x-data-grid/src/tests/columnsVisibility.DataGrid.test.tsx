@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
+import { act, createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -383,6 +383,46 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
       fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    });
+  });
+
+  describe('prop: toggleAllMode', () => {
+    it('should toggle filtered columns when `toggleAllMode` is `filtered`', () => {
+      render(
+        <div style={{ width: 400, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id' },
+              { field: 'firstName' },
+              { field: 'lastName' },
+              { field: 'age' },
+            ]}
+            rows={[{ id: 1, firstName: 'John', lastName: 'Doe', age: 20 }]}
+            slotProps={{
+              columnsManagement: {
+                toggleAllMode: 'filteredOnly',
+              },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            disableVirtualization
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
+      const button = screen.getByRole('button', { name: 'Select columns' });
+      act(() => button.focus());
+      fireEvent.click(button);
+
+      const input = screen.getByPlaceholderText('Search');
+      fireEvent.change(input, { target: { value: 'name' } });
+      const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
+      fireEvent.click(showHideAllCheckbox);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'age']);
+
+      fireEvent.change(input, { target: { value: 'firstName' } });
+      fireEvent.click(showHideAllCheckbox);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'age']);
     });
   });
 });

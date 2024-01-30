@@ -1,7 +1,6 @@
 ---
 productId: x-tree-view
 title: Tree View React component
-components: SimpleTreeView, RichTreeView, TreeItem, TreeView
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'

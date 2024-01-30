@@ -2,6 +2,14 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
+    pathname: '/x/api/charts/animated-area',
+    title: 'AnimatedArea',
+  },
+  {
+    pathname: '/x/api/charts/animated-line',
+    title: 'AnimatedLine',
+  },
+  {
     pathname: '/x/api/charts/area-element',
     title: 'AreaElement',
   },

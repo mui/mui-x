@@ -12,5 +12,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "line": "" }
+  "slotDescriptions": { "line": "The component that renders the line." }
 }

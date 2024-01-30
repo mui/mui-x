@@ -78,7 +78,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
      */
     slots?: {
       /**
-       * The component that renders the root.
+       * The component that renders the bar.
        * @default BarElementPath
        */
       bar?: React.ElementType;

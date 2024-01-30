@@ -6,6 +6,8 @@ import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { DrawingContext } from '../context/DrawingProvider';
+import { cleanId } from '../internals/utils';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -15,7 +17,9 @@ export interface MarkPlotSlotProps {
   mark?: Partial<MarkElementProps>;
 }
 
-export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
+export interface MarkPlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<MarkElementProps, 'skipAnimation'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -48,10 +52,11 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
+  const { chartId } = React.useContext(DrawingContext);
 
   const Mark = slots?.mark ?? MarkElement;
 
@@ -66,7 +71,7 @@ function MarkPlot(props: MarkPlotProps) {
   return (
     <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.flatMap((seriesId) => {
+        return groupIds.map((seriesId) => {
           const {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
@@ -106,56 +111,64 @@ function MarkPlot(props: MarkPlotProps) {
             );
           }
 
-          return xData
-            ?.map((x, index) => {
-              const value = data[index] == null ? null : stackedData[index][1];
-              return {
-                x: xScale(x),
-                y: value === null ? null : yScale(value)!,
-                position: x,
-                value,
-                index,
-              };
-            })
-            .filter(({ x, y, index, position, value }) => {
-              if (value === null || y === null) {
-                // Remove missing data point
-                return false;
-              }
-              if (!isInRange({ x, y })) {
-                // Remove out of range
-                return false;
-              }
-              if (showMark === true) {
-                return true;
-              }
-              return showMark({
-                x,
-                y,
-                index,
-                position,
-                value,
-              });
-            })
-            .map(({ x, y, index }) => {
-              return (
-                <Mark
-                  key={`${seriesId}-${index}`}
-                  id={seriesId}
-                  dataIndex={index}
-                  shape="circle"
-                  color={series[seriesId].color}
-                  x={x}
-                  y={y!} // Don't knwo why TS don't get from the filter that y can't be null
-                  highlightScope={series[seriesId].highlightScope}
-                  onClick={
-                    onItemClick &&
-                    ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
+          const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
+
+          return (
+            <g key={seriesId} clipPath={`url(#${clipId})`}>
+              {xData
+                ?.map((x, index) => {
+                  const value = data[index] == null ? null : stackedData[index][1];
+                  return {
+                    x: xScale(x),
+                    y: value === null ? null : yScale(value)!,
+                    position: x,
+                    value,
+                    index,
+                  };
+                })
+                .filter(({ x, y, index, position, value }) => {
+                  if (value === null || y === null) {
+                    // Remove missing data point
+                    return false;
                   }
-                  {...slotProps?.mark}
-                />
-              );
-            });
+                  if (!isInRange({ x, y })) {
+                    // Remove out of range
+                    return false;
+                  }
+                  if (showMark === true) {
+                    return true;
+                  }
+                  return showMark({
+                    x,
+                    y,
+                    index,
+                    position,
+                    value,
+                  });
+                })
+                .map(({ x, y, index }) => {
+                  return (
+                    <Mark
+                      key={`${seriesId}-${index}`}
+                      id={seriesId}
+                      dataIndex={index}
+                      shape="circle"
+                      color={series[seriesId].color}
+                      x={x}
+                      y={y!} // Don't know why TS doesn't get from the filter that y can't be null
+                      highlightScope={series[seriesId].highlightScope}
+                      skipAnimation={skipAnimation}
+                      onClick={
+                        onItemClick &&
+                        ((event) =>
+                          onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
+                      }
+                      {...slotProps?.mark}
+                    />
+                  );
+                })}
+            </g>
+          );
         });
       })}
     </g>

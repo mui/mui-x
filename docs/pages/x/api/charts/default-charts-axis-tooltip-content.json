@@ -4,7 +4,7 @@
     "axisData": {
       "type": {
         "name": "shape",
-        "description": "{ x?: { index?: number, value: Date<br>&#124;&nbsp;number }, y?: { index?: number, value: Date<br>&#124;&nbsp;number } }"
+        "description": "{ x?: { index?: number, value: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }, y?: { index?: number, value: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string } }"
       },
       "required": true
     },
