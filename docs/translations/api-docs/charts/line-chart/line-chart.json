@@ -29,6 +29,7 @@
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "topAxis": {
@@ -46,7 +47,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "area": "",
+    "area": "The component that renders the area.",
     "axisContent": "",
     "axisLabel": "",
     "axisLine": "",
@@ -54,7 +55,7 @@
     "axisTickLabel": "",
     "itemContent": "",
     "legend": "",
-    "line": "",
+    "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",
     "popper": ""

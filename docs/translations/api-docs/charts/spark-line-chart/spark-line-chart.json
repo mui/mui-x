@@ -40,11 +40,11 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "area": "",
+    "area": "The component that renders the area.",
     "axisContent": "",
     "bar": "",
     "itemContent": "",
-    "line": "",
+    "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",
     "popper": ""

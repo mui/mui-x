@@ -7,7 +7,8 @@
         "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
       },
       "required": true
-    }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "MarkElement",
   "imports": [
