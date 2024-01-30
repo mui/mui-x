@@ -26,8 +26,8 @@
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event catched at the svg level if using voronoid cells. Or Mouse event from the scatter element <code>disableVoronoi=true</code>.",
-        "scatterItemIdentifier": "Identify whihc item got clicked"
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using Voronoi cells. Or the Mouse event from the scatter element, when <code>disableVoronoi=true</code>.",
+        "scatterItemIdentifier": "The scatter item identifier."
       }
     },
     "rightAxis": {

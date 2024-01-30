@@ -139,11 +139,16 @@ LinePlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Callback fired when a pie item is clicked.
+   * Callback fired when a line item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

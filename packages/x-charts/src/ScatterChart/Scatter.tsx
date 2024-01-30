@@ -136,8 +136,8 @@ Scatter.propTypes = {
   markerSize: PropTypes.number.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,

@@ -284,8 +284,8 @@ ScatterChart.propTypes = {
   }),
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level if using voronoid cells. Or Mouse event from the scatter element `disableVoronoi=true`.
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
   /**

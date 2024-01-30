@@ -27,14 +27,14 @@
       "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
       "typeDescriptions": {
         "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
-        "data": "The data about the axis clicked and associated items."
+        "data": "The data about the clicked axis and items associated with it."
       }
     },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "barItemIdentifier": "The pie item identifier."
+        "barItemIdentifier": "The bar item identifier."
       }
     },
     "rightAxis": {

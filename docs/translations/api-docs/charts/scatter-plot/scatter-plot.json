@@ -4,8 +4,8 @@
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event catched at the svg level",
-        "scatterItemIdentifier": "Identify whihc item got clicked"
+        "event": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "scatterItemIdentifier": "The scatter item identifier."
       }
     },
     "slotProps": { "description": "The props used for each component slot." },
