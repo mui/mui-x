@@ -146,10 +146,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@argos-ci/core@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@argos-ci/core/-/core-1.4.1.tgz#4f7a74d7b0d88c24d86ec13ac7b9cc659824db46"
-  integrity sha512-1TEVPIP8hYIDuDF0Z19Nq/NKSI6Jypb2GojD2n88pe2oIzVimK9Z5MXy0wyFxqBr9NUrmMfolZDtOz1apWtbaw==
+"@argos-ci/core@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@argos-ci/core/-/core-1.5.1.tgz#3ea5bba8fe878df26fc337034d8272cae785ebd5"
+  integrity sha512-CoCe81ee+eQpah3CRi+Uxv9KAUjnfHWYFHZ3bGz0aUC/p9UkCPFKOEHvakO1W2hjx2Nj1bj6QOSod87Vavty+g==
   dependencies:
     "@argos-ci/util" "1.2.0"
     axios "^1.5.0"
