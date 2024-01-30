@@ -191,8 +191,8 @@
     ]
   },
   "resolutions": {
-    "**/react-is": "^18.2.0",
-    "**/@types/node": "^18.19.10"
+    "react-is": "^18.2.0",
+    "@types/node": "^18.19.10"
   },
   "packageManager": "pnpm@8.15.1"
 }
