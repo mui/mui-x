@@ -1868,11 +1868,11 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.6"
-  resolved "https://github.com/mui/material-ui.git#97f225cf1c72184e48982410371d93e74489834c"
+  resolved "https://github.com/mui/material-ui.git#b63fb955e6cfab340fdc3597fbb399493d39d81d"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
-    google-auth-library "^9.5.0"
+    google-auth-library "^9.4.2"
 
 "@mui/private-theming@^5.15.6":
   version "5.15.6"
@@ -7944,7 +7944,7 @@ gm@^1.25.0:
     cross-spawn "^4.0.0"
     debug "^3.1.0"
 
-google-auth-library@^9.0.0, google-auth-library@^9.5.0:
+google-auth-library@^9.0.0, google-auth-library@^9.4.2:
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-9.6.0.tgz#47a20aad0a358e9798c2adc489a89f1938e9c3ff"
   integrity sha512-bM/buCwCeYZjmnzGstwREu3BsnbmnuI064ZGur0NmHyXUxubWMJTCO9kxsyy4T6jdzacHJY3XQWHxX4D4Mc+EA==
