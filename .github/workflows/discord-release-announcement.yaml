@@ -14,4 +14,4 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: MUI Releases
-          separator: '<!--//-->'
+          separator: '<!--/ DO_NOT_REMOVE /-->'
