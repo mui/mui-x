@@ -21,9 +21,9 @@ export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps'> {
   /**
-   * Callback fired when a pie item is clicked.
+   * Callback fired when a line item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The pie item identifier.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,

@@ -70,7 +70,7 @@ export default function LineClickNoSnap() {
           code={`// Data from item click
 ${itemData ? JSON.stringify(itemData, null, 2) : '// click on the chart'}
 
-// Data from item click
+// Data from axis click
 ${axisData ? JSON.stringify(axisData, null, 2) : '// click on the chart'}
 `}
           language="json"

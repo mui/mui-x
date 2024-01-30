@@ -59,7 +59,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The pie item identifier.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,

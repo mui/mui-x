@@ -75,7 +75,7 @@ They both provide the following signature.
 ```js
 const clickHandler = (
   event, // The mouse event.
-  params, // An object that identify clicked elements.
+  params, // An object that identifies the clicked elements.
 ) => {};
 ```
 

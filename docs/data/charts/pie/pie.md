@@ -92,13 +92,13 @@ This value can be negative to reduce arc size.
 
 ## Click event
 
-Pie charts provides a click handler `onItemClick` for click on a specific pie arc.
-It provides the following signature.
+Pie Chart provides an `onItemClick` handler for handling clicks on specific pie arcs.
+It has the following signature.
 
 ```js
 const onItemClick = (
   event, // The mouse event.
-  params, // An object that identify clicked element.
+  params, // An object that identifies the clicked element.
 ) => {};
 ```
 
