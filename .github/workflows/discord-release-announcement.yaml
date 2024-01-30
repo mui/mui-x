@@ -1,0 +1,17 @@
+name: Discord Release Announcement
+
+on:
+  release:
+    types: [ prereleased, published ]
+
+jobs:
+  delimiter-test:
+    runs-on: ubuntu-latest
+    name: Send message to discord
+    steps:
+      - name: parse and send message
+        uses: michelengelen/discord-message-action@c02d0aeda64482b2edecbbc965258d31c531a1c5
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: MUI Releases
+          separator: '<!--//-->'
