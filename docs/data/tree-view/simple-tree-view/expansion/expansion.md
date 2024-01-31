@@ -29,6 +29,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track node expansion change
 
-Use the `onNodeExpansionToggle` if you want to react to a node expansion change:
+Use the `onNodeExpansionToggle` prop if you want to react to a node expansion change:
 
 {{"demo": "TrackNodeExpansionToggle.js"}}

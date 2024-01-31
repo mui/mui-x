@@ -1,5 +1,6 @@
 ---
 title: Charts - Pie demonstration
+productId: x-charts
 components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ---
 

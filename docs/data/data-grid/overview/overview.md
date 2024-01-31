@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
-The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
+The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing-fast performance.
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
@@ -21,9 +21,9 @@ Visit the [installation guide](/x/react-data-grid/getting-started/#installation)
 
 The Data Grid presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
-The component comes in three different versions. One available under MIT license and two available under commercial license.
+The component comes in three different versions, one available under MIT license and two available under commercial license.
 
-## MIT version (Free forever)
+## MIT version (free forever)
 
 The first version is meant as a stronger alternative to [data tables](/material-ui/react-table/#sorting-amp-selecting). It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
 
@@ -51,7 +51,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### Premium plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The Premium version includes everything from Pro, as well as advanced features for data analysis and large datasets management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
+The Premium version includes everything from Pro, as well as advanced features for data analysis and large dataset management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
 
 You can visit the [showcase page](/x/react-data-grid/demo/) for a comprehensible overview of all features exclusive to this plan.
 
@@ -97,7 +97,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 
 ### Upcoming features 🚧
 
-While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
+While the development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>

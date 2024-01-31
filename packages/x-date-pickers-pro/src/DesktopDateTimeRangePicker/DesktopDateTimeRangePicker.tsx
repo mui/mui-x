@@ -318,6 +318,10 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   */
+  maxDateTime: PropTypes.any,
+  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -326,6 +330,10 @@ DesktopDateTimeRangePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
+   */
+  minDateTime: PropTypes.any,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.

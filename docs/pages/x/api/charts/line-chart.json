@@ -43,6 +43,7 @@
       },
       "default": "null"
     },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -80,8 +81,18 @@
     { "name": "axisTick", "description": "", "class": null },
     { "name": "axisTickLabel", "description": "", "class": null },
     { "name": "axisLabel", "description": "", "class": null },
-    { "name": "area", "description": "", "class": null },
-    { "name": "line", "description": "", "class": null },
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    },
     { "name": "mark", "description": "", "class": null },
     { "name": "lineHighlight", "description": "", "class": null },
     { "name": "legend", "description": "", "class": null },

@@ -16,7 +16,7 @@ function renderRating(params: GridRenderCellParams<any, number>) {
 function RatingEditInputCell(props: GridRenderCellParams<any, number>) {
   const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
-  const ref = React.useRef<HTMLElement>();
+  const ref = React.useRef<HTMLElement>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number | null) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
