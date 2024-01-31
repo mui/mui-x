@@ -10,7 +10,7 @@ jobs:
     name: Send message to discord
     steps:
       - name: parse and send message
-        uses: michelengelen/discord-message-action@e5f378aae752589a3d6bc7f595a47e273e398aaa
+        uses: michelengelen/discord-message-action@02af30a15955ecf718049bc33b0efabf6f626e0b
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: MUI Releases
