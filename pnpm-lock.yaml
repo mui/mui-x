@@ -625,6 +625,9 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
     devDependencies:
+      '@mui/joy':
+        specifier: ^5.0.0-beta.24
+        version: 5.0.0-beta.24(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
@@ -716,6 +719,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
     publishDirectory: build
 
   packages/grid/x-data-grid-pro:
@@ -3131,7 +3137,6 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /@mui/lab@5.0.0-alpha.162(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.6)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-nSdlhq1YVozKXn6mtItWmnU9b/gQ708RSWG6C+M/Y096MlQ7Mz1gdNWOEwcGw2HaNoNgDvuG0+0HKARAMIMaLg==}
