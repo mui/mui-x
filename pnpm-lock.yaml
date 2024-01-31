@@ -910,6 +910,9 @@ importers:
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
+      '@types/moment-hijri':
+        specifier: ^2.1.4
+        version: 2.1.4
       '@types/moment-jalaali':
         specifier: ^0.7.9
         version: 0.7.9
@@ -4658,7 +4661,6 @@ packages:
     resolution: {integrity: sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==}
     dependencies:
       moment: 2.30.1
-    dev: false
 
   /@types/moment-jalaali@0.7.9:
     resolution: {integrity: sha512-gsDOoAzRnCfQTbfdlUrCvX6R0wIto6CvwfvV2C3j4qJLK+DEiTK8Rl/xlOCBO9C6qeUfX8oyZ2UfjnXJTOvHSA==}
