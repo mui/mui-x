@@ -39,7 +39,9 @@ export const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams)
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const rowTree = gridRowTreeSelector(apiRef);
   const selectedRows = apiRef.current.getSelectedRows();
-  const bodyRows = filteredSortedRowIds.filter((id) => rowTree[id].type !== 'footer');
+  const bodyRows = filteredSortedRowIds.filter(
+    (id) => rowTree[id].type !== 'footer' && rowTree[id].type !== 'group',
+  );
   const pinnedRows = gridPinnedRowsSelector(apiRef);
   const topPinnedRowsIds = pinnedRows?.top?.map((row) => row.id) || [];
   const bottomPinnedRowsIds = pinnedRows?.bottom?.map((row) => row.id) || [];
