@@ -624,6 +624,10 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    devDependencies:
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
     publishDirectory: build
 
   packages/grid/x-data-grid-generator:
@@ -708,6 +712,10 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    devDependencies:
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
     publishDirectory: build
 
   packages/grid/x-data-grid-pro:
@@ -748,6 +756,10 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    devDependencies:
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
     publishDirectory: build
 
   packages/x-charts:
@@ -822,6 +834,9 @@ importers:
       '@types/d3-shape':
         specifier: ^3.1.6
         version: 3.1.6
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
     publishDirectory: build
 
   packages/x-codemod:
@@ -898,6 +913,9 @@ importers:
       '@types/moment-jalaali':
         specifier: ^0.7.9
         version: 0.7.9
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -978,6 +996,9 @@ importers:
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -1046,6 +1067,10 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
     publishDirectory: build
 
 packages:

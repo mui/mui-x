@@ -61,6 +61,9 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "devDependencies": {
+    "@types/prop-types": "^15.7.11"
+  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
