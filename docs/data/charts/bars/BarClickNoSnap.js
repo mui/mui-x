@@ -2,6 +2,8 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -59,13 +61,31 @@ export default function BarClickNoSnap() {
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
-        <Typography>click data</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography>Click on the chart</Typography>
+          <IconButton
+            aria-label="reset"
+            size="small"
+            onClick={() => {
+              setItemData(null);
+              setAxisData(null);
+            }}
+          >
+            <UndoOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Box>
         <HighlightedCode
           code={`// Data from item click
-${itemData ? JSON.stringify(itemData, null, 2) : '// click on the chart'}
+${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
 
 // Data from axis click
-${axisData ? JSON.stringify(axisData, null, 2) : '// click on the chart'}
+${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
 `}
           language="json"
           copyButtonHidden
