@@ -18,6 +18,35 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v7.0.0-beta.0',
+    description:
+      'Featuring new components and multiple enhancements for both developers and end-users.',
+    date: new Date(2024, 0, 29),
+    url: 'https://mui.com/blog/mui-x-v7-beta/',
+    highlightList: [
+      {
+        title: 'Data Grid - Sticky headers',
+        url: 'https://mui.com/blog/mui-x-v7-beta/#sticky-headers',
+      },
+      {
+        title: 'Data Grid - Columns management panel',
+        url: 'https://mui.com/blog/mui-x-v7-beta/#improved-columns-panel-design',
+      },
+      {
+        title: 'Rich Tree View',
+        url: 'https://mui.com/blog/mui-x-v7-beta/#richtreeview',
+      },
+      {
+        title: 'Date Time Range Picker',
+        url: 'https://mui.com/blog/mui-x-v7-beta/#date-time-range-picker',
+      },
+      {
+        title: 'Charts - Reference line ',
+        url: 'https://mui.com/blog/mui-x-v7-beta/#reference-line',
+      },
+    ],
+  },
+  {
     title: 'MUI X v6.18.x',
     description: 'New stable components, polished features, better performance, and more.',
     date: new Date(2023, 10, 13),
