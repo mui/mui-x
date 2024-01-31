@@ -393,9 +393,6 @@ importers:
       '@react-spring/web':
         specifier: ^9.7.3
         version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
-      '@trendmicro/react-interpolate':
-        specifier: ^0.5.5
-        version: 0.5.5(react@18.2.0)
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -619,6 +616,7 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    publishDirectory: build
 
   packages/grid/x-data-grid-generator:
     dependencies:
@@ -636,7 +634,7 @@ importers:
         version: 5.15.6(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@mui/x-data-grid-premium':
         specifier: workspace:*
-        version: link:../x-data-grid-premium
+        version: link:../x-data-grid-premium/build
       chance:
         specifier: ^1.1.11
         version: 1.1.11
@@ -656,6 +654,7 @@ importers:
       '@types/lru-cache':
         specifier: ^7.10.9
         version: 7.10.10
+    publishDirectory: build
 
   packages/grid/x-data-grid-premium:
     dependencies:
@@ -673,13 +672,13 @@ importers:
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-data-grid':
         specifier: workspace:*
-        version: link:../x-data-grid
+        version: link:../x-data-grid/build
       '@mui/x-data-grid-pro':
         specifier: workspace:*
-        version: link:../x-data-grid-pro
+        version: link:../x-data-grid-pro/build
       '@mui/x-license-pro':
         specifier: workspace:*
-        version: link:../../x-license-pro
+        version: link:../../x-license-pro/build
       '@types/format-util':
         specifier: ^1.0.4
         version: 1.0.4
@@ -701,6 +700,7 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    publishDirectory: build
 
   packages/grid/x-data-grid-pro:
     dependencies:
@@ -718,10 +718,10 @@ importers:
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-data-grid':
         specifier: workspace:*
-        version: link:../x-data-grid
+        version: link:../x-data-grid/build
       '@mui/x-license-pro':
         specifier: workspace:*
-        version: link:../../x-license-pro
+        version: link:../../x-license-pro/build
       '@types/format-util':
         specifier: ^1.0.4
         version: 1.0.4
@@ -740,6 +740,7 @@ importers:
       reselect:
         specifier: ^4.1.8
         version: 4.1.8
+    publishDirectory: build
 
   packages/x-charts:
     dependencies:
@@ -813,6 +814,7 @@ importers:
       '@types/d3-shape':
         specifier: ^3.1.6
         version: 3.1.6
+    publishDirectory: build
 
   packages/x-codemod:
     dependencies:
@@ -838,6 +840,7 @@ importers:
       '@types/jscodeshift':
         specifier: ^0.11.5
         version: 0.11.11
+    publishDirectory: build
 
   packages/x-date-pickers:
     dependencies:
@@ -908,6 +911,7 @@ importers:
       moment-jalaali:
         specifier: ^0.10.0
         version: 0.10.0
+    publishDirectory: build
 
   packages/x-date-pickers-pro:
     dependencies:
@@ -934,10 +938,10 @@ importers:
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-date-pickers':
         specifier: workspace:*
-        version: link:../x-date-pickers
+        version: link:../x-date-pickers/build
       '@mui/x-license-pro':
         specifier: workspace:*
-        version: link:../x-license-pro
+        version: link:../x-license-pro/build
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
@@ -978,6 +982,7 @@ importers:
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+    publishDirectory: build
 
   packages/x-license-pro:
     dependencies:
@@ -990,6 +995,7 @@ importers:
       react:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0
+    publishDirectory: build
 
   packages/x-tree-view:
     dependencies:
@@ -1032,6 +1038,7 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+    publishDirectory: build
 
 packages:
 
@@ -4331,16 +4338,6 @@ packages:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
     dev: true
-
-  /@trendmicro/react-interpolate@0.5.5(react@18.2.0):
-    resolution: {integrity: sha512-PjkRT3XeK30kGjmSRn//4L106ekZfFkjqQ85G8K1hDdT7aYdng0Hz1MSLJjW9XNiljdTNB8D8Sm4tiBhdz5P3A==}
-    peerDependencies:
-      react: ^0.14.0 || >=15.0.0
-    dependencies:
-      lodash.omit: 4.5.0
-      prop-types: 15.8.1
-      react: 18.2.0
-    dev: false
 
   /@tufjs/canonical-json@1.0.0:
     resolution: {integrity: sha512-QTnf++uxunWvG2z3UFNzAoQPHxnSXOwtaI3iJ+AohhV+5vONuArPjJE7aPXPVXfXJsqrVbZBu9b81AJoSd09IQ==}
@@ -11881,10 +11878,6 @@ packages:
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
-
-  /lodash.omit@4.5.0:
-    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
-    dev: false
 
   /lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
