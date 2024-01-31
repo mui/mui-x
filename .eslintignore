@@ -1,4 +1,5 @@
 /.git
+pnpm-lock.yaml
 /docs/.next
 /docs/export
 /docs/pages/playground/
