@@ -25,11 +25,11 @@ const entries = [
     url: 'https://mui.com/blog/mui-x-v7-beta/',
     highlightList: [
       {
-        title: 'Data Grid Sticky headers',
+        title: 'Data Grid - Sticky headers',
         url: 'https://mui.com/blog/mui-x-v7-beta/#sticky-headers',
       },
       {
-        title: 'Data Grid columns management panel',
+        title: 'Data Grid - Columns management panel',
         url: 'https://mui.com/blog/mui-x-v7-beta/#improved-columns-panel-design',
       },
       {
@@ -41,7 +41,7 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v7-beta/#date-time-range-picker',
       },
       {
-        title: 'Charts Reference line ',
+        title: 'Charts - Reference line ',
         url: 'https://mui.com/blog/mui-x-v7-beta/#reference-line',
       },
     ],
