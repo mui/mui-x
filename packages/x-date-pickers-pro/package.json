@@ -46,8 +46,8 @@
     "@mui/base": "^5.0.0-beta.33",
     "@mui/system": "^5.15.6",
     "@mui/utils": "^5.15.6",
-    "@mui/x-date-pickers": "7.0.0-beta.0",
-    "@mui/x-license-pro": "7.0.0-beta.0",
+    "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-license-pro": "workspace:*",
     "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"

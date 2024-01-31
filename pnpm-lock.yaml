@@ -638,7 +638,7 @@ importers:
         specifier: ^5.15.0
         version: 5.15.6(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@mui/x-data-grid-premium':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-data-grid-premium
       chance:
         specifier: ^1.1.11
@@ -675,13 +675,13 @@ importers:
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-data-grid':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-data-grid
       '@mui/x-data-grid-pro':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-data-grid-pro
       '@mui/x-license-pro':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../../x-license-pro
       '@types/format-util':
         specifier: ^1.0.4
@@ -720,10 +720,10 @@ importers:
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-data-grid':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-data-grid
       '@mui/x-license-pro':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../../x-license-pro
       '@types/format-util':
         specifier: ^1.0.4
@@ -936,10 +936,10 @@ importers:
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
       '@mui/x-date-pickers':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-date-pickers
       '@mui/x-license-pro':
-        specifier: 7.0.0-beta.0
+        specifier: workspace:*
         version: link:../x-license-pro
       clsx:
         specifier: ^2.1.0
