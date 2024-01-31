@@ -123,6 +123,12 @@ module.exports = {
       },
     },
     {
+      files: ['**/*.mjs'],
+      rules: {
+        'import/extensions': ['error', 'ignorePackages'],
+      },
+    },
+    {
       files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
       excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
       rules: {

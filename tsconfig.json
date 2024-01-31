@@ -1,6 +1,8 @@
 {
   "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     // Already tested with eslint
     "noUnusedLocals": false,
