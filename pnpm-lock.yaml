@@ -395,6 +395,9 @@ importers:
       '@mui/styles':
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
+      '@mui/system':
+        specifier: ^5.15.6
+        version: 5.15.6(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react@18.2.0)
       '@mui/utils':
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
