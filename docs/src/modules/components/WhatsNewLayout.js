@@ -18,7 +18,7 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
-    title: 'MUI X v7.0.0.beta.0',
+    title: 'MUI X v7.0.0-beta.0',
     description:
       'Featuring new components and multiple enhancements for both developers and end-users.',
     date: new Date(2024, 0, 29),
