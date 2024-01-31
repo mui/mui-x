@@ -16,7 +16,7 @@
     "docs:importDocsStatic": "node scripts/importDocsStatic.mjs",
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true pnpm docs:build",
     "docs:deploy": "pnpm --filter docs deploy",
-    "deduplicate": "node scripts/deduplicate.mjs",
+    "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.mjs",
@@ -173,8 +173,7 @@
     "util": "^0.12.5",
     "webpack": "^5.90.0",
     "webpack-cli": "^5.1.4",
-    "yargs": "^17.7.2",
-    "yarn-deduplicate": "^6.0.2"
+    "yargs": "^17.7.2"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
