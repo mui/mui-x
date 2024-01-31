@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid } from '@mui/x-data-grid';
 
-export default function DataGridProDemo() {
+export default function Demo() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100000,
@@ -12,7 +12,7 @@ export default function DataGridProDemo() {
 
   return (
     <Box sx={{ height: 520, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         {...data}
         loading={data.rows.length === 0}
         rowHeight={38}
