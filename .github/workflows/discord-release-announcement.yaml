@@ -2,7 +2,7 @@ name: Discord Release Announcement
 
 on:
   release:
-    types: [ prereleased, published ]
+    types: [prereleased, published]
 
 jobs:
   delimiter-test:
