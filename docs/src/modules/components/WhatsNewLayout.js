@@ -294,7 +294,7 @@ BlogCard.propTypes = {
   entry: PropTypes.any,
 };
 
-export default function ChangeLog() {
+export default function WhatsNewLayout() {
   return (
     <div>
       <Timeline
