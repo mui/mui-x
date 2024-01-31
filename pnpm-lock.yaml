@@ -431,18 +431,6 @@ importers:
       '@react-spring/web':
         specifier: ^9.7.3
         version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
-      '@types/lodash':
-        specifier: ^4.14.202
-        version: 4.14.202
-      '@types/moment-hijri':
-        specifier: ^2.1.4
-        version: 2.1.4
-      '@types/react-dom':
-        specifier: ^18.2.18
-        version: 18.2.18
-      '@types/react-router-dom':
-        specifier: ^5.3.3
-        version: 5.3.3
       ast-types:
         specifier: ^0.14.2
         version: 0.14.2
@@ -581,6 +569,9 @@ importers:
       rimraf:
         specifier: ^5.0.5
         version: 5.0.5
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
       styled-components:
         specifier: ^6.1.8
         version: 6.1.8(react-dom@18.2.0)(react@18.2.0)
@@ -597,9 +588,27 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.23.3
         version: 7.23.3(@babel/core@7.23.9)
+      '@types/d3-scale':
+        specifier: ^4.0.8
+        version: 4.0.8
       '@types/doctrine':
         specifier: ^0.0.9
         version: 0.0.9
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.14.202
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.4.2
+      '@types/moment-hijri':
+        specifier: ^2.1.4
+        version: 2.1.4
+      '@types/react-dom':
+        specifier: ^18.2.18
+        version: 18.2.18
+      '@types/react-router-dom':
+        specifier: ^5.3.3
+        version: 5.3.3
       '@types/stylis':
         specifier: ^4.2.5
         version: 4.2.5
@@ -4601,7 +4610,7 @@ packages:
 
   /@types/history@4.7.11:
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
-    dev: false
+    dev: true
 
   /@types/html-minifier-terser@6.1.0:
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
@@ -4653,7 +4662,7 @@ packages:
 
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
-    dev: false
+    dev: true
 
   /@types/lru-cache@7.10.10:
     resolution: {integrity: sha512-nEpVRPWW9EBmx2SCfNn3ClYxPL7IktPX12HhIoSc/H5mMjdeW3+YsXIpseLQ2xF35+OcpwKQbEUw5VtqE4PDNA==}
@@ -4696,6 +4705,7 @@ packages:
     resolution: {integrity: sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==}
     dependencies:
       moment: 2.30.1
+    dev: true
 
   /@types/moment-jalaali@0.7.9:
     resolution: {integrity: sha512-gsDOoAzRnCfQTbfdlUrCvX6R0wIto6CvwfvV2C3j4qJLK+DEiTK8Rl/xlOCBO9C6qeUfX8oyZ2UfjnXJTOvHSA==}
@@ -4742,6 +4752,7 @@ packages:
     resolution: {integrity: sha512-TJxDm6OfAX2KJWJdMEVTwWke5Sc/E/RlnPGvGfS0W7+6ocy2xhDVQVh/KvC2Uf7kACs+gDytdusDSdWfWkaNzw==}
     dependencies:
       '@types/react': 18.2.48
+    dev: true
 
   /@types/react-router-dom@5.3.3:
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
@@ -4749,14 +4760,14 @@ packages:
       '@types/history': 4.7.11
       '@types/react': 18.2.48
       '@types/react-router': 5.1.20
-    dev: false
+    dev: true
 
   /@types/react-router@5.1.20:
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 18.2.48
-    dev: false
+    dev: true
 
   /@types/react-test-renderer@18.0.7:
     resolution: {integrity: sha512-1+ANPOWc6rB3IkSnElhjv6VLlKg2dSv/OWClUyZimbLsQyBn8Js9Vtdsi3UICJ2rIQ3k2la06dkB+C92QfhKmg==}
@@ -15032,7 +15043,6 @@ packages:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
       tslib: 2.6.2
-    dev: true
 
   /safe-array-concat@1.1.0:
     resolution: {integrity: sha512-ZdQ0Jeb9Ofti4hbt5lX3T2JcAamT9hfzYU1MNB+z/jaEbB6wfFfPIR/zEORmZqobkCCJhSjodobH6WHNmJ97dg==}
