@@ -15,7 +15,8 @@
     "url": "https://opencollective.com/mui-org"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",

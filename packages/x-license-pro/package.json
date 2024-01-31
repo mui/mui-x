@@ -16,7 +16,8 @@
     "./node/utils/licenseInfo.js"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",

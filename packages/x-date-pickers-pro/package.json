@@ -11,7 +11,8 @@
   "homepage": "https://mui.com/x/react-date-pickers/",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
