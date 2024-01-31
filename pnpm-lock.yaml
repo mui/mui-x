@@ -380,6 +380,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.0
         version: 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.48)(react@18.2.0)
+      '@mui/base':
+        specifier: ^5.0.0-beta.33
+        version: 5.0.0-beta.33(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@mui/icons-material':
         specifier: ^5.15.6
         version: 5.15.6(@mui/material@5.15.6)(@types/react@18.2.48)(react@18.2.0)
@@ -401,6 +404,30 @@ importers:
       '@mui/utils':
         specifier: ^5.15.6
         version: 5.15.6(@types/react@18.2.48)(react@18.2.0)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../packages/x-charts/build
+      '@mui/x-data-grid':
+        specifier: workspace:*
+        version: link:../packages/grid/x-data-grid/build
+      '@mui/x-data-grid-generator':
+        specifier: workspace:*
+        version: link:../packages/grid/x-data-grid-generator/build
+      '@mui/x-data-grid-premium':
+        specifier: workspace:*
+        version: link:../packages/grid/x-data-grid-premium/build
+      '@mui/x-data-grid-pro':
+        specifier: workspace:*
+        version: link:../packages/grid/x-data-grid-pro/build
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:*
+        version: link:../packages/x-date-pickers-pro/build
+      '@mui/x-tree-view':
+        specifier: workspace:*
+        version: link:../packages/x-tree-view/build
       '@react-spring/web':
         specifier: ^9.7.3
         version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
