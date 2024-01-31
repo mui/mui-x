@@ -24,6 +24,7 @@ import {
 } from '../../../components/toolbar/GridToolbarExport';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
+import { gridDataRowIdsSelector, gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -299,7 +300,8 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.exportState();
       // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
-      previousRows.current = apiRef.current.getSortedRows();
+      const gridRowsLookup = gridRowsLookupSelector(apiRef);
+      previousRows.current = gridDataRowIdsSelector(apiRef).map((rowId) => gridRowsLookup[rowId]);
 
       if (props.pagination) {
         const visibleRowCount = gridExpandedRowCountSelector(apiRef);
