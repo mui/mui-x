@@ -20,7 +20,7 @@ const entries = [
   {
     title: 'MUI X v7.0.0.beta.0',
     description:
-      'Featuring new components and multiple enhancements for both developers and end-users',
+      'Featuring new components and multiple enhancements for both developers and end-users.',
     announcementDate: 'Monday, Jan 29, 2024',
     url: 'https://mui.com/blog/mui-x-v7-beta/',
     highlightList: [
