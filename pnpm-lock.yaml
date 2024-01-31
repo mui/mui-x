@@ -8,6 +8,17 @@ overrides:
   react-is: ^18.2.0
   '@types/node': ^18.19.10
 
+patchedDependencies:
+  babel-plugin-replace-imports@1.0.2:
+    hash: h4cab4lqksemkw6ln3l3h4s77e
+    path: patches/babel-plugin-replace-imports@1.0.2.patch
+  date-fns-jalali@2.13.0-0:
+    hash: knk56uiq6xxn77bv6lgrgre7si
+    path: patches/date-fns-jalali@2.13.0-0.patch
+  karma-mocha@2.0.1:
+    hash: r6idlcdpax26bbzwxyjicxb5ra
+    path: patches/karma-mocha@2.0.1.patch
+
 importers:
 
   .:
@@ -170,7 +181,7 @@ importers:
         version: 0.3.0
       babel-plugin-replace-imports:
         specifier: ^1.0.2
-        version: 1.0.2
+        version: 1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e)
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
@@ -269,7 +280,7 @@ importers:
         version: 3.2.0
       karma-mocha:
         specifier: ^2.0.1
-        version: 2.0.1
+        version: 2.0.1(patch_hash=r6idlcdpax26bbzwxyjicxb5ra)
       karma-parallel:
         specifier: ^0.3.1
         version: 0.3.1(karma@6.4.2)
@@ -291,12 +302,6 @@ importers:
       nyc:
         specifier: ^15.1.0
         version: 15.1.0
-      patch-package:
-        specifier: ^7.0.2
-        version: 7.0.2
-      postinstall-postinstall:
-        specifier: ^2.1.0
-        version: 2.1.0
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
@@ -895,7 +900,7 @@ importers:
         version: 2.30.0
       date-fns-jalali:
         specifier: ^2.13.0-0
-        version: 2.13.0-0
+        version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -947,7 +952,7 @@ importers:
         version: 2.1.0
       date-fns-jalali:
         specifier: ^2.13.0-0
-        version: 2.13.0-0
+        version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
       moment-hijri:
         specifier: ^2.1.2
         version: 2.1.2
@@ -5921,11 +5926,6 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: true
 
-  /at-least-node@1.0.0:
-    resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
-    engines: {node: '>= 4.0.0'}
-    dev: true
-
   /atob@2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
     engines: {node: '>= 4.5.0'}
@@ -6089,7 +6089,7 @@ packages:
   /babel-plugin-react-remove-properties@0.3.0:
     resolution: {integrity: sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==}
 
-  /babel-plugin-replace-imports@1.0.2:
+  /babel-plugin-replace-imports@1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e):
     resolution: {integrity: sha512-v+9S4FBg9wYit3c+bDxhRHv/pnhBhhneZOPvqT1c293SSjUuUy1MPK76TsJ9038fp/SD2/TNcqG5PUBoG9/ByQ==}
     dependencies:
       lodash.isempty: 4.4.0
@@ -6098,6 +6098,7 @@ packages:
       lodash.isregexp: 4.0.1
       lodash.isstring: 4.0.1
     dev: true
+    patched: true
 
   /babel-plugin-search-and-replace@1.1.1:
     resolution: {integrity: sha512-fjP2VTF3mxxOUnc96mdK22llH92A6gu7A5AFapJmgnqsQi3bqLduIRP0FpA2r5vRZOYPpnX4rE5izQlpsMBjSA==}
@@ -7646,8 +7647,9 @@ packages:
       whatwg-url: 14.0.0
     dev: true
 
-  /date-fns-jalali@2.13.0-0:
+  /date-fns-jalali@2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si):
     resolution: {integrity: sha512-yjlI9O18Z6ryGNagryrLO8OQ+3rishM3+A0UOX2UX10cWMn2NTlQcQ+ywTEJvF5IJz0FwX/slt2nCcpyQ/c8gw==}
+    patched: true
 
   /date-fns-jalali@2.21.3-1:
     resolution: {integrity: sha512-Sgw1IdgCgyWDKCpq6uwAu24vPMOtvmcXXXuETr1jQO/aVj4h23XAltcP7hLbo+osqoiJnPmiydbI/q1W7TYAjA==}
@@ -9261,12 +9263,6 @@ packages:
       path-exists: 5.0.0
     dev: true
 
-  /find-yarn-workspace-root@2.0.0:
-    resolution: {integrity: sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==}
-    dependencies:
-      micromatch: 4.0.5
-    dev: true
-
   /finity@0.5.4:
     resolution: {integrity: sha512-3l+5/1tuw616Lgb0QBimxfdd2TqaDGpfCBpfX6EqtFmqUV3FtQnVEX4Aa62DagYEqnsTIjZcTfbq9msDbXYgyA==}
     dev: true
@@ -9410,16 +9406,6 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 4.0.0
       universalify: 0.1.2
-    dev: true
-
-  /fs-extra@9.1.0:
-    resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
-    engines: {node: '>=10'}
-    dependencies:
-      at-least-node: 1.0.0
-      graceful-fs: 4.2.11
-      jsonfile: 6.1.0
-      universalify: 2.0.1
     dev: true
 
   /fs-minipass@2.1.0:
@@ -11403,11 +11389,12 @@ packages:
       which: 1.3.1
     dev: true
 
-  /karma-mocha@2.0.1:
+  /karma-mocha@2.0.1(patch_hash=r6idlcdpax26bbzwxyjicxb5ra):
     resolution: {integrity: sha512-Tzd5HBjm8his2OA4bouAsATYEpZrp9vC7z5E5j4C5Of5Rrs1jY67RAwXNcVmd/Bnk1wgvQRou0zGVLey44G4tQ==}
     dependencies:
       minimist: 1.2.8
     dev: true
+    patched: true
 
   /karma-parallel@0.3.1(karma@6.4.2):
     resolution: {integrity: sha512-64jxNYamYi/9Y67h4+FfViSYhwDgod3rLuq+ZdZ0c3XeZFp/3q3v3HVkd8b5Czp3hCB+LLF8DIv4zlR4xFqbRw==}
@@ -11497,12 +11484,6 @@ packages:
   /kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
-
-  /klaw-sync@6.0.0:
-    resolution: {integrity: sha512-nIeuVSzdCCs6TDPTqI8w1Yre34sSq7AkZ4B3sfOBbI2CgVSB4Du4aLQijFU2+lhAFCwt9+42Hel6lQNIv6AntQ==}
-    dependencies:
-      graceful-fs: 4.2.11
-    dev: true
 
   /language-subtag-registry@0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}
@@ -13344,14 +13325,6 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /open@7.4.2:
-    resolution: {integrity: sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==}
-    engines: {node: '>=8'}
-    dependencies:
-      is-docker: 2.2.1
-      is-wsl: 2.2.0
-    dev: true
-
   /open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
@@ -13781,27 +13754,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /patch-package@7.0.2:
-    resolution: {integrity: sha512-PMYfL8LXxGIRmxXLqlEaBxzKPu7/SdP13ld6GSfAUJUZRmBDPp8chZs0dpzaAFn9TSPnFiMwkC6PJt6pBiAl8Q==}
-    engines: {node: '>=14', npm: '>5'}
-    hasBin: true
-    dependencies:
-      '@yarnpkg/lockfile': 1.1.0
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      cross-spawn: 7.0.3
-      find-yarn-workspace-root: 2.0.0
-      fs-extra: 9.1.0
-      klaw-sync: 6.0.0
-      minimist: 1.2.8
-      open: 7.4.2
-      rimraf: 2.7.1
-      semver: 7.5.4
-      slash: 2.0.0
-      tmp: 0.0.33
-      yaml: 2.3.4
-    dev: true
-
   /path-browserify@0.0.1:
     resolution: {integrity: sha512-BapA40NHICOS+USX9SN4tyhq+A2RrN/Ws5F0Z5aMHDp98Fl86lX8Oti8B7uN93L4Ifv4fHOEA+pQw87gmMO/lQ==}
     dev: false
@@ -14003,11 +13955,6 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.0.2
-
-  /postinstall-postinstall@2.1.0:
-    resolution: {integrity: sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==}
-    requiresBuild: true
-    dev: true
 
   /prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
@@ -14947,6 +14894,7 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+    dev: false
 
   /rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}

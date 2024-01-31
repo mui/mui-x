@@ -24,7 +24,6 @@
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
-    "postinstall": "patch-package",
     "prettier": "pretty-quick --branch next --ignore-path .eslintignore",
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
@@ -68,10 +67,10 @@
     "@babel/core": "^7.23.9",
     "@babel/node": "^7.23.9",
     "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-object-assign": "^7.23.3",
     "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/plugin-transform-private-methods": "^7.23.3",
     "@babel/plugin-transform-private-property-in-object": "^7.23.4",
-    "@babel/plugin-transform-object-assign": "^7.23.3",
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/plugin-transform-runtime": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
@@ -156,8 +155,6 @@
     "markdownlint-cli2": "^0.12.1",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
-    "patch-package": "^7.0.2",
-    "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.2.4",
     "pretty-quick": "^4.0.0",
     "process": "^0.11.10",
@@ -182,5 +179,12 @@
     "react-is": "^18.2.0",
     "@types/node": "^18.19.10"
   },
-  "packageManager": "pnpm@8.15.1"
+  "packageManager": "pnpm@8.15.1",
+  "pnpm": {
+    "patchedDependencies": {
+      "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
+      "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
+    }
+  }
 }
