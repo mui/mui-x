@@ -22,6 +22,7 @@ import {
   gridClasses,
   gridFocusCellSelector,
   GridCellParams,
+  GRID_REORDER_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -218,6 +219,10 @@ export const useGridCellSelection = (
       // Fix for https://github.com/mui/mui-x/pull/6567#issuecomment-1329155578
       const isMacOs = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       if (event.button !== 0 || (event.ctrlKey && isMacOs)) {
+        return;
+      }
+
+      if (params.field === GRID_REORDER_COL_DEF.field) {
         return;
       }
 
