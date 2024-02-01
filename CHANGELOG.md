@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.3
+
+_Feb 1, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Hebrew (he-IL) locale (#11831) @danielmishan85
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.3`
+
+- [l10n] Improve Hebrew (he-IL) locale (@danielmishan85) (#11831)
+
+#### `@mui/x-data-grid-pro@6.19.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.3`.
+
+#### `@mui/x-data-grid-premium@6.19.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.3`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.3`
+
+- [TimePicker] Add missing toolbar classes descriptions (#11862) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.3`.
+
+### Charts / `@mui/x-charts@6.19.3`
+
+- [charts] Document how to modify color according to values (#11854) @alexfauquette
+
+### Docs
+
+- [docs] Add a general uplift to the whats new page (#11883) @danilo-leal
+- [docs] Fix 404 (#11852) @alexfauquette
+- [docs] Fix <title> generation (#11825) @alexfauquette
+- [docs] Fix docs:api when typo in slots typing (#11861) @alexfauquette
+- [docs] Improve Support page (#11556) @oliviertassinari
+- [docs] Sync support page with core @oliviertassinari
+- [docs] These API don't exist in MUI X v6 @oliviertassinari
+- [docs] Update whats new page with v7 Beta blogpost content (#11886) @joserodolfofreitas
+
 ## 6.19.2
 
 _Jan 25, 2024_
