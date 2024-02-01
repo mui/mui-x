@@ -38,3 +38,7 @@ The rich version of the Tree View component receives its items dynamically from 
 This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
 
 {{"demo": "BasicRichTreeView.js"}}
+
+:::info
+At the moment, the Simple and Rich Tree Views are similar in terms of feature support. But as the component grows, you can expect to see the more advanced ones appear primarily on the Rich Tree View.
+:::
