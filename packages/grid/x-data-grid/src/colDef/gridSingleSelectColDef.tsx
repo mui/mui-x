@@ -25,15 +25,15 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   type: 'singleSelect',
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
-  valueFormatter(params) {
-    const { id, field, value, api } = params;
-    const colDef = params.api.getColumn(field);
+  valueFormatter(value, row, colDef, apiRef) {
+    // const { id, field, value, api } = params;
+    const rowId = apiRef.current.getRowId(row);
 
     if (!isSingleSelectColDef(colDef)) {
       return '';
     }
 
-    const valueOptions = getValueOptions(colDef, { id, row: id ? api.getRow(id) : null });
+    const valueOptions = getValueOptions(colDef, { id: rowId, row });
     if (value == null) {
       return '';
     }
@@ -52,8 +52,8 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
   // @ts-ignore
-  pastedValueParser: (value, params) => {
-    const colDef = params.colDef as GridSingleSelectColDef;
+  pastedValueParser: (value, row, column) => {
+    const colDef = column as GridSingleSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];
     const getOptionValue = (colDef as GridSingleSelectColDef).getOptionValue!;
     const valueOption = valueOptions.find((option) => {

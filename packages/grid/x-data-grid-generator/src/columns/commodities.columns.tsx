@@ -148,7 +148,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   {
     field: 'subTotal',
     headerName: 'Sub Total',
-    valueGetter: ({ row }) =>
+    valueGetter: (value, row) =>
       row.quantity == null || row.unitPrice == null ? null : row.quantity * row.unitPrice,
     type: 'number',
     width: 120,
@@ -165,7 +165,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   {
     field: 'feeAmount',
     headerName: 'Fee Amount',
-    valueGetter: ({ row }) =>
+    valueGetter: (value, row) =>
       row.feeRate == null || row.quantity == null || row.unitPrice == null
         ? null
         : row.feeRate * row.quantity * row.unitPrice,
@@ -184,7 +184,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   {
     field: 'totalPrice',
     headerName: 'Total in USD',
-    valueGetter: ({ row }) =>
+    valueGetter: (value, row) =>
       row.feeRate == null || row.quantity == null || row.unitPrice == null
         ? null
         : row.feeRate + row.quantity * row.unitPrice,
@@ -249,8 +249,8 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
 
       return value;
     },
-    valueFormatter: ({ value }) => value?.label,
-    groupingValueGetter: (params) => params.value.code,
+    valueFormatter: (value: { label: string }) => value?.label,
+    groupingValueGetter: (value: { code: string }) => value.code,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,

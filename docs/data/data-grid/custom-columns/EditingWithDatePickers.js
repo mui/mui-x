@@ -36,12 +36,12 @@ const dateColumnType = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: false },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
+  valueFormatter: (value) => {
+    if (typeof value === 'string') {
+      return value;
     }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDate');
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDate');
     }
     return '';
   },
@@ -122,12 +122,12 @@ const dateTimeColumnType = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: true },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
+  valueFormatter: (value) => {
+    if (typeof value === 'string') {
+      return value;
     }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDateTime');
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDateTime');
     }
     return '';
   },

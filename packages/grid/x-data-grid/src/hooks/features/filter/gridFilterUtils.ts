@@ -172,8 +172,8 @@ const getFilterCallbackFromItem = (
   if (column.valueParser) {
     const parser = column.valueParser;
     parsedValue = Array.isArray(filterItem.value)
-      ? filterItem.value?.map((x) => parser(x))
-      : parser(filterItem.value);
+      ? filterItem.value?.map((x) => parser(x, undefined, column, apiRef))
+      : parser(filterItem.value, undefined, column, apiRef);
   } else {
     parsedValue = filterItem.value;
   }

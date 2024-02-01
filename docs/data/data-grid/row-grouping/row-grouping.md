@@ -212,7 +212,7 @@ If your cell value is more complex, pass a `groupingValueGetter` property to the
 const columns: GridColDef[] = [
   {
     field: 'composer',
-    groupingValueGetter: (params) => params.value.name,
+    groupingValueGetter: (value) => value.name,
   },
   // ...
 ];

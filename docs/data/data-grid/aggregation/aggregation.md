@@ -228,7 +228,7 @@ In the example below, the values in the `profit` column are derived from the `gr
 {
   field: 'profit',
   type: 'number',
-  valueGetter: ({ row }) => {
+  valueGetter: (value, row) => {
     if (!row.gross || !row.budget) {
       return null;
     }
