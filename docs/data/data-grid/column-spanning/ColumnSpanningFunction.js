@@ -67,7 +67,7 @@ const columns = [
     headerName: 'Total',
     flex: 1,
     ...baseColumnOptions,
-    valueGetter: (valie, row) => {
+    valueGetter: (value, row) => {
       if (row.id === 'SUBTOTAL') {
         return row.subtotal;
       }
