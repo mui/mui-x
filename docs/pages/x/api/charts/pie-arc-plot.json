@@ -20,7 +20,7 @@
       }
     },
     "innerRadius": { "type": { "name": "number" }, "default": "0" },
-    "onClick": {
+    "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",

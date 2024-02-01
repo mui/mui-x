@@ -11,7 +11,7 @@ components: ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltip, D
 In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
 If you are using composition, you can add the `<ChartTooltip />` component and pass props directly.
 
-## Interactions
+## Tooltip trigger
 
 The tooltip can be triggered by two kinds of events:
 
@@ -86,7 +86,7 @@ It will remove the header showing the x-axis value from the tooltip.
 If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#interactions).
+You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>

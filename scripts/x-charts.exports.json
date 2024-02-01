@@ -73,6 +73,8 @@
   { "name": "ChartsLegendRootOwnerState", "kind": "TypeAlias" },
   { "name": "ChartsLegendSlotProps", "kind": "Interface" },
   { "name": "ChartsLegendSlots", "kind": "Interface" },
+  { "name": "ChartsOnAxisClickHandler", "kind": "Function" },
+  { "name": "ChartsOnAxisClickHandlerProps", "kind": "Interface" },
   { "name": "ChartsPieSorting", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },

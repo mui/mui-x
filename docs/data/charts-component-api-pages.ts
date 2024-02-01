@@ -58,6 +58,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-on-axis-click-handler',
+    title: 'ChartsOnAxisClickHandler',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },

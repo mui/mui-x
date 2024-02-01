@@ -12,6 +12,7 @@ import {
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { LineItemIdentifier } from '../models/seriesType/line';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -19,7 +20,17 @@ export interface LinePlotSlotProps extends LineElementSlotProps {}
 
 export interface LinePlotProps
   extends React.SVGAttributes<SVGSVGElement>,
-    Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {}
+    Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
+  /**
+   * Callback fired when a line item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    lineItemIdentifier: LineItemIdentifier,
+  ) => void;
+}
 
 const useAggregatedData = () => {
   const seriesData = React.useContext(SeriesContext).line;
@@ -97,7 +108,7 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
   const completedData = useAggregatedData();
 
@@ -114,6 +125,7 @@ function LinePlot(props: LinePlotProps) {
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}
+            onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
           />
         );
       })}
@@ -126,6 +138,12 @@ LinePlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
    * @default false

@@ -95,6 +95,7 @@ function BarElement(props: BarElementProps) {
     slots,
     slotProps,
     style,
+    onClick,
     ...other
   } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
@@ -128,6 +129,8 @@ function BarElement(props: BarElementProps) {
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
       style,
       className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
     },
     ownerState,
   });
