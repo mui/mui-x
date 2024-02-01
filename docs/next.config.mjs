@@ -9,7 +9,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra.js';
 import { findPages } from './src/modules/utils/find.mjs';
 import { LANGUAGES, LANGUAGES_SSR } from './config.js';
-import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants.js';
+import constants from './constants.js';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -37,8 +37,8 @@ export default withDocsInfra({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
-    SOURCE_CODE_REPO,
-    SOURCE_GITHUB_BRANCH,
+    SOURCE_CODE_REPO: constants.SOURCE_CODE_REPO,
+    SOURCE_GITHUB_BRANCH: constants.SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
     // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
