@@ -166,6 +166,22 @@ Here's the list of affected features, colDef flags and props to disable them and
 
 - The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
 
+- The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](/material-ui/react-popper/) component under the hood.
+
+```diff
+ <DataGrid
+  slotProps={{
+-   columnsPanel: {
++   columnsManagement: {
+      sort: 'asc',
+      autoFocusSearchField: false,
+    },
+  }}
+ />
+```
+
+- `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
+
 <!-- ### Rows
 
 - -->

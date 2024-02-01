@@ -46,12 +46,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Печать',
   toolbarExportExcel: 'Скачать в формате Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Найти столбец',
-  columnsPanelTextFieldPlaceholder: 'Заголовок столбца',
-  columnsPanelDragIconLabel: 'Изменить порядок столбца',
-  columnsPanelShowAllButton: 'Показать все',
-  columnsPanelHideAllButton: 'Скрыть все',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',

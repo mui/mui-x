@@ -39,7 +39,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               ...column,
               type: 'string',
               editable: true,
-            } as GridColDef),
+            }) as GridColDef,
         ),
       };
     }, [rowLength, colLength]);

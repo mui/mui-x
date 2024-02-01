@@ -53,9 +53,9 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   const publish = React.useCallback(
     (
-        eventName: keyof GridRowEventLookup,
-        propHandler?: React.MouseEventHandler<HTMLDivElement> | undefined,
-      ): React.MouseEventHandler<HTMLDivElement> =>
+      eventName: keyof GridRowEventLookup,
+      propHandler?: React.MouseEventHandler<HTMLDivElement> | undefined,
+    ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
         if (isEventTargetInPortal(event)) {

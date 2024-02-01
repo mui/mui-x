@@ -16,16 +16,20 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Следующий месяц',
 
   // View navigation
-  openPreviousView: 'открыть предыдущий вид',
-  openNextView: 'открыть следующий вид',
+  openPreviousView: 'Открыть предыдущий вид',
+  openNextView: 'Открыть следующий вид',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Начало',
   end: 'Конец',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Отмена',
@@ -41,9 +45,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${
-      time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

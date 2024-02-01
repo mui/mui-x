@@ -13,8 +13,8 @@ type IsAny<T> = 0 extends 1 & T ? true : false;
 export type OptionalIfEmpty<A extends string, B> = keyof B extends never
   ? Partial<Record<A, B>>
   : IsAny<B> extends true
-  ? Partial<Record<A, B>>
-  : Record<A, B>;
+    ? Partial<Record<A, B>>
+    : Record<A, B>;
 
 export type MergePluginsProperty<
   TPlugins extends readonly any[],

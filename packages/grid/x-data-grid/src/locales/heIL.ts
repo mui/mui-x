@@ -38,12 +38,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'הדפסה',
   toolbarExportExcel: 'ייצוא ל- Excel',
 
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'חפש עמודה',
-  columnsPanelTextFieldPlaceholder: 'כותרת עמודה',
-  columnsPanelDragIconLabel: 'סדר עמודות מחדש',
-  columnsPanelShowAllButton: 'הצג הכל',
-  columnsPanelHideAllButton: 'הסתר הכל',
+  // Columns management text
+  // columnsManagementSearchTitle: 'Search',
+  // columnsManagementNoColumns: 'No columns',
+  // columnsManagementShowHideAllText: 'Show/Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
@@ -71,12 +69,12 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
@@ -161,7 +159,7 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'הצג/הסתר פרטים',
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 

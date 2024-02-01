@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const lastMonday = dayjs().startOf('week');
 const nextSunday = dayjs().endOf('week').startOf('day');
@@ -20,7 +21,12 @@ export default function DateValidationShouldDisableDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={['DatePicker', 'DateTimePicker', 'DateRangePicker']}
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'DateRangePicker',
+          'DateTimeRangePicker',
+        ]}
       >
         <DemoItem label="DatePicker">
           <DatePicker
@@ -38,6 +44,12 @@ export default function DateValidationShouldDisableDate() {
         </DemoItem>
         <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker
+            defaultValue={[lastMonday, nextSunday]}
+            shouldDisableDate={isWeekend}
+          />
+        </DemoItem>
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
+          <DateTimeRangePicker
             defaultValue={[lastMonday, nextSunday]}
             shouldDisableDate={isWeekend}
           />

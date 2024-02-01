@@ -10,9 +10,10 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
   DateOrTimeViewWithMeridiem,
+  UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
@@ -153,6 +154,11 @@ export const useMobileRangePicker = <
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
+    tabs: {
+      ...innerSlotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,

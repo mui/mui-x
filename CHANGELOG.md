@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-beta.0
+
+_Jan 26, 2024_
+
+We are glad to announce MUI X v7 beta!
+This version has several improvements, bug fixes, and exciting features 🎉.
+We want to offer a big thanks to the 7 contributors who made this release possible ✨:
+
+- 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
+
+  <img src="https://github.com/mui/mui-x/assets/4941090/122bb7bc-5e72-4e11-a8e5-96f3026de922" width="510" height="652" alt="Date Time Range Picker example" />
+
+- 🎁 New column management panel design for the Data Grid (#11770) @MBilalShafi
+
+  <img width="310" alt="image" src="https://github.com/mui/mui-x/assets/12609561/a79dac8b-d54d-4e69-a63a-ef78f3993f37">
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The columns management component has been redesigned and the component was extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component above the headers as a panel. As a result, a new slot `columnsManagement` and the related prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://next.mui.com/material-ui/react-popper/) component under the hood.
+
+  ```diff
+   <DataGrid
+    slotProps={{
+  -   columnsPanel: {
+  +   columnsManagement: {
+        sort: 'asc',
+        autoFocusSearchField: false,
+      },
+    }}
+   />
+  ```
+
+- `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` toggle in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
+
+  ```diff
+   <DataGrid
+  -  disableShowAllButton
+  -  disableHideAllButton
+  +  disableShowHideToggle
+   />
+  ```
+
+#### `@mui/x-data-grid@7.0.0-beta.0`
+
+- [DataGrid] Export `GridColumnTypes` interface for custom column types (#11742) @cherniavskii
+- [DataGrid] Initialize `apiRef` early (#11792) @cherniavskii
+- [DataGrid] New column management panel design (#11770) @MBilalShafi
+- [DataGrid] Fix support for tree with more than 50,000 children (#11757) @zenazn
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.0`.
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-beta.0`
+
+- [pickers] Apply the `layout.tabs` class to `Tabs` slot (#11781) @LukasTy
+- [pickers] Avoid deep imports (#11794) @LukasTy
+- [pickers] Fields typing optimization (#11779) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
+
+- [pickers] Add `DateTimeRangePicker` component (#9528) @LukasTy
+- [pickers] Add `DateTimeRangePicker` theme augmentation (#11814) @LukasTy
+- [DateRangePicker] Remove `calendars` prop on `Mobile` (#11752) @LukasTy
+
+### Tree View / `@mui/x-tree-view@7.0.0-beta.0`
+
+- [TreeView] Remove unused props from prop-types and typing (#11778) @flaviendelangle
+- [TreeView] Throw an error when two items have the same id (#11715) @flaviendelangle
+
+### Docs
+
+- [docs] Add `contextValue` to the headless tree view doc (#11705) @flaviendelangle
+- [docs] Add section for the `disableSelection` prop (#11821) @flaviendelangle
+- [docs] Fix brand name non-breaking space (#11758) @oliviertassinari
+- [docs] Fix typo in Data Grid components page (#11775) @flaviendelangle
+- [docs] Fix use of quote, should use callout (#11759) @oliviertassinari
+- [docs] Improve error message for MUI Vale rule @oliviertassinari
+- [docs] Include `DateTimeRangePicker` in relevant demos (#11815) @LukasTy
+- [docs] Add recipe for sorting row groups by the number of child rows (#11164) @cherniavskii
+
+### Core
+
+- [core] Cleanup script and alias setup (#11749) @LukasTy
+- [core] Polish issue templates @oliviertassinari
+- [code-infra] Update prettier and pretty-quick (#11735) @Janpot
+
 ## 7.0.0-alpha.9
 
 _Jan 19, 2024_
@@ -138,7 +238,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 #### Breaking changes
 
 - The `expandIcon` / `defaultExpandIcon` props, used to expand the children of a node (rendered when it is collapsed),
-is now defined as a slot both on the Tree View and the Tree Item components.
+  is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ChevronRight` icon from `@mui/icons-material`,
   you can stop passing it to your component because it is now the default value:
@@ -180,7 +280,7 @@ is now defined as a slot both on the Tree View and the Tree Item components.
   ```
 
 - The `collapseIcon` / `defaultCollapseIcon` props, used to collapse the children of a node (rendered when it is expanded),
-is now defined as a slot both on the Tree View and the Tree Item components.
+  is now defined as a slot both on the Tree View and the Tree Item components.
 
   If you were using the `ExpandMore` icon from `@mui/icons-material`,
   you can stop passing it to your component because it is now the default value:
@@ -455,7 +555,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
     items={MUI_X_PRODUCTS}
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
-  />
+  />;
   ```
 
 - 🌍 Improve Czech (cs-CZ) locale on the Data Grid
@@ -600,6 +700,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
   but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
@@ -693,7 +794,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 #### Breaking changes
 
 - The slot interfaces got renamed to match with `@mui/base` naming.
-The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
+  The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
   ```diff
   -DateCalendarSlotsComponent
@@ -2196,7 +2297,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 🥧 Pie charts are now animated.
 - 📈 Line charts now support partial data, and can interpolate missing data https://mui.com/x/react-charts/lines/#skip-missing-points.
 
- <img src="https://github.com/mui/mui-x/assets/3165635/d2d50b1b-ee29-4e4c-9ebe-629c06f3093e" width="683" height="436" />
+ <img src="https://github.com/mui/mui-x/assets/3165635/d2d50b1b-ee29-4e4c-9ebe-629c06f3093e" width="683" height="436" alt="Charts partial data" />
 
 - ✨ The data grid allows to ignore [diacritics](https://en.wikipedia.org/wiki/Diacritic) when filtering.
 - 📚 Documentation improvements
@@ -3558,7 +3659,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🚀 Introducing UTC and timezone support for pickers.
 
-  <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348">
+  <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348" alt="Pickers time zone switching">
 
   Visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
 
@@ -3794,7 +3895,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New date time picking UI on [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
 
-  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" />
+  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" alt="Desktop Date Time Picker example" />
 
 - 🚀 Performance improvements
 - 🐞 Bugfixes
@@ -3870,7 +3971,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
-  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" />
+  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" alt="Filtering on column headers example" />
 
   See [the documentation](https://mui.com/x/react-data-grid/filtering/header-filters/) for more information
 
@@ -4029,7 +4130,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
 
-  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" />
+  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" alt="New digital clock time picker" />
 
 - ✨ Picker fields [now always include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
 - 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales

@@ -233,13 +233,21 @@ export interface GridClasses {
    */
   columnSeparator: string;
   /**
-   * Styles applied to the columns panel element.
+   * Styles applied to the columns management body.
    */
-  columnsPanel: string;
+  columnsManagement: string;
   /**
-   * Styles applied to the columns panel row element.
+   * Styles applied to the columns management row element.
    */
-  columnsPanelRow: string;
+  columnsManagementRow: string;
+  /**
+   * Styles applied to the columns management header element.
+   */
+  columnsManagementHeader: string;
+  /**
+   * Styles applied to the columns management footer element.
+   */
+  columnsManagementFooter: string;
   /**
    * Styles applied to the top container.
    */
@@ -655,8 +663,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnSeparator--sideLeft',
   'columnSeparator--sideRight',
   'columnSeparator',
-  'columnsPanel',
-  'columnsPanelRow',
+  'columnsManagement',
+  'columnsManagementRow',
+  'columnsManagementHeader',
+  'columnsManagementFooter',
   'container--top',
   'container--bottom',
   'detailPanel',
