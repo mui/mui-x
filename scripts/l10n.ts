@@ -12,7 +12,7 @@ import localeNames from './localeNames';
 import {
   SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
   SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
-} from '../docs/constants.js';
+} from '../docs/constants';
 
 const MyOctokit = Octokit.plugin(retry);
 
