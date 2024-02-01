@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { CartesianChartSeriesType, ChartSeriesDefaultized } from '../models/seriesType/config';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -33,31 +33,36 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
         )}
 
         <tbody>
-          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => {
-            const formattedValue = valueFormatter(data[dataIndex]);
-            if (formattedValue == null) {
-              return null;
-            }
-            return (
-              <ChartsTooltipRow key={id} className={classes.row}>
-                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                  <ChartsTooltipMark
-                    ownerState={{ color }}
-                    boxShadow={1}
-                    className={classes.mark}
-                  />
-                </ChartsTooltipCell>
+          {series
+            .filter((item): item is ChartSeriesDefaultized<CartesianChartSeriesType> =>
+              ['bar', 'line', 'scatter'].includes(item.type),
+            )
+            .map(({ color, id, label, valueFormatter, data }) => {
+              // @ts-ignore
+              const formattedValue = valueFormatter(data[dataIndex] ?? null);
+              if (formattedValue == null) {
+                return null;
+              }
+              return (
+                <ChartsTooltipRow key={id} className={classes.row}>
+                  <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                    <ChartsTooltipMark
+                      ownerState={{ color }}
+                      boxShadow={1}
+                      className={classes.mark}
+                    />
+                  </ChartsTooltipCell>
 
-                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                  {label ? <Typography>{label}</Typography> : null}
-                </ChartsTooltipCell>
+                  <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                    {label ? <Typography>{label}</Typography> : null}
+                  </ChartsTooltipCell>
 
-                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
-                  <Typography>{formattedValue}</Typography>
-                </ChartsTooltipCell>
-              </ChartsTooltipRow>
-            );
-          })}
+                  <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                    <Typography>{formattedValue}</Typography>
+                  </ChartsTooltipCell>
+                </ChartsTooltipRow>
+              );
+            })}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
