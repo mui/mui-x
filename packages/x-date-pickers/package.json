@@ -109,7 +109,8 @@
     "luxon": "^3.4.4",
     "moment": "^2.30.1",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.10.0"
+    "moment-jalaali": "^0.10.0",
+    "moment-timezone": "^0.5.44"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

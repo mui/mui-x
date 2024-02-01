@@ -302,6 +302,12 @@ importers:
       mocha:
         specifier: ^10.2.0
         version: 10.2.0
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
+      moment-timezone:
+        specifier: ^0.5.44
+        version: 0.5.44
       nyc:
         specifier: ^15.1.0
         version: 15.1.0
@@ -985,6 +991,9 @@ importers:
       moment-jalaali:
         specifier: ^0.10.0
         version: 0.10.0
+      moment-timezone:
+        specifier: ^0.5.44
+        version: 0.5.44
     publishDirectory: build
 
   packages/x-date-pickers-pro:

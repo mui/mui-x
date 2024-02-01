@@ -155,6 +155,8 @@
     "lerna": "^8.0.2",
     "markdownlint-cli2": "^0.12.1",
     "mocha": "^10.2.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.44",
     "nyc": "^15.1.0",
     "prettier": "^3.2.4",
     "pretty-quick": "^4.0.0",
