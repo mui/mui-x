@@ -50,7 +50,7 @@ const removeUnsupportedHash = (link) => {
   const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
   return rep;
 };
-write('Broken links found by `yarn docs:link-check` that exist:\n');
+write('Broken links found by `docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
   .filter((link) => !availableLinks[removeUnsupportedHash(link)])

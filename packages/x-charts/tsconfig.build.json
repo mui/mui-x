@@ -11,6 +11,6 @@
     "rootDir": "./src"
   },
   "references": [{ "path": "../x-license-pro/tsconfig.build.json" }],
-  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "include": ["src/**/*.ts*", "./node_modules/@mui/material/themeCssVarsAugmentation"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }
