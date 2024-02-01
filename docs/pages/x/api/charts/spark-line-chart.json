@@ -54,8 +54,18 @@
     "import { SparkLineChart } from '@mui/x-charts';"
   ],
   "slots": [
-    { "name": "area", "description": "", "class": null },
-    { "name": "line", "description": "", "class": null },
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    },
     { "name": "mark", "description": "", "class": null },
     { "name": "lineHighlight", "description": "", "class": null },
     { "name": "bar", "description": "", "class": null },

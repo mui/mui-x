@@ -13,13 +13,34 @@
     "view": { "description": "Currently visible picker view." }
   },
   "classDescriptions": {
-    "ampmLabel": { "description": "" },
-    "ampmLandscape": { "description": "" },
-    "ampmSelection": { "description": "" },
-    "hourMinuteLabel": { "description": "" },
-    "hourMinuteLabelLandscape": { "description": "" },
-    "hourMinuteLabelReverse": { "description": "" },
-    "root": { "description": "" },
-    "separator": { "description": "" }
+    "ampmLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the meridiem label element"
+    },
+    "ampmLandscape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the meridiem selection element in landscape mode"
+    },
+    "ampmSelection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the meridiem selection element"
+    },
+    "hourMinuteLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the time sections element"
+    },
+    "hourMinuteLabelLandscape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the time sections element in landscape mode"
+    },
+    "hourMinuteLabelReverse": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the time sections element in &quot;rtl&quot; theme mode"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "separator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the separator element"
+    }
   }
 }

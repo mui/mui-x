@@ -50,13 +50,13 @@ export interface PieArcPlotProps
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
-  onClick?: (
+  onItemClick?: (
     event: React.MouseEvent<SVGPathElement, MouseEvent>,
     pieItemIdentifier: PieItemIdentifier,
     item: DefaultizedPieValueType,
   ) => void;
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -75,7 +75,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     highlighted,
     faded = { additionalRadius: -5 },
     data,
-    onClick,
+    onItemClick,
     skipAnimation,
     ...other
   } = props;
@@ -136,9 +136,9 @@ function PieArcPlot(props: PieArcPlotProps) {
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
               onClick={
-                onClick &&
+                onItemClick &&
                 ((event) => {
-                  onClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+                  onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
                 })
               }
               {...slotProps?.pieArc}
@@ -219,7 +219,7 @@ PieArcPlot.propTypes = {
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
-  onClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   /**
    * The radius between circle center and the end of the arc.
    */
@@ -230,7 +230,7 @@ PieArcPlot.propTypes = {
    */
   paddingAngle: PropTypes.number,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

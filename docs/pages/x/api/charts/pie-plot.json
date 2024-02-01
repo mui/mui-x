@@ -1,6 +1,6 @@
 {
   "props": {
-    "onClick": {
+    "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",

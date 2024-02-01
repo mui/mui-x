@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
-import { LinePlot, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
+import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
+import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { MarkPlot, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
+import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
@@ -32,6 +32,10 @@ import {
   LineHighlightPlotSlots,
   LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
+import {
+  ChartsOnAxisClickHandler,
+  ChartsOnAxisClickHandlerProps,
+} from '../ChartsOnAxisClickHandler';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -52,7 +56,8 @@ export interface LineChartSlotProps
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    ChartsOnAxisClickHandlerProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   /**
@@ -82,6 +87,14 @@ export interface LineChartProps
    * @default {}
    */
   slotProps?: LineChartSlotProps;
+  onAreaClick?: AreaPlotProps['onItemClick'];
+  onLineClick?: LinePlotProps['onItemClick'];
+  onMarkClick?: MarkPlotProps['onItemClick'];
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation?: boolean;
 }
 
 /**
@@ -106,6 +119,10 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     dataset,
     sx,
     tooltip,
+    onAxisClick,
+    onAreaClick,
+    onLineClick,
+    onMarkClick,
     axisHighlight = { x: 'line' },
     disableLineItemHighlight,
     legend,
@@ -116,6 +133,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     children,
     slots,
     slotProps,
+    skipAnimation,
   } = props;
 
   const id = useId();
@@ -149,12 +167,26 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       dataset={dataset}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
+        tooltip?.trigger !== 'axis' &&
+        axisHighlight?.x === 'none' &&
+        axisHighlight?.y === 'none' &&
+        !onAxisClick
       }
     >
+      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot slots={slots} slotProps={slotProps} />
-        <LinePlot slots={slots} slotProps={slotProps} />
+        <AreaPlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onAreaClick}
+          skipAnimation={skipAnimation}
+        />
+        <LinePlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onLineClick}
+          skipAnimation={skipAnimation}
+        />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -165,7 +197,12 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slotProps={slotProps}
       />
       <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot slots={slots} slotProps={slotProps} />
+      <MarkPlot
+        slots={slots}
+        slotProps={slotProps}
+        onItemClick={onMarkClick}
+        skipAnimation={skipAnimation}
+      />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
@@ -313,6 +350,16 @@ LineChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  onAreaClick: PropTypes.func,
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  onLineClick: PropTypes.func,
+  onMarkClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -348,6 +395,11 @@ LineChart.propTypes = {
     PropTypes.string,
   ]),
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
