@@ -38,9 +38,7 @@ function addLabelDimension(
     reverse,
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & {
-      isMounted: boolean;
-    },
+    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
     if (!isMounted || tick.formattedValue === undefined) {
