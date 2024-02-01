@@ -1,6 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ScatterPlot, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
+import {
+  ScatterPlot,
+  ScatterPlotProps,
+  ScatterPlotSlotProps,
+  ScatterPlotSlots,
+} from './ScatterPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -41,7 +46,7 @@ export interface ScatterChartSlotProps
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    ChartsVoronoiHandlerProps {
+    Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
@@ -64,6 +69,12 @@ export interface ScatterChartProps
    * @default {}
    */
   slotProps?: ScatterChartSlotProps;
+  /**
+   * Callback fired when clicking on a scatter item.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick?: ScatterPlotProps['onItemClick'] | ChartsVoronoiHandlerProps['onItemClick'];
 }
 
 /**
@@ -95,6 +106,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     leftAxis,
     rightAxis,
     bottomAxis,
+    onItemClick,
     children,
     slots,
     slotProps,
@@ -111,7 +123,13 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
     >
-      {!disableVoronoi && <ChartsVoronoiHandler voronoiMaxRadius={voronoiMaxRadius} />}
+      {!disableVoronoi && (
+        <ChartsVoronoiHandler
+          voronoiMaxRadius={voronoiMaxRadius}
+          onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
+        />
+      )}
+
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
@@ -120,7 +138,11 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         slots={slots}
         slotProps={slotProps}
       />
-      <ScatterPlot slots={slots} slotProps={slotProps} />
+      <ScatterPlot
+        slots={slots}
+        slotProps={slotProps}
+        onItemClick={disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined}
+      />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
       <ChartsTooltip trigger="item" {...tooltip} />
@@ -260,6 +282,12 @@ ScatterChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * Callback fired when clicking on a scatter item.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

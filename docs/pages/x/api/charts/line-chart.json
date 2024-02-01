@@ -36,6 +36,13 @@
       },
       "default": "object Depends on the charts type."
     },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
     "rightAxis": {
       "type": {
         "name": "union",

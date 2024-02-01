@@ -65,8 +65,7 @@ export interface PieChartProps
    * @deprecated Consider using `slotProps.legend` instead.
    */
   legend?: ChartsLegendProps;
-  onClick?: PiePlotProps['onClick'];
-
+  onItemClick?: PiePlotProps['onItemClick'];
   slots?: PieChartSlots;
   /**
    * The props used for each component slot.
@@ -108,7 +107,7 @@ function PieChart(props: PieChartProps) {
     children,
     slots,
     slotProps,
-    onClick,
+    onItemClick,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -147,7 +146,7 @@ function PieChart(props: PieChartProps) {
       <PiePlot
         slots={slots}
         slotProps={slotProps}
-        onClick={onClick}
+        onItemClick={onItemClick}
         skipAnimation={skipAnimation}
       />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
@@ -284,7 +283,7 @@ PieChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
-  onClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

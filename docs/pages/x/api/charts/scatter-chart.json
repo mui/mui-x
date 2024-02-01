@@ -29,6 +29,13 @@
       },
       "default": "object Depends on the charts type."
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
     "rightAxis": {
       "type": {
         "name": "union",
