@@ -10,14 +10,14 @@ _Feb 1, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🏃 Increase the performance of the Data Grid by changing the `GridColDef` signature (#11573) @cherniavskii
-- 🏃 The Line Chart component now has animation by default (#11620) @alexfauquette
+- 🎁 The Line Chart component now has animation by default (#11620) @alexfauquette
 - 🚀 All charts have click handlers (#11411) @alexfauquette
   Test their respective documentation demonstrations to know more about the data format:
 
-  - [scatter chart](https://next.mui.com/x/react-charts/scatter/#click-event)
-  - [lines chart](https://next.mui.com/x/react-charts/lines/#click-event)
-  - [bars chart](https://next.mui.com/x/react-charts/bars/#click-event)
-  - [pie chart](https://next.mui.com/x/react-charts/pie/#click-event)
+  - [Scatter Chart](https://next.mui.com/x/react-charts/scatter/#click-event)
+  - [Line Chart](https://next.mui.com/x/react-charts/lines/#click-event)
+  - [Bar Chart](https://next.mui.com/x/react-charts/bars/#click-event)
+  - [Pie Chart](https://next.mui.com/x/react-charts/pie/#click-event)
 
   Big thanks to @giladappsforce and @yaredtsy for their contribution on exploring this feature.
 
@@ -133,15 +133,17 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.1`.
 
 Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
 
-### Charts / `@mui/x-charts@7.0.0-beta.1`
+### Charts
 
 #### Breaking changes
 
 - The line chart now have animation by default.
-  You can disable them with `skipAnimation` prop.
+  You can disable it with `skipAnimation` prop.
   See [animation documentation](next.mui.com/x/react-charts/lines/#animation) for more information.
 
 - Pie charts `onClick` get renamed `onItemClick` for consistency with other charts click callback.
+
+`@mui/x-charts@7.0.0-beta.1`
 
 - [charts] Add `onClick` support (#11411) @alexfauquette
 - [charts] Add line animation (#11620) @alexfauquette
