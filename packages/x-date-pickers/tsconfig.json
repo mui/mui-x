@@ -7,10 +7,12 @@
   "include": [
     "src/**/*",
     "../../test/utils/addChaiAssertions.ts",
-    "../../node_modules/@mui/monorepo/packages/test-utils/src/initMatchers.ts",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/dayjs/plugin/utc.d.ts",
-    "../../node_modules/dayjs/plugin/timezone.d.ts",
-    "../../node_modules/moment-timezone/index.d.ts"
-  ]
+    "@mui-internal/test-utils/initMatchers.ts",
+    "./node_modules/@mui/material/themeCssVarsAugmentation",
+    "./node_modules/dayjs/plugin/utc.d.ts",
+    "./node_modules/dayjs/plugin/timezone.d.ts",
+    "./node_modules/moment-timezone/index.d.ts"
+  ],
+  // Ignore to avoid error about having duplicate `tz` declarations
+  "exclude": ["**/node_modules/moment-timezone", "**/node_modules/dayjs"]
 }

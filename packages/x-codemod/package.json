@@ -40,7 +40,9 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.11.5"
+    "@types/jscodeshift": "^0.11.5",
+    "dayjs": "^1.11.10",
+    "moment-timezone": "^0.5.44"
   },
   "sideEffects": false,
   "publishConfig": {
