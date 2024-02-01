@@ -1796,7 +1796,7 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui/base@5.0.0-beta.34", "@mui/base@^5.0.0-beta.33":
+"@mui/base@5.0.0-beta.34", "@mui/base@^5.0.0-beta.34":
   version "5.0.0-beta.34"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.34.tgz#44b0f203250a6e3b2d810f37c9720d114182abd0"
   integrity sha512-e2mbTGTtReD/y5RFwnhkl1Tgl3XwgJhY040IlfkTVaU9f5LWrVhEnpRsYXu3B1CtLrwiWs4cu7aMHV9yRd4jpw==
@@ -1916,7 +1916,7 @@
     jss-plugin-vendor-prefixer "^10.10.0"
     prop-types "^15.8.1"
 
-"@mui/system@^5.15.6", "@mui/system@^5.15.7":
+"@mui/system@^5.15.7":
   version "5.15.7"
   resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.15.7.tgz#5ded95c14c78e0a2b5cb9a8643c6fc05c621be7f"
   integrity sha512-9alZ4/dLxsTwUOdqakgzxiL5YW6ntqj0CfzWImgWnBMTZhgGcPsbYpBLniNkkk7/jptma4/bykWXHwju/ls/pg==
@@ -1935,7 +1935,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.13.tgz#d1584912942f9dc042441ecc2d1452be39c666b8"
   integrity sha512-qP9OgacN62s+l8rdDhSFRe05HWtLLJ5TGclC9I1+tQngbssu0m2dmFZs+Px53AcOs9fD7TbYd4gc9AXzVqO/+g==
 
-"@mui/utils@^5.15.6", "@mui/utils@^5.15.7":
+"@mui/utils@^5.15.7":
   version "5.15.7"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.7.tgz#a71e08c4a2f5ba9c8a07106083ebf1b4c864ebb1"
   integrity sha512-8qhsxQRNV6aEOjjSk6YQIYJxkF5klhj8oG1FEEU4z6HV78TjNqRxMP08QGcdsibEbez+nihAaz6vu83b4XqbAg==
