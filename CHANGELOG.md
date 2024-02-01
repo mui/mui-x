@@ -3,6 +3,167 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-beta.1
+
+_Feb 1, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🏃 Increase the performance of the Data Grid by changing the `GridColDef` signature (#11573) @cherniavskii
+- 🏃 The Line Chart component now has animation by default (#11620) @alexfauquette
+- 🚀 All charts have click handlers (#11411) @alexfauquette
+  Test their respective documentation demonstrations to know more about the data format:
+
+  - [scatter chart](https://next.mui.com/x/react-charts/scatter/#click-event)
+  - [lines chart](https://next.mui.com/x/react-charts/lines/#click-event)
+  - [bars chart](https://next.mui.com/x/react-charts/bars/#click-event)
+  - [pie chart](https://next.mui.com/x/react-charts/pie/#click-event)
+
+  Big thanks to @giladappsforce and @yaredtsy for their contribution on exploring this feature.
+
+### Data Grid
+
+### Breaking changes
+
+- The signature of `GridColDef['valueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueGetter: ({ value, row }) => value,
+  + valueGetter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueGetterParams` interface has been removed:
+
+  ```diff
+  - const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
+  + const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
+  ```
+
+- The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
+
+  ```diff
+  - valueFormatter: ({ value }) => value,
+  + valueFormatter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueFormatterParams` interface has been removed:
+
+  ```diff
+  - const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
+  + const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
+  ```
+
+- The signature of `GridColDef['valueSetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueSetter: (params) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - }
+  + valueSetter: (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  +}
+  ```
+
+  The `GridValueSetterParams` interface has been removed:
+
+  ```diff
+  - const setFullName = (params: GridValueSetterParams) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - };
+  + const setFullName: GridValueSetter<Row> = (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  + }
+  ```
+
+- The signature of `GridColDef['valueParser']` has been changed for performance reasons:
+
+  ```diff
+  - valueParser: (value, params: GridCellParams) => value.toLowerCase(),
+  + valueParser: (value, row, column, apiRef) => value.toLowerCase(),
+  ```
+
+- The signature of `GridColDef['colSpan']` has been changed for performance reasons:
+
+  ```diff
+  - colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
+  + colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
+  ```
+
+- The signature of `GridColDef['pastedValueParser']` has been changed for performance reasons:
+
+  ```diff
+  - pastedValueParser: (value, params) => new Date(value),
+  + pastedValueParser: (value, row, column, apiRef) => new Date(value),
+  ```
+
+- The signature of `GridColDef['groupingValueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - groupingValueGetter: (params) => params.value.name,
+  + groupingValueGetter: (value: { name: string }) => value.name,
+  ```
+
+#### `@mui/x-data-grid@7.0.0-beta.1`
+
+- [DataGrid] Add `toggleAllMode` prop to the `columnsManagement` slot (#10794) @H999
+- [DataGrid] Change `GridColDef` methods signatures (#11573) @cherniavskii
+- [DataGrid] Fix row reorder with cell selection (#11783) @PEsteves8
+- [DataGrid] Make columns management' casing consistent (#11858) @MBilalShafi
+- [l10n] Improve Hebrew (he-IL) locale (#11788) @danielmishan85
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.1`.
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-beta.1`
+
+- [TimePicker] Add missing toolbar classes descriptions (#11856) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
+
+### Charts / `@mui/x-charts@7.0.0-beta.1`
+
+#### Breaking changes
+
+- The line chart now have animation by default.
+  You can disable them with `skipAnimation` prop.
+  See [animation documentation](next.mui.com/x/react-charts/lines/#animation) for more information.
+
+- Pie charts `onClick` get renamed `onItemClick` for consistency with other charts click callback.
+
+- [charts] Add `onClick` support (#11411) @alexfauquette
+- [charts] Add line animation (#11620) @alexfauquette
+- [charts] Document how to modify color according to values (#11824) @alexfauquette
+- [charts] Fix Tooltip crash with out of range lines (#11898) @alexfauquette
+
+### Docs
+
+- [docs] Add a general uplift to the changelog page (#11396) @danilo-leal
+- [docs] Do not reference the Tree View overview page in the API pages (#11826) @flaviendelangle
+- [docs] Fix charts API links (#11832) @alexfauquette
+- [docs] Improve Support page (#11556) @oliviertassinari
+- [docs] Improve column visibility documentation (#11857) @MBilalShafi
+- [docs] Polish header @oliviertassinari
+- [docs] Sync support page with core @oliviertassinari
+- [docs] Update whats new page with "v7 Beta blogpost" content (#11879) @joserodolfofreitas
+
+### Core
+
+- [core] Rely on immutable ref when possible (#11847) @oliviertassinari
+- [core] Bump monorepo (#11897) @alexfauquette
+
 ## 7.0.0-beta.0
 
 _Jan 26, 2024_
