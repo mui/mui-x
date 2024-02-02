@@ -9,7 +9,10 @@ import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
-import nextConfig from '../docs/next.config';
+import {
+  SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
+  SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
+} from '../docs/constants';
 
 const MyOctokit = Octokit.plugin(retry);
 
@@ -344,7 +347,7 @@ const generateDocReport = async (
         localeName,
         missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
         totalKeysCount: baseTranslationsNumber[packageKey],
-        githubLink: `${nextConfig.env.SOURCE_CODE_REPO}/blob/${nextConfig.env.SOURCE_GITHUB_BRANCH}/${info.path}`,
+        githubLink: `${DOCS_SOURCE_CODE_REPO}/blob/${DOCS_SOURCE_GITHUB_BRANCH}/${info.path}`,
       });
     });
 
