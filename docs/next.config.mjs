@@ -1,28 +1,44 @@
 // @ts-check
-const path = require('path');
-// @ts-ignore
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+import * as path from 'path';
+import * as url from 'url';
+import * as fs from 'fs';
+import { createRequire } from 'module';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// const withTM from 'next-transpile-modules')(['@mui/monorepo'];
 // @ts-expect-error This expected error should be gone once we update the monorepo
-const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
-const pkg = require('../package.json');
-const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
-const datePickersPkg = require('../packages/x-date-pickers/package.json');
-const chartsPkg = require('../packages/x-charts/package.json');
-const treeViewPkg = require('../packages/x-tree-view/package.json');
-const { findPages } = require('./src/modules/utils/find');
-const { LANGUAGES, LANGUAGES_SSR } = require('./config');
+import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra.js';
+import { findPages } from './src/modules/utils/find.mjs';
+import { LANGUAGES, LANGUAGES_SSR } from './config.js';
+import constants from './constants.js';
 
-const workspaceRoot = path.join(__dirname, '../');
+const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
+const require = createRequire(import.meta.url);
 
-module.exports = withDocsInfra({
+const workspaceRoot = path.join(currentDirectory, '../');
+
+/**
+ * @param {string} pkgPath
+ * @returns {{version: string}}
+ */
+function loadPkg(pkgPath) {
+  const pkgContent = fs.readFileSync(path.resolve(workspaceRoot, pkgPath, 'package.json'), 'utf8');
+  return JSON.parse(pkgContent);
+}
+
+const pkg = loadPkg('.');
+const dataGridPkg = loadPkg('./packages/grid/x-data-grid');
+const datePickersPkg = loadPkg('./packages/x-date-pickers');
+const chartsPkg = loadPkg('./packages/x-charts');
+const treeViewPkg = loadPkg('./packages/x-tree-view');
+
+export default withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
-    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
-    SOURCE_GITHUB_BRANCH: 'next', // #default-branch-switch
+    SOURCE_CODE_REPO: constants.SOURCE_CODE_REPO,
+    SOURCE_GITHUB_BRANCH: constants.SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
     // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
@@ -56,8 +72,8 @@ module.exports = withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          docs: path.resolve(__dirname, '../node_modules/@mui/monorepo/docs'),
-          docsx: path.resolve(__dirname, '../docs'),
+          docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
+          docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
       module: {

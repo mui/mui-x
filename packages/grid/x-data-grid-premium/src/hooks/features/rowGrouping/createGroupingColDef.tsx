@@ -6,6 +6,7 @@ import {
   GridRenderCellParams,
   GridGroupingColDefOverride,
   GridGroupNode,
+  GridTreeNodeWithRender,
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -178,25 +179,23 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 
       return '';
     },
-    valueGetter: (params) => {
-      if (
-        !params.rowNode ||
-        params.rowNode.type === 'footer' ||
-        params.rowNode.type === 'pinnedRow'
-      ) {
+    valueGetter: (value, row, column, apiRef) => {
+      const rowId = apiRef.current.getRowId(row);
+      const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(rowId);
+      if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
       }
 
-      if (params.rowNode.type === 'leaf') {
+      if (rowNode.type === 'leaf') {
         if (leafColDef) {
-          return params.api.getCellValue(params.id, leafField!);
+          return apiRef.current.getCellValue(rowId, leafField!);
         }
 
         return undefined;
       }
 
-      if (params.rowNode.groupingField === groupingCriteria) {
-        return params.rowNode.groupingKey;
+      if (rowNode.groupingField === groupingCriteria) {
+        return rowNode.groupingKey;
       }
 
       return undefined;
@@ -305,24 +304,22 @@ export const createGroupingColDefForAllGroupingCriteria = ({
         />
       );
     },
-    valueGetter: (params) => {
-      if (
-        !params.rowNode ||
-        params.rowNode.type === 'footer' ||
-        params.rowNode.type === 'pinnedRow'
-      ) {
+    valueGetter: (value, row) => {
+      const rowId = apiRef.current.getRowId(row);
+      const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(rowId);
+      if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
       }
 
-      if (params.rowNode.type === 'leaf') {
+      if (rowNode.type === 'leaf') {
         if (leafColDef) {
-          return params.api.getCellValue(params.id, leafField!);
+          return apiRef.current.getCellValue(rowId, leafField!);
         }
 
         return undefined;
       }
 
-      return params.rowNode.groupingKey;
+      return rowNode.groupingKey;
     },
   };
 

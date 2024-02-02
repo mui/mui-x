@@ -178,7 +178,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           { field: 'lastName' },
           {
             field: 'fullName',
-            valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+            valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
           },
         ];
 

@@ -22,7 +22,6 @@ import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApi,
-  GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
   useGridApiRef,
@@ -785,12 +784,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
               {
                 field: 'id',
                 type: 'number',
-                valueFormatter: (params) => {
-                  if (params.value == null) {
+                valueFormatter: (value) => {
+                  if (value == null) {
                     return null;
                   }
 
-                  return `#${params.value}`;
+                  return `#${value}`;
                 },
               },
               {
@@ -923,8 +922,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -951,8 +951,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
             defaultGroupingExpansionDepth={1}
             groupingColDef={() => ({
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -1168,12 +1169,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
               {
                 field: 'id',
                 type: 'number',
-                valueFormatter: (params) => {
-                  if (params.value == null) {
+                valueFormatter: (value) => {
+                  if (value == null) {
                     return null;
                   }
 
-                  return `#${params.value}`;
+                  return `#${value}`;
                 },
               },
               {
@@ -1338,8 +1339,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             rowGroupingColumnMode="multiple"
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
-              valueFormatter: (params) => {
-                const node = apiRef.current.getRowNode(params.id!)!;
+              valueFormatter: (value, row) => {
+                const rowId = apiRef.current.getRowId(row);
+                const node = apiRef.current.getRowNode(rowId)!;
                 if (node.type !== 'group') {
                   return '';
                 }
@@ -1380,8 +1382,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
               }
 
               return {
-                valueFormatter: (params) => {
-                  const node = apiRef.current.getRowNode(params.id!)!;
+                valueFormatter: (value, row) => {
+                  const rowId = apiRef.current.getRowId(row);
+                  const node = apiRef.current.getRowNode(rowId)!;
                   if (node.type !== 'group') {
                     return '';
                   }
@@ -1503,7 +1506,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              groupingValueGetter: (params) => `groupingValue ${params.value}`,
+              groupingValueGetter: (value) => `groupingValue ${value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1531,7 +1534,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'modulo',
-              groupingValueGetter: (params) => params.row.id % 2,
+              groupingValueGetter: (value, row) => row.id % 2,
             },
           ]}
           initialState={{ rowGrouping: { model: ['modulo'] } }}
@@ -1545,7 +1548,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         apiRef.current.updateColumns([
           {
             field: 'modulo',
-            groupingValueGetter: (params) => params.row.id % 3,
+            groupingValueGetter: (value, row) => row.id % 3,
           },
         ]),
       );
@@ -1563,7 +1566,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              valueGetter: (params) => `value ${params.row.category1}`,
+              valueGetter: (value, row) => `value ${row.category1}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1586,9 +1589,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
             {
               field: 'category1',
-              valueGetter: (params) => `value ${params.row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
-                `groupingValue ${params.row.category1}`,
+              valueGetter: (value, row) => `value ${row.category1}`,
+              groupingValueGetter: (value, row: { category1: string }) =>
+                `groupingValue ${row.category1}`,
             },
           ]}
           defaultGroupingExpansionDepth={-1}

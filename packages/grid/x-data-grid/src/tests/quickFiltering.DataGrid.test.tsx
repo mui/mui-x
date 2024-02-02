@@ -422,7 +422,7 @@ describe('<DataGrid /> - Quick filter', () => {
             {
               field: 'phone',
               type: 'string',
-              valueFormatter: ({ value }) => `+${value.slice(0, 2)} ${value.slice(2)}`,
+              valueFormatter: (value: string) => `+${value.slice(0, 2)} ${value.slice(2)}`,
             },
           ]}
         />,
@@ -534,7 +534,7 @@ describe('<DataGrid /> - Quick filter', () => {
               field: 'year',
               type: 'number',
               // Avoid the localization of the number to simplify the checks
-              valueFormatter: (params) => params.value,
+              valueFormatter: (value) => value,
             },
           ]}
         />,

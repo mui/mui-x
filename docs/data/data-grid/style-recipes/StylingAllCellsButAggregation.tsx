@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid-premium';
 
 // eliminate rounding errors in aggregation row
-const valueFormatter: GridColDef['valueFormatter'] = ({ value }) =>
+const valueFormatter: GridColDef['valueFormatter'] = (value) =>
   `${Math.floor(value * 1000) / 1000} °C`;
 
 const columns: GridColDef[] = [

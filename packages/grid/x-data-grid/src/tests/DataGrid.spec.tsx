@@ -79,12 +79,12 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
-            valueParser: (value, params) => params!.row.lastName,
-            valueSetter: (params) => {
+            valueParser: (value, row) => row!.lastName,
+            valueSetter: (value, row) => {
               // @ts-expect-error
-              const lastName = params.row.lastName;
+              const lastName = row.lastName;
               return {} as any;
             },
             // @ts-expect-error
@@ -98,10 +98,10 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
-            valueParser: (value, params) => params!.row.firstName,
-            valueSetter: (params) => {
-              const firstName = params.row.firstName;
+            valueGetter: (value, row) => row.firstName,
+            valueParser: (value, row) => row!.firstName,
+            valueSetter: (value, row) => {
+              const firstName = row.firstName;
               return {} as any;
             },
             renderCell: (params) => params.row.firstName,
@@ -115,12 +115,12 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
             // @ts-expect-error
-            valueParser: (value, params) => params!.row.lastName,
-            valueSetter: (params) => {
+            valueParser: (value, row) => row!.lastName,
+            valueSetter: (value, row) => {
               // @ts-expect-error
-              const lastName = params.row.lastName;
+              const lastName = row.lastName;
               return {} as any;
             },
             // @ts-expect-error
@@ -134,10 +134,10 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
-            valueParser: (value, params) => params!.row.firstName,
-            valueSetter: (params) => {
-              const firstName = params.row.firstName;
+            valueGetter: (value, row) => row.firstName,
+            valueParser: (value, row) => row!.firstName,
+            valueSetter: (value, row) => {
+              const firstName = row.firstName;
               return {} as any;
             },
             renderCell: (params) => params.row.firstName,
