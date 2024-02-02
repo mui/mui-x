@@ -11,7 +11,6 @@ const alias = {
   '@mui/x-charts': '../packages/x-charts/src',
   '@mui/x-tree-view': '../packages/x-tree-view/src',
   '@mui/x-license-pro': '../packages/x-license-pro/src',
-  '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
   '@mui/markdown': '../node_modules/@mui/monorepo/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
   '@mui/material-nextjs': '../node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
