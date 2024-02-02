@@ -1,5 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as url from 'url';
+
+const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 
 const jsRegex = /\.js$/;
 const blackList = ['/.eslintrc', '/_document', '/_app'];
@@ -7,9 +10,9 @@ const blackList = ['/.eslintrc', '/_document', '/_app'];
 // Returns the Next.js pages available in a nested format.
 // The output is in the next.js format.
 // Each pathname is a route you can navigate to.
-function findPages(
+export function findPages(
   options = {},
-  directory = path.resolve(__dirname, '../../../pages'),
+  directory = path.resolve(currentDirectory, '../../../pages'),
   pages = [],
 ) {
   fs.readdirSync(directory).forEach((item) => {
@@ -71,7 +74,3 @@ function findPages(
 
   return pages;
 }
-
-module.exports = {
-  findPages,
-};

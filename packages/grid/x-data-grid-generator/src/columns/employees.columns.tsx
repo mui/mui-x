@@ -40,10 +40,8 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Avatar',
     generateData: randomColor,
     renderCell: renderAvatar,
-    valueGetter: (params) =>
-      params.row.name == null || params.row.avatar == null
-        ? null
-        : { name: params.row.name, color: params.row.avatar },
+    valueGetter: (value, row) =>
+      row.name == null || row.avatar == null ? null : { name: row.name, color: row.avatar },
     sortable: false,
     filterable: false,
     groupable: false,
@@ -114,7 +112,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Country',
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
-    valueFormatter: ({ value }) => value?.label,
+    valueFormatter: (value: CountryIsoOption) => value?.label,
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
@@ -166,7 +164,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Salary',
     generateData: () => randomInt(30000, 80000),
     type: 'number',
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value?: number) => {
       if (!value || typeof value !== 'number') {
         return value;
       }

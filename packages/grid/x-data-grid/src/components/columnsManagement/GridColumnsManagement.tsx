@@ -266,12 +266,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                   indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
                   onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
                   name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
+                  sx={{ p: 0.5 }}
                   {...rootProps.slotProps?.baseCheckbox}
                 />
               }
-              sx={{
-                [`.MuiFormControlLabel-label`]: { textTransform: 'uppercase', fontSize: '14px' },
-              }}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
             />
           ) : (
@@ -361,7 +359,7 @@ const GridColumnsManagementFooter = styled('div', {
   slot: 'ColumnsManagementFooter',
   overridesResolver: (props, styles) => styles.columnsManagementFooter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 1, 0.5, 2.4),
+  padding: theme.spacing(0.5, 1, 0.5, 3),
   display: 'flex',
   justifyContent: 'space-between',
   borderTop: `1px solid ${theme.palette.divider}`,

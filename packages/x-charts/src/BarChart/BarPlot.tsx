@@ -7,7 +7,7 @@ import { BarElement, BarElementProps } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
-import { BarSeriesType } from '../models';
+import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
 /**
@@ -56,6 +56,15 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
    * @default false
    */
   skipAnimation?: boolean;
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    barItemIdentifier: BarItemIdentifier,
+  ) => void;
 }
 
 interface CompletedBarData {
@@ -216,7 +225,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const completedData = useAggregatedData();
-  const { skipAnimation, ...other } = props;
+  const { skipAnimation, onItemClick, ...other } = props;
 
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
@@ -235,6 +244,12 @@ function BarPlot(props: BarPlotProps) {
           highlightScope={highlightScope}
           color={color}
           {...other}
+          onClick={
+            onItemClick &&
+            ((event) => {
+              onItemClick(event, { type: 'bar', seriesId, dataIndex });
+            })
+          }
           style={style}
         />
       ))}
@@ -247,6 +262,12 @@ BarPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
    * @default false

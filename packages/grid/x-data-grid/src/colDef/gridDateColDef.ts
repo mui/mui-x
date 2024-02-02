@@ -1,9 +1,8 @@
 import { gridDateComparator } from '../hooks/features/sorting/gridSortingUtils';
 import { getGridDateOperators } from './gridDateOperators';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef } from '../models/colDef/gridColDef';
+import { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
 import { renderEditDateCell } from '../components/cell/GridEditDateCell';
-import { GridValueFormatterParams } from '../models/params/gridCellParams';
 
 function throwIfNotDateObject({
   value,
@@ -27,21 +26,28 @@ function throwIfNotDateObject({
   }
 }
 
-export function gridDateFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+export const gridDateFormatter: GridValueFormatter = (value: Date, row, column, apiRef): string => {
   if (!value) {
     return '';
   }
-  throwIfNotDateObject({ value, columnType: 'date', rowId: id, field });
+  const rowId = apiRef.current.getRowId(row);
+  throwIfNotDateObject({ value, columnType: 'date', rowId, field: column.field });
   return value.toLocaleDateString();
-}
+};
 
-export function gridDateTimeFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+export const gridDateTimeFormatter: GridValueFormatter = (
+  value: Date,
+  row,
+  column,
+  apiRef,
+): string => {
   if (!value) {
     return '';
   }
-  throwIfNotDateObject({ value, columnType: 'dateTime', rowId: id, field });
+  const rowId = apiRef.current.getRowId(row);
+  throwIfNotDateObject({ value, columnType: 'dateTime', rowId, field: column.field });
   return value.toLocaleString();
-}
+};
 
 export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
   ...GRID_STRING_COL_DEF,

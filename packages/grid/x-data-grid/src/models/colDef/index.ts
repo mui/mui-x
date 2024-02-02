@@ -9,6 +9,11 @@ export type {
   GridSingleSelectColDef,
   GridActionsColDef,
   GetApplyQuickFilterFn,
+  GridValueGetter,
+  GridValueFormatter,
+  GridValueSetter,
+  GridValueParser,
+  GridColSpanFn,
 } from './gridColDef';
 
 // Other types

@@ -182,6 +182,88 @@ Here's the list of affected features, colDef flags and props to disable them and
 
 - `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
 
+- The signature of `GridColDef['valueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueGetter: ({ value, row }) => value,
+  + valueGetter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueGetterParams` interface has been removed:
+
+  ```diff
+  - const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
+  + const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
+  ```
+
+- The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
+
+  ```diff
+  - valueFormatter: ({ value }) => value,
+  + valueFormatter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueFormatterParams` interface has been removed:
+
+  ```diff
+  - const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
+  + const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
+  ```
+
+- The signature of `GridColDef['valueSetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueSetter: (params) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - }
+  + valueSetter: (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  +}
+  ```
+
+  The `GridValueSetterParams` interface has been removed:
+
+  ```diff
+  - const setFullName = (params: GridValueSetterParams) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - };
+  + const setFullName: GridValueSetter<Row> = (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  + }
+  ```
+
+- The signature of `GridColDef['valueParser']` has been changed for performance reasons:
+
+  ```diff
+  - valueParser: (value, params: GridCellParams) => value.toLowerCase(),
+  + valueParser: (value, row, column, apiRef) => value.toLowerCase(),
+  ```
+
+- The signature of `GridColDef['colSpan']` has been changed for performance reasons:
+
+  ```diff
+  - colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
+  + colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
+  ```
+
+- The signature of `GridColDef['pastedValueParser']` has been changed for performance reasons:
+
+  ```diff
+  - pastedValueParser: (value, params) => new Date(value),
+  + pastedValueParser: (value, row, column, apiRef) => new Date(value),
+  ```
+
+- The signature of `GridColDef['groupingValueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - groupingValueGetter: (params) => params.value.name,
+  + groupingValueGetter: (value: { name: string }) => value.name,
+  ```
+
 <!-- ### Rows
 
 - -->

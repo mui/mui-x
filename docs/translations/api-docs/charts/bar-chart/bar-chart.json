@@ -23,6 +23,20 @@
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "data": "The data about the clicked axis and items associated with it."
+      }
+    },
+    "onItemClick": {
+      "description": "Callback fired when a bar item is clicked.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "barItemIdentifier": "The bar item identifier."
+      }
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },

@@ -11,7 +11,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            groupingValueGetter: (params) => params.row.lastName,
+            groupingValueGetter: (value, row) => row.lastName,
           },
         ]}
       />
@@ -21,7 +21,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            groupingValueGetter: (params) => params.row.firstName,
+            groupingValueGetter: (value, row) => row.firstName,
           },
         ]}
       />
@@ -32,7 +32,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            groupingValueGetter: (params) => params.row.lastName,
+            groupingValueGetter: (value, row) => row.lastName,
           },
         ]}
       />
@@ -42,7 +42,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            groupingValueGetter: (params) => params.row.firstName,
+            groupingValueGetter: (value, row) => row.firstName,
           },
         ]}
       />

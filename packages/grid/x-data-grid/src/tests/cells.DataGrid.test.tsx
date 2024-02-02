@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -145,7 +145,9 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   it('should call the valueFormatter with the correct params', () => {
-    const valueFormatter = spy(({ value }) => (value ? 'Yes' : 'No'));
+    const valueFormatter = spy<GridValueFormatter<{ id: number; isActive: boolean }>>((value) =>
+      value ? 'Yes' : 'No',
+    );
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -161,10 +163,10 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('Yes');
-    expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
-    expect(valueFormatter.lastCall.args[0].id).to.equal(0);
-    expect(valueFormatter.lastCall.args[0].field).to.equal('isActive');
-    expect(valueFormatter.lastCall.args[0].value).to.equal(true);
+    // expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
+    expect(valueFormatter.lastCall.args[0]).to.equal(true);
+    expect(valueFormatter.lastCall.args[1]).to.deep.equal({ id: 0, isActive: true });
+    expect(valueFormatter.lastCall.args[2].field).to.equal('isActive');
   });
 
   it('should throw when focusing cell without updating the state', () => {

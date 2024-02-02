@@ -436,7 +436,7 @@ export const useGridCellEditing = (
 
       let parsedValue = value;
       if (column.valueParser && !skipValueParser) {
-        parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
+        parsedValue = column.valueParser(value, row, column, apiRef);
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
@@ -490,7 +490,9 @@ export const useGridCellEditing = (
       }
 
       const { value } = editingState[id][field];
-      return column.valueSetter ? column.valueSetter({ value, row }) : { ...row, [field]: value };
+      return column.valueSetter
+        ? column.valueSetter(value, row, column, apiRef)
+        : { ...row, [field]: value };
     },
     [apiRef],
   );

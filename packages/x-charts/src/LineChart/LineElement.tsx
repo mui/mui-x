@@ -65,7 +65,8 @@ export interface LineElementSlotProps {
 
 export interface LineElementProps
   extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
-    Pick<AnimatedLineProps, 'skipAnimation'> {
+    Pick<AnimatedLineProps, 'skipAnimation'>,
+    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
@@ -91,7 +92,16 @@ export interface LineElementProps
  * - [LineElement API](https://mui.com/x/api/charts/line-element/)
  */
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    onClick,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -117,6 +127,8 @@ function LineElement(props: LineElementProps) {
       ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
     },
     ownerState,
   });

@@ -2,11 +2,11 @@ import type * as Excel from 'exceljs';
 import {
   GridRowId,
   GridColDef,
-  GridValueFormatterParams,
   GridApi,
   ValueOptions,
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   buildWarning,
@@ -35,6 +35,7 @@ const warnInvalidFormattedValue = buildWarning([
 
 const getFormattedValueOptions = (
   colDef: GridSingleSelectColDef,
+  row: GridValidRowModel,
   valueOptions: ValueOptions[],
   api: GridApi,
 ) => {
@@ -49,8 +50,7 @@ const getFormattedValueOptions = (
         return option;
       }
 
-      const params: GridValueFormatterParams = { field: colDef.field, api, value: option };
-      return String(colDef.valueFormatter!(params));
+      return String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
     });
   }
   return valueOptionsFormatted.map((option) =>
@@ -111,7 +111,12 @@ export const serializeRow = (
             row,
             field: cellParams.field,
           });
-          const formattedValueOptions = getFormattedValueOptions(castColumn, valueOptions, api);
+          const formattedValueOptions = getFormattedValueOptions(
+            castColumn,
+            row,
+            valueOptions,
+            api,
+          );
           dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
@@ -304,6 +309,7 @@ export async function getDataForValueOptionsSheet(
       const singleSelectColumn = column as GridSingleSelectColDef;
       const formattedValueOptions = getFormattedValueOptions(
         singleSelectColumn,
+        {},
         singleSelectColumn.valueOptions as Array<ValueOptions>,
         api,
       );

@@ -130,14 +130,12 @@ class CellValueUpdater {
       return;
     }
 
-    const cellParams = apiRef.current.getCellParams(rowId, field);
-
     let parsedValue = pastedCellValue;
 
     if (colDef.pastedValueParser) {
-      parsedValue = colDef.pastedValueParser(pastedCellValue, cellParams);
+      parsedValue = colDef.pastedValueParser(pastedCellValue, row, colDef, apiRef);
     } else if (colDef.valueParser) {
-      parsedValue = colDef.valueParser(parsedValue, cellParams);
+      parsedValue = colDef.valueParser(parsedValue, row, colDef, apiRef);
     }
 
     if (parsedValue === undefined) {
@@ -146,7 +144,7 @@ class CellValueUpdater {
 
     let rowCopy = { ...row };
     if (typeof colDef.valueSetter === 'function') {
-      rowCopy = colDef.valueSetter({ value: parsedValue, row: rowCopy });
+      rowCopy = colDef.valueSetter(parsedValue, rowCopy, colDef, apiRef);
     } else {
       rowCopy[field] = parsedValue;
     }
