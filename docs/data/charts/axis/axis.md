@@ -76,7 +76,7 @@ xAxis={[
 
 ### Axis direction
 
-By default, axes goes from left to right, and from bottom to top.
+By default, the axes' directions are left to right and bottom to top.
 You can change this behavior with the property `reverse`.
 
 {{"demo": "ReverseExampleNoSnap.js"}}
