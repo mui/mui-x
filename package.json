@@ -86,7 +86,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.7",
     "@mui/material": "^5.15.7",
-    "@mui/monorepo": "https://github.com/JanPot/material-ui.git#docs-i18n",
+    "@mui/monorepo": "https://github.com/JanPot/material-ui.git#docs-config",
     "@mui/utils": "^5.15.7",
     "@next/eslint-plugin-next": "14.0.4",
     "@octokit/plugin-retry": "^6.0.1",

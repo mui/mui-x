@@ -7,6 +7,7 @@ module.exports = {
   resolve: {
     modules: [__dirname, 'node_modules'],
     alias: {
+      '@mui/docs': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/mui-docs/src'),
       '@mui/x-data-grid': path.resolve(__dirname, './packages/grid/x-data-grid/src'),
       '@mui/x-data-grid-generator': path.resolve(
         __dirname,
