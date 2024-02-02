@@ -21,7 +21,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
-import { grey } from '@mui/material/colors';
 import pick from 'lodash/pick';
 import {
   useCustomizationPlayground,
@@ -112,12 +111,12 @@ const SlotItem = styled(Button)(({ theme }) => ({
 
 const TabsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'end',
   justifyContent: 'space-between',
-  gap: theme.spacing(1),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    gap: theme.spacing(4),
   },
 }));
 
@@ -129,13 +128,15 @@ type TabsProps = {
 
 function StylingApproachTabs({ value, onChange, options }: TabsProps) {
   return (
-    <Box>
+    <div>
       <Tabs
         value={value}
         onChange={onChange}
         aria-label="Customization option"
         TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
         sx={{
+          mt: 1,
+          mb: '-16px',
           '& .MuiTabs-indicator': {
             display: 'flex',
             justifyContent: 'center',
@@ -152,7 +153,7 @@ function StylingApproachTabs({ value, onChange, options }: TabsProps) {
           <Tab value={option} key={option} label={options[option]} />
         ))}
       </Tabs>
-    </Box>
+    </div>
   );
 }
 
@@ -176,7 +177,7 @@ function StylingRecommendation({
 
   if (isMobile) {
     return (
-      <Alert severity={type} sx={{ width: '100%', p: 0.5 }}>
+      <Alert severity={type} sx={{ p: 1 }}>
         {displayedMessage}
       </Alert>
     );
@@ -185,7 +186,7 @@ function StylingRecommendation({
 
   return (
     <Tooltip title={displayedMessage}>
-      <Chip color={type} label={labels[type]} />
+      <Chip size="small" color={type} label={labels[type]} />
     </Tooltip>
   );
 }
@@ -331,25 +332,6 @@ const CustomizationPlayground = function CustomizationPlayground({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {selectedDemo && customizationOptions && selectedCustomizationOption && (
-        <BrandingProvider>
-          <TabsWrapper>
-            <StylingApproachTabs
-              onChange={(_e, newValue) => {
-                setSelectedCustomizationOption(newValue);
-              }}
-              value={selectedCustomizationOption}
-              options={customizationOptions}
-            />
-            {selectedExample && (
-              <StylingRecommendation
-                type={selectedExample.type}
-                message={selectedExample?.comments}
-              />
-            )}
-          </TabsWrapper>{' '}
-        </BrandingProvider>
-      )}
       <PlaygroundWrapper>
         <PlaygroundDemoArea>
           <StyledChild sx={{ width: 'fit-content', minHeight: '390px' }}>
@@ -423,7 +405,25 @@ const CustomizationPlayground = function CustomizationPlayground({
           </BrandingProvider>
         )}
       </PlaygroundWrapper>
-
+      {selectedDemo && customizationOptions && selectedCustomizationOption && (
+        <BrandingProvider>
+          <TabsWrapper>
+            <StylingApproachTabs
+              onChange={(_e, newValue) => {
+                setSelectedCustomizationOption(newValue);
+              }}
+              value={selectedCustomizationOption}
+              options={customizationOptions}
+            />
+            {selectedExample && (
+              <StylingRecommendation
+                type={selectedExample.type}
+                message={selectedExample?.comments}
+              />
+            )}
+          </TabsWrapper>{' '}
+        </BrandingProvider>
+      )}
       {shouldBeInteractive && (
         <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
       )}
