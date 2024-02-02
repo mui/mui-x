@@ -2,11 +2,8 @@ import * as yargs from 'yargs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
-import {
-  getPropTypesFromFile,
-  injectPropTypesInFile,
-} from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utilities';
+import { getPropTypesFromFile, injectPropTypesInFile } from '@mui-internal/typescript-to-proptypes';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {

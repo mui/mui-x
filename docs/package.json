@@ -92,11 +92,12 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "@mui-internal/docs-utils": "^1.0.0",
+    "@mui-internal/typescript-to-proptypes": "^1.0.2",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",
     "@types/webpack-bundle-analyzer": "^4.6.3",
     "cpy-cli": "^5.0.0",
-    "gm": "^1.25.0",
-    "typescript-to-proptypes": "^2.2.1"
+    "gm": "^1.25.0"
   }
 }
