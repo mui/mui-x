@@ -16,7 +16,6 @@ const alias = {
   '@mui/monorepo': '../node_modules/@mui/monorepo',
   '@mui/material-nextjs': '../node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': '../node_modules/@mui/monorepo/packages/api-docs-builder',
-  '@mui-internal/docs-utilities': '../node_modules/@mui/monorepo/packages/docs-utilities',
   docs: '../node_modules/@mui/monorepo/docs',
   docsx: './',
 };
