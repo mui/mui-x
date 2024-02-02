@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Link from 'docs/src/modules/components/Link';
+import Link from '@mui/docs/Link';
 
 function components() {
   return [

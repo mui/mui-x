@@ -13,7 +13,6 @@ import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
@@ -307,21 +306,19 @@ function AppWrapper(props) {
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <DocsProvider config={config}>
-        <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
-          <CodeCopyProvider>
-            <CodeVariantProvider>
-              <PageContext.Provider value={pageContextValue}>
-                <ThemeWrapper>
-                  <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                    {children}
-                    <GoogleAnalytics />
-                  </DocsStyledEngineProvider>
-                </ThemeWrapper>
-              </PageContext.Provider>
-            </CodeVariantProvider>
-          </CodeCopyProvider>
-        </UserLanguageProvider>
+      <DocsProvider config={config} defaultUserLanguage={pageProps.userLanguage}>
+        <CodeCopyProvider>
+          <CodeVariantProvider>
+            <PageContext.Provider value={pageContextValue}>
+              <ThemeWrapper>
+                <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                  {children}
+                  <GoogleAnalytics />
+                </DocsStyledEngineProvider>
+              </ThemeWrapper>
+            </PageContext.Provider>
+          </CodeVariantProvider>
+        </CodeCopyProvider>
       </DocsProvider>
     </React.Fragment>
   );
