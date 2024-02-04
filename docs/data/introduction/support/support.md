@@ -35,7 +35,7 @@ You have a few possible options to provide it:
   - [Charts](/x/react-charts/getting-started/#single-charts)
   - [Tree View](/x/react-tree-view/#simpletreeview)
 
-- You can use a starter React template to build a reproduction case with:
+- You can use a starter template to build a reproduction case with:
   <!-- #default-branch-switch -->
   - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
   - A plain React [JavaScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react-ts) template
