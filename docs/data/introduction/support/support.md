@@ -23,7 +23,7 @@ If you think you've found a bug, or you have a new feature idea:
 
 ### Bug reproductions
 
-We require bug reports to be accompanied by at least a minimal reproduction.
+We require bug reports to be accompanied by a **minimal reproduction**.
 It significantly increases the odds of fixing the problem.
 You have a few possible options to provide it:
 
