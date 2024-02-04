@@ -21,6 +21,25 @@ If you think you've found a bug, or you have a new feature idea:
 - Please don't group multiple topics in one issue.
 - Please don't comment "+1" on an issue. It spams the maintainers and doesn't help move the issue forward. Use GitHub reactions instead (👍).
 
+### Bug reproductions
+
+We require bug reports to be accompanied by a **minimal reproduction**.
+It significantly increases the odds of fixing the problem.
+You have a few possible options to provide it:
+
+- You can browse the documentation, find an example close to your use case, and then open it in a live editor:
+  [![Forking an example](https://mui.com/static/docs-infra/forking-an-example.png)](/x/react-date-pickers/getting-started/#render-your-first-component)
+
+  - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
+  - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
+  - [Charts](/x/react-charts/getting-started/#single-charts)
+  - [Tree View](/x/react-tree-view/#simpletreeview)
+
+- You can use a starter template to build a reproduction case with:
+  <!-- #default-branch-switch -->
+  - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
+  - A plain React [JavaScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react-ts) template
+
 ## Stack Overflow
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
