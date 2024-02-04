@@ -38,10 +38,7 @@ body:
     attributes:
       label: The problem in depth 🔍
       description: |
-        **If applicable, please provide a live example to explain your problem.**
-        If you don't have one, you can use one of these options:
-          - [DataGrid codesandbox template](https://codesandbox.io/s/github/mui/mui-x/tree/master/templates/x-data-grid?file=/src/demo.tsx)
-          - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. See our [documentation](https://mui.com/x/introduction/support/#bug-reproductions) on how to build a reproduction case.
   - type: textarea
     attributes:
       label: Your environment 🌎
