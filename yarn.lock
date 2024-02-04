@@ -10264,7 +10264,7 @@ markdown-it@14.0.0:
     punycode.js "^2.3.1"
     uc.micro "^2.0.0"
 
-markdown-to-jsx@^7.4.0:
+markdown-to-jsx@^7.4.1:
   version "7.4.1"
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.4.1.tgz#1ed6a60f8f9cd944bec39d9923fbbc8d3d60dcb9"
   integrity sha512-GbrbkTnHp9u6+HqbPRFJbObi369AgJNXi/sGqq5HRsoZW063xR1XDCaConqq+whfEIAlzB1YPnOgsPc7B7bc/A==
