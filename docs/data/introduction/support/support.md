@@ -28,7 +28,14 @@ It significantly increases the odds of fixing the problem.
 You have a few possible options to provide it:
 
 - You can browse the documentation, find an example close to your use case, and then open it in a live editor:
-  [![Forking an example](https://mui.com/static/docs-infra/forking-an-example.png)](/x/react-date-pickers/getting-started/#render-your-first-component)
+  <a href="/x/react-date-pickers/getting-started/#render-your-first-component">
+  <span class="only-light-mode">
+  <img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
+  </span>
+  <span class="only-dark-mode">
+  <img src="/static/docs-infra/forking-an-example-dark.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
+  </span>
+  </a>
 
   - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
   - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
