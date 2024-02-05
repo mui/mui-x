@@ -100,7 +100,7 @@
   "devDependencies": {
     "@types/luxon": "^3.4.2",
     "@types/moment-jalaali": "^0.7.9",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.3.1",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.10",
     "luxon": "^3.4.4",
