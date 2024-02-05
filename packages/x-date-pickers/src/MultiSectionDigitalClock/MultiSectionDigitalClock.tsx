@@ -17,7 +17,7 @@ import {
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { TimeStepOptions, TimeView } from '../models';
+import { PickerValidDate, TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -44,7 +44,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-type MultiSectionDigitalClockComponent = (<TDate>(
+type MultiSectionDigitalClockComponent = (<TDate extends PickerValidDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -59,7 +59,7 @@ type MultiSectionDigitalClockComponent = (<TDate>(
  * - [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)
  */
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
 
@@ -455,7 +455,7 @@ MultiSectionDigitalClock.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false
@@ -484,12 +484,12 @@ MultiSectionDigitalClock.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -532,7 +532,7 @@ MultiSectionDigitalClock.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Disable specific time.
    * @template TDate
@@ -586,7 +586,7 @@ MultiSectionDigitalClock.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

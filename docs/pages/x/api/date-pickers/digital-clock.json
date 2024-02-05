@@ -3,14 +3,14 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focusedView": { "type": { "name": "enum", "description": "'hours'" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": {
       "type": { "name": "func" },
@@ -33,7 +33,7 @@
     "openTo": { "type": { "name": "enum", "description": "'hours'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
     },
     "shouldDisableTime": {
@@ -67,7 +67,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "object" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": {
       "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" },

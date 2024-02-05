@@ -12,11 +12,12 @@ import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
 
-export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps<TDate extends PickerValidDate>
+  extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -195,7 +196,7 @@ const ClockMeridiemText = styled(Typography, {
 /**
  * @ignore - internal component.
  */
-export function Clock<TDate>(inProps: ClockProps<TDate>) {
+export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,

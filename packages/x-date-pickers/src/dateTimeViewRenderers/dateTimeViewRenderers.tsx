@@ -17,8 +17,9 @@ import {
 } from '../timeViewRenderers';
 import { digitalClockClasses } from '../DigitalClock';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
-export interface DateTimeViewRendererProps<TDate>
+export interface DateTimeViewRendererProps<TDate extends PickerValidDate>
   extends Omit<
       DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
       'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView' | 'slots' | 'slotProps'
@@ -32,7 +33,7 @@ export interface DateTimeViewRendererProps<TDate>
   shouldRenderTimeInASingleColumn: boolean;
 }
 
-export const renderDesktopDateTimeView = <TDate extends unknown>({
+export const renderDesktopDateTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   views,

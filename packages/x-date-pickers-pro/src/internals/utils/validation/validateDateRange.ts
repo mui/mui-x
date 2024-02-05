@@ -1,4 +1,4 @@
-import { TimezoneProps } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   Validator,
   validateDate,
@@ -9,7 +9,7 @@ import { isRangeValid } from '../date-utils';
 import { DayRangeValidationProps } from '../../models';
 import { DateRangeValidationError, DateRange } from '../../../models';
 
-export interface DateRangeComponentValidationProps<TDate>
+export interface DateRangeComponentValidationProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
     DefaultizedProps<TimezoneProps, 'timezone'> {}

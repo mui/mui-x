@@ -13,6 +13,7 @@ import {
   UsePickerValueFieldResponse,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
@@ -29,7 +30,7 @@ import { useRangePosition } from '../useRangePosition';
 const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({

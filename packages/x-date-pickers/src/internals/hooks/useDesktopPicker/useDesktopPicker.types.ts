@@ -10,7 +10,12 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -24,8 +29,10 @@ import {
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
 
-export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends Pick<
+export interface UseDesktopPickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Pick<
       PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
@@ -57,12 +64,16 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
   openPickerIcon: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedUseDesktopPickerSlotProps<TDate, TView>,
+export interface UseDesktopPickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedUseDesktopPickerSlotProps<TDate, TView>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface ExportedUseDesktopPickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersPopperSlotProps,
+export interface ExportedUseDesktopPickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersPopperSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentProps<
@@ -80,7 +91,7 @@ export interface ExportedUseDesktopPickerSlotProps<TDate, TView extends DateOrTi
   openPickerIcon?: Record<string, any>;
 }
 
-export interface DesktopOnlyPickerProps<TDate>
+export interface DesktopOnlyPickerProps<TDate extends PickerValidDate>
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null, FieldSection>,
@@ -92,7 +103,7 @@ export interface DesktopOnlyPickerProps<TDate>
 }
 
 export interface UseDesktopPickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
@@ -111,7 +122,7 @@ export interface UseDesktopPickerProps<
 }
 
 export interface UseDesktopPickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePosition } from './DateRangeCalendar.types';
 import { DateRange } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
-interface UseDragRangeParams<TDate> {
+interface UseDragRangeParams<TDate extends PickerValidDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
   setRangeDragDay: (value: TDate | null) => void;
@@ -29,13 +29,13 @@ interface UseDragRangeEvents {
   onTouchEnd?: React.TouchEventHandler<HTMLButtonElement>;
 }
 
-interface UseDragRangeResponse<TDate> extends UseDragRangeEvents {
+interface UseDragRangeResponse<TDate extends PickerValidDate> extends UseDragRangeEvents {
   isDragging: boolean;
   rangeDragDay: TDate | null;
   draggingDatePosition: DateRangePosition | null;
 }
 
-const resolveDateFromTarget = <TDate>(
+const resolveDateFromTarget = <TDate extends PickerValidDate>(
   target: EventTarget,
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
@@ -87,7 +87,7 @@ const resolveElementFromTouch = (
   return null;
 };
 
-const useDragRangeEvents = <TDate>({
+const useDragRangeEvents = <TDate extends PickerValidDate>({
   utils,
   setRangeDragDay,
   setIsDragging,
@@ -276,7 +276,7 @@ const useDragRangeEvents = <TDate>({
   };
 };
 
-export const useDragRange = <TDate>({
+export const useDragRange = <TDate extends PickerValidDate>({
   disableDragEditing,
   utils,
   onDatePositionChange,

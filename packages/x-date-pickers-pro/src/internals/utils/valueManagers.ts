@@ -8,6 +8,7 @@ import {
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
@@ -20,7 +21,7 @@ import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
   TValue = [any, any],
-  TDate = any,
+  TDate extends PickerValidDate = any,
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError

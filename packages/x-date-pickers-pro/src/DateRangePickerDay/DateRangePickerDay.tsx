@@ -5,6 +5,7 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -15,7 +16,7 @@ import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps<TDate>
+export interface DateRangePickerDayProps<TDate extends PickerValidDate>
   extends Omit<PickersDayProps<TDate>, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
@@ -259,18 +260,17 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(ownerState.draggable && {
     touchAction: 'none',
   }),
-})) as unknown as <TDate>(
+})) as unknown as <TDate extends PickerValidDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => React.JSX.Element;
 
-type DateRangePickerDayComponent = <TDate>(
+type DateRangePickerDayComponent = <TDate extends PickerValidDate>(
   props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element;
 
-const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
-  inProps: DateRangePickerDayProps<TDate>,
-  ref: React.Ref<HTMLButtonElement>,
-) {
+const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
+  TDate extends PickerValidDate,
+>(inProps: DateRangePickerDayProps<TDate>, ref: React.Ref<HTMLButtonElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
@@ -376,7 +376,7 @@ DateRangePickerDayRaw.propTypes = {
   /**
    * The date to show.
    */
-  day: PropTypes.any.isRequired,
+  day: PropTypes.object.isRequired,
   /**
    * If `true`, renders as disabled.
    * @default false

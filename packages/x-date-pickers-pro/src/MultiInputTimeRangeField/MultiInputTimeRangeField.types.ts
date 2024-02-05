@@ -3,6 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
@@ -12,21 +13,21 @@ import { MultiInputFieldRefs } from '../internals/models/fields';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputTimeRangeFieldParams<
-  TDate,
+  TDate extends PickerValidDate,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
-export interface UseMultiInputTimeRangeFieldProps<TDate>
+export interface UseMultiInputTimeRangeFieldProps<TDate extends PickerValidDate>
   extends Omit<UseTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {}
 
-export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseMultiInputTimeRangeFieldProps<TDate>
-> &
+export type UseMultiInputTimeRangeFieldComponentProps<
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
   UseMultiInputTimeRangeFieldProps<TDate>;
 
-export interface MultiInputTimeRangeFieldProps<TDate>
+export interface MultiInputTimeRangeFieldProps<TDate extends PickerValidDate>
   extends UseMultiInputTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
   /**
@@ -45,7 +46,8 @@ export interface MultiInputTimeRangeFieldProps<TDate>
   slotProps?: MultiInputTimeRangeFieldSlotProps<TDate>;
 }
 
-export type MultiInputTimeRangeFieldOwnerState<TDate> = MultiInputTimeRangeFieldProps<TDate>;
+export type MultiInputTimeRangeFieldOwnerState<TDate extends PickerValidDate> =
+  MultiInputTimeRangeFieldProps<TDate>;
 
 export interface MultiInputTimeRangeFieldSlots {
   /**
@@ -67,7 +69,7 @@ export interface MultiInputTimeRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputTimeRangeFieldSlotProps<TDate> {
+export interface MultiInputTimeRangeFieldSlotProps<TDate extends PickerValidDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
   textField?: SlotComponentProps<
     typeof TextField,
@@ -78,7 +80,7 @@ export interface MultiInputTimeRangeFieldSlotProps<TDate> {
 }
 
 export type UseMultiInputTimeRangeFieldDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   AdditionalProps extends {},
 > = UseTimeRangeFieldDefaultizedProps<TDate> &
   Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

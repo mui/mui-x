@@ -14,10 +14,7 @@ export default function LifeCycleDateRangeField() {
     <Stack spacing={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['SingleInputDateRangeField']}>
-          <SingleInputDateRangeField
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
+          <SingleInputDateRangeField value={value} onChange={setValue} />
         </DemoContainer>
       </LocalizationProvider>
       <Typography>

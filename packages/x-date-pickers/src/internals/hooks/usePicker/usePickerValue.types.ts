@@ -10,6 +10,7 @@ import {
   MuiPickersAdapter,
   PickersTimezone,
   PickerChangeHandlerContext,
+  PickerValidDate,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -17,7 +18,7 @@ import {
   PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
 
-export interface PickerValueManager<TValue, TDate, TError> {
+export interface PickerValueManager<TValue, TDate extends PickerValidDate, TError> {
   /**
    * Determines if two values are equal.
    * @template TDate, TValue
@@ -249,7 +250,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
  */
 export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
   extends Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
+    UseFieldInternalProps<TValue, PickerValidDate, TSection, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
@@ -284,7 +285,7 @@ export interface UsePickerValueProps<TValue, TSection extends FieldSection, TErr
 
 export interface UsePickerValueParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
 > {
@@ -312,7 +313,7 @@ export interface UsePickerValueActions {
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, TError>,
+    UseFieldInternalProps<TValue, PickerValidDate, TSection, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;
