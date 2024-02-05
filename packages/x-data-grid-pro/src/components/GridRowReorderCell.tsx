@@ -10,7 +10,7 @@ import {
   getDataGridUtilityClass,
 } from '@mui/x-data-grid';
 import { gridEditRowsStateSelector, isEventTargetInPortal } from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 type OwnerState = {

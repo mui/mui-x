@@ -38,6 +38,7 @@ const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
   const themedProps = useProps(
+    // eslint-disable-next-line material-ui/mui-name-matches-component-name
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',

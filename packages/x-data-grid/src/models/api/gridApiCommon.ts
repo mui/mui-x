@@ -4,7 +4,7 @@ import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
-import { GridFilterApi } from './gridFilterApi';
+import type { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi, GridFocusPrivateApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
 import type { GridParamsApi } from './gridParamsApi';

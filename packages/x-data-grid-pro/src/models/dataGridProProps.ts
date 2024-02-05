@@ -25,7 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import { GridAutosizeOptions } from '../hooks';
+import type { GridAutosizeOptions } from '../hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
