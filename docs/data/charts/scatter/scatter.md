@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
+components: Scatter, ScatterChart, ScatterPlot
 ---
 
 # Charts - Scatter
