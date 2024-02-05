@@ -115,8 +115,12 @@ const rendererInterceptor = function rendererInterceptor<
   });
 };
 
-type MobileDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
