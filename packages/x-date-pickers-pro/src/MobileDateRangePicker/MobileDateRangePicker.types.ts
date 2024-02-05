@@ -1,5 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
-
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -11,18 +11,18 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface MobileDateRangePickerSlots<TDate>
+export interface MobileDateRangePickerSlots<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlots<TDate>,
     MakeOptional<UseMobileRangePickerSlots<TDate, 'day'>, 'field'> {}
 
 export interface MobileDateRangePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateRangePickerSlotProps<TDate>,
     Omit<UseMobileRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure>, 'tabs'> {}
 
 export interface MobileDateRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps {

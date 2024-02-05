@@ -4,6 +4,7 @@ import {
   UsePickerViewsProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
@@ -13,12 +14,14 @@ import {
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TDate, TView>,
+export interface UseDesktopRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends UseRangePickerSlots<TDate, TView>,
     PickersPopperSlots {}
 
 export interface UseDesktopRangePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
@@ -32,7 +35,7 @@ export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -59,7 +62,7 @@ export interface UseDesktopRangePickerProps<
 export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseDesktopRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopRangePickerProps<

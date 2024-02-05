@@ -10,6 +10,7 @@ import type {
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
+import { PickerValidDate } from './pickers';
 
 export type FieldSectionType =
   | 'year'
@@ -163,7 +164,7 @@ type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure exten
  */
 export type BaseSingleInputFieldProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,

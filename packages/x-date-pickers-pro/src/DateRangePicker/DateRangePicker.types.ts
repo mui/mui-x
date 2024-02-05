@@ -1,3 +1,4 @@
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -9,16 +10,18 @@ import {
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
 
-export interface DateRangePickerSlots<TDate>
+export interface DateRangePickerSlots<TDate extends PickerValidDate>
   extends DesktopDateRangePickerSlots<TDate>,
     MobileDateRangePickerSlots<TDate> {}
 
-export interface DateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+export interface DateRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
 export interface DateRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {

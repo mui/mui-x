@@ -4,11 +4,13 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
-export interface UseTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+export interface UseTimeRangeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       Omit<
         UseFieldInternalProps<
           DateRange<TDate>,

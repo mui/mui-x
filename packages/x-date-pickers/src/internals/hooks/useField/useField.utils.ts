@@ -13,11 +13,12 @@ import {
   MuiPickersAdapter,
   FieldSectionContentType,
   PickersTimezone,
+  PickerValidDate,
   FieldSelectedSections,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 
-export const getDateSectionConfigFromFormatToken = <TDate>(
+export const getDateSectionConfigFromFormatToken = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   formatToken: string,
 ): Pick<FieldSection, 'type' | 'contentType'> & { maxLength: number | undefined } => {
@@ -62,7 +63,7 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
   }
 };
 
-export const getDaysInWeekStr = <TDate>(
+export const getDaysInWeekStr = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   format: string,
@@ -82,7 +83,7 @@ export const getDaysInWeekStr = <TDate>(
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
-export const getLetterEditingOptions = <TDate>(
+export const getLetterEditingOptions = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   sectionType: FieldSectionType,
@@ -118,7 +119,9 @@ export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-export const getLocalizedDigits = <TDate>(utils: MuiPickersAdapter<TDate>) => {
+export const getLocalizedDigits = <TDate extends PickerValidDate>(
+  utils: MuiPickersAdapter<TDate>,
+) => {
   const today = utils.date(undefined);
   const formattedZero = utils.formatByString(
     utils.setSeconds(today, 0),
@@ -188,7 +191,7 @@ export const cleanLeadingZeros = (valueStr: string, size: number) => {
   return cleanValueStr;
 };
 
-export const cleanDigitSectionValue = <TDate>(
+export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   value: number,
   sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
@@ -232,7 +235,7 @@ export const cleanDigitSectionValue = <TDate>(
   return applyLocalizedDigits(valueStr, localizedDigits);
 };
 
-export const adjustSectionValue = <TDate, TSection extends FieldSection>(
+export const adjustSectionValue = <TDate extends PickerValidDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   section: TSection,
@@ -371,7 +374,7 @@ export const getSectionVisibleValue = (
   return value;
 };
 
-export const changeSectionValueFormat = <TDate>(
+export const changeSectionValueFormat = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   valueStr: string,
   currentFormat: string,
@@ -386,13 +389,13 @@ export const changeSectionValueFormat = <TDate>(
   return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
 };
 
-const isFourDigitYearFormat = <TDate>(
+const isFourDigitYearFormat = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   format: string,
 ) => utils.formatByString(utils.date(undefined, timezone), format).length === 4;
 
-export const doesSectionFormatHaveLeadingZeros = <TDate>(
+export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   contentType: FieldSectionContentType,
@@ -451,7 +454,7 @@ export const doesSectionFormatHaveLeadingZeros = <TDate>(
  * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
  * To make sure that the parsing works, we are building a format and a date without any separator.
  */
-export const getDateFromDateSections = <TDate>(
+export const getDateFromDateSections = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   sections: FieldSection[],
   localizedDigits: string[],
@@ -517,7 +520,7 @@ export const createDateStrForV6InputFromSections = (
   return `\u2066${dateStr}\u2069`;
 };
 
-export const getSectionsBoundaries = <TDate>(
+export const getSectionsBoundaries = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   localizedDigits: string[],
   timezone: PickersTimezone,
@@ -646,7 +649,7 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
-const transferDateSectionValue = <TDate>(
+const transferDateSectionValue = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   section: FieldSection,
@@ -721,7 +724,7 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
   empty: 9,
 };
 
-export const mergeDateIntoReferenceDate = <TDate>(
+export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   dateToTransferFrom: TDate,

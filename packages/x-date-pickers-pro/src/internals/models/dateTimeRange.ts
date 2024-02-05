@@ -6,12 +6,12 @@ import {
   DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DayRangeValidationProps } from './dateRange';
 import { DateTimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
 export interface UseDateTimeRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends MakeOptional<
       Omit<

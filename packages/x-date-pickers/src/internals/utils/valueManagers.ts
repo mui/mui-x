@@ -4,6 +4,7 @@ import {
   TimeValidationError,
   DateTimeValidationError,
   FieldSection,
+  PickerValidDate,
 } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
@@ -15,7 +16,7 @@ import {
 
 export type SingleItemPickerValueManager<
   TValue = any,
-  TDate = any,
+  TDate extends PickerValidDate = any,
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
 > = PickerValueManager<TValue, TDate, TError>;
 

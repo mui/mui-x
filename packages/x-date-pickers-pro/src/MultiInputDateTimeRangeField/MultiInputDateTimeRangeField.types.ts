@@ -3,12 +3,13 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
@@ -17,7 +18,7 @@ export type UseMultiInputDateTimeRangeFieldParams<
 >;
 
 export interface UseMultiInputDateTimeRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
       UseDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
@@ -26,7 +27,7 @@ export interface UseMultiInputDateTimeRangeFieldProps<
     MultiInputFieldRefs {}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
 > = Omit<
@@ -36,7 +37,7 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<
   UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export interface MultiInputDateTimeRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends UseMultiInputDateTimeRangeFieldComponentProps<
     TDate,
@@ -80,7 +81,7 @@ export interface MultiInputDateTimeRangeFieldSlots {
 }
 
 export interface MultiInputDateTimeRangeFieldSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > {
   root?: SlotComponentProps<

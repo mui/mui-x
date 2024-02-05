@@ -5,8 +5,9 @@ import {
   BaseSingleInputPickersTextFieldProps,
   FieldRef,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
-import { UseClearableFieldResponse } from '@mui/x-date-pickers';
+import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
@@ -52,7 +53,7 @@ export interface MultiInputFieldRefs {
  */
 export interface BaseMultiInputFieldProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,

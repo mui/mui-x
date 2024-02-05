@@ -9,6 +9,7 @@ import {
   BaseSingleInputFieldProps,
   FieldSelectedSections,
   FieldRef,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
@@ -55,7 +56,7 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 }
 
 export interface RangePickerFieldSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
@@ -79,7 +80,7 @@ export interface RangePickerFieldSlotProps<
 }
 
 export interface UseEnrichedRangePickerFieldPropsParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -121,7 +122,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
 }
 
 const useMultiInputFieldSlotProps = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -308,7 +309,7 @@ const useMultiInputFieldSlotProps = <
 };
 
 const useSingleInputFieldSlotProps = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -442,7 +443,7 @@ const useSingleInputFieldSlotProps = <
 };
 
 export const useEnrichedRangePickerFieldProps = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,

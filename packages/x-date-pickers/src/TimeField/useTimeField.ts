@@ -6,11 +6,11 @@ import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { FieldSection } from '../models';
+import { PickerValidDate, FieldSection } from '../models';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useTimeField = <
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(

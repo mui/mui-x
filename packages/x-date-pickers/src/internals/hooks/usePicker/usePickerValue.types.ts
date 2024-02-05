@@ -9,6 +9,7 @@ import {
   MuiPickersAdapter,
   PickersTimezone,
   PickerChangeHandlerContext,
+  PickerValidDate,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -16,7 +17,7 @@ import {
   PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
 
-export interface PickerValueManager<TValue, TDate, TError> {
+export interface PickerValueManager<TValue, TDate extends PickerValidDate, TError> {
   /**
    * Determines if two values are equal.
    * @template TDate, TValue
@@ -279,7 +280,7 @@ export interface UsePickerValueProps<TValue, TError>
 
 export interface UsePickerValueParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 > {
   props: TExternalProps;
@@ -305,7 +306,7 @@ export interface UsePickerValueActions {
 }
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
-  Pick<UseFieldInternalProps<TValue, unknown, TSection, any, TError>, 'value' | 'onChange'>
+  Pick<UseFieldInternalProps<TValue, PickerValidDate, TSection, any, TError>, 'value' | 'onChange'>
 >;
 
 /**

@@ -7,13 +7,15 @@ import {
   TimeValidationProps,
 } from '../models/validation';
 import { DefaultizedProps } from '../models/helpers';
+import { PickerValidDate } from '../../models';
 
-export interface UseDefaultizedDateFieldBaseProps<TDate> extends BaseDateValidationProps<TDate> {
+export interface UseDefaultizedDateFieldBaseProps<TDate extends PickerValidDate>
+  extends BaseDateValidationProps<TDate> {
   format?: string;
 }
 
 export const useDefaultizedDateField = <
-  TDate,
+  TDate extends PickerValidDate,
   TKnownProps extends UseDefaultizedDateFieldBaseProps<TDate>,
   TAllProps extends {},
 >(
@@ -37,7 +39,7 @@ export interface UseDefaultizedTimeFieldBaseProps extends BaseTimeValidationProp
 }
 
 export const useDefaultizedTimeField = <
-  TDate,
+  TDate extends PickerValidDate,
   TKnownProps extends UseDefaultizedTimeFieldBaseProps & { ampm?: boolean },
   TAllProps extends {},
 >(
@@ -56,14 +58,14 @@ export const useDefaultizedTimeField = <
   };
 };
 
-export interface UseDefaultizedDateTimeFieldBaseProps<TDate>
+export interface UseDefaultizedDateTimeFieldBaseProps<TDate extends PickerValidDate>
   extends BaseDateValidationProps<TDate>,
     BaseTimeValidationProps {
   format?: string;
 }
 
 export const useDefaultizedDateTimeField = <
-  TDate,
+  TDate extends PickerValidDate,
   TKnownProps extends UseDefaultizedDateTimeFieldBaseProps<TDate> &
     DateTimeValidationProps<TDate> &
     TimeValidationProps<TDate> & { ampm?: boolean },

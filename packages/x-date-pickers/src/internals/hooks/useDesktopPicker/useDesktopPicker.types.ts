@@ -10,7 +10,12 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -25,8 +30,10 @@ import {
 } from '../../../hooks/useClearableField';
 import { SlotComponentPropsFromProps } from '../../models/helpers';
 
-export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends Pick<
+export interface UseDesktopPickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Pick<
       PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
@@ -58,14 +65,14 @@ export interface UseDesktopPickerSlots<TDate, TView extends DateOrTimeViewWithMe
 }
 
 export interface UseDesktopPickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedUseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersPopperSlotProps,
@@ -105,7 +112,7 @@ export interface DesktopOnlyPickerProps
 }
 
 export interface UseDesktopPickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -125,7 +132,7 @@ export interface UseDesktopPickerProps<
 }
 
 export interface UseDesktopPickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopPickerProps<

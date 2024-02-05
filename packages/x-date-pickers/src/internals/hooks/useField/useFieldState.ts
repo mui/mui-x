@@ -21,7 +21,12 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import { InferError } from '../useValidation';
-import { FieldSection, FieldSelectedSections, PickersTimezone } from '../../../models';
+import {
+  FieldSection,
+  FieldSelectedSections,
+  PickersTimezone,
+  PickerValidDate,
+} from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
@@ -43,7 +48,11 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<TValue, TDate, TSection extends FieldSection> {
+export interface UseFieldStateResponse<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   state: UseFieldState<TValue, TSection>;
   activeSectionIndex: number | null;
   parsedSelectedSections: FieldParsedSelectedSections;
@@ -61,7 +70,7 @@ export interface UseFieldStateResponse<TValue, TDate, TSection extends FieldSect
 
 export const useFieldState = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,

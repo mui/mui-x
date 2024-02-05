@@ -9,20 +9,20 @@ import {
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 
-export interface DesktopDatePickerSlots<TDate>
+export interface DesktopDatePickerSlots<TDate extends PickerValidDate>
   extends BaseDatePickerSlots<TDate>,
     MakeOptional<UseDesktopPickerSlots<TDate, DateView>, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDatePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDatePickerSlotProps<TDate>,
     ExportedUseDesktopPickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
 
 export interface DesktopDatePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDatePickerProps<TDate>,
     DesktopOnlyPickerProps {

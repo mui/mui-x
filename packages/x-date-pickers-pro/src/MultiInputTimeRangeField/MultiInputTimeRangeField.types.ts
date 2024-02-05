@@ -3,12 +3,13 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputTimeRangeFieldParams<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
@@ -17,7 +18,7 @@ export type UseMultiInputTimeRangeFieldParams<
 >;
 
 export interface UseMultiInputTimeRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
       UseTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
@@ -26,7 +27,7 @@ export interface UseMultiInputTimeRangeFieldProps<
     MultiInputFieldRefs {}
 
 export type UseMultiInputTimeRangeFieldComponentProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
 > = Omit<
@@ -36,7 +37,7 @@ export type UseMultiInputTimeRangeFieldComponentProps<
   UseMultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export interface MultiInputTimeRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends UseMultiInputTimeRangeFieldComponentProps<
     TDate,
@@ -80,7 +81,7 @@ export interface MultiInputTimeRangeFieldSlots {
 }
 
 export interface MultiInputTimeRangeFieldSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > {
   root?: SlotComponentProps<

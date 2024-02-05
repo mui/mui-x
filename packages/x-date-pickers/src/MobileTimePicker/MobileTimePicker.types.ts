@@ -9,22 +9,24 @@ import {
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileTimePickerSlots<TDate, TView extends TimeViewWithMeridiem>
-  extends BaseTimePickerSlots<TDate>,
+export interface MobileTimePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem,
+> extends BaseTimePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
 
 export interface MobileTimePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseTimePickerSlotProps,
     ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileTimePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem = TimeView,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseTimePickerProps<TDate, TView>,

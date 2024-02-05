@@ -12,7 +12,7 @@ import {
   useControlledValueWithTimezone,
   useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
 import type {
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
@@ -28,7 +28,7 @@ import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useMultiInputDateTimeRangeField = <
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({

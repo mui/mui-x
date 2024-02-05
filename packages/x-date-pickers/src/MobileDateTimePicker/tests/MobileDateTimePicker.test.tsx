@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, userEvent } from '@mui-internal/test-utils';
@@ -38,7 +37,6 @@ describe('<MobileDateTimePicker />', () => {
         enableAccessibleFieldDOMStructure
         open
         value={adapterToUse.date('2021-11-20T10:01:22')}
-        defaultValue={(params) => <TextField {...params} />}
       />,
     );
 

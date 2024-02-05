@@ -9,13 +9,16 @@ import {
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
+import { PickerValidDate } from '../models';
 
-export interface DateTimePickerSlots<TDate>
+export interface DateTimePickerSlots<TDate extends PickerValidDate>
   extends DesktopDateTimePickerSlots<TDate>,
     MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+export interface DateTimePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDateTimePickerSlotProps<
       TDate,
       DateOrTimeViewWithMeridiem,
@@ -23,7 +26,7 @@ export interface DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructu
     > {}
 
 export interface DateTimePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     Omit<

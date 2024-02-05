@@ -10,7 +10,12 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps, FieldRef } from '../../../models';
+import {
+  FieldSection,
+  BaseSingleInputFieldProps,
+  PickerValidDate,
+  FieldRef,
+} from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -20,7 +25,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  * - MobileTimePicker
  */
 export const useMobilePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<

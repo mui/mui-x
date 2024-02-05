@@ -2,9 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen, fireEvent } from '@mui-internal/test-utils';
 import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
-function WrappedDateCalendar<TDate extends any>(
+function WrappedDateCalendar<TDate extends PickerValidDate>(
   props: Omit<DateCalendarProps<TDate>, 'value' | 'onChange'> & { initialValue: TDate },
 ) {
   const { initialValue, ...other } = props;

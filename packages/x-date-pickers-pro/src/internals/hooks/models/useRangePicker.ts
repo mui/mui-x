@@ -9,6 +9,7 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -21,12 +22,14 @@ import {
 } from '../useEnrichedRangePickerFieldProps';
 import { DateRange, RangeFieldSection } from '../../../models';
 
-export interface UseRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
+export interface UseRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlots {}
 
 export interface UseRangePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
@@ -43,7 +46,7 @@ export interface RangeOnlyPickerProps
     UseRangePositionProps {}
 
 export interface UseRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
@@ -55,7 +58,7 @@ export interface RangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseRangePickerProps<
     TDate,

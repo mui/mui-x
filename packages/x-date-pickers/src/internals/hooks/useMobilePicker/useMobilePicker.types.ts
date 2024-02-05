@@ -11,7 +11,12 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -22,8 +27,10 @@ import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { SlotComponentPropsFromProps } from '../../models/helpers';
 
-export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersModalDialogSlots,
+export interface UseMobilePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersModalDialogSlots,
     ExportedPickersLayoutSlots<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
@@ -37,7 +44,7 @@ export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeViewWithMer
 }
 
 export interface ExportedUseMobilePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
@@ -57,7 +64,7 @@ export interface ExportedUseMobilePickerSlotProps<
 }
 
 export interface UseMobilePickerSlotProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
@@ -70,7 +77,7 @@ export interface MobileOnlyPickerProps
     UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -90,7 +97,7 @@ export interface UseMobilePickerProps<
 }
 
 export interface UseMobilePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<

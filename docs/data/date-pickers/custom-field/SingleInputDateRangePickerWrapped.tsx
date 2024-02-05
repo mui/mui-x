@@ -8,8 +8,9 @@ import {
   SingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
-type FieldComponent = (<TDate>(
+type FieldComponent = (<TDate extends PickerValidDate>(
   props: SingleInputDateRangeFieldProps<TDate> &
     React.RefAttributes<HTMLInputElement>,
 ) => React.JSX.Element) & { fieldType?: string };

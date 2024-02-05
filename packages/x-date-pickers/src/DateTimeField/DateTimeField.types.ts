@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { DateTimeValidationError, FieldSection, BuiltInFieldTextFieldProps } from '../models';
+import {
+  DateTimeValidationError,
+  FieldSection,
+  PickerValidDate,
+  BuiltInFieldTextFieldProps,
+} from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
@@ -19,8 +24,10 @@ import {
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
 
-export interface UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+export interface UseDateTimeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       UseFieldInternalProps<
         TDate | null,
         TDate,
@@ -46,14 +53,14 @@ export interface UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure
 }
 
 export type UseDateTimeFieldComponentProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
 > = Omit<TChildProps, keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
   UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export type DateTimeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > = UseDateTimeFieldComponentProps<
   TDate,
@@ -73,7 +80,7 @@ export type DateTimeFieldProps<
 };
 
 export type DateTimeFieldOwnerState<
-  TDate,
+  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = DateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
@@ -85,8 +92,10 @@ export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseClearableFieldSlotProps {
+export interface DateTimeFieldSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},
