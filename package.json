@@ -4,7 +4,7 @@
   "scripts": {
     "start": "yarn && yarn docs:dev",
     "docs:dev": "yarn workspace docs dev",
-    "docs:start": "yarn workspace docs start",
+    "docs:serve": "yarn workspace docs serve",
     "docs:create-playground": "yarn workspace docs create-playground",
     "docs:api": "NODE_OPTIONS=--max-old-space-size=4096 yarn docs:api:build && yarn docs:api:buildX",
     "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./scripts/buildApiDocs/index.ts",
