@@ -18,7 +18,21 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   if (dataIndex == null) {
     return null;
   }
-  const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
+
+  const utcFormatter = (v: any): string => {
+    try {
+      const userProvidedDate = new Date(v);
+      const utcDate = new Date(userProvidedDate.toISOString());
+      return utcDate.toUTCString();
+    } catch (e) {
+      return v.toLocaleString();
+    }
+  };
+
+  const axisFormatter =
+    axis.valueFormatter ??
+    ((v: any) => (axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString()));
+
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>
