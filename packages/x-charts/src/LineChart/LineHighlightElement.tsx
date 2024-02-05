@@ -4,6 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
@@ -13,7 +14,7 @@ export interface LineHighlightElementClasses {
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
 interface LineHighlightElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   x: number;
   y: number;
@@ -49,7 +50,7 @@ const HighlightElement = styled('circle', {
 }));
 
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  React.ComponentPropsWithoutRef<'circle'> & {};
+  Omit<React.ComponentPropsWithoutRef<'circle'>, 'id'> & {};
 
 /**
  * Demos:
@@ -92,6 +93,7 @@ LineHighlightElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 } as any;
 
 export { LineHighlightElement };

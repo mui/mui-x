@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
@@ -14,6 +14,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -23,7 +24,7 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: string;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -62,27 +63,37 @@ export const BarElementPath = styled(animated.rect, {
   opacity: (ownerState.isFaded && 0.3) || 1,
 }));
 
+interface BarProps extends Omit<React.ComponentPropsWithoutRef<'path'>, 'id' | 'color'> {
+  highlightScope?: Partial<HighlightScope>;
+  onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+  ownerState: BarElementOwnerState;
+}
+
+export interface BarElementSlots {
+  /**
+   * The component that renders the bar.
+   * @default BarElementPath
+   */
+  bar?: React.JSXElementConstructor<BarProps>;
+}
+
+export interface BarElementSlotProps {
+  bar?: Partial<BarProps>;
+}
+
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
      */
-    slotProps?: {
-      bar?: SlotComponentProps<'path', {}, BarElementOwnerState>;
-    };
+    slotProps?: BarElementSlotProps;
     /**
      * Overridable component slots.
      * @default {}
      */
-    slots?: {
-      /**
-       * The component that renders the bar.
-       * @default BarElementPath
-       */
-      bar?: React.ElementType;
-    };
+    slots?: BarElementSlots;
   };
 
 function BarElement(props: BarElementProps) {
@@ -148,6 +159,7 @@ BarElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The props used for each component slot.
    * @default {}

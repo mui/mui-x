@@ -347,7 +347,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single configuration object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.string,
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     data: PropTypes.array,
     dataKey: PropTypes.string,
@@ -355,7 +355,7 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
     labelStyle: PropTypes.object,

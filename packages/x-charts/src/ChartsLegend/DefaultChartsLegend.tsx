@@ -64,7 +64,7 @@ export interface LegendRendererProps
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.
-   * @default 0
+   * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
 }
@@ -348,7 +348,7 @@ DefaultChartsLegend.propTypes = {
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.
-   * @default 0
+   * @default 10
    */
   padding: PropTypes.oneOfType([
     PropTypes.number,

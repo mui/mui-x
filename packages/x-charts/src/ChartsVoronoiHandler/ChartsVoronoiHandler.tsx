@@ -9,6 +9,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { getSVGPoint } from '../internals/utils';
 import { ScatterItemIdentifier } from '../models';
+import { SeriesId } from '../models/seriesType/common';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -87,7 +88,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     function getClosestPoint(
       event: MouseEvent,
     ):
-      | { seriesId: string; dataIndex: number }
+      | { seriesId: SeriesId; dataIndex: number }
       | 'outside-chart'
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
