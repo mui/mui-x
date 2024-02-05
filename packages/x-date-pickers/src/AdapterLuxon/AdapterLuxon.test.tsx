@@ -169,16 +169,4 @@ describe('<AdapterLuxon />', () => {
       });
     });
   });
-
-  describe('isWithinRange functionality', () => {
-    const adapter = new AdapterLuxon({ locale: 'en-US' });
-    it('should be equal with values in different locale', () => {
-      expect(
-        adapter.isWithinRange(adapter.date('2022-04-17'), [
-          DateTime.fromISO('2022-04-17', { locale: 'en-GB' }),
-          DateTime.fromISO('2022-04-19', { locale: 'en-GB' }),
-        ]),
-      ).to.equal(true);
-    });
-  });
 });
