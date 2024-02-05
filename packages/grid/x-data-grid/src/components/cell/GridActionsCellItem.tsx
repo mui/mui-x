@@ -12,29 +12,35 @@ export type GridActionsCellItemProps = {
   component?: React.ElementType;
 } & (
   | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
-  | ({ showInMenu: true } & MenuItemProps)
+  | ({
+      showInMenu: true;
+      /**
+       * If false, the menu will not close when this item is clicked.
+       * @default true
+       */
+      closeMenuOnClick?: boolean;
+      closeMenu?: () => void;
+    } & MenuItemProps)
 );
 
-const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellItemProps>(
+const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
   (props, ref) => {
-    const { label, icon, showInMenu, onClick, ...other } = props;
-
     const rootProps = useGridRootProps();
 
-    const handleClick = (event: any) => {
-      if (onClick) {
-        onClick(event);
-      }
-    };
+    if (!props.showInMenu) {
+      const { label, icon, showInMenu, onClick, ...other } = props;
 
-    if (!showInMenu) {
+      const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onClick?.(event);
+      };
+
       return (
         <rootProps.slots.baseIconButton
           ref={ref}
           size="small"
           role="menuitem"
           aria-label={label}
-          {...(other as any)}
+          {...other}
           onClick={handleClick}
           {...rootProps.slotProps?.baseIconButton}
         >
@@ -43,8 +49,25 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
       );
     }
 
+    const {
+      label,
+      icon,
+      showInMenu,
+      onClick,
+      closeMenuOnClick = true,
+      closeMenu,
+      ...other
+    } = props;
+
+    const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+      onClick?.(event);
+      if (closeMenuOnClick) {
+        closeMenu?.();
+      }
+    };
+
     return (
-      <MenuItem ref={ref} {...(other as any)} onClick={onClick}>
+      <MenuItem ref={ref} {...(other as any)} onClick={handleClick}>
         {icon && <ListItemIcon>{icon}</ListItemIcon>}
         {label}
       </MenuItem>
