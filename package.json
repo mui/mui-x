@@ -182,8 +182,6 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "!packages/grid",
-      "packages/grid/*",
       "docs"
     ],
     "nohoist": [

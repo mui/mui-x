@@ -45,18 +45,18 @@ export default apiPages;
   typeScriptProjects: [
     {
       name: 'data-grid',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid'),
       entryPointPath: 'src/index.ts',
     },
     {
       name: 'data-grid-pro',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid-pro'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
       entryPointPath: 'src/index.ts',
     },
 
     {
       name: 'data-grid-premium',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid-premium'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
       entryPointPath: 'src/index.ts',
     },
   ],

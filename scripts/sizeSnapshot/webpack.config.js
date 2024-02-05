@@ -9,15 +9,15 @@ async function getWebpackEntries() {
   return [
     {
       name: '@mui/x-data-grid-premium',
-      path: 'packages/grid/x-data-grid-premium/build/index-esm.js',
+      path: 'packages/x-data-grid-premium/build/index-esm.js',
     },
     {
       name: '@mui/x-data-grid-pro',
-      path: 'packages/grid/x-data-grid-pro/build/index-esm.js',
+      path: 'packages/x-data-grid-pro/build/index-esm.js',
     },
     {
       name: '@mui/x-data-grid',
-      path: 'packages/grid/x-data-grid/build/index-esm.js',
+      path: 'packages/x-data-grid/build/index-esm.js',
     },
     {
       name: '@mui/x-license',
@@ -62,17 +62,14 @@ module.exports = async function webpackConfig(webpack, environment) {
       ],
       resolve: {
         alias: {
-          '@mui/x-data-grid': path.join(
-            workspaceRoot,
-            'packages/grid/x-data-grid/build/index-esm.js',
-          ),
+          '@mui/x-data-grid': path.join(workspaceRoot, 'packages/x-data-grid/build/index-esm.js'),
           '@mui/x-data-grid-pro': path.join(
             workspaceRoot,
-            'packages/grid/x-data-grid-pro/build/index-esm.js',
+            'packages/x-data-grid-pro/build/index-esm.js',
           ),
           '@mui/x-data-grid-premium': path.join(
             workspaceRoot,
-            'packages/grid/x-data-grid-premium/build/index-esm.js',
+            'packages/x-data-grid-premium/build/index-esm.js',
           ),
           '@mui/x-license': path.join(workspaceRoot, 'packages/x-license/build/esm/index.js'),
         },
