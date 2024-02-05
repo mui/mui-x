@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -11,6 +10,7 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
+import { isCartesianSeries } from './utils';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;
@@ -33,8 +33,9 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
         )}
 
         <tbody>
-          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => {
-            const formattedValue = valueFormatter(data[dataIndex]);
+          {series.filter(isCartesianSeries).map(({ color, id, label, valueFormatter, data }) => {
+            // @ts-ignore
+            const formattedValue = valueFormatter(data[dataIndex] ?? null);
             if (formattedValue == null) {
               return null;
             }

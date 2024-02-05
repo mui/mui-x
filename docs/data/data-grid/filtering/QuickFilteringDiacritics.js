@@ -19,7 +19,7 @@ const columns = [
     field: 'date',
     type: 'date',
     width: 150,
-    valueFormatter: (params) => dateFormatter.format(params.value),
+    valueFormatter: (value) => dateFormatter.format(value),
   },
   {
     field: 'singleSelect',

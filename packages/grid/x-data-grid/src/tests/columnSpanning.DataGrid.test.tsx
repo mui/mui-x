@@ -62,9 +62,9 @@ describe('<DataGrid /> - Column spanning', () => {
         <DataGrid
           {...baselineProps}
           columns={[
-            { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-            { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-            { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+            { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+            { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+            { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
             { field: 'rating' },
           ]}
           disableVirtualization={isJSDOM}
@@ -112,9 +112,9 @@ describe('<DataGrid /> - Column spanning', () => {
 
   describe('key navigation', () => {
     const columns: GridColDef[] = [
-      { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-      { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-      { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+      { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+      { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+      { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
       { field: 'rating' },
     ];
 
@@ -307,7 +307,7 @@ describe('<DataGrid /> - Column spanning', () => {
         <div style={{ width: 500, height: (rows.length + 1) * rowHeight }}>
           <DataGrid
             columns={[
-              { field: 'brand', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
+              { field: 'brand', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
               { field: 'category' },
               { field: 'price' },
             ]}
@@ -370,7 +370,7 @@ describe('<DataGrid /> - Column spanning', () => {
           <DataGrid
             {...baselineProps}
             columns={[
-              { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
+              { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
               { field: 'category' },
               { field: 'price' },
               { field: 'rating' },
@@ -492,9 +492,9 @@ describe('<DataGrid /> - Column spanning', () => {
         <DataGrid
           {...baselineProps}
           columns={[
-            { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-            { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-            { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+            { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+            { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+            { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
             { field: 'rating' },
           ]}
           rows={[
@@ -571,9 +571,9 @@ describe('<DataGrid /> - Column spanning', () => {
         <DataGrid
           {...baselineProps}
           columns={[
-            { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-            { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-            { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+            { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+            { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+            { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
             { field: 'rating' },
           ]}
         />
@@ -667,9 +667,9 @@ describe('<DataGrid /> - Column spanning', () => {
     ];
 
     const columns: GridColDef[] = [
-      { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-      { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-      { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+      { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+      { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+      { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
       { field: 'rating' },
     ];
 
@@ -732,7 +732,7 @@ describe('<DataGrid /> - Column spanning', () => {
       <div style={{ width: 390, height: 300 }}>
         <DataGrid
           columns={[
-            { field: 'col0', width: 100, colSpan: ({ value }) => (value === '1-0' ? 3 : 1) },
+            { field: 'col0', width: 100, colSpan: (value) => (value === '1-0' ? 3 : 1) },
             { field: 'col1', width: 100 },
             { field: 'col2', width: 100 },
             { field: 'col3', width: 100 },
@@ -787,7 +787,7 @@ describe('<DataGrid /> - Column spanning', () => {
       <div style={{ width: 390, height: 300 }}>
         <DataGrid
           columns={[
-            { field: 'col0', width: 100, colSpan: ({ value }) => (value === '1-0' ? 3 : 1) },
+            { field: 'col0', width: 100, colSpan: (value) => (value === '1-0' ? 3 : 1) },
             { field: 'col1', width: 100 },
             { field: 'col2', width: 100 },
             { field: 'col3', width: 100 },
@@ -855,7 +855,7 @@ describe('<DataGrid /> - Column spanning', () => {
             pageSizeOptions={[3]}
             initialState={{ pagination: { paginationModel: { pageSize: 3 } } }}
             columns={[
-              { field: 'col0', width: 100, colSpan: ({ value }) => (value === '4-0' ? 3 : 1) },
+              { field: 'col0', width: 100, colSpan: (value) => (value === '4-0' ? 3 : 1) },
               { field: 'col1', width: 100 },
               { field: 'col2', width: 100 },
               { field: 'col3', width: 100 },

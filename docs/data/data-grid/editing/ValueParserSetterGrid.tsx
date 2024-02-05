@@ -2,25 +2,24 @@ import * as React from 'react';
 import {
   DataGrid,
   GridColDef,
-  GridValueGetterParams,
-  GridValueSetterParams,
+  GridValueGetter,
+  GridValueSetter,
+  GridValueParser,
 } from '@mui/x-data-grid';
 
-function getFullName(params: GridValueGetterParams) {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-}
+type Row = (typeof defaultRows)[number];
 
-function setFullName(params: GridValueSetterParams) {
-  const [firstName, lastName] = params.value!.toString().split(' ');
-  return { ...params.row, firstName, lastName };
-}
+const setFullName: GridValueSetter<Row> = (value, row) => {
+  const [firstName, lastName] = value!.toString().split(' ');
+  return { ...row, firstName, lastName };
+};
 
-function parseFullName(value: any) {
+const parseFullName: GridValueParser = (value) => {
   return String(value)
     .split(' ')
     .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
     .join(' ');
-}
+};
 
 export default function ValueParserSetterGrid() {
   return (
@@ -29,6 +28,18 @@ export default function ValueParserSetterGrid() {
     </div>
   );
 }
+
+const defaultRows = [
+  { id: 1, lastName: 'Snow', firstName: 'Jon' },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
+  { id: 4, lastName: 'Stark', firstName: 'Arya' },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
+];
+
+const getFullName: GridValueGetter<Row> = (value, row) => {
+  return `${row.firstName || ''} ${row.lastName || ''}`;
+};
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130, editable: true },
@@ -43,12 +54,4 @@ const columns: GridColDef[] = [
     valueParser: parseFullName,
     sortComparator: (v1, v2) => v1!.toString().localeCompare(v2!.toString()),
   },
-];
-
-const defaultRows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon' },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
-  { id: 4, lastName: 'Stark', firstName: 'Arya' },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
 ];
