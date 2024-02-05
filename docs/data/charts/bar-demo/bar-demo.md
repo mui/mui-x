@@ -1,5 +1,6 @@
 ---
 title: Charts - Bar demonstration
+productId: x-charts
 components: BarChart, BarElement, BarPlot
 ---
 

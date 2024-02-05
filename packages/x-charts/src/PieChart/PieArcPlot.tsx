@@ -56,7 +56,7 @@ export interface PieArcPlotProps
     item: DefaultizedPieValueType,
   ) => void;
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -230,7 +230,7 @@ PieArcPlot.propTypes = {
    */
   paddingAngle: PropTypes.number,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

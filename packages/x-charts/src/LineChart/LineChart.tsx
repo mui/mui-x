@@ -82,6 +82,11 @@ export interface LineChartProps
    * @default {}
    */
   slotProps?: LineChartSlotProps;
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation?: boolean;
 }
 
 /**
@@ -116,6 +121,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     children,
     slots,
     slotProps,
+    skipAnimation,
   } = props;
 
   const id = useId();
@@ -153,8 +159,8 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot slots={slots} slotProps={slotProps} />
-        <LinePlot slots={slots} slotProps={slotProps} />
+        <AreaPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
+        <LinePlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -165,7 +171,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slotProps={slotProps}
       />
       <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot slots={slots} slotProps={slotProps} />
+      <MarkPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
@@ -348,6 +354,11 @@ LineChart.propTypes = {
     PropTypes.string,
   ]),
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

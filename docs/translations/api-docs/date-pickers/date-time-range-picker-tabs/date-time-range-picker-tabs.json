@@ -5,7 +5,7 @@
     "dateIcon": { "description": "Date tab icon." },
     "hidden": { "description": "Toggles visibility of the tabs allowing view switching." },
     "onViewChange": {
-      "description": "Callback called when a tab is clicked",
+      "description": "Callback called when a tab is clicked.",
       "typeDescriptions": { "view": "The view to open" }
     },
     "timeIcon": { "description": "Time tab icon." },

@@ -109,11 +109,13 @@ ChartsAxisTooltipContent.propTypes = {
   axisData: PropTypes.shape({
     x: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
     y: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
   }).isRequired,
   classes: PropTypes.object.isRequired,
@@ -123,11 +125,13 @@ ChartsAxisTooltipContent.propTypes = {
     axisData: PropTypes.shape({
       x: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
       y: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
     }),
     axisValue: PropTypes.any,

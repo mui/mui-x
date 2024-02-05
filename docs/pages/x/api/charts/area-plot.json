@@ -1,5 +1,6 @@
 {
   "props": {
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -12,7 +13,14 @@
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';"
   ],
-  "slots": [{ "name": "area", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiAreaPlot",
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",

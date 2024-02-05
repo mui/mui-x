@@ -52,7 +52,7 @@ export interface BarPlotSlotProps {
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -74,7 +74,7 @@ interface CompletedBarData {
   highlightScope?: Partial<HighlightScope>;
 }
 
-const useCompletedData = (): CompletedBarData[] => {
+const useAggregatedData = (): CompletedBarData[] => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
@@ -215,7 +215,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const completedData = useCompletedData();
+  const completedData = useAggregatedData();
   const { skipAnimation, ...other } = props;
 
   const transition = useTransition(completedData, {
@@ -248,7 +248,7 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

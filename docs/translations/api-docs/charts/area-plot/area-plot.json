@@ -1,9 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "area": "" }
+  "slotDescriptions": { "area": "The component that renders the area." }
 }
