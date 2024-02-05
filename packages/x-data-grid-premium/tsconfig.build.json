@@ -13,8 +13,8 @@
   "references": [
     { "path": "../x-data-grid/tsconfig.build.json" },
     { "path": "../x-data-grid-pro/tsconfig.build.json" },
-    { "path": "../../x-license/tsconfig.build.json" }
+    { "path": "../x-license/tsconfig.build.json" }
   ],
-  "include": ["src/**/*.ts*", "../../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
