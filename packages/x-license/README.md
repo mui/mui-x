@@ -1,3 +1,3 @@
-# @mui/x-license-pro
+# @mui/x-license
 
 Package used by all MUI X to validate license.

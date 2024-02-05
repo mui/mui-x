@@ -20,8 +20,8 @@ async function getWebpackEntries() {
       path: 'packages/grid/x-data-grid/build/index-esm.js',
     },
     {
-      name: '@mui/x-license-pro',
-      path: 'packages/x-license-pro/build/esm/index.js',
+      name: '@mui/x-license',
+      path: 'packages/x-license/build/esm/index.js',
     },
   ];
 }
@@ -74,10 +74,7 @@ module.exports = async function webpackConfig(webpack, environment) {
             workspaceRoot,
             'packages/grid/x-data-grid-premium/build/index-esm.js',
           ),
-          '@mui/x-license-pro': path.join(
-            workspaceRoot,
-            'packages/x-license-pro/build/esm/index.js',
-          ),
+          '@mui/x-license': path.join(workspaceRoot, 'packages/x-license/build/esm/index.js'),
         },
       },
       entry: { [entry.name]: path.join(workspaceRoot, entry.path) },

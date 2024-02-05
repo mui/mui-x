@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';

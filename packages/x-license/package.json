@@ -1,5 +1,5 @@
 {
-  "name": "@mui/x-license-pro",
+  "name": "@mui/x-license",
   "version": "7.0.0-beta.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mui/mui-x.git",
-    "directory": "packages/x-license-pro"
+    "directory": "packages/x-license"
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
