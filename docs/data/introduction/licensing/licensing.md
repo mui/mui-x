@@ -164,7 +164,6 @@ When using Next.js App Router, you have multiple options to install the license 
 
 ```tsx
 'use client';
-
 import { LicenseInfo } from '@mui/x-license-pro';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
@@ -174,7 +173,6 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 ```tsx
 'use client';
-
 import { LicenseInfo } from '@mui/x-license-pro';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
