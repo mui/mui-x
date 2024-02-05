@@ -2,6 +2,8 @@ import * as React from 'react';
 import type { GridSlotProps } from './gridSlotsComponentsProps';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
+export type { GridSlotProps } from './gridSlotsComponentsProps';
+
 export interface GridBaseSlots {
   /**
    * The custom Checkbox component used in the grid for both header and cells.
