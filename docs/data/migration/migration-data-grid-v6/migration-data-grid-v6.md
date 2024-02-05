@@ -457,5 +457,6 @@ Here's the list of affected features, colDef flags and props to disable them and
 - The slot `row` has had these props removed: `containerWidth`, `position`.
 - The slot `row` has typed props now.
 - The slot `headerFilterCell` has had these props removed: `filterOperators`.
+- All slots are now strongly typed, previously were `React.JSXElementConstructor<any>`.
 
 <!-- ### Rename `components` to `slots` -->
