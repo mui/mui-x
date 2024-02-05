@@ -37,7 +37,7 @@ Please update your `@mui/material` package to this or a newer version.
 
 ## Update the license package
 
-If you're using the commerical version of the Data Grid ([Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans), you need to update the import path:
+If you're using the commercial version of the Data Grid ([Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans), you need to update the import path:
 
 ```diff
 -import { LicenseInfo } from '@mui/x-license-pro';

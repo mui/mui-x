@@ -33,7 +33,7 @@ Please update your `@mui/material` package to this or a newer version.
 
 ## Update the license package
 
-If you're using the commerical version of the pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
+If you're using the commercial version of the pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
 
 ```diff
 -import { LicenseInfo } from '@mui/x-license-pro';
