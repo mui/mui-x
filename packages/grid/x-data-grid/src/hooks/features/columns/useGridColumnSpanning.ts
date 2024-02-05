@@ -80,10 +80,12 @@ function calculateCellColSpan(params: {
 
   const columnsLength = columns.length;
   const column = columns[columnIndex];
+  const row = apiRef.current.getRow(rowId);
+  const value = apiRef.current.getRowValue(row, column);
 
   const colSpan =
     typeof column.colSpan === 'function'
-      ? column.colSpan(apiRef.current.getCellParams(rowId, column.field))
+      ? column.colSpan(value, row, column, apiRef)
       : column.colSpan;
 
   if (!colSpan || colSpan === 1) {

@@ -1,5 +1,6 @@
 ---
 title: React Pie chart
+productId: x-charts
 components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ---
 
@@ -89,6 +90,20 @@ If you do not want to provide absolute values, you can use `additionalRadius` wh
 This value can be negative to reduce arc size.
 
 {{"demo": "PieActiveArc.js"}}
+
+## Click event
+
+Pie Chart provides an `onItemClick` handler for handling clicks on specific pie arcs.
+It has the following signature.
+
+```js
+const onItemClick = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked element.
+) => {};
+```
+
+{{"demo": "PieClickNoSnap.js"}}
 
 ## Animation
 

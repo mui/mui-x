@@ -545,7 +545,7 @@ export const useGridRowEditing = (
 
       let parsedValue = value;
       if (column.valueParser && !skipValueParser) {
-        parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
+        parsedValue = column.valueParser(value, row, column, apiRef);
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
@@ -668,10 +668,7 @@ export const useGridRowEditing = (
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
         if (column.valueSetter) {
-          rowUpdate = column.valueSetter({
-            value: fieldProps.value,
-            row: rowUpdate,
-          });
+          rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
         } else {
           rowUpdate[field] = fieldProps.value;
         }

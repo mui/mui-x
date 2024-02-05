@@ -471,17 +471,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
     it('should use valueSetter if the column has one', async () => {
       const processRowUpdateSpy = spy((newRow) => newRow);
 
-      const columns: GridColDef[] = [
+      const columns: GridColDef<(typeof rows)[number]>[] = [
         { field: 'firstName' },
         { field: 'lastName' },
         {
           field: 'fullName',
-          valueGetter: (params) => {
-            return `${params.row.firstName} ${params.row.lastName}`;
+          valueGetter: (value, row) => {
+            return `${row.firstName} ${row.lastName}`;
           },
-          valueSetter: (params) => {
-            const [firstName, lastName] = params.value!.toString().split(' ');
-            return { ...params.row, firstName, lastName };
+          valueSetter: (value, row) => {
+            const [firstName, lastName] = value!.toString().split(' ');
+            return { ...row, firstName, lastName };
           },
           editable: true,
         },
@@ -985,10 +985,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
             field: 'size',
             type: 'singleSelect',
             valueOptions: sizes,
-            valueGetter: (params) => params.value.size,
-            valueSetter: (params) => {
-              const value = sizes.find((option) => option.size === params.value);
-              return { ...params.row, size: value };
+            valueGetter: (value: { size: number }) => value.size,
+            valueSetter: (value: string, row) => {
+              const size = sizes.find((option) => option.size === value);
+              return { ...row, size };
             },
             getOptionValue: (option: any) => option.size,
             getOptionLabel: (option: any) => option.size,

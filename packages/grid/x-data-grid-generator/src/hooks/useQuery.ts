@@ -18,10 +18,10 @@ import {
 } from './useDemoData';
 import { randomInt } from '../services/random-generator';
 
+const apiRef = {} as any;
+
 const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
-  const params = { id: row.id, row, field, rowNode: {} };
-  // @ts-ignore
-  return colDef.valueGetter?.(params) || row[field];
+  return colDef.valueGetter?.(row[row.id] as never, row, colDef, apiRef) || row[field];
 };
 
 const getRowComparator = (

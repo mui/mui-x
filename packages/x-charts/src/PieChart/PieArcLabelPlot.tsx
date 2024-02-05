@@ -75,7 +75,7 @@ export interface PieArcLabelPlotProps
    */
   slotProps?: PieArcLabelPlotSlotProps;
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -249,7 +249,7 @@ PieArcLabelPlot.propTypes = {
    */
   paddingAngle: PropTypes.number,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

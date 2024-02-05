@@ -34,6 +34,20 @@
       },
       "default": "object Depends on the charts type."
     },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
+        "describedArgs": ["event", "barItemIdentifier"]
+      }
+    },
     "rightAxis": {
       "type": {
         "name": "union",

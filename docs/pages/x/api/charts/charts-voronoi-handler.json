@@ -1,5 +1,14 @@
 {
-  "props": { "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" } },
+  "props": {
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
+    "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" }
+  },
   "name": "ChartsVoronoiHandler",
   "imports": [
     "import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';",

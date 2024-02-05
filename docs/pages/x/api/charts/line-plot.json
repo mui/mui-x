@@ -1,5 +1,13 @@
 {
   "props": {
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": ["event", "lineItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -12,7 +20,14 @@
     "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';"
   ],
-  "slots": [{ "name": "line", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiLinePlot",
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",

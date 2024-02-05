@@ -75,12 +75,13 @@ function LineHighlightElement(props: LineHighlightElementProps) {
 
   return (
     <HighlightElement
-      {...other}
+      pointerEvents="none"
       ownerState={ownerState}
       className={classes.root}
       cx={0}
       cy={0}
       r={other.r === undefined ? 5 : other.r}
+      {...other}
     />
   );
 }
