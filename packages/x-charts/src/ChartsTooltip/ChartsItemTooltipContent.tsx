@@ -63,7 +63,7 @@ ChartsItemTooltipContent.propTypes = {
     classes: PropTypes.object,
     itemData: PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
     }),
     series: PropTypes.shape({
@@ -96,7 +96,7 @@ ChartsItemTooltipContent.propTypes = {
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
-      id: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
       valueFormatter: PropTypes.func.isRequired,
     }),
@@ -108,7 +108,7 @@ ChartsItemTooltipContent.propTypes = {
   }),
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([

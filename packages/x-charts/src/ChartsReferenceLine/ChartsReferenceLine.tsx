@@ -38,7 +38,7 @@ ChartsReferenceLine.propTypes = {
    * The id of the axis used for the reference value.
    * @default The `id` of the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

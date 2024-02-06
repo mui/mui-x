@@ -9,6 +9,7 @@ import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
 import { BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import { SeriesId } from '../models/seriesType/common';
 
 /**
  * Solution of the equations
@@ -59,7 +60,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
 }
 
 interface CompletedBarData {
-  seriesId: string;
+  seriesId: SeriesId;
   dataIndex: number;
   layout: BarSeriesType['layout'];
   x: number;

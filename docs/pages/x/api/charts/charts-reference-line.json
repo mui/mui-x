@@ -1,6 +1,9 @@
 {
   "props": {
-    "axisId": { "type": { "name": "string" }, "default": "The `id` of the first defined axis." },
+    "axisId": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "The `id` of the first defined axis."
+    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "label": { "type": { "name": "string" } },
     "labelAlign": {

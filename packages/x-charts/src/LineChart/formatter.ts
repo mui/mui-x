@@ -8,6 +8,7 @@ import {
 } from '../models/seriesType/config';
 import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
+import { SeriesId } from '../models/seriesType/common';
 
 let warnedOnce = false;
 
@@ -38,12 +39,12 @@ const formatter: Formatter<'line'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: { [id: string]: DefaultizedProps<ChartSeries<'line'>, 'data'> } = {};
+  const completedSeries: Record<SeriesId, DefaultizedProps<ChartSeries<'line'>, 'data'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
     const { ids, stackingOrder, stackingOffset } = stackingGroup;
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, string>()
+    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(
         ids.map((id) => {
           // Use dataKey if needed and available

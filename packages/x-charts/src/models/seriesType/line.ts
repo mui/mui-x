@@ -4,6 +4,7 @@ import {
   CartesianSeriesType,
   CommonDefaultizedProps,
   CommonSeriesType,
+  SeriesId,
   StackableSeriesType,
 } from './common';
 
@@ -86,7 +87,7 @@ export interface LineSeriesType
  */
 export type LineItemIdentifier = {
   type: 'line';
-  seriesId: DefaultizedLineSeriesType['id'];
+  seriesId: SeriesId;
   /**
    * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
    */
