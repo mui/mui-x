@@ -137,7 +137,7 @@ However, it's preferable to pass the `apiRef` as the first argument instead:
 gridColumnFieldsSelector(apiRef);
 ```
 
-See [Direct state access](/x/react-data-grid/state/#direct-selector-access) page for more info.
+See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) page for more info.
 
 <!-- ### Events
 
@@ -344,7 +344,7 @@ See [Direct state access](/x/react-data-grid/state/#direct-selector-access) page
 
 ### CSS classes
 
-- You can now style a row hover state using just `:hover` instead of `.Mui-hovered`.
+- You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 
 ### Changes to the public API
