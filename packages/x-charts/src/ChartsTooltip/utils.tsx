@@ -85,3 +85,20 @@ export function getTooltipHasData(
 
   return hasAxisXData || hasAxisYData;
 }
+
+export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
+  return ['bar', 'line', 'scatter'].includes(seriesType);
+}
+
+export function isCartesianSeries(
+  series: ChartSeriesDefaultized<ChartSeriesType>,
+): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
+  return isCartesianSeriesType(series.type);
+}
+
+export function utcFormatter(v: string | number | Date): string {
+  if (v instanceof Date) {
+    return v.toUTCString();
+  }
+  return v.toLocaleString();
+}
