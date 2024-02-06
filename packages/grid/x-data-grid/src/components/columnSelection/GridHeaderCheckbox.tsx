@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
+const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);

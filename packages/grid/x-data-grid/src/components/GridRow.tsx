@@ -389,7 +389,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           width={width}
           contentWidth={contentWidth}
           field={column.field}
-          align={column.align}
+          align={column.align ?? 'left'}
         />
       );
     }

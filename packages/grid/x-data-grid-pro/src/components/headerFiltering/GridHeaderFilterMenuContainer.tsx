@@ -53,13 +53,16 @@ function GridHeaderFilterMenuContainer(props: {
     return null;
   }
 
+  const label = apiRef.current.getLocaleText('filterPanelOperator');
+  const labelString = label ? String(label) : undefined;
+
   return (
     <React.Fragment>
       <rootProps.slots.baseIconButton
         id={buttonId}
         ref={buttonRef}
-        aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
-        title={apiRef.current.getLocaleText('filterPanelOperator')}
+        aria-label={labelString}
+        title={labelString}
         aria-controls={menuId}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"

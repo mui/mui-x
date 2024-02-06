@@ -10,6 +10,7 @@ import {
   GridColumnMenuSortItem,
   useGridApiRef,
   DataGridPro,
+  GridSlots,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
@@ -119,7 +120,7 @@ export default function CustomColumnMenu() {
             },
           ]}
           slots={{
-            columnMenu: CustomColumnMenuComponent,
+            columnMenu: CustomColumnMenuComponent as GridSlots['columnMenu'],
           }}
           slotProps={{
             columnMenu: { color },

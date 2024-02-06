@@ -577,7 +577,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       ).to.equal(false);
     });
 
-    it('should use inclusivity of range', () => {
+    it('should use inclusiveness of range', () => {
       expect(
         adapter.isWithinRange(adapter.date('2019-09-01T00:00:00.000Z')!, [
           adapter.date('2019-09-01T00:00:00.000Z')!,
@@ -603,6 +603,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         adapter.isWithinRange(adapter.date('2019-12-01')!, [
           adapter.date('2019-09-01')!,
           adapter.date('2019-12-01')!,
+        ]),
+      ).to.equal(true);
+    });
+
+    it('should be equal with values in different locales', () => {
+      expect(
+        adapter.isWithinRange(adapter.date('2022-04-17'), [
+          adapterFr.date('2022-04-17'),
+          adapterFr.date('2022-04-19'),
         ]),
       ).to.equal(true);
     });

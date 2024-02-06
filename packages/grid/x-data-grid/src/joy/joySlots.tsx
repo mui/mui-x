@@ -16,7 +16,7 @@ import JoyCircularProgress from '@mui/joy/CircularProgress';
 import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
-import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
+import type { GridSlotProps, GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridFilteredTopLevelRowCountSelector, gridPaginationModelSelector } from '../hooks';
@@ -116,10 +116,10 @@ const TextField = React.forwardRef<
   );
 });
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  NonNullable<GridSlotsComponentsProps['baseButton']>
->(function Button({ startIcon, color, endIcon, size, sx, variant, ...props }, ref) {
+const Button = React.forwardRef<HTMLButtonElement, GridSlotProps['baseButton']>(function Button(
+  { startIcon, color, endIcon, size, sx, variant, ...props },
+  ref,
+) {
   return (
     <JoyButton
       {...props}
@@ -150,10 +150,7 @@ const IconButton = React.forwardRef<
   );
 });
 
-const Switch = React.forwardRef<
-  HTMLDivElement,
-  NonNullable<GridSlotsComponentsProps['baseSwitch']>
->(function Switch(
+const Switch = React.forwardRef<any, GridSlotProps['baseSwitch']>(function Switch(
   {
     name,
     checkedIcon,
@@ -204,10 +201,7 @@ const Switch = React.forwardRef<
   );
 });
 
-const Select = React.forwardRef<
-  HTMLButtonElement,
-  NonNullable<GridSlotsComponentsProps['baseSelect']>
->(
+const Select = React.forwardRef<any, GridSlotProps['baseSelect']>(
   (
     {
       open,
@@ -314,10 +308,7 @@ const getLabelDisplayedRowsTo = ({
   return pageSize === -1 ? rowCount : Math.min(rowCount, (page + 1) * pageSize);
 };
 
-const Pagination = React.forwardRef<
-  HTMLDivElement,
-  NonNullable<GridSlotsComponentsProps['pagination']>
->((props, ref) => {
+const Pagination = React.forwardRef<any, GridSlotProps['pagination']>((props, ref) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationModel = gridPaginationModelSelector(apiRef);
@@ -443,8 +434,8 @@ const joySlots: Partial<GridSlotsComponent> = {
   baseSelect: Select,
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
-  baseFormControl: JoyFormControl,
-  baseTooltip: JoyTooltip,
+  baseFormControl: JoyFormControl as any /* FIXME: typing error */,
+  baseTooltip: JoyTooltip as any /* FIXME: typing error */,
   pagination: Pagination,
   loadingOverlay: LoadingOverlay,
 };

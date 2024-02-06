@@ -12,6 +12,8 @@ import {
   validateProps,
 } from '../internals/utils/propValidation';
 
+export type { GridSlotsComponent as GridSlots } from '../models';
+
 const propValidators: PropValidator<DataGridProcessedProps>[] = [
   ...propValidatorsDataGrid,
   // Only validate in MIT version
