@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import { DefaultizedScatterSeriesType, ScatterValueType } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import {
   getIsFaded,
@@ -45,13 +45,10 @@ function Scatter(props: ScatterProps) {
     const minYRange = Math.min(...yRange);
     const maxYRange = Math.max(...yRange);
 
-    const temp: {
-      x: number;
-      y: number;
-      id: string | number;
+    const temp: (ScatterValueType & {
       isFaded: boolean;
       interactionProps: ReturnType<typeof getInteractionItemProps>;
-    }[] = [];
+    })[] = [];
 
     for (let i = 0; i < series.data.length; i += 1) {
       const scatterPoint = series.data[i];
@@ -125,7 +122,7 @@ Scatter.propTypes = {
       faded: PropTypes.oneOf(['global', 'none', 'series']),
       highlighted: PropTypes.oneOf(['item', 'none', 'series']),
     }),
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     label: PropTypes.string,
     markerSize: PropTypes.number,
     type: PropTypes.oneOf(['scatter']).isRequired,

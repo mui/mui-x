@@ -70,7 +70,7 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   /**
@@ -106,7 +106,7 @@ DefaultChartsItemTooltipContent.propTypes = {
       faded: PropTypes.oneOf(['global', 'none', 'series']),
       highlighted: PropTypes.oneOf(['item', 'none', 'series']),
     }),
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
     valueFormatter: PropTypes.func.isRequired,
   }).isRequired,

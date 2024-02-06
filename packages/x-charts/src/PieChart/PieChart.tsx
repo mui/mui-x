@@ -174,7 +174,7 @@ PieChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -231,7 +231,7 @@ PieChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -292,7 +292,7 @@ PieChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -362,7 +362,7 @@ PieChart.propTypes = {
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       innerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       paddingAngle: PropTypes.number,
@@ -407,7 +407,7 @@ PieChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -451,7 +451,7 @@ PieChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -459,7 +459,7 @@ PieChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
@@ -492,7 +492,7 @@ PieChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -500,7 +500,7 @@ PieChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,

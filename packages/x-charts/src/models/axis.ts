@@ -10,6 +10,8 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 
+export type AxisId = string | number;
+
 export type D3Scale<
   Domain extends { toString(): string } = number | Date | string,
   Range = number,
@@ -47,7 +49,7 @@ export interface ChartsAxisProps extends TickParams {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId?: string;
+  axisId?: AxisId;
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -188,7 +190,7 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
    * Id used to identify the axis.
    */
-  id: string;
+  id: AxisId;
   /**
    * The minimal value of the domain.
    * If not provided, it gets computed to display the entire chart data.

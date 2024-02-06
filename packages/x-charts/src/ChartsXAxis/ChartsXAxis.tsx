@@ -241,7 +241,7 @@ ChartsXAxis.propTypes = {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

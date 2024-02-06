@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
@@ -14,6 +14,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -23,7 +24,7 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: string;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -63,14 +64,14 @@ export const BarElementPath = styled(animated.rect, {
 }));
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
      */
     slotProps?: {
-      bar?: SlotComponentProps<'path', {}, BarElementOwnerState>;
+      bar?: Omit<SlotComponentProps<'path', {}, BarElementOwnerState>, 'id'> & { id?: SeriesId };
     };
     /**
      * Overridable component slots.
@@ -145,6 +146,7 @@ BarElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The props used for each component slot.
    * @default {}

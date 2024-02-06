@@ -13,6 +13,7 @@ import {
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -25,8 +26,8 @@ export interface LineElementClasses {
 
 export type LineElementClassKey = keyof LineElementClasses;
 
-interface LineElementOwnerState {
-  id: string;
+export interface LineElementOwnerState {
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -88,14 +89,14 @@ LineElementPath.propTypes = {
 } as any;
 
 export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
      */
     slotProps?: {
-      line?: SlotComponentProps<'path', {}, LineElementOwnerState>;
+      line?: Omit<SlotComponentProps<'path', {}, LineElementOwnerState>, 'id'> & { id?: SeriesId };
     };
     /**
      * Overridable component slots.
@@ -164,6 +165,7 @@ LineElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The props used for each component slot.
    * @default {}

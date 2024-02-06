@@ -1,8 +1,10 @@
 import type { HighlightScope } from '../../context/HighlightProvider';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
+export type SeriesId = number | string;
+
 export type CommonSeriesType<TValue> = {
-  id?: string;
+  id?: SeriesId;
   color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
