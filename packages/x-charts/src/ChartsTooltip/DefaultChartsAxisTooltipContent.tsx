@@ -22,9 +22,8 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const utcFormatter = (v: string | number | Date): string => {
     if (v instanceof Date) {
       return v.toUTCString();
-    } else {
-      return v.toLocaleString();
     }
+    return v.toLocaleString();
   };
 
   const axisFormatter =
