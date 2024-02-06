@@ -44,7 +44,7 @@ If you're using the commercial version of the Data Grid ([Pro](/x/introduction/l
 +import { LicenseInfo } from '@mui/x-license';
 ```
 
-If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, update the license package to the latest version:
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",

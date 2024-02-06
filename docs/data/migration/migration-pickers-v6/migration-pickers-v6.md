@@ -33,14 +33,14 @@ Please update your `@mui/material` package to this or a newer version.
 
 ## Update the license package
 
-If you're using the commercial version of the pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
+If you're using the commercial version of the Pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
 
 ```diff
 -import { LicenseInfo } from '@mui/x-license-pro';
 +import { LicenseInfo } from '@mui/x-license';
 ```
 
-If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, update the license package to the latest version:
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",
