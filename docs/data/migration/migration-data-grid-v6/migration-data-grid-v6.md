@@ -118,7 +118,7 @@ As a result, the following changes have been made:
 
 The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc., can now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
 
-Here's the list of affected features, `colDef` flags and props to disable them, and the related props and API methods to control them programmatically.
+Here's the list of affected features, column definition flags and props to disable them, and the related props and API methods to control them programmatically.
 
 {{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
