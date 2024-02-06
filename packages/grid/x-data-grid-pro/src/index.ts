@@ -1,6 +1,13 @@
 import './typeOverloads';
 
-export { LicenseInfo } from '@mui/x-license';
+export {
+  /**
+   * @deprecated
+   * Use `@mui/x-license` package instead:
+   * import { LicenseInfo } from '@mui/x-license';
+   */
+  LicenseInfo,
+} from '@mui/x-license';
 export * from '@mui/x-data-grid/components';
 export * from '@mui/x-data-grid/constants';
 export * from '@mui/x-data-grid/hooks';
