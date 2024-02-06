@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridBody,
   GridFooterPlaceholder,

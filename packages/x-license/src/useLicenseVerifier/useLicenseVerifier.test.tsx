@@ -6,7 +6,7 @@ import {
   LicenseInfo,
   generateLicense,
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
-} from '@mui/x-license-pro';
+} from '@mui/x-license';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 

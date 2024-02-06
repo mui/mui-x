@@ -1,5 +1,5 @@
 const path = require('path');
-const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
+const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
 
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
@@ -11,7 +11,7 @@ const defaultAlias = {
   '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
   '@mui/x-data-grid-premium': resolveAliasPath('./packages/grid/x-data-grid-premium/src'),
-  '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
+  '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),

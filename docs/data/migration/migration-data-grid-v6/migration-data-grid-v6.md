@@ -19,6 +19,10 @@ In `package.json`, change the version of the data grid package to `next`.
 ```diff
 -"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
+-"@mui/x-data-grid-pro": "6.x.x",
++"@mui/x-data-grid-pro": "next",
+-"@mui/x-data-grid-premium": "6.x.x",
++"@mui/x-data-grid-premium": "next",
 ```
 
 Since v7 is a major release, it contains changes that affect the public API.
@@ -30,6 +34,22 @@ Described below are the steps needed to migrate from v6 to v7.
 To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
+
+## Update the license package
+
+If you're using the commercial version of the Data Grid ([Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans), you need to update the import path:
+
+```diff
+-import { LicenseInfo } from '@mui/x-license-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
+
+```diff
+-"@mui/x-license-pro": "6.x.x",
++"@mui/x-license": "next",
+```
 
 ## Run codemods
 
