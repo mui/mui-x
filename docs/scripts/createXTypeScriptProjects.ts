@@ -29,7 +29,7 @@ export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
 }
 
 export type XProjectNames =
-  | 'x-license-pro'
+  | 'x-license'
   | 'x-data-grid'
   | 'x-data-grid-pro'
   | 'x-data-grid-premium'
@@ -117,10 +117,10 @@ export const createXTypeScriptProjects = () => {
   const projects: XTypeScriptProjects = new Map();
 
   projects.set(
-    'x-license-pro',
+    'x-license',
     createXTypeScriptProject({
-      name: 'x-license-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      name: 'x-license',
+      rootPath: path.join(workspaceRoot, 'packages/x-license'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'license',
     }),

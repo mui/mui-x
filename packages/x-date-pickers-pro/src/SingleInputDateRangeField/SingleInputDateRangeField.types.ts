@@ -2,25 +2,27 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
 
-export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
+export interface UseSingleInputDateRangeFieldProps<TDate extends PickerValidDate>
+  extends UseDateRangeFieldProps<TDate> {}
 
 export type UseSingleInputDateRangeFieldDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   AdditionalProps extends {},
 > = UseDateRangeFieldDefaultizedProps<TDate> &
   Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;
 
-export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseSingleInputDateRangeFieldProps<TDate>
-> &
+export type UseSingleInputDateRangeFieldComponentProps<
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate>> &
   UseSingleInputDateRangeFieldProps<TDate>;
 
 export type SingleInputDateRangeFieldProps<
-  TDate,
+  TDate extends PickerValidDate,
   TChildProps extends {} = FieldsTextFieldProps,
 > = UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps> & {
   /**
@@ -35,7 +37,8 @@ export type SingleInputDateRangeFieldProps<
   slotProps?: SingleInputDateRangeFieldSlotProps<TDate>;
 };
 
-export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFieldProps<TDate>;
+export type SingleInputDateRangeFieldOwnerState<TDate extends PickerValidDate> =
+  SingleInputDateRangeFieldProps<TDate>;
 
 export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -46,6 +49,7 @@ export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface SingleInputDateRangeFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
+export interface SingleInputDateRangeFieldSlotProps<TDate extends PickerValidDate>
+  extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
 }

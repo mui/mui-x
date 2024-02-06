@@ -212,6 +212,10 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * If `true`, hide this value in the tooltip
    */
   hideTooltip?: boolean;
+  /**
+   * If `true`, Reverse the axis scaleBand.
+   */
+  reverse?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams;

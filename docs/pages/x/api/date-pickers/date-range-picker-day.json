@@ -1,6 +1,6 @@
 {
   "props": {
-    "day": { "type": { "name": "any" }, "required": true },
+    "day": { "type": { "name": "object" }, "required": true },
     "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
     "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
     "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },

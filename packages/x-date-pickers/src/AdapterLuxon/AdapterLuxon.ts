@@ -83,6 +83,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'D T',
 };
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    luxon: DateTime;
+  }
+}
+
 /**
  * Based on `@date-io/luxon`
  *
@@ -318,8 +324,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isWithinRange = (value: DateTime, [start, end]: [DateTime, DateTime]) => {
     return (
-      value.equals(start) ||
-      value.equals(end) ||
+      this.isEqual(value, start) ||
+      this.isEqual(value, end) ||
       (this.isAfter(value, start) && this.isBefore(value, end))
     );
   };

@@ -1,6 +1,6 @@
 import './typeOverloads';
 
-export { LicenseInfo } from '@mui/x-license-pro';
+export { LicenseInfo } from '@mui/x-license';
 export * from '@mui/x-data-grid/components';
 export * from '@mui/x-data-grid/constants';
 export * from '@mui/x-data-grid/hooks';

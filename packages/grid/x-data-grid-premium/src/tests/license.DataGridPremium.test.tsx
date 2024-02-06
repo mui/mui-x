@@ -3,7 +3,7 @@ import addYears from 'date-fns/addYears';
 import { expect } from 'chai';
 import { createRenderer, screen, waitFor } from '@mui-internal/test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { generateLicense, LicenseInfo } from '@mui/x-license-pro';
+import { generateLicense, LicenseInfo } from '@mui/x-license';
 
 describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();

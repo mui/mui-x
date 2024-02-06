@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickersTimezone } from '../../../models';
+import { FieldSectionType, FieldSection, PickersTimezone, PickerValidDate } from '../../../models';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries } from './useField.types';
 import {
@@ -27,7 +27,7 @@ interface ApplyCharacterEditingParams {
   sectionIndex: number;
 }
 
-interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
+interface UseFieldEditingParams<TDate extends PickerValidDate, TSection extends FieldSection> {
   sections: TSection[];
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
@@ -78,7 +78,10 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
+export const useFieldCharacterEditing = <
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+>({
   sections,
   updateSectionValue,
   sectionsValueBoundaries,

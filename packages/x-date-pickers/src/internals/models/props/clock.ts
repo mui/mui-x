@@ -1,12 +1,12 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../validation';
-import { TimeStepOptions, TimezoneProps } from '../../../models';
+import { PickerValidDate, TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 import { TimeViewWithMeridiem } from '../common';
 
-export interface ExportedBaseClockProps<TDate>
+export interface ExportedBaseClockProps<TDate extends PickerValidDate>
   extends TimeValidationProps<TDate>,
     BaseTimeValidationProps,
     TimezoneProps {
@@ -17,7 +17,7 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
+export interface BaseClockProps<TDate extends PickerValidDate, TView extends TimeViewWithMeridiem>
   extends ExportedUseViewsOptions<TView>,
     ExportedBaseClockProps<TDate> {
   className?: string;
@@ -52,7 +52,7 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
   referenceDate?: TDate;
 }
 
-export interface DesktopOnlyTimePickerProps<TDate>
+export interface DesktopOnlyTimePickerProps<TDate extends PickerValidDate>
   extends Omit<ExportedDigitalClockProps<TDate>, 'timeStep'>,
     Omit<ExportedMultiSectionDigitalClockProps<TDate>, 'timeSteps'> {
   /**

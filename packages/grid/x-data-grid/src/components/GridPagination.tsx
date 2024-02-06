@@ -26,7 +26,7 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   },
 })) as typeof TablePagination;
 
-export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePaginationProps>>(
+export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationProps>>(
   function GridPagination(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();

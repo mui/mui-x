@@ -192,7 +192,9 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const range = [drawingArea.left, drawingArea.left + drawingArea.width];
+      const range = axis.reverse
+        ? [drawingArea.left + drawingArea.width, drawingArea.left]
+        : [drawingArea.left, drawingArea.left + drawingArea.width];
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -247,7 +249,9 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
-      const range = [drawingArea.top + drawingArea.height, drawingArea.top];
+      const range = axis.reverse
+        ? [drawingArea.top, drawingArea.top + drawingArea.height]
+        : [drawingArea.top + drawingArea.height, drawingArea.top];
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -341,6 +345,7 @@ CartesianContextProvider.propTypes = {
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -381,6 +386,7 @@ CartesianContextProvider.propTypes = {
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
