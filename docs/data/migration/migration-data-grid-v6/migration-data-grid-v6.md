@@ -61,12 +61,13 @@ You can either run it on a specific file, folder, or your entire codebase when c
 ```bash
 // Data Grid specific
 npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
+
 // Target other MUI X components as well
 npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for the Data Grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -97,7 +98,8 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### DOM changes
 
-The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
+The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
+As a result, the following changes have been made:
 
 - The main element now corresponds to the virtal scroller element.
 - Headers are now contained in the virtual scroller.
@@ -134,24 +136,28 @@ The layout of the grid has been substantially altered to use CSS sticky position
 
 ### Behavioral changes
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
+The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc., can now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
 
-Here's the list of affected features, colDef flags and props to disable them and the related props and API methods to control them programmatically.
+Here's the list of affected features, column definition flags and props to disable them, and the related props and API methods to control them programmatically.
 
 {{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 
-- Some selectors now require passing `instanceId` as a second argument:
-  ```diff
-  - gridColumnFieldsSelector(apiRef.current.state);
-  + gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
-  ```
-  However, it's preferable to pass the `apiRef` as the first argument instead:
-  ```js
-  gridColumnFieldsSelector(apiRef);
-  ```
-  See [Direct state access](/x/react-data-grid/state/#direct-selector-access) for more info.
+Some selectors now require passing `instanceId` as a second argument:
+
+```diff
+- gridColumnFieldsSelector(apiRef.current.state);
++ gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+```
+
+However, it's preferable to pass the `apiRef` as the first argument instead:
+
+```js
+gridColumnFieldsSelector(apiRef);
+```
+
+See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) page for more info.
 
 <!-- ### Events
 
@@ -456,12 +462,8 @@ Here's the list of affected features, colDef flags and props to disable them and
 
 ### CSS classes
 
-- Some CSS classes were removed or renamed
-
-  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
-  | :------------------------------------------ | :--------------- | :--------------------- | --- |
-  | `.Mui-hovered`                              | `:hover`         | For rows               |
-  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
+- You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
+- The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 
 ### Changes to the public API
 
