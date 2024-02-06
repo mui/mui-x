@@ -316,7 +316,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
-      (event: SelectChangeEvent) => {
+      (event: SelectChangeEvent<any>) => {
         const field = event.target.value as string;
         const column = apiRef.current.getColumn(field)!;
 
@@ -369,7 +369,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeOperator = React.useCallback(
-      (event: SelectChangeEvent) => {
+      (event: SelectChangeEvent<any>) => {
         const operator = event.target.value as string;
 
         const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
@@ -388,7 +388,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeLogicOperator = React.useCallback(
-      (event: SelectChangeEvent) => {
+      (event: SelectChangeEvent<any>) => {
         const logicOperator =
           (event.target.value as string) === GridLogicOperator.And.toString()
             ? GridLogicOperator.And

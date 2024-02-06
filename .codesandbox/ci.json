@@ -3,7 +3,7 @@
   "installCommand": "install:codesandbox",
   "node": "18",
   "packages": [
-    "packages/x-license-pro",
+    "packages/x-license",
     "packages/grid/x-data-grid",
     "packages/grid/x-data-grid-pro",
     "packages/grid/x-data-grid-premium",
@@ -14,7 +14,7 @@
     "packages/x-tree-view"
   ],
   "publishDirectory": {
-    "@mui/x-license-pro": "packages/x-license-pro/build",
+    "@mui/x-license": "packages/x-license/build",
     "@mui/x-data-grid": "packages/grid/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
     "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",

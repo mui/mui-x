@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {

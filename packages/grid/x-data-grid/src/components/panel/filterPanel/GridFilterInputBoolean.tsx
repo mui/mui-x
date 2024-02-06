@@ -85,7 +85,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           native={isSelectNative}
           displayEmpty
           inputProps={{ ref: focusElementRef, tabIndex }}
-          {...others}
+          {
+            ...(others as any) /* FIXME: typing error */
+          }
           {...baseSelectProps}
         >
           <rootProps.slots.baseSelectOption

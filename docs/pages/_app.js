@@ -18,7 +18,7 @@ import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvide
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 
 // Remove the license warning from demonstration purposes

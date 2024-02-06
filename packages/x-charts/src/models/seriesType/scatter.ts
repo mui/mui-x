@@ -5,7 +5,7 @@ export type ScatterValueType = {
   x: number;
   y: number;
   /**
-   * A unique id identifying the scatter point.
+   * A unique identifier for the scatter point
    */
   id: string | number;
 };

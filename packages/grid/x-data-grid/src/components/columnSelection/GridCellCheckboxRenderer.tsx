@@ -49,7 +49,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
-    const checkboxElement = React.useRef<HTMLInputElement | null>(null);
+    const checkboxElement = React.useRef<HTMLElement>(null);
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
@@ -104,7 +104,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        touchRippleRef={rippleRef}
+        touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
