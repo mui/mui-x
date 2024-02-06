@@ -36,7 +36,7 @@ const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemPro
 
       return (
         <rootProps.slots.baseIconButton
-          ref={ref}
+          ref={ref as React.MutableRefObject<HTMLButtonElement>}
           size="small"
           role="menuitem"
           aria-label={label}
