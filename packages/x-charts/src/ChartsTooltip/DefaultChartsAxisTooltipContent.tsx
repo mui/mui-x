@@ -10,7 +10,7 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
-import { isCartesianSeries } from './utils';
+import { isCartesianSeries, utcFormatter } from './utils';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;
@@ -19,16 +19,10 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
     return null;
   }
 
-  const utcFormatter = (v: string | number | Date): string => {
-    if (v instanceof Date) {
-      return v.toUTCString();
-    }
-    return v.toLocaleString();
-  };
-
   const axisFormatter =
     axis.valueFormatter ??
-    ((v: any) => (axis?.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString()));
+    ((v: string | number | Date) =>
+      axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
