@@ -725,9 +725,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
     it('should be equal with values in different locales', () => {
       expect(
-        adapter.isWithinRange(adapter.date('2022-04-17'), [
-          adapterFr.date('2022-04-17'),
-          adapterFr.date('2022-04-19'),
+        adapter.isWithinRange(adapter.date('2022-04-17')!, [
+          adapterFr.date('2022-04-17')!,
+          adapterFr.date('2022-04-19')!,
         ]),
       ).to.equal(true);
     });
