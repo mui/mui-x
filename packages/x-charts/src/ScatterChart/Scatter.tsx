@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
+import {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
+} from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import {
   getIsFaded,
@@ -62,15 +66,12 @@ function Scatter(props: ScatterProps) {
     const minYRange = Math.min(...yRange);
     const maxYRange = Math.max(...yRange);
 
-    const temp: {
-      x: number;
-      y: number;
-      id: string | number;
+    const temp: (ScatterValueType & {
       dataIndex: number;
       isHighlighted: boolean;
       isFaded: boolean;
       interactionProps: ReturnType<typeof getInteractionItemProps>;
-    }[] = [];
+    })[] = [];
 
     for (let i = 0; i < series.data.length; i += 1) {
       const scatterPoint = series.data[i];

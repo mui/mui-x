@@ -63,9 +63,9 @@
     "axisLine": "",
     "axisTick": "",
     "axisTickLabel": "",
-    "bar": "",
+    "bar": "The component that renders the bar.",
     "itemContent": "",
-    "legend": "",
+    "legend": "Custom rendering of the legend.",
     "popper": ""
   }
 }

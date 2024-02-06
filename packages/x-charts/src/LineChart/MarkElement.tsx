@@ -14,6 +14,7 @@ import {
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -27,7 +28,7 @@ export interface MarkElementClasses {
 export type MarkElementClassKey = keyof MarkElementClasses;
 
 interface MarkElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -84,7 +85,7 @@ MarkElementPath.propTypes = {
 } as any;
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -177,6 +178,7 @@ MarkElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The shape of the marker.
    */

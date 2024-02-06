@@ -46,7 +46,7 @@
     "axisTick": "",
     "axisTickLabel": "",
     "itemContent": "",
-    "legend": "",
+    "legend": "Custom rendering of the legend.",
     "pieArc": "",
     "pieArcLabel": "",
     "popper": ""
