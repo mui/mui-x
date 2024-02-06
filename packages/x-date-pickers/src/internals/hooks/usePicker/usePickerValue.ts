@@ -5,7 +5,12 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
+import {
+  FieldSection,
+  FieldSelectedSections,
+  PickerChangeHandlerContext,
+  PickerValidDate,
+} from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -147,7 +152,7 @@ const shouldClosePicker = <TValue, TError>(
  */
 export const usePickerValue = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
 >({

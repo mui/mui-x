@@ -1,5 +1,6 @@
 ---
 title: React Tree map chart
+productId: x-charts
 ---
 
 # Charts - Treemap 🚧

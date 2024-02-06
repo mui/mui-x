@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -15,6 +15,8 @@ import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
+
+export type { GridProSlotsComponent as GridSlots } from '../models';
 
 const releaseInfo = getReleaseInfo();
 

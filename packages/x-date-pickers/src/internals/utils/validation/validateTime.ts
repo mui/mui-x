@@ -1,10 +1,10 @@
 import { createIsAfterIgnoreDatePart } from '../time-utils';
 import { Validator } from '../../hooks/useValidation';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../models/validation';
-import { TimeValidationError, TimezoneProps } from '../../../models';
+import { PickerValidDate, TimeValidationError, TimezoneProps } from '../../../models';
 import { DefaultizedProps } from '../../models/helpers';
 
-export interface TimeComponentValidationProps<TDate>
+export interface TimeComponentValidationProps<TDate extends PickerValidDate>
   extends Required<BaseTimeValidationProps>,
     TimeValidationProps<TDate>,
     DefaultizedProps<TimezoneProps, 'timezone'> {}

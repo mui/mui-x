@@ -75,7 +75,7 @@ export interface PieArcLabelPlotProps
    */
   slotProps?: PieArcLabelPlotSlotProps;
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation?: boolean;
@@ -233,7 +233,7 @@ PieArcLabelPlot.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The radius between circle center and the begining of the arc.
    * @default 0
@@ -249,7 +249,7 @@ PieArcLabelPlot.propTypes = {
    */
   paddingAngle: PropTypes.number,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

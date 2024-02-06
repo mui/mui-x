@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
   {
     field: 'idBis',
     type: 'number',
-    valueGetter: (params) => params.row.id,
+    valueGetter: (value, row) => row.id,
   },
   {
     field: 'category',

@@ -18,6 +18,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -29,7 +30,7 @@ const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   return composeClasses(slots, getMonthCalendarUtilityClass, classes);
 };
 
-export function useMonthCalendarDefaultizedProps<TDate>(
+export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: MonthCalendarProps<TDate>,
   name: string,
 ): DefaultizedProps<
@@ -66,7 +67,7 @@ const MonthCalendarRoot = styled('div', {
   boxSizing: 'border-box',
 });
 
-type MonthCalendarComponent = (<TDate>(
+type MonthCalendarComponent = (<TDate extends PickerValidDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -79,7 +80,7 @@ type MonthCalendarComponent = (<TDate>(
  *
  * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
  */
-export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
+export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate extends PickerValidDate>(
   inProps: MonthCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -314,7 +315,7 @@ MonthCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true` picker is disabled
    */
@@ -339,11 +340,11 @@ MonthCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -365,7 +366,7 @@ MonthCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Disable specific month.
    * @template TDate
@@ -393,5 +394,5 @@ MonthCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
 } as any;

@@ -79,9 +79,9 @@ describe('<DataGridPro /> - Column spanning', () => {
 
   describe('key navigation', () => {
     const columns: GridColDef[] = [
-      { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-      { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-      { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+      { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+      { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+      { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
       { field: 'rating' },
     ];
 
@@ -120,9 +120,9 @@ describe('<DataGridPro /> - Column spanning', () => {
             apiRef={apiRef}
             {...baselineProps}
             columns={[
-              { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-              { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-              { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+              { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+              { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+              { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
               { field: 'rating' },
             ]}
             disableVirtualization={isJSDOM}
@@ -184,9 +184,9 @@ describe('<DataGridPro /> - Column spanning', () => {
 
   it('should apply `colSpan` correctly on GridApiRef setRows', () => {
     const columns: GridColDef[] = [
-      { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
-      { field: 'category', colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1) },
-      { field: 'price', colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1) },
+      { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
+      { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
+      { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
       { field: 'rating' },
     ];
 

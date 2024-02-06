@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useId from '@mui/utils/useId';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
 
@@ -38,13 +39,21 @@ export type DrawingArea = {
   height: number;
 };
 
-export const DrawingContext = React.createContext<DrawingArea>({
+export const DrawingContext = React.createContext<
+  DrawingArea & {
+    /**
+     * A random id used to distinguish each chart on the same page.
+     */
+    chartId: string;
+  }
+>({
   top: 0,
   left: 0,
   bottom: 0,
   right: 0,
   height: 300,
   width: 400,
+  chartId: '',
 });
 export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
@@ -56,10 +65,16 @@ export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ 
 function DrawingProvider(props: DrawingProviderProps) {
   const { width, height, margin, svgRef, children } = props;
   const drawingArea = useChartDimensions(width, height, margin);
+  const chartId = useId();
+
+  const value = React.useMemo(
+    () => ({ chartId: chartId ?? '', ...drawingArea }),
+    [chartId, drawingArea],
+  );
 
   return (
     <SVGContext.Provider value={svgRef}>
-      <DrawingContext.Provider value={drawingArea}>{children}</DrawingContext.Provider>
+      <DrawingContext.Provider value={value}>{children}</DrawingContext.Provider>
     </SVGContext.Provider>
   );
 }

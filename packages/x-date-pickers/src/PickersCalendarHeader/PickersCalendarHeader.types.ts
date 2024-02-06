@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
@@ -8,7 +9,7 @@ import {
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
-import { DateView } from '../models/views';
+import { PickerValidDate, DateView } from '../models';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
@@ -28,9 +29,11 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
 // We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderSlotPropsOverrides {}
 
-export type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
+export type PickersCalendarHeaderOwnerState<TDate extends PickerValidDate> =
+  PickersCalendarHeaderProps<TDate>;
 
-export interface PickersCalendarHeaderSlotProps<TDate> extends PickersArrowSwitcherSlotProps {
+export interface PickersCalendarHeaderSlotProps<TDate extends PickerValidDate>
+  extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderSlotPropsOverrides,
@@ -44,7 +47,7 @@ export interface PickersCalendarHeaderSlotProps<TDate> extends PickersArrowSwitc
   >;
 }
 
-export interface PickersCalendarHeaderProps<TDate>
+export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
   extends ExportedPickersArrowSwitcherProps,
     MonthValidationOptions<TDate> {
   /**
@@ -76,7 +79,7 @@ export interface PickersCalendarHeaderProps<TDate>
   sx?: SxProps<Theme>;
 }
 
-export type ExportedPickersCalendarHeaderProps<TDate> = Pick<
+export type ExportedPickersCalendarHeaderProps<TDate extends PickerValidDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
   'classes' | 'slots' | 'slotProps'
 >;

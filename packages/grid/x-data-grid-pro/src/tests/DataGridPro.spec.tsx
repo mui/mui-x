@@ -15,7 +15,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
           },
         ]}
       />
@@ -25,7 +25,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            valueGetter: (value, row) => row.firstName,
           },
         ]}
       />
@@ -36,7 +36,7 @@ function ColumnPropTest() {
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            valueGetter: (value, row) => row.lastName,
           },
         ]}
       />
@@ -46,7 +46,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            valueGetter: (value, row) => row.firstName,
           },
         ]}
       />

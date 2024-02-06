@@ -82,7 +82,7 @@ const COLUMNS = [
     headerName: 'Available on',
     width: 100,
     align: 'center',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (row.projects.includes('x-data-grid')) {
         return 'x-data-grid';
       }

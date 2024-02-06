@@ -16,6 +16,7 @@ import {
   FieldsTextFieldProps,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
 import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
@@ -59,7 +60,7 @@ const MultiInputTimeRangeFieldSeparator = styled(
   },
 )({});
 
-type MultiInputTimeRangeFieldComponent = (<TDate>(
+type MultiInputTimeRangeFieldComponent = (<TDate extends PickerValidDate>(
   props: MultiInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -73,10 +74,9 @@ type MultiInputTimeRangeFieldComponent = (<TDate>(
  *
  * - [MultiInputTimeRangeField API](https://mui.com/x/api/multi-input-time-range-field/)
  */
-const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<TDate>(
-  inProps: MultiInputTimeRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
+  TDate extends PickerValidDate,
+>(inProps: MultiInputTimeRangeFieldProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiMultiInputTimeRangeField',
@@ -179,7 +179,7 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * Defines the `flex-direction` style property.
    * It is applied for all screen sizes.
@@ -228,12 +228,12 @@ MultiInputTimeRangeField.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -271,7 +271,7 @@ MultiInputTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -376,7 +376,7 @@ MultiInputTimeRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
 export { MultiInputTimeRangeField };

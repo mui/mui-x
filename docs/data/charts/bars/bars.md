@@ -1,6 +1,7 @@
 ---
 title: React Bar chart
-components: BarChart, BarElement, BarPlot, ChartsGrid
+productId: x-charts
+components: BarChart, BarElement, BarPlot, ChartsGrid , ChartsOnAxisClickHandler
 ---
 
 # Charts - Bars
@@ -71,6 +72,48 @@ It takes an object with properties `vertical` and `horizontal`.
 More info in the [axis documentation](/x/react-charts/axis/#grid).
 
 {{"demo": "GridDemo.js"}}
+
+## Click event
+
+Bar charts provides two click handlers:
+
+- `onItemClick` for click on a specific bar.
+- `onAxisClick` for a click anywhere in the chart
+
+They both provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "BarClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+
+:::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <BarPlot onItemClick={onItemClick} />
+</ChartContainer>;
+```
 
 ## Animation
 

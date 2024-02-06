@@ -1,5 +1,6 @@
 ---
 title: React Gantt chart
+productId: x-charts
 ---
 
 # Charts - Gantt [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧

@@ -8,13 +8,14 @@ import {
   pickersLayoutClasses,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
 import { DateTimeRangePickerView } from '../internals/models/dateTimeRange';
 
 /**
  * @ignore - internal component.
  */
-export function DesktopDateTimeRangePickerLayout<TDate>(
+export function DesktopDateTimeRangePickerLayout<TDate extends PickerValidDate>(
   props: PickersLayoutProps<DateRange<TDate>, TDate, DateTimeRangePickerView>,
 ) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);

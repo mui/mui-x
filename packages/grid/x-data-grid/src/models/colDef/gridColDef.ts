@@ -3,12 +3,8 @@ import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import type { GridFilterOperator } from '../gridFilterOperator';
 import {
-  GridCellParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
-  GridValueFormatterParams,
-  GridValueGetterParams,
-  GridValueSetterParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
@@ -44,6 +40,51 @@ export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowMode
   colDef: GridStateColDef<R, V>,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
+
+export type GridValueGetter<
+  R extends GridValidRowModel = GridValidRowModel,
+  V = any,
+  F = V,
+  TValue = never,
+> = (
+  value: TValue,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => V;
+
+export type GridValueFormatter<
+  R extends GridValidRowModel = GridValidRowModel,
+  V = any,
+  F = V,
+  TValue = never,
+> = (
+  value: TValue,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => F;
+
+export type GridValueSetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: V,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => R;
+
+export type GridValueParser<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: F | undefined,
+  row: R | undefined,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => V;
+
+export type GridColSpanFn<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
+  value: V,
+  row: R,
+  column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => number | undefined;
 
 /**
  * Column Definition base interface.
@@ -134,34 +175,23 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @template R, V
-   * @param {GridValueGetterParams<R, any>} params Object containing parameters for the getter.
-   * @returns {V} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams<R, any>) => V;
+  valueGetter?: GridValueGetter<R, V, F>;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
-   * @template R, V
-   * @param {GridValueSetterParams<R, V>} params Object containing parameters for the setter.
    * @returns {R} The row with the updated field.
    */
-  valueSetter?: (params: GridValueSetterParams<R, V>) => R;
+  valueSetter?: GridValueSetter<R, V, F>;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @template V, F
-   * @param {GridValueFormatterParams<V>} params Object containing parameters for the formatter.
-   * @returns {F} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams<V>) => F;
+  valueFormatter?: GridValueFormatter<R, V, F>;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
-   * @template R, V, F
-   * @param {F | undefined} value The user-entered value.
-   * @param {GridCellParams<R, V, F>} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F | undefined, params?: GridCellParams<R, V, F>) => V;
+  valueParser?: GridValueParser<R, V, F>;
   /**
    * Class name that will be added in cells for that column.
    */
@@ -245,7 +275,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Number of columns a cell should span.
    * @default 1
    */
-  colSpan?: number | ((params: GridCellParams<R, V, F>) => number | undefined);
+  colSpan?: number | GridColSpanFn<R, V, F>;
 }
 
 /**

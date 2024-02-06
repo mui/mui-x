@@ -8,5 +8,7 @@ export function GridFooterPlaceholder() {
     return null;
   }
 
-  return <rootProps.slots.footer {...rootProps.slotProps?.footer} />;
+  return (
+    <rootProps.slots.footer {...(rootProps.slotProps?.footer as any) /* FIXME: typing error */} />
+  );
 }

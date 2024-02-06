@@ -1,6 +1,7 @@
 ---
 title: React Line chart
-components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, ChartsGrid
+productId: x-charts
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
 ---
 
 # Charts - Lines
@@ -90,6 +91,51 @@ However, it cannot extrapolate the curve before the first non-null data point or
 
 {{"demo": "ConnectNulls.js"}}
 
+## Click event
+
+Line charts provides multiple click handlers:
+
+- `onAreaClick` for click on a specific area.
+- `onLineClick` for click on a specific line.
+- `onMarkClick` for click on a specific mark.
+- `onAxisClick` for a click anywhere in the chart
+
+They all provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "LineClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onAxisClick` and the others:
+
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
+
+:::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <LinePlot onItemClick={onLineClick} />
+  <AreaPlot onItemClick={onAreaClick} />
+</ChartContainer>;
+```
+
 ## Styling
 
 ### Grid
@@ -151,3 +197,30 @@ sx={{
 ```
 
 {{"demo": "CSSCustomization.js"}}
+
+## Animation
+
+To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+:::warning
+If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
+
+Otherwise the chart will have no way to know if you are modifying, removing, or adding some series.
+This will lead to strange behaviors.
+:::
+
+```jsx
+// For a single component chart
+<LineChart skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <LinePlot skipAnimation />
+  <AreaPlot skipAnimation />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "LineAnimation.js"}}
