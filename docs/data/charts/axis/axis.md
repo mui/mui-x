@@ -69,6 +69,13 @@ xAxis={[{ min: 10, max: 50,  }]}
 
 {{"demo": "MinMaxExample.js"}}
 
+### Axis direction
+
+By default, the axes' directions are left to right and bottom to top.
+You can change this behavior with the property `reverse`.
+
+{{"demo": "ReverseExampleNoSnap.js"}}
+
 ## Tick position
 
 ### Automatic tick position
