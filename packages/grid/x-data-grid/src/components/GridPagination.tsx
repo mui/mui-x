@@ -39,7 +39,7 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
     );
 
     const lastPage = React.useMemo(
-      () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+      () => Math.ceil(rowCount / (paginationModel.pageSize || 1) - 1),
       [rowCount, paginationModel.pageSize],
     );
 
