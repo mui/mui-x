@@ -305,10 +305,7 @@ function defaultPasteResolver({
 }
 
 const isPasteShortcut = (event: React.KeyboardEvent) => {
-  return (
-    (event.ctrlKey || event.metaKey) &&
-    (event.key.toLowerCase() === 'v' || event.code.toLowerCase() === 'keyv')
-  );
+  return (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v';
 };
 
 export const useGridClipboardImport = (
