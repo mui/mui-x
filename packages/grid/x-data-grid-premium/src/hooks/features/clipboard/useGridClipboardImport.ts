@@ -306,9 +306,7 @@ function defaultPasteResolver({
 
 const isPasteShortcut = (event: React.KeyboardEvent) => {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v') {
-    if (event.shiftKey) {
-      return false;
-    } else if (event.altKey) {
+    if (event.shiftKey || event.altKey) {
       return false;
     }
     return true;
