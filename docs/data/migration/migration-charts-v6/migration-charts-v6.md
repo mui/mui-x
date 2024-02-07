@@ -45,7 +45,7 @@ Some types got renamed for coherence:
 
 #### Props
 
-The Pie Chart `onClick` has been renamed `onItemClick` for consistency with other components.
+The Pie Chart `onClick` prop has been renamed `onItemClick` for consistency with other components.
 The behavior of this prop remains the same.
 
 ### Animation
