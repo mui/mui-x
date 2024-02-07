@@ -100,7 +100,7 @@ Unlike the `SimpleTreeView` component, the `RichTreeView` component only support
 
 ## Disabled items
 
-You can disable some of the items using the `isItemDisabled` prop on the `RichTreeView` component:
+Use the `isItemDisabled` prop on the Rich Tree View to disable interaction and focus on a Tree Item:
 
 ```tsx
 function isItemDisabled(item) {
@@ -116,29 +116,27 @@ function isItemDisabled(item) {
 Just like the `items` prop, the `isItemDisabled` function should keep the same JavaScript reference between two renders.
 Otherwise, the Tree View will re-generate its entire structure.
 
-It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
+This can be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
-### Interact with disabled items
+### The disabledItemsFocusable prop
 
-The behavior of disabled tree items depends on the `disabledItemsFocusable` prop.
+Use the `disabledItemsFocusable` prop to control whether or not a disabled Tree Item can be focused.
 
-If it is false:
+When this prop is set to false:
 
-- Arrow keys will not focus disabled items, and the next non-disabled item will be focused.
-- Typing the first character of a disabled item's label will not focus the item.
+- Navigating with keyboard arrow keys will not focus the disabled items, and the next non-disabled item will be focused instead.
+- Typing the first character of a disabled item's label will not move the focus to it.
 - Mouse or keyboard interaction will not expand/collapse disabled items.
 - Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will skip disabled items, and the next non-disabled item will be selected.
+- <kbd class="key">Shift</kbd> + arrow keys will skip disabled items, and the next non-disabled item will be selected instead.
 - Programmatic focus will not focus disabled items.
 
-If it is true:
+When it's set to true:
 
-- Arrow keys will focus disabled items.
-- Typing the first character of a disabled item's label will focus the item.
+- Navigating with keyboard arrow keys will focus disabled items.
+- Typing the first character of a disabled item's label will move focus to it.
 - Mouse or keyboard interaction will not expand/collapse disabled items.
 - Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will not skip disabled items but, the disabled item will not be selected.
+- <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
-
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}

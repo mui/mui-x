@@ -12,6 +12,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -25,7 +26,7 @@ export interface LineElementClasses {
 export type LineElementClassKey = keyof LineElementClasses;
 
 export interface LineElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -148,7 +149,7 @@ LineElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

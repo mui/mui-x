@@ -64,7 +64,7 @@ const CustomContent = React.forwardRef(function CustomContent(
       ref={ref as React.Ref<HTMLDivElement>}
     >
       <div className={classes.iconContainer}>{icon}</div>
-      <Box sx={{ flexGrow: 1, display: 'flex', gap: 2 }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
         <Avatar
           sx={(theme) => ({
             background: theme.palette.primary.main,

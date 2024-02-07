@@ -90,6 +90,10 @@ const apiPages: MuiPage[] = [
     title: 'DefaultChartsItemTooltipContent',
   },
   {
+    pathname: '/x/api/charts/default-charts-legend',
+    title: 'DefaultChartsLegend',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },

@@ -12,6 +12,7 @@ import {
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -25,7 +26,7 @@ export interface AreaElementClasses {
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -149,7 +150,7 @@ AreaElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

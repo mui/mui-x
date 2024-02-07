@@ -61,7 +61,7 @@
     "axisTick": "",
     "axisTickLabel": "",
     "itemContent": "",
-    "legend": "",
+    "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",

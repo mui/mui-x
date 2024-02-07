@@ -6,7 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { Watermark } from '@mui/x-license-pro';
+import { Watermark } from '@mui/x-license';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
