@@ -38,13 +38,10 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
       [rootProps.rowCount, visibleTopLevelRowCount],
     );
 
-    const lastPage = React.useMemo(
-      () => {
-        const calculatedValue = Math.ceil(rowCount / (paginationModel.pageSize || 1)) - 1;
-        return calculatedValue < 0 ? 0 : calculatedValue;
-      },
-      [rowCount, paginationModel.pageSize],
-    );
+    const lastPage = React.useMemo(() => {
+      const calculatedValue = Math.ceil(rowCount / (paginationModel.pageSize || 1)) - 1;
+      return calculatedValue < 0 ? 0 : calculatedValue;
+    }, [rowCount, paginationModel.pageSize]);
 
     const handlePageSizeChange = React.useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
