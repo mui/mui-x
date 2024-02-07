@@ -40,7 +40,7 @@ You have a few possible options to provide it:
   - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
   - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
   - [Charts](/x/react-charts/getting-started/#single-charts)
-  - [Tree View](/x/react-tree-view/#simpletreeview)
+  - [Tree View](/x/react-tree-view/#simple-tree-view)
 
 - You can use a starter template to build a reproduction case with:
   <!-- #default-branch-switch -->
