@@ -27,7 +27,7 @@ const getItemId = (item) => item.internalId;
 
 export default function GetItemId() {
   return (
-    <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView items={MUI_X_PRODUCTS} getItemId={getItemId} />
     </Box>
   );

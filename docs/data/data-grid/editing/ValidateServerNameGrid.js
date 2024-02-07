@@ -23,13 +23,10 @@ function validateName(username) {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
 
   return new Promise((resolve) => {
-    promiseTimeout = setTimeout(
-      () => {
-        const exists = existingUsers.includes(username.toLowerCase());
-        resolve(exists ? `${username} is already taken.` : null);
-      },
-      Math.random() * 500 + 100,
-    ); // simulate network latency
+    promiseTimeout = setTimeout(() => {
+      const exists = existingUsers.includes(username.toLowerCase());
+      resolve(exists ? `${username} is already taken.` : null);
+    }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
