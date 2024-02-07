@@ -46,6 +46,20 @@ This new feature allows the field component to set aria attributes on individual
 When using `slotProps.field` to pass props to your field component,
 the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
 
+- For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
+
+  Both components below will respect the leading zeroes on digit sections:
+
+  ```js
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+    enableAccessibleFieldDOMStructure
+  />
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+  />
+  ```
+
 - For the props forwarded to the `TextField`,
   you can have a look at the next section to see how the migration impact them.
 
@@ -58,20 +72,6 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   />
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
-  />
-  ```
-
-- For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
-
-  Both components below will respect the leading zeroes on digit sections:
-
-  ```js
-  <DatePicker
-    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
-    enableAccessibleFieldDOMStructure
-  />
-  <DatePicker
-    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
   />
   ```
 
@@ -106,7 +106,7 @@ You can have a look at the [custom PickersTextField](/x/react-date-pickers/custo
 
 :::info
 If your custom field was used to create a Joy UI design component,
-you may want to wait a few weeks for us to release an out-of-the-box Joy `PickersTextField` component instead of implement it yourself.
+you may want to wait a few weeks for the release of an out-of-the-box Joy `PickersTextField` component instead of implementing it yourself.
 :::
 
 ### Usage with `slots.textField`

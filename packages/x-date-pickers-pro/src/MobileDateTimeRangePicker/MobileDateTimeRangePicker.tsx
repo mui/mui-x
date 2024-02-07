@@ -464,7 +464,7 @@ MobileDateTimeRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 3. If `"all"` is provided, all the sections will be selected.
