@@ -4,6 +4,8 @@ on:
   release:
     types: [prereleased, published]
 
+permissions: {}
+
 jobs:
   delimiter-test:
     runs-on: ubuntu-latest
