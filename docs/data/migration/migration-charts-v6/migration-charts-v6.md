@@ -45,11 +45,11 @@ Some types got renamed for coherence:
 
 #### Props
 
-The pie chart `onClick` has been renamed `onItemClick` for consistency with other components.
+The Pie Chart `onClick` has been renamed `onItemClick` for consistency with other components.
 The behavior of this prop remains the same.
 
 ### Animation
 
-The line chart now have animation by default.
+The Line Chart now have animation by default.
 You can disable it with `skipAnimation` prop.
-See [animation documentation](next.mui.com/x/react-charts/lines/#animation) for more information.
+See [animation documentation](/x/react-charts/lines/#animation) for more information.
