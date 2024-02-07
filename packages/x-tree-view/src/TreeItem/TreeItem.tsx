@@ -189,10 +189,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
-      return (
-        reactChildren.length > 0 &&
-        reactChildren.some(isExpandable)
-      );
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
     }
     return Boolean(reactChildren);
   };
