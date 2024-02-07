@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useLocalizationContext } from './useUtils';
 import { MuiPickersAdapterContextValue } from '../../LocalizationProvider/LocalizationProvider';
+import { PickerValidDate } from '../../models';
 
 interface ValidationCommonProps<TError, TValue> {
   /**
@@ -27,13 +28,18 @@ export type InferError<TProps> =
     ? Parameters<Exclude<TProps['onError'], undefined>>[0]
     : never;
 
-export type Validator<TValue, TDate, TError, TValidationProps> = (params: {
+export type Validator<TValue, TDate extends PickerValidDate, TError, TValidationProps> = (params: {
   adapter: MuiPickersAdapterContextValue<TDate>;
   value: TValue;
   props: Omit<TValidationProps, 'value' | 'onError'>;
 }) => TError;
 
-export function useValidation<TValue, TDate, TError, TValidationProps extends {}>(
+export function useValidation<
+  TValue,
+  TDate extends PickerValidDate,
+  TError,
+  TValidationProps extends {},
+>(
   props: ValidationProps<TError, TValue, TValidationProps>,
   validate: Validator<TValue, TDate, TError, TValidationProps>,
   isSameError: (a: TError, b: TError | null) => boolean,

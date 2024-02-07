@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { DigitalClockClasses } from './digitalClockClasses';
@@ -6,9 +7,9 @@ import {
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/clock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 
-export interface ExportedDigitalClockProps<TDate>
+export interface ExportedDigitalClockProps<TDate extends PickerValidDate>
   extends ExportedBaseClockProps<TDate>,
     DigitalClockOnlyProps {}
 
@@ -24,7 +25,7 @@ export interface DigitalClockSlotProps {
   digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
-export interface DigitalClockProps<TDate>
+export interface DigitalClockProps<TDate extends PickerValidDate>
   extends ExportedDigitalClockProps<TDate>,
     BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
   /**

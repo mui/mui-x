@@ -12,6 +12,14 @@
     "import { BarElement } from '@mui/x-charts/BarChart';",
     "import { BarElement } from '@mui/x-charts';"
   ],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "root",

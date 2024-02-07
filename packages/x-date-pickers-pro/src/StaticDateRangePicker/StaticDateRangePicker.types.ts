@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   StaticRangeOnlyPickerProps,
   UseStaticRangePickerSlots,
@@ -10,15 +11,15 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface StaticDateRangePickerSlots<TDate>
+export interface StaticDateRangePickerSlots<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlots<TDate>,
     UseStaticRangePickerSlots<TDate, 'day'> {}
 
-export interface StaticDateRangePickerSlotProps<TDate>
+export interface StaticDateRangePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlotProps<TDate>,
     UseStaticRangePickerSlotProps<TDate, 'day'> {}
 
-export interface StaticDateRangePickerProps<TDate>
+export interface StaticDateRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerProps<TDate>,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**

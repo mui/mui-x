@@ -21,7 +21,7 @@ module.exports = {
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
-      '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
+      '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
       '@mui/markdown': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/markdown'),
       '@mui/material-nextjs': path.resolve(
         __dirname,

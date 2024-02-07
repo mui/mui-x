@@ -13,5 +13,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "bar": "" }
+  "slotDescriptions": { "bar": "The component that renders the bar." }
 }

@@ -4,8 +4,9 @@ import { unstable_useControlled as useControlled } from '@mui/utils';
 import type { PickerSelectionState } from './usePicker';
 import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';
+import { PickerValidDate } from '../../models';
 
-export type PickerOnChangeFn<TDate> = (
+export type PickerOnChangeFn<TDate extends PickerValidDate> = (
   date: TDate | null,
   selectionState?: PickerSelectionState,
 ) => void;

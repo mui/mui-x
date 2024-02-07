@@ -212,7 +212,10 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         apiRef.current.deleteFilterItem(validFilters[0]);
         return apiRef.current.hideFilterPanel();
       }
-      return apiRef.current.setFilterModel({ ...filterModel, items: readOnlyFilters });
+      return apiRef.current.setFilterModel(
+        { ...filterModel, items: readOnlyFilters },
+        'removeAllFilterItems',
+      );
     }, [apiRef, readOnlyFilters, filterModel, validFilters]);
 
     React.useEffect(() => {

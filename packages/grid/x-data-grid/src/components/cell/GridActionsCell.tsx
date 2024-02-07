@@ -180,7 +180,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     if (event.key === 'Tab') {
       event.preventDefault();
     }
-    if (['Tab', 'Enter', 'Escape'].includes(event.key)) {
+    if (['Tab', 'Escape'].includes(event.key)) {
       hideMenu();
     }
   };
@@ -223,13 +223,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       )}
 
       {menuButtons.length > 0 && (
-        <GridMenu
-          open={open}
-          target={buttonRef.current}
-          position={position}
-          onClose={hideMenu}
-          onClick={hideMenu}
-        >
+        <GridMenu open={open} target={buttonRef.current} position={position} onClose={hideMenu}>
           <MenuList
             id={menuId}
             className={gridClasses.menuList}
@@ -238,7 +232,9 @@ function GridActionsCell(props: GridActionsCellProps) {
             variant="menu"
             autoFocusItem
           >
-            {menuButtons.map((button, index) => React.cloneElement(button, { key: index }))}
+            {menuButtons.map((button, index) =>
+              React.cloneElement(button, { key: index, closeMenu: hideMenu }),
+            )}
           </MenuList>
         </GridMenu>
       )}

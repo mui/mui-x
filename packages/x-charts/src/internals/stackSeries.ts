@@ -14,12 +14,13 @@ import {
 } from 'd3-shape';
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
+import { SeriesId } from '../models/seriesType/common';
 
-type StackableSeries = { [id: string]: BarSeriesType } | { [id: string]: LineSeriesType };
+type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
 
 type FormatterParams = {
   series: StackableSeries;
-  seriesOrder: string[];
+  seriesOrder: SeriesId[];
   defaultStrategy?: {
     stackOrder?: StackOrderType;
     stackOffset?: StackOffsetType;
@@ -27,7 +28,7 @@ type FormatterParams = {
 };
 
 export type StackingGroupsType = {
-  ids: string[];
+  ids: SeriesId[];
   stackingOrder: (series: Series<any, any>) => number[];
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
@@ -95,7 +96,7 @@ export const getStackingGroups = (params: FormatterParams) => {
   const { series, seriesOrder, defaultStrategy } = params;
 
   const stackingGroups: StackingGroupsType = [];
-  const stackIndex: { [id: string]: number } = {};
+  const stackIndex: Record<SeriesId, number> = {};
 
   seriesOrder.forEach((id) => {
     const { stack, stackOrder, stackOffset } = series[id];

@@ -1,13 +1,13 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" } },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -18,7 +18,7 @@
     },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
     },
     "shouldDisableMonth": {
@@ -44,7 +44,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "any" } }
+    "value": { "type": { "name": "object" } }
   },
   "name": "MonthCalendar",
   "imports": [

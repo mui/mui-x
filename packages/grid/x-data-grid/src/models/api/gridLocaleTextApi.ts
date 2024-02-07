@@ -41,9 +41,9 @@ export interface GridLocaleText {
   toolbarExportExcel: string;
 
   // Columns management text
-  columnsManagementSearchTitle: React.ReactNode;
-  columnsManagementNoColumns: React.ReactNode;
-  columnsManagementShowHideAllText: React.ReactNode;
+  columnsManagementSearchTitle: string;
+  columnsManagementNoColumns: string;
+  columnsManagementShowHideAllText: string;
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;

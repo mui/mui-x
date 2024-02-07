@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
