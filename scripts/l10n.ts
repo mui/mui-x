@@ -26,8 +26,8 @@ const packagesWithL10n = [
   {
     key: 'data-grid',
     reportName: '🧑‍💼 DataGrid, DataGridPro, DataGridPremium',
-    constantsRelativePath: 'packages/grid/x-data-grid/src/constants/localeTextConstants.ts',
-    localesRelativePath: 'packages/grid/x-data-grid/src/locales',
+    constantsRelativePath: 'packages/x-data-grid/src/constants/localeTextConstants.ts',
+    localesRelativePath: 'packages/x-data-grid/src/locales',
     documentationReportPath: 'docs/data/data-grid/localization/data.json',
   },
   {

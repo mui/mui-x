@@ -9,7 +9,7 @@ components: ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltip, D
 <p class="description">Tooltip provides extra data on charts item.</p>
 
 In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
-If you are using composition, you can add the `<ChartTooltip />` component and pass props directly.
+If you are using composition, you can add the `<ChartsTooltip />` component and pass props directly.
 
 ## Tooltip trigger
 
