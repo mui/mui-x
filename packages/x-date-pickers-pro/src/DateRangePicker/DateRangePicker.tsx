@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TDate>(
+type DatePickerComponent = (<TDate extends PickerValidDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -21,7 +22,7 @@ type DatePickerComponent = (<TDate>(
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
+const DateRangePicker = React.forwardRef(function DateRangePicker<TDate extends PickerValidDate>(
   inProps: DateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -84,7 +85,7 @@ DateRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -171,11 +172,11 @@ DateRangePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Name attribute used by the `input` element in the Field.
    * Ignored if the field has several inputs.
@@ -251,7 +252,7 @@ DateRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -338,7 +339,7 @@ DateRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

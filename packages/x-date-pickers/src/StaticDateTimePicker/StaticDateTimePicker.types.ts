@@ -9,17 +9,17 @@ import {
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView, PickerValidDate } from '../models';
 
-export interface StaticDateTimePickerSlots<TDate>
+export interface StaticDateTimePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlots<TDate>,
     UseStaticPickerSlots<TDate, DateOrTimeView> {}
 
-export interface StaticDateTimePickerSlotProps<TDate>
+export interface StaticDateTimePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlotProps<TDate>,
     UseStaticPickerSlotProps<TDate, DateOrTimeView> {}
 
-export interface StaticDateTimePickerProps<TDate>
+export interface StaticDateTimePickerProps<TDate extends PickerValidDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**

@@ -5,6 +5,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { LineItemIdentifier } from '../models/seriesType/line';
 import { DrawingContext } from '../context/DrawingProvider';
 import { cleanId } from '../internals/utils';
 
@@ -29,6 +30,15 @@ export interface MarkPlotProps
    * @default {}
    */
   slotProps?: MarkPlotSlotProps;
+  /**
+   * Callback fired when a line mark item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    lineItemIdentifier: LineItemIdentifier,
+  ) => void;
 }
 
 /**
@@ -42,7 +52,7 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -148,6 +158,11 @@ function MarkPlot(props: MarkPlotProps) {
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
                       highlightScope={series[seriesId].highlightScope}
                       skipAnimation={skipAnimation}
+                      onClick={
+                        onItemClick &&
+                        ((event) =>
+                          onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
+                      }
                       {...slotProps?.mark}
                     />
                   );
@@ -165,6 +180,12 @@ MarkPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line mark item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
    * @default false

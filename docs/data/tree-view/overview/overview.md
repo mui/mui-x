@@ -8,31 +8,36 @@ packageName: '@mui/x-tree-view'
 
 # MUI X Tree View
 
-<p class="description">A Tree View widget presents a hierarchical list.</p>
-
-Tree views can be used to represent a file system navigator displaying folders and files, an item representing a folder can be expanded to reveal the contents of the folder, which may be files, folders, or both.
+<p class="description">The Tree View component lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Available components
 
-There are two versions of the Tree View available.
+The MUI X Tree View package exposes two different versions of the component:
 
-### SimpleTreeView
+### Simple Tree View
 
-The `SimpleTreeView` component receives its items as JSX children.
-It is designed for simple use-cases where the items are hardcoded.
+```jsx
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+```
+
+The simple version of the Tree View component receives its items as JSX children.
+This is the recommended version for hardcoded items.
 
 {{"demo": "BasicSimpleTreeView.js"}}
 
-:::warning
-Most new advanced features won't be available on this component.
-If you are waiting for features like editing or virtualization, you should use `RichTreeView` instead.
-:::
+### Rich Tree View
 
-### RichTreeView
+```jsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+```
 
-The `RichTreeView` component receives its items through the `items` prop.
-It is designed for more advanced use-cases where the items are dynamically loaded from a data source.
+The rich version of the Tree View component receives its items dynamically from an external data source.
+This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
 
 {{"demo": "BasicRichTreeView.js"}}
+
+:::info
+At the moment, the Simple and Rich Tree Views are similar in terms of feature support. But as the component grows, you can expect to see the more advanced ones appear primarily on the Rich Tree View.
+:::

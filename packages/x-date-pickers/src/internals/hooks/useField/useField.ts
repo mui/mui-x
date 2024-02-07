@@ -16,11 +16,11 @@ import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './u
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 
 export const useField = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
