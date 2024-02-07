@@ -604,7 +604,7 @@
   { "name": "GridWorkspacesIcon", "kind": "Variable" },
   { "name": "isGroupingColumn", "kind": "Variable" },
   { "name": "isLeaf", "kind": "Function" },
-  { "name": "LicenseInfo", "kind": "Variable" },
+  { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LoadingOverlayPropsOverrides", "kind": "Interface" },
   { "name": "Logger", "kind": "Interface" },
   { "name": "MuiBaseEvent", "kind": "TypeAlias" },
