@@ -34,9 +34,16 @@ These changes were done for consistency, improved stability and to make room for
 
 ### Renaming
 
+#### Types
+
 Some types got renamed for coherence:
 
 | v6                                | v7                       |
 | :-------------------------------- | :----------------------- |
 | `ChartsTooltipSlotComponentProps` | `ChartsTooltipSlotProps` |
 | `ChartsTooltipSlotsComponent`     | `ChartsTooltipSlots`     |
+
+#### Props
+
+The pie chart `onClick` has been renamed `onItemClick` for consistency with other components.
+The behavior of this prop remains the same.
