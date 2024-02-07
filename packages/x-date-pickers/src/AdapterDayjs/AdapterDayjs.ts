@@ -111,6 +111,12 @@ const MISSING_TIMEZONE_PLUGIN = [
 const withLocale = (dayjs: any, locale?: string): Constructor =>
   !locale ? dayjs : (...args) => dayjs(...args).locale(locale);
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    dayjs: Dayjs;
+  }
+}
+
 /**
  * Based on `@date-io/dayjs`
  *

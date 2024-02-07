@@ -10,7 +10,7 @@
       },
       "default": "'primary'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
@@ -38,12 +38,12 @@
       },
       "default": "'none'"
     },
-    "maxDate": { "type": { "name": "any" } },
-    "maxDateTime": { "type": { "name": "any" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
-    "minDateTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" } },
+    "maxDateTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" } },
+    "minDateTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onChange": {
@@ -70,7 +70,7 @@
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
     "required": { "type": { "name": "bool" }, "default": "false" },
@@ -122,7 +122,7 @@
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "variant": {
       "type": {
         "name": "enum",

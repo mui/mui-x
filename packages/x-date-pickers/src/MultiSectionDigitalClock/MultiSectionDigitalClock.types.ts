@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
@@ -8,6 +9,7 @@ import {
 } from '../internals/models/props/clock';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 export interface MultiSectionDigitalClockOption<TValue> {
   isDisabled?: (value: TValue) => boolean;
@@ -18,7 +20,7 @@ export interface MultiSectionDigitalClockOption<TValue> {
   ariaLabel: string;
 }
 
-export interface ExportedMultiSectionDigitalClockProps<TDate>
+export interface ExportedMultiSectionDigitalClockProps<TDate extends PickerValidDate>
   extends ExportedBaseClockProps<TDate>,
     MultiSectionDigitalClockOnlyProps {}
 
@@ -37,7 +39,7 @@ export interface MultiSectionDigitalClockSlotProps {
   digitalClockSectionItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
-export interface MultiSectionDigitalClockProps<TDate>
+export interface MultiSectionDigitalClockProps<TDate extends PickerValidDate>
   extends ExportedMultiSectionDigitalClockProps<TDate>,
     BaseClockProps<TDate, TimeViewWithMeridiem> {
   /**

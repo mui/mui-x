@@ -26,7 +26,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -45,8 +45,8 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" } },
     "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
@@ -93,7 +93,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
@@ -141,7 +141,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "name": "DesktopDateRangePicker",

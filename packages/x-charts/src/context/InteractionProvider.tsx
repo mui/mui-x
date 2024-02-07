@@ -9,11 +9,11 @@ export type ItemInteractionData<T extends ChartSeriesType> = ChartItemIdentifier
 
 export type AxisInteractionData = {
   x: null | {
-    value: number | Date;
+    value: number | Date | string;
     index?: number;
   };
   y: null | {
-    value: number | Date;
+    value: number | Date | string;
     index?: number;
   };
 };
@@ -25,7 +25,7 @@ type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
     }
   | {
       type: 'leaveItem';
-      data: ItemInteractionData<T>;
+      data: Partial<ItemInteractionData<T>>;
     }
   | {
       type: 'exitChart';

@@ -7,6 +7,7 @@ import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -31,14 +32,18 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
 
 interface PickersLayoutPropsWithValueRequired<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
-const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem>(
+const usePickerLayout = <
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse<TValue> => {
   const {

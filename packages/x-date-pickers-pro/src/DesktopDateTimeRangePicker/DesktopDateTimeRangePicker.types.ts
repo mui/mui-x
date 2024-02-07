@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -11,15 +12,15 @@ import {
 } from '../DateTimeRangePicker/shared';
 import { DateTimeRangePickerView } from '../internals/models';
 
-export interface DesktopDateTimeRangePickerSlots<TDate>
+export interface DesktopDateTimeRangePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerSlots<TDate>,
     MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
-export interface DesktopDateTimeRangePickerSlotProps<TDate>
+export interface DesktopDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerSlotProps<TDate>,
     Omit<UseDesktopRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs' | 'toolbar'> {}
 
-export interface DesktopDateTimeRangePickerProps<TDate>
+export interface DesktopDateTimeRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerProps<TDate>,
     DesktopRangeOnlyPickerProps<TDate> {
   /**

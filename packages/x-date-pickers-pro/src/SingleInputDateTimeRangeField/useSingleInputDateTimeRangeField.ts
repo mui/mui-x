@@ -5,6 +5,7 @@ import {
   useDefaultDates,
   splitFieldInternalAndForwardedProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseSingleInputDateTimeRangeFieldComponentProps,
   UseSingleInputDateTimeRangeFieldDefaultizedProps,
@@ -13,7 +14,10 @@ import {
 import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
+export const useDefaultizedTimeRangeFieldProps = <
+  TDate extends PickerValidDate,
+  AdditionalProps extends {},
+>(
   props: UseSingleInputDateTimeRangeFieldProps<TDate>,
 ): UseSingleInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
@@ -37,7 +41,10 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
   } as any;
 };
 
-export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
+export const useSingleInputDateTimeRangeField = <
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+>(
   inProps: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>,
 ) => {
   const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);

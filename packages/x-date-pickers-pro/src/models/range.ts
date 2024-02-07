@@ -1,5 +1,7 @@
-export type DateRange<TDate> = [TDate | null, TDate | null];
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
-export type NonEmptyDateRange<TDate> = [TDate, TDate];
+export type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
+
+export type NonEmptyDateRange<TDate extends PickerValidDate> = [TDate, TDate];
 
 export type RangePosition = 'start' | 'end';
