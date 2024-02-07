@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import {
   CursorCoordinates,
   useGridApiEventHandler,
   getDataGridUtilityClass,
-  GridEventListener,
   useGridLogger,
   useGridApiOptionHandler,
   GridColumnOrderChangeParams,
+  GridColumnHeaderParams,
+  GridCellParams,
 } from '@mui/x-data-grid';
 import { GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -83,8 +87,8 @@ export const useGridColumnReorder = (
     };
   }, []);
 
-  const handleDragStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
-    (params, event) => {
+  const handleDragStart = useEventCallback(
+    (params: GridColumnHeaderParams, event: React.DragEvent<HTMLElement>) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
@@ -98,6 +102,11 @@ export const useGridColumnReorder = (
       dragColNode.current.classList.add(classes.columnHeaderDragging);
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
+        // For Android and iOS, if event.dataTransfer.setData is not called it doesn't allow to drag
+        // `text/html` doesn't work on Android but works on iOS
+        // `text` doesn't work on Safari iOS
+        const isAndroid = /(android)/i.test(navigator.userAgent);
+        event.dataTransfer.setData(isAndroid ? 'text' : 'text/html', params.field);
       }
       apiRef.current.setState((state) => ({
         ...state,
@@ -176,22 +185,19 @@ export const useGridColumnReorder = (
         }
       }
     },
-    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
-  const handleDragEnter = React.useCallback<
-    GridEventListener<'cellDragEnter' | 'columnHeaderDragEnter'>
-  >((params, event) => {
-    event.preventDefault();
-    // Prevent drag events propagation.
-    // For more information check here https://github.com/mui/mui-x/issues/2680.
-    event.stopPropagation();
-  }, []);
+  const handleDragEnter = useEventCallback(
+    (params: GridCellParams | GridColumnHeaderParams, event: React.DragEvent) => {
+      event.preventDefault();
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
+      event.stopPropagation();
+    },
+  );
 
-  const handleDragOver = React.useCallback<
-    GridEventListener<'cellDragOver' | 'columnHeaderDragOver'>
-  >(
-    (params, event) => {
+  const handleDragOver = useEventCallback(
+    (params: GridCellParams | GridColumnHeaderParams, event: React.DragEvent) => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (!dragColField) {
         return;
@@ -298,11 +304,10 @@ export const useGridColumnReorder = (
         cursorPosition.current = coordinates;
       }
     },
-    [apiRef, logger, theme.direction],
   );
 
-  const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
-    (params, event): void => {
+  const handleDragEnd = useEventCallback(
+    (params: GridColumnHeaderParams, event: React.DragEvent): void => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (props.disableColumnReorder || !dragColField) {
         return;
@@ -317,8 +322,21 @@ export const useGridColumnReorder = (
       clearTimeout(removeDnDStylesTimeout.current);
       dragColNode.current = null;
 
+      const rect = apiRef.current.rootElementRef!.current!.getBoundingClientRect();
+      const hasDroppedOutsideFallback =
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom;
+
+      // We can't use event.dataTransfer.dropEffect on Android because it's always "none"
+      const isAndroid = /(android)/i.test(navigator.userAgent);
+      const hasDroppedOutside = isAndroid
+        ? hasDroppedOutsideFallback
+        : event.dataTransfer.dropEffect === 'none';
+
       // Check if the column was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
+      if (hasDroppedOutside && !props.keepColumnPositionIfDraggedOutside) {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
         originColumnIndex.current = null;
@@ -339,7 +357,6 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
