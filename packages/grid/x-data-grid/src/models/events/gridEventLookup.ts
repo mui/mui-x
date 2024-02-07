@@ -366,7 +366,8 @@ export interface GridControlledStateReasonLookup {
     | 'upsertFilterItems'
     | 'deleteFilterItem'
     | 'changeLogicOperator'
-    | 'restoreState';
+    | 'restoreState'
+    | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
 }
 
