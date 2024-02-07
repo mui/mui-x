@@ -15,7 +15,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { UsePickerValueFieldResponse } from '../usePicker/usePickerValue.types';
 
@@ -26,7 +26,7 @@ import { UsePickerValueFieldResponse } from '../usePicker/usePickerValue.types';
  * - DesktopTimePicker
  */
 export const useDesktopPicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({

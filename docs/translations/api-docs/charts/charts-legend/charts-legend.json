@@ -23,5 +23,5 @@
     },
     "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
   },
-  "slotDescriptions": { "legend": "" }
+  "slotDescriptions": { "legend": "Custom rendering of the legend." }
 }

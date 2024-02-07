@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/base/utils';
 import { Theme } from '@mui/material/styles';
-import { TimezoneProps } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -28,7 +28,7 @@ import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
-export interface DateRangeCalendarSlots<TDate>
+export interface DateRangeCalendarSlots<TDate extends PickerValidDate>
   extends PickersArrowSwitcherSlots,
     Omit<DayCalendarSlots<TDate>, 'day'>,
     PickersCalendarHeaderSlots {
@@ -46,7 +46,7 @@ export interface DateRangeCalendarSlots<TDate>
   day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
-export interface DateRangeCalendarSlotProps<TDate>
+export interface DateRangeCalendarSlotProps<TDate extends PickerValidDate>
   extends PickersArrowSwitcherSlotProps,
     Omit<DayCalendarSlotProps<TDate>, 'day'>,
     PickersCalendarHeaderSlotProps<TDate> {
@@ -62,7 +62,7 @@ export interface DateRangeCalendarSlotProps<TDate>
   >;
 }
 
-export interface ExportedDateRangeCalendarProps<TDate>
+export interface ExportedDateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
@@ -105,7 +105,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   disableDragEditing?: boolean;
 }
 
-export interface DateRangeCalendarProps<TDate>
+export interface DateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDateRangeCalendarProps<TDate>,
     UseRangePositionProps,
     ExportedUseViewsOptions<'day'> {
@@ -155,11 +155,12 @@ export interface DateRangeCalendarProps<TDate>
   availableRangePositions?: DateRangePosition[];
 }
 
-export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
+export interface DateRangeCalendarOwnerState<TDate extends PickerValidDate>
+  extends DateRangeCalendarProps<TDate> {
   isDragging: boolean;
 }
 
-export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
+export type DateRangeCalendarDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
   | 'views'
   | 'openTo'

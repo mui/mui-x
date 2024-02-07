@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 
@@ -48,7 +48,7 @@ export const getExpectedOnChangeCount = (
   return getChangeCountForComponentFamily(componentFamily);
 };
 
-export const getDateOffset = <TDate extends unknown>(
+export const getDateOffset = <TDate extends PickerValidDate>(
   adapter: MuiPickersAdapter<TDate>,
   date: TDate,
 ) => {
@@ -57,7 +57,7 @@ export const getDateOffset = <TDate extends unknown>(
   return cleanUtcHour * 60;
 };
 
-export const formatFullTimeValue = <TDate extends unknown>(
+export const formatFullTimeValue = <TDate extends PickerValidDate>(
   adapter: MuiPickersAdapter<TDate>,
   value: TDate,
 ) => {

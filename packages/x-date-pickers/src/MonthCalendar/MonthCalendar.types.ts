@@ -2,7 +2,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
-import { TimezoneProps } from '../models';
+import { PickerValidDate, TimezoneProps } from '../models';
 
 export interface ExportedMonthCalendarProps {
   /**
@@ -11,7 +11,7 @@ export interface ExportedMonthCalendarProps {
    */
   monthsPerRow?: 3 | 4;
 }
-export interface MonthCalendarProps<TDate>
+export interface MonthCalendarProps<TDate extends PickerValidDate>
   extends ExportedMonthCalendarProps,
     MonthValidationProps<TDate>,
     BaseDateValidationProps<TDate>,

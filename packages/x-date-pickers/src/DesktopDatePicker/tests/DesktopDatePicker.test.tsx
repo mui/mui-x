@@ -307,15 +307,6 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
-
-    it('should allow to navigate to previous and next month if props.minDate == null', () => {
-      render(<DesktopDatePicker minDate={null} />);
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
-    });
   });
 
   describe('Validation', () => {

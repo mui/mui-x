@@ -16,21 +16,21 @@ import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 
-export interface DesktopTimePickerSlots<TDate>
+export interface DesktopTimePickerSlots<TDate extends PickerValidDate>
   extends BaseTimePickerSlots<TDate>,
     MakeOptional<UseDesktopPickerSlots<TDate, TimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotProps<TDate>
+export interface DesktopTimePickerSlotProps<TDate extends PickerValidDate>
   extends BaseTimePickerSlotProps,
     ExportedUseDesktopPickerSlotProps<TDate, TimeViewWithMeridiem>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopTimePickerProps<TDate>
+export interface DesktopTimePickerProps<TDate extends PickerValidDate>
   extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
     DesktopOnlyPickerProps<TDate>,
     DesktopOnlyTimePickerProps<TDate> {

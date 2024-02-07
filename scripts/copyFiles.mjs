@@ -157,12 +157,7 @@ async function run() {
   try {
     const packageData = await createPackageFile();
 
-    const filesToCopy = [
-      './README.md',
-
-      // TODO: Remove `grid` folder to flatten the structure
-      packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
-    ];
+    const filesToCopy = ['./README.md', '../../CHANGELOG.md'];
 
     const hasLicenseFileInPackage = await fse.exists(path.join(packagePath, 'LICENSE'));
     if (hasLicenseFileInPackage) {

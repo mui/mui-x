@@ -20,7 +20,7 @@ import {
   getLocalizedDigits,
 } from './useField.utils';
 import { InferError } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
+import { FieldSection, FieldSelectedSections, PickerValidDate } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
@@ -44,7 +44,7 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
 
 export const useFieldState = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,

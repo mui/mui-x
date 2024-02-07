@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, userEvent } from '@mui-internal/test-utils';
@@ -31,13 +30,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   it('should render toolbar and tabs by default', () => {
-    render(
-      <MobileDateTimePicker
-        open
-        value={adapterToUse.date('2021-11-20T10:01:22')}
-        defaultValue={(params) => <TextField {...params} />}
-      />,
-    );
+    render(<MobileDateTimePicker open value={adapterToUse.date('2021-11-20T10:01:22')} />);
 
     expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
