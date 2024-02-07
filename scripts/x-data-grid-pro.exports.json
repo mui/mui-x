@@ -556,7 +556,7 @@
   { "name": "gridVisiblePinnedColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridVisibleRowsLookupSelector", "kind": "Variable" },
   { "name": "isLeaf", "kind": "Function" },
-  { "name": "LicenseInfo", "kind": "Class" },
+  { "name": "LicenseInfo", "kind": "Variable" },
   { "name": "LoadingOverlayPropsOverrides", "kind": "Interface" },
   { "name": "Logger", "kind": "Interface" },
   { "name": "MuiBaseEvent", "kind": "TypeAlias" },
