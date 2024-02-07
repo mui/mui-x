@@ -42,7 +42,7 @@
   "slotDescriptions": {
     "area": "The component that renders the area.",
     "axisContent": "",
-    "bar": "",
+    "bar": "The component that renders the bar.",
     "itemContent": "",
     "line": "The component that renders the line.",
     "lineHighlight": "",

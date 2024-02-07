@@ -27,6 +27,7 @@ import {
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
+import { SeriesId } from '../models/seriesType/common';
 
 export type CartesianContextProviderProps = {
   /**
@@ -145,7 +146,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
-      const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
+      const series = (formattedSeries[chartType]?.series as Record<SeriesId, ChartSeries<T>>) ?? {};
 
       const [minChartTypeData, maxChartTypeData] = getter({
         series,
@@ -330,7 +331,7 @@ CartesianContextProvider.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -338,7 +339,7 @@ CartesianContextProvider.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
@@ -371,7 +372,7 @@ CartesianContextProvider.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -379,7 +380,7 @@ CartesianContextProvider.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps } from './BarElement';
+import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
 import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import { SeriesId } from '../models/seriesType/common';
 
 /**
  * Solution of the equations
@@ -42,13 +43,9 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots {
-  bar?: React.JSXElementConstructor<BarElementProps>;
-}
+export interface BarPlotSlots extends BarElementSlots {}
 
-export interface BarPlotSlotProps {
-  bar?: Partial<BarElementProps>;
-}
+export interface BarPlotSlotProps extends BarElementSlotProps {}
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
@@ -68,7 +65,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
 }
 
 interface CompletedBarData {
-  seriesId: string;
+  seriesId: SeriesId;
   dataIndex: number;
   layout: BarSeriesType['layout'];
   x: number;

@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
 import { ChartsTextStyle } from '../ChartsText';
+import { AxisId } from '../models/axis';
 
 export type CommonChartsReferenceLineProps = {
   /**
@@ -22,7 +23,7 @@ export type CommonChartsReferenceLineProps = {
    * The id of the axis used for the reference value.
    * @default The `id` of the first defined axis.
    */
-  axisId?: string;
+  axisId?: AxisId;
   /**
    * The style applied to the label.
    */

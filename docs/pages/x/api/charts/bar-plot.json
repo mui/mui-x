@@ -20,7 +20,14 @@
     "import { BarPlot } from '@mui/x-charts/BarChart';",
     "import { BarPlot } from '@mui/x-charts';"
   ],
-  "slots": [{ "name": "bar", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
