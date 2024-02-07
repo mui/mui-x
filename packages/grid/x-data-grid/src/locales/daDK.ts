@@ -15,8 +15,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Luftig',
 
   // Columns selector toolbar button text
-  toolbarColumns: 'Kolonne',
-  toolbarColumnsLabel: 'Vælg kolonne',
+  toolbarColumns: 'Kolonner',
+  toolbarColumnsLabel: 'Vælg kolonner',
 
   // Filters toolbar button text
   toolbarFilters: 'Filtre',
@@ -50,12 +50,12 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelRemoveAll: 'Fjern alle',
   filterPanelDeleteIconLabel: 'Slet',
   filterPanelLogicOperator: 'Logisk operator',
-  filterPanelOperator: 'Operatorer',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolonne',
+  filterPanelColumns: 'Kolonner',
   filterPanelInputLabel: 'Værdi',
-  filterPanelInputPlaceholder: 'Filter værdi',
+  filterPanelInputPlaceholder: 'Filterværdi',
 
   // Filter operators text
   filterOperatorContains: 'indeholder',
@@ -106,10 +106,10 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  columnMenuShowColumns: 'Vis Kolonner',
+  columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
-  columnMenuFilter: 'Filtre',
-  columnMenuHideColumn: 'Skjul',
+  columnMenuFilter: 'Filtrer',
+  columnMenuHideColumn: 'Skjul kolonne',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
   columnMenuSortDesc: 'Sorter faldende',
@@ -151,14 +151,14 @@ const daDKGrid: Partial<GridLocaleText> = {
   unpin: 'Frigiv',
 
   // Tree Data
-  treeDataGroupingHeaderName: 'Gruppering',
+  treeDataGroupingHeaderName: 'Gruppe',
   treeDataExpand: 'Vis underelementer',
   treeDataCollapse: 'Skjul underelementer',
 
   // Grouping columns
-  groupingColumnHeaderName: 'Gruppér',
+  groupingColumnHeaderName: 'Gruppe',
   groupColumn: (name) => `Gruppér efter ${name}`,
-  unGroupColumn: (name) => `Fjern gruppéring efter ${name}`,
+  unGroupColumn: (name) => `Fjern gruppering efter ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Udvid/kollaps detaljepanel',
@@ -169,7 +169,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Omarrangering af rækker',
 
   // Aggregation
-  aggregationMenuItemHeader: 'Aggregation',
+  aggregationMenuItemHeader: 'Aggregering',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'gns',
   aggregationFunctionLabelMin: 'min',
