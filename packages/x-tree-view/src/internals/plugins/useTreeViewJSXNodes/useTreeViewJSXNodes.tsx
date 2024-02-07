@@ -73,10 +73,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
-      return (
-        reactChildren.length > 0 &&
-        reactChildren.some((child) => (Array.isArray(child) ? child.length > 0 : true))
-      );
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
     }
     return Boolean(reactChildren);
   };

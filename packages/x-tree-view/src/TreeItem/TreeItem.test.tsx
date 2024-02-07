@@ -218,6 +218,19 @@ describe('<TreeItem />', () => {
 
     expect(getByTestId('2')).to.have.attribute('aria-expanded', 'true');
   });
+  it('should handle edge case of nested array of array', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[[]]}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
 
   it('should not call onClick when children are clicked', () => {
     const handleClick = spy();
