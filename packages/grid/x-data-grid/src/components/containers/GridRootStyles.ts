@@ -159,6 +159,12 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
       },
+      [`& .${gridClasses.groupingCriteriaCell}`]: {
+        width: 'unset',
+      },
+      [`& .${gridClasses.treeDataGroupingCell}`]: {
+        width: 'unset',
+      },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
       {
