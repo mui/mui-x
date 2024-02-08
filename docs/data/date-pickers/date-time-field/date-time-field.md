@@ -37,7 +37,7 @@ See the [Date format and localization](/x/react-date-pickers/adapters-locale/) a
 {{"demo": "CustomDateTimeFormat.js"}}
 
 :::info
-You can find more information about [custom formats](/x/react-date-pickers/adapters-locale/#custom-formats) in the documentation page.
+See [Date format and localization—Custom formats](/x/react-date-pickers/adapters-locale/#custom-formats) for more details.
 :::
 
 ## Validation
