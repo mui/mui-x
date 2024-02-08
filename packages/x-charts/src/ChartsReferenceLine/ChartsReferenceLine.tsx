@@ -13,7 +13,7 @@ function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;
   if (x !== undefined && y !== undefined) {
     throw new Error(
-      'MUI X Charts: The ChartsReferenceLine can not have both `x` and `y` props set.',
+      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set.',
     );
   }
 

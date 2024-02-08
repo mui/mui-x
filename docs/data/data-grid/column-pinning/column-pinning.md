@@ -73,7 +73,7 @@ To disable the pinning of a single column, set the `pinnable` property in `GridC
 
 ### Pin non-pinnable columns programmatically
 
-It may be desirable to allow one or more columns to be pinned or unpinned programmatically that can not be pinned or unpinned on the UI (i.e. columns for which prop `disableColumnPinning = true` or `colDef.pinnable = false`).
+It may be desirable to allow one or more columns to be pinned or unpinned programmatically that cannot be pinned or unpinned on the UI (i.e. columns for which prop `disableColumnPinning = true` or `colDef.pinnable = false`).
 This can be done in one of the following ways.
 
 - (A) Initializing the pinned columns
