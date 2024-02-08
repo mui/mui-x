@@ -43,12 +43,25 @@ const PickersYearRoot = styled('div', {
   name: 'MuiPickersYear',
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
-})<{ ownerState: PickersYearProps }>(({ ownerState }) => ({
-  flexBasis: ownerState.yearsPerRow === 3 ? '33.3%' : '25%',
+})<{ ownerState: PickersYearProps }>({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+  variants: [
+    {
+      props: { yearsPerRow: 3 },
+      style: {
+        flexBasis: '33.3%',
+      },
+    },
+    {
+      props: { yearsPerRow: 4 },
+      style: {
+        flexBasis: '25%',
+      },
+    },
+  ],
+});
 
 const PickersYearButton = styled('button', {
   name: 'MuiPickersYear',
