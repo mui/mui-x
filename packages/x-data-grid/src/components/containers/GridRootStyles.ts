@@ -572,8 +572,10 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
-    [`& .${c.cell}:not(.${c['cell--pinnedLeft']}):not(.${c['cell--pinnedRight']})`]: {
-      transform: 'translate3d(var(--DataGrid-offsetLeft), 0, 0)',
+    [`& .${c.cellOffsetLeft}`]: {
+      flex: '0 0 auto',
+      display: 'inline-block',
+      width: 'var(--DataGrid-offsetLeft)',
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
