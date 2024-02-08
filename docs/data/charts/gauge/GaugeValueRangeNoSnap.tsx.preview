@@ -1,0 +1,4 @@
+<React.Fragment>
+  <Gauge value={50} />
+  <Gauge value={50} valueMin={10} valueMax={60} />
+</React.Fragment>
