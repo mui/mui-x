@@ -11,6 +11,7 @@ import {
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
 import { DateTimeRangePickerView } from '../internals/models/dateTimeRange';
+import { useTheme } from '@mui/material/styles';
 
 /**
  * @ignore - internal component.
@@ -21,6 +22,10 @@ export function DesktopDateTimeRangePickerLayout<TDate extends PickerValidDate>(
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
+
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
+  const ownerState = { ...props, isRTL };
 
   return (
     <PickersLayoutRoot
@@ -33,7 +38,7 @@ export function DesktopDateTimeRangePickerLayout<TDate extends PickerValidDate>(
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      ownerState={props}
+      ownerState={ownerState}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
