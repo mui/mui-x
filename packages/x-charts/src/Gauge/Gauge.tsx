@@ -5,8 +5,9 @@ import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
 import { GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
+import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
 
-export interface GaugeProps extends GaugeContainerProps {
+export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
 }
 
@@ -17,17 +18,20 @@ const useUtilityClasses = (props: GaugeProps) => {
     root: ['root'],
     valueArc: ['valueArc'],
     referenceArc: ['referenceArc'],
+    valueText: ['valueText'],
   };
 
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
 function Gauge(props: GaugeProps) {
+  const { text, ...other } = props;
   const classes = useUtilityClasses(props);
   return (
-    <GaugeContainer {...props} className={classes.root}>
+    <GaugeContainer {...other} className={classes.root}>
       <GaugeReferenceArc className={classes.referenceArc} />
       <GaugeValueArc className={classes.valueArc} />
+      <GaugeValueText className={classes.valueText} text={text} />
     </GaugeContainer>
   );
 }

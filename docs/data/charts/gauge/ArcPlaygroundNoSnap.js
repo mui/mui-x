@@ -1,9 +1,9 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Paper from '@mui/material/Paper';
-import { Gauge } from '@mui/x-charts/Gauge';
+import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
-export default function PlaygroundNoSnap() {
+export default function ArcPlaygroundNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Gauge"
@@ -58,7 +58,11 @@ export default function PlaygroundNoSnap() {
           }}
         >
           <Gauge
-            margin={{ top: 5 }}
+            sx={{
+              [`& .${gaugeClasses.valueText}`]: {
+                fontSize: 45,
+              },
+            }}
             {...props}
             innerRadius={`${props.innerRadius}%`}
             outerRadius={`${props.outerRadius}%`}

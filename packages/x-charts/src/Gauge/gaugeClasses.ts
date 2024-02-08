@@ -8,6 +8,8 @@ export interface GaugeClasses {
   valueArc: string;
   /** Styles applied to the arc diplaying the range of available values. */
   referenceArc: string;
+  /** Styles applied to the value text. */
+  valueText: string;
 }
 
 export type GaugeClassKey = keyof GaugeClasses;
@@ -20,6 +22,7 @@ export const gaugeClasses: GaugeClasses = generateUtilityClasses('MuiGauge', [
   'root',
   'valueArc',
   'referenceArc',
+  'valueText',
 ]);
 
 export default gaugeClasses;

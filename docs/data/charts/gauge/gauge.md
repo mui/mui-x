@@ -32,13 +32,25 @@ You can modify the arc shape with the following props:
 - `innerRadius`, `outerRadius`: Radius of the arc. It can be a number for fix number of px. Or a percentage string which will be a percent of the maximal available radius.
 - `cornerRadius`: It can be a number for fix number of px. Or a percentage string which will be a percent of distance between inner and outer radius.
 
-{{"demo": "PlaygroundNoSnap.js"}}
+{{"demo": "ArcPlaygroundNoSnap.js"}}
 
 :::info
 Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
 
 Provide props `cx` and/or `cy` to fix the coordinate of the arc center.
 :::
+
+## Text configuration
+
+By default, the Gauge displays the value in the center of the arc.
+To modify it, use the `text` prop.
+
+This prop can be a string, or a formatter.
+In the second case, the formatter argument contains the `value`, `valueMin` and `valueMax`.
+
+To modify the layout of the text, use the class name `gaugeClasses.valueText`.
+
+{{"demo": "TextPlaygroundNoSnap.js"}}
 
 ## Accessibility
 

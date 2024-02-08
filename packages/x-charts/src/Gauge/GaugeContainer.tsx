@@ -27,7 +27,7 @@ export interface GaugeContainerProps
 const ResizableContainer = styled('div', {
   name: 'MuiGauge',
   slot: 'Container',
-})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
+})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -40,6 +40,9 @@ const ResizableContainer = styled('div', {
   '&>svg': {
     width: '100%',
     height: '100%',
+  },
+  '& text': {
+    fill: (theme.vars || theme).palette.text.primary,
   },
 }));
 
