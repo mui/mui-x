@@ -609,7 +609,7 @@
     {
       "key": "cellOffsetLeft",
       "className": "MuiDataGrid-cellOffsetLeft",
-      "description": "Styles applied to the left offset cell element.",
+      "description": "",
       "isGlobal": false
     },
     {

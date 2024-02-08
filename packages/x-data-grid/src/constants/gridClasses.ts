@@ -113,6 +113,7 @@ export interface GridClasses {
    */
   cellSkeleton: string;
   /**
+   * @ignore - do not document.
    * Styles applied to the left offset cell element.
    */
   cellOffsetLeft: string;
