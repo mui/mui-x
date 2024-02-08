@@ -113,6 +113,10 @@ export interface GridClasses {
    */
   cellSkeleton: string;
   /**
+   * Styles applied to the left offset cell element.
+   */
+  cellOffset: string;
+  /**
    * Styles applied to the selection checkbox element.
    */
   checkboxInput: string;
@@ -634,6 +638,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cellCheckbox',
   'cellEmpty',
   'cellSkeleton',
+  'cellOffset',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',

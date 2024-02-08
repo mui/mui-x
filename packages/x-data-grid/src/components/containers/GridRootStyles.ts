@@ -572,7 +572,7 @@ export const GridRootStyles = styled('div', {
         },
       },
     },
-    [`& .${c.offsetCell}`]: {
+    [`& .${c.cellOffset}`]: {
       flex: '0 0 auto',
       display: 'inline-block',
       width: 'var(--DataGrid-offsetLeft)',
