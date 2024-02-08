@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { arc as d3Arc } from 'd3-shape';
-import styled from '@mui/system/styled';
+import { styled } from '@mui/material/styles';
 import { useGaugeState } from './GaugeProvider';
 
 const StyledPath = styled('path', {
@@ -8,7 +8,7 @@ const StyledPath = styled('path', {
   slot: 'ReferenceArc',
   overridesResolver: (props, styles) => styles.referenceArc,
 })(({ theme }) => ({
-  fill: theme.palette.divider,
+  fill: (theme.vars || theme).palette.divider,
 }));
 
 export function GaugeReferenceArc(props: React.ComponentProps<'path'>) {
