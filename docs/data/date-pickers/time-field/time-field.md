@@ -34,8 +34,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Localization
 
-Use the `LocalizationProvider` to change the date-library locale used in the time field.
-See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) pages.
 
 ## Validation
 
