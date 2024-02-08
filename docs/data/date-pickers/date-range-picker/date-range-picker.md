@@ -102,6 +102,10 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
+## Localization
+
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) pages.
+
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
