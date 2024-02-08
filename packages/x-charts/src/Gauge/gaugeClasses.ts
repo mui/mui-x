@@ -16,7 +16,7 @@ export function getGaugeUtilityClass(slot: string): string {
   return generateUtilityClass('MuiGauge', slot);
 }
 
-const gaugeClasses: GaugeClasses = generateUtilityClasses('MuiGauge', [
+export const gaugeClasses: GaugeClasses = generateUtilityClasses('MuiGauge', [
   'root',
   'valueArc',
   'referenceArc',
