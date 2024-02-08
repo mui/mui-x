@@ -94,6 +94,14 @@ const apiPages: MuiPage[] = [
     title: 'DefaultChartsLegend',
   },
   {
+    pathname: '/x/api/charts/gauge',
+    title: 'Gauge',
+  },
+  {
+    pathname: '/x/api/charts/gauge-container',
+    title: 'GaugeContainer',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
