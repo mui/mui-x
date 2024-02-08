@@ -107,9 +107,9 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
         component="div"
         count={rowCount}
         page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
-        // TODO: Remove the cast once the type is fixed in MUI and that the min MUI version
+        // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
         // for x-data-grid is past the fix.
-        // Note that MUI will not mutate the array, so this is safe.
+        // Note that Material UI will not mutate the array, so this is safe.
         rowsPerPageOptions={pageSizeOptions as MutableArray<typeof pageSizeOptions>}
         rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
