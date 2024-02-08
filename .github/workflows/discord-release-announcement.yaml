@@ -16,5 +16,5 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: MUI Releases
-          avatar-url: 'https://i.ibb.co/YfMzb7r/logo.png'
+          avatar-url: 'https://raw.githubusercontent.com/mui/material-ui/master/docs/public/static/logo.png'
           separator: '<!--/ DO_NOT_REMOVE /-->'
