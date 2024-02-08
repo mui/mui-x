@@ -515,7 +515,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...other}
     >
       {leftCells}
-      <div className={gridClasses.cellOffset} role="presentation" />
+      <div className={gridClasses.cellOffsetLeft} role="presentation" />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
