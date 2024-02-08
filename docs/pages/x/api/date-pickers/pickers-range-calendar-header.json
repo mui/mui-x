@@ -9,13 +9,7 @@
       "required": true,
       "signature": { "type": "function(newMonth: TDate) => void", "describedArgs": ["newMonth"] }
     },
-    "month": {
-      "type": {
-        "name": "union",
-        "description": "Date<br>&#124;&nbsp;object<br>&#124;&nbsp;{ add: func, clone: func, date: func, day: func, daysInMonth: func, diff: func, endOf: func, format: func, get: func, hour: func, isAfter: func, isBefore: func, isBetween: func, isSame: func, isUTC: func, isValid: func, local: func, locale: func, millisecond: func, minute: func, month: func, offsetName: func, second: func, set: func, startOf: func, subtract: func, toDate: func, toISOString: func, toJSON: func, toString: func, tz: func, unix: func, utc: func, utcOffset: func, valueOf: func, week: func, year: func }"
-      },
-      "required": true
-    },
+    "month": { "type": { "name": "object" }, "required": true },
     "monthIndex": { "type": { "name": "number" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "format": {

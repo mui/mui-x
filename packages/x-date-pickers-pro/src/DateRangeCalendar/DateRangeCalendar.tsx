@@ -359,10 +359,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     elementType: CalendarHeader,
     externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
+      changeMonth,
+      calendars,
       views: ['day'],
       view: 'day',
-      calendars,
-      changeMonth,
       currentMonth: calendarState.currentMonth,
       onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
       minDate: minDateWithDisabled,
@@ -371,9 +371,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       disablePast,
       disableFuture,
       reduceAnimations,
+      timezone,
       slots,
       slotProps,
-      timezone,
     },
     ownerState: props,
   });
