@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -18,11 +19,13 @@ type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
 const PickersRangeCalendarHeaderContentSingleCalendar = styled(PickersCalendarHeader, {
   name: 'PickersRangeCalendarHeader',
   slot: 'ContentSingleCalendar',
+  overridesResolver: (_, styles) => styles.contentSingleCalendar,
 })({}) as typeof PickersCalendarHeader;
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
   name: 'PickersRangeCalendarHeader',
   slot: 'ContentMultipleCalendars',
+  overridesResolver: (_, styles) => styles.contentMultipleCalendars,
 })({
   padding: '12px 16px 4px 16px',
   display: 'flex',
@@ -30,7 +33,7 @@ const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSw
   justifyContent: 'space-between',
 });
 
-export const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader<
+const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader<
   TDate extends PickerValidDate,
 >(inProps: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersRangeCalendarHeader' });
@@ -88,3 +91,112 @@ export const PickersRangeCalendarHeader = React.forwardRef(function PickersRange
     </PickersRangeCalendarHeaderContentMultipleCalendars>
   );
 }) as PickersRangeCalendarHeaderComponent;
+
+PickersRangeCalendarHeader.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The number of calendars rendered.
+   */
+  calendars: PropTypes.oneOf([1, 2, 3]).isRequired,
+  /**
+   * Callback to call to change the current month.
+   * @param {TDate} newMonth The value to set to "currentMonth".
+   */
+  changeMonth: PropTypes.func.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  currentMonth: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
+  disableFuture: PropTypes.bool,
+  disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
+  labelId: PropTypes.string,
+  maxDate: PropTypes.object.isRequired,
+  minDate: PropTypes.object.isRequired,
+  /**
+   * Month used for this header.
+   */
+  month: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.object,
+    PropTypes.shape({
+      add: PropTypes.func.isRequired,
+      clone: PropTypes.func.isRequired,
+      date: PropTypes.func.isRequired,
+      day: PropTypes.func.isRequired,
+      daysInMonth: PropTypes.func.isRequired,
+      diff: PropTypes.func.isRequired,
+      endOf: PropTypes.func.isRequired,
+      format: PropTypes.func.isRequired,
+      get: PropTypes.func.isRequired,
+      hour: PropTypes.func.isRequired,
+      isAfter: PropTypes.func.isRequired,
+      isBefore: PropTypes.func.isRequired,
+      isBetween: PropTypes.func.isRequired,
+      isSame: PropTypes.func.isRequired,
+      isUTC: PropTypes.func.isRequired,
+      isValid: PropTypes.func.isRequired,
+      local: PropTypes.func.isRequired,
+      locale: PropTypes.func.isRequired,
+      millisecond: PropTypes.func.isRequired,
+      minute: PropTypes.func.isRequired,
+      month: PropTypes.func.isRequired,
+      offsetName: PropTypes.func.isRequired,
+      second: PropTypes.func.isRequired,
+      set: PropTypes.func.isRequired,
+      startOf: PropTypes.func.isRequired,
+      subtract: PropTypes.func.isRequired,
+      toDate: PropTypes.func.isRequired,
+      toISOString: PropTypes.func.isRequired,
+      toJSON: PropTypes.func.isRequired,
+      toString: PropTypes.func.isRequired,
+      tz: PropTypes.func.isRequired,
+      unix: PropTypes.func.isRequired,
+      utc: PropTypes.func.isRequired,
+      utcOffset: PropTypes.func.isRequired,
+      valueOf: PropTypes.func.isRequired,
+      week: PropTypes.func.isRequired,
+      year: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  /**
+   * Index of the month used for this header.
+   */
+  monthIndex: PropTypes.number.isRequired,
+  onMonthChange: PropTypes.func.isRequired,
+  onViewChange: PropTypes.func,
+  reduceAnimations: PropTypes.bool.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  timezone: PropTypes.string.isRequired,
+  view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
+} as any;
+
+export { PickersRangeCalendarHeader };

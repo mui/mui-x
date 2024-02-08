@@ -1,5 +1,8 @@
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { PickersCalendarHeaderProps } from '@mui/x-date-pickers/PickersCalendarHeader';
+import {
+  ExportedPickersCalendarHeaderProps,
+  PickersCalendarHeaderProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
 
 export interface PickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
   extends PickersCalendarHeaderProps<TDate> {
@@ -17,6 +20,10 @@ export interface PickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
   month: TDate;
   /**
    * Callback to call to change the current month.
+   * @param {TDate} newMonth The value to set to "currentMonth".
    */
   changeMonth: (newMonth: TDate) => void;
 }
+
+export interface ExportedPickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
+  extends ExportedPickersCalendarHeaderProps<TDate> {}

@@ -1,2 +1,5 @@
 export { PickersRangeCalendarHeader } from './PickersRangeCalendarHeader';
-export type { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
+export type {
+  PickersRangeCalendarHeaderProps,
+  ExportedPickersRangeCalendarHeaderProps,
+} from './PickersRangeCalendarHeader.types';

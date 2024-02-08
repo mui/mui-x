@@ -16,6 +16,7 @@ import { DesktopDateTimeRangePickerProps } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicker';
 import { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
 import { ExportedDateTimeRangePickerToolbarProps } from '../DateTimeRangePicker/DateTimeRangePickerToolbar';
+import { ExportedPickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<PickerValidDate>;
@@ -23,6 +24,7 @@ export interface PickersProComponentsPropsList {
   MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<PickerValidDate>;
   MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
+  MuiPickersRangeCalendarHeader: ExportedPickersRangeCalendarHeaderProps<PickerValidDate>;
 
   // Multi input range fields
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<PickerValidDate>;

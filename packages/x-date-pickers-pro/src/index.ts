@@ -24,6 +24,7 @@ export type {
 
 // Calendars
 export * from './DateRangeCalendar';
+export * from './PickersRangeCalendarHeader';
 
 // New pickers
 export * from './DateRangePicker';
