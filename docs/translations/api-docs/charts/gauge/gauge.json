@@ -45,6 +45,7 @@
     "valueArc": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the arc diplaying the value"
-    }
+    },
+    "valueText": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the value text" }
   }
 }

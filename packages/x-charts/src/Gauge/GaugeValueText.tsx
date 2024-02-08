@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useGaugeState } from './GaugeProvider';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 
@@ -15,7 +16,7 @@ export interface GaugeValueTextProps extends Omit<ChartsTextProps, 'text'> {
 function defaultFormatter({ value }: GaugeFormatterParams) {
   return value === null ? 'NaN' : value.toLocaleString();
 }
-export function GaugeValueText(props: GaugeValueTextProps) {
+function GaugeValueText(props: GaugeValueTextProps) {
   const { text = defaultFormatter, className, ...other } = props;
 
   const { value, valueMin, valueMax, cx, cy } = useGaugeState();
@@ -38,3 +39,27 @@ export function GaugeValueText(props: GaugeValueTextProps) {
     </g>
   );
 }
+
+GaugeValueText.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Height of a text line (in `em`).
+   */
+  lineHeight: PropTypes.number,
+  /**
+   * If `true`, the line width is computed.
+   * @default false
+   */
+  needsComputation: PropTypes.bool,
+  ownerState: PropTypes.any,
+  /**
+   * Style applied to text elements.
+   */
+  style: PropTypes.object,
+  text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+} as any;
+
+export { GaugeValueText };

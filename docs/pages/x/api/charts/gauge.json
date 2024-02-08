@@ -50,6 +50,12 @@
       "className": "MuiGauge-valueArc",
       "description": "Styles applied to the arc diplaying the value.",
       "isGlobal": false
+    },
+    {
+      "key": "valueText",
+      "className": "MuiGauge-valueText",
+      "description": "Styles applied to the value text.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiGauge",

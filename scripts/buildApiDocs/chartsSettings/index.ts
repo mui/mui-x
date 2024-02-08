@@ -64,6 +64,7 @@ export default apiPages;
     return [
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',
+      'x-charts/src/Gauge/GaugeValueText.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

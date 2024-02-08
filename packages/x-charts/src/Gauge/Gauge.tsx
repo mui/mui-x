@@ -114,6 +114,7 @@ Gauge.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   title: PropTypes.string,
   /**
    * The value of the gauge.
