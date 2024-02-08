@@ -26,7 +26,11 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   },
 })) as typeof TablePagination;
 
-export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePaginationProps>>(
+// A mutable version of a readonly array.
+
+type MutableArray<A> = A extends readonly (infer T)[] ? T[] : never;
+
+export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationProps>>(
   function GridPagination(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -103,7 +107,10 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
         component="div"
         count={rowCount}
         page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
-        rowsPerPageOptions={pageSizeOptions}
+        // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
+        // for x-data-grid is past the fix.
+        // Note that Material UI will not mutate the array, so this is safe.
+        rowsPerPageOptions={pageSizeOptions as MutableArray<typeof pageSizeOptions>}
         rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
