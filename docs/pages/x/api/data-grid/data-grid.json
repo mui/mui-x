@@ -607,6 +607,12 @@
       "isGlobal": false
     },
     {
+      "key": "cellOffset",
+      "className": "MuiDataGrid-cellOffset",
+      "description": "Styles applied to the left offset cell element.",
+      "isGlobal": false
+    },
+    {
       "key": "cellSkeleton",
       "className": "MuiDataGrid-cellSkeleton",
       "description": "Styles applied to the skeleton cell element.",
