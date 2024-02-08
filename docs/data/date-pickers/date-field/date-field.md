@@ -32,10 +32,13 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 {{"demo": "CustomDateFormat.js"}}
 
+:::info
+You can find more information about [custom formats](/x/react-date-pickers/adapters-locale/#custom-formats) in the documentation page.
+:::
+
 ## Localization
 
-Use the `LocalizationProvider` to change the date-library locale used in the date field.
-See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
+You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) pages.
 
 ## Validation
 
