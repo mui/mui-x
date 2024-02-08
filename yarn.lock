@@ -1890,9 +1890,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/cherniavskii/material-ui.git#allow-ignoring-classes":
+"@mui/monorepo@https://github.com/cherniavskii/material-ui.git#export-functions-from-copyFiles":
   version "5.15.9"
-  resolved "https://github.com/cherniavskii/material-ui.git#6652d6af28fe5d4f1bd3eb90bcb2bfcf36107cfa"
+  resolved "https://github.com/cherniavskii/material-ui.git#224129ed999f7196dc09639f78faf1d1858e4137"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
