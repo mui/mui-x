@@ -28,15 +28,18 @@ The value of the component can be uncontrolled or controlled.
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
 
-## Customize the time format
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+### Customize the time format
 
 {{"demo": "CustomTimeFormat.js"}}
 
-## Localization
-
-Use the `LocalizationProvider` to change the date-library locale used in the date field.
-See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
+:::info
+See [Date format and localization—Custom formats](/x/react-date-pickers/adapters-locale/#custom-formats) for more details.
+:::
 
 ## Validation
 
-See the documentation page [validation documentation page](/x/react-date-pickers/validation/) for more details.
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
