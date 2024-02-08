@@ -25,7 +25,7 @@ const useUtilityClasses = (props: GaugeProps) => {
 function Gauge(props: GaugeProps) {
   const classes = useUtilityClasses(props);
   return (
-    <GaugeContainer width={200} height={200} {...props} className={classes.root}>
+    <GaugeContainer {...props} className={classes.root}>
       <GaugeReferenceArc className={classes.referenceArc} />
       <GaugeValueArc className={classes.valueArc} />
     </GaugeContainer>

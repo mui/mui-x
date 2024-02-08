@@ -54,6 +54,7 @@ export default function PlaygroundNoSnap() {
           sx={{
             width: 200,
             height: 200,
+            margin: 'auto',
           }}
         >
           <Gauge

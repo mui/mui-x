@@ -1,4 +1,2 @@
-<React.Fragment>
-  <Gauge value={60} />
-  <Gauge value={60} startAngle={-90} endAngle={90} />
-</React.Fragment>
+<Gauge width={100} height={100} value={60} />
+<Gauge width={100} height={100} value={60} startAngle={-90} endAngle={90} />
