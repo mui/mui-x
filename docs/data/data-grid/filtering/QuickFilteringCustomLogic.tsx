@@ -26,7 +26,7 @@ const getApplyQuickFilterFnSameYear: GetApplyQuickFilterFn<any, unknown> = (
   value,
 ) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
-    // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
+    // If the value is not a 4-digit string, it cannot be a year so applying this filter is useless
     return null;
   }
   return (cellValue) => {

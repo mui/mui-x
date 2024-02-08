@@ -95,7 +95,7 @@ It could be achieved by either defining the prop outside the component scope or 
 :::
 
 :::warning
-Unlike the `SimpleTreeView` component, the `RichTreeView` component only supports string labels, you can't pass React nodes to it.
+Unlike the `SimpleTreeView` component, the `RichTreeView` component only supports string labels, you cannot pass React nodes to it.
 :::
 
 ## Disabled items

@@ -58,7 +58,7 @@ You can search through existing questions and answers to see if someone has aske
 - mui-x-date-picker
 - mui-x-charts
 
-If you can't find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
 
 ## Technical support
 
