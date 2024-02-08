@@ -65,7 +65,6 @@ export const useGridVirtualScroller = () => {
   const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
-  const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
   const contentHeight = dimensions.contentSize.height;
@@ -343,6 +342,16 @@ export const useGridVirtualScroller = () => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
+
+      const rowIndexInPage = (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i;
+      let index = rowIndexOffset + rowIndexInPage;
+      if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
+        index = indexOfRowWithFocusedCell;
+        isRowWithFocusedCellRendered = true;
+      } else if (isRowWithFocusedCellRendered) {
+        index -= 1;
+      }
+
       const isRowNotVisible = isRowWithFocusedCellNotInRange && cellFocus!.id === id;
 
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
@@ -358,7 +367,7 @@ export const useGridVirtualScroller = () => {
 
       let isFirstVisible = false;
       if (params.position === undefined) {
-        isFirstVisible = i === 0;
+        isFirstVisible = rowIndexInPage === 0;
       }
 
       let isLastVisible = false;
@@ -392,14 +401,6 @@ export const useGridVirtualScroller = () => {
       if (cellTabIndex !== null && cellTabIndex.id === id) {
         const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
         tabbableCell = cellParams.cellMode === 'view' ? cellTabIndex.field : null;
-      }
-
-      let index = rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i;
-      if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
-        index = indexOfRowWithFocusedCell;
-        isRowWithFocusedCellRendered = true;
-      } else if (isRowWithFocusedCellRendered) {
-        index -= 1;
       }
 
       rows.push(
@@ -532,7 +533,7 @@ export const useGridVirtualScroller = () => {
       style: contentSize,
       role: 'presentation',
     }),
-    getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
+    getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
     getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
   };
