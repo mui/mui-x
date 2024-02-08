@@ -237,6 +237,12 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
       },
+      [`& .${c.groupingCriteriaCell}`]: {
+        width: 'unset',
+      },
+      [`& .${c.treeDataGroupingCell}`]: {
+        width: 'unset',
+      },
     },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
