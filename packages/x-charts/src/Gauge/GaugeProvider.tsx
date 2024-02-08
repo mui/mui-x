@@ -1,0 +1,190 @@
+// @ignore - do not document.
+import * as React from 'react';
+import { DrawingContext } from '../context/DrawingProvider';
+import { getPercentageValue } from '../internals/utils';
+import { getArcRatios, getAvailableRadius } from './utils';
+
+interface CircularConfig {
+  /**
+   * The start angle (deg).
+   * @default 0
+   */
+  startAngle?: number;
+  /**
+   * The end angle (deg).
+   * @default 360
+   */
+  endAngle?: number;
+  /**
+   * The radius between circle center and the begining of the arc.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
+   * @default '80%'
+   */
+  innerRadius?: number | string;
+  /**
+   * The radius between circle center and the end of the arc.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the maximal radius that fit into the drawing area.
+   * @default '100%'
+   */
+  outerRadius?: number | string;
+  /**
+   * The radius applied to arc corners (similar to border radius).
+   * @default '50%'
+   */
+  cornerRadius?: number;
+  /**
+   * The x coordinate of the pie center.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the width the drawing area.
+   */
+  cx?: number | string;
+  /**
+   * The y coordinate of the pie center.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the height the drawing area.
+   */
+  cy?: number | string;
+}
+
+interface ProcessedCircularConfig {
+  /**
+   * The start angle (rad).
+   */
+  startAngle: number;
+  /**
+   * The end angle (rad).
+   */
+  endAngle: number;
+  /**
+   * The radius between circle center and the begining of the arc.
+   */
+  innerRadius: number;
+  /**
+   * The radius between circle center and the end of the arc.
+   */
+  outerRadius: number;
+  /**
+   * The radius applied to arc corners (similar to border radius).
+   */
+  cornerRadius: number;
+  /**
+   * The x coordinate of the pie center.
+   */
+  cx: number;
+  /**
+   * The y coordinate of the pie center.
+   */
+  cy: number;
+}
+
+interface GaugeConfig {
+  /**
+   * The value of the gauge.
+   * Set to `null` if no value to display.
+   */
+  value?: number | null;
+  /**
+   * The minimal value of the gauge.
+   * @default 0
+   */
+  valueMin?: number;
+  /**
+   * The maximal value of the gauge.
+   * @default 100
+   */
+  valueMax?: number;
+}
+
+export const GaugeContext = React.createContext<Required<GaugeConfig> & ProcessedCircularConfig>({
+  value: null,
+  valueMin: 0,
+  valueMax: 0,
+  startAngle: 0,
+  endAngle: 0,
+  innerRadius: 0,
+  outerRadius: 0,
+  cornerRadius: 0,
+  cx: 0,
+  cy: 0,
+});
+
+export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
+  children: React.ReactNode;
+}
+
+export function GaugeProvider(props: GaugeProviderProps) {
+  const {
+    value = null,
+    valueMin = 0,
+    valueMax = 100,
+    startAngle = 0,
+    endAngle = 360,
+    outerRadius: outerRadiusParam,
+    innerRadius: innerRadiusParam,
+    cornerRadius: cornerRadiusParam,
+    cx: cxParam,
+    cy: cyParam,
+    children,
+  } = props;
+
+  const { width, height, top, left } = React.useContext(DrawingContext);
+
+  const ratios = getArcRatios(startAngle, endAngle);
+
+  const innerCx = cxParam ? getPercentageValue(cxParam, width) : ratios.cx * width;
+  const innerCy = cyParam ? getPercentageValue(cyParam, height) : ratios.cy * height;
+
+  let cx = left + innerCx;
+  let cy = top + innerCy;
+
+  const availableRadius = getAvailableRadius(innerCx, innerCy, width, height, ratios);
+
+  // If the center is not defined, after computation of the available radius, udpate the center to use the remaining space.
+  if (cxParam === undefined) {
+    const usedWidth = availableRadius * (ratios.maxX - ratios.minX);
+    cx = left + (width - usedWidth) / 2 + ratios.cx * usedWidth;
+  }
+  if (cyParam === undefined) {
+    const usedHeight = availableRadius * (ratios.maxY - ratios.minY);
+    cy = top + (height - usedHeight) / 2 + ratios.cy * usedHeight;
+  }
+
+  const outerRadius = getPercentageValue(outerRadiusParam ?? availableRadius, availableRadius);
+  const innerRadius = getPercentageValue(innerRadiusParam ?? '80%', availableRadius);
+  const cornerRadius = getPercentageValue(cornerRadiusParam ?? '50%', outerRadius - innerRadius);
+
+  const contextValue = React.useMemo(
+    () => ({
+      value,
+      valueMin,
+      valueMax,
+      startAngle: (Math.PI * startAngle) / 180,
+      endAngle: (Math.PI * endAngle) / 180,
+      outerRadius,
+      innerRadius,
+      cornerRadius,
+      cx,
+      cy,
+    }),
+    [
+      value,
+      valueMin,
+      valueMax,
+      startAngle,
+      endAngle,
+      outerRadius,
+      innerRadius,
+      cornerRadius,
+      cx,
+      cy,
+    ],
+  );
+
+  return <GaugeContext.Provider value={contextValue}>{children}</GaugeContext.Provider>;
+}
+
+export function useGaugeState() {
+  return React.useContext(GaugeContext);
+}

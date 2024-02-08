@@ -19,6 +19,7 @@ export * from './LineChart';
 export * from './PieChart';
 export * from './ScatterChart';
 export * from './SparkLineChart';
+export * from './Gauge';
 export * from './ChartContainer';
 export * from './ChartsSurface';
 export * from './ResponsiveChartContainer';
