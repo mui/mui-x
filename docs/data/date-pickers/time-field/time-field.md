@@ -38,4 +38,4 @@ You can find the documentation about localization in the [Date format and locali
 
 ## Validation
 
-See the documentation page [validation documentation page](/x/react-date-pickers/validation/) for more details.
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

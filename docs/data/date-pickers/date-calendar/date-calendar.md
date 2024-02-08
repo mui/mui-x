@@ -101,4 +101,4 @@ You can find the documentation about localization in the [Date format and locali
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
