@@ -56,7 +56,7 @@ You can take advantage of the [DateRangePickerDay](/x/api/date-pickers/date-rang
 
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) pages.
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
 
 ## Validation
 

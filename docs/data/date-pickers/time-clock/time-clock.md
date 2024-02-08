@@ -56,7 +56,7 @@ You can find more information about 12h/24h format in the [Date localization pag
 
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) pages.
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
 
 ## Validation
 
