@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
@@ -23,68 +23,29 @@ const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean; isRTL: boolean } }>({
+})<{ ownerState: { isLandscape: boolean } }>(({ theme }) => ({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
-  variants: [
-    {
-      props: { isLandscape: true },
-      style: {
-        [`.${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: '2 / 4',
-          gridRow: 1,
-        },
-      },
+  variants: [true, false].map((isLandscape) => ({
+    props: { isLandscape },
+    style: {
+      [`& .${pickersLayoutClasses.toolbar}`]: isLandscape
+        ? {
+            gridColumn: theme.direction === 'rtl' ? 3 : 1,
+            gridRow: '2 / 3',
+          }
+        : { gridColumn: '2 / 4', gridRow: 1 },
+      [`.${pickersLayoutClasses.shortcuts}`]: isLandscape
+        ? { gridColumn: '2 / 4', gridRow: 1 }
+        : {
+            gridColumn: theme.direction === 'rtl' ? 3 : 1,
+            gridRow: '2 / 3',
+          },
     },
-    {
-      props: { isLandscape: false },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: '2 / 4',
-          gridRow: 1,
-        },
-      },
-    },
-    {
-      props: { isLandscape: true, isRTL: false },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 1,
-          gridRow: '2 / 3',
-        },
-      },
-    },
-    {
-      props: { isLandscape: true, isRTL: true },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 3,
-          gridRow: '2 / 3',
-        },
-      },
-    },
-    {
-      props: { isLandscape: false, isRTL: false },
-      style: {
-        [`.${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 1,
-          gridRow: '2 / 3',
-        },
-      },
-    },
-    {
-      props: { isLandscape: false, isRTL: true },
-      style: {
-        [`.${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 3,
-          gridRow: '2 / 3',
-        },
-      },
-    },
-  ],
-});
+  })),
+}));
 
 PickersLayoutRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -134,9 +95,7 @@ const PickersLayout = function PickersLayout<
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref, wrapperVariant } = props;
 
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
-  const ownerState = { ...props, isRTL };
+  const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   return (
