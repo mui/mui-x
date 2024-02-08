@@ -783,8 +783,8 @@
       "isGlobal": false
     },
     {
-      "key": "cellOffset",
-      "className": "MuiDataGridPremium-cellOffset",
+      "key": "cellOffsetLeft",
+      "className": "MuiDataGridPremium-cellOffsetLeft",
       "description": "Styles applied to the left offset cell element.",
       "isGlobal": false
     },

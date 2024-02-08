@@ -571,7 +571,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the empty cell element"
     },
-    "cellOffset": {
+    "cellOffsetLeft": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the left offset cell element"
     },
