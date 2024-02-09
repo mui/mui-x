@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.19.4
+
+_Feb 9, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve  Danish (da-DK) locale on the Data Grid (#11831) @danielmishan85
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.19.4`
+
+- [DataGrid] Add support for dialogs in menu actions (@cherniavskii) (#11937) @github-actions[bot]
+- [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (@pcorpet) (#11992) @github-actions[bot]
+- [DataGrid] Fix row reorder with cell selection (@PEsteves8) (#11878) @github-actions[bot]
+- [DataGrid] Replace `eval` with `new Function` (#11962) @cherniavskii
+- [l10n] Improve Danish (da-DK) locale (@ShahrazH) (#11972) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v6.19.4`.
+
+#### `@mui/x-data-grid-premium@v6.19.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v6.19.4`, plus:
+
+- [DataGridPremium] Fix autosize grouping cell (@romgrk) (#11990) @cherniavskii
+- [DataGridPremium] Fix error after closing print export (#11889) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.19.4`
+
+- [pickers] Avoid relying on locale in Luxon `isWithinRange` method (@LukasTy) (#11940) @github-actions[bot]
+
+#### `@mui/x-date-pickers-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v6.19.4`.
+
+### Charts / `@mui/x-charts@v6.19.4`
+
+- [charts] Add `reverse` property to axes (#11899) @alexfauquette (#11959) @alexfauquette
+- [charts] Allows series ids to be numbers (#11941) (#11960) @alexfauquette
+- [charts] Fix Proptypes by support string values for axes (#11953) @alexfauquette
+
+### Docs
+
+- [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (@flaviendelangle) (#11987) @github-actions[bot]
+- [docs] Avoid the use of MUI Core @oliviertassinari
+- [docs] Fix API links (#11930) @alexfauquette
+- [docs] Fix `ChartsTooltip` typo (@thisisharsh7) (#11967) @github-actions[bot]
+- [docs] Refactor `Localization` documentation sections (@LukasTy) (#11997) @github-actions[bot]
+- [code] Simplify bug reproduction (#11849) (#11932) @alexfauquette
+
 ## 6.19.3
 
 _Feb 1, 2024_
