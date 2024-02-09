@@ -86,9 +86,9 @@ export default function Formatting() {
   return (
     <LineChart
       {...lineChartsParams}
-      xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormater }]}
-      series={lineChartsParams.series.map((s) => ({
-        ...s,
+      xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormatter }]}
+      series={lineChartsParams.series.map((serie) => ({
+        ...serie,
         valueFormatter: currencyFormatter,
       }))}
     />

@@ -541,7 +541,7 @@ export default function LineDataset() {
       xAxis={[
         {
           dataKey: 'year',
-          valueFormatter: (v) => v.toString(),
+          valueFormatter: (value) => value.toString(),
           min: 1985,
           max: 2022,
         },
