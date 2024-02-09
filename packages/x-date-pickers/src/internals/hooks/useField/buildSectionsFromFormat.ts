@@ -1,9 +1,11 @@
 import { FieldSection, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../../models';
 import { PickersLocaleText } from '../../../locales';
 import {
+  applyLocalizedDigits,
   cleanLeadingZeros,
   doesSectionFormatHaveLeadingZeros,
   getDateSectionConfigFromFormatToken,
+  removeLocalizedDigits,
 } from './useField.utils';
 
 interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
@@ -14,6 +16,7 @@ interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
   timezone: PickersTimezone;
   shouldRespectLeadingZeros: boolean;
   localeText: PickersLocaleText<TDate>;
+  localizedDigits: string[];
   date: TDate | null;
   enableAccessibleFieldDOMStructure: boolean;
 }
@@ -120,6 +123,7 @@ const createSection = <TDate extends PickerValidDate>({
   date,
   shouldRespectLeadingZeros,
   localeText,
+  localizedDigits,
   now,
   token,
   startSeparator,
@@ -164,7 +168,10 @@ const createSection = <TDate extends PickerValidDate>({
       maxLength = sectionConfig.maxLength;
 
       if (isValidDate) {
-        sectionValue = cleanLeadingZeros(sectionValue, maxLength);
+        sectionValue = applyLocalizedDigits(
+          cleanLeadingZeros(removeLocalizedDigits(sectionValue, localizedDigits), maxLength),
+          localizedDigits,
+        );
       }
     }
   }
