@@ -7,9 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 9, 2024_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve  Danish (da-DK) locale on the Data Grid (#11972) @ShahrazH
+- 🌍 Improve Danish (da-DK) locale on the Data Grid (#11972) @ShahrazH
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -47,8 +47,8 @@ Same changes as in `@mui/x-date-pickers@v6.19.4`.
 ### Charts / `@mui/x-charts@v6.19.4`
 
 - [charts] Add `reverse` property to axes (#11959) @alexfauquette
-- [charts] Allows series ids to be numbers (#11960) @alexfauquette
-- [charts] Fix Proptypes by support string values for axes (#11953) @alexfauquette
+- [charts] Allow series ids to be numbers (#11960) @alexfauquette
+- [charts] Fix Proptypes error by supporting string values for axes (#11953) @alexfauquette
 
 ### Docs
 
