@@ -23,6 +23,7 @@ import {
   DateRangeValidationError,
   RangeFieldSection,
   DateRange,
+  FieldType,
 } from '@mui/x-date-pickers-pro/models';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
 
@@ -123,7 +124,7 @@ interface BrowserSingleInputDateRangeFieldProps
 
 type BrowserSingleInputDateRangeFieldComponent = ((
   props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: string };
+) => React.JSX.Element) & { fieldType?: FieldType };
 
 const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {

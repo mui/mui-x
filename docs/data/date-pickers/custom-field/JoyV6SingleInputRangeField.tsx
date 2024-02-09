@@ -33,6 +33,7 @@ import {
   RangeFieldSection,
   DateRange,
   DateRangeValidationError,
+  FieldType,
 } from '@mui/x-date-pickers-pro/models';
 
 const joyTheme = extendJoyTheme();
@@ -113,7 +114,7 @@ interface JoySingleInputDateRangeFieldProps
 
 type JoySingleInputDateRangeFieldComponent = ((
   props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: string };
+) => React.JSX.Element) & { fieldType?: FieldType };
 
 const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {

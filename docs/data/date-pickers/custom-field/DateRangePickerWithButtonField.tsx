@@ -10,6 +10,7 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { FieldType } from '@mui/x-date-pickers-pro/models';
 
 interface DateRangeButtonFieldProps extends SingleInputDateRangeFieldProps<Dayjs> {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,7 +18,7 @@ interface DateRangeButtonFieldProps extends SingleInputDateRangeFieldProps<Dayjs
 
 type DateRangeButtonFieldComponent = ((
   props: DateRangeButtonFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: string };
+) => React.JSX.Element) & { fieldType?: FieldType };
 
 const DateRangeButtonField = React.forwardRef(
   (props: DateRangeButtonFieldProps, ref: React.Ref<HTMLElement>) => {
