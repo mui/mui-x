@@ -56,7 +56,7 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material UI
+## Usage with Material UI
 
 ### Using Material `TextField`
 
