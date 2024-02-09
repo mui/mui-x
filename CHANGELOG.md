@@ -32,6 +32,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add slot typings (#11795) @romgrk
 - [DataGrid] Add support for dialogs in menu actions (#11909) @cherniavskii
 - [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11609) @pcorpet
+- [DataGrid] Fix incorrect computation of `lastPage` in `GridPagination` (#11958) @MBilalShafi
 - [DataGrid] Vertical scrolling performance (#11924) @romgrk
 - [DataGrid] Fix Unable to Paste Row Data in Data Grid with CAPS Lock Key Enabled (#11965) @shaharyar-shamshi
 - [l10n] Improve Danish (da-DK) locale (#11877) @ShahrazH
