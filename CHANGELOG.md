@@ -64,12 +64,12 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [charts] Allow series ids to be numbers (#11941) @alexfauquette
 - [charts] Support UTC date formatting in tooltip (#11943) @shaharyar-shamshi
 
-### Tree View / `@mui/x-tree-view@v7.0.0-beta.1`
+### Tree View / `@mui/x-tree-view@v7.0.0-beta.2`
 
 - [TreeView] Correctly detect if an item is expandable (#11963) @swalker326
 - [TreeView] Polish the default design & revise the simple version pages (#11529) @danilo-leal
 
-### License / `@mui/x-license@v7.0.0-beta.1`
+### License / `@mui/x-license@v7.0.0-beta.2`
 
 - [license] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
 
