@@ -28,12 +28,12 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
-  BaseSingleInputFieldProps,
+  RangeFieldSection,
   DateRange,
   DateRangeValidationError,
-} from '@mui/x-date-pickers/models';
-import { RangeFieldSection } from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers-pro/models';
 
 const joyTheme = extendJoyTheme();
 
