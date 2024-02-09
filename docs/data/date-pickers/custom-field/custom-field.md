@@ -97,7 +97,7 @@ You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components ins
 ### Using Joy `PickersTextField`
 
 :::warning
-This component is not available yet
+This component is not available yet.
 :::
 
 ## Usage with an unstyled input
