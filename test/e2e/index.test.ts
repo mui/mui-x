@@ -541,8 +541,8 @@ async function initializeEnvironment(
 
           await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'MM' }).fill('04');
-          await page.getByRole(`spinbutton`, { name: 'DD' }).type('11');
-          await page.getByRole(`spinbutton`, { name: 'YYYY' }).type('2022');
+          await page.getByRole(`spinbutton`, { name: 'DD' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'YYYY' }).fill('2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
 
@@ -557,7 +557,7 @@ async function initializeEnvironment(
 
         it('should allow pasting a section', async () => {
           // Only firefox is capable of reliably running this test in CI and headless browsers
-          if (browserType.name() !== 'firefox' /* && process.env.CIRCLECI */) {
+          if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
             return;
           }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
@@ -573,8 +573,8 @@ async function initializeEnvironment(
 
           await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
-          await daySection.type('11');
-          await yearSection.type('2022');
+          await daySection.fill('11');
+          await yearSection.fill('2022');
 
           // move to day section
           await yearSection.press('ArrowLeft');
