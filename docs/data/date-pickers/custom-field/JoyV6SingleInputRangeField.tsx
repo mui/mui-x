@@ -29,11 +29,7 @@ import {
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
-import {
-  DateRange,
-  DateRangeValidationError,
-  RangeFieldSection,
-} from '@mui/x-date-pickers-pro';
+import { RangeFieldSection } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
