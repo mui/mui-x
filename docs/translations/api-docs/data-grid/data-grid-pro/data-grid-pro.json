@@ -685,21 +685,12 @@
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
     },
-    "cell--withRenderer": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the cell element",
-      "conditions": "the cell has a custom renderer"
-    },
     "cell--withRightBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
     },
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
-    },
-    "cellContent": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the element that wraps the cell content"
     },
     "cellEmpty": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1140,6 +1131,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
     },
+    "scrollbarFiller": { "description": "" },
+    "scrollbarFiller--borderTop": { "description": "" },
+    "scrollbarFiller--header": { "description": "" },
+    "scrollbarFiller--pinnedRight": { "description": "" },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"

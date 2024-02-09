@@ -577,12 +577,6 @@
       "isGlobal": false
     },
     {
-      "key": "cell--withRenderer",
-      "className": "MuiDataGrid-cell--withRenderer",
-      "description": "Styles applied to the cell element if the cell has a custom renderer.",
-      "isGlobal": false
-    },
-    {
       "key": "cell--withRightBorder",
       "className": "MuiDataGrid-cell--withRightBorder",
       "description": "Styles applied the cell if `showColumnVerticalBorder={true}`.",
@@ -592,12 +586,6 @@
       "key": "cellCheckbox",
       "className": "MuiDataGrid-cellCheckbox",
       "description": "Styles applied to the cell checkbox element.",
-      "isGlobal": false
-    },
-    {
-      "key": "cellContent",
-      "className": "MuiDataGrid-cellContent",
-      "description": "Styles applied to the element that wraps the cell content.",
       "isGlobal": false
     },
     {
@@ -1258,6 +1246,30 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGrid-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller",
+      "className": "MuiDataGrid-scrollbarFiller",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--borderTop",
+      "className": "MuiDataGrid-scrollbarFiller--borderTop",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--header",
+      "className": "MuiDataGrid-scrollbarFiller--header",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--pinnedRight",
+      "className": "MuiDataGrid-scrollbarFiller--pinnedRight",
+      "description": "",
       "isGlobal": false
     },
     {
