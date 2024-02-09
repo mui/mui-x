@@ -94,7 +94,7 @@ Both components below will render a small size UI:
 
 :::info
 If you are passing `inputProps` to `slotProps.textField`,
-this props will now be passed to the hidden `<input />` element.
+these props will now be passed to the hidden `<input />` element.
 :::
 
 ### Usage with `slots.field`
