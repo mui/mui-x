@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { gridClasses } from '../constants';
 
 const classes = {
-  root: gridClasses['scrollbarFiller'],
+  root: gridClasses.scrollbarFiller,
   header: gridClasses['scrollbarFiller--header'],
   borderTop: gridClasses['scrollbarFiller--borderTop'],
   pinnedRight: gridClasses['scrollbarFiller--pinnedRight'],

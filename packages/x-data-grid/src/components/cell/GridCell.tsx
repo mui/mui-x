@@ -412,7 +412,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = valueString;
-    title = valueString
+    title = valueString;
   }
 
   if (React.isValidElement(children) && canManageOwnFocus) {

@@ -73,5 +73,9 @@ export function renderProgress(params: GridRenderCellParams<any, number, any>) {
     return null;
   }
 
-  return <Center><ProgressBar value={params.value} /></Center>;
+  return (
+    <Center>
+      <ProgressBar value={params.value} />
+    </Center>
+  );
 }

@@ -645,7 +645,7 @@ export const GridRootStyles = styled('div', {
         position: 'sticky',
         right: 0,
       },
-    }
+    },
   };
 
   return gridStyle;
