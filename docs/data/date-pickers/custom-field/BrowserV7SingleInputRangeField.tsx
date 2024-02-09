@@ -22,6 +22,7 @@ import {
   BasePickersTextFieldProps,
   DateRangeValidationError,
   RangeFieldSection,
+  DateRange,
 } from '@mui/x-date-pickers-pro/models';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
 
