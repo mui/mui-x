@@ -410,6 +410,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
+      backgroundColor: 'var(--DataGrid-containerBackground)',
 
       '--rowBorderColor': 'var(--DataGrid-rowBorderColor)',
 
@@ -618,6 +619,21 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
+
+    [`.${c.scrollbarFiller}`]: {
+      minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
+      alignSelf: 'stretch',
+      [`&.${c['scrollbarFiller--borderTop']}`]: {
+        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      },
+      [`&.${c['scrollbarFiller--pinnedRight']}`]: {
+        backgroundColor: 'var(--DataGrid-pinnedBackground)',
+      },
+      [`&.${c['scrollbarFiller--pinnedRight']}:not(.${c['scrollbarFiller--header']})`]: {
+        position: 'sticky',
+        right: 0,
+      },
+    }
   };
 
   return gridStyle;
