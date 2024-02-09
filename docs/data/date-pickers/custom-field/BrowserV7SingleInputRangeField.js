@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
-import styled from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
