@@ -47,12 +47,17 @@ const PickersMonthRoot = styled('div', {
   overridesResolver: (_, styles) => [styles.root],
 })<{
   ownerState: PickersMonthProps;
-}>(({ ownerState }) => ({
-  flexBasis: ownerState.monthsPerRow === 3 ? '33.3%' : '25%',
+}>({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+  variants: [3, 4].map((monthsPerRow) => ({
+    props: { monthsPerRow },
+    style: {
+      flexBasis: `${Math.round((1 / monthsPerRow) * 10000) / 100}%`,
+    },
+  })),
+});
 
 const PickersMonthButton = styled('button', {
   name: 'MuiPickersMonth',
