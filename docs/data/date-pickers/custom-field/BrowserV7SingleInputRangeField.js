@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { useSlotProps } from '@mui/base/utils';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
