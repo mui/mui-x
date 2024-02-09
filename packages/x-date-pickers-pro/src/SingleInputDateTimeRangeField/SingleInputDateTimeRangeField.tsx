@@ -97,6 +97,10 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   autoFocus: PropTypes.bool,
   className: PropTypes.any,
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
   clearable: PropTypes.bool,
   /**
    * The color of the component.
@@ -242,6 +246,9 @@ SingleInputDateTimeRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the clear button is clicked.
+   */
   onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.

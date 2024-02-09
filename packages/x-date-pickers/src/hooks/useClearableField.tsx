@@ -7,7 +7,14 @@ import { ClearIcon } from '../icons';
 import { useLocaleText } from '../internals/hooks/useUtils';
 
 export interface ExportedUseClearableFieldProps {
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
   clearable?: boolean;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
   onClear?: React.MouseEventHandler<HTMLButtonElement>;
 }
 

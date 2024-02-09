@@ -5,6 +5,9 @@
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },
+    "clearable": {
+      "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing."
+    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },
@@ -77,6 +80,7 @@
         "context": "The context containing the validation result of the current value."
       }
     },
+    "onClear": { "description": "Callback fired when the clear button is clicked." },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",
       "typeDescriptions": {

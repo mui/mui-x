@@ -16,6 +16,7 @@ import { InferError, Validator } from '../useValidation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
 export interface UseFieldParams<
   TValue,
@@ -152,18 +153,9 @@ export interface UseFieldInternalProps<
 export interface UseFieldCommonAdditionalProps
   extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
 
-export interface UseFieldCommonForwardedProps {
+export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
   onKeyDown?: React.KeyboardEventHandler;
   error?: boolean;
-  /**
-   * Callback fired when the clear button is clicked.
-   */
-  onClear?: React.MouseEventHandler;
-  /**
-   * If `true`, a clear button will be shown in the field allowing value clearing.
-   * @default false
-   */
-  clearable?: boolean;
 }
 
 export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
