@@ -34,7 +34,7 @@ const expandFormat = <TDate extends PickerValidDate>({
     formatExpansionOverflow -= 1;
     if (formatExpansionOverflow < 0) {
       throw new Error(
-        'MUI X: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component',
+        'MUI X: The format expansion seems to be in an infinite loop. Please open an issue with the format passed to the picker component.',
       );
     }
   }
