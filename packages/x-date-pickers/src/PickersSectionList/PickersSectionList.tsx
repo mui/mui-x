@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from '@mui/system/styled';
+import styled from '@mui/material/styled';
 import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
