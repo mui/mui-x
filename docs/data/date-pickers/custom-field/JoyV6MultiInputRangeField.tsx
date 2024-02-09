@@ -27,6 +27,7 @@ import {
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
   BaseMultiInputFieldProps,
+  DateRange,
   DateRangeValidationError,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
