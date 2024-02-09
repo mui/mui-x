@@ -62,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [charts] Allows series ids to be numbers (#11941) @alexfauquette
 - [charts] Support UTC date formatting in tooltip (#11943) @shaharyar-shamshi
 
-### Tree View / `@mui/x-tree-view@v7.0.0-beta.2`
+### Tree View / `@mui/x-tree-view@v7.0.0-beta.1`
 
 - [TreeView] Correctly detect if an item is expandable (#11963) @swalker326
 - [TreeView] Polish the default design & revise the simple version pages (#11529) @danilo-leal
