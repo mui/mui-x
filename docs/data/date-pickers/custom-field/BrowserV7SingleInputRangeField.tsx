@@ -24,7 +24,6 @@ import {
   RangeFieldSection,
 } from '@mui/x-date-pickers-pro/models';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
-import { DateRange } from '@mui/x-date-pickers-pro';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
