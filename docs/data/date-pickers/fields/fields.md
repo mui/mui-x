@@ -29,7 +29,7 @@ All fields to edit a range are available in a single input version and in a mult
 
 By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
 
-From version v7.0.0, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
+From v7 version, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
 
 ```tsx
 <DateField enableAccessibleFieldDOMStructure />
