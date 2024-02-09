@@ -176,7 +176,7 @@ const theme = createTheme({
         margin: 'dense',
       },
     },
-    MuiInputBases: {
+    MuiPickersInputBase: {
       defaultProps: {
         margin: 'dense',
       },
