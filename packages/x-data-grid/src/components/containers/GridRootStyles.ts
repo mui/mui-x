@@ -230,6 +230,16 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
       },
+      '@media (hover: hover)': {
+        [`& .${c.iconButtonContainer}`]: {
+          width: '0 !important',
+          visibility: 'hidden !important',
+        },
+        [`& .${c.menuIcon}`]: {
+          width: '0 !important',
+          visibility: 'hidden !important',
+        },
+      },
       [`& .${c.cell}`]: {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
