@@ -9,8 +9,8 @@ _Feb 9, 2024_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🏃 Add slot typings (#11795) @romgrk
-- 🎁 Support UTC date formatting in charts tooltip (#11943) @shaharyar-shamshi
+- 🏃 Add slot typings on the Data Grid components (#11795) @romgrk
+- 🎁 Support UTC date formatting in Charts tooltip (#11943) @shaharyar-shamshi
 - 🌍 Improve Danish (da-DK) locale Data Grid (#11877) @ShahrazH
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -32,6 +32,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add slot typings (#11795) @romgrk
 - [DataGrid] Add support for dialogs in menu actions (#11909) @cherniavskii
 - [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11609) @pcorpet
+- [DataGrid] Fix incorrect computation of `lastPage` in `GridPagination` (#11958) @MBilalShafi
 - [DataGrid] Vertical scrolling performance (#11924) @romgrk
 - [DataGrid] Fix Unable to Paste Row Data in Data Grid with CAPS Lock Key Enabled (#11965) @shaharyar-shamshi
 - [l10n] Improve Danish (da-DK) locale (#11877) @ShahrazH
@@ -86,14 +87,14 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 
 - [core] Add `docs:serve` script (#11935) @cherniavskii
 - [core] Bump monorepo (#12001) @cherniavskii
-- [core] Deprecate `LicenseInfo` reexports (#11956) @cherniavskii
+- [core] Deprecate `LicenseInfo` re-exports (#11956) @cherniavskii
 - [core] Fix `test_types` failing on the `next` branch (#11944) @cherniavskii
 - [core] Fix failing `test_static` on the next branch (#11977) @cherniavskii
 - [core] Flatten grid packages folder (#11946) @cherniavskii
 - [core] Improve license info deprecation message (#11974) @cherniavskii
-- [core] Integrate changes from Core's #40842 (#11801) @michaldudak
+- [core] Integrate changes from Core #40842 PR (#11801) @michaldudak
 - [core] Move next config to ESM (#11882) @Janpot
-- [core] auto-message on closed issues (#11805) @michelengelen
+- [core] Add auto-message on closed issues (#11805) @michelengelen
 - [core] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
 - [core] Simplify bug reproduction (#11849) @oliviertassinari
 - [core] Fix npm reference @oliviertassinari
