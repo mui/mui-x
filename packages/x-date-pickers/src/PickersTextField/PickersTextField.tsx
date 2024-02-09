@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -229,12 +230,7 @@ PickersTextField.propTypes = {
    * component depending on the `variant` prop value.
    */
   InputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   /**
    * If `dense` or `normal`, will adjust vertical spacing of this and contained components.

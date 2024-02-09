@@ -10,6 +10,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -320,12 +321,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.

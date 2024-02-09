@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
+import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import visuallyHidden from '@mui/utils/visuallyHidden';
@@ -345,12 +346,7 @@ PickersInputBase.propTypes = {
   fullWidth: PropTypes.bool,
   id: PropTypes.string,
   inputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   name: PropTypes.string,
