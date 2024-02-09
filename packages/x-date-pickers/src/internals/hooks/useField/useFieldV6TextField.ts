@@ -401,7 +401,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   );
 
   React.useEffect(() => {
-    // Select the all the sections when focused on mount (`autoFocus = true` on the input)
+    // Select all the sections when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === getActiveElement(document)) {
       setSelectedSections('all');
     }
