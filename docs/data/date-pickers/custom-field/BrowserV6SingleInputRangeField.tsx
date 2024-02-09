@@ -23,7 +23,7 @@ import {
   DateRangeValidationError,
   RangeFieldSection,
 } from '@mui/x-date-pickers-pro/models';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
