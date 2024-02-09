@@ -61,7 +61,7 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 ### Charts / `@mui/x-charts@v7.0.0-beta.2`
 
 - [charts] Add `reverse` property to axes (#11899) @alexfauquette
-- [charts] Allows series ids to be numbers (#11941) @alexfauquette
+- [charts] Allow series ids to be numbers (#11941) @alexfauquette
 - [charts] Support UTC date formatting in tooltip (#11943) @shaharyar-shamshi
 
 ### Tree View / `@mui/x-tree-view@v7.0.0-beta.1`
