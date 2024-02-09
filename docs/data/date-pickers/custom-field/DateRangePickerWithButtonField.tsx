@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import useForkRef from '@mui/utils/useForkRef';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { DateRange, FieldType } from '@mui/x-date-pickers-pro/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -10,7 +10,6 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
 
 interface DateRangeButtonFieldProps extends SingleInputDateRangeFieldProps<Dayjs> {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
