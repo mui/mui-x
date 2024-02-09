@@ -7,9 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 9, 2024_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve  Danish (da-DK) locale on the Data Grid (#11831) @danielmishan85
+- 🌍 Improve  Danish (da-DK) locale on the Data Grid (#11972) @ShahrazH
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -17,11 +17,11 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### `@mui/x-data-grid@v6.19.4`
 
-- [DataGrid] Add support for dialogs in menu actions (@cherniavskii) (#11937) @github-actions[bot]
-- [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (@pcorpet) (#11992) @github-actions[bot]
-- [DataGrid] Fix row reorder with cell selection (@PEsteves8) (#11878) @github-actions[bot]
+- [DataGrid] Add support for dialogs in menu actions (#11937) @cherniavskii
+- [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11992) @pcorpet
+- [DataGrid] Fix row reorder with cell selection (#11878) @PEsteves8
 - [DataGrid] Replace `eval` with `new Function` (#11962) @cherniavskii
-- [l10n] Improve Danish (da-DK) locale (@ShahrazH) (#11972) @github-actions[bot]
+- [l10n] Improve Danish (da-DK) locale (#11972) @ShahrazH
 
 #### `@mui/x-data-grid-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -31,14 +31,14 @@ Same changes as in `@mui/x-data-grid@v6.19.4`.
 
 Same changes as in `@mui/x-data-grid-pro@v6.19.4`, plus:
 
-- [DataGridPremium] Fix autosize grouping cell (@romgrk) (#11990) @cherniavskii
+- [DataGridPremium] Fix autosize grouping cell (#11990) @romgrk
 - [DataGridPremium] Fix error after closing print export (#11889) @cherniavskii
 
 ### Date Pickers
 
 #### `@mui/x-date-pickers@v6.19.4`
 
-- [pickers] Avoid relying on locale in Luxon `isWithinRange` method (@LukasTy) (#11940) @github-actions[bot]
+- [pickers] Avoid relying on locale in Luxon `isWithinRange` method (#11940) @LukasTy
 
 #### `@mui/x-date-pickers-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -46,18 +46,18 @@ Same changes as in `@mui/x-date-pickers@v6.19.4`.
 
 ### Charts / `@mui/x-charts@v6.19.4`
 
-- [charts] Add `reverse` property to axes (#11899) @alexfauquette (#11959) @alexfauquette
-- [charts] Allows series ids to be numbers (#11941) (#11960) @alexfauquette
+- [charts] Add `reverse` property to axes (#11959) @alexfauquette
+- [charts] Allows series ids to be numbers (#11960) @alexfauquette
 - [charts] Fix Proptypes by support string values for axes (#11953) @alexfauquette
 
 ### Docs
 
-- [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (@flaviendelangle) (#11987) @github-actions[bot]
+- [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (#11987) @flaviendelangle
 - [docs] Avoid the use of MUI Core @oliviertassinari
 - [docs] Fix API links (#11930) @alexfauquette
-- [docs] Fix `ChartsTooltip` typo (@thisisharsh7) (#11967) @github-actions[bot]
-- [docs] Refactor `Localization` documentation sections (@LukasTy) (#11997) @github-actions[bot]
-- [code] Simplify bug reproduction (#11849) (#11932) @alexfauquette
+- [docs] Fix `ChartsTooltip` typo (#11967) @thisisharsh7
+- [docs] Refactor `Localization` documentation sections (#11997) @LukasTy
+- [code] Simplify bug reproduction (#11932) @alexfauquette
 
 ## 6.19.3
 
