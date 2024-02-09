@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.19.4
+
+_Feb 9, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Danish (da-DK) locale on the Data Grid (#11972) @ShahrazH
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.19.4`
+
+- [DataGrid] Add support for dialogs in menu actions (#11937) @cherniavskii
+- [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11992) @pcorpet
+- [DataGrid] Fix row reorder with cell selection (#11878) @PEsteves8
+- [DataGrid] Replace `eval` with `new Function` (#11962) @cherniavskii
+- [l10n] Improve Danish (da-DK) locale (#11972) @ShahrazH
+
+#### `@mui/x-data-grid-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v6.19.4`.
+
+#### `@mui/x-data-grid-premium@v6.19.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v6.19.4`, plus:
+
+- [DataGridPremium] Fix autosize grouping cell (#11990) @romgrk
+- [DataGridPremium] Fix error after closing print export (#11889) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.19.4`
+
+- [pickers] Avoid relying on locale in Luxon `isWithinRange` method (#11940) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v6.19.4`.
+
+### Charts / `@mui/x-charts@v6.19.4`
+
+- [charts] Add `reverse` property to axes (#11959) @alexfauquette
+- [charts] Allow series ids to be numbers (#11960) @alexfauquette
+- [charts] Fix Proptypes error by supporting string values for axes (#11953) @alexfauquette
+
+### Docs
+
+- [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (#11987) @flaviendelangle
+- [docs] Avoid the use of MUI Core @oliviertassinari
+- [docs] Fix API links (#11930) @alexfauquette
+- [docs] Fix `ChartsTooltip` typo (#11967) @thisisharsh7
+- [docs] Refactor `Localization` documentation sections (#11997) @LukasTy
+- [code] Simplify bug reproduction (#11932) @alexfauquette
+
 ## 6.19.3
 
 _Feb 1, 2024_
