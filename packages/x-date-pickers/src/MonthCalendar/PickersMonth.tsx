@@ -54,7 +54,7 @@ const PickersMonthRoot = styled('div', {
   variants: [3, 4].map((monthsPerRow) => ({
     props: { monthsPerRow },
     style: {
-      flexBasis: `${Math.round((1 / monthsPerRow) * 10000) / 100}%`,
+      flexBasis: `${Math.round((1 / monthsPerRow) * 1000) / 10}%`,
     },
   })),
 });

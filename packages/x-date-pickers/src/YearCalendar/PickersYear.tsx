@@ -50,7 +50,7 @@ const PickersYearRoot = styled('div', {
   variants: [3, 4].map((yearsPerRow) => ({
     props: { yearsPerRow },
     style: {
-      flexBasis: `${Math.round((1 / yearsPerRow) * 10000) / 100}%`,
+      flexBasis: `${Math.round((1 / yearsPerRow) * 1000) / 10}%`,
     },
   })),
 });
