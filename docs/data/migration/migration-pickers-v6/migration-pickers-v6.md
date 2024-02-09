@@ -381,7 +381,7 @@ When building a custom UI, you are most-likely only supporting one DOM structure
   function MyCustomField(props) {
     const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...props,
-+     // If you only support one DOM structure, we advise you to hardcode it here it avoid unwanted switches in your application
++     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
 +     enableAccessibleFieldDOMStructure: false,
     });
 
