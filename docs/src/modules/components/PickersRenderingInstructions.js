@@ -21,7 +21,16 @@ export default function PickersRenderingInstructions() {
 
   const commandLines = [
     `import { LocalizationProvider } from '${componentPackage}';`,
+    ...(libraryUsed === 'date-fns'
+      ? ['// If you are using date-fns v2.x, please import `AdapterDateFns`']
+      : []),
     `import { ${adapterName} } from '${componentPackage}/${adapterName}'`,
+    ...(libraryUsed === 'date-fns'
+      ? [
+          '// If you are using date-fns v3.x, please import `AdapterDateFnsV3`',
+          `import { AdapterDateFnsV3 } from '${componentPackage}/AdapterDateFnsV3'`,
+        ]
+      : []),
     '',
     'function App({ children }) {',
     '  return (',

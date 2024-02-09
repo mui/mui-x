@@ -7123,7 +7123,7 @@ You can find more information about the new api, including how to set those tran
 - [core] Add link to the security page on the `README` (#6073) @oliviertassinari
 - [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
 - [core] Remove the Storybook (#6099) @flaviendelangle
-- [core] Tag release as `next` in NPM (#6256) @m4theushw
+- [core] Tag release as `next` in npm (#6256) @m4theushw
 - [core] Update monorepo (#6180) @flaviendelangle
 - [core] Use the `next` branch for Prettier (#6097) @flaviendelangle
 - [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
