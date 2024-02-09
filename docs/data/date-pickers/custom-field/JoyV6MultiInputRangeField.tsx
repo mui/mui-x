@@ -31,7 +31,7 @@ import {
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
 } from '@mui/x-date-pickers-pro/models';
-import { UseDateRangeFieldProps, DateRange } from '@mui/x-date-pickers-pro';
+import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
