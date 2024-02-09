@@ -12,13 +12,22 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
   return (
     <Box
       sx={{
+        height: '100%',
         display: 'flex',
         alignItems: 'center',
-        lineHeight: '24px',
-        color: 'text.secondary',
+        justifyContent: 'flex-end',
       }}
     >
-      <Rating value={value} sx={{ mr: 1 }} readOnly /> {Math.round(Number(value) * 10) / 10}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          lineHeight: '24px',
+          color: 'text.secondary',
+        }}
+      >
+        <Rating value={value} sx={{ mr: 1 }} readOnly /> {Math.round(Number(value) * 10) / 10}
+      </Box>
     </Box>
   );
 });
