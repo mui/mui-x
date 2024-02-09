@@ -69,6 +69,10 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [TreeView] Correctly detect if an item is expandable (#11963) @swalker326
 - [TreeView] Polish the default design & revise the simple version pages (#11529) @danilo-leal
 
+### License / `@mui/x-charts@v7.0.0-beta.1`
+
+- [license] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
+
 ### Docs
 
 - [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (#11985) @flaviendelangle
@@ -95,7 +99,6 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [core] Integrate changes from Core #40842 PR (#11801) @michaldudak
 - [core] Move next config to ESM (#11882) @Janpot
 - [core] Add auto-message on closed issues (#11805) @michelengelen
-- [core] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
 - [core] Simplify bug reproduction (#11849) @oliviertassinari
 - [core] Fix npm reference @oliviertassinari
 - [core] Normalize issue template @oliviertassinari
