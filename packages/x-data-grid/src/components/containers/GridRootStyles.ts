@@ -532,6 +532,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
+      display: 'flex',
       alignItems: 'stretch',
     },
     [`.${c.withBorderColor}`]: {
@@ -552,13 +553,13 @@ export const GridRootStyles = styled('div', {
       borderRightStyle: 'solid',
     },
     [`& .${c['cell--textLeft']}`]: {
-      justifyContent: 'flex-start',
+      textAlign: 'left',
     },
     [`& .${c['cell--textRight']}`]: {
-      justifyContent: 'flex-end',
+      textAlign: 'right',
     },
     [`& .${c['cell--textCenter']}`]: {
-      justifyContent: 'center',
+      textAlign: 'center',
     },
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
