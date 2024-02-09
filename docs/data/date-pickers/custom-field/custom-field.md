@@ -70,7 +70,7 @@ You can import the `TextField` component to create custom wrappers:
 
 ### Using Material `PickersTextField`
 
-Pass the `enableAccessibleFieldDOMStructure` to any field or picker component to enable the accessible DOM structure:
+Pass the `enableAccessibleFieldDOMStructure` to any Field or Picker component to enable the accessible DOM structure:
 
 {{"demo": "MaterialV7Field.js"}}
 
