@@ -15,15 +15,6 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### Breaking changes
-
-- If you're using the [commercial license](https://next.mui.com/x/introduction/licensing), you need to update the import path:
-
-  ```diff
-  -import { LicenseInfo } from '@mui/x-license-pro';
-  +import { LicenseInfo } from '@mui/x-license';
-  ```
-
 ### Data Grid
 
 #### `@mui/x-data-grid@v7.0.0-beta.2`
@@ -69,7 +60,18 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [TreeView] Correctly detect if an item is expandable (#11963) @swalker326
 - [TreeView] Polish the default design & revise the simple version pages (#11529) @danilo-leal
 
-### License / `@mui/x-license@v7.0.0-beta.2`
+### License
+
+#### Breaking changes
+
+- If you're using the [commercial license](https://next.mui.com/x/introduction/licensing), you need to update the import path:
+
+  ```diff
+  -import { LicenseInfo } from '@mui/x-license-pro';
+  +import { LicenseInfo } from '@mui/x-license';
+  ```
+
+`@mui/x-license@v7.0.0-beta.2`
 
 - [license] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
 
