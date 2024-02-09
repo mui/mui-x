@@ -9,7 +9,7 @@ _Feb 9, 2024_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🏃 Add slot typings on the Data Grid components (#11795) @romgrk
+- 🚀 Add slot typings on the Data Grid components (#11795) @romgrk
 - 🎁 Support UTC date formatting in Charts tooltip (#11943) @shaharyar-shamshi
 - 🌍 Improve Danish (da-DK) locale Data Grid (#11877) @ShahrazH
 - 🐞 Bugfixes
@@ -33,8 +33,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add support for dialogs in menu actions (#11909) @cherniavskii
 - [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11609) @pcorpet
 - [DataGrid] Fix incorrect computation of `lastPage` in `GridPagination` (#11958) @MBilalShafi
-- [DataGrid] Vertical scrolling performance (#11924) @romgrk
-- [DataGrid] Fix Unable to Paste Row Data in Data Grid with CAPS Lock Key Enabled (#11965) @shaharyar-shamshi
+- [DataGrid] Improve vertical scrolling performance (#11924) @romgrk
 - [l10n] Improve Danish (da-DK) locale (#11877) @ShahrazH
 
 #### `@mui/x-data-grid-pro@v7.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -46,6 +45,7 @@ Same changes as in `@mui/x-data-grid@v7.0.0-beta.2`.
 Same changes as in `@mui/x-data-grid-pro@v7.0.0-beta.2`, plus:
 
 - [DataGridPremium] Fix autosize grouping cell (#11870) @romgrk
+- [DataGridPremium] Fix clipboard paste not working with Caps Lock enabled (#11965) @shaharyar-shamshi
 
 ### Date Pickers
 
@@ -76,7 +76,7 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 ### Docs
 
 - [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (#11985) @flaviendelangle
-- [docs] Add missing `charts` breaking change steps (#11971) @alexfauquette
+- [docs] Add missing `Charts` breaking change steps (#11971) @alexfauquette
 - [docs] Fix `ChartsTooltip` typo (#11961) @thisisharsh7
 - [docs] Refactor `Localization` documentation sections (#11989) @LukasTy
 - [docs] Use "cannot" instead of "can't" or "can not" (#11986) @flaviendelangle
