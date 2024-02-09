@@ -208,6 +208,10 @@ DateField.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.object,
+  /**
+   * Name attribute of the `input` element.
+   */
+  name: PropTypes.string,
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.

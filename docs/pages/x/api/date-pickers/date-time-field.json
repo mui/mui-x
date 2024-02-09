@@ -50,6 +50,7 @@
     "minDateTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "name": { "type": { "name": "string" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {

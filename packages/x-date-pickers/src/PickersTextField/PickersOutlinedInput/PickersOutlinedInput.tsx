@@ -190,6 +190,7 @@ PickersOutlinedInput.propTypes = {
   ]),
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   notched: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

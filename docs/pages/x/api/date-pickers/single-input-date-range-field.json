@@ -43,6 +43,7 @@
     },
     "maxDate": { "type": { "name": "object" } },
     "minDate": { "type": { "name": "object" } },
+    "name": { "type": { "name": "string" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {

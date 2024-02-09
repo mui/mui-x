@@ -56,6 +56,7 @@
     },
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
+    "name": { "description": "Name attribute of the <code>input</code> element." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {

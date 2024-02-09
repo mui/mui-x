@@ -182,6 +182,7 @@ PickersInput.propTypes = {
   ]),
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,

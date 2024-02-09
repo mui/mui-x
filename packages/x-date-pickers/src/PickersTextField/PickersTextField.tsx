@@ -241,6 +241,7 @@ PickersTextField.propTypes = {
    * @default 'none'
    */
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onBlur: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

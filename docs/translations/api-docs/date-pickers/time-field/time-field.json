@@ -65,6 +65,7 @@
       "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minutesStep": { "description": "Step over minutes." },
+    "name": { "description": "Name attribute of the <code>input</code> element." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {

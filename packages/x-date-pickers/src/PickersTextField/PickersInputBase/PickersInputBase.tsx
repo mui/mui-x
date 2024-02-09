@@ -190,6 +190,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onPaste,
     onKeyDown,
     fullWidth,
+    name,
     inputProps,
     inputRef,
     sectionListRef,
@@ -292,6 +293,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
           })
         : null}
       <PickersInputBaseInput
+        name={name}
         className={classes.input}
         value={value}
         onChange={onChange}
@@ -351,6 +353,7 @@ PickersInputBase.propTypes = {
   ]),
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,

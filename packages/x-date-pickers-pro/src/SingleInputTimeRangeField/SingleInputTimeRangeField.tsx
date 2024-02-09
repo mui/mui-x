@@ -228,6 +228,10 @@ SingleInputTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Name attribute of the `input` element.
+   */
+  name: PropTypes.string,
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
