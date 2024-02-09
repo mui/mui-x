@@ -3,7 +3,6 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { DateRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
