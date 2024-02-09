@@ -65,19 +65,16 @@ export const GridRootStyles = styled('div', {
     },
     { [`&.${c.autosizing}`]: styles.autosizing },
     { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
+    { [`& .${c.cell}`]: styles.cell },
     { [`& .${c['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${c['cell--textCenter']}`]: styles['cell--textCenter'] },
     { [`& .${c['cell--textLeft']}`]: styles['cell--textLeft'] },
     { [`& .${c['cell--textRight']}`]: styles['cell--textRight'] },
-    // TODO v6: Remove
-    { [`& .${c['cell--withRenderer']}`]: styles['cell--withRenderer'] },
-    { [`& .${c.cell}`]: styles.cell },
     { [`& .${c['cell--rangeTop']}`]: styles['cell--rangeTop'] },
     { [`& .${c['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${c['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${c['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${c['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
-    { [`& .${c.cellContent}`]: styles.cellContent },
     { [`& .${c.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${c.cellSkeleton}`]: styles.cellSkeleton },
     { [`& .${c.checkboxInput}`]: styles.checkboxInput },
@@ -440,17 +437,20 @@ export const GridRootStyles = styled('div', {
 
     /* Cell styles */
     [`& .${c.cell}`]: {
-      display: 'flex',
-      alignItems: 'center',
       height: 'var(--height)',
       minWidth: 'var(--width)',
       maxWidth: 'var(--width)',
+      lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
 
       '--width': '0px',
       '--height': '0px',
 
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
+
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
 
       '&.Mui-selected': selectedStyles,
     },
@@ -460,9 +460,10 @@ export const GridRootStyles = styled('div', {
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
-    [`& .${c.row}:not(.${c['row--dynamicHeight']}) > .${c.cell}`]: {
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
+    [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
+      overflow: 'initial',
+      whiteSpace: 'initial',
+      lineHeight: 'unset',
     },
     [`& .${c.cellEmpty}`]: {
       padding: 0,
@@ -479,10 +480,6 @@ export const GridRootStyles = styled('div', {
         outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
-    },
-    [`& .${c.cellContent}`]: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
     },
     [`& .${c['row--editing']}`]: {
       boxShadow: t.shadows[2],

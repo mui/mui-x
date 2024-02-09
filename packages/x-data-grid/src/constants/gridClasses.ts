@@ -61,10 +61,6 @@ export interface GridClasses {
    */
   'cell--textRight': string;
   /**
-   * Styles applied to the cell element if the cell has a custom renderer.
-   */
-  'cell--withRenderer': string;
-  /**
    * Styles applied to the cell element if it is at the top edge of a cell selection range.
    */
   'cell--rangeTop': string;
@@ -96,10 +92,6 @@ export interface GridClasses {
    * Styles applied to the cell element.
    */
   cell: string;
-  /**
-   * Styles applied to the element that wraps the cell content.
-   */
-  cellContent: string;
   /**
    * Styles applied to the cell checkbox element.
    */
@@ -626,7 +618,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textCenter',
   'cell--textLeft',
   'cell--textRight',
-  'cell--withRenderer',
   'cell--rangeTop',
   'cell--rangeBottom',
   'cell--rangeLeft',
@@ -635,7 +626,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--pinnedRight',
   'cell--selectionMode',
   'cell',
-  'cellContent',
   'cellCheckbox',
   'cellEmpty',
   'cellSkeleton',
