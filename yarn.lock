@@ -1796,7 +1796,7 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui-internal/docs-utils@1.0.0", "@mui-internal/docs-utils@^1.0.0":
+"@mui-internal/docs-utils@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.0.tgz#b1cd8fafe00dca045896daa2977e26eb551b891a"
   integrity sha512-TqbdoXrXAk9JhcsGjekriQVU6A0w7oo01CfTfm4mefcKT2Z+RhHeFzG4fJrugN718qLdolJKGMoD7f+u/yBSBw==
@@ -1804,17 +1804,23 @@
     rimraf "^5.0.5"
     typescript "^5.1.6"
 
-"@mui-internal/typescript-to-proptypes@^1.0.2":
+"@mui-internal/docs-utils@https://pkg.csb.dev/mui/material-ui/commit/fd499021/@mui-internal/docs-utils":
+  version "1.0.0"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/fd499021/@mui-internal/docs-utils#0f3cb001e5a948403f42c5e9a86e85a1b7930ae6"
+  dependencies:
+    rimraf "^5.0.5"
+    typescript "^5.1.6"
+
+"@mui-internal/typescript-to-proptypes@https://pkg.csb.dev/mui/material-ui/commit/fd499021/@mui-internal/typescript-to-proptypes":
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@mui-internal/typescript-to-proptypes/-/typescript-to-proptypes-1.0.2.tgz#93ccfe6f611ffc700e99570a34737842c6cc0c70"
-  integrity sha512-KpnPqY8MCQBHwmFMCZZxXwG3uREgMAbXKLBzcxlBhYxssZcYdsE/aImWE0B50QfVHBPjkNmt4dcI2UO2VEzS9w==
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/fd499021/@mui-internal/typescript-to-proptypes#00c3edc1e73a16b000e5a7cfa509fbafa47f650d"
   dependencies:
     "@babel/core" "^7.23.7"
     "@babel/plugin-syntax-class-properties" "^7.12.13"
     "@babel/plugin-syntax-jsx" "^7.23.3"
     "@babel/plugin-syntax-typescript" "^7.23.3"
     "@babel/types" "^7.23.6"
-    "@mui-internal/docs-utils" "1.0.0"
+    "@mui-internal/docs-utils" "https://pkg.csb.dev/mui/material-ui/commit/fd499021/@mui-internal/docs-utils"
     doctrine "^3.0.0"
     lodash "^4.17.21"
     typescript "^5.3.3"

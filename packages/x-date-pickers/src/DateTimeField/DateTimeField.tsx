@@ -92,7 +92,7 @@ DateTimeField.propTypes = {
    * @default false
    */
   autoFocus: PropTypes.bool,
-  className: PropTypes.any,
+  className: PropTypes.string,
   /**
    * If `true`, a clear button will be shown in the field allowing value clearing.
    * @default false
@@ -104,7 +104,7 @@ DateTimeField.propTypes = {
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
-  color: PropTypes.any,
+  color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.
@@ -137,7 +137,7 @@ DateTimeField.propTypes = {
   /**
    * If `true`, the component is displayed in focused state.
    */
-  focused: PropTypes.any,
+  focused: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -151,57 +151,65 @@ DateTimeField.propTypes = {
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
-  FormHelperTextProps: PropTypes.any,
+  FormHelperTextProps: PropTypes.object,
   /**
    * If `true`, the input will take up the full width of its container.
    * @default false
    */
-  fullWidth: PropTypes.any,
+  fullWidth: PropTypes.bool,
   /**
    * The helper text content.
    */
-  helperText: PropTypes.any,
+  helperText: PropTypes.node,
   /**
    * If `true`, the label is hidden.
    * This is used to increase density for a `FilledInput`.
    * Be sure to add `aria-label` to the `input` element.
    * @default false
    */
-  hiddenLabel: PropTypes.any,
+  hiddenLabel: PropTypes.bool,
   /**
    * The id of the `input` element.
    * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
-  id: PropTypes.any,
+  id: PropTypes.string,
   /**
    * Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
    * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
    */
-  InputLabelProps: PropTypes.any,
+  InputLabelProps: PropTypes.object,
   /**
    * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
    */
-  inputProps: PropTypes.any,
+  inputProps: PropTypes.object,
   /**
    * Props applied to the Input element.
    * It will be a [`FilledInput`](/material-ui/api/filled-input/),
    * [`OutlinedInput`](/material-ui/api/outlined-input/) or [`Input`](/material-ui/api/input/)
    * component depending on the `variant` prop value.
    */
-  InputProps: PropTypes.any,
+  InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.any,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
   /**
    * The label content.
    */
-  label: PropTypes.any,
+  label: PropTypes.node,
   /**
    * If `dense` or `normal`, will adjust vertical spacing of this and contained components.
    * @default 'none'
    */
-  margin: PropTypes.any,
+  margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
    * Maximal selectable date.
    */
@@ -233,7 +241,7 @@ DateTimeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  onBlur: PropTypes.any,
+  onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -254,7 +262,7 @@ DateTimeField.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
-  onFocus: PropTypes.any,
+  onFocus: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -276,7 +284,7 @@ DateTimeField.propTypes = {
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
    */
-  required: PropTypes.any,
+  required: PropTypes.bool,
   /**
    * The currently selected sections.
    * This prop accepts four formats:
@@ -351,7 +359,7 @@ DateTimeField.propTypes = {
   /**
    * The size of the component.
    */
-  size: PropTypes.any,
+  size: PropTypes.oneOf(['medium', 'small']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -362,11 +370,15 @@ DateTimeField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  style: PropTypes.any,
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  sx: PropTypes.any,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
@@ -388,7 +400,7 @@ DateTimeField.propTypes = {
    * The variant to use.
    * @default 'outlined'
    */
-  variant: PropTypes.any,
+  variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
 } as any;
 
 export { DateTimeField };

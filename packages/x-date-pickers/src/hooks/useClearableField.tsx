@@ -15,7 +15,7 @@ export interface ExportedUseClearableFieldProps {
   /**
    * Callback fired when the clear button is clicked.
    */
-  onClear?: React.MouseEventHandler<HTMLButtonElement>;
+  onClear?: React.MouseEventHandler;
 }
 
 export interface UseClearableFieldSlots {
