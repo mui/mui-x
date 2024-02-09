@@ -50,6 +50,11 @@ export interface DateRangePickerDayProps<TDate extends PickerValidDate>
    * Indicates if the day should be visually selected.
    */
   isVisuallySelected?: boolean;
+  /**
+   * If `true`, the day can be dragged to change the current date range.
+   * @default false
+   */
+  draggable?: boolean;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & {
@@ -154,10 +159,11 @@ const DateRangePickerDayRoot = styled('div', {
     },
     styles.root,
   ],
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) =>
-  ownerState.isHiddenDayFiller
-    ? {}
-    : {
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  variants: [
+    {
+      props: { isHiddenDayFiller: false },
+      style: {
         [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
           ...startBorderStyle,
           borderLeftColor: (theme.vars || theme).palette.divider,
@@ -166,25 +172,38 @@ const DateRangePickerDayRoot = styled('div', {
           ...endBorderStyle,
           borderRightColor: (theme.vars || theme).palette.divider,
         },
-        ...(ownerState.isHighlighting && {
-          borderRadius: 0,
-          color: (theme.vars || theme).palette.primary.contrastText,
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-            : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-          '&:first-of-type': startBorderStyle,
-          '&:last-of-type': endBorderStyle,
-        }),
-        ...((ownerState.isStartOfHighlighting || ownerState.isFirstVisibleCell) && {
-          ...startBorderStyle,
-          paddingLeft: 0,
-        }),
-        ...((ownerState.isEndOfHighlighting || ownerState.isLastVisibleCell) && {
-          ...endBorderStyle,
-          paddingRight: 0,
-        }),
       },
-);
+    },
+    {
+      props: { isHiddenDayFiller: false, isHighlighting: true },
+      style: {
+        borderRadius: 0,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        backgroundColor: theme.vars
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+          : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+        '&:first-of-type': startBorderStyle,
+        '&:last-of-type': endBorderStyle,
+      },
+    },
+    {
+      props: ({ isHiddenDayFiller, isStartOfHighlighting, isFirstVisibleCell }: OwnerState) =>
+        !isHiddenDayFiller && (isStartOfHighlighting || isFirstVisibleCell),
+      style: {
+        ...startBorderStyle,
+        paddingLeft: 0,
+      },
+    },
+    {
+      props: ({ isHiddenDayFiller, isEndOfHighlighting, isLastVisibleCell }: OwnerState) =>
+        !isHiddenDayFiller && (isEndOfHighlighting || isLastVisibleCell),
+      style: {
+        ...endBorderStyle,
+        paddingRight: 0,
+      },
+    },
+  ],
+}));
 
 DateRangePickerDayRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -248,19 +267,22 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ],
 })<{
   ownerState: OwnerState;
-}>(({ ownerState }) => ({
+}>({
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(ownerState.draggable && {
-    cursor: 'grab',
-  }),
-  ...(ownerState.draggable && {
-    touchAction: 'none',
-  }),
-})) as unknown as <TDate extends PickerValidDate>(
+  variants: [
+    {
+      props: { draggable: true },
+      style: {
+        cursor: 'grab',
+        touchAction: 'none',
+      },
+    },
+  ],
+}) as unknown as <TDate extends PickerValidDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => React.JSX.Element;
 
