@@ -69,7 +69,7 @@ Same changes as in `@mui/x-date-pickers@v7.0.0-beta.2`.
 - [TreeView] Correctly detect if an item is expandable (#11963) @swalker326
 - [TreeView] Polish the default design & revise the simple version pages (#11529) @danilo-leal
 
-### License / `@mui/x-charts@v7.0.0-beta.1`
+### License / `@mui/x-license@v7.0.0-beta.1`
 
 - [license] Rename `@mui/x-license-pro` to `@mui/x-license` (#11938) @cherniavskii
 
