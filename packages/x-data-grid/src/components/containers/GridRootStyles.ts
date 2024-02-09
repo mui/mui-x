@@ -230,9 +230,11 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
       },
-      [`& .${c.cell} > *`]: {
+      [`& .${c.cell}`]: {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
+        minWidth: 'max-content !important',
+        maxWidth: 'max-content !important',
       },
       [`& .${c.groupingCriteriaCell}`]: {
         width: 'unset',
