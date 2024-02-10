@@ -19,9 +19,6 @@ export function fastObjectShallowCompare<T extends Record<string, any> | null>(a
     if (!is(a[key], b[key])) {
       return false;
     }
-    if (!(key in b)) {
-      return false;
-    }
   }
 
   /* eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars */
