@@ -885,7 +885,7 @@ function computeOffsets(
 
   const top = gridRowsMetaSelector(apiRef.current.state).positions[renderContext.firstRowIndex];
   const left =
-    factor * columnPositions[renderContext.firstColumnIndex] - columnPositions[pinnedLeftLength];
+    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) - (columnPositions[pinnedLeftLength] ?? 0);
 
   return { top, left };
 }
