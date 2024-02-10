@@ -70,11 +70,7 @@ const SpaceFiller = styled('div')({
   },
 });
 
-export const GridColumnHeaderRow = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ColumnHeaderRow',
-  overridesResolver: (props, styles) => styles.columnHeaderRow,
-})({
+export const GridColumnHeaderRow = styled('div')({
   display: 'flex',
   height: 'var(--DataGrid-headerHeight)',
 });
