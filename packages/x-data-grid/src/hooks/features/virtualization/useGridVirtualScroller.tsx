@@ -490,10 +490,6 @@ export const useGridVirtualScroller = () => {
       // TODO a scroll reset should not be necessary
       scrollerRef.current!.scrollLeft = 0;
       scrollerRef.current!.scrollTop = 0;
-    } else {
-      // XXX: when is this necessary?
-      debugger
-      throw new Error('handle this')
     }
   }, [enabled, gridRootRef, scrollerRef]);
 
