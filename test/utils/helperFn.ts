@@ -29,8 +29,11 @@ export function gridVar(name: string) {
 }
 
 export function gridOffsetTop() {
+  const transform = getComputedStyle(grid('virtualScrollerRenderZone')!).transform;
   return parseInt(
-    getComputedStyle(grid('virtualScrollerRenderZone')!).transform.split('(')[1].split(',')[1],
+    transform.startsWith('translate3d') ?
+      transform.split('(')[1].split(',')[1] :
+      transform.split('(')[1].split(',')[5],
     10,
   );
 }
