@@ -43,7 +43,7 @@ function useData(length: number) {
         field: 'rating',
         headerName: 'Rating',
         renderCell: renderRating,
-        display: 'flex',
+        display: 'flex' as const,
       },
     ];
 
