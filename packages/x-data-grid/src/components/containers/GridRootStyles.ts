@@ -422,7 +422,6 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
-      backgroundColor: 'var(--DataGrid-containerBackground)',
 
       '--rowBorderColor': 'var(--DataGrid-rowBorderColor)',
 
