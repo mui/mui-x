@@ -113,7 +113,6 @@ export const useGridVirtualScroller = () => {
         nextRenderContext,
         theme.direction,
         pinnedColumns.left.length,
-        columnPositions,
       );
 
       apiRef.current.setState((state) => {
@@ -879,11 +878,12 @@ function computeOffsets(
   renderContext: GridRenderContext,
   direction: Theme['direction'],
   pinnedLeftLength: number,
-  columnPositions: number[],
 ) {
   const factor = direction === 'ltr' ? 1 : -1;
+  const rowPositions = gridRowsMetaSelector(apiRef.current.state).positions;
+  const columnPositions = gridColumnPositionsSelector(apiRef);
 
-  const top = gridRowsMetaSelector(apiRef.current.state).positions[renderContext.firstRowIndex];
+  const top = rowPositions[renderContext.firstRowIndex] ?? 0;
   const left =
     factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) - (columnPositions[pinnedLeftLength] ?? 0);
 
