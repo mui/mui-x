@@ -552,14 +552,21 @@ export const GridRootStyles = styled('div', {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
+    [`& .${c['cell--flex']}`]: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     [`& .${c['cell--textLeft']}`]: {
       textAlign: 'left',
+      justifyContent: 'flex-start',
     },
     [`& .${c['cell--textRight']}`]: {
       textAlign: 'right',
+      justifyContent: 'flex-end',
     },
     [`& .${c['cell--textCenter']}`]: {
       textAlign: 'center',
+      justifyContent: 'center',
     },
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',

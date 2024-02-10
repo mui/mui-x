@@ -49,6 +49,10 @@ export interface GridClasses {
    */
   'cell--editing': string;
   /**
+   * Styles applied to the cell element in flex display mode.
+   */
+  'cell--flex': string;
+  /**
    * Styles applied to the cell element if `align="center"`.
    */
   'cell--textCenter': string;
@@ -635,6 +639,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'booleanCell',
   'cell--editable',
   'cell--editing',
+  'cell--flex',
   'cell--textCenter',
   'cell--textLeft',
   'cell--textRight',

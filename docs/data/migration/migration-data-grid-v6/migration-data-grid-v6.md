@@ -104,6 +104,7 @@ As a result, the following changes have been made:
 - The main element now corresponds to the virtal scroller element.
 - Headers are now contained in the virtual scroller.
 - Pinned row and column sections are now contained in the virtual scroller.
+- The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
 
 <!-- ### Renamed props
 
@@ -460,10 +461,12 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
  }
 ```
 
-### CSS classes
+### CSS classes and styling
 
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
+- The `.MuiDataGrid-cell--withRenderer` class has been removed.
+- The cell element isn't `display: flex` by default. You can use `cellClassName: gridClasses['cell--flex']` to restore the behavior.
 
 ### Changes to the public API
 
