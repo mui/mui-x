@@ -9,6 +9,7 @@ import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { gridDimensionsSelector } from '../dimensions';
 import {
+  gridOffsetsSelector,
   gridRenderContextColumnsSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '../virtualization';
@@ -69,24 +70,10 @@ const SpaceFiller = styled('div')({
   },
 });
 
-export const GridColumnHeaderRow = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ColumnHeaderRow',
-  overridesResolver: (props, styles) => styles.columnHeaderRow,
-})<{ ownerState: { params?: GetHeadersParams; leftOverflow?: number } }>(
-  ({ ownerState: { params: { position } = {}, leftOverflow = 0 } }) => ({
-    display: 'flex',
-    height: 'var(--DataGrid-headerHeight)',
-    transform:
-      position === undefined
-        ? `translate3d(${
-            leftOverflow !== 0
-              ? `calc(var(--DataGrid-offsetLeft) - ${leftOverflow}px)`
-              : 'var(--DataGrid-offsetLeft)'
-          }, 0, 0)`
-        : undefined,
-  }),
-);
+export const GridColumnHeaderRow = styled('div')({
+  display: 'flex',
+  height: 'var(--DataGrid-headerHeight)',
+});
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
@@ -114,6 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
@@ -163,15 +151,26 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     };
   };
 
-  const getFiller = (params: GetHeadersParams | undefined, borderTop: boolean = false) => {
+  const getFillers = (
+    params: GetHeadersParams | undefined,
+    children: React.ReactNode,
+    leftOverflow: number,
+    borderTop: boolean = false,
+  ) => {
     const isPinnedRight = params?.position === GridPinnedColumnPosition.RIGHT;
+    const isNotPinned = params?.position === undefined;
+
     const hasScrollbarFiller =
       (visiblePinnedColumns.right.length > 0 && isPinnedRight) ||
-      (visiblePinnedColumns.right.length === 0 && params?.position === undefined);
+      (visiblePinnedColumns.right.length === 0 && isNotPinned);
+
+    const leftOffsetWidth = offsets.left - leftOverflow;
 
     return (
       <React.Fragment>
-        {params?.position === undefined && <SpaceFiller className={gridClasses.columnHeader} />}
+        {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
+        {children}
+        {isNotPinned && <SpaceFiller className={gridClasses.columnHeader} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
@@ -217,13 +216,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow
-        role="row"
-        aria-rowindex={headerGroupingMaxDepth + 1}
-        ownerState={{ params }}
-      >
-        {columns}
-        {getFiller(params)}
+      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+        {getFillers(params, columns, 0)}
       </GridColumnHeaderRow>
     );
   };
@@ -323,36 +317,29 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     headerToRender.forEach((depthInfo, depthIndex) => {
+      const children = depthInfo.elements.map(
+        ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
+          return (
+            <GridColumnGroupHeader
+              key={groupIndex}
+              groupId={groupId}
+              width={width}
+              fields={fields}
+              colIndex={colIndex}
+              depth={depthIndex}
+              isLastColumn={colIndex === visibleColumns.length - fields.length}
+              maxDepth={headerToRender.length}
+              height={dimensions.headerHeight}
+              hasFocus={hasFocus}
+              tabIndex={tabIndex}
+            />
+          );
+        },
+      );
+
       columns.push(
-        <GridColumnHeaderRow
-          key={depthIndex}
-          role="row"
-          aria-rowindex={depthIndex + 1}
-          ownerState={{
-            params,
-            leftOverflow: depthInfo.leftOverflow,
-          }}
-        >
-          {depthInfo.elements.map(
-            ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
-              return (
-                <GridColumnGroupHeader
-                  key={groupIndex}
-                  groupId={groupId}
-                  width={width}
-                  fields={fields}
-                  colIndex={colIndex}
-                  depth={depthIndex}
-                  isLastColumn={colIndex === visibleColumns.length - fields.length}
-                  maxDepth={headerToRender.length}
-                  height={dimensions.headerHeight}
-                  hasFocus={hasFocus}
-                  tabIndex={tabIndex}
-                />
-              );
-            },
-          )}
-          {getFiller(params)}
+        <GridColumnHeaderRow key={depthIndex} role="row" aria-rowindex={depthIndex + 1}>
+          {getFillers(params, children, depthInfo.leftOverflow)}
         </GridColumnHeaderRow>,
       );
     });
@@ -361,7 +348,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   return {
     renderContext,
-    getFiller,
+    getFillers,
     getColumnHeaders,
     getColumnsToRender,
     getColumnGroupHeaders,

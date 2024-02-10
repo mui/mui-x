@@ -37,6 +37,16 @@ export const gridRenderContextSelector = createSelector(
 );
 
 /**
+ * Get the offsets
+ * @category Virtualization
+ * @ignore - do not document.
+ */
+export const gridOffsetsSelector = createSelector(
+  gridVirtualizationSelector,
+  (state) => state.offsets,
+);
+
+/**
  * Get the render context, with only columns filled in.
  * This is cached, so it can be used to only re-render when the column interval changes.
  * @category Virtualization
