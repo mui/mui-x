@@ -28,6 +28,13 @@ export function gridVar(name: string) {
   return $(`.${gridClasses.root}`)!.style.getPropertyValue(name);
 }
 
+export function gridOffsetTop() {
+  return parseInt(
+    getComputedStyle(grid('virtualScrollerRenderZone')!).transform.split('(')[1].split(',')[1],
+    10,
+  );
+}
+
 export function sleep(duration: number): Promise<void> {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
