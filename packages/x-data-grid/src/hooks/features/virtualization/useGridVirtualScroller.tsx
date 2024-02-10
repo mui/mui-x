@@ -57,7 +57,6 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const theme = useTheme();
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -139,7 +138,6 @@ export const useGridVirtualScroller = () => {
     },
     [
       apiRef,
-      columnPositions,
       pinnedColumns.left.length,
       theme.direction,
       dimensions.isReady,
@@ -885,7 +883,8 @@ function computeOffsets(
 
   const top = rowPositions[renderContext.firstRowIndex] ?? 0;
   const left =
-    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) - (columnPositions[pinnedLeftLength] ?? 0);
+    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
+    (columnPositions[pinnedLeftLength] ?? 0);
 
   return { top, left };
 }
