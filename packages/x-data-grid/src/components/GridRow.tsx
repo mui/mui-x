@@ -589,6 +589,10 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
+  offsets: PropTypes.shape({
+    left: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired,
+  }).isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
