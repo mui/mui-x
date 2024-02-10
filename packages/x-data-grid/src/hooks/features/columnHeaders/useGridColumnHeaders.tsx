@@ -162,17 +162,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     borderTop: boolean = false,
   ) => {
     const isPinnedRight = params?.position === GridPinnedColumnPosition.RIGHT;
+    const isNotPinned = params?.position === undefined;
+
     const hasScrollbarFiller =
       (visiblePinnedColumns.right.length > 0 && isPinnedRight) ||
-      (visiblePinnedColumns.right.length === 0 && params?.position === undefined);
+      (visiblePinnedColumns.right.length === 0 && isNotPinned);
 
     const leftOffsetWidth = offsets.left - leftOverflow;
 
     return (
       <React.Fragment>
-        <div role="presentation" style={{ width: leftOffsetWidth }} />
+        {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {params?.position === undefined && <SpaceFiller className={gridClasses.columnHeader} />}
+        {isNotPinned && <SpaceFiller className={gridClasses.columnHeader} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
