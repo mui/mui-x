@@ -511,6 +511,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--flex",
+      "className": "MuiDataGrid-cell--flex",
+      "description": "Styles applied to the cell element in flex display mode.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--pinnedLeft",
       "className": "MuiDataGrid-cell--pinnedLeft",
       "description": "Styles applied to the cell element if it is pinned to the left.",
