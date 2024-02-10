@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { getDataGridUtilityClass, useGridSelector, GridRowId } from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  gridRowsMetaSelector,
+  useGridSelector,
+  GridRowId,
+} from '@mui/x-data-grid';
 import { GridDetailPanelsProps, EMPTY_DETAIL_PANELS } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -31,6 +36,7 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
   const classes = useUtilityClasses();
   const { setPanels } = virtualScroller;
 
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(
     apiRef,
@@ -55,11 +61,13 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
 
       const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
       const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
+      const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(rowId);
 
       return (
         <GridDetailPanel
           key={`panel-${rowId}`}
           rowId={rowId}
+          top={top}
           height={height}
           className={classes.detailPanel}
         >
@@ -67,7 +75,7 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
         </GridDetailPanel>
       );
     },
-    [apiRef, classes.detailPanel, detailPanelsHeights, detailPanelsContent],
+    [apiRef, classes.detailPanel, rowsMeta, detailPanelsHeights, detailPanelsContent],
   );
 
   React.useEffect(() => {

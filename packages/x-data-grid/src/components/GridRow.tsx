@@ -42,6 +42,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
+  top: number;
   offsets: GridVirtualizationState['offsets'];
   dimensions: GridDimensions;
   firstColumnToRender: number;
@@ -124,6 +125,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     visibleColumns,
     renderedColumns,
     pinnedColumns,
+    top,
     offsets,
     dimensions,
     firstColumnToRender,
@@ -308,6 +310,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
       minHeight,
+      top,
     };
 
     if (sizes?.spacingTop) {
@@ -327,7 +330,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, minHeight, top, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
 
@@ -436,7 +439,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
         gridHasScrollX={dimensions.hasScrollX}
-        offsets={offsets}
       />
     );
   };

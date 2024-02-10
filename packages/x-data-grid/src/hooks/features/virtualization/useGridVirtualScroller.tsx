@@ -415,6 +415,7 @@ export const useGridVirtualScroller = () => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
+          top={rowsMeta.positions[rowIndexInPage]}
           offsets={offsets}
           dimensions={dimensions}
           isFirstVisible={isFirstVisible}
@@ -527,7 +528,6 @@ export const useGridVirtualScroller = () => {
       style: contentSize,
       role: 'presentation',
     }),
-    getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
     getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
   };

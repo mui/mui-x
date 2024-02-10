@@ -15,7 +15,6 @@ import { GridTopContainer as TopContainer } from './GridTopContainer';
 import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
-import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 
 type OwnerState = DataGridProcessedProps;
@@ -67,7 +66,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getContainerProps,
     getScrollerProps,
     getContentProps,
-    getRenderZoneProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
   } = virtualScroller;
@@ -83,10 +81,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <GridOverlays />
 
         <Content {...getContentProps()}>
-          <RenderZone {...getRenderZoneProps()}>
-            {virtualScroller.getRows()}
-            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
-          </RenderZone>
+          {virtualScroller.getRows()}
+          {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
         </Content>
 
         <SpaceFiller />
