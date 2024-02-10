@@ -9,7 +9,6 @@ import { useGridApiRef } from '@mui/x-data-grid';
 import {
   DataGridPro,
   GridApiPro,
-  gridClasses,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from '@mui/x-data-grid-pro';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
@@ -40,7 +39,12 @@ function useData(length: number) {
       { field: 'id', headerName: 'Brand ID' },
       { field: 'brand', headerName: 'Brand name' },
       { field: 'rep', headerName: 'Representative' },
-      { field: 'rating', headerName: 'Rating', renderCell: renderRating, cellClassName: gridClasses['cell--flex'] },
+      {
+        field: 'rating',
+        headerName: 'Rating',
+        renderCell: renderRating,
+        display: 'flex',
+      },
     ];
 
     return { rows, columns };

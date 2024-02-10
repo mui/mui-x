@@ -230,6 +230,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     );
   }
 
+  if (column.display === 'flex') {
+    classNames.push(gridClasses['cell--flex']);
+  }
+
   if (getCellClassName) {
     classNames.push(getCellClassName(cellParamsWithAPI));
   }

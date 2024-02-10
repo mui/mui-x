@@ -476,7 +476,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       overflow: 'initial',
       whiteSpace: 'initial',
-      lineHeight: 'unset',
+      lineHeight: 'inherit',
     },
     [`& .${c.cellEmpty}`]: {
       padding: 0,
@@ -555,6 +555,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--flex']}`]: {
       display: 'flex',
       alignItems: 'center',
+      lineHeight: 'inherit',
     },
     [`& .${c['cell--textLeft']}`]: {
       textAlign: 'left',

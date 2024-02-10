@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, GridApiPro, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApiPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -16,7 +16,12 @@ const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },
   { field: 'brand', headerName: 'Brand name' },
   { field: 'rep', headerName: 'Representative' },
-  { field: 'rating', headerName: 'Rating', renderCell: renderRating, cellClassName: gridClasses['cell--flex'] },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex',
+  },
 ];
 
 function renderRating(params: any) {

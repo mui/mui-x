@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -19,7 +19,7 @@ const columns = [
     field: 'rating',
     headerName: 'Rating',
     renderCell: renderRating,
-    cellClassName: gridClasses['cell--flex'],
+    display: 'flex',
   },
 ];
 
