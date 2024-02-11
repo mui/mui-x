@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
-    "@mui/system": "^5.15.7",
-    "@mui/utils": "^5.15.7",
+    "@mui/system": "^5.15.9",
+    "@mui/utils": "^5.15.9",
     "@mui/x-data-grid": "7.0.0-beta.2",
     "@mui/x-data-grid-pro": "7.0.0-beta.2",
     "@mui/x-license": "7.0.0-beta.2",
