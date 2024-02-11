@@ -9,7 +9,7 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v6 to v7.
-The change between v6 and v7 is mostly here to match the version with other MUI X packages.
+The change between v6 and v7 is mostly here to match the version with other MUI X packages.
 Not big breaking changes are expected.
 
 ## Start using the new release
@@ -34,9 +34,22 @@ These changes were done for consistency, improved stability and to make room for
 
 ### Renaming
 
+#### Types
+
 Some types got renamed for coherence:
 
 | v6                                | v7                       |
 | :-------------------------------- | :----------------------- |
 | `ChartsTooltipSlotComponentProps` | `ChartsTooltipSlotProps` |
 | `ChartsTooltipSlotsComponent`     | `ChartsTooltipSlots`     |
+
+#### Props
+
+The Pie Chart `onClick` prop has been renamed `onItemClick` for consistency with other components.
+The behavior of this prop remains the same.
+
+### Animation
+
+The Line Chart now have animation by default.
+You can disable it with `skipAnimation` prop.
+See [animation documentation](/x/react-charts/lines/#animation) for more information.

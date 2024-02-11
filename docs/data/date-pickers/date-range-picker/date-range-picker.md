@@ -102,9 +102,13 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
 
 ## Month Range Picker 🚧
 

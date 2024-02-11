@@ -77,5 +77,5 @@ export type PickersTextFieldProps<Variant extends TextFieldVariants = TextFieldV
   Variant extends 'filled'
     ? PickersFilledTextFieldProps
     : Variant extends 'standard'
-    ? PickersStandardTextFieldProps
-    : PickersOutlinedTextFieldProps;
+      ? PickersStandardTextFieldProps
+      : PickersOutlinedTextFieldProps;

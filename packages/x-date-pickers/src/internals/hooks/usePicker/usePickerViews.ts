@@ -7,7 +7,7 @@ import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { TimezoneProps } from '../../../models';
+import { PickerValidDate, TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -26,7 +26,7 @@ export type PickerViewsRendererProps<
     onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
   };
 
-type PickerViewRenderer<
+export type PickerViewRenderer<
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
@@ -49,7 +49,7 @@ export type PickerViewRendererLookup<
  */
 export interface UsePickerViewsBaseProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
@@ -93,7 +93,7 @@ export interface UsePickerViewsNonStaticProps {
  */
 export interface UsePickerViewsProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
@@ -105,7 +105,7 @@ export interface UsePickerViewsProps<
 
 export interface UsePickerViewParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<
     TValue,
@@ -121,6 +121,21 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   autoFocusView: boolean;
+  /**
+   * A function that intercepts the regular picker rendering.
+   * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
+   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
+   * @param {TView} popperView The current picker view.
+   * @param {any} rendererProps All the props that are being passed down to the renderer.
+   * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
+   */
+  rendererInterceptor?: (
+    viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
+    popperView: TView,
+    rendererProps: Omit<TExternalProps, 'className' | 'sx'> &
+      TAdditionalProps &
+      UsePickerValueViewsResponse<TValue>,
+  ) => React.ReactNode;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
@@ -148,7 +163,7 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMe
  */
 export const usePickerViews = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
@@ -158,6 +173,7 @@ export const usePickerViews = <
   additionalViewProps,
   inputRef,
   autoFocusView,
+  rendererInterceptor,
 }: UsePickerViewParams<
   TValue,
   TDate,
@@ -285,7 +301,7 @@ export const usePickerViews = <
         return null;
       }
 
-      return renderer({
+      const rendererProps = {
         ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,
@@ -298,7 +314,13 @@ export const usePickerViews = <
         onFocusedViewChange: setFocusedView,
         showViewSwitcher: timeViewsCount > 1,
         timeViewsCount,
-      });
+      };
+
+      if (rendererInterceptor) {
+        return rendererInterceptor(viewRenderers, popperView, rendererProps);
+      }
+
+      return renderer(rendererProps);
     },
   };
 };

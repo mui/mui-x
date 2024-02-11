@@ -29,6 +29,7 @@ const updateState = ({
     parentId: string | null,
   ): TreeViewNodeIdAndChildren => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
+
     if (id == null) {
       throw new Error(
         [
@@ -36,6 +37,16 @@ const updateState = ({
           'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
           'An item was provided without id in the `items` prop:',
           JSON.stringify(item),
+        ].join('\n'),
+      );
+    }
+
+    if (nodeMap[id] != null) {
+      throw new Error(
+        [
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+          `Tow items were provided with the same id in the \`items\` prop: "${id}"`,
         ].join('\n'),
       );
     }

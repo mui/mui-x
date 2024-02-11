@@ -793,15 +793,27 @@
       "isGlobal": false
     },
     {
-      "key": "columnsPanel",
-      "className": "MuiDataGrid-columnsPanel",
-      "description": "Styles applied to the columns panel element.",
+      "key": "columnsManagement",
+      "className": "MuiDataGrid-columnsManagement",
+      "description": "Styles applied to the columns management body.",
       "isGlobal": false
     },
     {
-      "key": "columnsPanelRow",
-      "className": "MuiDataGrid-columnsPanelRow",
-      "description": "Styles applied to the columns panel row element.",
+      "key": "columnsManagementFooter",
+      "className": "MuiDataGrid-columnsManagementFooter",
+      "description": "Styles applied to the columns management footer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementHeader",
+      "className": "MuiDataGrid-columnsManagementHeader",
+      "description": "Styles applied to the columns management header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementRow",
+      "className": "MuiDataGrid-columnsManagementRow",
+      "description": "Styles applied to the columns management row element.",
       "isGlobal": false
     },
     {
@@ -1317,7 +1329,7 @@
   ],
   "muiName": "MuiDataGrid",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
+  "filename": "/packages/x-data-grid/src/DataGrid/DataGrid.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
   "cssComponent": false

@@ -1,35 +1,33 @@
 import * as React from 'react';
-import { FieldRef } from '@mui/x-date-pickers/models';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internals/models/dateTimeRange';
-import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputFieldRefs } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
-  TDate,
+  TDate extends PickerValidDate,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
-export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-}
+export interface UseMultiInputDateTimeRangeFieldProps<TDate extends PickerValidDate>
+  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'>,
+    MultiInputFieldRefs {}
 
-export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseMultiInputDateTimeRangeFieldProps<TDate>
-> &
+export type UseMultiInputDateTimeRangeFieldComponentProps<
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
   UseMultiInputDateTimeRangeFieldProps<TDate>;
 
-export interface MultiInputDateTimeRangeFieldProps<TDate>
+export interface MultiInputDateTimeRangeFieldProps<TDate extends PickerValidDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
   /**
@@ -48,7 +46,7 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
   slotProps?: MultiInputDateTimeRangeFieldSlotProps<TDate>;
 }
 
-export type MultiInputDateTimeRangeFieldOwnerState<TDate> =
+export type MultiInputDateTimeRangeFieldOwnerState<TDate extends PickerValidDate> =
   MultiInputDateTimeRangeFieldProps<TDate>;
 
 export interface MultiInputDateTimeRangeFieldSlots {
@@ -71,7 +69,7 @@ export interface MultiInputDateTimeRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateTimeRangeFieldSlotProps<TDate> {
+export interface MultiInputDateTimeRangeFieldSlotProps<TDate extends PickerValidDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateTimeRangeFieldOwnerState<TDate>>;
   textField?: SlotComponentProps<
     typeof TextField,
@@ -86,7 +84,7 @@ export interface MultiInputDateTimeRangeFieldSlotProps<TDate> {
 }
 
 export type UseMultiInputDateTimeRangeFieldDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   AdditionalProps extends {},
 > = UseDateTimeRangeFieldDefaultizedProps<TDate> &
   Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

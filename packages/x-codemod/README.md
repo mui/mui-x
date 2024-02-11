@@ -1,12 +1,12 @@
 # @mui/x-codemod
 
-> Codemod scripts for MUI X
+> Codemod scripts for MUI X
 
 [![npm version](https://img.shields.io/npm/v/@mui/x-codemod.svg?style=flat-square)](https://www.npmjs.com/package/@mui/x-codemod)
 [![npm downloads](https://img.shields.io/npm/dm/@mui/x-codemod.svg?style=flat-square)](https://www.npmjs.com/package/@mui/x-codemod)
 
 This repository contains a collection of codemod scripts based for use with
-[jscodeshift](https://github.com/facebook/jscodeshift) that help update MUI X APIs.
+[jscodeshift](https://github.com/facebook/jscodeshift) that help update MUI X APIs.
 
 ## Setup & run
 

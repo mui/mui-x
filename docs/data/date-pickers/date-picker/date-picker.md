@@ -112,13 +112,13 @@ You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
 
-## Validation
-
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
-
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+## Validation
+
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
 
 ## Customization
 

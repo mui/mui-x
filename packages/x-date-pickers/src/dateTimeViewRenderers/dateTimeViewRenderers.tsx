@@ -17,8 +17,9 @@ import {
 } from '../timeViewRenderers';
 import { digitalClockClasses } from '../DigitalClock';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
-export interface DateTimeViewRendererProps<TDate>
+export interface DateTimeViewRendererProps<TDate extends PickerValidDate>
   extends Omit<
       DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
       'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView' | 'slots' | 'slotProps'
@@ -32,7 +33,7 @@ export interface DateTimeViewRendererProps<TDate>
   shouldRenderTimeInASingleColumn: boolean;
 }
 
-export const renderDesktopDateTimeView = <TDate extends unknown>({
+export const renderDesktopDateTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   views,
@@ -163,27 +164,31 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
                   view: 'hours',
                   views: ['hours'],
                   focusedView: focusedView && isInternalTimeView(focusedView) ? 'hours' : null,
-                  sx: {
-                    width: 'auto',
-                    [`&.${digitalClockClasses.root}`]: {
-                      maxHeight: VIEW_HEIGHT,
+                  sx: [
+                    {
+                      width: 'auto',
+                      [`&.${digitalClockClasses.root}`]: {
+                        maxHeight: VIEW_HEIGHT,
+                      },
                     },
                     ...(Array.isArray(sx) ? sx : [sx]),
-                  },
+                  ],
                 })
               : renderMultiSectionDigitalClockTimeView({
                   ...commonTimeProps,
                   view: isInternalTimeView(view) ? view : 'hours',
                   views: views.filter(isInternalTimeView),
                   focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
-                  sx: {
-                    borderBottom: 0,
-                    width: 'auto',
-                    [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-                      maxHeight: '100%',
+                  sx: [
+                    {
+                      borderBottom: 0,
+                      width: 'auto',
+                      [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+                        maxHeight: '100%',
+                      },
                     },
                     ...(Array.isArray(sx) ? sx : [sx]),
-                  },
+                  ],
                 })}
           </React.Fragment>
         )}

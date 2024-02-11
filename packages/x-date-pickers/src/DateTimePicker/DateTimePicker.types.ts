@@ -9,16 +9,17 @@ import {
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
+import { PickerValidDate } from '../models';
 
-export interface DateTimePickerSlots<TDate>
+export interface DateTimePickerSlots<TDate extends PickerValidDate>
   extends DesktopDateTimePickerSlots<TDate>,
     MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerSlotProps<TDate>
+export interface DateTimePickerSlotProps<TDate extends PickerValidDate>
   extends DesktopDateTimePickerSlotProps<TDate>,
     MobileDateTimePickerSlotProps<TDate, DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerProps<TDate>
+export interface DateTimePickerProps<TDate extends PickerValidDate>
   extends DesktopDateTimePickerProps<TDate>,
     Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'> {
   /**

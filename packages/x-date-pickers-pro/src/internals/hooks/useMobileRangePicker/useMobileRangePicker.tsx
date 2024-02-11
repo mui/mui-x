@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -10,9 +10,11 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
   DateOrTimeViewWithMeridiem,
+  UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
@@ -28,7 +30,7 @@ import { useRangePosition } from '../useRangePosition';
 const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -153,6 +155,11 @@ export const useMobileRangePicker = <
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
+    tabs: {
+      ...innerSlotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,

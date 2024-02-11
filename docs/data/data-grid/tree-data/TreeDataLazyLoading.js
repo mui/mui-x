@@ -134,13 +134,16 @@ const getChildren = (parentPath) => {
  */
 const fakeDataFetcher = (parentPath = []) =>
   new Promise((resolve) => {
-    setTimeout(() => {
-      const rows = getChildren(parentPath).map((row) => ({
-        ...row,
-        descendantCount: getChildren(row.hierarchy).length,
-      }));
-      resolve(rows);
-    }, 500 + Math.random() * 300);
+    setTimeout(
+      () => {
+        const rows = getChildren(parentPath).map((row) => ({
+          ...row,
+          descendantCount: getChildren(row.hierarchy).length,
+        }));
+        resolve(rows);
+      },
+      500 + Math.random() * 300,
+    );
   });
 
 const LoadingContainer = styled('div')({

@@ -533,12 +533,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
-    "pinnedColumns": {
-      "type": {
-        "name": "shape",
-        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
-      }
-    },
+    "pinnedColumns": { "type": { "name": "object" } },
     "pinnedRows": {
       "type": {
         "name": "shape",
@@ -974,15 +969,27 @@
       "isGlobal": false
     },
     {
-      "key": "columnsPanel",
-      "className": "MuiDataGridPremium-columnsPanel",
-      "description": "Styles applied to the columns panel element.",
+      "key": "columnsManagement",
+      "className": "MuiDataGridPremium-columnsManagement",
+      "description": "Styles applied to the columns management body.",
       "isGlobal": false
     },
     {
-      "key": "columnsPanelRow",
-      "className": "MuiDataGridPremium-columnsPanelRow",
-      "description": "Styles applied to the columns panel row element.",
+      "key": "columnsManagementFooter",
+      "className": "MuiDataGridPremium-columnsManagementFooter",
+      "description": "Styles applied to the columns management footer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementHeader",
+      "className": "MuiDataGridPremium-columnsManagementHeader",
+      "description": "Styles applied to the columns management header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementRow",
+      "className": "MuiDataGridPremium-columnsManagementRow",
+      "description": "Styles applied to the columns management row element.",
       "isGlobal": false
     },
     {
@@ -1498,7 +1505,7 @@
   ],
   "muiName": "MuiDataGridPremium",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
+  "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
   "cssComponent": false

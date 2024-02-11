@@ -42,12 +42,12 @@ const dateColumnType: GridColTypeDef<Date, string> = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: false },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
+  valueFormatter: (value) => {
+    if (typeof value === 'string') {
+      return value;
     }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDate');
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDate');
     }
     return '';
   },
@@ -70,7 +70,7 @@ function GridEditDateCell({
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<any, Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
@@ -137,12 +137,12 @@ const dateTimeColumnType: GridColTypeDef<Date, string> = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: true },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
+  valueFormatter: (value) => {
+    if (typeof value === 'string') {
+      return value;
     }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDateTime');
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDateTime');
     }
     return '';
   },

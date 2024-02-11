@@ -22,9 +22,13 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '시작',
   end: '종료',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: '취소',
@@ -40,11 +44,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${views[view]} 선택하세요. ${
-      time === null
-        ? '시간을 선택하지 않았습니다.'
-        : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`
-    }`,
+    `${views[view]} 선택하세요. ${time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시간`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,

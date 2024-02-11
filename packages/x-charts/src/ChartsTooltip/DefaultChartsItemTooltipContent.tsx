@@ -72,23 +72,13 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   /**
    * The series linked to the triggered axis.
    */
-  series: PropTypes.shape({
-    color: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.number).isRequired,
-    highlightScope: PropTypes.shape({
-      faded: PropTypes.oneOf(['global', 'none', 'series']),
-      highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-    }),
-    id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-    valueFormatter: PropTypes.func.isRequired,
-  }).isRequired,
+  series: PropTypes.object.isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

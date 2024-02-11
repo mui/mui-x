@@ -4,6 +4,10 @@ import { ProjectSettings } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
 import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_isGlobalState as isGlobalState,
+} from '@mui/utils';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
@@ -41,18 +45,18 @@ export default apiPages;
   typeScriptProjects: [
     {
       name: 'data-grid',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid'),
       entryPointPath: 'src/index.ts',
     },
     {
       name: 'data-grid-pro',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid-pro'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
       entryPointPath: 'src/index.ts',
     },
 
     {
       name: 'data-grid-premium',
-      rootPath: path.join(process.cwd(), 'packages/grid/x-data-grid-premium'),
+      rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
       entryPointPath: 'src/index.ts',
     },
   ],
@@ -76,4 +80,6 @@ export default apiPages;
   propsSettings: {
     propsWithoutDefaultVerification: ['debounceMs', 'quickFilterParser'],
   },
+  generateClassName: generateUtilityClass,
+  isGlobalClassName: isGlobalState,
 };

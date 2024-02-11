@@ -63,20 +63,10 @@ ChartsItemTooltipContent.propTypes = {
     classes: PropTypes.object,
     itemData: PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
     }),
-    series: PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-      valueFormatter: PropTypes.func.isRequired,
-    }),
+    series: PropTypes.object,
     sx: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
       PropTypes.func,
@@ -85,7 +75,7 @@ ChartsItemTooltipContent.propTypes = {
   }),
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([

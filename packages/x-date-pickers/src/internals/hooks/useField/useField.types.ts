@@ -8,13 +8,14 @@ import {
   FieldSectionContentType,
   FieldValueType,
   PickersTimezone,
+  PickerValidDate,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
 
 export interface UseFieldParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,
@@ -32,8 +33,12 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends TimezoneProps {
+export interface UseFieldInternalProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TError,
+> extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -183,12 +188,15 @@ export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSec
   'start' | 'end' | 'startInInput' | 'endInInput'
 >;
 
-export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
+export type FieldSectionValueBoundaries<
+  TDate extends PickerValidDate,
+  SectionType extends FieldSectionType,
+> = {
   minimum: number;
   maximum: number;
 } & (SectionType extends 'day' ? { longestMonth: TDate } : {});
 
-export type FieldSectionsValueBoundaries<TDate> = {
+export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
   [SectionType in FieldSectionType]: (params: {
     currentDate: TDate | null;
     format: string;
@@ -209,7 +217,11 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
+interface FieldActiveDateManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Active date from `state.value`.
    */
@@ -245,7 +257,11 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors: boolean;
 };
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
+export interface FieldValueManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
