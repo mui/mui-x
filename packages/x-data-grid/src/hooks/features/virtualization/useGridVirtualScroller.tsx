@@ -24,6 +24,7 @@ import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp, range } from '../../../utils/utils';
+import { RowIntervalList } from '../../../utils/RowIntervalList';
 import { GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -81,7 +82,11 @@ export const useGridVirtualScroller = () => {
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
-  const renderedRowsIndex = React.useRef<number[]>(addRowIndexes([], renderContext));
+  const rowsIntervalList = useLazyRef(() => new RowIntervalList());
+
+  // XXX: Cleanup
+  // console.log(((globalThis as any).r = rowsIntervalList.current));
+  // console.log(JSON.stringify(rowsIntervalList.current.nodes.map((n) => [n.start, n.end])));
 
   const getRenderedColumns = useLazyRef(createGetRenderedColumns).current;
 
@@ -179,7 +184,7 @@ export const useGridVirtualScroller = () => {
       return previousContext.current;
     }
 
-    renderedRowsIndex.current = addRowIndexes(renderedRowsIndex.current, nextRenderContext);
+    rowsIntervalList.current.add(nextRenderContext);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -248,7 +253,7 @@ export const useGridVirtualScroller = () => {
       (hasBottomPinnedRows && params.position === 'bottom');
     const isPinnedSection = params.position !== undefined;
 
-    let rowIndexOffset;
+    let rowIndexOffset: number;
     // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
     // eslint-disable-next-line default-case
     switch (params.position) {
@@ -263,18 +268,18 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    renderedRowsIndex.current = addRowIndexes(renderedRowsIndex.current, renderContext);
+    rowsIntervalList.current.add(renderContext);
 
-    if (renderedRowsIndex.current.length === 0) {
+    if (rowsIntervalList.current.size() === 0) {
       return [];
     }
 
     const firstRowToRender = params.rows
       ? renderContext.firstRowIndex
-      : renderedRowsIndex.current.at(0)!;
+      : rowsIntervalList.current.first()!;
     const lastRowToRender = params.rows
       ? renderContext.lastRowIndex
-      : renderedRowsIndex.current.at(-1)!;
+      : rowsIntervalList.current.last()!;
     const firstColumnToRender = renderContext.firstColumnIndex;
     const lastColumnToRender = renderContext.lastColumnIndex;
 
@@ -292,10 +297,11 @@ export const useGridVirtualScroller = () => {
       ) {
         isRowWithFocusedCellNotInRange = true;
 
+        // PREVENT_COMMIT: Make this work
         if (indexOfRowWithFocusedCell > firstRowToRender) {
-          renderedRowsIndex.current.push(indexOfRowWithFocusedCell);
+          // renderedRowsIndex.current.push(indexOfRowWithFocusedCell);
         } else {
-          renderedRowsIndex.current.unshift(indexOfRowWithFocusedCell);
+          // renderedRowsIndex.current.unshift(indexOfRowWithFocusedCell);
         }
       }
 
@@ -317,7 +323,7 @@ export const useGridVirtualScroller = () => {
     );
 
     const renderedRows =
-      params.rows ?? renderedRowsIndex.current.map((index) => currentPage.rows[index]);
+      params.rows ?? rowsIntervalList.current.map((index) => currentPage.rows[index]);
 
     renderedRows.forEach((row) => {
       apiRef.current.calculateColSpan({
@@ -350,10 +356,17 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
     let isRowWithFocusedCellRendered = false;
 
-    for (let i = 0; i < renderedRows.length; i += 1) {
-      const { id, model } = renderedRows[i];
+    const list = params.rows ?
+      new RowIntervalList({
+        firstRowIndex: 0,
+        lastRowIndex: params.rows.length,
+        firstColumnIndex: renderContext.firstColumnIndex,
+        lastColumnIndex: renderContext.lastColumnIndex,
+      }) :
+      rowsIntervalList.current;
 
-      const rowIndexInPage = renderedRowsIndex.current[i];
+    list.forEach((rowIndexInPage, rowRenderContext, i) => {
+      const { id, model } = renderedRows[i];
 
       let index = rowIndexOffset + rowIndexInPage;
       if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
@@ -427,8 +440,8 @@ export const useGridVirtualScroller = () => {
           renderedColumns={renderedColumnsWithFocusedCell}
           visibleColumns={visibleColumns}
           pinnedColumns={pinnedColumns}
-          firstColumnToRender={firstColumnToRender}
-          lastColumnToRender={lastColumnToRender}
+          firstColumnToRender={rowRenderContext.firstColumnIndex}
+          lastColumnToRender={rowRenderContext.lastColumnIndex}
           selected={isSelected}
           top={rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
@@ -444,7 +457,7 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
-    }
+    })
 
     return rows;
   };
