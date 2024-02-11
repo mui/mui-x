@@ -9,7 +9,7 @@ import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { gridDimensionsSelector } from '../dimensions';
 import {
-  gridOffsetsSelector,
+  gridOffsetLeftSelector,
   gridRenderContextColumnsSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '../virtualization';
@@ -101,7 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
+  const offsetLeft = useGridSelector(apiRef, gridOffsetLeftSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
@@ -164,7 +164,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       (visiblePinnedColumns.right.length > 0 && isPinnedRight) ||
       (visiblePinnedColumns.right.length === 0 && isNotPinned);
 
-    const leftOffsetWidth = offsets.left - leftOverflow;
+    const leftOffsetWidth = offsetLeft - leftOverflow;
 
     return (
       <React.Fragment>

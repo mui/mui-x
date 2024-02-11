@@ -41,9 +41,9 @@ export const gridRenderContextSelector = createSelector(
  * @category Virtualization
  * @ignore - do not document.
  */
-export const gridOffsetsSelector = createSelector(
+export const gridOffsetLeftSelector = createSelector(
   gridVirtualizationSelector,
-  (state) => state.offsets,
+  (state) => state.offsetLeft,
 );
 
 /**

@@ -32,7 +32,7 @@ import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import {
-  gridOffsetsSelector,
+  gridOffsetLeftSelector,
   gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
@@ -76,7 +76,7 @@ export const useGridVirtualScroller = () => {
 
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
-  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
+  const offsetLeft = useGridSelector(apiRef, gridOffsetLeftSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
@@ -124,7 +124,7 @@ export const useGridVirtualScroller = () => {
           virtualization: {
             ...state.virtualization,
             renderContext: nextRenderContext,
-            offsets: nextOffsets,
+            offsetLeft: nextOffsets.left,
           },
         };
       });
@@ -292,8 +292,6 @@ export const useGridVirtualScroller = () => {
       ) {
         isRowWithFocusedCellNotInRange = true;
 
-        const rowWithFocusedCell = currentPage.rows[indexOfRowWithFocusedCell];
-
         if (indexOfRowWithFocusedCell > firstRowToRender) {
           renderedRowsIndex.current.push(indexOfRowWithFocusedCell);
         } else {
@@ -433,7 +431,7 @@ export const useGridVirtualScroller = () => {
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
           top={rowsMeta.positions[rowIndexInPage]}
-          offsets={offsets}
+          offsetLeft={offsetLeft}
           dimensions={dimensions}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}

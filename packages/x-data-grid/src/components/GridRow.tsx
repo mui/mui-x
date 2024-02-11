@@ -23,7 +23,6 @@ import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
-import type { GridVirtualizationState } from '../hooks/features/virtualization';
 import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
@@ -43,7 +42,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   index: number;
   rowHeight: number | 'auto';
   top: number;
-  offsets: GridVirtualizationState['offsets'];
+  offsetLeft: number;
   dimensions: GridDimensions;
   firstColumnToRender: number;
   lastColumnToRender: number;
@@ -120,13 +119,13 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     row,
     index,
     style: styleProp,
+    top,
     rowHeight,
     className,
     visibleColumns,
     renderedColumns,
     pinnedColumns,
-    top,
-    offsets,
+    offsetLeft,
     dimensions,
     firstColumnToRender,
     lastColumnToRender,
@@ -524,7 +523,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       <div
         role="presentation"
         className={gridClasses.cellOffsetLeft}
-        style={{ width: offsets.left }}
+        style={{ width: offsetLeft }}
       />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
@@ -591,10 +590,7 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
-  offsets: PropTypes.shape({
-    left: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-  }).isRequired,
+  offsetLeft: PropTypes.number.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
@@ -610,6 +606,7 @@ GridRow.propTypes = {
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: PropTypes.string,
+  top: PropTypes.number.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
