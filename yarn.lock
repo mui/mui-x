@@ -193,7 +193,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.23.5.tgz#ffb878728bb6bdcb6f4510aa51b1be9afb8cfd98"
   integrity sha512-uU27kfDRlhfKl+w1U6vp16IuvSLtjAxdArVXPa9BvLkrr7CYIsxH5adpHObeAGY/41+syctUWOZ140a2Rvkgjw==
 
-"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.7", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
+"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
   version "7.23.9"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.23.9.tgz#b028820718000f267870822fec434820e9b1e4d1"
   integrity sha512-5q0175NOjddqpvvzU+kDiSOAk4PfdO6FvwCWoQ6RO7rTzEe8vlo+4HVfcnAREhD4npMs0e9uZypjTwzZPCf/cw==
@@ -1796,25 +1796,25 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui-internal/docs-utils@1.0.0", "@mui-internal/docs-utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.0.tgz#b1cd8fafe00dca045896daa2977e26eb551b891a"
-  integrity sha512-TqbdoXrXAk9JhcsGjekriQVU6A0w7oo01CfTfm4mefcKT2Z+RhHeFzG4fJrugN718qLdolJKGMoD7f+u/yBSBw==
+"@mui-internal/docs-utils@1.0.1", "@mui-internal/docs-utils@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.1.tgz#ee9d31365edb528967e126d075168df297943675"
+  integrity sha512-f8PQ6HyYW/ngVcrGC3HzLbh7dtdgrpURSql0c19lzia2xVuqkun6IyqcqRc41rV1nttFBEkQ8Rvj2roqimB7cQ==
   dependencies:
     rimraf "^5.0.5"
-    typescript "^5.1.6"
+    typescript "^5.3.3"
 
-"@mui-internal/typescript-to-proptypes@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@mui-internal/typescript-to-proptypes/-/typescript-to-proptypes-1.0.2.tgz#93ccfe6f611ffc700e99570a34737842c6cc0c70"
-  integrity sha512-KpnPqY8MCQBHwmFMCZZxXwG3uREgMAbXKLBzcxlBhYxssZcYdsE/aImWE0B50QfVHBPjkNmt4dcI2UO2VEzS9w==
+"@mui-internal/typescript-to-proptypes@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@mui-internal/typescript-to-proptypes/-/typescript-to-proptypes-1.0.3.tgz#d6d68378afbc46be04c36d053dc69b667f3c2fd3"
+  integrity sha512-80SYsGtDrBucx4Zfv8xMvZiYIOjnbrwvfA04ohS7z+3vNl3vl5OOu9qywuhRupX24SHeH1aQJJLSym65QmHPog==
   dependencies:
-    "@babel/core" "^7.23.7"
+    "@babel/core" "^7.23.9"
     "@babel/plugin-syntax-class-properties" "^7.12.13"
     "@babel/plugin-syntax-jsx" "^7.23.3"
     "@babel/plugin-syntax-typescript" "^7.23.3"
-    "@babel/types" "^7.23.6"
-    "@mui-internal/docs-utils" "1.0.0"
+    "@babel/types" "^7.23.9"
+    "@mui-internal/docs-utils" "1.0.1"
     doctrine "^3.0.0"
     lodash "^4.17.21"
     typescript "^5.3.3"
@@ -14439,7 +14439,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@>=3 < 6", typescript@^5.1.6, typescript@^5.3.3:
+"typescript@>=3 < 6", typescript@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
