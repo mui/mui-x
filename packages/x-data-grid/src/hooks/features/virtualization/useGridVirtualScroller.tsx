@@ -17,6 +17,7 @@ import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnPositionsSelector,
+  gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
@@ -72,6 +73,7 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const minFirstColumn = pinnedColumns.left.length;
   const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
+  const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
@@ -82,11 +84,7 @@ export const useGridVirtualScroller = () => {
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
-  const rowsIntervalList = useLazyRef(() => new RowIntervalList());
-
-  // XXX: Cleanup
-  // console.log(((globalThis as any).r = rowsIntervalList.current));
-  // console.log(JSON.stringify(rowsIntervalList.current.nodes.map((n) => [n.start, n.end])));
+  const rowsIntervalList = useLazyRef(RowIntervalList.create);
 
   const getRenderedColumns = useLazyRef(createGetRenderedColumns).current;
 
@@ -322,40 +320,11 @@ export const useGridVirtualScroller = () => {
       isColumnWihFocusedCellNotInRange ? indexOfColumnWithFocusedCell : -1,
     );
 
-    const renderedRows =
-      params.rows ?? rowsIntervalList.current.map((index) => currentPage.rows[index]);
-
-    renderedRows.forEach((row) => {
-      apiRef.current.calculateColSpan({
-        rowId: row.id,
-        minFirstColumn,
-        maxLastColumn,
-        columns: visibleColumns,
-      });
-
-      if (pinnedColumns.left.length > 0) {
-        apiRef.current.calculateColSpan({
-          rowId: row.id,
-          minFirstColumn: 0,
-          maxLastColumn: pinnedColumns.left.length,
-          columns: visibleColumns,
-        });
-      }
-
-      if (pinnedColumns.right.length > 0) {
-        apiRef.current.calculateColSpan({
-          rowId: row.id,
-          minFirstColumn: visibleColumns.length - pinnedColumns.right.length,
-          maxLastColumn: visibleColumns.length,
-          columns: visibleColumns,
-        });
-      }
-    });
-
     const rows: React.ReactNode[] = [];
     const rowProps = rootProps.slotProps?.row;
     let isRowWithFocusedCellRendered = false;
 
+    const rowModels = params.rows ?? currentPage.rows;
     const list = params.rows ?
       new RowIntervalList({
         firstRowIndex: 0,
@@ -366,7 +335,35 @@ export const useGridVirtualScroller = () => {
       rowsIntervalList.current;
 
     list.forEach((rowIndexInPage, rowRenderContext, i) => {
-      const { id, model } = renderedRows[i];
+      const { id, model } = rowModels[i];
+
+      // NOTE: This is an expensive feature, the colSpan code could be optimized.
+      if (hasColSpan) {
+        apiRef.current.calculateColSpan({
+          rowId: id,
+          minFirstColumn,
+          maxLastColumn,
+          columns: visibleColumns,
+        });
+
+        if (pinnedColumns.left.length > 0) {
+          apiRef.current.calculateColSpan({
+            rowId: id,
+            minFirstColumn: 0,
+            maxLastColumn: pinnedColumns.left.length,
+            columns: visibleColumns,
+          });
+        }
+
+        if (pinnedColumns.right.length > 0) {
+          apiRef.current.calculateColSpan({
+            rowId: id,
+            minFirstColumn: visibleColumns.length - pinnedColumns.right.length,
+            maxLastColumn: visibleColumns.length,
+            columns: visibleColumns,
+          });
+        }
+      }
 
       let index = rowIndexOffset + rowIndexInPage;
       if (isRowWithFocusedCellNotInRange && cellFocus?.id === id) {
@@ -406,7 +403,7 @@ export const useGridVirtualScroller = () => {
             isLastVisible = true;
           }
         } else {
-          isLastVisible = i === renderedRows.length - 1;
+          isLastVisible = i === rowModels.length - 1;
         }
       }
 

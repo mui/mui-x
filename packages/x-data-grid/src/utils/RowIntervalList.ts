@@ -26,6 +26,10 @@ const equals = isColumnRangeEqual;
 export class RowIntervalList {
   nodes: Interval[];
 
+  static create() {
+    return new RowIntervalList()
+  }
+
   constructor(renderContext?: GridRenderContext) {
     this.nodes = [];
     if (renderContext) {

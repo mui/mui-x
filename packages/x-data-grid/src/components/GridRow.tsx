@@ -359,9 +359,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       indexRelativeToAllColumns,
     );
 
-    if (!cellColSpanInfo || cellColSpanInfo.spannedByColSpan) {
+    if (cellColSpanInfo?.spannedByColSpan) {
       return null;
     }
+
+    const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
+    const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
     let pinnedOffset: number;
     // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
@@ -383,7 +386,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     if (rowNode?.type === 'skeletonRow') {
-      const { width } = cellColSpanInfo.cellProps;
       const contentWidth = Math.round(randomNumber());
 
       return (
@@ -396,8 +398,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         />
       );
     }
-
-    const { colSpan, width } = cellColSpanInfo.cellProps;
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
 
