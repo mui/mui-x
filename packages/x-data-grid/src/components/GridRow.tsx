@@ -436,7 +436,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
         gridHasScrollX={dimensions.hasScrollX}
-        offsets={offsets}
       />
     );
   };
