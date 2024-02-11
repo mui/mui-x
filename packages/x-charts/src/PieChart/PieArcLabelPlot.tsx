@@ -83,21 +83,21 @@ export interface PieArcLabelPlotProps
 
 function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
-    slots,
-    slotProps,
-    innerRadius,
-    outerRadius,
-    arcLabelRadius,
-    cornerRadius = 0,
-    paddingAngle = 0,
-    id,
-    highlightScope,
-    highlighted,
-    faded = { additionalRadius: -5 },
-    data,
     arcLabel,
     arcLabelMinAngle = 0,
+    arcLabelRadius,
+    cornerRadius = 0,
+    data,
+    faded = { additionalRadius: -5 },
+    highlighted,
+    highlightScope,
+    id,
+    innerRadius,
+    outerRadius,
+    paddingAngle = 0,
     skipAnimation,
+    slotProps,
+    slots,
     ...other
   } = props;
 
