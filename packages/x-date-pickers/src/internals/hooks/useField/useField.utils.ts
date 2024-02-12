@@ -210,7 +210,7 @@ export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
       throw new Error(
         [
-          `MUI: The token "${section.format}" is a digit format with letter in it.'
+          `MUI X: The token "${section.format}" is a digit format with letter in it.'
              This type of format is only supported for 'day' sections`,
         ].join('\n'),
       );
