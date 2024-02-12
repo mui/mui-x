@@ -253,7 +253,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiInputBase: {
+    MuiPickersInputBase: {
       styleOverrides: {
         root: {
           color: 'red',
