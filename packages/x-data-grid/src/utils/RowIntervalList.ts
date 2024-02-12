@@ -29,6 +29,7 @@ const equals = isColumnRangeEqual;
 
 export class RowIntervalList {
   nodes: Interval[];
+
   virtualRow: { index: number; data: GridRenderContext } | null;
 
   static create() {
@@ -61,6 +62,7 @@ export class RowIntervalList {
     currentInsertion.nodes = [new Interval(start, end, data)];
 
     // Check if there are conflicting intervals
+    // eslint-disable-next-line
     while (true) {
       const conflictingIndex = this.findFirstConflictingIndex(start, end, data);
       if (conflictingIndex === null) {
@@ -169,10 +171,10 @@ export class RowIntervalList {
   forEach(callback: (index: number, context: GridRenderContext, i: number) => void) {
     let iteration = 0;
 
-    let hasVirtualRow = this.virtualRow !== null;
+    const hasVirtualRow = this.virtualRow !== null;
     let didVirtualRow = false;
 
-    for (let i = 0; i < this.nodes.length; i++) {
+    for (let i = 0; i < this.nodes.length; i += 1) {
       const node = this.nodes[i];
       for (let index = node.start; index <= node.end; index += 1) {
         if (hasVirtualRow && !didVirtualRow && index >= this.virtualRow!.index) {
@@ -362,7 +364,7 @@ export class RowIntervalList {
     let maxDistance = -1;
     let current = null as Interval | null;
 
-    for (let i = 0; i < this.nodes.length; i++) {
+    for (let i = 0; i < this.nodes.length; i += 1) {
       const interval = this.nodes[i];
       if (interval.data === renderContext) {
         continue;
@@ -455,87 +457,6 @@ export class RowIntervalList {
     }
   }
 }
-
-// XXX: Remove these
-
-function toString(nodes: Interval[]) {
-  return JSON.stringify(nodes.map((n) => [n.start, n.end]));
-}
-
-function test(nodes: number[][], range: number[], expect: number[][]) {
-  const r = new RowIntervalList();
-  nodes.forEach((node) => {
-    r.add({
-      firstRowIndex: node[0],
-      lastRowIndex: node[1],
-      firstColumnIndex: node[2] ?? 0,
-      lastColumnIndex: node[2] ?? 0,
-    });
-  });
-  r.add({
-    firstRowIndex: range[0],
-    lastRowIndex: range[1],
-    firstColumnIndex: range[2] ?? 0,
-    lastColumnIndex: range[2] ?? 0,
-  });
-  console.log('input:', JSON.stringify(nodes));
-  console.log('insert:', JSON.stringify(range));
-  console.log('expect:', JSON.stringify(expect));
-  console.log('actual:', toString(r.nodes));
-
-  if (!expect.every((range, i) => r.nodes[i].start === range[0] && r.nodes[i].end === range[1])) {
-    console.log('fail');
-    const r = new RowIntervalList();
-    nodes.forEach((node) => {
-      r.add({
-        firstRowIndex: node[0],
-        lastRowIndex: node[1],
-        firstColumnIndex: node[2] ?? 0,
-        lastColumnIndex: node[2] ?? 0,
-      });
-    });
-    debugger;
-    r.add({
-      firstRowIndex: range[0],
-      lastRowIndex: range[1],
-      firstColumnIndex: range[2] ?? 0,
-      lastColumnIndex: range[2] ?? 0,
-    });
-  } else {
-    console.log('pass');
-  }
-}
-
-// test(
-//   [
-//     [0, 10],
-//     [15, 20],
-//   ],
-//   [8, 12],
-//   [
-//     [0, 12],
-//     [15, 20],
-//   ],
-// );
-// test(
-//   [
-//     [0, 10],
-//     [15, 20],
-//   ],
-//   [8, 15],
-//   [[0, 20]],
-// );
-// test(
-//   [
-//     [0, 10],
-//     [15, 20],
-//   ],
-//   [8, 15, 1],
-//   [
-//     [0, 8],
-//     [8, 20],
-//   ],
-// );
 
 function isColumnRangeEqual(a: GridRenderContext, b: GridRenderContext) {
   return a.firstColumnIndex === b.firstColumnIndex && a.lastColumnIndex === b.lastColumnIndex;

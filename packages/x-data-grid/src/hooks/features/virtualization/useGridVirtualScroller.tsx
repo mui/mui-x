@@ -3,7 +3,7 @@
  * ====================
  *
  * This file handles row virtualization. Surprisingly, the biggest cost when virtualizing rows
- * isn't adding new ones, it's actually removing old ones from the DOM. The logic here avoids that 
+ * isn't adding new ones, it's actually removing old ones from the DOM. The logic here avoids that
  * cost by keeping all the rows in the DOM during scrolling to ensure a smoother UX, and delays
  * removing the rows until there is idle time.
  *
@@ -111,12 +111,12 @@ export const useGridVirtualScroller = () => {
   const focusedCell = {
     rowIndex: React.useMemo(
       () => (cellFocus ? currentPage.rows.findIndex((row) => row.id === cellFocus.id) : -1),
-      [cellFocus?.id, currentPage.rows],
+      [cellFocus, currentPage.rows],
     ),
     columnIndex: React.useMemo(
       () =>
         cellFocus ? visibleColumns.findIndex((column) => column.field === cellFocus.field) : -1,
-      [cellFocus?.field, visibleColumns],
+      [cellFocus, visibleColumns],
     ),
   };
 
@@ -155,13 +155,7 @@ export const useGridVirtualScroller = () => {
       previousContext.current = rawRenderContext;
       prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
-    [
-      apiRef,
-      pinnedColumns.left.length,
-      theme.direction,
-      dimensions.isReady,
-      dimensions.columnsTotalWidth,
-    ],
+    [apiRef, dimensions.isReady, dimensions.columnsTotalWidth],
   );
 
   const triggerUpdateRenderContext = () => {
@@ -537,7 +531,7 @@ const CLEANUP_INTERACTION_DELAY = 1_000;
 function useCleanup(
   apiRef: React.MutableRefObject<GridApiCommon>,
   renderContext: GridRenderContext,
-  rowList: RowIntervalList
+  rowList: RowIntervalList,
 ) {
   const needsCleanup = React.useRef(false);
   const timeout = useTimeout();
@@ -545,6 +539,7 @@ function useCleanup(
   const idleCallback = useIdleCallback();
 
   const runWhenIdle = () => {
+    // eslint-disable-next-line
     idleCallback.request(run);
   };
 
@@ -564,13 +559,16 @@ function useCleanup(
     const isStartFarther = Math.abs(center - interval.start) > Math.abs(center - interval.end);
 
     if (isStartFarther) {
-      removalList.keep(removalList.nodes.at(0)!.start, removalList.nodes.at(0)!.start + CLEANUP_ROWS);
+      removalList.keep(
+        removalList.nodes.at(0)!.start,
+        removalList.nodes.at(0)!.start + CLEANUP_ROWS,
+      );
     } else {
       removalList.keep(removalList.nodes.at(0)!.end - CLEANUP_ROWS, removalList.nodes.at(0)!.end);
     }
 
-    removalList.nodes.forEach((interval) => {
-      rowList.remove(interval.start, interval.end);
+    removalList.nodes.forEach((n) => {
+      rowList.remove(n.start, n.end);
     });
 
     forceUpdate();
@@ -609,22 +607,21 @@ function useCleanup(
   useOnMount(() => {
     const root = apiRef.current.rootElementRef.current!;
 
-    root.addEventListener('click', busy)
-    root.addEventListener('keydown', busy)
-    root.addEventListener('touchstart', busy)
-    root.addEventListener('touchmove', busy)
+    root.addEventListener('click', busy);
+    root.addEventListener('keydown', busy);
+    root.addEventListener('touchstart', busy);
+    root.addEventListener('touchmove', busy);
 
     return () => {
-      root.removeEventListener('click', busy)
-      root.removeEventListener('keydown', busy)
-      root.removeEventListener('touchstart', busy)
-      root.removeEventListener('touchmove', busy)
-    }
-  })
+      root.removeEventListener('click', busy);
+      root.removeEventListener('keydown', busy);
+      root.removeEventListener('touchstart', busy);
+      root.removeEventListener('touchmove', busy);
+    };
+  });
 
   return { schedule, busy };
 }
-
 
 type ScrollPosition = { top: number; left: number };
 type RenderContextInputs = {

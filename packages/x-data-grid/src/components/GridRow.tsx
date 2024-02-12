@@ -519,8 +519,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
   const emptyCellWidth = Math.max(0, expandedWidth);
 
-  if (!row) debugger;
-
   return (
     <div
       ref={handleRef}
