@@ -1,6 +1,9 @@
 {
   "props": {
-    "cornerRadius": { "type": { "name": "number" }, "default": "'50%'" },
+    "cornerRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "0"
+    },
     "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },

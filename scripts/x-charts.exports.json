@@ -250,6 +250,7 @@
   { "name": "StackOffsetType", "kind": "TypeAlias" },
   { "name": "StackOrderType", "kind": "TypeAlias" },
   { "name": "useDrawingArea", "kind": "Function" },
+  { "name": "useGaugeState", "kind": "Function" },
   { "name": "useXScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" }
 ]

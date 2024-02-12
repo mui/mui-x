@@ -127,9 +127,10 @@ GaugeContainer.propTypes = {
   className: PropTypes.string,
   /**
    * The radius applied to arc corners (similar to border radius).
-   * @default '50%'
+   * Set it to '50%' to get rounded arc.
+   * @default 0
    */
-  cornerRadius: PropTypes.number,
+  cornerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The x coordinate of the pie center.
    * Can be a number (in px) or a string with a percentage such as '50%'.
