@@ -887,3 +887,14 @@ Which is the same type as the one accepted by the components `value` prop.
 ```
 
 </details>
+
+## Removed internal types
+
+The following internal types were exported by mistake and have been removed from the public API:
+
+- `UseDateFieldDefaultizedProps`
+- `UseTimeFieldDefaultizedProps`
+- `UseDateTimeFieldDefaultizedProps`
+- `UseSingleInputDateRangeFieldComponentProps`
+- `UseSingleInputTimeRangeFieldComponentProps`
+- `UseSingleInputDateTimeRangeFieldComponentProps`
