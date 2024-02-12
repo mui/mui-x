@@ -11,15 +11,16 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { DateRange, UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
+import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import {
   RangeFieldSection,
   BaseMultiInputFieldProps,
   BasePickersTextFieldProps,
   MultiInputFieldSlotTextFieldProps,
   DateRangeValidationError,
+  DateRange,
 } from '@mui/x-date-pickers-pro/models';
-import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',

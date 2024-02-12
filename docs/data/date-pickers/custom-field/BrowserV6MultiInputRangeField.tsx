@@ -15,10 +15,10 @@ import {
   BaseMultiInputFieldProps,
   DateRange,
   DateRangeValidationError,
-  UseDateRangeFieldProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers-pro/models';
+import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {

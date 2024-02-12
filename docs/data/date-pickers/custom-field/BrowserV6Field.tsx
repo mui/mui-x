@@ -14,7 +14,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers/models';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
