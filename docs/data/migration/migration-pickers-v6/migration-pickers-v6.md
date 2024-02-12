@@ -243,6 +243,22 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 
 ## Field components
 
+### Update the format of `selectedSections`
+
+The `selectedSections` prop no longer accepts start and end indexes.
+When selecting several — but not all — sections, the field components were not behaving correctly, you can now only select one or all sections:
+
+```diff
+ <DateField
+-  selectedSections={{ startIndex: 0, endIndex: 0 }}
++  selectedSections={0}
+
+   // If the field has 3 sections
+-  selectedSections={{ startIndex: 0, endIndex: 2 }}
++  selectedSections="all"
+ />
+```
+
 ### Replace the section `hasLeadingZeros` property
 
 :::success
