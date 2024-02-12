@@ -126,7 +126,7 @@ You will need to use a component that supports the `sx` prop as a wrapper for yo
 ### Using custom `PickersTextField`
 
 :::success
-Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure)
+Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure).
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
