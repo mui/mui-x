@@ -84,6 +84,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     onChange,
     fullWidth,
     id: idProp,
+    name,
     // Props used by FormHelperText
     helperText,
     FormHelperTextProps,
@@ -152,6 +153,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         inputRef={inputRef}
         sectionListRef={sectionListRef}
         label={label}
+        name={name}
         {...InputProps}
       />
       {helperText && (
