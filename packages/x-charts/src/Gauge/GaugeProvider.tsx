@@ -31,7 +31,8 @@ interface CircularConfig {
   outerRadius?: number | string;
   /**
    * The radius applied to arc corners (similar to border radius).
-   * @default '50%'
+   * Set it to '50%' to get rounded arc.
+   * @default 0
    */
   cornerRadius?: number;
   /**
@@ -153,7 +154,7 @@ export function GaugeProvider(props: GaugeProviderProps) {
 
   const outerRadius = getPercentageValue(outerRadiusParam ?? availableRadius, availableRadius);
   const innerRadius = getPercentageValue(innerRadiusParam ?? '80%', availableRadius);
-  const cornerRadius = getPercentageValue(cornerRadiusParam ?? '50%', outerRadius - innerRadius);
+  const cornerRadius = getPercentageValue(cornerRadiusParam ?? 0, outerRadius - innerRadius);
 
   const contextValue = React.useMemo(
     () => ({
