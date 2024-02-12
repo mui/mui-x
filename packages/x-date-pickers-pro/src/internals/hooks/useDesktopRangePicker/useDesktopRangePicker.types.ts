@@ -4,6 +4,7 @@ import {
   UsePickerViewsProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
@@ -13,15 +14,20 @@ import {
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TDate, TView>,
+export interface UseDesktopRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends UseRangePickerSlots<TDate, TView>,
     PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlotProps<TDate, TView>,
+export interface UseDesktopRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends UseRangePickerSlotProps<TDate, TView>,
     PickersPopperSlotProps {}
 
-export interface DesktopRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {
+export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
+  extends RangeOnlyPickerProps<TDate> {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -29,7 +35,7 @@ export interface DesktopRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
@@ -55,7 +61,7 @@ export interface UseDesktopRangePickerProps<
 export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseDesktopRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends UseRangePickerParams<

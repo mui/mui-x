@@ -2,6 +2,14 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
+    pathname: '/x/api/charts/animated-area',
+    title: 'AnimatedArea',
+  },
+  {
+    pathname: '/x/api/charts/animated-line',
+    title: 'AnimatedLine',
+  },
+  {
     pathname: '/x/api/charts/area-element',
     title: 'AreaElement',
   },
@@ -50,6 +58,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-on-axis-click-handler',
+    title: 'ChartsOnAxisClickHandler',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -76,6 +88,10 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/default-charts-item-tooltip-content',
     title: 'DefaultChartsItemTooltipContent',
+  },
+  {
+    pathname: '/x/api/charts/default-charts-legend',
+    title: 'DefaultChartsLegend',
   },
   {
     pathname: '/x/api/charts/line-chart',

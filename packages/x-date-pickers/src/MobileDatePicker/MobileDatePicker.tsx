@@ -8,14 +8,14 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TDate>(
+type MobileDatePickerComponent = (<TDate extends PickerValidDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -29,7 +29,7 @@ type MobileDatePickerComponent = (<TDate>(
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
+const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate extends PickerValidDate>(
   inProps: MobileDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -113,7 +113,7 @@ MobileDatePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -182,11 +182,11 @@ MobileDatePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -278,7 +278,7 @@ MobileDatePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -378,7 +378,7 @@ MobileDatePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

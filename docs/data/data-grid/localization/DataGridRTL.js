@@ -27,7 +27,7 @@ const columns = [
   {
     field: 'age',
     headerName: 'عمر',
-    valueGetter: (params) => `${params.value} سنوات`,
+    valueGetter: (value) => `${value} سنوات`,
     width: 150,
   },
   {

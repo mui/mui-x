@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
@@ -14,7 +15,7 @@
     "pages/**/*.ts*",
     "data/**/*",
     "src/modules/components/**/*",
-    "next.config.js",
+    "next.config.mjs",
     "../node_modules/@mui/material/themeCssVarsAugmentation",
     "../node_modules/dayjs/plugin/utc.d.ts",
     "../node_modules/dayjs/plugin/timezone.d.ts",

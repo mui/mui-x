@@ -88,6 +88,12 @@ const MISSING_TIMEZONE_PLUGIN = [
   'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
 ].join('\n');
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    moment: Moment;
+  }
+}
+
 /**
  * Based on `@date-io/moment`
  *

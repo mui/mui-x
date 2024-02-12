@@ -184,6 +184,53 @@ describe('<TreeItem />', () => {
 
     expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
   });
+  it('should treat multiple empty conditional arrays as empty', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
+  it('should treat one conditional empty and one conditional with results as expandable', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[]}
+            {[1].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).to.have.attribute('aria-expanded', 'true');
+  });
+  it('should handle edge case of nested array of array', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[[]]}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
 
   it('should not call onClick when children are clicked', () => {
     const handleClick = spy();

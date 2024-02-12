@@ -54,7 +54,7 @@ write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
   .filter((link) => !availableLinks[removeUnsupportedHash(link)])
-  // unstyled sections are added by scripts (can not be found in markdown)
+  // unstyled sections are added by scripts (cannot be found in markdown)
   .filter((link) => !link.includes('#unstyled'))
   .filter((link) => UNSUPPORTED_PATHS.every((unsupportedPath) => !link.includes(unsupportedPath)))
   .sort()

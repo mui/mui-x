@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -19,7 +20,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: string;
+  id: PieItemId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -56,7 +57,7 @@ const PieArcLabelRoot = styled(animated.text, {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  React.ComponentPropsWithoutRef<'text'> & {
+  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
@@ -153,6 +154,7 @@ PieArcLabel.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   formattedArcLabel: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
 } as any;

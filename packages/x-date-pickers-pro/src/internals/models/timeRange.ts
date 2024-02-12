@@ -5,11 +5,12 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeRangeValidationError, DateRange } from '../../models';
 import { BaseRangeProps } from './dateRange';
 import { RangeFieldSection } from './fields';
 
-export interface UseTimeRangeFieldProps<TDate>
+export interface UseTimeRangeFieldProps<TDate extends PickerValidDate>
   extends MakeOptional<
       UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, TimeRangeValidationError>,
       'format'
@@ -24,7 +25,7 @@ export interface UseTimeRangeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+export type UseTimeRangeFieldDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
   UseTimeRangeFieldProps<TDate>,
   keyof BaseTimeValidationProps | 'format'
 >;

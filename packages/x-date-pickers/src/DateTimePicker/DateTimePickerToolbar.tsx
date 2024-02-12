@@ -20,13 +20,14 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals';
+import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
 }
 
-export interface DateTimePickerToolbarProps<TDate>
+export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   extends ExportedDateTimePickerToolbarProps,
     MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
   /**
@@ -209,7 +210,9 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  *
  * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
  */
-function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
+function DateTimePickerToolbar<TDate extends PickerValidDate>(
+  inProps: DateTimePickerToolbarProps<TDate>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
@@ -425,7 +428,7 @@ DateTimePickerToolbar.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */

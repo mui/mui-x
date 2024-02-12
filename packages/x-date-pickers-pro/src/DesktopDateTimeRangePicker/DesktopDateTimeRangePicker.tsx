@@ -8,6 +8,7 @@ import {
   PickerViewRenderer,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import {
   renderDigitalClockTimeView,
@@ -36,7 +37,7 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
-const rendererInterceptor = function rendererInterceptor<TDate>(
+const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: DefaultizedProps<
@@ -88,14 +89,13 @@ const rendererInterceptor = function rendererInterceptor<TDate>(
   );
 };
 
-type DesktopDateRangePickerComponent = (<TDate>(
+type DesktopDateRangePickerComponent = (<TDate extends PickerValidDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<TDate>(
-  inProps: DesktopDateTimeRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
+  TDate extends PickerValidDate,
+>(inProps: DesktopDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
@@ -225,7 +225,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -316,29 +316,29 @@ DesktopDateTimeRangePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime: PropTypes.any,
+  maxDateTime: PropTypes.object,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime: PropTypes.any,
+  minDateTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -431,7 +431,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -547,7 +547,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The visible view.
    * Used when the component view is controlled.

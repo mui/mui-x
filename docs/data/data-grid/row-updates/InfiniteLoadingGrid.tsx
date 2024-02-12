@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps, GridSlots } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealGridData,
@@ -61,7 +61,7 @@ export default function InfiniteLoadingGrid() {
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}
         slots={{
-          loadingOverlay: LinearProgress,
+          loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
         }}
       />
     </div>

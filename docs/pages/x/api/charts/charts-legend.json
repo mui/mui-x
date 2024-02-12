@@ -15,7 +15,14 @@
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts';"
   ],
-  "slots": [{ "name": "legend", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "DefaultChartsLegend",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "column",

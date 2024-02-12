@@ -16,7 +16,7 @@ import {
   UseFieldResponse,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
 import type {
   UseMultiInputDateTimeRangeFieldDefaultizedProps,
   UseMultiInputDateTimeRangeFieldParams,
@@ -31,7 +31,10 @@ import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
 
-export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
+export const useDefaultizedDateTimeRangeFieldProps = <
+  TDate extends PickerValidDate,
+  AdditionalProps extends {},
+>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
 ): UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
@@ -55,7 +58,10 @@ export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps ext
   } as any;
 };
 
-export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
+export const useMultiInputDateTimeRangeField = <
+  TDate extends PickerValidDate,
+  TTextFieldSlotProps extends {},
+>({
   sharedProps: inSharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
@@ -130,7 +136,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
 
   const startFieldProps: UseDateTimeFieldComponentProps<
     TDate,
-    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    UseDateTimeFieldDefaultizedProps<TDate>
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
@@ -149,7 +155,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
 
   const endFieldProps: UseDateTimeFieldComponentProps<
     TDate,
-    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    UseDateTimeFieldDefaultizedProps<TDate>
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,

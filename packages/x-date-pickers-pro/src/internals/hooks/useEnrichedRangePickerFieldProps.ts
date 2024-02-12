@@ -9,6 +9,7 @@ import {
   BaseSingleInputFieldProps,
   FieldSelectedSections,
   FieldRef,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
@@ -54,7 +55,8 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType<TextFieldProps>;
 }
 
-export interface RangePickerFieldSlotProps<TDate> extends UseClearableFieldSlotProps {
+export interface RangePickerFieldSlotProps<TDate extends PickerValidDate>
+  extends UseClearableFieldSlotProps {
   field?: SlotComponentProps<
     React.ElementType<
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
@@ -73,7 +75,7 @@ export interface RangePickerFieldSlotProps<TDate> extends UseClearableFieldSlotP
 }
 
 export interface UseEnrichedRangePickerFieldPropsParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   FieldProps extends BaseFieldProps<
@@ -105,7 +107,11 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   onViewChange?: (view: TView) => void;
 }
 
-const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
+const useMultiInputFieldSlotProps = <
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
@@ -281,7 +287,11 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
+const useSingleInputFieldSlotProps = <
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
@@ -398,7 +408,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
 };
 
 export const useEnrichedRangePickerFieldProps = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 >(

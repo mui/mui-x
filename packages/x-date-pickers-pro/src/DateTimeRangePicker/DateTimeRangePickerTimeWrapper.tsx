@@ -7,6 +7,7 @@ import {
   TimeViewWithMeridiem,
   BaseClockProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -14,7 +15,7 @@ import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
 export type DateTimeRangePickerTimeWrapperProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateTimeRangePickerView,
   TComponentProps extends Omit<
     BaseClockProps<TDate, TimeViewWithMeridiem>,
@@ -43,7 +44,7 @@ export type DateTimeRangePickerTimeWrapperProps<
  * @ignore - internal component.
  */
 function DateTimeRangePickerTimeWrapper<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateTimeRangePickerView,
   TComponentProps extends Omit<
     BaseClockProps<TDate, TimeViewWithMeridiem>,
