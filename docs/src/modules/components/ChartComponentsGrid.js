@@ -4,6 +4,8 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import Link from 'docs/src/modules/components/Link';
 
 function components() {
@@ -38,10 +40,59 @@ function components() {
       srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
     },
+    {
+      title: 'Gauge Chart',
+      srcLight: '/static/x/component-illustrations/gauge-light.png',
+      srcDark: '/static/x/component-illustrations/gauge-dark.png',
+      href: '/x/react-charts/gauge/',
+      planned: true,
+    },
+    {
+      title: 'Heat map Chart',
+      srcLight: '/static/x/component-illustrations/heatmap-light.png',
+      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
+      href: '/x/react-charts/heat-map/',
+      planned: true,
+    },
+    {
+      title: 'Radar Chart',
+      srcLight: '/static/x/component-illustrations/radar-light.png',
+      srcDark: '/static/x/component-illustrations/radar-dark.png',
+      href: '/x/react-charts/radar/',
+      planned: true,
+    },
+    {
+      title: 'Treemap Chart',
+      srcLight: '/static/x/component-illustrations/treemap-light.png',
+      srcDark: '/static/x/component-illustrations/treemap-dark.png',
+      href: '/x/react-charts/tree-map/',
+      planned: true,
+    },
+    {
+      title: 'Funnel Chart',
+      srcLight: '/static/x/component-illustrations/funnel-light.png',
+      srcDark: '/static/x/component-illustrations/funnel-dark.png',
+      href: '/x/react-charts/funnel/',
+      planned: true,
+    },
+    {
+      title: 'Gantt Chart',
+      srcLight: '/static/x/component-illustrations/gantt-light.png',
+      srcDark: '/static/x/component-illustrations/gantt-dark.png',
+      href: '/x/react-charts/gantt/',
+      planned: true,
+    },
+    {
+      title: 'Sankey Chart',
+      srcLight: '/static/x/component-illustrations/sankey-light.png',
+      srcDark: '/static/x/component-illustrations/sankey-dark.png',
+      href: '/x/react-charts/sankey/',
+      planned: true,
+    },
   ];
 }
 
-export default function ChartComponentsGrid() {
+export default function ChartComponentsGrid({ planned }) {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {components().map((component) => (
@@ -80,14 +131,34 @@ export default function ChartComponentsGrid() {
                 }),
               })}
             />
-            <Typography
-              component="h3"
-              variant="body2"
-              fontWeight="semiBold"
-              sx={{ px: 2, py: 1.5 }}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={2}
+              useFlexGap
+              sx={{ p: 1.5 }}
             >
-              {component.title}
-            </Typography>
+              <Typography component="h3" variant="body2" fontWeight="semiBold">
+                {component.title}
+              </Typography>
+              {component.planned && (
+                <Chip
+                  label="Planned"
+                  size="small"
+                  variant="outlined"
+                  color="grey"
+                  sx={{
+                    height: 20,
+                    fontSize: '0.65rem',
+                    textTransform: 'uppercase',
+                    color: 'text.secondary',
+                    '.MuiChip-label': {
+                      px: '6px',
+                    },
+                  }}
+                />
+              )}
+            </Stack>
           </Card>
         </Grid>
       ))}
