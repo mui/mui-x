@@ -122,10 +122,10 @@ please consider having a look at the [custom PickersTextField](/x/react-date-pic
 This approach can be more appropriate for deeper changes.
 :::
 
-### Usage with theme `defaultProps`
+### Usage with theme
 
-If you are using the theme to set default props to `MuiTextField`,
-you need to set the same default props to `MuiPickersTextField`:
+If you are using the theme to customize `MuiTextField`,
+you need to pass the same config to `MuiPickersTextField`:
 
 ```js
 const theme = createTheme({
@@ -134,66 +134,6 @@ const theme = createTheme({
       defaultProps: {
         variant: 'outlined',
       },
-    },
-    MuiPickersTextField: {
-      defaultProps: {
-        variant: 'outlined',
-      },
-    },
-  },
-});
-```
-
-If you are using the theme to set default props to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
-you need to set the same default props to `MuiPickersInput`, `MuiPickersOutlinedInput` and `MuiPickersFilledInput`
-
-```js
-const theme = createTheme({
-  components: {
-    // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
-    MuiInput: {
-      defaultProps: {
-        margin: 'dense',
-      },
-    },
-    // Replace with `MuiPickersOutlinedInput` or `MuiPickersFilledInput` if needed
-    MuiPickersInput: {
-      defaultProps: {
-        margin: 'dense',
-      },
-    },
-  },
-});
-```
-
-If you are using the theme to set default props to `MuiInputBase`, you need to set the same default props to `MuiPickersInputBase`:
-
-```js
-const theme = createTheme({
-  components: {
-    MuiInputBase: {
-      defaultProps: {
-        margin: 'dense',
-      },
-    },
-    MuiPickersInputBase: {
-      defaultProps: {
-        margin: 'dense',
-      },
-    },
-  },
-});
-```
-
-### Usage with theme `styleOverrides`
-
-If you are using the theme to set style overrides to `MuiTextField`,
-you need to set the same style overrides to `MuiPickersTextField`:
-
-```js
-const theme = createTheme({
-  components: {
-    MuiTextField: {
       styleOverrides: {
         root: {
           '& .MuiInputLabel-outlined.Mui-focused': {
@@ -203,6 +143,9 @@ const theme = createTheme({
       },
     },
     MuiPickersTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
       styleOverrides: {
         root: {
           '& .MuiInputLabel-outlined.Mui-focused': {
@@ -215,14 +158,17 @@ const theme = createTheme({
 });
 ```
 
-If you are using the theme to set style overrides to `MuiInput`, `MuiOutlinedInput`, `MuiFilledInput`,
-you need to set the same default props to `MuiPickersInput`, `MuiPickersOutlinedInput` and `MuiPickersFilledInput`
+If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
+you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
 
 ```js
 const theme = createTheme({
   components: {
     // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
     MuiInput: {
+      defaultProps: {
+        margin: 'dense',
+      },
       styleOverrides: {
         root: {
           color: 'red',
@@ -231,6 +177,9 @@ const theme = createTheme({
     },
     // Replace with `MuiPickersOutlinedInput` or `MuiPickersFilledInput` if needed
     MuiPickersInput: {
+      defaultProps: {
+        margin: 'dense',
+      },
       styleOverrides: {
         root: {
           color: 'red',
@@ -241,12 +190,16 @@ const theme = createTheme({
 });
 ```
 
-If you are using the theme to set style overrides to `MuiInputBase`, you need to set the same style overrides to `MuiPickersInputBase`:
+If you are using the theme to customize `MuiInputBase`,
+you need to pass the same config to `MuiPickersInputBase`:
 
 ```js
 const theme = createTheme({
   components: {
     MuiInputBase: {
+      defaultProps: {
+        margin: 'dense',
+      },
       styleOverrides: {
         root: {
           color: 'red',
@@ -254,6 +207,9 @@ const theme = createTheme({
       },
     },
     MuiPickersInputBase: {
+      defaultProps: {
+        margin: 'dense',
+      },
       styleOverrides: {
         root: {
           color: 'red',
