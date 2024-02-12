@@ -139,7 +139,7 @@ DateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default 'v6'
+   * @default false
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

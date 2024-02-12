@@ -214,7 +214,7 @@ MultiInputDateRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
-   * @default 'v6'
+   * @default false
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
