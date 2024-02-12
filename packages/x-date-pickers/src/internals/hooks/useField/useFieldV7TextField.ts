@@ -429,9 +429,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     isContainerEditable,
   ]);
 
-  const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) =>
-    updateValueFromValueStr(event.target.value),
-  );
+  const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    updateValueFromValueStr(event.target.value);
+  });
 
   const valueStr = React.useMemo(
     () =>
