@@ -112,6 +112,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=12.22.12"
   }
 }
