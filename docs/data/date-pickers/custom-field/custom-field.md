@@ -60,13 +60,16 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 ### Using Material `TextField`
 
-By default, the fields and pickers are using this component to build their UI.
-
-{{"demo": "MaterialV6Field.js"}}
-
 You can import the `TextField` component to create custom wrappers:
 
 {{"demo": "MaterialV6FieldWrapped.js"}}
+
+:::success
+This approach is only recommended if you need complex customizations on your `TextField`,
+or if you already have a wrapper also used outside the Date and Time Pickers.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
+:::
 
 ### Using Material `PickersTextField`
 
@@ -81,6 +84,12 @@ Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#ac
 You can import the `PickersTextField` component to create custom wrappers:
 
 {{"demo": "MaterialV7FieldWrapped.js"}}
+
+:::success
+This approach is only recommended if you need complex customizations on your `PickersTextField`.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
+:::
 
 ## Usage with Joy UI
 
