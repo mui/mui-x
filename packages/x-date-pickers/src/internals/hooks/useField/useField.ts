@@ -86,8 +86,8 @@ export const useField = <
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
-    setTempAndroidValueStr,
     localizedDigits,
+    setTempAndroidValueStr,
     timezone,
   });
 
