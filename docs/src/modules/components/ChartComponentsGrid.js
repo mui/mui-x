@@ -92,7 +92,7 @@ function components() {
   ];
 }
 
-export default function ChartComponentsGrid({ planned }) {
+export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {components().map((component) => (
