@@ -34,7 +34,7 @@ interface CircularConfig {
    * Set it to '50%' to get rounded arc.
    * @default 0
    */
-  cornerRadius?: number;
+  cornerRadius?: number | string;
   /**
    * The x coordinate of the pie center.
    * Can be a number (in px) or a string with a percentage such as '50%'.

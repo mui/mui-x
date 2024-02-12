@@ -52,6 +52,14 @@ To modify the layout of the text, use the class name `gaugeClasses.valueText`.
 
 {{"demo": "TextPlaygroundNoSnap.js"}}
 
+## Arc design
+
+You can customize the Gauge style with usual selectors.
+The `gaugeClasses` provides class names to select parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
+
+{{"demo": "ArcDesign.js"}}
+
+
 ## Accessibility
 
 (WAI-ARIA: [https://www.w3.org/WAI/ARIA/apg/patterns/meter/](https://www.w3.org/WAI/ARIA/apg/patterns/meter/))
