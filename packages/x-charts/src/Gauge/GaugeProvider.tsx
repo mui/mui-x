@@ -98,7 +98,15 @@ interface GaugeConfig {
   valueMax?: number;
 }
 
-export const GaugeContext = React.createContext<Required<GaugeConfig> & ProcessedCircularConfig>({
+export const GaugeContext = React.createContext<
+  Required<GaugeConfig> &
+    ProcessedCircularConfig & {
+      /**
+       * The maximal radius from (cx, cy) that fit that arc in the drawing area.
+       */
+      maxRadius: number;
+    }
+>({
   value: null,
   valueMin: 0,
   valueMax: 0,
@@ -109,6 +117,7 @@ export const GaugeContext = React.createContext<Required<GaugeConfig> & Processe
   cornerRadius: 0,
   cx: 0,
   cy: 0,
+  maxRadius: 0,
 });
 
 export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
@@ -140,20 +149,20 @@ export function GaugeProvider(props: GaugeProviderProps) {
   let cx = left + innerCx;
   let cy = top + innerCy;
 
-  const availableRadius = getAvailableRadius(innerCx, innerCy, width, height, ratios);
+  const maxRadius = getAvailableRadius(innerCx, innerCy, width, height, ratios);
 
   // If the center is not defined, after computation of the available radius, udpate the center to use the remaining space.
   if (cxParam === undefined) {
-    const usedWidth = availableRadius * (ratios.maxX - ratios.minX);
+    const usedWidth = maxRadius * (ratios.maxX - ratios.minX);
     cx = left + (width - usedWidth) / 2 + ratios.cx * usedWidth;
   }
   if (cyParam === undefined) {
-    const usedHeight = availableRadius * (ratios.maxY - ratios.minY);
+    const usedHeight = maxRadius * (ratios.maxY - ratios.minY);
     cy = top + (height - usedHeight) / 2 + ratios.cy * usedHeight;
   }
 
-  const outerRadius = getPercentageValue(outerRadiusParam ?? availableRadius, availableRadius);
-  const innerRadius = getPercentageValue(innerRadiusParam ?? '80%', availableRadius);
+  const outerRadius = getPercentageValue(outerRadiusParam ?? maxRadius, maxRadius);
+  const innerRadius = getPercentageValue(innerRadiusParam ?? '80%', maxRadius);
   const cornerRadius = getPercentageValue(cornerRadiusParam ?? 0, outerRadius - innerRadius);
 
   const contextValue = React.useMemo(
@@ -168,6 +177,7 @@ export function GaugeProvider(props: GaugeProviderProps) {
       cornerRadius,
       cx,
       cy,
+      maxRadius,
     }),
     [
       value,
@@ -180,6 +190,7 @@ export function GaugeProvider(props: GaugeProviderProps) {
       cornerRadius,
       cx,
       cy,
+      maxRadius,
     ],
   );
 
