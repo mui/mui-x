@@ -171,7 +171,7 @@
     "typescript": "^5.3.3",
     "unist-util-visit": "^2.0.3",
     "util": "^0.12.5",
-    "webpack": "^5.90.0",
+    "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2",
     "yarn-deduplicate": "^6.0.2"
