@@ -200,6 +200,5 @@ export const gridFilterableColumnLookupSelector = createSelectorMemoized(
  */
 export const gridHasColSpanSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
-  (columns) =>
-    columns.some(column => column.colSpan !== undefined),
+  (columns) => columns.some((column) => column.colSpan !== undefined),
 );

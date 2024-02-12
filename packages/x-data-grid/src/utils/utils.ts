@@ -36,13 +36,6 @@ export const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
 
 /**
- * Returns an array containing numbers in range
- */
-export function range(start: number, end: number) {
-  return Array.from({ length: end - start }).map((_, i) => start + i);
-}
-
-/**
  * Based on `fast-deep-equal`
  *
  * MIT License

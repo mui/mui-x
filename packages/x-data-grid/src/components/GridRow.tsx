@@ -15,6 +15,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import type { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
+import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -33,6 +34,7 @@ import { PinnedPosition } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
+  row: GridRowModel;
   rowId: GridRowId;
   selected: boolean;
   /**
@@ -41,29 +43,25 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
-  top: number;
+  offsetTop: number | undefined;
   offsetLeft: number;
   dimensions: GridDimensions;
-  firstColumnToRender: number;
-  lastColumnToRender: number;
+  renderContext: GridRenderContext;
   visibleColumns: GridStateColDef[];
-  renderedColumns: GridStateColDef[];
   pinnedColumns: GridPinnedColumns;
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
    */
-  focusedCell: string | null;
+  focusedColumnIndex: number | undefined;
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: string | null;
-  row?: GridRowModel;
   isFirstVisible: boolean;
   isLastVisible: boolean;
-  focusedCellColumnIndexNotInRange?: number;
-  isNotVisible?: boolean;
+  isNotVisible: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -119,19 +117,17 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     row,
     index,
     style: styleProp,
-    top,
+    offsetTop,
     rowHeight,
     className,
     visibleColumns,
-    renderedColumns,
     pinnedColumns,
     offsetLeft,
     dimensions,
-    firstColumnToRender,
-    lastColumnToRender,
+    renderContext,
+    focusedColumnIndex,
     isFirstVisible,
     isLastVisible,
-    focusedCellColumnIndexNotInRange,
     isNotVisible,
     focusedCell,
     tabbableCell,
@@ -155,6 +151,16 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+
+  const hasFocusCell = focusedColumnIndex !== undefined;
+  const hasVirtualFocusCellLeft =
+    hasFocusCell &&
+    focusedColumnIndex >= pinnedColumns.left.length &&
+    focusedColumnIndex < renderContext.firstColumnIndex;
+  const hasVirtualFocusCellRight =
+    hasFocusCell &&
+    focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
+    focusedColumnIndex >= renderContext.lastColumnIndex;
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
 
@@ -309,7 +315,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
       minHeight,
-      top,
+      top: offsetTop,
     };
 
     if (sizes?.spacingTop) {
@@ -329,7 +335,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, minHeight, top, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, minHeight, offsetTop, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
 
@@ -381,6 +387,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           scrollbarWidth;
         break;
       case PinnedPosition.NONE:
+      case PinnedPosition.VIRTUAL:
         pinnedOffset = 0;
         break;
     }
@@ -411,13 +418,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
     const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
-    let cellIsNotVisible = false;
-    if (
-      focusedCellColumnIndexNotInRange !== undefined &&
-      visibleColumns[focusedCellColumnIndexNotInRange].field === column.field
-    ) {
-      cellIsNotVisible = true;
-    }
+    const cellIsNotVisible = pinnedPosition === PinnedPosition.VIRTUAL;
 
     return (
       <slots.cell
@@ -474,21 +475,33 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     visibleColumns.length - pinnedColumns.left.length - pinnedColumns.right.length;
 
   const cells = [] as React.ReactNode[];
-  for (let i = 0; i < renderedColumns.length; i += 1) {
-    const column = renderedColumns[i];
+  if (hasVirtualFocusCellLeft) {
+    cells.push(
+      getCell(
+        visibleColumns[focusedColumnIndex],
+        focusedColumnIndex - pinnedColumns.left.length,
+        focusedColumnIndex,
+        middleColumnsLength,
+        PinnedPosition.VIRTUAL,
+      ),
+    );
+  }
+  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+    const column = visibleColumns[i];
+    const indexInSection = i - pinnedColumns.left.length;
 
-    let indexRelativeToAllColumns = firstColumnToRender + i;
-    if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
-      if (visibleColumns[focusedCellColumnIndexNotInRange].field === column.field) {
-        indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
-      } else {
-        indexRelativeToAllColumns -= 1;
-      }
-    }
-
-    const indexInSection = indexRelativeToAllColumns - pinnedColumns.left.length;
-
-    cells.push(getCell(column, indexInSection, indexRelativeToAllColumns, middleColumnsLength));
+    cells.push(getCell(column, indexInSection, i, middleColumnsLength));
+  }
+  if (hasVirtualFocusCellRight) {
+    cells.push(
+      getCell(
+        visibleColumns[focusedColumnIndex],
+        focusedColumnIndex - pinnedColumns.left.length,
+        focusedColumnIndex,
+        middleColumnsLength,
+        PinnedPosition.VIRTUAL,
+      ),
+    );
   }
 
   const eventHandlers = row
@@ -505,6 +518,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const expandedWidth =
     dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
   const emptyCellWidth = Math.max(0, expandedWidth);
+
+  if (!row) debugger;
 
   return (
     <div
@@ -574,13 +589,11 @@ GridRow.propTypes = {
       width: PropTypes.number.isRequired,
     }).isRequired,
   }).isRequired,
-  firstColumnToRender: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
    */
   focusedCell: PropTypes.string,
-  focusedCellColumnIndexNotInRange: PropTypes.number,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
@@ -589,14 +602,13 @@ GridRow.propTypes = {
   isFirstVisible: PropTypes.bool.isRequired,
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool,
-  lastColumnToRender: PropTypes.number.isRequired,
   offsetLeft: PropTypes.number.isRequired,
+  offsetTop: PropTypes.number,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
-  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -606,7 +618,6 @@ GridRow.propTypes = {
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: PropTypes.string,
-  top: PropTypes.number.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 

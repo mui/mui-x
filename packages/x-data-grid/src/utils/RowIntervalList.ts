@@ -25,15 +25,17 @@ const equals = isColumnRangeEqual;
 
 export class RowIntervalList {
   nodes: Interval[];
+  virtualRow: { index: number; data: GridRenderContext } | null;
 
   static create() {
-    return new RowIntervalList()
+    return new RowIntervalList();
   }
 
   constructor(renderContext?: GridRenderContext) {
     this.nodes = [];
+    this.virtualRow = null;
     if (renderContext) {
-      this.add(renderContext)
+      this.add(renderContext);
     }
   }
 
@@ -63,11 +65,7 @@ export class RowIntervalList {
 
       // Get overlapping zone
       const conflictingInterval = this.nodes[conflictingIndex];
-      const [overlappingFrom, overlappingTo] = getOverlappingZone(
-        conflictingInterval,
-        start,
-        end,
-      );
+      const [overlappingFrom, overlappingTo] = getOverlappingZone(conflictingInterval, start, end);
 
       const newIntervals = this.calculateInsertions(
         conflictingIndex,
@@ -144,14 +142,33 @@ export class RowIntervalList {
   }
 
   /**
+   * Add a virtual row.
+   * This is used for the focused row.
+   */
+  setVirtualRow(virtualRow: { index: number; data: GridRenderContext } | null) {
+    this.virtualRow = virtualRow;
+  }
+
+  /**
    * Iterate the indexes contained in the list
    */
   forEach(callback: (index: number, context: GridRenderContext, i: number) => void) {
     let iteration = 0;
+
+    let hasVirtualRow = this.virtualRow !== null;
+    let didVirtualRow = false;
+
     for (let i = 0; i < this.nodes.length; i++) {
       const node = this.nodes[i];
       for (let index = node.start; index <= node.end; index += 1) {
-        callback(index, node.data, iteration)
+        if (hasVirtualRow && !didVirtualRow && index >= this.virtualRow!.index) {
+          if (index !== this.virtualRow!.index) {
+            callback(this.virtualRow!.index, this.virtualRow!.data, iteration);
+            iteration += 1;
+          }
+          didVirtualRow = true;
+        }
+        callback(index, node.data, iteration);
         iteration += 1;
       }
     }
@@ -161,15 +178,10 @@ export class RowIntervalList {
    * Map over the indexes contained in the list
    */
   map<T>(callback: (index: number, context: GridRenderContext, i: number) => T): T[] {
-    const result = []
-    let iteration = 0;
-    for (let i = 0; i < this.nodes.length; i++) {
-      const node = this.nodes[i];
-      for (let index = node.start; index <= node.end; index += 1) {
-        result.push(callback(index, node.data, iteration))
-        iteration += 1;
-      }
-    }
+    const result = [] as T[];
+    this.forEach((index, context, i) => {
+      result.push(callback(index, context, i));
+    });
     return result;
   }
 
@@ -182,11 +194,11 @@ export class RowIntervalList {
   }
 
   first(): number | undefined {
-    return this.nodes[0]?.start
+    return this.nodes[0]?.start;
   }
 
   last(): number | undefined {
-    return this.nodes[this.nodes.length]?.end
+    return this.nodes[this.nodes.length]?.end;
   }
 
   search(start: number) {
@@ -505,4 +517,3 @@ function calculateRemoval(interval: Interval, start: number, end: number) {
   }
   return res;
 }
-
