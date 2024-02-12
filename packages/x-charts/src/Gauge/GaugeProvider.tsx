@@ -105,6 +105,10 @@ export const GaugeContext = React.createContext<
        * The maximal radius from (cx, cy) that fit that arc in the drawing area.
        */
       maxRadius: number;
+      /**
+       * The angle (rad) associated to the current value.
+       */
+      valueAngle: null | number;
     }
 >({
   value: null,
@@ -118,6 +122,7 @@ export const GaugeContext = React.createContext<
   cx: 0,
   cy: 0,
   maxRadius: 0,
+  valueAngle: null,
 });
 
 export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
@@ -165,34 +170,40 @@ export function GaugeProvider(props: GaugeProviderProps) {
   const innerRadius = getPercentageValue(innerRadiusParam ?? '80%', maxRadius);
   const cornerRadius = getPercentageValue(cornerRadiusParam ?? 0, outerRadius - innerRadius);
 
-  const contextValue = React.useMemo(
-    () => ({
+  const contextValue = React.useMemo(() => {
+    const startAngleRad = (Math.PI * startAngle) / 180;
+    const endAngleRad = (Math.PI * endAngle) / 180;
+    return {
       value,
       valueMin,
       valueMax,
-      startAngle: (Math.PI * startAngle) / 180,
-      endAngle: (Math.PI * endAngle) / 180,
+      startAngle: startAngleRad,
+      endAngle: endAngleRad,
       outerRadius,
       innerRadius,
       cornerRadius,
       cx,
       cy,
       maxRadius,
-    }),
-    [
-      value,
-      valueMin,
-      valueMax,
-      startAngle,
-      endAngle,
-      outerRadius,
-      innerRadius,
-      cornerRadius,
-      cx,
-      cy,
-      maxRadius,
-    ],
-  );
+      valueAngle:
+        value === null
+          ? null
+          : startAngleRad +
+            ((endAngleRad - startAngleRad) * (value - valueMin)) / (valueMax - valueMin),
+    };
+  }, [
+    value,
+    valueMin,
+    valueMax,
+    startAngle,
+    endAngle,
+    outerRadius,
+    innerRadius,
+    cornerRadius,
+    cx,
+    cy,
+    maxRadius,
+  ]);
 
   return <GaugeContext.Provider value={contextValue}>{children}</GaugeContext.Provider>;
 }

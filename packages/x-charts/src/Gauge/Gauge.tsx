@@ -9,6 +9,7 @@ import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
+  children?: React.ReactNode;
 }
 
 const useUtilityClasses = (props: GaugeProps) => {
@@ -25,13 +26,14 @@ const useUtilityClasses = (props: GaugeProps) => {
 };
 
 function Gauge(props: GaugeProps) {
-  const { text, ...other } = props;
+  const { text, children, ...other } = props;
   const classes = useUtilityClasses(props);
   return (
     <GaugeContainer {...other} className={classes.root}>
       <GaugeReferenceArc className={classes.referenceArc} />
       <GaugeValueArc className={classes.valueArc} />
       <GaugeValueText className={classes.valueText} text={text} />
+      {children}
     </GaugeContainer>
   );
 }

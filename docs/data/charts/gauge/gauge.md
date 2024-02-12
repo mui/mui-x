@@ -59,6 +59,51 @@ The `gaugeClasses` provides class names to select parts of the component, such a
 
 {{"demo": "ArcDesign.js"}}
 
+## Adding elements
+
+### Using the default Gauge
+
+If the default Gauge does not contain all the visual elements you're looking for, you can add them.
+THe first solution is to add your component as children.
+They will be stacked on top of the default rendering.
+
+```tsx
+import { Gauge } from '@mui/x-charts/Gauge'
+
+<Gauge value={25} valueMax={50}>
+  <AddedElement />
+</Gauge>
+```
+
+### Using the Gauge container
+
+The second solution is to start from scratch with our components:
+
+- GaugeReferenceArc
+- GaugeValueArc
+- GaugeValueText
+
+```tsx
+import { GaugeContainer, Gauge , GaugeReferenceArc, GaugeValueArc } from '@mui/x-charts/Gauge'
+
+<GaugeContainer value={25} valueMax={50}>
+  <GaugeReferenceArc />
+  <GaugeValueArc />
+  <AddedElement />
+</GaugeContainer>
+```
+
+### Creating your components
+
+To create your own components, use `useGaugeState` hook which provides all you need about the gauge configuration:
+
+- Information about the value: `value`, `valueMin`, `valueMax`
+- Information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
+- Computed values:
+  - `maxRadius` the maximal radius that can fit in the drawing area.
+  - `valueAngle` the angle associated to the current value.
+
+{{"demo": "CompositionExample.js"}}
 
 ## Accessibility
 
