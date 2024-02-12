@@ -38,6 +38,12 @@ function components() {
       srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
     },
+    // {
+    //   title: 'Gauge',
+    //   srcLight: '/static/x/component-illustrations/gauge-light.png',
+    //   srcDark: '/static/x/component-illustrations/gauge-dark.png',
+    //   href: '/x/react-charts/gauge/',
+    // },
   ];
 }
 

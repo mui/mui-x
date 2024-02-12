@@ -68,11 +68,11 @@ THe first solution is to add your component as children.
 They will be stacked on top of the default rendering.
 
 ```tsx
-import { Gauge } from '@mui/x-charts/Gauge'
+import { Gauge } from '@mui/x-charts/Gauge';
 
 <Gauge value={25} valueMax={50}>
   <AddedElement />
-</Gauge>
+</Gauge>;
 ```
 
 ### Using the Gauge container
@@ -84,13 +84,18 @@ The second solution is to start from scratch with our components:
 - GaugeValueText
 
 ```tsx
-import { GaugeContainer, Gauge , GaugeReferenceArc, GaugeValueArc } from '@mui/x-charts/Gauge'
+import {
+  GaugeContainer,
+  Gauge,
+  GaugeReferenceArc,
+  GaugeValueArc,
+} from '@mui/x-charts/Gauge';
 
 <GaugeContainer value={25} valueMax={50}>
   <GaugeReferenceArc />
   <GaugeValueArc />
   <AddedElement />
-</GaugeContainer>
+</GaugeContainer>;
 ```
 
 ### Creating your components
