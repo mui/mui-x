@@ -11,8 +11,9 @@ import {
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { PickerValidDate } from '../models';
 
-const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
+const useDefaultizedTimeField = <TDate extends PickerValidDate, AdditionalProps extends {}>(
   props: UseTimeFieldProps<TDate>,
 ): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
@@ -28,7 +29,7 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useTimeField = <TDate, TChildProps extends {}>(
+export const useTimeField = <TDate extends PickerValidDate, TChildProps extends {}>(
   inProps: UseTimeFieldComponentProps<TDate, TChildProps>,
 ) => {
   const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);

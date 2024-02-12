@@ -71,7 +71,14 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
-  const expandable = Boolean(Array.isArray(children) ? children.length : children);
+  const isExpandable = (reactChildren: React.ReactNode) => {
+    if (Array.isArray(reactChildren)) {
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
+    }
+    return Boolean(reactChildren);
+  };
+
+  const expandable = isExpandable(children);
 
   const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps } from './BarElement';
+import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
 import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import { SeriesId } from '../models/seriesType/common';
 
 /**
  * Solution of the equations
@@ -42,13 +43,9 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots {
-  bar?: React.JSXElementConstructor<BarElementProps>;
-}
+export interface BarPlotSlots extends BarElementSlots {}
 
-export interface BarPlotSlotProps {
-  bar?: Partial<BarElementProps>;
-}
+export interface BarPlotSlotProps extends BarElementSlotProps {}
 
 export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
   /**
@@ -68,9 +65,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
 }
 
 interface CompletedBarData {
-  bottom: number;
-  top: number;
-  seriesId: string;
+  seriesId: SeriesId;
   dataIndex: number;
   layout: BarSeriesType['layout'];
   x: number;
@@ -162,23 +157,25 @@ const useAggregatedData = (): CompletedBarData[] => {
       const { stackedData, color } = series[seriesId];
 
       return stackedData.map((values, dataIndex: number) => {
-        const bottom = Math.min(...values);
-        const top = Math.max(...values);
+        const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+
+        const minValueCoord = Math.min(...valueCoordinates);
+        const maxValueCoord = Math.max(...valueCoordinates);
 
         return {
-          bottom,
-          top,
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
           x: verticalLayout
             ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : xScale(bottom)!,
-          y: verticalLayout ? yScale(top)! : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+            : minValueCoord!,
+          y: verticalLayout
+            ? minValueCoord
+            : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
           xOrigin: xScale(0)!,
           yOrigin: yScale(0)!,
-          height: verticalLayout ? Math.abs(yScale(bottom)! - yScale(top)!) : barWidth,
-          width: verticalLayout ? barWidth : Math.abs(xScale(bottom)! - xScale(top)!),
+          height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
+          width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color,
           highlightScope: series[seriesId].highlightScope,
         };

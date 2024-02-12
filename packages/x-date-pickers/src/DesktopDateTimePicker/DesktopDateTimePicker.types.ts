@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView, PickerValidDate } from '../models';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
@@ -18,7 +18,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 
-export interface DesktopDateTimePickerSlots<TDate>
+export interface DesktopDateTimePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlots<TDate>,
     MakeOptional<
       UseDesktopPickerSlots<TDate, DateOrTimeViewWithMeridiem>,
@@ -27,13 +27,13 @@ export interface DesktopDateTimePickerSlots<TDate>
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopDateTimePickerSlotProps<TDate>
+export interface DesktopDateTimePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlotProps<TDate>,
     ExportedUseDesktopPickerSlotProps<TDate, DateOrTimeViewWithMeridiem>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopDateTimePickerProps<TDate>
+export interface DesktopDateTimePickerProps<TDate extends PickerValidDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps<TDate>,
     DesktopOnlyTimePickerProps<TDate> {

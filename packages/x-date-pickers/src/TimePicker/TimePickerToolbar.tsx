@@ -16,8 +16,9 @@ import {
 } from './timePickerToolbarClasses';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { PickerValidDate } from '../models';
 
-export interface TimePickerToolbarProps<TDate>
+export interface TimePickerToolbarProps<TDate extends PickerValidDate>
   extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
   ampm?: boolean;
   ampmInClock?: boolean;
@@ -153,7 +154,7 @@ TimePickerToolbarAmPmSelection.propTypes = {
  *
  * - [TimePickerToolbar API](https://mui.com/x/api/date-pickers/time-picker-toolbar/)
  */
-function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
+function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
     ampm,
@@ -302,7 +303,7 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */

@@ -11,6 +11,7 @@ import {
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
@@ -36,7 +37,7 @@ const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => 
 
 type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
-export interface DateTimeRangePickerToolbarProps<TDate>
+export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
   extends BaseToolbarProps<DateRange<TDate>, DateTimeRangeViews>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
@@ -59,11 +60,12 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
   flexDirection: 'column',
 });
 
-type DateTimeRangePickerStartOrEndToolbarProps<TDate> = DateTimePickerToolbarProps<TDate> & {
-  ownerState?: DateTimeRangePickerToolbarProps<TDate>;
-};
+type DateTimeRangePickerStartOrEndToolbarProps<TDate extends PickerValidDate> =
+  DateTimePickerToolbarProps<TDate> & {
+    ownerState?: DateTimeRangePickerToolbarProps<TDate>;
+  };
 
-type DateTimeRangePickerStartOrEndToolbarComponent = <TDate>(
+type DateTimeRangePickerStartOrEndToolbarComponent = <TDate extends PickerValidDate>(
   props: DateTimeRangePickerStartOrEndToolbarProps<TDate>,
 ) => React.JSX.Element;
 
@@ -91,7 +93,7 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
 })) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: DateTimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerToolbar' });
   const utils = useUtils<TDate>();
@@ -228,7 +230,7 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  value: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Currently visible picker view.
    */

@@ -230,6 +230,8 @@ The following are the native column types with their required value types:
 | `'singleSelect'`     | A value in `.valueOptions` |
 | `'actions'`          | Not applicable             |
 
+{{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+
 ### Converting types
 
 Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type`.
@@ -249,57 +251,67 @@ If for any reason, your data type is not the correct one, you can use `valueGett
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
-- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
+#### Single select
 
-  ```tsx
-  {
-    field: 'country',
-    type: 'singleSelect',
-    valueOptions: ['United Kingdom', 'Spain', 'Brazil']
-  }
-  ```
+If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
 
-  :::warning
-  When using objects values for `valueOptions` you need to provide the `value` and `label` attributes for each option.
-  However, you can customize which attribute is used as value and label by using `getOptionValue` and `getOptionLabel`, respectively.
+```tsx
+{
+  field: 'country',
+  type: 'singleSelect',
+  valueOptions: ['United Kingdom', 'Spain', 'Brazil']
+}
+```
 
-  ```tsx
-  // Without getOptionValue and getOptionLabel
-  {
-    valueOptions: [
-      { value: 'BR', label: 'Brazil' },
-      { value: 'FR', label: 'France' }
-    ]
-  }
+:::warning
+When using objects values for `valueOptions` you need to provide the `value` and `label` attributes for each option.
+However, you can customize which attribute is used as value and label by using `getOptionValue` and `getOptionLabel`, respectively.
 
-  // With getOptionValue and getOptionLabel
-  {
-    getOptionValue: (value: any) => value.code,
-    getOptionLabel: (value: any) => value.name,
-    valueOptions: [
-      { code: 'BR', name: 'Brazil' },
-      { code: 'FR', name: 'France' }
-    ]
-  }
-  ```
+```tsx
+// Without getOptionValue and getOptionLabel
+{
+  valueOptions: [
+    { value: 'BR', label: 'Brazil' },
+    { value: 'FR', label: 'France' }
+  ]
+}
 
-  :::
+// With getOptionValue and getOptionLabel
+{
+  getOptionValue: (value: any) => value.code,
+  getOptionLabel: (value: any) => value.name,
+  valueOptions: [
+    { code: 'BR', name: 'Brazil' },
+    { code: 'FR', name: 'France' }
+  ]
+}
+```
 
-- If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-  You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+:::
 
-  ```tsx
-  {
-    field: 'actions',
-    type: 'actions',
-    getActions: (params: GridRowParams) => [
-      <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
-      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
-    ]
-  }
-  ```
+#### Actions
 
-{{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
+You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+
+```tsx
+{
+  field: 'actions',
+  type: 'actions',
+  getActions: (params: GridRowParams) => [
+    <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+    <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+  ]
+}
+```
+
+By default, actions shown in the menu will close the menu on click.
+But in some cases, you might want to keep the menu open after clicking an action.
+You can achieve this by setting the `closeMenuOnClick` prop to `false`.
+
+In the following example, the "Delete" action opens a confirmation dialog and therefore needs to keep the menu mounted:
+
+{{"demo": "ActionsWithModalGrid.js", "bg": "inline"}}
 
 ### Custom column types
 

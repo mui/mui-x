@@ -43,7 +43,7 @@ For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 :::info
 Both `date-fns` major versions (v2.x and v3.x) are supported.
 
-A single adapter can not work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
+A single adapter cannot work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
 
 To use `date-fns` v3.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
 :::

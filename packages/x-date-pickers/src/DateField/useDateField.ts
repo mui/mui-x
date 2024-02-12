@@ -12,8 +12,9 @@ import { validateDate } from '../internals/utils/validation/validateDate';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { PickerValidDate } from '../models';
 
-const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
+const useDefaultizedDateField = <TDate extends PickerValidDate, AdditionalProps extends {}>(
   props: UseDateFieldProps<TDate>,
 ): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
@@ -29,7 +30,7 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useDateField = <TDate, TChildProps extends {}>(
+export const useDateField = <TDate extends PickerValidDate, TChildProps extends {}>(
   inProps: UseDateFieldComponentProps<TDate, TChildProps>,
 ) => {
   const props = useDefaultizedDateField<TDate, TChildProps>(inProps);

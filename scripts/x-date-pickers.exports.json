@@ -233,6 +233,8 @@
   { "name": "pickersYearClasses", "kind": "Variable" },
   { "name": "PickersYearClasses", "kind": "Interface" },
   { "name": "PickersYearClassKey", "kind": "TypeAlias" },
+  { "name": "PickerValidDate", "kind": "TypeAlias" },
+  { "name": "PickerValidDateLookup", "kind": "Interface" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
   { "name": "renderDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderMultiSectionDigitalClockTimeView", "kind": "Variable" },
