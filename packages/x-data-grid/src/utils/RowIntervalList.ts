@@ -19,6 +19,10 @@ class Interval {
   get size() {
     return this.end - this.start + 1;
   }
+
+  clone() {
+    return new Interval(this.start, this.end, this.data);
+  }
 }
 
 const equals = isColumnRangeEqual;
@@ -142,6 +146,16 @@ export class RowIntervalList {
   }
 
   /**
+   * Remove every index outside this range.
+   * Indexes are inclusive.
+   */
+  keep(start: number, end: number) {
+    this.remove(-1, start - 1);
+    this.remove(end + 1, Number.MAX_SAFE_INTEGER);
+    return this;
+  }
+
+  /**
    * Add a virtual row.
    * This is used for the focused row.
    */
@@ -198,7 +212,14 @@ export class RowIntervalList {
   }
 
   last(): number | undefined {
-    return this.nodes[this.nodes.length]?.end;
+    return this.nodes[this.nodes.length - 1]?.end;
+  }
+
+  clone() {
+    const clone = new RowIntervalList();
+    clone.nodes = this.nodes.map((n) => n.clone());
+    clone.virtualRow = this.virtualRow;
+    return clone;
   }
 
   search(start: number) {
@@ -334,6 +355,35 @@ export class RowIntervalList {
     return null;
   }
 
+  findFarthestInterval(renderContext: GridRenderContext) {
+    const start = renderContext.firstRowIndex;
+    const end = renderContext.lastRowIndex - 1;
+
+    let maxDistance = -1;
+    let current = null as Interval | null;
+
+    for (let i = 0; i < this.nodes.length; i++) {
+      const interval = this.nodes[i];
+      if (interval.data === renderContext) {
+        continue;
+      }
+
+      const intervalMaxDistance = Math.max(
+        interval.start < start ? start - interval.start : 0,
+        interval.end < start ? start - interval.end : 0,
+        interval.start > end ? interval.start - end : 0,
+        interval.end > end ? interval.end - end : 0,
+      );
+
+      if (intervalMaxDistance > maxDistance) {
+        maxDistance = intervalMaxDistance;
+        current = interval;
+      }
+    }
+
+    return current;
+  }
+
   calculateInsertions(
     conflictingIndex: number,
     start: number,
@@ -367,14 +417,7 @@ export class RowIntervalList {
   }
 
   findAndReplace(index: number, newIntervals: Interval[]) {
-    // Remove previous
-    this.nodes.splice(index, 1);
-
-    // Add list of intervals
-    for (let i = 0; i < newIntervals.length; i += 1) {
-      const newInterval = newIntervals[i];
-      this.nodes.splice(index + i, 0, newInterval);
-    }
+    this.nodes.splice(index, 1, ...newIntervals);
   }
 
   tryMerge(index: number) {

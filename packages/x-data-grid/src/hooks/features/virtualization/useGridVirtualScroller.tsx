@@ -1,15 +1,41 @@
+/*
+ * Virtualization logic
+ * ====================
+ *
+ * This file handles row virtualization. Surprisingly, the biggest cost when virtualizing rows
+ * isn't adding new ones, it's actually removing old ones from the DOM. The logic here avoids that 
+ * cost by keeping all the rows in the DOM during scrolling to ensure a smoother UX, and delays
+ * removing the rows until there is idle time.
+ *
+ * The rendered row indexes are kept in a `RowIntervalList` structure, which encodes rendered rows
+ * as intervals (inclusive).
+ *
+ * The idle scheduling uses both a timeout and idle callbacks, to ensure operations are easily
+ * interruptable by other tasks and don't block the main thread. We also attach event listeners
+ * on the root grid element to ensure we don't block interactions other than scrolling. The number
+ * of rows cleaned up during each idle callback iteration may seem low (10), but bigger numbers may
+ * prevent the operation from being interrupted in a reasonable timeframe on low-end devices. This
+ * means we end up paying the react render & diffing cost more often, but hopefully this also means
+ * the interface feels more reactive despite using more CPU resources.
+ *
+ */
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import useTimeout from '@mui/utils/useTimeout';
+import useOnMount from '@mui/utils/useOnMount';
 import { useTheme, Theme } from '@mui/material/styles';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useLazyRef } from '../../utils/useLazyRef';
+import { useForceUpdate } from '../../../utils/useForceUpdate';
+import { useIdleCallback } from '../../../utils/useIdleCallback';
 import { useResizeObserver } from '../../utils/useResizeObserver';
 import { useRunOnce } from '../../utils/useRunOnce';
 import {
@@ -25,7 +51,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
 import { RowIntervalList } from '../../../utils/RowIntervalList';
-import { GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
+import { GridApiCommon, GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
@@ -80,7 +106,7 @@ export const useGridVirtualScroller = () => {
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
-  const rowsIntervalList = useLazyRef(RowIntervalList.create);
+  const rowList = useLazyRef(RowIntervalList.create).current;
 
   const focusedCell = {
     rowIndex: React.useMemo(
@@ -93,6 +119,8 @@ export const useGridVirtualScroller = () => {
       [cellFocus?.field, visibleColumns],
     ),
   };
+
+  const cleanup = useCleanup(apiRef, renderContext, rowList);
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext, rawRenderContext: GridRenderContext) => {
@@ -166,12 +194,14 @@ export const useGridVirtualScroller = () => {
       return previousContext.current;
     }
 
-    rowsIntervalList.current.add(nextRenderContext);
+    rowList.add(nextRenderContext);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
       updateRenderContext(nextRenderContext, rawRenderContext);
     });
+
+    cleanup.schedule();
 
     return nextRenderContext;
   };
@@ -223,8 +253,8 @@ export const useGridVirtualScroller = () => {
   const getRows = (
     params: {
       rows?: GridRowEntry[];
-      renderContext?: GridRenderContext;
       position?: GridPinnedRowsPosition;
+      renderContext?: GridRenderContext;
     } = {},
   ) => {
     if (!params.rows && !currentPage.range) {
@@ -251,15 +281,13 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    rowsIntervalList.current.add(renderContext);
+    rowList.add(renderContext);
 
-    if (rowsIntervalList.current.size() === 0) {
+    if (rowList.size() === 0) {
       return [];
     }
 
-    const firstRowToRender = params.rows
-      ? renderContext.firstRowIndex
-      : rowsIntervalList.current.first()!;
+    const firstRowToRender = params.rows ? renderContext.firstRowIndex : rowList.first()!;
 
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
@@ -267,30 +295,26 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
 
     const rowModels = params.rows ?? currentPage.rows;
-    const list = params.rows ? new RowIntervalList(params.renderContext) : rowsIntervalList.current;
+    const list = params.rows ? new RowIntervalList(params.renderContext) : rowList;
 
     let virtualContext = null as GridRenderContext | null;
-    if (!isPinnedSection) {
-      virtualContext = !cellFocus
-        ? null
-        : {
-            firstRowIndex: focusedCell.rowIndex,
-            lastRowIndex: focusedCell.rowIndex + 1,
-            firstColumnIndex: focusedCell.columnIndex,
-            lastColumnIndex: focusedCell.columnIndex + 1,
-          };
-      list.setVirtualRow(
-        !virtualContext
-          ? null
-          : {
-              index: focusedCell.rowIndex,
-              data: virtualContext,
-            },
-      );
+    if (!isPinnedSection && focusedCell.rowIndex !== -1) {
+      virtualContext = {
+        firstRowIndex: focusedCell.rowIndex,
+        lastRowIndex: focusedCell.rowIndex + 1,
+        firstColumnIndex: focusedCell.columnIndex,
+        lastColumnIndex: focusedCell.columnIndex + 1,
+      };
+      list.setVirtualRow({
+        index: focusedCell.rowIndex,
+        data: virtualContext,
+      });
+    } else {
+      list.setVirtualRow(null);
     }
 
     list.forEach((rowIndexInPage, rowRenderContext, i) => {
-      const { id, model } = rowModels[i];
+      const { id, model } = rowModels[rowIndexInPage];
       const rowIndex = rowIndexOffset + rowIndexInPage;
 
       const isInViewport = params.rows
@@ -505,6 +529,102 @@ export const useGridVirtualScroller = () => {
     getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
   };
 };
+
+const CLEANUP_ROWS = 10;
+const CLEANUP_ITERATION_DELAY = 50;
+const CLEANUP_INTERACTION_DELAY = 1_000;
+
+function useCleanup(
+  apiRef: React.MutableRefObject<GridApiCommon>,
+  renderContext: GridRenderContext,
+  rowList: RowIntervalList
+) {
+  const needsCleanup = React.useRef(false);
+  const timeout = useTimeout();
+  const forceUpdate = useForceUpdate();
+  const idleCallback = useIdleCallback();
+
+  const runWhenIdle = () => {
+    idleCallback.request(run);
+  };
+
+  const run = () => {
+    const interval = rowList.findFarthestInterval(renderContext);
+    if (!interval) {
+      return;
+    }
+
+    const removalList = new RowIntervalList();
+    removalList.nodes.push(interval);
+    removalList.remove(renderContext.firstRowIndex, renderContext.lastRowIndex - 1);
+
+    const center =
+      renderContext.firstRowIndex +
+      Math.floor((renderContext.lastRowIndex - renderContext.firstRowIndex) / 2);
+    const isStartFarther = Math.abs(center - interval.start) > Math.abs(center - interval.end);
+
+    if (isStartFarther) {
+      removalList.keep(removalList.nodes.at(0)!.start, removalList.nodes.at(0)!.start + CLEANUP_ROWS);
+    } else {
+      removalList.keep(removalList.nodes.at(0)!.end - CLEANUP_ROWS, removalList.nodes.at(0)!.end);
+    }
+
+    removalList.nodes.forEach((interval) => {
+      rowList.remove(interval.start, interval.end);
+    });
+
+    forceUpdate();
+
+    if (
+      rowList.first() !== renderContext.firstRowIndex ||
+      rowList.last() !== renderContext.lastRowIndex - 1
+    ) {
+      needsCleanup.current = true;
+      idleCallback.cancel();
+      timeout.start(CLEANUP_ITERATION_DELAY, runWhenIdle);
+    } else {
+      needsCleanup.current = false;
+    }
+  };
+
+  /**
+   * Schedule cleanup.
+   */
+  const schedule = () => {
+    needsCleanup.current = true;
+    idleCallback.cancel();
+    timeout.start(CLEANUP_INTERACTION_DELAY, run);
+  };
+
+  /**
+   * Mark the grid as busy and reschedule pending cleanup.
+   */
+  const busy = () => {
+    if (!needsCleanup.current) {
+      return;
+    }
+    schedule();
+  };
+
+  useOnMount(() => {
+    const root = apiRef.current.rootElementRef.current!;
+
+    root.addEventListener('click', busy)
+    root.addEventListener('keydown', busy)
+    root.addEventListener('touchstart', busy)
+    root.addEventListener('touchmove', busy)
+
+    return () => {
+      root.removeEventListener('click', busy)
+      root.removeEventListener('keydown', busy)
+      root.removeEventListener('touchstart', busy)
+      root.removeEventListener('touchmove', busy)
+    }
+  })
+
+  return { schedule, busy };
+}
+
 
 type ScrollPosition = { top: number; left: number };
 type RenderContextInputs = {
