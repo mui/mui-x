@@ -46,9 +46,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
-    "@mui/base": "^5.0.0-beta.34",
-    "@mui/system": "^5.15.7",
-    "@mui/utils": "^5.15.7",
+    "@mui/base": "^5.0.0-beta.36",
+    "@mui/system": "^5.15.9",
+    "@mui/utils": "^5.15.9",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
