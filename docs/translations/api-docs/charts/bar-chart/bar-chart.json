@@ -2,7 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisHighlight": {
-      "description": "Object <code>{ x, y }</code> that defines how the charts highlight the mouse position along the x- and y-axes. The two properties accept the following values: - &#39;none&#39;: display nothing. - &#39;line&#39;: display a line at the current mouse position. - &#39;band&#39;: display a band at the current mouse position. Only available with band scale."
+      "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
+      "seeMoreText": "See {{link}} for more details."
     },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
@@ -17,6 +18,7 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "layout": { "description": "The direction of the bar elements." },
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
@@ -40,9 +42,14 @@
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "series": { "description": "The series to display in the bar chart." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
