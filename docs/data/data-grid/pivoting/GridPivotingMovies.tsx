@@ -4,11 +4,9 @@ import {
   useGridApiRef,
   unstable_useGridPivoting,
   Unstable_GridPivotModel as PivotModel,
-  Unstable_GridPivotModelEditor as GridPivotModelEditor,
   GridColDef,
+  GridToolbar,
 } from '@mui/x-data-grid-premium';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 export default function GridPivotingMovies() {
@@ -47,23 +45,24 @@ export default function GridPivotingMovies() {
 
   return (
     <div style={{ width: '100%' }}>
-      <FormControlLabel
-        control={
-          <Switch checked={isPivot} onChange={(e) => setIsPivot(e.target.checked)} />
-        }
-        label="Pivot"
-      />
-      <GridPivotModelEditor
-        columns={data.columns}
-        pivotModel={pivotModel}
-        onPivotModelChange={setPivotModel}
-      />
       <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
         <DataGridPremium
           key={isPivot.toString()}
           {...props}
           apiRef={apiRef}
           autoHeight={isPivot}
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          slotProps={{
+            pivotPanel: {
+              pivotModel,
+              initialColumns: data.columns,
+              onPivotModelChange: setPivotModel,
+              pivotMode: isPivot,
+              onPivotModeChange: setIsPivot,
+            },
+          }}
         />
       </div>
     </div>

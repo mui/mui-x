@@ -22,9 +22,9 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 ## Simple examples
 
-{{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
-{{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
 ## API
 

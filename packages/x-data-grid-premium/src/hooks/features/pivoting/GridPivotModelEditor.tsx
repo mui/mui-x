@@ -270,34 +270,34 @@ export default function GridPivotModelEditor({
           onPivotModelChange((prevModel) => ({ ...prevModel, rows: newRows }));
         }}
       />
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5%', marginTop: 4 }}>
-        <FieldsEditor
-          values={pivotModel.columns}
-          options={availableFields}
-          onChange={(newValues) => {
-            onPivotModelChange((prevModel) => ({
-              ...prevModel,
-              columns: newValues,
-            }));
-          }}
-          label="Columns"
-          fieldsConfig={[{ key: 'sort', options: ['asc', 'desc'] }]}
-          style={{ flex: 1 }}
-        />
-        <FieldsEditor
-          values={pivotModel.values}
-          options={availableFields}
-          onChange={(newValues) => {
-            onPivotModelChange((prevModel) => ({
-              ...prevModel,
-              values: newValues,
-            }));
-          }}
-          label="Values"
-          fieldsConfig={[{ key: 'aggFunc', options: ['sum', 'avg', 'min', 'max', 'size'] }]}
-          style={{ flex: 1 }}
-        />
-      </div>
+      {/* <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5%', marginTop: 4 }}> */}
+      <FieldsEditor
+        values={pivotModel.columns}
+        options={availableFields}
+        onChange={(newValues) => {
+          onPivotModelChange((prevModel) => ({
+            ...prevModel,
+            columns: newValues,
+          }));
+        }}
+        label="Columns"
+        fieldsConfig={[{ key: 'sort', options: ['asc', 'desc'] }]}
+        style={{ flex: 1 }}
+      />
+      <FieldsEditor
+        values={pivotModel.values}
+        options={availableFields}
+        onChange={(newValues) => {
+          onPivotModelChange((prevModel) => ({
+            ...prevModel,
+            values: newValues,
+          }));
+        }}
+        label="Values"
+        fieldsConfig={[{ key: 'aggFunc', options: ['sum', 'avg', 'min', 'max', 'size'] }]}
+        style={{ flex: 1 }}
+      />
+      {/* </div> */}
     </div>
   );
 }

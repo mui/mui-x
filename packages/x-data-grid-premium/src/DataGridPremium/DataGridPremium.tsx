@@ -8,6 +8,7 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
@@ -15,6 +16,7 @@ import {
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
+import clsx from 'clsx';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
   DataGridPremiumProcessedProps,
@@ -22,6 +24,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { GridPivotPanelContainer, GridPivotPanel } from '../components/GridPivotPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -41,21 +44,36 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
+  const hasPivotModel = props.slotProps?.pivotPanel?.pivotModel;
+
   validateProps(props, dataGridPremiumPropValidators);
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
-        className={props.className}
+        className={clsx(
+          props.className,
+          props.slotProps?.pivotPanel?.pivotModel && gridClasses.sidePanel,
+        )}
         style={props.style}
         sx={props.sx}
         ref={ref}
         {...props.forwardedProps}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        <div
+          style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}
+          role="presentation"
+        >
+          <GridHeader />
+          <GridBody>
+            <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+          </GridBody>
+          <GridFooterPlaceholder />
+        </div>
+        {hasPivotModel && (
+          <GridPivotPanelContainer>
+            <GridPivotPanel {...props.slotProps?.pivotPanel} />
+          </GridPivotPanelContainer>
+        )}
       </GridRoot>
     </GridContextProvider>
   );
