@@ -555,6 +555,19 @@ async function initializeEnvironment(
           expect(await input.inputValue()).to.equal('');
         });
 
+        it('should handle change event on the input', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const input = page.getByRole('textbox', { includeHidden: true });
+
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await input.fill('02/12/2020');
+
+          expect(await page.getByRole('button').getAttribute('aria-label')).to.equal(
+            'Choose date, selected date is Feb 12, 2020',
+          );
+        });
+
         it('should allow pasting a section', async () => {
           // Only firefox is capable of reliably running this test in CI and headless browsers
           if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
