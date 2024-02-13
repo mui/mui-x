@@ -251,8 +251,10 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
     onPaste?.(event);
 
+    // prevent default to avoid the input `onChange` handler being called
+    event.preventDefault();
+
     if (readOnly) {
-      event.preventDefault();
       return;
     }
 
@@ -274,19 +276,15 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
-        // prevent default to avoid the input change handler being called
-        event.preventDefault();
         return;
       }
       if (lettersOnly || digitsOnly) {
-        // The pasted value correspond to a single section but not the expected type
+        // The pasted value corresponds to a single section, but not the expected type,
         // skip the modification
-        event.preventDefault();
         return;
       }
     }
 
-    event.preventDefault();
     resetCharacterQuery();
     updateValueFromValueStr(pastedValue);
   });

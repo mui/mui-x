@@ -299,8 +299,10 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const handleInputContentPaste = useEventCallback(
     (event: React.ClipboardEvent<HTMLSpanElement>) => {
+      // prevent default to avoid the input `onInput` handler being called
+      event.preventDefault();
+
       if (readOnly || typeof parsedSelectedSections !== 'number') {
-        event.preventDefault();
         return;
       }
 
@@ -313,6 +315,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         (activeSection.contentType === 'letter' && lettersOnly) ||
         (activeSection.contentType === 'digit' && digitsOnly) ||
         (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
+
       if (isValidPastedValue) {
         resetCharacterQuery();
         updateSectionValue({
@@ -320,13 +323,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
-        // prevent default to avoid the input input handler being called
-        event.preventDefault();
       }
-      if (lettersOnly || digitsOnly) {
-        // The pasted value correspond to a single section but not the expected type
-        // skip the modification
-        event.preventDefault();
+      // If the pasted value corresponds to a single section, but not the expected type, we skip the modification
+      else if (!lettersOnly && !digitsOnly) {
+        resetCharacterQuery();
+        updateValueFromValueStr(pastedValue);
       }
     },
   );
