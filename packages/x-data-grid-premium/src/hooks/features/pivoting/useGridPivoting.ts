@@ -189,6 +189,8 @@ const getPivotedData = ({
   }
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
+    const initialColumnsLookup: Record<string, GridColDef | null> = {};
+
     columnGroups.forEach((columnGroup) => {
       if (isLeaf(columnGroup)) {
         return;
@@ -196,15 +198,28 @@ const getPivotedData = ({
       const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
       if (isLastColumnGroupLevel) {
         pivotModel.values.forEach((pivotValue) => {
+          if (typeof initialColumnsLookup[pivotValue.field] === 'undefined') {
+            initialColumnsLookup[pivotValue.field] =
+              columns.find((column) => column.field === pivotValue.field) || null;
+          }
+          const initialColumn = initialColumnsLookup[pivotValue.field];
           const valueField = pivotValue.field;
           const mapValueKey = `${columnGroup.groupId}-${valueField}`;
-          pivotColumns.push({
+          const column: GridColDef = {
             field: mapValueKey,
             headerName: String(valueField),
             aggregable: true,
             availableAggregationFunctions: [pivotValue.aggFunc],
             ...getAttributesFromInitialColumn(pivotValue.field),
-          });
+          };
+          if (initialColumn?.valueFormatter) {
+            column.valueFormatter = initialColumn.valueFormatter;
+          }
+          if (initialColumn?.valueGetter) {
+            column.valueGetter = initialColumn.valueGetter;
+          }
+          // TODO: copy other column attributes?
+          pivotColumns.push(column);
           aggregationModel[mapValueKey] = pivotValue.aggFunc;
           if (columnGroup) {
             columnGroup.children.push({ field: mapValueKey });
