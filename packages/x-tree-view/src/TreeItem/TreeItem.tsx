@@ -187,7 +187,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
     icon: inSlots?.icon,
   };
 
-  const expandable = Boolean(Array.isArray(children) ? children.length : children);
+  const isExpandable = (reactChildren: React.ReactNode) => {
+    if (Array.isArray(reactChildren)) {
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
+    }
+    return Boolean(reactChildren);
+  };
+  const expandable = isExpandable(children);
   const expanded = instance.isNodeExpanded(nodeId);
   const focused = instance.isNodeFocused(nodeId);
   const selected = instance.isNodeSelected(nodeId);

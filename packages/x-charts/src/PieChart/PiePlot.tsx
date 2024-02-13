@@ -21,12 +21,6 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
    * @default {}
    */
   slotProps?: PiePlotSlotProps;
-  /**
-   * Callback fired when a pie item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
-   */
 }
 
 /**

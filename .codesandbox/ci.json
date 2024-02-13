@@ -25,9 +25,7 @@
     "@mui/x-tree-view": "packages/x-tree-view/build"
   },
   "sandboxes": [
-    "new",
-    "github/mui/material-ui/tree/master/examples/create-react-app",
-    "github/mui/material-ui/tree/master/examples/create-react-app-with-typescript"
+    "/bug-reproductions/x-data-grid"
   ],
   "silent": true
 }

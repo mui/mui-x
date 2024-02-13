@@ -276,7 +276,7 @@ export const useGridColumnReorder = (
               forbiddenIndexes.current[indexWithOffset] ||
               allColumns[indexWithOffset].field === nextVisibleColumnField
             ) {
-              // If we ended up on a visible column, or a forbidden one, we can not do the reorder
+              // If we ended up on a visible column, or a forbidden one, we cannot do the reorder
               canBeReordered = false;
             }
           }
