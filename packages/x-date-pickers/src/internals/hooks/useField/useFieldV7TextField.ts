@@ -219,6 +219,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       resetCharacterQuery();
       clearValue();
       setSelectedSections('all');
+    } else if (keyPressed.length > 1) {
+      updateValueFromValueStr(keyPressed);
     } else {
       applyCharacterEditing({
         keyPressed,
