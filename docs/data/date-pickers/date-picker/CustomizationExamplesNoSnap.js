@@ -35,7 +35,6 @@ export default function CustomizationExamplesNoSnap() {
             exclusive
             onChange={handleSelectedPickerChange}
             aria-label="date picker components"
-            sx={{}}
           >
             {pickerExamples.map(({ name }, index) => (
               <ToggleButton value={index} aria-label={name} key={name}>

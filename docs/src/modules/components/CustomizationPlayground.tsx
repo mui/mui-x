@@ -421,7 +421,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                 message={selectedExample?.comments}
               />
             )}
-          </TabsWrapper>{' '}
+          </TabsWrapper>
         </BrandingProvider>
       )}
       {shouldBeInteractive && (
