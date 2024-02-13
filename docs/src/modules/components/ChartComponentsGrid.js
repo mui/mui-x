@@ -139,7 +139,7 @@ export default function ChartComponentsGrid() {
               <Typography component="h3" variant="body2" fontWeight="semiBold" mr={0.5}>
                 {component.title}
               </Typography>
-              {component.pro && <span class="plan-pro" />}
+              {component.pro && <span className="plan-pro" />}
               {component.planned && (
                 <Chip
                   label="Planned"
