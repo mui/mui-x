@@ -577,6 +577,12 @@ export const GridRootStyles = styled('div', {
       display: 'inline-block',
       width: 'var(--DataGrid-offsetLeft)',
     },
+    [`& .${c.cellSkeleton}`]: {
+      flex: '0 0 auto',
+      height: '100%',
+      display: 'inline-flex',
+      alignItems: 'center',
+    },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
