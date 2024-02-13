@@ -122,40 +122,47 @@ export default function ChartComponentsGrid() {
               sx={(theme) => ({
                 aspectRatio: '16 / 9',
                 background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                borderBottom: '1px solid',
-                borderColor: 'divider',
+                opacity: component.planned ? 0.4 : 1,
+                filter: component.planned ? 'grayscale(100%)' : undefined,
                 ...theme.applyDarkStyles({
+                  opacity: component.planned ? 0.2 : 1,
                   content: `url(${component.srcDark})`,
                   background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                  borderColor: 'divider',
                 }),
               })}
             />
             <Stack
               direction="row"
-              justifyContent="space-between"
-              spacing={2}
-              useFlexGap
-              sx={{ p: 1.5 }}
+              alignItems="center"
+              sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider' }}
             >
-              <Typography component="h3" variant="body2" fontWeight="semiBold">
+              <Typography component="h3" variant="body2" fontWeight="semiBold" mr={0.5}>
                 {component.title}
               </Typography>
+              {component.pro && <span class="plan-pro" />}
               {component.planned && (
                 <Chip
                   label="Planned"
                   size="small"
                   variant="outlined"
                   color="grey"
-                  sx={{
+                  sx={(theme) => ({
+                    ml: 'auto',
                     height: 20,
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    color: 'text.secondary',
+                    backgroundColor: 'grey.50',
+                    borderColor: 'grey.200',
                     '.MuiChip-label': {
                       px: '6px',
+                      fontSize: '0.65rem',
+                      letterSpacing: '.04rem',
+                      textTransform: 'uppercase',
+                      color: 'text.primary',
                     },
-                  }}
+                    ...theme.applyDarkStyles({
+                      backgroundColor: 'divider',
+                      borderColor: 'divider',
+                    }),
+                  })}
                 />
               )}
             </Stack>
