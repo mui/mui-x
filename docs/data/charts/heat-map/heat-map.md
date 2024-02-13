@@ -3,7 +3,7 @@ title: React Heat map chart
 productId: x-charts
 ---
 
-# Charts - Heat map 🚧
+# Charts - Heat map [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">Heat map charts allow to highlight correlation between categories.</p>
 
