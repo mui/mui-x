@@ -196,7 +196,7 @@ export const useGridRows = (
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
         throw new Error(
           [
-            "MUI X: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
+            'MUI X: You cannot update several rows at once in `apiRef.current.updateRows` on the DataGrid.',
             'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
           ].join('\n'),
         );
@@ -387,7 +387,7 @@ export const useGridRows = (
       if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
         throw new Error(
           [
-            "MUI X: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
+            'MUI X: You cannot replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.',
             'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
           ].join('\n'),
         );

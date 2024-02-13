@@ -33,7 +33,7 @@ You should provide an array of items, each item should be one of these types:
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
+You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
@@ -42,7 +42,7 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 The default pagination behavior depends on your plan.
 
-- On the `DataGrid`, pagination is enabled by default and can't be disabled.
+- On the `DataGrid`, pagination is enabled by default and cannot be disabled.
 - On the `DataGridPro` and `DataGridPremium`, pagination is disabled by default; use the `pagination` prop to enable it.
 
 The following example activates pagination on a `DataGridPremium` component.

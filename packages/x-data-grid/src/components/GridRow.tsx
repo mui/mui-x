@@ -91,8 +91,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isLastVisible && 'row--lastVisible',
       rowHeight === 'auto' && 'row--dynamicHeight',
     ],
-    pinnedLeft: ['pinnedLeft'],
-    pinnedRight: ['pinnedRight'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -517,6 +515,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...other}
     >
       {leftCells}
+      <div className={gridClasses.cellOffsetLeft} role="presentation" />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}

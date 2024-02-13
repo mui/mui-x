@@ -2,7 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisHighlight": {
-      "description": "Object <code>{ x, y }</code> that defines how the charts highlight the mouse position along the x- and y-axes. The two properties accept the following values: - &#39;none&#39;: display nothing. - &#39;line&#39;: display a line at the current mouse position. - &#39;band&#39;: display a band at the current mouse position. Only available with band scale."
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
     },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
@@ -26,6 +27,7 @@
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
+    "onAreaClick": { "description": "Callback fired when an area element is clicked." },
     "onAxisClick": {
       "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
       "typeDescriptions": {
@@ -33,12 +35,19 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onLineClick": { "description": "Callback fired when a line element is clicked." },
+    "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "series": { "description": "The series to display in the line chart." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
