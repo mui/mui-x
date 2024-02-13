@@ -469,7 +469,6 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-
       '&.Mui-selected': selectedStyles,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
