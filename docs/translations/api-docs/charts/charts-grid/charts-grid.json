@@ -7,10 +7,7 @@
   },
   "classDescriptions": {
     "horizontalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the main line element"
-    },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every line element" },
     "root": { "description": "Styles applied to the root element." },
     "verticalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" }
   }

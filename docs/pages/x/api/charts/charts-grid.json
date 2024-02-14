@@ -19,7 +19,7 @@
     {
       "key": "line",
       "className": "MuiChartsGrid-line",
-      "description": "Styles applied to the main line element.",
+      "description": "Styles applied to every line element.",
       "isGlobal": false
     },
     {
