@@ -108,7 +108,9 @@ If `axisId` is not provided it will pick the first one.
 
 ### Grid
 
-To add a grid, you can use `<ChartsGrid />` as defined in the [axis page](/x/react-charts/axis/#grid).
+To add a grid, you can use the `<ChartsGrid />` component.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
 ### Additional information
 

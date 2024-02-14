@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsGrid , ChartsOnAxisClickHandler
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
 ---
 
 # Charts - Bars
@@ -67,9 +67,8 @@ If you're using [composition](/x/react-charts/composition/), you should set the 
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
-It takes an object with properties `vertical` and `horizontal`.
 
-More info in the [axis documentation](/x/react-charts/axis/#grid).
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
 {{"demo": "GridDemo.js"}}
 
