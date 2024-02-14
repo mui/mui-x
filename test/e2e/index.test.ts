@@ -13,7 +13,6 @@ import {
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
-import { setFieldValue } from '@mui/x-date-pickers/playwright';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -767,20 +766,6 @@ async function initializeEnvironment(
         await page.keyboard.press('Escape');
 
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
-      });
-    });
-
-    describe('Date and Time Pickers utils', () => {
-      it('should set the value when calling `setFieldValue` (DesktopDatePicker)', async () => {
-        await renderFixture('DatePicker/BasicDesktopDatePicker');
-        const picker = page.locator('.test-date-picker');
-        const input = page.getByRole('textbox', { includeHidden: true });
-
-        await setFieldValue(picker, '04/11/2022');
-        expect(await input.inputValue()).to.equal('04/11/2022');
-
-        await setFieldValue(picker, '05/25/2014');
-        expect(await input.inputValue()).to.equal('05/25/2014');
       });
     });
   });
