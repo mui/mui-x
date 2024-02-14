@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -10,22 +11,17 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface MobileDateRangePickerSlots<TDate>
+export interface MobileDateRangePickerSlots<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlots<TDate>,
     MakeOptional<UseMobileRangePickerSlots<TDate, 'day'>, 'field'> {}
 
-export interface MobileDateRangePickerSlotProps<TDate>
+export interface MobileDateRangePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseMobileRangePickerSlotProps<TDate, 'day'> {}
+    Omit<UseMobileRangePickerSlotProps<TDate, 'day'>, 'tabs'> {}
 
-export interface MobileDateRangePickerProps<TDate>
+export interface MobileDateRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps<TDate> {
-  /**
-   * The number of calendars to render on **desktop**.
-   * @default 2
-   */
-  calendars?: 1 | 2 | 3;
   /**
    * Overridable component slots.
    * @default {}

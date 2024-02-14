@@ -12,12 +12,15 @@ function updateRowPosition(
   rows: Array<GridRowModel>,
 ): Promise<any> {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      const rowsClone = [...rows];
-      const row = rowsClone.splice(initialIndex, 1)[0];
-      rowsClone.splice(newIndex, 0, row);
-      resolve(rowsClone);
-    }, Math.random() * 500 + 100); // simulate network latency
+    setTimeout(
+      () => {
+        const rowsClone = [...rows];
+        const row = rowsClone.splice(initialIndex, 1)[0];
+        rowsClone.splice(newIndex, 0, row);
+        resolve(rowsClone);
+      },
+      Math.random() * 500 + 100,
+    ); // simulate network latency
   });
 }
 

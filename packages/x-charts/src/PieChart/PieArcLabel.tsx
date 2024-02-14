@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -19,7 +20,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: string;
+  id: PieItemId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -56,11 +57,12 @@ const PieArcLabelRoot = styled(animated.text, {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  React.ComponentPropsWithoutRef<'text'> & {
+  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
     outerRadius: SpringValue<number>;
+    arcLabelRadius: SpringValue<number>;
     cornerRadius: SpringValue<number>;
     paddingAngle: SpringValue<number>;
   } & {
@@ -77,8 +79,7 @@ const getLabelPosition =
     startAngle: number,
     endAngle: number,
     padAngle: number,
-    innerRadius: number,
-    outerRadius: number,
+    arcLabelRadius: number,
     cornerRadius: number,
   ) => {
     if (!formattedArcLabel) {
@@ -88,8 +89,8 @@ const getLabelPosition =
       padAngle,
       startAngle,
       endAngle,
-      innerRadius,
-      outerRadius,
+      innerRadius: arcLabelRadius,
+      outerRadius: arcLabelRadius,
     })!;
     if (variable === 'x') {
       return x;
@@ -105,6 +106,7 @@ function PieArcLabel(props: PieArcLabelProps) {
     startAngle,
     endAngle,
     paddingAngle,
+    arcLabelRadius,
     innerRadius,
     outerRadius,
     cornerRadius,
@@ -130,11 +132,11 @@ function PieArcLabel(props: PieArcLabelProps) {
       {...other}
       style={{
         x: to(
-          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
           getLabelPosition(formattedArcLabel, 'x'),
         ),
         y: to(
-          [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
           getLabelPosition(formattedArcLabel, 'y'),
         ),
         ...style,
@@ -152,6 +154,7 @@ PieArcLabel.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   formattedArcLabel: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
 } as any;

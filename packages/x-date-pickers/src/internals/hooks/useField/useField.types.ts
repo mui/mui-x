@@ -8,13 +8,14 @@ import {
   FieldSectionContentType,
   FieldValueType,
   PickersTimezone,
+  PickerValidDate,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
 
 export interface UseFieldParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any>,
@@ -32,8 +33,12 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends TimezoneProps {
+export interface UseFieldInternalProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TError,
+> extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -183,12 +188,15 @@ export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSec
   'start' | 'end' | 'startInInput' | 'endInInput'
 >;
 
-export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
+export type FieldSectionValueBoundaries<
+  TDate extends PickerValidDate,
+  SectionType extends FieldSectionType,
+> = {
   minimum: number;
   maximum: number;
 } & (SectionType extends 'day' ? { longestMonth: TDate } : {});
 
-export type FieldSectionsValueBoundaries<TDate> = {
+export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
   [SectionType in FieldSectionType]: (params: {
     currentDate: TDate | null;
     format: string;
@@ -209,7 +217,11 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
+interface FieldActiveDateManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Active date from `state.value`.
    */
@@ -245,7 +257,11 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors: boolean;
 };
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
+export interface FieldValueManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -253,6 +269,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the direction is "right to left".
    * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
@@ -261,6 +278,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
+    localizedDigits: string[],
     isRTL: boolean,
     getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
@@ -268,10 +286,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getValueStrFromSections: (
+    sections: TSection[],
+    localizedDigits: string[],
+    isRTL: boolean,
+  ) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection

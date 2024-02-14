@@ -14,7 +14,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -81,7 +81,7 @@ const DigitalClockItem = styled(MenuItem, {
   },
 }));
 
-type DigitalClockComponent = (<TDate>(
+type DigitalClockComponent = (<TDate extends PickerValidDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -95,7 +95,7 @@ type DigitalClockComponent = (<TDate>(
  *
  * - [DigitalClock API](https://mui.com/x/api/date-pickers/digital-clock/)
  */
-export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends unknown>(
+export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends PickerValidDate>(
   inProps: DigitalClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -352,7 +352,7 @@ DigitalClock.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false
@@ -381,12 +381,12 @@ DigitalClock.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -394,8 +394,9 @@ DigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate, TView
-   * @param {TDate | null} value The new value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
@@ -428,7 +429,7 @@ DigitalClock.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Disable specific time.
    * @template TDate
@@ -478,7 +479,7 @@ DigitalClock.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.
@@ -487,6 +488,7 @@ DigitalClock.propTypes = {
   view: PropTypes.oneOf(['hours']),
   /**
    * Available views.
+   * @default ['hours']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours'])),
 } as any;

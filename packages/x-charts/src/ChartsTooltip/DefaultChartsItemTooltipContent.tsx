@@ -10,6 +10,7 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
+import { CommonSeriesType } from '../models/seriesType/common';
 
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
@@ -30,9 +31,10 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
           displayedLabel: series.label,
         };
 
-  // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
-  // @ts-ignore
-  const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
+  const value = series.data[itemData.dataIndex];
+  const formattedValue = (
+    series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
+  )?.(value);
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>
@@ -70,23 +72,13 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   /**
    * The series linked to the triggered axis.
    */
-  series: PropTypes.shape({
-    color: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.number).isRequired,
-    highlightScope: PropTypes.shape({
-      faded: PropTypes.oneOf(['global', 'none', 'series']),
-      highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-    }),
-    id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-    valueFormatter: PropTypes.func.isRequired,
-  }).isRequired,
+  series: PropTypes.object.isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

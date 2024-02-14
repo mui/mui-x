@@ -4,12 +4,13 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { TimeFieldProps } from './TimeField.types';
+import { TimeFieldProps, TimeFieldSlotProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { PickerValidDate } from '../models';
 
-type TimeFieldComponent = (<TDate>(
+type TimeFieldComponent = (<TDate extends PickerValidDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +24,7 @@ type TimeFieldComponent = (<TDate>(
  *
  * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
  */
-const TimeField = React.forwardRef(function TimeField<TDate>(
+const TimeField = React.forwardRef(function TimeField<TDate extends PickerValidDate>(
   inProps: TimeFieldProps<TDate>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
@@ -37,7 +38,12 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: TimeFieldProps<TDate> = useSlotProps({
+  const textFieldProps: TimeFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    TimeFieldSlotProps<TDate>['textField'],
+    TimeFieldProps<TDate>,
+    TimeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -95,7 +101,7 @@ TimeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -188,12 +194,12 @@ TimeField.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -241,7 +247,7 @@ TimeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -337,7 +343,7 @@ TimeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The variant to use.
    * @default 'outlined'

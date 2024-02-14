@@ -108,6 +108,10 @@ You might be interested in using the [Time Clock](/x/react-date-pickers/time-clo
 
 {{"demo": "TimePickerViewRenderers.js"}}
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

@@ -119,13 +119,33 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
 
-In the example below, the _rating_ column can not be filtered.
+In the example below, the _rating_ column cannot be filtered.
 
 ```js
 <DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Filter non-filterable columns programmatically
+
+You can initialize the `filterModel`, set the `filterModel` prop, or use the API method `apiRef.current.setFilterModel` to set the filters for non-filterable columns. These filters will be applied but will be read-only on the UI and the user won't be able to change them.
+
+```jsx
+const columns = [
+  { field: 'name', filterable: false },
+  ...otherColumns,
+]
+
+<DataGrid
+  filterModel={{
+    items: [{ field: 'name', operator: 'contains', value: 'a' }],
+  }}
+  columns={columns}
+/>
+```
+
+{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Ignore diacritics (accents)
 

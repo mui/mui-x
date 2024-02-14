@@ -6,14 +6,15 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
+export interface DatePickerToolbarProps<TDate extends PickerValidDate>
+  extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
   sx?: SxProps<Theme>;
 }
@@ -36,9 +37,6 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })({});
 
-/**
- * @ignore - do not document.
- */
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
@@ -49,7 +47,7 @@ const DatePickerToolbarTitle = styled(Typography, {
   }),
 }));
 
-type DatePickerToolbarComponent = (<TDate>(
+type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -63,10 +61,9 @@ type DatePickerToolbarComponent = (<TDate>(
  *
  * - [DatePickerToolbar API](https://mui.com/x/api/date-pickers/date-picker-toolbar/)
  */
-const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
-  inProps: DatePickerToolbarProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
+  TDate extends PickerValidDate,
+>(inProps: DatePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });
   const {
     value,
@@ -120,9 +117,6 @@ DatePickerToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  /**
-   * className applied to the root component.
-   */
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**
@@ -154,12 +148,10 @@ DatePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
-
-export { DatePickerToolbar };

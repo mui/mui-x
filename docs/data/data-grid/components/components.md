@@ -8,21 +8,33 @@ As part of the customization API, the Data Grid allows you to override internal 
 The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
-This prop is of type `GridSlotsComponentsProps`.
+This prop is of type `GridSlotsComponentsProps`. Note that if you do and you use typescript, you'll need to cast your custom component so it can fit in the slot type.
 
 As an example, you could override the column menu and pass additional props as below.
 
-```jsx
+```tsx
 <DataGrid
   rows={rows}
   columns={columns}
   slots={{
-    columnMenu: MyCustomColumnMenu,
+    columnMenu: MyCustomColumnMenu as DataGridProps['slots']['columnMenu'],
   }}
   slotProps={{
     columnMenu: { background: 'red', counter: rows.length },
   }}
 />
+```
+
+If you want to ensure type safety, you can declare your component using the slot props typings:
+
+```tsx
+import { GridSlotProps } from '@mui/x-data-grid';
+
+function MyCustomColumnMenu(
+  props: GridSlotProps['columnMenu'] & { background: string; counter: number },
+) {
+  // ...
+}
 ```
 
 ### Interacting with the data grid
@@ -67,7 +79,9 @@ This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
 
-Alternatively, you can compose your own toolbar.
+You can also compose your own toolbar. Each button in the toolbar is wrapped with a tooltip component. In order to override some of the props corresponding to the toolbar buttons, you can use the `slotProps` prop.
+
+The following demo shows how to override the tooltip title of the density selector and the variant of the export button.
 
 ```jsx
 function CustomToolbar() {
@@ -75,8 +89,16 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
+      <GridToolbarDensitySelector
+        slotProps={{ tooltip: { title: 'Change density' } }}
+      />
+      <Box sx={{ flexGrow: 1 }} />
+      <GridToolbarExport
+        slotProps={{
+          tooltip: { title: 'Export data' },
+          button: { variant: 'outlined' },
+        }}
+      />
     </GridToolbarContainer>
   );
 }
@@ -170,7 +192,7 @@ The naming of overridable interfaces uses a pattern like this:
 
 For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
 
-This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
+This [file](https://github.com/mui/mui-x/blob/-/packages/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
 
 <codeblock storageKey="pricing-plan">
 
@@ -195,7 +217,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 ```tsx Pro
@@ -219,7 +241,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 ```tsx Premium
@@ -243,7 +265,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
->
+/>;
 ```
 
 </codeblock>

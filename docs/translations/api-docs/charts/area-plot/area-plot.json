@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when a line area item is clicked.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "lineItemIdentifier": "The line item identifier."
+      }
+    },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "area": "The component that renders the area." }
+}

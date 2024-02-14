@@ -5,13 +5,18 @@ import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/i
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { refType } from '@mui/utils';
-import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
+import {
+  SingleInputDateTimeRangeFieldProps,
+  SingleInputDateTimeRangeFieldSlotProps,
+} from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
+import { FieldType } from '../internals/models';
 
-type DateRangeFieldComponent = (<TDate>(
+type DateRangeFieldComponent = (<TDate extends PickerValidDate>(
   props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
+) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
  * Demos:
@@ -24,7 +29,7 @@ type DateRangeFieldComponent = (<TDate>(
  * - [SingleInputDateTimeRangeField API](https://mui.com/x/api/single-input-date-time-range-field/)
  */
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
-  TDate,
+  TDate extends PickerValidDate,
 >(inProps: SingleInputDateTimeRangeFieldProps<TDate>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
@@ -36,7 +41,12 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps({
+  const textFieldProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    SingleInputDateTimeRangeFieldSlotProps<TDate>['textField'],
+    SingleInputDateTimeRangeFieldProps<TDate>,
+    SingleInputDateTimeRangeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -98,7 +108,7 @@ SingleInputDateTimeRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -190,29 +200,29 @@ SingleInputDateTimeRangeField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime: PropTypes.any,
+  maxDateTime: PropTypes.object,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime: PropTypes.any,
+  minDateTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -260,7 +270,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -367,7 +377,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The variant to use.
    * @default 'outlined'

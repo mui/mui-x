@@ -25,6 +25,10 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import {
+  ChartsOnAxisClickHandler,
+  ChartsOnAxisClickHandlerProps,
+} from '../ChartsOnAxisClickHandler';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -40,15 +44,23 @@ export interface BarChartSlotProps
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Pick<BarPlotProps, 'skipAnimation'> {
+    Omit<BarPlotProps, 'slots' | 'slotProps'>,
+    ChartsOnAxisClickHandlerProps {
+  /**
+   * The series to display in the bar chart.
+   */
   series: MakeOptional<BarSeriesType, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   */
   tooltip?: ChartsTooltipProps;
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   *
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -65,6 +77,10 @@ export interface BarChartProps
    * @default {}
    */
   slotProps?: BarChartSlotProps;
+  /**
+   * The direction of the bar elements.
+   * @default 'vertical'
+   */
   layout?: BarSeriesType['layout'];
 }
 
@@ -99,6 +115,8 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     rightAxis,
     bottomAxis,
     skipAnimation,
+    onItemClick,
+    onAxisClick,
     children,
     slots,
     slotProps,
@@ -146,11 +164,20 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       dataset={dataset}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
+        tooltip?.trigger !== 'axis' &&
+        axisHighlight?.x === 'none' &&
+        axisHighlight?.y === 'none' &&
+        !onAxisClick
       }
     >
+      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot slots={slots} slotProps={slotProps} skipAnimation={skipAnimation} />
+        <BarPlot
+          slots={slots}
+          slotProps={slotProps}
+          skipAnimation={skipAnimation}
+          onItemClick={onItemClick}
+        />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -175,11 +202,10 @@ BarChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -192,7 +218,7 @@ BarChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -223,6 +249,7 @@ BarChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -241,6 +268,10 @@ BarChart.propTypes = {
    * @default undefined
    */
   height: PropTypes.number,
+  /**
+   * The direction of the bar elements.
+   * @default 'vertical'
+   */
   layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * Indicate which axis to display the left of the charts.
@@ -249,7 +280,7 @@ BarChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -303,13 +334,26 @@ BarChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -336,36 +380,12 @@ BarChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number),
-      dataKey: PropTypes.string,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      layout: PropTypes.oneOf(['horizontal', 'vertical']),
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['bar']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
   /**
-   * If `true`, animations are skiped.
+   * The series to display in the bar chart.
+   */
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,
@@ -385,6 +405,10 @@ BarChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
@@ -400,7 +424,7 @@ BarChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -444,7 +468,7 @@ BarChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -452,13 +476,14 @@ BarChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -484,7 +509,7 @@ BarChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -492,13 +517,14 @@ BarChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,

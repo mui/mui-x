@@ -1,8 +1,8 @@
-# MUI Scripts
+# Scripts
 
 ## Release
 
-> Tip: For people who are doing the release for the first time, make sure you sign in to NPM from the command line using security-key flow as well as have two-factor authentication enabled.
+> Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
 > You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
 
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
@@ -14,18 +14,18 @@ A typical release goes like this:
 The following steps must be proposed as a pull request.
 
 1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
-      To do so, use `yarn release:changelog` The options are the following:
+   To do so, use `yarn release:changelog` The options are the following:
 
-  ```bash
-  yarn release:changelog
-     --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
-     --lastRelease   The release to compare against (default: the last one)
-     --release       The branch to release (default: master)
-  ```
+```bash
+yarn release:changelog
+   --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
+   --lastRelease   The release to compare against (default: the last one)
+   --release       The branch to release (default: master)
+```
 
-  You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
+You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
 
-  In case of a problem, another method to generate the changelog is available at the end of this page.
+In case of a problem, another method to generate the changelog is available at the end of this page.
 
 2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 3. Update the root `package.json`'s version

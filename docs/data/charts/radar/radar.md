@@ -1,8 +1,9 @@
 ---
 title: React Radar chart
+productId: x-charts
 ---
 
-# Charts - Radar
+# Charts - Radar 🚧
 
 <p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
 

@@ -4,12 +4,13 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { DateFieldProps } from './DateField.types';
+import { DateFieldProps, DateFieldSlotProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { PickerValidDate } from '../models';
 
-type DateFieldComponent = (<TDate>(
+type DateFieldComponent = (<TDate extends PickerValidDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +24,7 @@ type DateFieldComponent = (<TDate>(
  *
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
-const DateField = React.forwardRef(function DateField<TDate>(
+const DateField = React.forwardRef(function DateField<TDate extends PickerValidDate>(
   inProps: DateFieldProps<TDate>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
@@ -37,7 +38,12 @@ const DateField = React.forwardRef(function DateField<TDate>(
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: DateFieldProps<TDate> = useSlotProps({
+  const textFieldProps: DateFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    DateFieldSlotProps<TDate>['textField'],
+    DateFieldProps<TDate>,
+    DateFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -90,7 +96,7 @@ DateField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -177,11 +183,11 @@ DateField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Name attribute of the `input` element.
    */
@@ -224,7 +230,7 @@ DateField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -336,7 +342,7 @@ DateField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The variant to use.
    * @default 'outlined'

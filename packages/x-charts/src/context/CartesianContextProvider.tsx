@@ -27,6 +27,7 @@ import {
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
+import { SeriesId } from '../models/seriesType/common';
 
 export type CartesianContextProviderProps = {
   /**
@@ -95,12 +96,8 @@ export const CartesianContext = React.createContext<{
  *
  * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
  */
-function CartesianContextProvider({
-  xAxis: inXAxis,
-  yAxis: inYAxis,
-  dataset,
-  children,
-}: CartesianContextProviderProps) {
+function CartesianContextProvider(props: CartesianContextProviderProps) {
+  const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
 
@@ -112,7 +109,7 @@ function CartesianContextProvider({
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI-X-Charts: x-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X Charts: x-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
@@ -130,7 +127,7 @@ function CartesianContextProvider({
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI-X-Charts: y-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X Charts: y-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
@@ -149,7 +146,7 @@ function CartesianContextProvider({
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
-      const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
+      const series = (formattedSeries[chartType]?.series as Record<SeriesId, ChartSeries<T>>) ?? {};
 
       const [minChartTypeData, maxChartTypeData] = getter({
         series,
@@ -196,7 +193,9 @@ function CartesianContextProvider({
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const range = [drawingArea.left, drawingArea.left + drawingArea.width];
+      const range = axis.reverse
+        ? [drawingArea.left + drawingArea.width, drawingArea.left]
+        : [drawingArea.left, drawingArea.left + drawingArea.width];
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -251,7 +250,9 @@ function CartesianContextProvider({
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
-      const range = [drawingArea.top + drawingArea.height, drawingArea.top];
+      const range = axis.reverse
+        ? [drawingArea.top, drawingArea.top + drawingArea.height]
+        : [drawingArea.top + drawingArea.height, drawingArea.top];
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -330,7 +331,7 @@ CartesianContextProvider.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -338,13 +339,14 @@ CartesianContextProvider.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -370,7 +372,7 @@ CartesianContextProvider.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -378,13 +380,14 @@ CartesianContextProvider.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,

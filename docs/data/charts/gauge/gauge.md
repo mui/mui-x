@@ -1,8 +1,9 @@
 ---
 title: React Gauge chart
+productId: x-charts
 ---
 
-# Charts - Gauge
+# Charts - Gauge 🚧
 
 <p class="description">Gauge charts let the user evaluate metrics.</p>
 

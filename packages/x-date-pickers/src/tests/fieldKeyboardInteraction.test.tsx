@@ -12,7 +12,7 @@ import {
   expectInputValue,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
@@ -20,7 +20,7 @@ import {
 
 const testDate = '2018-05-15T09:35:10';
 
-function updateDate<TDate>(
+function updateDate<TDate extends PickerValidDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
   sectionType: FieldSectionType,
@@ -176,13 +176,13 @@ adapterToTest.forEach((adapterName) => {
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>,
     ) => {
       if (sectionConfig.contentType === 'digit' && sectionConfig.maxLength != null) {
-        return cleanLeadingZeros(adapter, valueStr, sectionConfig.maxLength);
+        return cleanLeadingZeros(valueStr, sectionConfig.maxLength);
       }
 
       return valueStr;
     };
 
-    const testKeyPress = <TDate extends unknown>({
+    const testKeyPress = <TDate extends PickerValidDate>({
       key,
       format,
       initialValue,

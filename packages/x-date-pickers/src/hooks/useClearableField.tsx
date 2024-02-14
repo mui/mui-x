@@ -65,17 +65,21 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
     ...other,
     InputProps: {
       ...InputProps,
-      endAdornment: clearable ? (
+      endAdornment: (
         <React.Fragment>
-          <InputAdornment position="end" sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}>
-            <IconButton {...iconButtonProps} onClick={onClear}>
-              <EndClearIcon fontSize="small" {...endClearIconProps} />
-            </IconButton>
-          </InputAdornment>
+          {clearable && (
+            <InputAdornment
+              position="end"
+              sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}
+            >
+              <IconButton {...iconButtonProps} onClick={onClear}>
+                <EndClearIcon fontSize="small" {...endClearIconProps} />
+              </IconButton>
+            </InputAdornment>
+          )}
+
           {InputProps?.endAdornment}
         </React.Fragment>
-      ) : (
-        InputProps?.endAdornment
       ),
     },
     sx: [

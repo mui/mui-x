@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickersTimezone } from '../../../models';
+import { FieldSectionType, FieldSection, PickersTimezone, PickerValidDate } from '../../../models';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries } from './useField.types';
 import {
@@ -10,6 +10,9 @@ import {
   getDateSectionConfigFromFormatToken,
   getDaysInWeekStr,
   getLetterEditingOptions,
+  applyLocalizedDigits,
+  removeLocalizedDigits,
+  isStringNumber,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
@@ -24,10 +27,11 @@ interface ApplyCharacterEditingParams {
   sectionIndex: number;
 }
 
-interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
+interface UseFieldEditingParams<TDate extends PickerValidDate, TSection extends FieldSection> {
   sections: TSection[];
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
+  localizedDigits: string[];
   setTempAndroidValueStr: (newValue: string | null) => void;
   timezone: PickersTimezone;
 }
@@ -74,10 +78,14 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
+export const useFieldCharacterEditing = <
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+>({
   sections,
   updateSectionValue,
   sectionsValueBoundaries,
+  localizedDigits,
   setTempAndroidValueStr,
   timezone,
 }: UseFieldEditingParams<TDate, TSection>) => {
@@ -114,7 +122,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     const activeSection = sections[sectionIndex];
 
     // The current query targets the section being editing
-    // We can try to concatenated value
+    // We can try to concatenate the value
     if (
       query != null &&
       (!isValidQueryValue || isValidQueryValue(query.value)) &&
@@ -275,7 +283,8 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         | 'maxLength'
       >,
     ): ReturnType<QueryApplier<TSection>> => {
-      const queryValueNumber = Number(`${queryValue}`);
+      const cleanQueryValue = removeLocalizedDigits(queryValue, localizedDigits);
+      const queryValueNumber = Number(cleanQueryValue);
       const sectionBoundaries = sectionsValueBoundaries[section.type]({
         currentDate: null,
         format: section.format,
@@ -294,14 +303,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       }
 
       const shouldGoToNextSection =
-        Number(`${queryValue}0`) > sectionBoundaries.maximum ||
-        queryValue.length === sectionBoundaries.maximum.toString().length;
+        queryValueNumber * 10 > sectionBoundaries.maximum ||
+        cleanQueryValue.length === sectionBoundaries.maximum.toString().length;
 
       const newSectionValue = cleanDigitSectionValue(
         utils,
-        timezone,
         queryValueNumber,
         sectionBoundaries,
+        localizedDigits,
         section,
       );
 
@@ -375,17 +384,20 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       return { saveQuery: false };
     };
 
-    return applyQuery(
-      params,
-      getFirstSectionValueMatchingWithQuery,
-      (queryValue) => !Number.isNaN(Number(queryValue)),
+    return applyQuery(params, getFirstSectionValueMatchingWithQuery, (queryValue) =>
+      isStringNumber(queryValue, localizedDigits),
     );
   };
 
   const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
     const activeSection = sections[params.sectionIndex];
-    const isNumericEditing = !Number.isNaN(Number(params.keyPressed));
-    const response = isNumericEditing ? applyNumericEditing(params) : applyLetterEditing(params);
+    const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
+    const response = isNumericEditing
+      ? applyNumericEditing({
+          ...params,
+          keyPressed: applyLocalizedDigits(params.keyPressed, localizedDigits),
+        })
+      : applyLetterEditing(params);
     if (response == null) {
       setTempAndroidValueStr(null);
     } else {

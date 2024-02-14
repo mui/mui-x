@@ -6,6 +6,8 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
+<!-- #default-branch-switch -->
+
 :::warning
 The `next` tag is used to download the latest v7 **pre-release** version.
 :::
@@ -43,7 +45,7 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ### Style engine
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -61,7 +63,7 @@ pnpm add @mui/styled-engine-sc styled-components
 </codeblock>
 
 :::info
-Take a look at the [Styled Components guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled Components guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 :::
 
 ## Quickstart
@@ -159,7 +161,7 @@ const theme = createTheme({
 
 ## Licenses
 
-While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
 Please pay attention to the license.
 
 ### Plans
@@ -180,7 +182,7 @@ The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
-| **Column**                                                                             |           |                                    |
+| **Column**                                                                             |           |                                    |                                            |
 | [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

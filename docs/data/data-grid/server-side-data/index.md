@@ -2,9 +2,9 @@
 title: React Data Grid - Server-side data
 ---
 
-# Data Grid - Server-side data
+# Data Grid - Server-side data 🚧
 
-<p class="description">The data grid server-side data</p>
+<p class="description">The data grid server-side data.</p>
 
 ## Overview
 
@@ -26,9 +26,7 @@ const [paginationModel, setPaginationModel] = React.useState({
   page: 0,
   pageSize: 10,
 });
-const [filterModel, setFilterModel] = React.useState({
-  items: [],
-});
+const [filterModel, setFilterModel] = React.useState({ items: [] });
 const [sortModel, setSortModel] = React.useState([]);
 
 React.useEffect(() => {
@@ -98,7 +96,7 @@ interface DataSource {
     Fetcher Functions:
     - `getRows` is required
     - `updateRow` is optional
-    
+
     `getRows` will be used by the grid to fetch data for the current page or children for the current parent group
     It may return a `rowCount` to update the total count of rows in the grid
   */

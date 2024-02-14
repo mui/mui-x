@@ -17,6 +17,7 @@ import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHigh
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
+import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
@@ -39,7 +40,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'margin'> {
   /**
    * The xAxis configuration.
    * Notice it is a single configuration object, not an array of configuration.
@@ -60,8 +61,9 @@ export interface SparkLineChartProps
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
-  valueFormatter?: (value: number) => string;
+  valueFormatter?: (value: number | null) => string;
   /**
    * Set to `true` to enable the tooltip in the sparkline.
    * @default false
@@ -84,6 +86,18 @@ export interface SparkLineChartProps
    * @default 'linear'
    */
   curve?: LineSeriesType['curve'];
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default {
+   *   top: 5,
+   *   bottom: 5,
+   *   left: 5,
+   *   right: 5,
+   * }
+   */
+  margin?: Partial<CardinalDirections<number>>;
   /**
    * Overridable component slots.
    * @default {}
@@ -129,7 +143,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     slotProps,
     data,
     plotType = 'line',
-    valueFormatter = (v: number) => v.toString(),
+    valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
   } = props;
@@ -183,8 +197,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
       {plotType === 'line' && (
         <React.Fragment>
-          <AreaPlot slots={slots} slotProps={slotProps} />
-          <LinePlot slots={slots} slotProps={slotProps} />
+          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
           <LineHighlightPlot slots={slots} slotProps={slotProps} />
         </React.Fragment>
       )}
@@ -216,6 +230,7 @@ SparkLineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -255,7 +270,12 @@ SparkLineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
+   * @default {
+   *   top: 5,
+   *   bottom: 5,
+   *   left: 5,
+   *   right: 5,
+   * }
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -308,6 +328,7 @@ SparkLineChart.propTypes = {
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({
@@ -326,7 +347,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single configuration object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.string,
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     data: PropTypes.array,
     dataKey: PropTypes.string,
@@ -334,13 +355,14 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+    reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
     slots: PropTypes.object,

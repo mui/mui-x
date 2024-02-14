@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
 
@@ -8,7 +7,11 @@ export interface TreeViewNode {
   index: number;
   parentId: string | null;
   expandable: boolean;
-  disabled: boolean | undefined;
+  disabled: boolean;
+  /**
+   * Only defined for `RichTreeView`.
+   */
+  label?: string;
 }
 
 export interface TreeViewItemRange {
@@ -21,7 +24,7 @@ export interface TreeViewItemRange {
 export interface TreeViewModel<TValue> {
   name: string;
   value: TValue;
-  setValue: React.Dispatch<React.SetStateAction<TValue>>;
+  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
 }
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =

@@ -83,6 +83,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'D T',
 };
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    luxon: DateTime;
+  }
+}
+
 /**
  * Based on `@date-io/luxon`
  *
@@ -318,8 +324,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isWithinRange = (value: DateTime, [start, end]: [DateTime, DateTime]) => {
     return (
-      value.equals(start) ||
-      value.equals(end) ||
+      this.isEqual(value, start) ||
+      this.isEqual(value, end) ||
       (this.isAfter(value, start) && this.isBefore(value, end))
     );
   };
@@ -333,12 +339,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf(
-      'week',
-      // TODO: remove when `@types/luxon` add support for the parameter.
-      // @ts-ignore
-      { useLocaleWeeks: true },
-    );
+    return value.startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -354,12 +355,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf(
-      'week',
-      // TODO: remove when `@types/luxon` add support for the parameter.
-      // @ts-ignore
-      { useLocaleWeeks: true },
-    );
+    return value.endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -480,9 +476,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
-    // TODO: remove when `@types/luxon` add support for the parameter.
-    // @ts-ignore
-    return value.localeWeekNumber ?? value.weekNumber;
+    return value.localWeekNumber ?? value.weekNumber;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

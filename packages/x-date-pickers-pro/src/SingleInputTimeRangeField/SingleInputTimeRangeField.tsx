@@ -3,15 +3,20 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
+import {
+  SingleInputTimeRangeFieldProps,
+  SingleInputTimeRangeFieldSlotProps,
+} from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
+import { FieldType } from '../internals/models';
 
-type DateRangeFieldComponent = (<TDate>(
+type DateRangeFieldComponent = (<TDate extends PickerValidDate>(
   props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
+) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
  * Demos:
@@ -23,10 +28,9 @@ type DateRangeFieldComponent = (<TDate>(
  *
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
-const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
-  inProps: SingleInputTimeRangeFieldProps<TDate>,
-  inRef: React.Ref<HTMLDivElement>,
-) {
+const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
+  TDate extends PickerValidDate,
+>(inProps: SingleInputTimeRangeFieldProps<TDate>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiSingleInputTimeRangeField',
@@ -37,7 +41,12 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
+  const textFieldProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps<
+    typeof TextField,
+    SingleInputTimeRangeFieldSlotProps<TDate>['textField'],
+    SingleInputTimeRangeFieldProps<TDate>,
+    SingleInputTimeRangeFieldProps<TDate>
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -97,7 +106,7 @@ SingleInputTimeRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -190,12 +199,12 @@ SingleInputTimeRangeField.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -243,7 +252,7 @@ SingleInputTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -339,7 +348,7 @@ SingleInputTimeRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The variant to use.
    * @default 'outlined'

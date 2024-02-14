@@ -16,6 +16,7 @@ import {
   FieldsTextFieldProps,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
@@ -59,7 +60,7 @@ const MultiInputDateRangeFieldSeparator = styled(
   },
 )({});
 
-type MultiInputDateRangeFieldComponent = (<TDate>(
+type MultiInputDateRangeFieldComponent = (<TDate extends PickerValidDate>(
   props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -73,10 +74,9 @@ type MultiInputDateRangeFieldComponent = (<TDate>(
  *
  * - [MultiInputDateRangeField API](https://mui.com/x/api/multi-input-date-range-field/)
  */
-const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
-  inProps: MultiInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<
+  TDate extends PickerValidDate,
+>(inProps: MultiInputDateRangeFieldProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiMultiInputDateRangeField',
@@ -173,7 +173,7 @@ MultiInputDateRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * Defines the `flex-direction` style property.
    * It is applied for all screen sizes.
@@ -216,11 +216,11 @@ MultiInputDateRangeField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -253,7 +253,7 @@ MultiInputDateRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -361,7 +361,7 @@ MultiInputDateRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
 export { MultiInputDateRangeField };

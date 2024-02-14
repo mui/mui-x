@@ -9,17 +9,17 @@ import {
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 
-export interface MobileDatePickerSlots<TDate>
+export interface MobileDatePickerSlots<TDate extends PickerValidDate>
   extends BaseDatePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TDate>
+export interface MobileDatePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDatePickerSlotProps<TDate>,
     ExportedUseMobilePickerSlotProps<TDate, DateView> {}
 
-export interface MobileDatePickerProps<TDate>
+export interface MobileDatePickerProps<TDate extends PickerValidDate>
   extends BaseDatePickerProps<TDate>,
     MobileOnlyPickerProps<TDate> {
   /**

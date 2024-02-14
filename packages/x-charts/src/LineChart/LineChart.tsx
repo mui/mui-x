@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
-import { LinePlot, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
+import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
+import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { MarkPlot, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
+import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
@@ -32,6 +32,10 @@ import {
   LineHighlightPlotSlots,
   LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
+import {
+  ChartsOnAxisClickHandler,
+  ChartsOnAxisClickHandlerProps,
+} from '../ChartsOnAxisClickHandler';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -52,15 +56,22 @@ export interface LineChartSlotProps
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    ChartsOnAxisClickHandlerProps {
+  /**
+   * The series to display in the line chart.
+   */
   series: MakeOptional<LineSeriesType, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip?: ChartsTooltipProps;
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -81,6 +92,23 @@ export interface LineChartProps
    * @default {}
    */
   slotProps?: LineChartSlotProps;
+  /**
+   * Callback fired when an area element is clicked.
+   */
+  onAreaClick?: AreaPlotProps['onItemClick'];
+  /**
+   * Callback fired when a line element is clicked.
+   */
+  onLineClick?: LinePlotProps['onItemClick'];
+  /**
+   * Callback fired when a mark element is clicked.
+   */
+  onMarkClick?: MarkPlotProps['onItemClick'];
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation?: boolean;
 }
 
 /**
@@ -105,6 +133,10 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     dataset,
     sx,
     tooltip,
+    onAxisClick,
+    onAreaClick,
+    onLineClick,
+    onMarkClick,
     axisHighlight = { x: 'line' },
     disableLineItemHighlight,
     legend,
@@ -115,6 +147,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     children,
     slots,
     slotProps,
+    skipAnimation,
   } = props;
 
   const id = useId();
@@ -148,12 +181,26 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       dataset={dataset}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
+        tooltip?.trigger !== 'axis' &&
+        axisHighlight?.x === 'none' &&
+        axisHighlight?.y === 'none' &&
+        !onAxisClick
       }
     >
+      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot slots={slots} slotProps={slotProps} />
-        <LinePlot slots={slots} slotProps={slotProps} />
+        <AreaPlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onAreaClick}
+          skipAnimation={skipAnimation}
+        />
+        <LinePlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={onLineClick}
+          skipAnimation={skipAnimation}
+        />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -164,7 +211,12 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slotProps={slotProps}
       />
       <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot slots={slots} slotProps={slotProps} />
+      <MarkPlot
+        slots={slots}
+        slotProps={slotProps}
+        onItemClick={onMarkClick}
+        skipAnimation={skipAnimation}
+      />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
@@ -180,11 +232,9 @@ LineChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -197,7 +247,7 @@ LineChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -228,6 +278,7 @@ LineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -257,7 +308,7 @@ LineChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -311,13 +362,32 @@ LineChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * Callback fired when an area element is clicked.
+   */
+  onAreaClick: PropTypes.func,
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when a line element is clicked.
+   */
+  onLineClick: PropTypes.func,
+  /**
+   * Callback fired when a mark element is clicked.
+   */
+  onMarkClick: PropTypes.func,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -344,47 +414,15 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      area: PropTypes.bool,
-      color: PropTypes.string,
-      connectNulls: PropTypes.bool,
-      curve: PropTypes.oneOf([
-        'catmullRom',
-        'linear',
-        'monotoneX',
-        'monotoneY',
-        'natural',
-        'step',
-        'stepAfter',
-        'stepBefore',
-      ]),
-      data: PropTypes.arrayOf(PropTypes.number),
-      dataKey: PropTypes.string,
-      disableHighlight: PropTypes.bool,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['line']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  /**
+   * The series to display in the line chart.
+   */
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -401,6 +439,11 @@ LineChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
@@ -416,7 +459,7 @@ LineChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -460,7 +503,7 @@ LineChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -468,13 +511,14 @@ LineChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -500,7 +544,7 @@ LineChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -508,13 +552,14 @@ LineChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,

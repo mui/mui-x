@@ -8,16 +8,17 @@ import {
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
+import { PickerValidDate } from '../models';
 
-export interface DatePickerSlots<TDate>
+export interface DatePickerSlots<TDate extends PickerValidDate>
   extends DesktopDatePickerSlots<TDate>,
     MobileDatePickerSlots<TDate> {}
 
-export interface DatePickerSlotProps<TDate>
+export interface DatePickerSlotProps<TDate extends PickerValidDate>
   extends DesktopDatePickerSlotProps<TDate>,
     MobileDatePickerSlotProps<TDate> {}
 
-export interface DatePickerProps<TDate>
+export interface DatePickerProps<TDate extends PickerValidDate>
   extends DesktopDatePickerProps<TDate>,
     MobileDatePickerProps<TDate> {
   /**

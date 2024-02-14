@@ -7,6 +7,7 @@ import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -81,7 +82,7 @@ export const PickersLayoutContentWrapper = styled('div', {
  */
 const PickersLayout = function PickersLayout<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 >(inProps: PickersLayoutProps<TValue, TDate, TView>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });

@@ -1,8 +1,9 @@
 ---
 title: React Heat map chart
+productId: x-charts
 ---
 
-# Charts - Heat map
+# Charts - Heat map 🚧
 
 <p class="description">Heat map charts allow to highlight correlation between categories.</p>
 

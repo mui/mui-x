@@ -16,11 +16,11 @@ import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './u
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 
 export const useField = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
@@ -39,6 +39,7 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    localizedDigits,
     placeholder,
     timezone,
   } = useFieldState(params);
@@ -69,6 +70,7 @@ export const useField = <
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
+    localizedDigits,
     setTempAndroidValueStr,
     timezone,
   });
@@ -238,7 +240,7 @@ export const useField = <
       keyPressed = cleanValueStr;
     } else {
       const prevValueStr = cleanString(
-        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+        fieldValueManager.getValueStrFromSections(state.sections, localizedDigits, isRTL),
       );
 
       let startOfDiffIndex = -1;
@@ -386,6 +388,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
+          localizedDigits,
           activeDateManager.date,
           { minutesStep },
         );
@@ -486,8 +489,9 @@ export const useField = <
 
   const valueStr = React.useMemo(
     () =>
-      state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections, isRTL),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
+      state.tempValueStrAndroid ??
+      fieldValueManager.getValueStrFromSections(state.sections, localizedDigits, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRTL],
   );
 
   const inputMode = React.useMemo(() => {
