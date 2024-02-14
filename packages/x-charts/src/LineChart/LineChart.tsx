@@ -58,14 +58,19 @@ export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
+  /**
+   * The series to display in the line chart.
+   */
   series: MakeOptional<LineSeriesType, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip?: ChartsTooltipProps;
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -87,8 +92,17 @@ export interface LineChartProps
    * @default {}
    */
   slotProps?: LineChartSlotProps;
+  /**
+   * Callback fired when an area element is clicked.
+   */
   onAreaClick?: AreaPlotProps['onItemClick'];
+  /**
+   * Callback fired when a line element is clicked.
+   */
   onLineClick?: LinePlotProps['onItemClick'];
+  /**
+   * Callback fired when a mark element is clicked.
+   */
   onMarkClick?: MarkPlotProps['onItemClick'];
   /**
    * If `true`, animations are skipped.
@@ -218,11 +232,8 @@ LineChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
@@ -350,6 +361,9 @@ LineChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * Callback fired when an area element is clicked.
+   */
   onAreaClick: PropTypes.func,
   /**
    * The function called for onClick events.
@@ -358,7 +372,13 @@ LineChart.propTypes = {
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when a line element is clicked.
+   */
   onLineClick: PropTypes.func,
+  /**
+   * Callback fired when a mark element is clicked.
+   */
   onMarkClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
@@ -394,6 +414,9 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * The series to display in the line chart.
+   */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
@@ -416,6 +439,11 @@ LineChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
