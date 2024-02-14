@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
-import useTicks from '../hooks/useTicks';
+import { useTicks } from '../hooks/useTicks';
 import { ChartsGridClasses, getGridUtilityClass, gridClasses } from './gridClasses';
 
 export const GridRoot = styled('g', {
