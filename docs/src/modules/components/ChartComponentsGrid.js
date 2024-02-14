@@ -35,20 +35,20 @@ function components() {
       href: '/x/react-charts/scatter/',
     },
     {
-      title: 'Sparkline Chart',
+      title: 'Sparkline',
       srcLight: '/static/x/component-illustrations/sparkline-light.png',
       srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
     },
     {
-      title: 'Gauge Chart',
+      title: 'Gauge',
       srcLight: '/static/x/component-illustrations/gauge-light.png',
       srcDark: '/static/x/component-illustrations/gauge-dark.png',
       href: '/x/react-charts/gauge/',
       planned: true,
     },
     {
-      title: 'Heat map Chart',
+      title: 'Heatmap',
       srcLight: '/static/x/component-illustrations/heatmap-light.png',
       srcDark: '/static/x/component-illustrations/heatmap-dark.png',
       href: '/x/react-charts/heat-map/',
@@ -62,7 +62,7 @@ function components() {
       planned: true,
     },
     {
-      title: 'Treemap Chart',
+      title: 'Treemap',
       srcLight: '/static/x/component-illustrations/treemap-light.png',
       srcDark: '/static/x/component-illustrations/treemap-dark.png',
       href: '/x/react-charts/tree-map/',
