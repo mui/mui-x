@@ -13,7 +13,7 @@ import {
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
-import { getFieldValue, setFieldValue } from '@mui/x-date-pickers/playwright';
+import { setFieldValue } from '@mui/x-date-pickers/playwright';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
