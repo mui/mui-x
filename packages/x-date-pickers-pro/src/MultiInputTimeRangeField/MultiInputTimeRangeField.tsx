@@ -15,7 +15,7 @@ import {
   splitFieldInternalAndForwardedProps,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputTimeRangeFieldProps,

@@ -62,7 +62,7 @@ export interface BaseMultiInputFieldProps<
     BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
     'unstableFieldRef'
   > {
-  sx?: SxProps;
+  sx?: SxProps<any>;
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   slots?: {

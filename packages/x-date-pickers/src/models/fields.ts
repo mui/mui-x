@@ -124,7 +124,7 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
 interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
   ref?: React.Ref<HTMLDivElement>;
-  sx?: SxProps;
+  sx?: SxProps<any>;
   label?: React.ReactNode;
   id?: string;
   name?: string;
