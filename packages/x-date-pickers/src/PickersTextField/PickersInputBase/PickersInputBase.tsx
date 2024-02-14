@@ -301,6 +301,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         id={id}
         aria-hidden="true"
         tabIndex={-1}
+        required={muiFormControl.required}
         {...inputProps}
         ref={handleInputRef}
       />
