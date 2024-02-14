@@ -2,10 +2,10 @@ const fse = require('fs-extra');
 const getBaseConfig = require('../babel.config');
 
 const alias = {
-  '@mui/x-data-grid': '../packages/grid/x-data-grid/src',
-  '@mui/x-data-grid-generator': '../packages/grid/x-data-grid-generator/src',
-  '@mui/x-data-grid-pro': '../packages/grid/x-data-grid-pro/src',
-  '@mui/x-data-grid-premium': '../packages/grid/x-data-grid-premium/src',
+  '@mui/x-data-grid': '../packages/x-data-grid/src',
+  '@mui/x-data-grid-generator': '../packages/x-data-grid-generator/src',
+  '@mui/x-data-grid-pro': '../packages/x-data-grid-pro/src',
+  '@mui/x-data-grid-premium': '../packages/x-data-grid-premium/src',
   '@mui/x-date-pickers': '../packages/x-date-pickers/src',
   '@mui/x-date-pickers-pro': '../packages/x-date-pickers-pro/src',
   '@mui/x-charts': '../packages/x-charts/src',

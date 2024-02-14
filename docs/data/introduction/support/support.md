@@ -40,12 +40,12 @@ You have a few possible options to provide it:
   - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
   - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
   - [Charts](/x/react-charts/getting-started/#single-charts)
-  - [Tree View](/x/react-tree-view/#simpletreeview)
+  - [Tree View](/x/react-tree-view/#simple-tree-view)
 
 - You can use a starter template to build a reproduction case with:
   <!-- #default-branch-switch -->
   - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
-  - A plain React [JavaScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/fork/github/stackblitz/starters/tree/main/react-ts) template
+  - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
 ## Stack Overflow
 
@@ -58,7 +58,7 @@ You can search through existing questions and answers to see if someone has aske
 - mui-x-date-picker
 - mui-x-charts
 
-If you can't find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
 
 ## Technical support
 
