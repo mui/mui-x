@@ -27,7 +27,7 @@ export default function LazyLoadingGrid() {
 
   const apiRef = useGridApiRef();
   const [initialRows, setInitialRows] = React.useState<typeof rowsServerSide>([]);
-  const [rowCount, setRowCount] = React.useState(0);
+  const [rowCount, setRowCount] = React.useState(100);
 
   const fetchRow = React.useCallback(
     async (params: GridFetchRowsParams) => {
