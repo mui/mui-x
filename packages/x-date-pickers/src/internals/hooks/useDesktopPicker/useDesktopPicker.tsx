@@ -157,6 +157,7 @@ export const useDesktopPicker = <
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   if (hasUIView) {
     fieldProps.InputProps = {
+      ...fieldProps.InputProps,
       ref: containerRef,
       [`${inputAdornmentProps.position}Adornment`]: (
         <InputAdornment {...inputAdornmentProps}>
