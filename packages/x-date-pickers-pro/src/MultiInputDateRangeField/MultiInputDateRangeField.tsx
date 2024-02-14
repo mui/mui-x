@@ -15,12 +15,15 @@ import {
   splitFieldInternalAndForwardedProps,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
+import {
+  MultiInputDateRangeFieldProps,
+  MultiInputDateRangeFieldSlotProps,
+} from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { MultiInputRangeFieldClasses } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputDateRangeField',
@@ -122,16 +125,30 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const TextField =
     slots?.textField ??
     (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
-  const startTextFieldProps = useSlotProps({
+  const startTextFieldProps = useSlotProps<
+    typeof TextField,
+    MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    {},
+    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+      position: RangePosition;
+    }
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
-  }) as BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>;
-  const endTextFieldProps = useSlotProps({
+  });
+  const endTextFieldProps = useSlotProps<
+    typeof TextField,
+    MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    {},
+    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+      position: RangePosition;
+    }
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
-  }) as BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>;
+  });
 
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
@@ -144,7 +161,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const fieldResponse = useMultiInputDateRangeField<
     TDate,
     TEnableAccessibleFieldDOMStructure,
-    BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
+    typeof startTextFieldProps
   >({
     sharedProps: internalProps,
     startTextFieldProps,
