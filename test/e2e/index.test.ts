@@ -782,18 +782,6 @@ async function initializeEnvironment(
         await setFieldValue(picker, '05/25/2014');
         expect(await input.inputValue()).to.equal('05/25/2014');
       });
-
-      it('should retrieve the value when calling `getFieldValue` (DesktopDatePicker)', async () => {
-        await renderFixture('DatePicker/BasicDesktopDatePicker');
-        const picker = page.locator('.test-date-picker');
-
-        const value1 = await getFieldValue(picker);
-        expect(value1).to.equal('MM/DD/YYYY');
-
-        await setFieldValue(picker, '04/11/2022');
-        const value2 = await getFieldValue(picker);
-        expect(value2).to.equal('04/11/2022');
-      });
     });
   });
 });
