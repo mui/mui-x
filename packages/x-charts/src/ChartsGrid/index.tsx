@@ -1,2 +1,2 @@
 export * from './ChartsGrid';
-export * from './gridClasses';
+export * from './chartsGridClasses';

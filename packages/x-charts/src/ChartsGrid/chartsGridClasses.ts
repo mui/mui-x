@@ -14,10 +14,10 @@ export interface ChartsGridClasses {
 
 export type ChartsGridClassKey = keyof ChartsGridClasses;
 
-export function getGridUtilityClass(slot: string) {
+export function getChartsGridUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsGrid', slot);
 }
-export const gridClasses: ChartsGridClasses = generateUtilityClasses('MuiChartsGrid', [
+export const chartsGridClasses: ChartsGridClasses = generateUtilityClasses('MuiChartsGrid', [
   'root',
   'line',
   'horizontalLine',

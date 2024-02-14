@@ -5,14 +5,18 @@ import { styled } from '@mui/material/styles';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks } from '../hooks/useTicks';
-import { ChartsGridClasses, getGridUtilityClass, gridClasses } from './gridClasses';
+import {
+  ChartsGridClasses,
+  getChartsGridUtilityClass,
+  chartsGridClasses,
+} from './chartsGridClasses';
 
-export const GridRoot = styled('g', {
+const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
-  [`& .${gridClasses.line}`]: {
+  [`& .${chartsGridClasses.line}`]: {
     stroke: (theme.vars || theme).palette.divider,
     shapeRendering: 'crispEdges',
     strokeWidth: 1,
@@ -26,7 +30,7 @@ const useUtilityClasses = ({ classes }: ChartsGridProps) => {
     horizontalLine: ['line', 'horizontalLine'],
   };
 
-  return composeClasses(slots, getGridUtilityClass, classes);
+  return composeClasses(slots, getChartsGridUtilityClass, classes);
 };
 
 export interface ChartsGridProps {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { gridClasses } from '@mui/x-charts/ChartsGrid';
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const chartSetting = {
@@ -107,7 +107,7 @@ export default function GridDemo() {
         [`& .${axisClasses.left} .${axisClasses.label}`]: {
           transform: 'translateX(-10px)',
         },
-        [`& .${gridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
+        [`& .${chartsGridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
       }}
       {...chartSetting}
     />

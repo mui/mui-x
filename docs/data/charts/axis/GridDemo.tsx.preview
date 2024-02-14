@@ -7,7 +7,7 @@
     [`& .${axisClasses.left} .${axisClasses.label}`]: {
       transform: 'translateX(-10px)',
     },
-    [`& .${gridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
+    [`& .${chartsGridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
   }}
   {...chartSetting}
 />
