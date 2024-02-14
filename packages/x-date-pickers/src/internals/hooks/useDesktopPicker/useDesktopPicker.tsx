@@ -5,17 +5,21 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import {
+  UseDesktopPickerParams,
+  UseDesktopPickerProps,
+  UseDesktopPickerSlotProps,
+} from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
-import { usePicker } from '../usePicker';
+import { usePicker, UsePickerValueFieldResponse } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
 import {
   FieldSection,
-  BaseSingleInputFieldProps,
   PickerValidDate,
   FieldRef,
+  BaseSingleInputFieldProps,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
@@ -112,7 +116,20 @@ export const useDesktopPicker = <
   const OpenPickerIcon = slots.openPickerIcon;
 
   const Field = slots.field;
-  const fieldProps = useSlotProps({
+  const fieldProps = useSlotProps<
+    typeof Field,
+    UseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    Partial<
+      BaseSingleInputFieldProps<
+        TDate | null,
+        TDate,
+        FieldSection,
+        TEnableAccessibleFieldDOMStructure,
+        InferError<TExternalProps>
+      >
+    >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -135,18 +152,11 @@ export const useDesktopPicker = <
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
-  }) as BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  >;
+  });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   if (hasUIView) {
     fieldProps.InputProps = {
-      ...fieldProps.InputProps,
       ref: containerRef,
       [`${inputAdornmentProps.position}Adornment`]: (
         <InputAdornment {...inputAdornmentProps}>
@@ -155,7 +165,7 @@ export const useDesktopPicker = <
           </OpenPickerButton>
         </InputAdornment>
       ),
-    };
+    } as typeof fieldProps.InputProps;
   }
 
   const slotsForField = {

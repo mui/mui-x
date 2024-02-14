@@ -12,12 +12,13 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef } from '@mui/x-date-pickers/models';
+import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
+  UseMobileRangePickerSlotProps,
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
@@ -106,7 +107,29 @@ export const useMobileRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps = useSlotProps({
+  const fieldProps = useSlotProps<
+    typeof Field,
+    UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    | Partial<
+        BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >
+    | Partial<
+        BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -124,13 +147,7 @@ export const useMobileRangePicker = <
       ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
-  }) as BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  >;
+  });
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 

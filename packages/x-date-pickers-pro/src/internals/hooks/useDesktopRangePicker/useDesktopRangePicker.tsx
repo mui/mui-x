@@ -13,11 +13,12 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef } from '@mui/x-date-pickers/models';
+import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
+  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
@@ -130,7 +131,29 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps = useSlotProps({
+  const fieldProps = useSlotProps<
+    typeof Field,
+    UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    | Partial<
+        BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >
+    | Partial<
+        BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
@@ -150,13 +173,7 @@ export const useDesktopRangePicker = <
       ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
-  }) as BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  >;
+  });
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,

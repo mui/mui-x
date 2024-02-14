@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
+import { SxProps, Theme } from '@mui/material/styles';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
@@ -123,6 +124,7 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
 interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
   ref?: React.Ref<HTMLDivElement>;
+  sx?: SxProps<Theme>;
   label?: React.ReactNode;
   id?: string;
   name?: string;

@@ -3,7 +3,11 @@ import { useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
+import {
+  UseMobilePickerParams,
+  UseMobilePickerProps,
+  UseMobilePickerSlotProps,
+} from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
@@ -81,7 +85,20 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps = useSlotProps({
+  const fieldProps = useSlotProps<
+    typeof Field,
+    UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    Partial<
+      BaseSingleInputFieldProps<
+        TDate | null,
+        TDate,
+        FieldSection,
+        TEnableAccessibleFieldDOMStructure,
+        InferError<TExternalProps>
+      >
+    >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -106,19 +123,13 @@ export const useMobilePicker = <
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
-  }) as BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  >;
+  });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   fieldProps.inputProps = {
     ...fieldProps.inputProps,
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
-  };
+  } as typeof fieldProps.inputProps;
 
   const slotsForField = {
     textField: slots.textField,
