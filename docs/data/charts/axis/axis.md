@@ -85,10 +85,10 @@ You can change this behavior with the property `reverse`.
 
 You can add a grid in the background of the cartesian chart with the `grid` prop.
 
-It takes an object with properties `vertical` and `horizontal`.
+It accepts an object with `vertical` and `horizontal` properties.
 Setting those properties to `true` will display the grid lines.
 
-If you use composition you can pass those properties as props of the `<ChartsGrid />`
+If you use composition you can pass those properties to the `<ChartsGrid />` component.
 
 ```jsx
 <BarChart grid={{ vertical: true }}>

@@ -56,9 +56,8 @@ Otherwise, the click behavior will be the same as defined in the [interaction se
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
-It takes an object with properties `vertical` and `horizontal`.
 
-More info in the [axis documentation](/x/react-charts/axis/#grid).
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
 {{"demo": "GridDemo.js"}}
 

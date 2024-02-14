@@ -4,7 +4,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 export interface ChartsGridClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the main line element. */
+  /** Styles applied to every line element. */
   line: string;
   /** Styles applied to x-axes. */
   horizontalLine: string;
