@@ -188,5 +188,53 @@ createTheme({
       //   constent: { color: 'red' },
       // },
     },
+    MuiPieArc: {
+      defaultProps: {
+        id: 'toto',
+        // @ts-expect-error invalid MuiMarkElement prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiMarkElement class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiPieArcLabel: {
+      defaultProps: {
+        id: 'toto',
+        // @ts-expect-error invalid MuiMarkElement prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiMarkElement class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiChartsReferenceLine: {
+      defaultProps: {
+        x: 5,
+        // @ts-expect-error invalid MuiMarkElement prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiMarkElement class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiChartsGrid: {
+      defaultProps: {
+        vertical: true,
+        // @ts-expect-error invalid MuiMarkElement prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiMarkElement class key
+        constent: { color: 'red' },
+      },
+    },
   },
 });

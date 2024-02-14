@@ -1,9 +1,12 @@
 import { BarElementClassKey } from '../BarChart/BarElement';
 import { ChartsAxisClassKey } from '../ChartsAxis';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
+import { ChartsGridClassKey } from '../ChartsGrid';
 import { ChartsLegendClassKey } from '../ChartsLegend';
+import { ChartsReferenceLineClassKey } from '../ChartsReferenceLine';
 import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
+import { PieArcClassKey, PieArcLabelClassKey } from '../PieChart';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -14,13 +17,24 @@ export interface PickersComponentNameToClassKey {
 
   // BarChart components
   MuiBarElement: BarElementClassKey;
+
   // LineChart components
-  
   MuiAreaElement: AreaElementClassKey;
   MuiLineElement: LineElementClassKey;
   MuiMarkElement: MarkElementClassKey;
-  // ScatterChart components
   
+  // ScatterChart components
+
+
+  // PieChart components
+  MuiPieArc: PieArcClassKey;
+  MuiPieArcLabel: PieArcLabelClassKey;
+
+  // Reference line
+  MuiChartsReferenceLine: ChartsReferenceLineClassKey;
+
+  // Grid
+  MuiChartsGrid: ChartsGridClassKey;
 }
 
 declare module '@mui/material/styles' {

@@ -4,10 +4,9 @@ import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXRefere
 import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
 import { XOR } from '../internals/utils';
 
-type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
-  ChartsXReferenceLineProps<TValue>,
-  ChartsYReferenceLineProps<TValue>
->;
+export type ChartsReferenceLineProps<
+  TValue extends string | number | Date = string | number | Date,
+> = XOR<ChartsXReferenceLineProps<TValue>, ChartsYReferenceLineProps<TValue>>;
 
 function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;

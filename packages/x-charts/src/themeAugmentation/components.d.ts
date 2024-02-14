@@ -57,6 +57,22 @@ export interface ChartsComponents {
   MuiScatter?: {
     defaultProps?: ComponentsProps['MuiScatter'];
   };
+  MuiPieArc?: {
+    defaultProps?: ComponentsProps['MuiPieArc'];
+    styleOverrides?: ComponentsOverrides['MuiPieArc'];
+  };
+  MuiPieArcLabel?: {
+    defaultProps?: ComponentsProps['MuiPieArcLabel'];
+    styleOverrides?: ComponentsOverrides['MuiPieArcLabel'];
+  };
+  MuiChartsReferenceLine?: {
+    defaultProps?: ComponentsProps['MuiChartsReferenceLine'];
+    styleOverrides?: ComponentsOverrides['MuiChartsReferenceLine'];
+  };
+  MuiChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiChartsGrid'];
+    styleOverrides?: ComponentsOverrides['MuiChartsGrid'];
+  };
 }
 
 declare module '@mui/material/styles' {
