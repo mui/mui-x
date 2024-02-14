@@ -1,5 +1,20 @@
 {
   "props": {
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "axisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+      },
+      "default": "{ x: 'none', y: 'none' }",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
+        "text": "highlight docs"
+      }
+    },
     "bottomAxis": {
       "type": {
         "name": "union",
@@ -21,6 +36,15 @@
       },
       "default": "null"
     },
+    "legend": {
+      "type": {
+        "name": "shape",
+        "description": "{ classes?: object, direction?: 'column'<br>&#124;&nbsp;'row', hidden?: bool, position?: { horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }, slotProps?: object, slots?: object }"
+      },
+      "default": "{ direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }",
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>slotProps.legend</code> instead."
+    },
     "margin": {
       "type": {
         "name": "shape",
@@ -28,6 +52,7 @@
       },
       "default": "object Depends on the charts type."
     },
+    "onItemClick": { "type": { "name": "func" } },
     "rightAxis": {
       "type": {
         "name": "union",
@@ -37,6 +62,19 @@
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "tooltip": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisContent?: elementType, classes?: object, itemContent?: elementType, slotProps?: object, slots?: object, trigger?: 'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none' }"
+      },
+      "default": "{ trigger: 'item' }",
+      "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
+    },
     "topAxis": {
       "type": {
         "name": "union",

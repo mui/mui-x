@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
@@ -17,14 +21,22 @@
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "legend": { "description": "The props of the legend." },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
+    "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "series": { "description": "The series to display in the pie chart." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
