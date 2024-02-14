@@ -2386,7 +2386,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
 - [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
 - [DataGrid] Fix value parsing in date input (#3307) @alexfauquette
-- [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
+- [DataGrid] Fix cannot enter 0 on numeric column (#3491) @m4theushw
 - [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
 - [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
 - [DataGridPro] Block edition for auto-generated rows (#3547) @flaviendelangle

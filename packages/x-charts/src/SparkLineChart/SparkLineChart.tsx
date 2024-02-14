@@ -61,7 +61,7 @@ export interface SparkLineChartProps
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number | null) => (v === null ? '' : v.toString())
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter?: (value: number | null) => string;
   /**
@@ -143,7 +143,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     slotProps,
     data,
     plotType = 'line',
-    valueFormatter = (v: number | null) => (v === null ? '' : v.toString()),
+    valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
   } = props;
@@ -328,7 +328,7 @@ SparkLineChart.propTypes = {
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number | null) => (v === null ? '' : v.toString())
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({

@@ -63,7 +63,7 @@ pnpm add @mui/styled-engine-sc styled-components
 </codeblock>
 
 :::info
-Take a look at the [Styled Components guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled Components guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 :::
 
 ## Quickstart

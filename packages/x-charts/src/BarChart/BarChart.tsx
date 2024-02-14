@@ -47,7 +47,14 @@ export interface BarChartProps
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
+  /**
+   * The series to display in the bar chart.
+   */
   series: MakeOptional<BarSeriesType, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   */
   tooltip?: ChartsTooltipProps;
 
   /**
@@ -55,11 +62,11 @@ export interface BarChartProps
    */
   grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   *
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -76,6 +83,10 @@ export interface BarChartProps
    * @default {}
    */
   slotProps?: BarChartSlotProps;
+  /**
+   * The direction of the bar elements.
+   * @default 'vertical'
+   */
   layout?: BarSeriesType['layout'];
 }
 
@@ -199,11 +210,10 @@ BarChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Object `{ x, y }` that defines how the charts highlight the mouse position along the x- and y-axes.
-   * The two properties accept the following values:
-   * - 'none': display nothing.
-   * - 'line': display a line at the current mouse position.
-   * - 'band': display a band at the current mouse position. Only available with band scale.
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -273,6 +283,10 @@ BarChart.propTypes = {
    * @default undefined
    */
   height: PropTypes.number,
+  /**
+   * The direction of the bar elements.
+   * @default 'vertical'
+   */
   layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * Indicate which axis to display the left of the charts.
@@ -381,6 +395,9 @@ BarChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * The series to display in the bar chart.
+   */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
@@ -403,6 +420,10 @@ BarChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,

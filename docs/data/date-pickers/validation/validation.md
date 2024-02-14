@@ -118,7 +118,7 @@ Please note that `shouldDisableDate` will execute on every date rendered in the 
 
 For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker`)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
 
-In the example below—the start date can't be in the weekend but the end date can.
+In the example below—the start date cannot be in the weekend but the end date can.
 
 {{"demo": "DateRangeValidationShouldDisableDate.js", "defaultCodeOpen": false}}
 
