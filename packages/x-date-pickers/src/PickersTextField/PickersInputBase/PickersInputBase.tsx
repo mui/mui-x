@@ -192,6 +192,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onKeyDown,
     fullWidth,
     name,
+    readOnly,
     inputProps,
     inputRef,
     sectionListRef,
@@ -261,6 +262,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         sectionListRef={sectionListRef}
         elements={elements}
         contentEditable={contentEditable}
+        readOnly={readOnly}
         tabIndex={tabIndex}
         className={classes.sectionsContainer}
         onFocus={handleInputFocus}
@@ -301,7 +303,9 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         id={id}
         aria-hidden="true"
         tabIndex={-1}
+        readOnly={readOnly}
         required={muiFormControl.required}
+        disabled={muiFormControl.disabled}
         {...inputProps}
         ref={handleInputRef}
       />
