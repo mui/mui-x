@@ -8,7 +8,7 @@ import {
   PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/material/styles';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
@@ -62,7 +62,7 @@ export interface BaseMultiInputFieldProps<
     BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
     'unstableFieldRef'
   > {
-  sx?: SxProps<Theme>;
+  sx?: SxProps;
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   slots?: {
