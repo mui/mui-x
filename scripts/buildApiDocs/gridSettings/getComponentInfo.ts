@@ -36,6 +36,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
       { demoPathname: '/x/react-data-grid/#pro-plan', demoPageTitle: 'DataGridPro' },
       { demoPathname: '/x/react-data-grid/#premium-plan', demoPageTitle: 'DataGridPremium' },
     ],
+    layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
   };
 }
 
