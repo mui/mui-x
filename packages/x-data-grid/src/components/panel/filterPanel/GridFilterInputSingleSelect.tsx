@@ -183,7 +183,6 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  inputLabelProps: PropTypes.object,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
