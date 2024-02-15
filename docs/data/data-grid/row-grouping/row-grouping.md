@@ -187,7 +187,7 @@ It will disable all the features related to the row grouping, even if a model is
 ### For some columns
 
 In case you need to disable grouping on specific column(s), set the `groupable` property on the respective column definition (`GridColDef`) to `false`.
-In the example below, the `director` column can not be grouped. And in all example, the `title` and `gross` columns can not be grouped.
+In the example below, the `director` column cannot be grouped. In all examples, the `title` and `gross` columns cannot be grouped.
 
 {{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 

@@ -100,6 +100,10 @@ You can pass a different view renderer to the Date Time Range Picker to customiz
 
 {{"demo": "DateTimeRangePickerViewRenderer.js"}}
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
