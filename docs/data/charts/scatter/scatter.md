@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
+components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -52,6 +52,14 @@ If `disableVoronoi=true`, users need to click precisely on the scatter element, 
 Otherwise, the click behavior will be the same as defined in the [interaction section](#interaction) and the mouse event will come from the svg component.
 
 ## Styling
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
 
 ### CSS 🚧
 

@@ -26,7 +26,7 @@ function loadPkg(pkgPath) {
 }
 
 const pkg = loadPkg('.');
-const dataGridPkg = loadPkg('./packages/grid/x-data-grid');
+const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');

@@ -31,6 +31,7 @@ import {
   ChartsVoronoiHandler,
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -47,9 +48,26 @@ export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
+  /**
+   * The series to display in the scatter chart.
+   */
   series: MakeOptional<ScatterSeriesType, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip?: ChartsTooltipProps;
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'none', y: 'none' }
+   */
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
@@ -102,6 +120,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     margin,
     colors,
     sx,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -138,6 +157,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         slots={slots}
         slotProps={slotProps}
       />
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <ScatterPlot
         slots={slots}
         slotProps={slotProps}
@@ -156,6 +176,11 @@ ScatterChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'none', y: 'none' }
+   */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -217,6 +242,13 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined
@@ -322,6 +354,9 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  /**
+   * The series to display in the scatter chart.
+   */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * The props used for each component slot.
@@ -339,6 +374,11 @@ ScatterChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
