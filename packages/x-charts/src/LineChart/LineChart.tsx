@@ -32,6 +32,7 @@ import {
   LineHighlightPlotSlots,
   LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
@@ -68,6 +69,10 @@ export interface LineChartProps
    * @default { trigger: 'item' }
    */
   tooltip?: ChartsTooltipProps;
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
@@ -140,6 +145,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     axisHighlight = { x: 'line' },
     disableLineItemHighlight,
     legend,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -188,6 +194,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       }
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <g clipPath={`url(#${clipPathId})`}>
         <AreaPlot
           slots={slots}
@@ -296,6 +303,13 @@ LineChart.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined

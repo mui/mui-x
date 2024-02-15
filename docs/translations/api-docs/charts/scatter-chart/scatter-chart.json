@@ -18,6 +18,7 @@
     "disableVoronoi": {
       "description": "If true, the interaction will not use the Voronoi cell and fall back to hover events."
     },
+    "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },

@@ -50,6 +50,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-grid',
+    title: 'ChartsGrid',
+  },
+  {
     pathname: '/x/api/charts/charts-item-tooltip-content',
     title: 'ChartsItemTooltipContent',
   },
