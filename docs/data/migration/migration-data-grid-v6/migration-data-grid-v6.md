@@ -416,9 +416,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-<!-- ### Editing
+### Editing
 
-- -->
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 
