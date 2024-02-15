@@ -83,7 +83,7 @@ interface ProcessedCircularConfig {
 interface GaugeConfig {
   /**
    * The value of the gauge.
-   * Set to `null` if no value to display.
+   * Set to `null` to not display a value.
    */
   value?: number | null;
   /**
@@ -102,7 +102,7 @@ export const GaugeContext = React.createContext<
   Required<GaugeConfig> &
     ProcessedCircularConfig & {
       /**
-       * The maximal radius from (cx, cy) that fit that arc in the drawing area.
+       * The maximal radius from (cx, cy) that fits the arc in the drawing area.
        */
       maxRadius: number;
       /**

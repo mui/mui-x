@@ -15,7 +15,7 @@ export function getArcRatios(startAngle: number, endAngle: number) {
   // Set the start, end and center point.
   const points = [[0, 0], getPoint(startAngle), getPoint(endAngle)];
 
-  // Add cardinals points included in the arc
+  // Add cardinal points included in the arc
   const minAngle = Math.min(startAngle, endAngle);
   const maxAngle = Math.max(startAngle, endAngle);
 
