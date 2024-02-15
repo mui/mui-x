@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TreeViewItemId } from '@mui/x-tree-view';
 import { SlotComponentProps } from '@mui/base/utils/types';
+import { MuiCancellableEventHandler } from '@mui/x-tree-view/internals/models/MuiCancellableEvent';
 
 export interface UseTreeItemParameters {
   /**
@@ -30,12 +31,16 @@ export interface UseTreeItemRootSlotOwnProps {
   'aria-expanded': React.AriaAttributes['aria-expanded'];
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
+  onFocus: MuiCancellableEventHandler<React.FocusEvent>;
 }
 
 export type UseTreeItemRootSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemRootSlotOwnProps;
 
-export interface UseTreeItemContentSlotOwnProps {}
+export interface UseTreeItemContentSlotOwnProps {
+  onClick: MuiCancellableEventHandler<React.MouseEvent>;
+  onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
+}
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemContentSlotOwnProps;

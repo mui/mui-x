@@ -4,13 +4,10 @@ import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
-  UseTreeItemRootSlotOwnProps,
   UseTreeItemRootSlotProps,
-  UseTreeItemContentSlotOwnProps,
   UseTreeItemContentSlotProps,
-  UseTreeItemGroupSlotOwnProps,
   UseTreeItemGroupSlotProps,
-  UseTreeItemStatus,
+  UseTreeItemLabelSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
@@ -38,33 +35,11 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
   // We transform the ref into a `React.RefCallback`
   const rootRef = useForkRef(ref);
 
-  const status: UseTreeItemStatus = {
-    expandable: Boolean(Array.isArray(children) ? children.length : children),
-    expanded: instance.isNodeExpanded(nodeId),
-    focused: instance.isNodeFocused(nodeId),
-    selected: instance.isNodeSelected(nodeId),
-    disabled: instance.isNodeDisabled(nodeId),
-  };
-
-  const interactions = useTreeItemInteractions(nodeId, status);
+  const { interactions, status } = useTreeItemInteractions({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
-  let ariaSelected;
-  if (multiSelect) {
-    ariaSelected = status.selected;
-  } else if (status.selected) {
-    /* single-selection trees unset aria-selected on un-selected items.
-     *
-     * If the tree does not support multiple selection, aria-selected
-     * is set to true for the selected node and it is not present on any other node in the tree.
-     * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-     */
-    ariaSelected = true;
-  }
-
   const createRootHandleFocus =
-    (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLLIElement> & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.FocusEvent & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
 
       if (event.defaultMuiPrevented) {
@@ -83,8 +58,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
 
   const createContentHandleClick =
-    (otherHandlers: EventHandlers) =>
-    (event: React.MouseEvent<HTMLDivElement> & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
 
       if (event.defaultMuiPrevented) {
@@ -96,8 +70,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
 
   const createContentHandleMouseDown =
-    (otherHandlers: EventHandlers) =>
-    (event: React.MouseEvent<HTMLDivElement> & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
 
       if (event.defaultMuiPrevented) {
@@ -115,18 +88,27 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       ...extractEventHandlers(externalProps),
     };
 
-    const rootOwnProps: UseTreeItemRootSlotOwnProps = {
+    let ariaSelected: boolean | undefined;
+    if (multiSelect) {
+      ariaSelected = status.selected;
+    } else if (status.selected) {
+      /* single-selection trees unset aria-selected on un-selected items.
+       *
+       * If the tree does not support multiple selection, aria-selected
+       * is set to true for the selected node and it is not present on any other node in the tree.
+       * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+       */
+      ariaSelected = true;
+    }
+
+    return {
+      ...externalEventHandlers,
       role: 'treeitem',
       tabIndex: -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
-    };
-
-    return {
-      ...externalEventHandlers,
-      ...rootOwnProps,
       ...externalProps,
       onFocus: createRootHandleFocus(externalEventHandlers),
     };
@@ -140,11 +122,8 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       ...extractEventHandlers(externalProps),
     };
 
-    const contentOwnProps: UseTreeItemContentSlotOwnProps = {};
-
     return {
       ...externalEventHandlers,
-      ...contentOwnProps,
       ...externalProps,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
@@ -153,19 +132,15 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
 
   const getLabelProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemContentSlotProps<ExternalProps> => {
+  ): UseTreeItemLabelSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
     };
 
-    const contentOwnProps: UseTreeItemContentSlotOwnProps = {
-      children: label,
-    };
-
     return {
       ...externalEventHandlers,
-      ...contentOwnProps,
+      children: label,
       ...externalProps,
     };
   };
@@ -178,17 +153,13 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       ...extractEventHandlers(externalProps),
     };
 
-    const groupOwnProps: UseTreeItemGroupSlotOwnProps = {
+    return {
+      ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
       role: 'group',
       in: status.expanded,
       children,
-    };
-
-    return {
-      ...externalEventHandlers,
-      ...groupOwnProps,
       ...externalProps,
     };
   };

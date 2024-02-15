@@ -1,89 +1,41 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { useTreeItemInteractions } from '@mui/x-tree-view/internals/useTreeItemInteractions';
+import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/internals/useTreeItem';
 import {
-  TreeItem,
-  TreeItemProps,
-  useTreeItemState,
-  TreeItemContentProps,
-} from '@mui/x-tree-view/TreeItem';
+  TreeItemNext,
+  TreeItemNextProps,
+} from '@mui/x-tree-view/internals/TreeItemNext';
 
-const CustomContent = React.forwardRef(function CustomContent(
-  props: TreeItemContentProps,
-  ref,
+const CustomTreeItem = React.forwardRef(function MyTreeItem(
+  props: TreeItemNextProps,
+  ref: React.Ref<HTMLLIElement>,
 ) {
-  const {
-    classes,
-    className,
-    label,
-    nodeId,
-    icon: iconProp,
-    expansionIcon,
-    displayIcon,
-  } = props;
+  const { interactions } = useTreeItemInteractions({
+    nodeId: props.nodeId,
+    children: props.children,
+  });
 
-  const {
-    disabled,
-    expanded,
-    selected,
-    focused,
-    handleExpansion,
-    handleSelection,
-    preventSelection,
-  } = useTreeItemState(nodeId);
-
-  const icon = iconProp || expansionIcon || displayIcon;
-
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    preventSelection(event);
+  const handleContentClick: UseTreeItemContentSlotOwnProps['onClick'] = (event) => {
+    event.defaultMuiPrevented = true;
+    interactions.handleSelection(event);
   };
 
-  const handleExpansionClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    handleExpansion(event);
-  };
-
-  const handleSelectionClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    handleSelection(event);
+  const handleIconContainerClick = (event: React.MouseEvent) => {
+    interactions.handleExpansion(event);
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      className={clsx(className, classes.root, {
-        [classes.expanded]: expanded,
-        [classes.selected]: selected,
-        [classes.focused]: focused,
-        [classes.disabled]: disabled,
-      })}
-      onMouseDown={handleMouseDown}
-      ref={ref as React.Ref<HTMLDivElement>}
-    >
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div onClick={handleExpansionClick} className={classes.iconContainer}>
-        {icon}
-      </div>
-      <Typography
-        onClick={handleSelectionClick}
-        component="div"
-        className={classes.label}
-      >
-        {label}
-      </Typography>
-    </div>
+    <TreeItemNext
+      {...props}
+      ref={ref}
+      slotProps={{
+        content: { onClick: handleContentClick },
+        iconContainer: { onClick: handleIconContainerClick },
+      }}
+    />
   );
-});
-
-const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItemProps,
-  ref: React.Ref<HTMLLIElement>,
-) {
-  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
 });
 
 export default function IconExpansionTreeView() {

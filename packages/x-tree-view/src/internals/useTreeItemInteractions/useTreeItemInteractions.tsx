@@ -3,13 +3,27 @@ import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins';
 import type { UseTreeItemStatus } from '../useTreeItem';
 
-export const useTreeItemInteractions = (nodeId: string, status: UseTreeItemStatus) => {
+export const useTreeItemInteractions = ({
+  nodeId,
+  children,
+}: {
+  nodeId: string;
+  children: React.ReactNode;
+}) => {
   const {
     instance,
     selection: { multiSelect },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
+  const status: UseTreeItemStatus = {
+    expandable: Boolean(Array.isArray(children) ? children.length : children),
+    expanded: instance.isNodeExpanded(nodeId),
+    focused: instance.isNodeFocused(nodeId),
+    selected: instance.isNodeSelected(nodeId),
+    disabled: instance.isNodeDisabled(nodeId),
+  };
+
+  const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -26,7 +40,7 @@ export const useTreeItemInteractions = (nodeId: string, status: UseTreeItemStatu
     }
   };
 
-  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelection = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -48,12 +62,14 @@ export const useTreeItemInteractions = (nodeId: string, status: UseTreeItemStatu
     }
   };
 
-  const preventSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const preventSelection = (event: React.MouseEvent) => {
     if (event.shiftKey || event.ctrlKey || event.metaKey || status.disabled) {
       // Prevent text selection
       event.preventDefault();
     }
   };
 
-  return { handleExpansion, handleSelection, preventSelection };
+  const interactions = { handleExpansion, handleSelection, preventSelection };
+
+  return { interactions, status };
 };
