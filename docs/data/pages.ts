@@ -407,7 +407,6 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
             ],
           },
-          { pathname: '/x/react-charts/gauge', title: 'Gauge' },
           {
             pathname: '/x/react-charts-lines',
             title: 'Lines',
@@ -437,6 +436,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/sparkline',
             title: 'Sparkline',
           },
+          { pathname: '/x/react-charts/gauge', title: 'Gauge' },
           {
             pathname: '/x/api/charts-group',
             title: 'API Reference',
