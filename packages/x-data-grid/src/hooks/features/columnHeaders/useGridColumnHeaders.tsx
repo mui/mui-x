@@ -70,10 +70,16 @@ const SpaceFiller = styled('div')({
   },
 });
 
-export const GridColumnHeaderRow = styled('div')({
+export const GridColumnHeaderRow = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderRow',
+  overridesResolver: (_, styles) => styles.columnHeaderRow,
+})<{ ownerState: {} }>({
   display: 'flex',
   height: 'var(--DataGrid-headerHeight)',
 });
+
+const EMPTY_OWNER_STATE = {};
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
@@ -216,7 +222,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+      <GridColumnHeaderRow
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+        ownerState={EMPTY_OWNER_STATE}
+      >
         {getFillers(params, columns, 0)}
       </GridColumnHeaderRow>
     );
@@ -338,7 +348,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
 
       columns.push(
-        <GridColumnHeaderRow key={depthIndex} role="row" aria-rowindex={depthIndex + 1}>
+        <GridColumnHeaderRow
+          key={depthIndex}
+          role="row"
+          aria-rowindex={depthIndex + 1}
+          ownerState={EMPTY_OWNER_STATE}
+        >
           {getFillers(params, children, depthInfo.leftOverflow)}
         </GridColumnHeaderRow>,
       );
