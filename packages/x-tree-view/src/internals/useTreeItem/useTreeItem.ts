@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventHandlers, extractEventHandlers, SlotComponentProps } from '@mui/base/utils';
+import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItemParameters,
@@ -8,16 +8,15 @@ import {
   UseTreeItemContentSlotProps,
   UseTreeItemGroupSlotProps,
   UseTreeItemLabelSlotProps,
+  UseTreeItemIconContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
-import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../../icons';
 import { useTreeItemInteractions } from '../useTreeItemInteractions';
 
 export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemReturnValue => {
   const {
-    icons,
     runItemPlugins,
     selection: { multiSelect },
     disabledItemsFocusable,
@@ -145,6 +144,20 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
   };
 
+  const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItemIconContainerSlotProps<ExternalProps> => {
+    const externalEventHandlers = {
+      ...extractEventHandlers(parameters),
+      ...extractEventHandlers(externalProps),
+    };
+
+    return {
+      ...externalEventHandlers,
+      ...externalProps,
+    };
+  };
+
   const getGroupProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemGroupSlotProps<ExternalProps> => {
@@ -164,30 +177,14 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
   };
 
-  let fallbackIcon: React.ElementType | undefined;
-  let fallbackIconProps: SlotComponentProps<'svg', {}, {}> | undefined;
-  if (status.expandable) {
-    if (status.expanded) {
-      fallbackIcon = icons.slots.collapseIcon ?? TreeViewCollapseIcon;
-      fallbackIconProps = icons.slotProps.collapseIcon;
-    } else {
-      fallbackIcon = icons.slots.expandIcon ?? TreeViewExpandIcon;
-      fallbackIconProps = icons.slotProps.expandIcon;
-    }
-  } else {
-    fallbackIcon = icons.slots.endIcon;
-    fallbackIconProps = icons.slotProps.endIcon;
-  }
-
   return {
     getRootProps,
     getContentProps,
     getGroupProps,
+    getIconContainerProps,
     getLabelProps,
     rootRef,
     wrapItem,
     status,
-    fallbackIcon,
-    fallbackIconProps,
   };
 };

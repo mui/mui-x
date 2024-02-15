@@ -2,28 +2,29 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { alpha, styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
-import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types';
 import { useTreeItem } from '../useTreeItem';
 import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
+import { TreeItemIcon } from '../TreeItemIcon';
 
-const TreeItemNextRoot = styled('li', {
+export const TreeItemNextRoot = styled('li', {
   name: 'MuiTreeItemNext',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeItemNextOwnerState }>({
+})({
   listStyle: 'none',
   margin: 0,
   padding: 0,
   outline: 0,
 });
 
-const TreeItemNextContent = styled('div', {
+export const TreeItemNextContent = styled('div', {
   name: 'MuiTreeItemNext',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-})<{ ownerState: TreeItemNextOwnerState }>(({ theme }) => ({
+})(({ theme }) => ({
   padding: '0 8px',
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
@@ -72,50 +73,42 @@ const TreeItemNextContent = styled('div', {
           ),
     },
   },
-  [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: 4,
-    width: 15,
-    display: 'flex',
-    flexShrink: 0,
-    justifyContent: 'center',
-    '& svg': {
-      fontSize: 18,
-    },
-  },
-  [`& .${treeItemClasses.label}`]: {
-    paddingLeft: 4,
-    width: '100%',
-    boxSizing: 'border-box', // prevent width + padding to overflow
-    // fixes overflow - see https://github.com/mui/material-ui/issues/27372
-    minWidth: 0,
-    position: 'relative',
-    ...theme.typography.body1,
-  },
 }));
 
-const TreeItemNextLabel = styled('div', {
+export const TreeItemNextLabel = styled('div', {
   name: 'MuiTreeItemNext',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
-})<{ ownerState: TreeItemNextOwnerState }>({
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  outline: 0,
-});
+})(({ theme }) => ({
+  paddingLeft: 4,
+  width: '100%',
+  boxSizing: 'border-box', // prevent width + padding to overflow
+  // fixes overflow - see https://github.com/mui/material-ui/issues/27372
+  minWidth: 0,
+  position: 'relative',
+  ...theme.typography.body1,
+}));
 
-const TreeItemNextIconContainer = styled('div', {
+export const TreeItemNextIconContainer = styled('div', {
   name: 'MuiTreeItemNext',
   slot: 'IconContainer',
   overridesResolver: (props, styles) => styles.iconContainer,
-})<{ ownerState: TreeItemNextOwnerState }>({
+})({
   listStyle: 'none',
   margin: 0,
   padding: 0,
   outline: 0,
+  marginRight: 4,
+  width: 15,
+  display: 'flex',
+  flexShrink: 0,
+  justifyContent: 'center',
+  '& svg': {
+    fontSize: 18,
+  },
 });
 
-const TreeItemNextGroup = styled(Collapse, {
+export const TreeItemNextGroup = styled(Collapse, {
   name: 'MuiTreeItem',
   slot: 'Group',
   overridesResolver: (props, styles) => styles.group,
@@ -149,21 +142,13 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
 ) {
   const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
 
-  const {
-    getRootProps,
-    getContentProps,
-    getLabelProps,
-    getGroupProps,
-    status,
-    wrapItem,
-    fallbackIcon,
-    fallbackIconProps,
-  } = useTreeItem({
-    id,
-    nodeId,
-    children,
-    label,
-  });
+  const { getRootProps, getContentProps, getLabelProps, getGroupProps, status, wrapItem } =
+    useTreeItem({
+      id,
+      nodeId,
+      children,
+      label,
+    });
 
   const ownerState: TreeItemNextOwnerState = {
     ...props,
@@ -183,32 +168,6 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     },
     ownerState,
     className: classes.root,
-  });
-
-  let Icon: React.ElementType | undefined;
-  let iconSlotProps: SlotComponentProps<'svg', {}, {}> | undefined;
-  if (status.expandable) {
-    if (status.expanded) {
-      Icon = slots.collapseIcon;
-      iconSlotProps = slotProps.collapseIcon;
-    } else {
-      Icon = slots.expandIcon;
-      iconSlotProps = slotProps.expandIcon;
-    }
-  } else {
-    Icon = slots.endIcon;
-    iconSlotProps = slotProps.endIcon;
-  }
-
-  if (Icon === undefined) {
-    Icon = fallbackIcon;
-    iconSlotProps = fallbackIconProps;
-  }
-
-  const iconProps = useSlotProps({
-    elementType: Icon,
-    externalSlotProps: iconSlotProps,
-    ownerState,
   });
 
   const Content: React.ElementType = slots.content ?? TreeItemNextContent;
@@ -255,7 +214,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     <Root {...rootProps}>
       <Content {...contentProps}>
         <IconContainer {...iconContainerProps}>
-          {Icon ? <Icon {...iconProps} /> : null}
+          <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
         </IconContainer>
         <Label {...labelProps} />
       </Content>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TreeViewItemId } from '@mui/x-tree-view';
-import { SlotComponentProps } from '@mui/base/utils/types';
-import { MuiCancellableEventHandler } from '@mui/x-tree-view/internals/models/MuiCancellableEvent';
+import { MuiCancellableEventHandler } from '../models/MuiCancellableEvent';
 
 export interface UseTreeItemParameters {
   /**
@@ -45,7 +44,14 @@ export interface UseTreeItemContentSlotOwnProps {
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemContentSlotOwnProps;
 
-export interface UseTreeItemLabelSlotOwnProps {}
+export interface UseTreeItemIconContainerSlotOwnProps {}
+
+export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItemIconContainerSlotOwnProps;
+
+export interface UseTreeItemLabelSlotOwnProps {
+  children: React.ReactNode;
+}
 
 export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemLabelSlotOwnProps;
@@ -89,11 +95,19 @@ export interface UseTreeItemReturnValue {
   /**
    * Resolver for the label slot's props.
    * @param {ExternalProps} externalProps additional props for the label slot
-   * @returns {UseTreeItemContentSlotProps<ExternalProps>} props that should be spread on the label slot
+   * @returns {UseTreeItemLabelSlotProps<ExternalProps>} props that should be spread on the label slot
    */
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItemLabelSlotProps<ExternalProps>;
+  /**
+   * Resolver for the iconContainer slot's props.
+   * @param {ExternalProps} externalProps additional props for the iconContainer slot
+   * @returns {UseTreeItemIconContainerSlotProps<ExternalProps>} props that should be spread on the iconContainer slot
+   */
+  getIconContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemIconContainerSlotProps<ExternalProps>;
   /**
    * Resolver for the group slot's props.
    * @param {ExternalProps} externalProps additional props for the group slot
@@ -116,14 +130,4 @@ export interface UseTreeItemReturnValue {
    * Current status of the item.
    */
   status: UseTreeItemStatus;
-  /**
-   * The icon to render if no icon has been provided directly to the item.
-   * This icon is passed by the Tree View component and based on the current status of the item.
-   */
-  fallbackIcon: React.ElementType | undefined;
-  /**
-   * The props to add to the rendered icon if no icon has been provided directly to the item.
-   * The props are passed by the Tree View component and based on the current status of the item.
-   */
-  fallbackIconProps: SlotComponentProps<'svg', {}, {}> | undefined;
 }

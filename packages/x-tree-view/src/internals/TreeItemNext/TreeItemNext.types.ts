@@ -2,8 +2,9 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from '../../TreeItem';
+import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
 
-export interface TreeItemNextSlots {
+export interface TreeItemNextSlots extends TreeItemIconSlots {
   /**
    * The component that renders the root.
    * @default TreeItemNextRoot
@@ -30,34 +31,14 @@ export interface TreeItemNextSlots {
    * @default TreeItemNextLabel
    */
   label?: React.ElementType;
-  /**
-   * The icon used to collapse the node.
-   */
-  collapseIcon?: React.ElementType;
-  /**
-   * The icon used to expand the node.
-   */
-  expandIcon?: React.ElementType;
-  /**
-   * The icon displayed next to an end node.
-   */
-  endIcon?: React.ElementType;
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon?: React.ElementType;
 }
 
-export interface TreeItemNextSlotProps {
+export interface TreeItemNextSlotProps extends TreeItemIconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
   group?: SlotComponentProps<'div', {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
-  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
-  expandIcon?: SlotComponentProps<'svg', {}, {}>;
-  endIcon?: SlotComponentProps<'svg', {}, {}>;
-  icon?: SlotComponentProps<'svg', {}, {}>;
 }
 
 export interface TreeItemNextProps extends Omit<UseTreeItemParameters, 'rootRef'> {
