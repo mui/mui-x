@@ -4,9 +4,9 @@ import { GridColDef, DataGrid, GridCellParams, gridClasses } from '@mui/x-data-g
 
 const columns: GridColDef[] = [
   { field: 'city' },
-  { field: 'oct', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'nov', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'dec', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
+  { field: 'oct', type: 'number', valueFormatter: (value) => `${value} °C` },
+  { field: 'nov', type: 'number', valueFormatter: (value) => `${value} °C` },
+  { field: 'dec', type: 'number', valueFormatter: (value) => `${value} °C` },
 ];
 
 const rows = [

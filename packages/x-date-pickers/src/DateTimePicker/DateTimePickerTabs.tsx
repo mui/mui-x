@@ -159,7 +159,7 @@ DateTimePickerTabs.propTypes = {
    */
   hidden: PropTypes.bool,
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a tab is clicked.
    * @template TView
    * @param {TView} view The view to open
    */

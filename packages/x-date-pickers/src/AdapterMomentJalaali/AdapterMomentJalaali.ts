@@ -85,6 +85,12 @@ const NUMBER_SYMBOL_MAP = {
   '0': '۰',
 };
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'moment-jalaali': Moment;
+  }
+}
+
 /**
  * Based on `@date-io/jalaali`
  *

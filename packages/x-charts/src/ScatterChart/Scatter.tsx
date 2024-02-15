@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
+} from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import {
   getIsFaded,
@@ -17,6 +21,15 @@ export interface ScatterProps {
   yScale: D3Scale;
   markerSize: number;
   color: string;
+  /**
+   * Callback fired when clicking on a scatter item.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    scatterItemIdentifier: ScatterItemIdentifier,
+  ) => void;
 }
 
 /**
@@ -30,7 +43,7 @@ export interface ScatterProps {
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, markerSize } = props;
+  const { series, xScale, yScale, color, markerSize, onItemClick } = props;
 
   const highlightScope: HighlightScope = React.useMemo(
     () => ({ highlighted: 'item', faded: 'global', ...series.highlightScope }),
@@ -53,14 +66,12 @@ function Scatter(props: ScatterProps) {
     const minYRange = Math.min(...yRange);
     const maxYRange = Math.max(...yRange);
 
-    const temp: {
-      x: number;
-      y: number;
-      id: string | number;
+    const temp: (ScatterValueType & {
+      dataIndex: number;
       isHighlighted: boolean;
       isFaded: boolean;
       interactionProps: ReturnType<typeof getInteractionItemProps>;
-    }[] = [];
+    })[] = [];
 
     for (let i = 0; i < series.data.length; i += 1) {
       const scatterPoint = series.data[i];
@@ -81,6 +92,7 @@ function Scatter(props: ScatterProps) {
           isFaded: !isHighlighted && getIsFaded(item, pointCtx, highlightScope),
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
+          dataIndex: i,
         });
       }
     }
@@ -99,6 +111,16 @@ function Scatter(props: ScatterProps) {
           transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
           fill={color}
           opacity={(dataPoint.isFaded && 0.3) || 1}
+          onClick={
+            onItemClick &&
+            ((event) =>
+              onItemClick(event, {
+                type: 'scatter',
+                seriesId: series.id,
+                dataIndex: dataPoint.dataIndex,
+              }))
+          }
+          cursor={onItemClick ? 'pointer' : 'unset'}
           {...dataPoint.interactionProps}
         />
       ))}
@@ -113,6 +135,12 @@ Scatter.propTypes = {
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
   markerSize: PropTypes.number.isRequired,
+  /**
+   * Callback fired when clicking on a scatter item.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,

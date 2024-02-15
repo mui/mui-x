@@ -5,11 +5,11 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../../models/validation';
-import { DateValidationError, TimezoneProps } from '../../../models';
+import { DateValidationError, PickerValidDate, TimezoneProps } from '../../../models';
 import { applyDefaultDate } from '../date-utils';
 import { DefaultizedProps } from '../../models/helpers';
 
-export interface DateComponentValidationProps<TDate>
+export interface DateComponentValidationProps<TDate extends PickerValidDate>
   extends DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,

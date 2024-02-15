@@ -1,4 +1,4 @@
-import { TimeView } from '../../models';
+import { PickerValidDate, TimeView } from '../../models';
 
 interface FutureAndPastValidationProps {
   /**
@@ -22,7 +22,7 @@ export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
 /**
  * Props used to validate a time value.
  */
-export interface TimeValidationProps<TDate> {
+export interface TimeValidationProps<TDate extends PickerValidDate> {
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -57,7 +57,8 @@ export interface TimeValidationProps<TDate> {
  * Validation props common to all the date views.
  * All these props have a default value when used inside a field / picker / calendar.
  */
-export interface BaseDateValidationProps<TDate> extends FutureAndPastValidationProps {
+export interface BaseDateValidationProps<TDate extends PickerValidDate>
+  extends FutureAndPastValidationProps {
   /**
    * Maximal selectable date.
    */
@@ -71,7 +72,7 @@ export interface BaseDateValidationProps<TDate> extends FutureAndPastValidationP
 /**
  * Props used to validate a date value (validates day + month + year).
  */
-export interface DayValidationProps<TDate> {
+export interface DayValidationProps<TDate extends PickerValidDate> {
   /**
    * Disable specific date.
    *
@@ -87,7 +88,7 @@ export interface DayValidationProps<TDate> {
 /**
  * Props used to validate a month value
  */
-export interface MonthValidationProps<TDate> {
+export interface MonthValidationProps<TDate extends PickerValidDate> {
   /**
    * Disable specific month.
    * @template TDate
@@ -100,7 +101,7 @@ export interface MonthValidationProps<TDate> {
 /**
  * Props used to validate a year value
  */
-export interface YearValidationProps<TDate> {
+export interface YearValidationProps<TDate extends PickerValidDate> {
   /**
    * Disable specific year.
    * @template TDate
@@ -113,7 +114,7 @@ export interface YearValidationProps<TDate> {
 /**
  * Props used to validate a date time value.
  */
-export interface DateTimeValidationProps<TDate> {
+export interface DateTimeValidationProps<TDate extends PickerValidDate> {
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */

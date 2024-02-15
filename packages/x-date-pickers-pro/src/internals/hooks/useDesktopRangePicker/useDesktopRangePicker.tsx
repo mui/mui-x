@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -13,7 +13,9 @@ import {
   BaseFieldProps,
   DateOrTimeViewWithMeridiem,
   UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -29,7 +31,7 @@ import { useRangePosition } from '../useRangePosition';
 const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -188,7 +190,7 @@ export const useDesktopRangePicker = <
       ...slotProps?.tabs,
       rangePosition,
       onRangePositionChange,
-    },
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

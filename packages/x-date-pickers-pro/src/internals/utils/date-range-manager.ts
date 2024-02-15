@@ -1,8 +1,8 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { mergeDateAndTime } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../../models';
 
-interface CalculateRangeChangeOptions<TDate> {
+interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
   utils: MuiPickersAdapter<TDate>;
   range: DateRange<TDate>;
   newDate: TDate | null;
@@ -16,12 +16,12 @@ interface CalculateRangeChangeOptions<TDate> {
   shouldMergeDateAndTime?: boolean;
 }
 
-interface CalculateRangeChangeResponse<TDate> {
+interface CalculateRangeChangeResponse<TDate extends PickerValidDate> {
   nextSelection: RangePosition;
   newRange: DateRange<TDate>;
 }
 
-export function calculateRangeChange<TDate>({
+export function calculateRangeChange<TDate extends PickerValidDate>({
   utils,
   range,
   newDate: selectedDate,
@@ -58,7 +58,7 @@ export function calculateRangeChange<TDate>({
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }
 
-export function calculateRangePreview<TDate>(
+export function calculateRangePreview<TDate extends PickerValidDate>(
   options: CalculateRangeChangeOptions<TDate>,
 ): DateRange<TDate> {
   if (options.newDate == null) {

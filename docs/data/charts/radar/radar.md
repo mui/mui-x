@@ -1,5 +1,6 @@
 ---
 title: React Radar chart
+productId: x-charts
 ---
 
 # Charts - Radar 🚧

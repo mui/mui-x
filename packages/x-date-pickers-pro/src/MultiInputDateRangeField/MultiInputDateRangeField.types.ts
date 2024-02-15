@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
@@ -9,21 +10,21 @@ import { MultiInputFieldRefs } from '../internals/models/fields';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
-  TDate,
+  TDate extends PickerValidDate,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
-export interface UseMultiInputDateRangeFieldProps<TDate>
+export interface UseMultiInputDateRangeFieldProps<TDate extends PickerValidDate>
   extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {}
 
-export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
-  TChildProps,
-  keyof UseMultiInputDateRangeFieldProps<TDate>
-> &
+export type UseMultiInputDateRangeFieldComponentProps<
+  TDate extends PickerValidDate,
+  TChildProps extends {},
+> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
   UseMultiInputDateRangeFieldProps<TDate>;
 
-export interface MultiInputDateRangeFieldProps<TDate>
+export interface MultiInputDateRangeFieldProps<TDate extends PickerValidDate>
   extends UseMultiInputDateRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
   /**
@@ -42,7 +43,8 @@ export interface MultiInputDateRangeFieldProps<TDate>
   slotProps?: MultiInputDateRangeFieldSlotProps<TDate>;
 }
 
-export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;
+export type MultiInputDateRangeFieldOwnerState<TDate extends PickerValidDate> =
+  MultiInputDateRangeFieldProps<TDate>;
 
 export interface MultiInputDateRangeFieldSlots {
   /**
@@ -64,7 +66,7 @@ export interface MultiInputDateRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateRangeFieldSlotProps<TDate> {
+export interface MultiInputDateRangeFieldSlotProps<TDate extends PickerValidDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
   textField?: SlotComponentProps<
     typeof TextField,

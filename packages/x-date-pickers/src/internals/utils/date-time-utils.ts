@@ -2,6 +2,7 @@ import {
   DateOrTimeView,
   DateView,
   MuiPickersAdapter,
+  PickerValidDate,
   TimeStepOptions,
   TimeView,
 } from '../../models';
@@ -11,8 +12,8 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 import { DesktopOnlyTimePickerProps } from '../models/props/clock';
 import { DefaultizedProps } from '../models/helpers';
 
-export const resolveDateTimeFormat = (
-  utils: MuiPickersAdapter<any>,
+export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
+  utils: MuiPickersAdapter<TDate>,
   { views, format, ...other }: { format?: string; views: readonly DateOrTimeView[]; ampm: boolean },
 ) => {
   if (format) {
@@ -58,13 +59,15 @@ const resolveViews = <TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewW
 const resolveShouldRenderTimeInASingleColumn = (timeSteps: TimeStepOptions, threshold: number) =>
   (24 * 60) / ((timeSteps.hours ?? 1) * (timeSteps.minutes ?? 5)) <= threshold;
 
-interface DefaultizedTimeViewsProps<TDate, TView = DateOrTimeView>
+interface DefaultizedTimeViewsProps<TDate extends PickerValidDate, TView = DateOrTimeView>
   extends DefaultizedProps<DesktopOnlyTimePickerProps<TDate>, 'ampm'> {
   views: readonly TView[];
 }
 
-interface DefaultizedTimeViewsResponse<TDate, TView = DateOrTimeViewWithMeridiem>
-  extends Required<
+interface DefaultizedTimeViewsResponse<
+  TDate extends PickerValidDate,
+  TView = DateOrTimeViewWithMeridiem,
+> extends Required<
     Pick<
       DefaultizedTimeViewsProps<TDate, TView>,
       'thresholdToRenderTimeInASingleColumn' | 'timeSteps' | 'views'
@@ -74,7 +77,7 @@ interface DefaultizedTimeViewsResponse<TDate, TView = DateOrTimeViewWithMeridiem
 }
 
 export function resolveTimeViewsResponse<
-  TDate,
+  TDate extends PickerValidDate,
   InTView extends DateOrTimeView = DateOrTimeView,
   OutTView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
 >({

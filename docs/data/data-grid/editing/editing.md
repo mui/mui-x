@@ -212,7 +212,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: any, params: GridCellParams) => {
+    valueParser: (value, row, column, apiRef) => {
       return value.toLowerCase();
     },
   },
@@ -227,9 +227,9 @@ If you are already using a `valueGetter` to extract the value from a nested obje
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueSetter: (params: GridValueSetterParams) => {
-      const [firstName, lastName] = params.value!.toString().split(' ');
-      return { ...params.row, firstName, lastName };
+    valueSetter: (value, row) => {
+      const [firstName, lastName] = value!.toString().split(' ');
+      return { ...row, firstName, lastName };
     },
   },
 ];

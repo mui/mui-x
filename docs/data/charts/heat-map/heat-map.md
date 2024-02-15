@@ -1,5 +1,6 @@
 ---
 title: React Heat map chart
+productId: x-charts
 ---
 
 # Charts - Heat map 🚧
