@@ -58,7 +58,14 @@ export default apiPages;
   getComponentInfo,
   translationLanguages: LANGUAGES,
   skipComponent(filename) {
-    return filename.includes('/context/');
+    if (filename.includes('/context/')) {
+      return true;
+    }
+    return [
+      'x-charts/src/Gauge/GaugeReferenceArc.tsx',
+      'x-charts/src/Gauge/GaugeValueArc.tsx',
+      'x-charts/src/Gauge/GaugeValueText.tsx',
+    ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/charts',
