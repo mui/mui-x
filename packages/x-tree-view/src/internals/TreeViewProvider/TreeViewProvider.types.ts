@@ -10,7 +10,10 @@ import {
 export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> =
   MergePluginsProperty<TPlugins, 'contextValue'> & {
     instance: TreeViewInstance<TPlugins>;
-    runItemPlugins: (options: TreeViewItemPluginOptions) => Required<TreeViewItemPluginResponse>;
+    runItemPlugins: (
+      options: TreeViewItemPluginOptions,
+    ) => Pick<TreeViewItemPluginResponse, 'ref'> &
+      Required<Omit<TreeViewItemPluginResponse, 'ref'>>;
   };
 
 export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {

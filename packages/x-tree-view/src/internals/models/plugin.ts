@@ -124,7 +124,7 @@ export interface TreeViewItemPluginResponse {
   /**
    * Ref enriched by the plugin
    */
-  ref?: React.RefCallback<HTMLLIElement>;
+  ref?: React.Ref<HTMLLIElement>;
   /**
    * Render function used to add React wrappers around the TreeItem.
    * @param {React.ReactNode} children The TreeItem node before this plugin execution.

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EventHandlers, extractEventHandlers, SlotComponentProps } from '@mui/base/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -33,6 +34,9 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
   } = runItemPlugins({ props: inParameters, ref: inParameters.rootRef });
 
   const { id, nodeId, label, children } = parameters;
+
+  // We transform the ref into a `React.RefCallback`
+  const rootRef = useForkRef(ref);
 
   const status: UseTreeItemStatus = {
     expandable: Boolean(Array.isArray(children) ? children.length : children),
@@ -209,7 +213,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     getContentProps,
     getGroupProps,
     getLabelProps,
-    rootRef: ref,
+    rootRef,
     wrapItem,
     status,
     fallbackIcon,
