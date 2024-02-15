@@ -23,7 +23,8 @@ import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
-import { type GridDimensions } from '../hooks/features/dimensions';
+import type { GridVirtualizationState } from '../hooks/features/virtualization';
+import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
@@ -41,6 +42,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
+  offsets: GridVirtualizationState['offsets'];
   dimensions: GridDimensions;
   firstColumnToRender: number;
   lastColumnToRender: number;
@@ -122,6 +124,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     visibleColumns,
     renderedColumns,
     pinnedColumns,
+    offsets,
     dimensions,
     firstColumnToRender,
     lastColumnToRender,
@@ -515,7 +518,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...other}
     >
       {leftCells}
-      <div className={gridClasses.cellOffsetLeft} role="presentation" />
+      <div
+        role="presentation"
+        className={gridClasses.cellOffsetLeft}
+        style={{ width: offsets.left }}
+      />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
       {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
@@ -581,6 +588,10 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
+  offsets: PropTypes.shape({
+    left: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired,
+  }).isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
