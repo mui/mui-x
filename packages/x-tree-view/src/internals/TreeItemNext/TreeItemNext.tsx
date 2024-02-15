@@ -110,8 +110,6 @@ export const TreeItemNextGroup = styled(Collapse, {
   slot: 'Group',
   overridesResolver: (props, styles) => styles.group,
 })({
-  margin: 0,
-  padding: 0,
   paddingLeft: 12,
 });
 
