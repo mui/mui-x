@@ -1,8 +1,11 @@
-name: Add comment
+name: Add comment to closed issue
 on:
   issues:
     types:
       - closed
+
+permissions: {}
+
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_REPO: ${{ github.repository }}
@@ -23,9 +26,13 @@ jobs:
     permissions:
       issues: write
     steps:
+      - uses: actions-cool/check-user-permission@main
+        id: checkUser
+        with:
+          require: 'write'
       - name: Add comment for outside contributors
-        if: github.event.issue.author_association != 'MEMBER' && github.event.issue.author_association != 'OWNER'
+        if: steps.checkUser.outputs.check-result == 'false'
         run: gh issue comment "$NUMBER" --body "$BODY $APPENDIX"
       - name: Add comment for maintainers
-        if: github.event.issue.author_association == 'MEMBER' || github.event.issue.author_association == 'OWNER'
+        if: steps.checkUser.outputs.check-result == 'true'
         run: gh issue comment "$NUMBER" --body "$BODY"
