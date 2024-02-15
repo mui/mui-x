@@ -119,6 +119,20 @@ const TabsWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(4),
   },
 }));
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  mt: 1,
+  mb: '-16px',
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: '60%',
+    width: '100%',
+    backgroundColor: theme.palette.primary.main,
+  },
+}));
 
 type TabsProps = {
   value: string;
@@ -129,30 +143,16 @@ type TabsProps = {
 function StylingApproachTabs({ value, onChange, options }: TabsProps) {
   return (
     <div>
-      <Tabs
+      <StyledTabs
         value={value}
         onChange={onChange}
         aria-label="Customization option"
         TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-        sx={{
-          mt: 1,
-          mb: '-16px',
-          '& .MuiTabs-indicator': {
-            display: 'flex',
-            justifyContent: 'center',
-            backgroundColor: 'transparent',
-          },
-          '& .MuiTabs-indicatorSpan': {
-            maxWidth: '60%',
-            width: '100%',
-            backgroundColor: theme.palette.primary.main,
-          },
-        }}
       >
         {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
           <Tab value={option} key={option} label={options[option]} />
         ))}
-      </Tabs>
+      </StyledTabs>
     </div>
   );
 }
