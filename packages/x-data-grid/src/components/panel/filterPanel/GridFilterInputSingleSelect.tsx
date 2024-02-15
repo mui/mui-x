@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { InputLabelProps } from '@mui/material/InputLabel';
+// import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
@@ -65,7 +65,6 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
-    inputLabelProps?: InputLabelProps;
   };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -81,7 +80,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     variant = 'standard',
     isFilterActive,
     clearButton,
-    inputLabelProps,
+    InputLabelProps,
     ...others
   } = props;
   const filterValue = item.value ?? '';
