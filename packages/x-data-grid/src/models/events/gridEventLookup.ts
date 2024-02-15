@@ -507,10 +507,6 @@ export interface GridEventLookup
     params: GridRowEditStopParams;
     event: MuiBaseEvent;
   };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
   /**
