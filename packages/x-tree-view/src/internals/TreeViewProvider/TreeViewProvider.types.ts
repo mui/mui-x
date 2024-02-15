@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   MergePluginsProperty,
+  TreeItemWrapper,
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewItemPluginOptions,
@@ -10,10 +11,11 @@ import {
 export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> =
   MergePluginsProperty<TPlugins, 'contextValue'> & {
     instance: TreeViewInstance<TPlugins>;
-    runItemPlugins: (
-      options: TreeViewItemPluginOptions,
-    ) => Pick<TreeViewItemPluginResponse, 'ref'> &
-      Required<Omit<TreeViewItemPluginResponse, 'ref'>>;
+    wrapItem: TreeItemWrapper;
+    runItemPlugins: <TProps extends {}>(
+      options: TreeViewItemPluginOptions<TProps>,
+    ) => Pick<TreeViewItemPluginResponse<TProps>, 'ref'> &
+      Required<Omit<TreeViewItemPluginResponse<TProps>, 'ref'>>;
   };
 
 export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {

@@ -121,12 +121,6 @@ export interface UseTreeItemReturnValue {
    */
   rootRef: React.RefCallback<HTMLLIElement> | null;
   /**
-   * Render function used to add React wrappers around the TreeItem.
-   * @param {React.ReactNode} children The TreeItem node before this plugin execution.
-   * @returns {React.ReactNode} The wrapped TreeItem.
-   */
-  wrapItem: (children: React.ReactNode) => React.ReactNode;
-  /**
    * Current status of the item.
    */
   status: UseTreeItemStatus;

@@ -12,6 +12,7 @@ import {
   TreeItemNextRoot,
 } from '@mui/x-tree-view/internals/TreeItemNext';
 import { TreeItemIcon } from '@mui/x-tree-view/internals/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/internals/TreeItemProvider';
 
 const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
@@ -35,34 +36,33 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupProps,
     status,
-    wrapItem,
   } = useTreeItem({ id, nodeId, children, label, rootRef: ref });
 
-  const node = (
-    <TreeItemNextRoot {...getRootProps(other)}>
-      <CustomTreeItemContent {...getContentProps()}>
-        <TreeItemNextIconContainer {...getIconContainerProps()}>
-          <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
-        </TreeItemNextIconContainer>
-        <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
-          <Avatar
-            sx={(theme) => ({
-              background: theme.palette.primary.main,
-              width: 24,
-              height: 24,
-              fontSize: '0.8rem',
-            })}
-          >
-            {label[0]}
-          </Avatar>
-          <TreeItemNextLabel {...getLabelProps()} />
-        </Box>
-      </CustomTreeItemContent>
-      {children && <TreeItemNextGroup {...getGroupProps()} />}
-    </TreeItemNextRoot>
+  return (
+    <TreeItemProvider nodeId={nodeId}>
+      <TreeItemNextRoot {...getRootProps(other)}>
+        <CustomTreeItemContent {...getContentProps()}>
+          <TreeItemNextIconContainer {...getIconContainerProps()}>
+            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+          </TreeItemNextIconContainer>
+          <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
+            <Avatar
+              sx={(theme) => ({
+                background: theme.palette.primary.main,
+                width: 24,
+                height: 24,
+                fontSize: '0.8rem',
+              })}
+            >
+              {label[0]}
+            </Avatar>
+            <TreeItemNextLabel {...getLabelProps()} />
+          </Box>
+        </CustomTreeItemContent>
+        {children && <TreeItemNextGroup {...getGroupProps()} />}
+      </TreeItemNextRoot>
+    </TreeItemProvider>
   );
-
-  return wrapItem(node);
 });
 
 export default function CustomContentTreeView() {

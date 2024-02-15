@@ -11,6 +11,7 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
+import type { TreeItemProps } from '../../../TreeItem';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
@@ -66,7 +67,8 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   });
 };
 
-const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
+// TODO: Add support for TreeItemNextProps
+const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps> = ({ props, ref }) => {
   const { children, disabled = false, label, nodeId, id, ContentProps: inContentProps } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
@@ -125,17 +127,19 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   return {
     props: {
       ...props,
-      // TODO: Make compatible with TreeItemNext
       ContentProps: {
         ...inContentProps,
         ref: contentRef,
       },
     },
     ref: handleRef,
-    wrapItem: (item) => <DescendantProvider id={nodeId}>{item}</DescendantProvider>,
   };
 };
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+
+useTreeViewJSXNodes.wrapItem = ({ children, nodeId }) => (
+  <DescendantProvider id={nodeId}>{children}</DescendantProvider>
+);
 
 useTreeViewJSXNodes.params = {};

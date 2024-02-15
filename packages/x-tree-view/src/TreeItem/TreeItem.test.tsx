@@ -26,7 +26,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => {},
   } as any,
-  runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
+  runItemPlugins: ({ props, ref }) => ({ props, ref }),
+  wrapItem: ({ children }) => children,
   disabledItemsFocusable: false,
   icons: {
     slots: {},

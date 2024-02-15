@@ -8,6 +8,7 @@ import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types'
 import { useTreeItem } from '../useTreeItem';
 import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
 import { TreeItemIcon } from '../TreeItemIcon';
+import { TreeItemProvider } from '../TreeItemProvider';
 
 export const TreeItemNextRoot = styled('li', {
   name: 'MuiTreeItemNext',
@@ -138,13 +139,12 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
 ) {
   const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
 
-  const { getRootProps, getContentProps, getLabelProps, getGroupProps, status, wrapItem } =
-    useTreeItem({
-      id,
-      nodeId,
-      children,
-      label,
-    });
+  const { getRootProps, getContentProps, getLabelProps, getGroupProps, status } = useTreeItem({
+    id,
+    nodeId,
+    children,
+    label,
+  });
 
   const ownerState: TreeItemNextOwnerState = {
     ...props,
@@ -206,17 +206,17 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     className: classes.group,
   });
 
-  const node = (
-    <Root {...rootProps}>
-      <Content {...contentProps}>
-        <IconContainer {...iconContainerProps}>
-          <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
-        </IconContainer>
-        <Label {...labelProps} />
-      </Content>
-      {children && <Group {...groupProps} />}
-    </Root>
+  return (
+    <TreeItemProvider nodeId={nodeId}>
+      <Root {...rootProps}>
+        <Content {...contentProps}>
+          <IconContainer {...iconContainerProps}>
+            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+          </IconContainer>
+          <Label {...labelProps} />
+        </Content>
+        {children && <Group {...groupProps} />}
+      </Root>
+    </TreeItemProvider>
   );
-
-  return wrapItem(node);
 });

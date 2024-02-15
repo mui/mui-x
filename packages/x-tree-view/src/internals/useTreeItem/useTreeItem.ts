@@ -23,11 +23,10 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const {
-    props: parameters,
-    ref,
-    wrapItem,
-  } = runItemPlugins({ props: inParameters, ref: inParameters.rootRef });
+  const { props: parameters, ref } = runItemPlugins({
+    props: inParameters,
+    ref: inParameters.rootRef,
+  });
 
   const { id, nodeId, label, children } = parameters;
 
@@ -184,7 +183,6 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     getIconContainerProps,
     getLabelProps,
     rootRef,
-    wrapItem,
     status,
   };
 };
