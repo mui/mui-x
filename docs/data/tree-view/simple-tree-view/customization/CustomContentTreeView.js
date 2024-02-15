@@ -14,7 +14,7 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/internals/TreeItemIcon';
 
 const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
-  '&': { padding: theme.spacing(0.5, 1) },
+  padding: theme.spacing(0.5, 1),
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {

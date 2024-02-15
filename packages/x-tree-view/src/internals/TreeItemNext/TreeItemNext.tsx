@@ -100,8 +100,7 @@ export const TreeItemNextIconContainer = styled('div', {
   margin: 0,
   padding: 0,
   outline: 0,
-  marginRight: 4,
-  width: 15,
+  width: 16,
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',
@@ -117,7 +116,7 @@ export const TreeItemNextGroup = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
-  marginLeft: 17,
+  paddingLeft: 17,
 });
 
 const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
