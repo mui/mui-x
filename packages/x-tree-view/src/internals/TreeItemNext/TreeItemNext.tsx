@@ -25,11 +25,13 @@ export const TreeItemNextContent = styled('div', {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
-  padding: '0 8px',
+  padding: theme.spacing(0.5, 1),
+  borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
+  gap: theme.spacing(1),
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
   '&:hover': {
