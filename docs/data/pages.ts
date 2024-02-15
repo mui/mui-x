@@ -459,7 +459,7 @@ const pages: MuiPage[] = [
             subheader: 'Future components',
             children: [
               { pathname: '/x/react-charts/gauge', title: 'Gauge', planned: true },
-              { pathname: '/x/react-charts/heat-map', title: 'Heat map', planned: true },
+              { pathname: '/x/react-charts/heat-map', title: 'Heatmap', planned: true },
               { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
               { pathname: '/x/react-charts/tree-map', title: 'Tree map', planned: true },
               { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
