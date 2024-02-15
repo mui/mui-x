@@ -29,6 +29,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         !!srcInfo.src.match(/@ignore - internal hook\./);
       return { ...srcInfo, shouldSkip };
     },
+    slotInterfaceName: `${name.replace('DataGrid', 'Grid')}SlotsComponent`,
     getInheritance: () => null, // TODO: Support inheritance
     getDemos: () => [
       { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
