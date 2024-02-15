@@ -132,13 +132,13 @@ GaugeContainer.propTypes = {
    */
   cornerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
-   * The x coordinate of the pie center.
+   * The x coordinate of the arc center.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the width the drawing area.
    */
   cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
-   * The y coordinate of the pie center.
+   * The y coordinate of the arc center.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the height the drawing area.
    */

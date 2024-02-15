@@ -2,12 +2,16 @@
 title: React Gauge chart
 productId: x-charts
 components: Gauge, GaugeContainer
+packageName: '@mui/x-charts'
+githubLabel: 'component: charts'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 ---
 
 # Charts - Gauge
 
 <p class="description">Gauge charts let the user evaluate metrics.</p>
+
+{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
 
 ## Basic gauge
 

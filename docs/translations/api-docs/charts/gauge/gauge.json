@@ -5,10 +5,10 @@
       "description": "The radius applied to arc corners (similar to border radius). Set it to &#39;50%&#39; to get rounded arc."
     },
     "cx": {
-      "description": "The x coordinate of the pie center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the width the drawing area."
+      "description": "The x coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the width the drawing area."
     },
     "cy": {
-      "description": "The y coordinate of the pie center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
+      "description": "The y coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
     },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
