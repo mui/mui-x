@@ -82,7 +82,6 @@ export const TreeItemNextLabel = styled('div', {
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
-  paddingLeft: 4,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   // fixes overflow - see https://github.com/mui/material-ui/issues/27372
@@ -96,10 +95,6 @@ export const TreeItemNextIconContainer = styled('div', {
   slot: 'IconContainer',
   overridesResolver: (props, styles) => styles.iconContainer,
 })({
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  outline: 0,
   width: 16,
   display: 'flex',
   flexShrink: 0,
@@ -116,7 +111,7 @@ export const TreeItemNextGroup = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
-  paddingLeft: 17,
+  paddingLeft: 12,
 });
 
 const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
