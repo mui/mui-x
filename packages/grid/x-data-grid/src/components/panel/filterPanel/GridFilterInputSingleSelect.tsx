@@ -75,6 +75,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
+    variant = 'standard',
     isFilterActive,
     clearButton,
     InputLabelProps,
@@ -157,7 +158,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           id={labelId}
           htmlFor={id}
           shrink
-          variant="standard"
+          variant={variant}
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -167,7 +168,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValueState}
           onChange={onFilterChange}
-          variant="standard"
+          variant={variant}
           type={type || 'text'}
           inputProps={{
             tabIndex,
@@ -175,7 +176,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
-          {...others}
+          notched={variant === 'outlined' ? true : undefined}
+          {
+            ...(others as any) /* FIXME: typing error */
+          }
           {...rootProps.slotProps?.baseSelect}
         >
           {renderSingleSelectOptions({
