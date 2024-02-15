@@ -121,7 +121,7 @@ Gauge.propTypes = {
   title: PropTypes.string,
   /**
    * The value of the gauge.
-   * Set to `null` if no value to display.
+   * Set to `null` to not display a value.
    */
   value: PropTypes.number,
   /**

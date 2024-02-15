@@ -28,7 +28,7 @@
     },
     "startAngle": { "description": "The start angle (deg)." },
     "value": {
-      "description": "The value of the gauge. Set to <code>null</code> if no value to display."
+      "description": "The value of the gauge. Set to <code>null</code> to not display a value."
     },
     "valueMax": { "description": "The maximal value of the gauge." },
     "valueMin": { "description": "The minimal value of the gauge." },
