@@ -151,7 +151,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           native={isSelectNative}
           notched={variant === 'outlined' ? true : undefined}
           {
-              ...(others as any) /* FIXME: typing error */
+            ...(others as any) /* FIXME: typing error */
           }
           {...rootProps.slotProps?.baseSelect}
         >
