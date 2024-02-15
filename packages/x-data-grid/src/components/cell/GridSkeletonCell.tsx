@@ -54,8 +54,8 @@ GridSkeletonCell.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.string.isRequired,
-  contentWidth: PropTypes.number.isRequired,
   field: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
 } as any;
 
