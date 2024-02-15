@@ -149,7 +149,10 @@ export const useGridRowEditing = (
       nextFocusedCell.current = null;
       focusTimeout.current = setTimeout(() => {
         focusTimeout.current = null;
-        if (nextFocusedCell.current?.id !== params.id) {
+        if (
+          nextFocusedCell.current?.id !== params.id ||
+          nextFocusedCell.current?.isEditable === false
+        ) {
           // The row might have been deleted during the click
           if (!apiRef.current.getRow(params.id)) {
             return;
