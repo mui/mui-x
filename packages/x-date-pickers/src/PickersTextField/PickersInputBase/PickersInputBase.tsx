@@ -262,7 +262,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         sectionListRef={sectionListRef}
         elements={elements}
         contentEditable={contentEditable}
-        readOnly={readOnly}
         tabIndex={tabIndex}
         className={classes.sectionsContainer}
         onFocus={handleInputFocus}
