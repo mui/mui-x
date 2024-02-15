@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled } from '@mui/material/styles';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
+import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -70,16 +72,16 @@ const SpaceFiller = styled('div')({
   },
 });
 
+type OwnerState = DataGridProcessedProps;
+
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
   overridesResolver: (_, styles) => styles.columnHeaderRow,
-})<{ ownerState: {} }>({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   height: 'var(--DataGrid-headerHeight)',
 });
-
-const EMPTY_OWNER_STATE = {};
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
@@ -102,6 +104,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
+  const rootProps = useGridRootProps();
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
   const innerRef = React.useRef<HTMLDivElement>(null);
@@ -225,7 +228,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <GridColumnHeaderRow
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
-        ownerState={EMPTY_OWNER_STATE}
+        ownerState={rootProps}
       >
         {getFillers(params, columns, 0)}
       </GridColumnHeaderRow>
@@ -352,7 +355,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           key={depthIndex}
           role="row"
           aria-rowindex={depthIndex + 1}
-          ownerState={EMPTY_OWNER_STATE}
+          ownerState={rootProps}
         >
           {getFillers(params, children, depthInfo.leftOverflow)}
         </GridColumnHeaderRow>,
