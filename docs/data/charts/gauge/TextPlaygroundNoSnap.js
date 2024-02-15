@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
 export default function TextPlaygroundNoSnap() {
@@ -42,11 +42,12 @@ export default function TextPlaygroundNoSnap() {
         },
       ]}
       renderDemo={(props) => (
-        <Paper
+        <Box
           sx={{
-            width: 300,
+            width: '100%',
             height: 200,
             margin: 'auto',
+            mb: 4,
           }}
         >
           <Gauge
@@ -61,7 +62,7 @@ export default function TextPlaygroundNoSnap() {
             value={props.value}
             text={({ value, valueMax }) => `${value} / ${valueMax}`}
           />
-        </Paper>
+        </Box>
       )}
       getCode={({ props }) => {
         return [
