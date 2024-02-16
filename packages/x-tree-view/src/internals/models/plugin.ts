@@ -43,6 +43,7 @@ export type TreeViewPluginSignature<
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
     modelNames?: keyof T['defaultizedParams'];
     dependantPlugins?: readonly TreeViewAnyPluginSignature[];
+    publicAPI?: {};
   },
 > = {
   params: T extends { params: {} } ? T['params'] : {};
@@ -61,6 +62,7 @@ export type TreeViewPluginSignature<
       }
     : {};
   dependantPlugins: T extends { dependantPlugins: Array<any> } ? T['dependantPlugins'] : [];
+  publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
 };
 
 export type TreeViewAnyPluginSignature = {
@@ -74,6 +76,7 @@ export type TreeViewAnyPluginSignature = {
   slots: any;
   slotProps: any;
   models: any;
+  publicAPI: any;
 };
 
 type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
@@ -91,6 +94,14 @@ type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['instance'] &
     MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'instance'> & {
+      /**
+       * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
+       */
+      $$signature: TSignature;
+    };
+export type TreeViewUsedPublicAPI<TSignature extends TreeViewAnyPluginSignature> =
+  TSignature['publicAPI'] &
+    MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'publicAPI'> & {
       /**
        * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
        */
