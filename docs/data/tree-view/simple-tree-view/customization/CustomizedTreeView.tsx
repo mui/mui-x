@@ -7,7 +7,11 @@ import Label from '@mui/icons-material/Label';
 import FolderRounded from '@mui/icons-material/FolderRounded';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import {
+  TreeItemNext,
+  TreeItemNextProps,
+} from '@mui/x-tree-view/internals/TreeItemNext';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { animated, useSpring } from '@react-spring/web';
@@ -36,7 +40,7 @@ declare module 'react' {
   }
 }
 
-type StyledTreeItemProps = TreeItemProps & {
+type StyledTreeItemProps = Omit<TreeItemNextProps, 'label'> & {
   labelIcon: React.ElementType;
   labelText: string;
 };
@@ -48,7 +52,7 @@ const StyledTreeItemLabel = styled(Typography)({
   flexGrow: 1,
 }) as unknown as typeof Typography;
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItemNext)(({ theme }) => ({
   color:
     theme.palette.mode === 'light'
       ? theme.palette.grey[800]
@@ -101,13 +105,13 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       color: 'white',
     },
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: theme.spacing(3.5),
     [`& .${treeItemClasses.content}`]: {
       fontWeight: 500,
     },
   },
-})) as unknown as typeof TreeItem;
+})) as unknown as typeof TreeItemNext;
 
 const AnimatedCollapse = animated(Collapse);
 
@@ -130,6 +134,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
 
   return (
     <StyledTreeItemRoot
+      slots={{
+        groupTransition: TransitionComponent,
+      }}
       label={
         <Box
           sx={{
@@ -147,7 +154,6 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
         </Box>
       }
       {...other}
-      TransitionComponent={TransitionComponent}
       ref={ref}
     />
   );

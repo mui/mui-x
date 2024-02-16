@@ -7,7 +7,8 @@ import Label from '@mui/icons-material/Label';
 import FolderRounded from '@mui/icons-material/FolderRounded';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { TreeItemNext } from '@mui/x-tree-view/internals/TreeItemNext';
 import Collapse from '@mui/material/Collapse';
 
 import { animated, useSpring } from '@react-spring/web';
@@ -36,7 +37,7 @@ const StyledTreeItemLabel = styled(Typography)({
   flexGrow: 1,
 });
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItemNext)(({ theme }) => ({
   color:
     theme.palette.mode === 'light'
       ? theme.palette.grey[800]
@@ -89,7 +90,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       color: 'white',
     },
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: theme.spacing(3.5),
     [`& .${treeItemClasses.content}`]: {
       fontWeight: 500,
@@ -115,6 +116,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 
   return (
     <StyledTreeItemRoot
+      slots={{
+        groupTransition: TransitionComponent,
+      }}
       label={
         <Box
           sx={{
@@ -132,7 +136,6 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
         </Box>
       }
       {...other}
-      TransitionComponent={TransitionComponent}
       ref={ref}
     />
   );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -22,11 +23,12 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const { id, nodeId, label, children } = parameters;
+  const { id, nodeId, label, children, rootRef } = parameters;
 
-  const { rootRef, contentRef } = runItemPlugins(parameters);
+  const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItemInteractions({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
+  const handleRootRef = useForkRef(rootRef, pluginRootRef);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent & MuiCancellableEvent) => {
@@ -93,6 +95,7 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
 
     return {
       ...externalEventHandlers,
+      ref: handleRootRef,
       role: 'treeitem',
       tabIndex: -1,
       id: idAttribute,
@@ -175,7 +178,7 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
     getGroupTransitionProps,
     getIconContainerProps,
     getLabelProps,
-    rootRef,
+    rootRef: handleRootRef,
     status,
   };
 };

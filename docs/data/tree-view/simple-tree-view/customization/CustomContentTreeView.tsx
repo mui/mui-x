@@ -2,12 +2,12 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-import Collapse from '@mui/material/Collapse';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { useTreeItem } from '@mui/x-tree-view/internals/useTreeItem';
 import {
   TreeItemNextContent,
   TreeItemNextIconContainer,
+  TreeItemNextTransitionGroup,
   TreeItemNextLabel,
   TreeItemNextProps,
   TreeItemNextRoot,
@@ -45,7 +45,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   return (
     <TreeItemProvider nodeId={nodeId}>
       <TreeItemNextRoot {...getRootProps(other)}>
-        <CustomTreeItemContent {...getContentProps()}>
+        <CustomTreeItemContent {...getContentProps()} ownerState={status}>
           <TreeItemNextIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
           </TreeItemNextIconContainer>
@@ -63,7 +63,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <TreeItemNextLabel {...getLabelProps()} />
           </Box>
         </CustomTreeItemContent>
-        {children && <Collapse {...getGroupTransitionProps()} />}
+        {children && <TreeItemNextTransitionGroup {...getGroupTransitionProps()} />}
       </TreeItemNextRoot>
     </TreeItemProvider>
   );
