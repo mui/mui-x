@@ -13,6 +13,10 @@ const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = withDocsInfra({
+  experimental: {
+    workerThreads: true,
+    cpus: 3,
+  },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
