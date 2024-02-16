@@ -6,9 +6,13 @@ export const extractPluginParamsFromProps = <
   TPlugins extends readonly TreeViewPlugin<any>[],
   TSlots extends MergePluginsProperty<TPlugins, 'slots'>,
   TSlotProps extends MergePluginsProperty<TPlugins, 'slotProps'>,
-  TProps extends { slots?: TSlots; slotProps?: TSlotProps },
+  TProps extends {
+    slots?: TSlots;
+    slotProps?: TSlotProps;
+    apiRef?: React.MutableRefObject<{} | null> | undefined;
+  },
 >({
-  props: { slots, slotProps, ...props },
+  props: { slots, slotProps, apiRef, ...props },
   plugins,
   rootRef,
 }: {
@@ -28,6 +32,7 @@ export const extractPluginParamsFromProps = <
     rootRef,
     slots: slots ?? {},
     slotProps: slotProps ?? {},
+    apiRef: apiRef ?? {},
   } as UseTreeViewBaseParameters<TPlugins> & PluginParams;
   const otherProps = {} as Omit<TProps, keyof PluginParams>;
 

@@ -3,12 +3,13 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/base/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
+  publicAPI,
   params,
   state,
   setState,
@@ -46,6 +47,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     isNodeFocused,
     focusNode,
     focusRoot,
+  });
+
+  populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
+    test,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {

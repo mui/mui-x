@@ -10,6 +10,9 @@ export interface UseTreeViewFocusInstance {
   focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
   focusRoot: () => void;
 }
+export interface UseTreeViewFocusPublicAPI {
+  test: () => void;
+}
 
 export interface UseTreeViewFocusParameters {
   /**
@@ -31,6 +34,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
   defaultizedParams: UseTreeViewFocusDefaultizedParameters;
   instance: UseTreeViewFocusInstance;
+  publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
   dependantPlugins: [
     UseTreeViewIdSignature,
