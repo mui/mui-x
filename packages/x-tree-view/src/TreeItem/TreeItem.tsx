@@ -13,7 +13,7 @@ import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
-import { TreeItemProvider } from '@mui/x-tree-view/internals/TreeItemProvider';
+import { TreeItemProvider } from '../internals/TreeItemProvider';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
