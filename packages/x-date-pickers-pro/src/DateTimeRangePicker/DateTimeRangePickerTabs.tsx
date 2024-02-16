@@ -119,6 +119,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     rangePosition,
     onRangePositionChange,
     className,
+    sx,
   } = props;
 
   const localeText = useLocaleText();
@@ -166,7 +167,11 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   }
 
   return (
-    <DateTimeRangePickerTabsRoot ownerState={props} className={clsx(classes.root, className)}>
+    <DateTimeRangePickerTabsRoot
+      ownerState={props}
+      className={clsx(classes.root, className)}
+      sx={sx}
+    >
       {!isPreviousHidden ? (
         <IconButton
           onClick={changeToPreviousTab}
