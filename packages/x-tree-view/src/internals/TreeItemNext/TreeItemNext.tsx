@@ -76,6 +76,9 @@ export const TreeItemNextContent = styled('div', {
           ),
     },
   },
+  [`& .${treeItemClasses.groupTransition}`]: {
+    paddingLeft: 12,
+  },
 }));
 
 export const TreeItemNextLabel = styled('div', {
@@ -105,14 +108,6 @@ export const TreeItemNextIconContainer = styled('div', {
   },
 });
 
-export const TreeItemNextGroup = styled(Collapse, {
-  name: 'MuiTreeItem',
-  slot: 'Group',
-  overridesResolver: (props, styles) => styles.group,
-})({
-  paddingLeft: 12,
-});
-
 const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
   const { classes } = ownerState;
 
@@ -125,7 +120,7 @@ const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     label: ['label'],
-    group: ['group'],
+    groupTransition: ['groupTransition'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -137,12 +132,13 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
 ) {
   const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
 
-  const { getRootProps, getContentProps, getLabelProps, getGroupProps, status } = useTreeItem({
-    id,
-    nodeId,
-    children,
-    label,
-  });
+  const { getRootProps, getContentProps, getLabelProps, getGroupTransitionProps, status } =
+    useTreeItem({
+      id,
+      nodeId,
+      children,
+      label,
+    });
 
   const ownerState: TreeItemNextOwnerState = {
     ...props,
@@ -195,13 +191,13 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     className: classes.label,
   });
 
-  const Group: React.ElementType = slots.group ?? TreeItemNextGroup;
+  const GroupTransition: React.ElementType = slots.groupTransition ?? Collapse;
   const groupProps = useSlotProps({
-    elementType: Group,
-    getSlotProps: getGroupProps,
-    externalSlotProps: slotProps.group,
+    elementType: GroupTransition,
+    getSlotProps: getGroupTransitionProps,
+    externalSlotProps: slotProps.groupTransition,
     ownerState,
-    className: classes.group,
+    className: classes.groupTransition,
   });
 
   return (
@@ -213,7 +209,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
           </IconContainer>
           <Label {...labelProps} />
         </Content>
-        {children && <Group {...groupProps} />}
+        {children && <GroupTransition {...groupProps} />}
       </Root>
     </TreeItemProvider>
   );

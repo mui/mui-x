@@ -6,7 +6,7 @@ import {
   UseTreeItemReturnValue,
   UseTreeItemRootSlotProps,
   UseTreeItemContentSlotProps,
-  UseTreeItemGroupSlotProps,
+  UseTreeItemGroupTransitionSlotProps,
   UseTreeItemLabelSlotProps,
   UseTreeItemIconContainerSlotProps,
 } from './useTreeItem.types';
@@ -157,9 +157,9 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     };
   };
 
-  const getGroupProps = <ExternalProps extends Record<string, any> = {}>(
+  const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemGroupSlotProps<ExternalProps> => {
+  ): UseTreeItemGroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
@@ -169,7 +169,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
-      role: 'group',
+      role: 'GroupTransition',
       in: status.expanded,
       children,
       ...externalProps,
@@ -179,7 +179,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
   return {
     getRootProps,
     getContentProps,
-    getGroupProps,
+    getGroupTransitionProps,
     getIconContainerProps,
     getLabelProps,
     rootRef,

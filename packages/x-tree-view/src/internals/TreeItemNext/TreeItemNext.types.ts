@@ -20,7 +20,7 @@ export interface TreeItemNextSlots extends TreeItemIconSlots {
    * The component that renders the children of the item.
    * @default TreeItemNextGroup
    */
-  group?: React.ElementType;
+  groupTransition?: React.ElementType;
   /**
    * The component that renders the icon
    * @default TreeItemNextIconContainer
@@ -36,7 +36,7 @@ export interface TreeItemNextSlots extends TreeItemIconSlots {
 export interface TreeItemNextSlotProps extends TreeItemIconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
-  group?: SlotComponentProps<'div', {}, {}>;
+  groupTransition?: SlotComponentProps<'div', {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
 }

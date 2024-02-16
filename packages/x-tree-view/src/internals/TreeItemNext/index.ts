@@ -2,7 +2,6 @@ export {
   TreeItemNext,
   TreeItemNextRoot,
   TreeItemNextContent,
-  TreeItemNextGroup,
   TreeItemNextIconContainer,
   TreeItemNextLabel,
 } from './TreeItemNext';

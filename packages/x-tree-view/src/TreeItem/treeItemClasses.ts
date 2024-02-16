@@ -4,8 +4,13 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 export interface TreeItemClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the transition component. */
+  /**
+   * Styles applied to the transition component.
+   * @deprecated Use `treeItemClasses.groupTransition` instead.
+   */
   group: string;
+  /** Styles applied to the transition component. */
+  groupTransition: string;
   /** Styles applied to the content element. */
   content: string;
   /** State class applied to the content element when expanded. */

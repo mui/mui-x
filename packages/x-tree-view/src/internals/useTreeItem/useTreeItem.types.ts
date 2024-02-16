@@ -56,16 +56,16 @@ export interface UseTreeItemLabelSlotOwnProps {
 export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemLabelSlotOwnProps;
 
-export interface UseTreeItemGroupSlotOwnProps {
+export interface UseTreeItemGroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
   component: 'ul';
-  role: 'group';
+  role: 'GroupTransition';
   children: React.ReactNode;
 }
 
-export type UseTreeItemGroupSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemGroupSlotOwnProps;
+export type UseTreeItemGroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItemGroupTransitionSlotOwnProps;
 
 export interface UseTreeItemStatus {
   expandable: boolean;
@@ -109,13 +109,13 @@ export interface UseTreeItemReturnValue {
     externalProps?: ExternalProps,
   ) => UseTreeItemIconContainerSlotProps<ExternalProps>;
   /**
-   * Resolver for the group slot's props.
-   * @param {ExternalProps} externalProps additional props for the group slot
-   * @returns {UseTreeItemGroupSlotProps<ExternalProps>} props that should be spread on the group slot
+   * Resolver for the GroupTransition slot's props.
+   * @param {ExternalProps} externalProps additional props for the GroupTransition slot
+   * @returns {UseTreeItemGroupTransitionSlotProps<ExternalProps>} props that should be spread on the GroupTransition slot
    */
-  getGroupProps: <ExternalProps extends Record<string, any> = {}>(
+  getGroupTransitionProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
-  ) => UseTreeItemGroupSlotProps<ExternalProps>;
+  ) => UseTreeItemGroupTransitionSlotProps<ExternalProps>;
   /**
    * A ref to the component's root DOM element.
    */

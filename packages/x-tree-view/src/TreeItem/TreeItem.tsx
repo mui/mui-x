@@ -28,6 +28,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     label: ['label'],
     group: ['group'],
+    groupTransition: ['groupTransition'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -323,7 +324,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           <TreeItemGroup
             as={TransitionComponent}
             unmountOnExit
-            className={classes.group}
+            className={clsx(classes.group, classes.groupTransition)}
             in={expanded}
             component="ul"
             role="group"
