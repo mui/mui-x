@@ -98,7 +98,11 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
         return;
       }
 
-      const itemPluginResponse = plugin.itemPlugin({ props: itemPluginProps, rootRef: finalRootRef, contentRef: finalContentRef });
+      const itemPluginResponse = plugin.itemPlugin({
+        props: itemPluginProps,
+        rootRef: finalRootRef,
+        contentRef: finalContentRef,
+      });
       if (itemPluginResponse?.rootRef) {
         finalRootRef = itemPluginResponse.rootRef;
       }
@@ -109,7 +113,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
     return {
       contentRef: finalContentRef,
-      rootRef: finalRootRef
+      rootRef: finalRootRef,
     };
   };
 

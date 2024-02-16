@@ -11,9 +11,7 @@ export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSign
   MergePluginsProperty<TPlugins, 'contextValue'> & {
     instance: TreeViewInstance<TPlugins>;
     wrapItem: TreeItemWrapper;
-    runItemPlugins: <TProps extends {}>(
-      props: TProps,
-    ) => Required<TreeViewItemPluginResponse>
+    runItemPlugins: <TProps extends {}>(props: TProps) => Required<TreeViewItemPluginResponse>;
   };
 
 export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {

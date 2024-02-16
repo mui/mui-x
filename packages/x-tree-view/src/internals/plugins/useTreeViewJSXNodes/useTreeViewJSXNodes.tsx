@@ -12,7 +12,7 @@ import {
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
 import type { TreeItemProps } from '../../../TreeItem';
-import type { TreeItemNextProps} from "../../TreeItemNext";
+import type { TreeItemNextProps } from '../../TreeItemNext';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
@@ -68,7 +68,11 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   });
 };
 
-const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItemNextProps> = ({ props, rootRef, contentRef }) => {
+const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItemNextProps> = ({
+  props,
+  rootRef,
+  contentRef,
+}) => {
   const { children, disabled = false, label, nodeId, id } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();

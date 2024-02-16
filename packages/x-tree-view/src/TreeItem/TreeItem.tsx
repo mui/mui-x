@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
@@ -161,9 +162,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
-
-  const { props, ref } = runItemPlugins<TreeItemProps>({ props: inPropsWithTheme, ref: inRef });
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
   const {
     children,
@@ -181,6 +180,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     TransitionProps,
     ...other
   } = props;
+
+  const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
+  const handleRootRef = useForkRef(inRef, rootRef);
+  const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
@@ -297,7 +300,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
         {...other}
         ownerState={ownerState}
         onFocus={handleFocus}
-        ref={ref}
+        ref={handleRootRef}
       >
         <StyledTreeItemContent
           as={ContentComponent}
@@ -319,6 +322,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           displayIcon={displayIcon}
           ownerState={ownerState}
           {...ContentProps}
+          ref={handleContentRef}
         />
         {children && (
           <TreeItemGroup
