@@ -1,3 +1,5 @@
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
 
 export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem> {
@@ -15,4 +17,5 @@ export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem> {
 
 export interface ExportedBaseTabsProps {
   className?: string;
+  sx?: SxProps<Theme>;
 }
