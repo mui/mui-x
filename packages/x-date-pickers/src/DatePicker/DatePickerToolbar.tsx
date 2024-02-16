@@ -19,6 +19,9 @@ export interface DatePickerToolbarProps<TDate extends PickerValidDate>
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DatePickerToolbarClasses>;
 }
 

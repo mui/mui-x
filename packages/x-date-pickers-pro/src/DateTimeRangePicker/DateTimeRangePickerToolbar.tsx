@@ -46,6 +46,9 @@ export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
 }
 
 export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateTimeRangePickerToolbarClasses>;
 }
 

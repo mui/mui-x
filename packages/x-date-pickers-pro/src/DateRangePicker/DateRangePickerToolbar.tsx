@@ -36,6 +36,9 @@ export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
