@@ -48,6 +48,11 @@
     },
     "group": {
       "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the transition component",
+      "deprecationInfo": "Use <code>treeItemClasses.groupTransition</code> instead."
+    },
+    "groupTransition": {
+      "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the transition component"
     },
     "iconContainer": {

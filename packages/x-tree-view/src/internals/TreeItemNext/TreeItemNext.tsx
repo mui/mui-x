@@ -77,7 +77,7 @@ export const TreeItemNextContent = styled('div', {
     },
   },
   [`& .${treeItemClasses.groupTransition}`]: {
-    paddingLeft: 12,
+    paddingLeft: '12px',
   },
 }));
 

@@ -71,6 +71,13 @@
       "key": "group",
       "className": "MuiTreeItem-group",
       "description": "Styles applied to the transition component.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "groupTransition",
+      "className": "MuiTreeItem-groupTransition",
+      "description": "Styles applied to the transition component.",
       "isGlobal": false
     },
     {

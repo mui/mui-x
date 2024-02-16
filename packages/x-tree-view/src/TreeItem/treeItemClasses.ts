@@ -36,6 +36,7 @@ export function getTreeItemUtilityClass(slot: string): string {
 export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeItem', [
   'root',
   'group',
+  'groupTransition',
   'content',
   'expanded',
   'selected',
