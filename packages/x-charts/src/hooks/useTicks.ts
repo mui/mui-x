@@ -58,7 +58,7 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-function useTicks(
+export function useTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: (value: any) => string;
@@ -112,5 +112,3 @@ function useTicks(
     }));
   }, [tickNumber, scale, valueFormatter, tickInterval]);
 }
-
-export default useTicks;

@@ -27,6 +27,9 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "grid": {
+      "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
+    },
     "height": { "type": { "name": "number" }, "default": "undefined" },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },

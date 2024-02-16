@@ -4,7 +4,7 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -32,6 +32,7 @@ import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import {
+  gridOffsetsSelector,
   gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
@@ -56,7 +57,6 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const theme = useTheme();
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -74,6 +74,7 @@ export const useGridVirtualScroller = () => {
 
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
+  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
@@ -94,25 +95,6 @@ export const useGridVirtualScroller = () => {
     return -1;
   }, [cellFocus, visibleColumns]);
 
-  React.useEffect(() => {
-    const direction = theme.direction === 'ltr' ? 1 : -1;
-
-    const top = gridRowsMetaSelector(apiRef.current.state).positions[renderContext.firstRowIndex];
-    const left =
-      direction * columnPositions[renderContext.firstColumnIndex] -
-      columnPositions[pinnedColumns.left.length];
-
-    gridRootRef.current?.style.setProperty('--DataGrid-offsetTop', `${top}px`);
-    gridRootRef.current?.style.setProperty('--DataGrid-offsetLeft', `${left}px`);
-  }, [
-    apiRef,
-    gridRootRef,
-    theme.direction,
-    columnPositions,
-    pinnedColumns.left.length,
-    renderContext,
-  ]);
-
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext, rawRenderContext: GridRenderContext) => {
       if (
@@ -125,12 +107,20 @@ export const useGridVirtualScroller = () => {
         nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
+      const nextOffsets = computeOffsets(
+        apiRef,
+        nextRenderContext,
+        theme.direction,
+        pinnedColumns.left.length,
+      );
+
       apiRef.current.setState((state) => {
         return {
           ...state,
           virtualization: {
             ...state.virtualization,
             renderContext: nextRenderContext,
+            offsets: nextOffsets,
           },
         };
       });
@@ -146,7 +136,13 @@ export const useGridVirtualScroller = () => {
       previousContext.current = rawRenderContext;
       prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
-    [apiRef, dimensions.isReady, dimensions.columnsTotalWidth],
+    [
+      apiRef,
+      pinnedColumns.left.length,
+      theme.direction,
+      dimensions.isReady,
+      dimensions.columnsTotalWidth,
+    ],
   );
 
   const triggerUpdateRenderContext = () => {
@@ -419,6 +415,7 @@ export const useGridVirtualScroller = () => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
+          offsets={offsets}
           dimensions={dimensions}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
@@ -490,9 +487,6 @@ export const useGridVirtualScroller = () => {
       // TODO a scroll reset should not be necessary
       scrollerRef.current!.scrollLeft = 0;
       scrollerRef.current!.scrollTop = 0;
-    } else {
-      gridRootRef.current?.style.setProperty('--DataGrid-offsetTop', '0px');
-      gridRootRef.current?.style.setProperty('--DataGrid-offsetLeft', '0px');
     }
   }, [enabled, gridRootRef, scrollerRef]);
 
@@ -875,4 +869,22 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
     context1.firstColumnIndex === context2.firstColumnIndex &&
     context1.lastColumnIndex === context2.lastColumnIndex
   );
+}
+
+function computeOffsets(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  renderContext: GridRenderContext,
+  direction: Theme['direction'],
+  pinnedLeftLength: number,
+) {
+  const factor = direction === 'ltr' ? 1 : -1;
+  const rowPositions = gridRowsMetaSelector(apiRef.current.state).positions;
+  const columnPositions = gridColumnPositionsSelector(apiRef);
+
+  const top = rowPositions[renderContext.firstRowIndex] ?? 0;
+  const left =
+    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
+    (columnPositions[pinnedLeftLength] ?? 0);
+
+  return { top, left };
 }

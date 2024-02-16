@@ -50,6 +50,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-grid',
+    title: 'ChartsGrid',
+  },
+  {
     pathname: '/x/api/charts/charts-item-tooltip-content',
     title: 'ChartsItemTooltipContent',
   },
@@ -92,6 +96,14 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/default-charts-legend',
     title: 'DefaultChartsLegend',
+  },
+  {
+    pathname: '/x/api/charts/gauge',
+    title: 'Gauge',
+  },
+  {
+    pathname: '/x/api/charts/gauge-container',
+    title: 'GaugeContainer',
   },
   {
     pathname: '/x/api/charts/line-chart',

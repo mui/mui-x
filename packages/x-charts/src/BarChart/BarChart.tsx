@@ -25,6 +25,7 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
@@ -55,6 +56,11 @@ export interface BarChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip?: ChartsTooltipProps;
+
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
@@ -110,6 +116,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     tooltip,
     axisHighlight,
     legend,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -171,6 +178,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot
           slots={slots}
@@ -263,6 +271,13 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined
