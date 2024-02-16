@@ -7,6 +7,9 @@
       "description": "Callback called when a toolbar is clicked",
       "typeDescriptions": { "view": "The view to open" }
     },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
     "toolbarFormat": { "description": "Toolbar date format." },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
