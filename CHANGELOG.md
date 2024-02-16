@@ -11,9 +11,12 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - 🎁 Charts get a [built in grid](https://next.mui.com/x/react-charts/axis/#grid)
   ![image](https://github.com/mui/mui-x/assets/45398769/74299f54-f020-4135-b38c-dc88a230db30)
+
 - 🎛️ Charts get a [Gauge component](https://next.mui.com/x/react-charts/gauge/).
   ![image](https://github.com/mui/mui-x/assets/45398769/fb7a94b5-bef6-4fc2-a0cd-d6ff5b60fa8b)
+
 - 🐞 Bugfixes
+
 - 📚 Documentation improvements
 
 ### Data Grid
@@ -54,6 +57,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.3`.
 - [docs] Fix `dayOfWeekFormatter` typo in the pickers v6 to v7 migration document (#12043) @StylesTrip
 - [docs] Fix redirection @oliviertassinari
 - [docs] Fix typo for `AdapterDateFnsV3` (#12036) @flaviendelangle
+- [docs] Removed `focused` prop from demo (#12092) @michelengelen
 
 ### Core
 
