@@ -1892,7 +1892,7 @@
 
 "@mui/monorepo@https://github.com/JanPot/material-ui.git#docs-config":
   version "5.15.10"
-  resolved "https://github.com/JanPot/material-ui.git#a2bc301e804ec3bec9685a61383758e692680c82"
+  resolved "https://github.com/JanPot/material-ui.git#b41c6330b6677536625832a4d89d2b179f39bc91"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
