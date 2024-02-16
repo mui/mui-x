@@ -124,7 +124,7 @@ export default function ChartComponentsGrid() {
                 opacity: component.planned ? 0.4 : 1,
                 filter: component.planned ? 'grayscale(100%)' : undefined,
                 ...theme.applyDarkStyles({
-                  opacity: component.planned ? 0.2 : 1,
+                  opacity: component.planned ? 0.4 : 1,
                   content: `url(${component.srcDark})`,
                   background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
                 }),

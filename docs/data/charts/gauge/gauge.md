@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 {{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
 
-## Basic gauge
+## Basics
 
 The Gauge displays a numeric value that varies within a defined range.
 
@@ -28,15 +28,15 @@ To modify it, use the `valueMin` and `valueMax` props.
 
 ## Arcs configuration
 
-You can modify the arc shape with the following props:
+Modify the arc shape with the following props:
 
 - `startAngle` and `endAngle`: The angle range provided in degrees
-- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius.
-- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius.
+- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
+- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 
-{{"demo": "ArcPlaygroundNoSnap.js"}}
+{{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
 
-:::info
+:::success
 Notice that the arc position is computed to let the Gauge chart take as much space as possible in the drawing area.
 
 Use the `cx` and/or `cy` props to fix the coordinate of the arc center.
@@ -52,7 +52,7 @@ In the second case, the formatter argument contains the `value`, `valueMin` and 
 
 To modify the text's layout, use the `gaugeClasses.valueText` class name.
 
-{{"demo": "TextPlaygroundNoSnap.js"}}
+{{"demo": "TextPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true}}
 
 ## Arc design
 
@@ -80,9 +80,9 @@ import { Gauge } from '@mui/x-charts/Gauge';
 
 The second option is to make use of the following elements that are available within the Gauge module:
 
-- GaugeReferenceArc
-- GaugeValueArc
-- GaugeValueText
+- Gauge Reference Arc
+- Gauge Value Arc
+- Gauge Value Text
 
 ```tsx
 import {
@@ -103,11 +103,11 @@ import {
 
 To create your own components, use the `useGaugeState` hook which provides all you need about the gauge configuration:
 
-- information about the value: `value`, `valueMin`, `valueMax`;
-- information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`;
+- information about the value: `value`, `valueMin`, `valueMax`
+- information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
 - computed values:
-  - `maxRadius` the maximal radius that can fit the drawing area;
-  - `valueAngle` the angle associated with the current value.
+  - `maxRadius`: the maximal radius that can fit the drawing area
+  - `valueAngle`: the angle associated with the current value
 
 {{"demo": "CompositionExample.js"}}
 
@@ -118,7 +118,7 @@ The MUI X Gauge chart is compliant with the [Meter ARIA pattern](https://www.w3.
 ### Label
 
 If a visible label is available, reference it by adding `aria-labelledby` attribute.
-Otherwise, the label can be provided by `aria-label`.
+Otherwise, the label can be manually provided by `aria-label`.
 
 ### Presentation
 

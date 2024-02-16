@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
 export default function ArcPlaygroundNoSnap() {
@@ -50,9 +50,9 @@ export default function ArcPlaygroundNoSnap() {
         },
       ]}
       renderDemo={(props) => (
-        <Paper
+        <Box
           sx={{
-            width: 200,
+            width: '100%',
             height: 200,
             margin: 'auto',
           }}
@@ -67,7 +67,7 @@ export default function ArcPlaygroundNoSnap() {
             innerRadius={`${props.innerRadius}%`}
             outerRadius={`${props.outerRadius}%`}
           />
-        </Paper>
+        </Box>
       )}
       getCode={({ props }) => {
         const { innerRadius, outerRadius, ...numberProps } = props;
@@ -75,13 +75,13 @@ export default function ArcPlaygroundNoSnap() {
           `import { Gauge } from '@mui/x-charts/Gauge';`,
           '',
           `<Gauge`,
-          `  // ...`,
           ...Object.entries(numberProps).map(
             ([name, value]) => `  ${name}={${value}}`,
           ),
           ...Object.entries({ innerRadius, outerRadius }).map(
             ([name, value]) => `  ${name}="${value}%"`,
           ),
+          `  // ...`,
           '/>',
         ].join('\n');
       }}
