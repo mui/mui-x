@@ -10,10 +10,12 @@ _Feb 16, 2024_
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Charts get a [built in grid](https://next.mui.com/x/react-charts/axis/#grid)
-  ![image](https://github.com/mui/mui-x/assets/45398769/74299f54-f020-4135-b38c-dc88a230db30)
+
+  <img src="https://github.com/mui/mui-x/assets/45398769/74299f54-f020-4135-b38c-dc88a230db30" width="510" alt="Charts Grid" />
 
 - 🎛️ Charts get a [Gauge component](https://next.mui.com/x/react-charts/gauge/).
-  ![image](https://github.com/mui/mui-x/assets/45398769/fb7a94b5-bef6-4fc2-a0cd-d6ff5b60fa8b)
+
+  <img src="https://github.com/mui/mui-x/assets/45398769/fb7a94b5-bef6-4fc2-a0cd-d6ff5b60fa8b" width="510" alt="Guage Chart" />
 
 - 🐞 Bugfixes
 
