@@ -31,6 +31,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     if (nodeId) {
+      console.log('focusNode', nodeId);
       setFocusedNodeId(nodeId);
 
       if (params.onNodeFocus) {
@@ -51,6 +52,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
     test,
+    focusNode,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
@@ -68,7 +70,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const createHandleFocus =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
       otherHandlers.onFocus?.(event);
-
+      console.log('createHandleFocus', event);
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
         const isNodeVisible = (nodeId: string) => {
