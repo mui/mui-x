@@ -45,7 +45,6 @@ function components() {
       srcLight: '/static/x/component-illustrations/gauge-light.png',
       srcDark: '/static/x/component-illustrations/gauge-dark.png',
       href: '/x/react-charts/gauge/',
-      planned: true,
     },
     {
       title: 'Heatmap',

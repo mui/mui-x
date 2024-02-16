@@ -26,7 +26,7 @@ import {
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
   grid,
-  gridVar,
+  gridOffsetTop,
   getColumnValues,
   getRow,
   getActiveCell,
@@ -850,7 +850,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+          expect(gridOffsetTop()).to.equal(0);
         });
       });
 
@@ -874,9 +874,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
         setProps({ pageSize: 5 });
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
@@ -904,7 +904,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
 
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
 
         const virtualScroller = grid('virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
@@ -914,7 +914,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+          expect(gridOffsetTop()).to.equal(0);
         });
       });
     });

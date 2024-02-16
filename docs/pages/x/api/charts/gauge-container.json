@@ -1,0 +1,44 @@
+{
+  "props": {
+    "cornerRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "0"
+    },
+    "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "endAngle": { "type": { "name": "number" }, "default": "360" },
+    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "innerRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "'80%'"
+    },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
+    },
+    "outerRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "'100%'"
+    },
+    "startAngle": { "type": { "name": "number" }, "default": "0" },
+    "value": { "type": { "name": "number" } },
+    "valueMax": { "type": { "name": "number" }, "default": "100" },
+    "valueMin": { "type": { "name": "number" }, "default": "0" },
+    "width": { "type": { "name": "number" }, "default": "undefined" }
+  },
+  "name": "GaugeContainer",
+  "imports": [
+    "import { GaugeContainer } from '@mui/x-charts/Gauge';",
+    "import { GaugeContainer } from '@mui/x-charts';"
+  ],
+  "classes": [],
+  "muiName": "MuiGaugeContainer",
+  "filename": "/packages/x-charts/src/Gauge/GaugeContainer.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/gauge/\">Charts - Gauge</a></li></ul>",
+  "cssComponent": false
+}
