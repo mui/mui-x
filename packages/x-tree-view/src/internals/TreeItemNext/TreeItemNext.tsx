@@ -122,6 +122,16 @@ export const TreeItemNextIconContainer = styled('div', {
   },
 });
 
+export const TreeItemNextTransitionGroup = styled('div', {
+  name: 'MuiTreeItemNextTransitionGroup',
+  slot: 'IconContainer',
+  overridesResolver: (props, styles) => styles.transitionGroup,
+})({
+  margin: 0,
+  padding: 0,
+  paddingLeft: 12,
+});
+
 const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
   const { classes } = ownerState;
 
@@ -208,7 +218,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
   });
 
   const GroupTransition: React.ElementType = slots.groupTransition ?? Collapse;
-  const groupProps = useSlotProps({
+  const groupTransitionProps = useSlotProps({
     elementType: GroupTransition,
     getSlotProps: getGroupTransitionProps,
     externalSlotProps: slotProps.groupTransition,
@@ -225,7 +235,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
           </IconContainer>
           <Label {...labelProps} />
         </Content>
-        {children && <GroupTransition {...groupProps} />}
+        {children && <TreeItemNextTransitionGroup as={GroupTransition} {...groupTransitionProps} />}
       </Root>
     </TreeItemProvider>
   );
