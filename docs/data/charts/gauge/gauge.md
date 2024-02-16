@@ -31,8 +31,8 @@ To modify it, use the `valueMin` and `valueMax` props.
 Modify the arc shape with the following props:
 
 - `startAngle` and `endAngle`: The angle range provided in degrees
-- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius.
-- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius.
+- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
+- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 
 {{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
 
@@ -80,9 +80,9 @@ import { Gauge } from '@mui/x-charts/Gauge';
 
 The second option is to make use of the following elements that are available within the Gauge module:
 
-- `<GaugeReferenceArc/>`
-- `<GaugeValueArc/>`
-- `<GaugeValueText/>`
+- Gauge Reference Arc
+- Gauge Value Arc
+- Gauge Value Text
 
 ```tsx
 import {
@@ -106,8 +106,8 @@ To create your own components, use the `useGaugeState` hook which provides all y
 - information about the value: `value`, `valueMin`, `valueMax`
 - information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
 - computed values:
-  - `maxRadius` the maximal radius that can fit the drawing area
-  - `valueAngle` the angle associated with the current value.
+  - `maxRadius`: the maximal radius that can fit the drawing area
+  - `valueAngle`: the angle associated with the current value
 
 {{"demo": "CompositionExample.js"}}
 
