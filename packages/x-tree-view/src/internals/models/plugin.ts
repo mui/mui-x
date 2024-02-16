@@ -111,25 +111,24 @@ export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'events'>;
 
-export interface TreeViewItemPluginOptions<TProps extends {}> {
+export interface TreeViewItemPluginOptions<TProps extends {}> extends TreeViewItemPluginResponse {
   props: TProps;
-  ref: React.Ref<HTMLLIElement> | undefined;
 }
 
-export interface TreeViewItemPluginResponse<TProps extends {}> {
+export interface TreeViewItemPluginResponse {
   /**
-   * Props enriched by the plugin.
+   * Root of the `content` slot enriched by the plugin.
    */
-  props?: TProps;
+  contentRef?: React.RefCallback<HTMLElement> | null;
   /**
-   * Ref enriched by the plugin
+   * Ref of the `root` slot enriched by the plugin
    */
-  ref?: React.Ref<HTMLLIElement>;
+  rootRef?: React.RefCallback<HTMLLIElement> | null;
 }
 
 export type TreeViewItemPlugin<TProps extends {}> = (
   options: TreeViewItemPluginOptions<TProps>,
-) => void | TreeViewItemPluginResponse<TProps>;
+) => void | TreeViewItemPluginResponse;
 
 export type TreeItemWrapper = (params: {
   nodeId: TreeViewItemId;

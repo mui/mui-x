@@ -8,6 +8,11 @@ export interface UseTreeItemParameters {
    */
   id?: string;
   /**
+   * If `true`, the node is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * The id of the node.
    * Must be unique.
    */

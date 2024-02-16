@@ -26,7 +26,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   const isNodeExpandable = React.useCallback(
     (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
     [instance],
-  );
+  ); 
 
   const toggleNodeExpansion = useEventCallback(
     (event: React.SyntheticEvent, nodeId: string | null) => {

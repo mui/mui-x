@@ -89,27 +89,27 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   plugins.forEach(runPlugin);
 
-  contextValue.runItemPlugins = ({ props, ref }) => {
-    let finalProps = props;
-    let finalRef = ref;
+  contextValue.runItemPlugins = (itemPluginProps) => {
+    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
+    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
 
     plugins.forEach((plugin) => {
       if (!plugin.itemPlugin) {
         return;
       }
 
-      const itemPluginResponse = plugin.itemPlugin({ props: finalProps, ref: finalRef });
-      if (itemPluginResponse?.props) {
-        finalProps = itemPluginResponse.props;
+      const itemPluginResponse = plugin.itemPlugin({ props: itemPluginProps, rootRef: finalRootRef, contentRef: finalContentRef });
+      if (itemPluginResponse?.rootRef) {
+        finalRootRef = itemPluginResponse.rootRef;
       }
-      if (itemPluginResponse?.ref) {
-        finalRef = itemPluginResponse.ref;
+      if (itemPluginResponse?.contentRef) {
+        finalContentRef = itemPluginResponse.contentRef;
       }
     });
 
     return {
-      props: finalProps,
-      ref: finalRef,
+      contentRef: finalContentRef,
+      rootRef: finalRootRef
     };
   };
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
-import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -15,7 +14,7 @@ import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
 import { useTreeItemInteractions } from '../useTreeItemInteractions';
 
-export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemReturnValue => {
+export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemReturnValue => {
   const {
     runItemPlugins,
     selection: { multiSelect },
@@ -23,16 +22,9 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const { props: parameters, ref } = runItemPlugins({
-    props: inParameters,
-    ref: inParameters.rootRef,
-  });
-
   const { id, nodeId, label, children } = parameters;
 
-  // We transform the ref into a `React.RefCallback`
-  const rootRef = useForkRef(ref);
-
+  const { rootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItemInteractions({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
@@ -123,6 +115,7 @@ export const useTreeItem = (inParameters: UseTreeItemParameters): UseTreeItemRet
     return {
       ...externalEventHandlers,
       ...externalProps,
+      ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
     };

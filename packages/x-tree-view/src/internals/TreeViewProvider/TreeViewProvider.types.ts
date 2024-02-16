@@ -4,7 +4,6 @@ import {
   TreeItemWrapper,
   TreeViewAnyPluginSignature,
   TreeViewInstance,
-  TreeViewItemPluginOptions,
   TreeViewItemPluginResponse,
 } from '../models';
 
@@ -13,9 +12,8 @@ export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSign
     instance: TreeViewInstance<TPlugins>;
     wrapItem: TreeItemWrapper;
     runItemPlugins: <TProps extends {}>(
-      options: TreeViewItemPluginOptions<TProps>,
-    ) => Pick<TreeViewItemPluginResponse<TProps>, 'ref'> &
-      Required<Omit<TreeViewItemPluginResponse<TProps>, 'ref'>>;
+      props: TProps,
+    ) => Required<TreeViewItemPluginResponse>
   };
 
 export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {

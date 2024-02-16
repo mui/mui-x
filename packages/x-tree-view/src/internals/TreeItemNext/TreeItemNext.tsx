@@ -1,11 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled } from '@mui/material/styles';
+import {alpha, styled, useThemeProps} from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types';
-import { useTreeItem } from '../useTreeItem';
+import {useTreeItem, UseTreeItemStatus} from '../useTreeItem';
 import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -25,63 +25,76 @@ export const TreeItemNextContent = styled('div', {
   name: 'MuiTreeItemNext',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-})(({ theme }) => ({
-  padding: theme.spacing(0.5, 1),
-  borderRadius: theme.shape.borderRadius,
-  width: '100%',
-  boxSizing: 'border-box', // prevent width + padding to overflow
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-  cursor: 'pointer',
-  WebkitTapHighlightColor: 'transparent',
-  '&:hover': {
-    backgroundColor: (theme.vars || theme).palette.action.hover,
-    // Reset on touch devices, it doesn't add specificity
-    '@media (hover: none)': {
-      backgroundColor: 'transparent',
-    },
-  },
-  [`&.${treeItemClasses.disabled}`]: {
-    opacity: (theme.vars || theme).palette.action.disabledOpacity,
-    backgroundColor: 'transparent',
-  },
-  [`&.${treeItemClasses.focused}`]: {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
-  },
-  [`&.${treeItemClasses.selected}`]: {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-        : alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-          ),
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+})<{ ownerState: UseTreeItemStatus }>(({ theme }) =>
+    ({
+      padding: theme.spacing(0.5, 1),
+      borderRadius: theme.shape.borderRadius,
+      width: '100%',
+      boxSizing: 'border-box', // prevent width + padding to overflow
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      cursor: 'pointer',
+      WebkitTapHighlightColor: 'transparent',
+      '&:hover': {
+        backgroundColor: (theme.vars || theme).palette.action.hover,
+        // Reset on touch devices, it doesn't add specificity
+        '@media (hover: none)': {
+          backgroundColor: 'transparent',
+        },
       },
-    },
-    [`&.${treeItemClasses.focused}`]: {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-        : alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-          ),
-    },
-  },
-  [`& .${treeItemClasses.groupTransition}`]: {
-    padding: 0,
-    margin: 0,
-    paddingLeft: '12px',
-  },
-}));
+      [`& .${treeItemClasses.groupTransition}`]: {
+        margin: 0,
+        padding: 0,
+        paddingLeft: 12,
+      },
+      variants: [
+        {
+          props: {disabled: true},
+          style: {
+            opacity: (theme.vars || theme).palette.action.disabledOpacity,
+            backgroundColor: 'transparent',
+          }
+        },
+        {
+          props: {focused: true},
+          style: {backgroundColor: (theme.vars || theme).palette.action.focus,}
+        },
+        {
+          props: {selected: true},
+          style: {
+            backgroundColor: theme.vars
+                ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+                : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+            '&:hover': {
+              backgroundColor: theme.vars
+                  ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
+                  : alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+                  ),
+              // Reset on touch devices, it doesn't add specificity
+              '@media (hover: none)': {
+                backgroundColor: theme.vars
+                    ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+                    : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+              },
+            },
+          },
+        },
+        {
+          props: {selected: true, focused: true},
+          style: {
+            backgroundColor: theme.vars
+                ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
+                : alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+                ),
+          }
+        }
+      ],
+    }));
 
 export const TreeItemNextLabel = styled('div', {
   name: 'MuiTreeItemNext',
@@ -129,9 +142,11 @@ const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
 };
 
 export const TreeItemNext = React.forwardRef(function TreeItemNext(
-  props: TreeItemNextProps,
+    inProps: TreeItemNextProps,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeItemNext' });
+
   const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
 
   const { getRootProps, getContentProps, getLabelProps, getGroupTransitionProps, status } =
@@ -158,7 +173,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     additionalProps: {
       ref: forwardedRef,
     },
-    ownerState,
+    ownerState: {},
     className: classes.root,
   });
 
@@ -167,7 +182,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     elementType: Content,
     getSlotProps: getContentProps,
     externalSlotProps: slotProps.content,
-    ownerState,
+    ownerState: status,
     className: clsx(classes.content, {
       [classes.expanded]: status.expanded,
       [classes.selected]: status.selected,
@@ -180,7 +195,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
     externalSlotProps: slotProps.iconContainer,
-    ownerState,
+    ownerState: {},
     className: classes.iconContainer,
   });
 
@@ -189,7 +204,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     elementType: Label,
     getSlotProps: getLabelProps,
     externalSlotProps: slotProps.label,
-    ownerState,
+    ownerState: {},
     className: classes.label,
   });
 
@@ -198,7 +213,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     elementType: GroupTransition,
     getSlotProps: getGroupTransitionProps,
     externalSlotProps: slotProps.groupTransition,
-    ownerState,
+    ownerState: {},
     className: classes.groupTransition,
   });
 

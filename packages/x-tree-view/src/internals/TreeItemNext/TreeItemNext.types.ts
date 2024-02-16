@@ -59,4 +59,4 @@ export interface TreeItemNextProps extends Omit<UseTreeItemParameters, 'rootRef'
   slotProps?: TreeItemNextSlotProps;
 }
 
-export interface TreeItemNextOwnerState extends TreeItemNextProps, UseTreeItemStatus {}
+export interface TreeItemNextOwnerState extends Omit<TreeItemNextProps, 'disabled'>, UseTreeItemStatus {}

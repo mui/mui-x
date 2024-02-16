@@ -9,6 +9,7 @@ export interface TreeViewComponentNameToClassKey {
   MuiRichTreeView: RichTreeViewClassKey;
   MuiTreeView: TreeViewClassKey;
   MuiTreeItem: TreeItemClassKey;
+  MuiTreeItemNext: TreeItemClassKey;
 }
 
 declare module '@mui/material/styles' {
