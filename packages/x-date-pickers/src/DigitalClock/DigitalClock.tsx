@@ -230,11 +230,19 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           return false;
         }
 
-        if (disableFuture && isAfter(valueToCheck, now)) {
+        if (
+          disableFuture &&
+          utils.getDate(valueToCheck) === utils.getDate(now) &&
+          isAfter(valueToCheck, now)
+        ) {
           return false;
         }
 
-        if (disablePast && isAfter(now, valueToCheck)) {
+        if (
+          disablePast &&
+          utils.getDate(valueToCheck) === utils.getDate(now) &&
+          isAfter(now, valueToCheck)
+        ) {
           return false;
         }
 
