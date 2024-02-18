@@ -338,8 +338,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
-      // IE11, Edge (prior to using Blink?) use 'Esc'
-      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
+      if (open && nativeEvent.key === 'Escape') {
         onDismiss();
       }
     }
