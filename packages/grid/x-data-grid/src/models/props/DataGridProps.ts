@@ -111,7 +111,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
   /**
    * Set the locale text of the Data Grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v6.19.4/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
 }
