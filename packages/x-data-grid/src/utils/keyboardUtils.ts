@@ -47,3 +47,17 @@ export const isKeyboardEvent = (event: any): event is React.KeyboardEvent<HTMLEl
   !!event.key;
 
 export const isHideMenuKey = (key: React.KeyboardEvent['key']) => isTabKey(key) || isEscapeKey(key);
+
+// In theory, on macOS, ctrl + v doesn't trigger a paste, so the function should return false.
+// However, maybe it's overkill to fix, so let's be lazy.
+export function isPasteShortcut(event: React.KeyboardEvent) {
+  if (
+    (event.ctrlKey || event.metaKey) &&
+    event.key.toLowerCase() === 'v' &&
+    !event.shiftKey &&
+    !event.altKey
+  ) {
+    return true;
+  }
+  return false;
+}
