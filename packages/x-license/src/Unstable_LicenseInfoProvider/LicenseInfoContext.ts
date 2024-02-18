@@ -1,4 +1,10 @@
 import * as React from 'react';
 import { MuiLicenseInfo } from '../utils/licenseInfo';
 
-export default React.createContext<MuiLicenseInfo>({ key: undefined });
+const MuiLicenseInfoContext = React.createContext<MuiLicenseInfo>({ key: undefined });
+
+if (process.env.NODE_ENV !== 'production') {
+  MuiLicenseInfoContext.displayName = 'MuiLicenseInfoContext';
+}
+
+export default MuiLicenseInfoContext;
