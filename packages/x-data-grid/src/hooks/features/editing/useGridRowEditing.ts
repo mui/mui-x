@@ -250,8 +250,7 @@ export const useGridRowEditing = (
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete' || event.key === 'Backspace') {
-          // Delete on Windows, Backspace on macOS
+        } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridRowEditStartReasons.deleteKeyDown;
         }
 
