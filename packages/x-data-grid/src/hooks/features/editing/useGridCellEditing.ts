@@ -171,7 +171,12 @@ export const useGridCellEditing = (
         }
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (
+          (event.ctrlKey || event.metaKey) &&
+          event.key.toLowerCase() === 'v' &&
+          !event.shiftKey &&
+          !event.altKey
+        ) {
           reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;

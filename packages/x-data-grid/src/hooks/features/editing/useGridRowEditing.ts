@@ -246,7 +246,12 @@ export const useGridRowEditing = (
 
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (
+          (event.ctrlKey || event.metaKey) &&
+          event.key.toLowerCase() === 'v' &&
+          !event.shiftKey &&
+          !event.altKey
+        ) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
