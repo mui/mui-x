@@ -1,4 +1,2 @@
 Broken links found by `yarn docs:link-check` that exist:
 
-- https://mui.com/base-ui/react-autocomplete/hooks-api/#use-autocomplete
-- https://mui.com/base-ui/react-portal/components-api/
