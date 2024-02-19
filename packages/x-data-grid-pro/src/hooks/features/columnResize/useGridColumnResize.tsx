@@ -284,7 +284,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const previousMouseClickEvent = React.useRef<React.MouseEvent<HTMLElement, MouseEvent>>();
+  const previousMouseClickEvent = React.useRef<MouseEvent>();
   const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
@@ -380,13 +380,15 @@ export const useGridColumnResize = (
     stopListening();
 
     if (previousMouseClickEvent.current) {
-      const prevTimeStamp = previousMouseClickEvent.current.timeStamp;
-      const prevClientX = previousMouseClickEvent.current.clientX;
-      const prevClientY = previousMouseClickEvent.current.clientY;
+      const prevEvent = previousMouseClickEvent.current;
+      const prevTimeStamp = prevEvent instanceof MouseEvent ? prevEvent.timeStamp : 0;
+      const prevClientX = prevEvent instanceof MouseEvent ? prevEvent.clientX : null;
+      const prevClientY = prevEvent instanceof MouseEvent ? prevEvent.clientY : null;
+
       if (
         nativeEvent.timeStamp - prevTimeStamp < 300 &&
         nativeEvent.clientX === prevClientX &&
-        prevClientY === nativeEvent.clientY
+        nativeEvent.clientY === prevClientY
       ) {
         previousMouseClickEvent.current = undefined;
         return;
@@ -625,7 +627,7 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      previousMouseClickEvent.current = event;
+      previousMouseClickEvent.current = event.nativeEvent;
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
