@@ -28,11 +28,6 @@ pnpm add @mui/x-charts
 
 </codeblock>
 
-:::info
-The `next` tag is used to download the latest, **pre-release**, v7 version.
-Remove it to get the current stable version.
-:::
-
 ### Usage with Next.js
 
 If you're using MUI X Charts with Next.js, you might face the following error:
