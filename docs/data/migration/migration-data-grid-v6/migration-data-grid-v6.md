@@ -466,7 +466,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 - The `.MuiDataGrid-cell--withRenderer` class has been removed.
-- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior.
+- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
 
 ### Changes to the public API
 
