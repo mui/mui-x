@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function BasicSimpleTreeView() {
   return (
-    <Box sx={{ height: 168, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView>
         <TreeItem nodeId="grid" label="Data Grid">
           <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />

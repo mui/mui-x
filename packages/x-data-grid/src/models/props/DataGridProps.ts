@@ -470,12 +470,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
   /**
-   * Callback fired when the row changes are committed.
-   * @param {GridRowId} id The row id.
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   */
-  onRowEditCommit?: GridEventListener<'rowEditCommit'>;
-  /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.

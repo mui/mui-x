@@ -322,13 +322,6 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
-    "onRowEditCommit": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(id: GridRowId, event: MuiEvent<MuiBaseEvent>) => void",
-        "describedArgs": ["id", "event"]
-      }
-    },
     "onRowEditStart": {
       "type": { "name": "func" },
       "signature": {
@@ -598,12 +591,6 @@
       "key": "cellEmpty",
       "className": "MuiDataGrid-cellEmpty",
       "description": "Styles applied to the empty cell element.",
-      "isGlobal": false
-    },
-    {
-      "key": "cellOffsetLeft",
-      "className": "MuiDataGrid-cellOffsetLeft",
-      "description": "",
       "isGlobal": false
     },
     {
@@ -1252,30 +1239,6 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGrid-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
-      "isGlobal": false
-    },
-    {
-      "key": "scrollbarFiller",
-      "className": "MuiDataGrid-scrollbarFiller",
-      "description": "",
-      "isGlobal": false
-    },
-    {
-      "key": "scrollbarFiller--borderTop",
-      "className": "MuiDataGrid-scrollbarFiller--borderTop",
-      "description": "",
-      "isGlobal": false
-    },
-    {
-      "key": "scrollbarFiller--header",
-      "className": "MuiDataGrid-scrollbarFiller--header",
-      "description": "",
-      "isGlobal": false
-    },
-    {
-      "key": "scrollbarFiller--pinnedRight",
-      "className": "MuiDataGrid-scrollbarFiller--pinnedRight",
-      "description": "",
       "isGlobal": false
     },
     {
