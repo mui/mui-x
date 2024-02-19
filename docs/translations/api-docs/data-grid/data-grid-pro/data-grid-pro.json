@@ -212,6 +212,9 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
+    "lastVisibleRowThreshold": {
+      "description": "Has a value between 0 and 1. It represents the percentage of the last visible row before onRowsScrollEnd is called."
+    },
     "loading": { "description": "If <code>true</code>, a  loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
@@ -542,9 +545,6 @@
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."
-    },
-    "scrollEndThreshold": {
-      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, the vertical borders of the cells are displayed."
