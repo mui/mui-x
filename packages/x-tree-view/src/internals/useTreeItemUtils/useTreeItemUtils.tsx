@@ -3,13 +3,23 @@ import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins';
 import type { UseTreeItemStatus } from '../useTreeItem';
 
-export const useTreeItemInteractions = ({
+interface UseTreeItemInteractions {
+  handleExpansion: (event: React.MouseEvent) => void;
+  handleSelection: (event: React.MouseEvent) => void;
+}
+
+interface UseTreeItemUtilsReturnValue {
+  interactions: UseTreeItemInteractions;
+  status: UseTreeItemStatus;
+}
+
+export const useTreeItemUtils = ({
   nodeId,
   children,
 }: {
   nodeId: string;
   children: React.ReactNode;
-}) => {
+}): UseTreeItemUtilsReturnValue => {
   const {
     instance,
     selection: { multiSelect },
@@ -62,14 +72,7 @@ export const useTreeItemInteractions = ({
     }
   };
 
-  const preventSelection = (event: React.MouseEvent) => {
-    if (event.shiftKey || event.ctrlKey || event.metaKey || status.disabled) {
-      // Prevent text selection
-      event.preventDefault();
-    }
-  };
-
-  const interactions = { handleExpansion, handleSelection, preventSelection };
+  const interactions: UseTreeItemInteractions = { handleExpansion, handleSelection };
 
   return { interactions, status };
 };

@@ -13,7 +13,7 @@ import {
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
-import { useTreeItemInteractions } from '../useTreeItemInteractions';
+import { useTreeItemUtils } from '../useTreeItemUtils';
 
 export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemReturnValue => {
   const {
@@ -26,7 +26,7 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
   const { id, nodeId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItemInteractions({ nodeId, children });
+  const { interactions, status } = useTreeItemUtils({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef);
 
@@ -69,7 +69,10 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
         return;
       }
 
-      interactions.preventSelection(event);
+      // Prevent text selection
+      if (event.shiftKey || event.ctrlKey || event.metaKey || status.disabled) {
+        event.preventDefault();
+      }
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(

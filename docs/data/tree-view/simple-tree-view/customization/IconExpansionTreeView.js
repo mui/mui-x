@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItemInteractions } from '@mui/x-tree-view/internals/useTreeItemInteractions';
+import { useTreeItemUtils } from 'packages/x-tree-view/src/internals/useTreeItemUtils';
 
 import { TreeItemNext } from '@mui/x-tree-view/internals/TreeItemNext';
 
 const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
-  const { interactions } = useTreeItemInteractions({
+  const { interactions } = useTreeItemUtils({
     nodeId: props.nodeId,
     children: props.children,
   });
