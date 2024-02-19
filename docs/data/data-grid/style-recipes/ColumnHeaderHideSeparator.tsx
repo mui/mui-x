@@ -15,12 +15,14 @@ const columns: GridColDef[] = [
   },
   {
     field: 'username',
-    width: 125,
-    minWidth: 150,
-    maxWidth: 200,
+    width: 200,
     resizable: false,
   },
-  { field: 'age', resizable: false },
+  {
+    field: 'age',
+    width: 100,
+    resizable: false,
+  },
 ];
 
 export default function ColumnHeaderHideSeparator() {
