@@ -510,11 +510,6 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * Has a value between 0 and 1. It represents the percentage of the last visible row before onRowsScrollEnd is called.
-   * @default 0
-   */
-  lastVisibleRowThreshold: PropTypes.number,
-  /**
    * If `true`, a  loading overlay is displayed.
    */
   loading: PropTypes.bool,
@@ -954,6 +949,11 @@ DataGridPremiumRaw.propTypes = {
    * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
+  /**
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
+   */
+  scrollEndThreshold: PropTypes.number,
   /**
    * If `true`, the vertical borders of the cells are displayed.
    * @default false

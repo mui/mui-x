@@ -211,7 +211,6 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "lastVisibleRowThreshold": { "type": { "name": "number" }, "default": "0" },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -569,6 +568,7 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
+    "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },

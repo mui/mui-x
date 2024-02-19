@@ -19,7 +19,7 @@ import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
  */
 export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
-  lastVisibleRowThreshold: 0,
+  scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   autosizeOnMount: false,

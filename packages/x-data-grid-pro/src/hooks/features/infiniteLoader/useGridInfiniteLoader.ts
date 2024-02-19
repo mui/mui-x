@@ -20,11 +20,7 @@ export const useGridInfiniteLoader = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'onRowsScrollEnd'
-    | 'pagination'
-    | 'paginationMode'
-    | 'rowsLoadingMode'
-    | 'lastVisibleRowThreshold'
+    'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
@@ -41,7 +37,7 @@ export const useGridInfiniteLoader = (
       const isIntersecting = entry.isIntersecting;
 
       // Scrolling down check
-      if (currentY < previousY.current || isIntersecting) {
+      if (currentY < previousY.current && isIntersecting) {
         if (currentRatio >= previousRatio.current) {
           const viewportPageSize = apiRef.current.getViewportPageSize();
           const rowScrollEndParam: GridRowScrollEndParams = {
@@ -66,20 +62,22 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      if (observer.current) {
-        observer.current.disconnect();
+      if (!observer.current) {
+        observer.current = new IntersectionObserver(handleLoadMoreRows, {
+          threshold: 1,
+          root: apiRef.current.virtualScrollerRef.current,
+          rootMargin: `0px 0px ${props.scrollEndThreshold}px 0px`,
+        });
       }
-
-      observer.current = new IntersectionObserver(handleLoadMoreRows, {
-        threshold: props.lastVisibleRowThreshold,
-      });
-
-      if (node && node !== previousNode.current) {
+      if (previousNode.current !== node) {
+        observer.current.disconnect();
         previousNode.current = node;
-        observer.current.observe(node);
+        if (node) {
+          observer.current.observe(node);
+        }
       }
     },
-    [props.rowsLoadingMode, props.lastVisibleRowThreshold, handleLoadMoreRows],
+    [props.rowsLoadingMode, handleLoadMoreRows, apiRef, props.scrollEndThreshold],
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {

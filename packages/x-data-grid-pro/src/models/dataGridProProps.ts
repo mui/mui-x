@@ -75,10 +75,10 @@ export type DataGridProForcedPropsKey = 'signature';
  */
 export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
   /**
-   * Has a value between 0 and 1. It represents the percentage of the last visible row before onRowsScrollEnd is called.
-   * @default 0
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
    */
-  lastVisibleRowThreshold: number;
+  scrollEndThreshold: number;
   /**
    * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
    * @default false
