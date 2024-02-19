@@ -284,6 +284,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
+  const previousTimeStampOfMouseClick = React.useRef<Number>();
   const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
@@ -377,6 +378,16 @@ export const useGridColumnResize = (
   const finishResize = (nativeEvent: MouseEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
+
+    if (previousTimeStampOfMouseClick.current) {
+      const lastTimeStamp = previousTimeStampOfMouseClick.current as number;
+      if (nativeEvent.timeStamp - lastTimeStamp < 300) {
+        // If the time difference is within the threshold, it's a double-click
+        // Reset the last mousedown timestamp
+        previousTimeStampOfMouseClick.current = 0;
+        return;
+      }
+    }
 
     if (colDefRef.current) {
       apiRef.current.setColumnWidth(colDefRef.current.field, colDefRef.current.width!);
@@ -610,6 +621,8 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
+      previousTimeStampOfMouseClick.current = event.timeStamp;
+
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
 
@@ -702,6 +715,17 @@ export const useGridColumnResize = (
         }
 
         apiRef.current.updateColumns(newColumns);
+
+        if (colDefRef.current) {
+          const columnsState = gridColumnsStateSelector(apiRef.current.state);
+          const column: GridStateColDef = columnsState.lookup[colDefRef.current.field];
+          const width: number = column.width as number;
+          apiRef.current.publishEvent('columnWidthChange', {
+            element: apiRef.current.getColumnHeaderElement(colDefRef.current.field),
+            colDef: colDefRef.current,
+            width,
+          });
+        }
       } finally {
         apiRef.current.unstable_setColumnVirtualization(true);
         isAutosizingRef.current = false;
