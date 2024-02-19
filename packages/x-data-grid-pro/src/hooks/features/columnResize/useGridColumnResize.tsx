@@ -284,7 +284,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
-  const previousTimeStampOfMouseClick = React.useRef<Number>();
+  const previousMouseClickEvent = React.useRef<React.MouseEvent<HTMLElement, MouseEvent>>();
   const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
@@ -379,12 +379,16 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    if (previousTimeStampOfMouseClick.current) {
-      const lastTimeStamp = previousTimeStampOfMouseClick.current as number;
-      if (nativeEvent.timeStamp - lastTimeStamp < 300) {
-        // If the time difference is within the threshold, it's a double-click
-        // Reset the last mousedown timestamp
-        previousTimeStampOfMouseClick.current = 0;
+    if (previousMouseClickEvent.current) {
+      const prevTimeStamp = previousMouseClickEvent.current.timeStamp;
+      const prevClientX = previousMouseClickEvent.current.clientX;
+      const prevClientY = previousMouseClickEvent.current.clientY;
+      if (
+        nativeEvent.timeStamp - prevTimeStamp < 300 &&
+        nativeEvent.clientX === prevClientX &&
+        prevClientY === nativeEvent.clientY
+      ) {
+        previousMouseClickEvent.current = undefined;
         return;
       }
     }
@@ -621,7 +625,7 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      previousTimeStampOfMouseClick.current = event.timeStamp;
+      previousMouseClickEvent.current = event;
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
