@@ -20,15 +20,15 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
     BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
 }
 
@@ -393,6 +393,9 @@ DateTimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -16,6 +16,9 @@ export interface ExportedPickersArrowSwitcherProps {
    * @default {}
    */
   slotProps?: PickersArrowSwitcherSlotsComponentsProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersArrowSwitcherClasses>;
 }
 

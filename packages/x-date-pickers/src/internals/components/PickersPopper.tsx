@@ -80,6 +80,9 @@ export interface PickerPopperProps extends UsePickerValueActions {
   onBlur?: () => void;
   slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
   slotProps?: PickersPopperSlotsComponentsProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;

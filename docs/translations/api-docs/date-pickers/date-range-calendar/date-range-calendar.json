@@ -5,6 +5,7 @@
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
     "calendars": { "description": "The number of calendars to render." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "components": { "description": "Overridable components." },
     "componentsProps": { "description": "The props used for each component slot." },
     "currentMonthCalendarPosition": { "description": "Position the current month is rendered in." },
