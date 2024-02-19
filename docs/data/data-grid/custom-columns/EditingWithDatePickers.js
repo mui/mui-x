@@ -173,7 +173,7 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props) {
-  const { InputProps, ...other } = props;
+  const { InputProps, focused, ...other } = props;
   return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
