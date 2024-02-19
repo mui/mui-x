@@ -183,14 +183,17 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          referenceDate={adapterToUse.date(new Date(2022, 3, 17, 12, 30))}
           view="day"
         />,
       );
 
+      // should make the reference day firstly focusable
+      expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
+
       userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 2, 12, 30));
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', () => {
