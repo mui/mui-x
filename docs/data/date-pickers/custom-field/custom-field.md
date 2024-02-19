@@ -91,11 +91,15 @@ This approach is only recommended if you need complex customizations on your `Pi
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
 :::
 
-## Usage with Joy UI
+## Usage with Joy UI
 
 ### Using Joy `Input`
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+
+:::info
+A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
+:::
 
 {{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 

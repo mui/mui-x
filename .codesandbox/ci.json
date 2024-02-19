@@ -24,8 +24,6 @@
     "@mui/x-charts": "packages/x-charts/build",
     "@mui/x-tree-view": "packages/x-tree-view/build"
   },
-  "sandboxes": [
-    "/bug-reproductions/x-data-grid"
-  ],
+  "sandboxes": ["/bug-reproductions/x-data-grid"],
   "silent": true
 }

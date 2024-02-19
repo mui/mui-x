@@ -31,6 +31,7 @@ import {
   ChartsVoronoiHandler,
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -63,6 +64,10 @@ export interface ScatterChartProps
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
@@ -115,6 +120,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     margin,
     colors,
     sx,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -151,6 +157,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         slots={slots}
         slotProps={slotProps}
       />
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <ScatterPlot
         slots={slots}
         slotProps={slotProps}
@@ -235,6 +242,13 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    * @default undefined

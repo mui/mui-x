@@ -11,6 +11,7 @@ Broken links found by `yarn docs:link-check` that exist:
 - https://mui.com/system/styles/api/#serverstylesheets
 - https://mui.com/system/styles/api/#stylesprovider
 - https://mui.com/system/styles/api/#themeprovider
+- https://mui.com/x/api/charts/gauge/#classes
 - https://mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs
 - https://mui.com/x/api/data-grid/data-grid/#props
 - https://mui.com/x/api/data-grid/data-grid/#slots
