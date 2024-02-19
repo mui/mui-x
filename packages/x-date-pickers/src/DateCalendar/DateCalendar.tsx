@@ -29,6 +29,7 @@ import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -40,7 +41,7 @@ const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   return composeClasses(slots, getDateCalendarUtilityClass, classes);
 };
 
-function useDateCalendarDefaultizedProps<TDate>(
+function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate>,
   name: string,
 ): DateCalendarDefaultizedProps<TDate> {
@@ -83,7 +84,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: DateCalendarProps<any> }>({});
 
-type DateCalendarComponent = (<TDate>(
+type DateCalendarComponent = (<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -98,7 +99,7 @@ type DateCalendarComponent = (<TDate>(
  *
  * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
-export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
+export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends PickerValidDate>(
   inProps: DateCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -278,10 +279,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
     if (day) {
       // If there is a date already selected, then we want to keep its time
-      return handleValueChange(mergeDateAndTime(utils, day, value ?? referenceDate), 'finish');
+      return handleValueChange(
+        mergeDateAndTime(utils, day, value ?? referenceDate),
+        'finish',
+        view,
+      );
     }
 
-    return handleValueChange(day, 'finish');
+    return handleValueChange(day, 'finish', view);
   });
 
   React.useEffect(() => {
@@ -411,6 +416,9 @@ DateCalendar.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -424,7 +432,7 @@ DateCalendar.propTypes = {
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -452,7 +460,6 @@ DateCalendar.propTypes = {
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -468,11 +475,11 @@ DateCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -480,9 +487,11 @@ DateCalendar.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
   onChange: PropTypes.func,
   /**
@@ -530,7 +539,7 @@ DateCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -602,7 +611,7 @@ DateCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

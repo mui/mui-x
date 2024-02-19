@@ -1,5 +1,7 @@
 ---
 title: React Sparkline chart
+productId: x-charts
+components: SparkLineChart
 ---
 
 # Charts - Sparkline

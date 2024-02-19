@@ -1,0 +1,16 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "contentEditable": {
+      "description": "If true, the whole element is editable. Useful when all the sections are selected."
+    },
+    "elements": {
+      "description": "The elements to render. Each element contains the prop to edit a section of the value."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "root": "", "section": "", "sectionContent": "", "sectionSeparator": "" }
+}

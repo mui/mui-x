@@ -1,0 +1,12 @@
+<Button onClick={() => apiRef.current.sortColumn('firstName', 'asc')}>
+  Sort by ASC
+</Button>
+<Button onClick={() => apiRef.current.sortColumn('firstName', 'desc')}>
+  Sort by DESC
+</Button>
+<Button onClick={() => apiRef.current.sortColumn('firstName', null)}>
+  Remove sort
+</Button>
+<Box sx={{ height: 400 }}>
+  <DataGrid columns={columns} rows={rows} apiRef={apiRef} />
+</Box>

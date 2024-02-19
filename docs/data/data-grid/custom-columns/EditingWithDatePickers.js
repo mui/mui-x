@@ -16,7 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase from '@mui/material/InputBase';
-import locale from 'date-fns/locale/en-US';
+import { enUS as locale } from 'date-fns/locale';
 import { styled } from '@mui/material/styles';
 
 const dateAdapter = new AdapterDateFns({ locale });
@@ -36,12 +36,9 @@ const dateColumnType = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: false },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
-    }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDate');
+  valueFormatter: (value) => {
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDate');
     }
     return '';
   },
@@ -53,7 +50,7 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props) {
-  const { InputProps, ...other } = props;
+  const { InputProps, focused, ...other } = props;
   return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
@@ -122,12 +119,9 @@ const dateTimeColumnType = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: true },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
-    }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDateTime');
+  valueFormatter: (value) => {
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDateTime');
     }
     return '';
   },

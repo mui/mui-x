@@ -21,7 +21,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
-import locale from 'date-fns/locale/en-US';
+import { enUS as locale } from 'date-fns/locale';
 import { styled } from '@mui/material/styles';
 import { TextFieldProps } from '@mui/material/TextField';
 
@@ -42,12 +42,9 @@ const dateColumnType: GridColTypeDef<Date, string> = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: false },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
-    }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDate');
+  valueFormatter: (value) => {
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDate');
     }
     return '';
   },
@@ -59,7 +56,7 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props: TextFieldProps) {
-  const { InputProps, ...other } = props;
+  const { InputProps, focused, ...other } = props;
   return (
     <GridEditDateInput fullWidth {...InputProps} {...(other as InputBaseProps)} />
   );
@@ -70,7 +67,7 @@ function GridEditDateCell({
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<any, Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
@@ -137,12 +134,9 @@ const dateTimeColumnType: GridColTypeDef<Date, string> = {
     InputComponent: GridFilterDateInput,
     InputComponentProps: { showTime: true },
   })),
-  valueFormatter: (params) => {
-    if (typeof params.value === 'string') {
-      return params.value;
-    }
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDateTime');
+  valueFormatter: (value) => {
+    if (value) {
+      return dateAdapter.format(value, 'keyboardDateTime');
     }
     return '';
   },

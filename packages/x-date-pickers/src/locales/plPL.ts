@@ -15,16 +15,20 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Następny miesiąc',
 
   // View navigation
-  openPreviousView: 'otwórz poprzedni widok',
-  openNextView: 'otwórz następny widok',
+  openPreviousView: 'Otwórz poprzedni widok',
+  openNextView: 'Otwórz następny widok',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'otwarty jest widok roku, przełącz na widok kalendarza'
       : 'otwarty jest widok kalendarza, przełącz na widok roku',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Początek',
   end: 'Koniec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',
@@ -40,9 +44,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Wybierz ${timeViews[view]}. ${
-      time === null ? 'Nie wybrano czasu' : `Wybrany czas to ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Wybierz ${timeViews[view]}. ${time === null ? 'Nie wybrano czasu' : `Wybrany czas to ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} godzin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,

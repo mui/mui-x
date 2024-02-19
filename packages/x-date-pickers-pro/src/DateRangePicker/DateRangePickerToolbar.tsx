@@ -12,7 +12,8 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internals/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
@@ -29,12 +30,15 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
 
-export interface DateRangePickerToolbarProps<TDate>
+export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
   extends Omit<
       BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
@@ -67,7 +71,7 @@ const DateRangePickerToolbarContainer = styled('div', {
  * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
  */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
@@ -127,10 +131,10 @@ DateRangePickerToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   /**
-   * className applied to the root component.
+   * Override or extend the styles applied to the component.
    */
+  classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**
@@ -141,6 +145,9 @@ DateRangePickerToolbar.propTypes = {
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -156,7 +163,7 @@ DateRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  value: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

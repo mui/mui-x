@@ -8,7 +8,7 @@ productId: x-date-pickers
 
 ## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
 
 ## Start using the new release
 
@@ -37,7 +37,7 @@ npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v600) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v600) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -268,7 +268,7 @@ The codemod will take care of renaming the prop to keep the existing functionali
 
 In v5, it was possible to import adapters either from either `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
-Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
+Which means adapters cannot be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
 Otherwise, some methods will be missing.
 If you do not find the adapter you were using—there probably was a reason for it, but you can raise an issue expressing interest in it.
 
@@ -447,7 +447,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
-You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
+You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
 These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.
@@ -954,7 +954,7 @@ To do so please refer to the corresponding [docs example](/x/react-date-pickers/
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, pickers support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.

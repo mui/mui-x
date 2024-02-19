@@ -8,6 +8,7 @@ import {
 } from '../models/seriesType/config';
 import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
+import { SeriesId } from '../models/seriesType/common';
 
 let warnOnce = false;
 
@@ -32,7 +33,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
     } else if (dataset === undefined) {
       throw new Error(
         [
-          `MUI-X-Charts: bar series with id='${id}' has no data.`,
+          `MUI X Charts: bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -45,7 +46,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
     // Get stacked values, and derive the domain
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, string>()
+    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(
         ids.map((id) => {
           // Use dataKey if needed and available
@@ -86,7 +87,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => v?.toLocaleString()),
+    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
   };
 };
 

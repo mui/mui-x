@@ -1,8 +1,9 @@
 ---
 title: React Sankey chart
+productId: x-charts
 ---
 
-# Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">Sankey charts are great for visualizing flows between different elements.</p>
 

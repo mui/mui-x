@@ -4,6 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
+  AxisId,
   ChartsAxisSlotProps,
   ChartsAxisSlots,
   ChartsXAxisProps,
@@ -49,7 +50,7 @@ export interface ChartsAxisProps {
 
 const getAxisId = (
   propsValue: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
-): string | null => {
+): AxisId | null => {
   if (propsValue == null) {
     return null;
   }
@@ -97,7 +98,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (topId !== null && !xAxis[topId]) {
     throw Error(
       [
-        `MUI-X-Charts: id used for top axis "${topId}" is not defined.`,
+        `MUI X Charts: id used for top axis "${topId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -105,7 +106,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (leftId !== null && !yAxis[leftId]) {
     throw Error(
       [
-        `MUI-X-Charts: id used for left axis "${leftId}" is not defined.`,
+        `MUI X Charts: id used for left axis "${leftId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -113,7 +114,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (rightId !== null && !yAxis[rightId]) {
     throw Error(
       [
-        `MUI-X-Charts: id used for right axis "${rightId}" is not defined.`,
+        `MUI X Charts: id used for right axis "${rightId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -121,7 +122,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (bottomId !== null && !xAxis[bottomId]) {
     throw Error(
       [
-        `MUI-X-Charts: id used for bottom axis "${bottomId}" is not defined.`,
+        `MUI X Charts: id used for bottom axis "${bottomId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -153,7 +154,7 @@ ChartsAxis.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -187,7 +188,7 @@ ChartsAxis.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -221,7 +222,7 @@ ChartsAxis.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -265,7 +266,7 @@ ChartsAxis.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,

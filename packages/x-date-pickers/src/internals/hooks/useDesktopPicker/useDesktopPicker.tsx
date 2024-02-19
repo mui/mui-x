@@ -5,14 +5,19 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import {
+  UseDesktopPickerParams,
+  UseDesktopPickerProps,
+  UseDesktopPickerSlotProps,
+} from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { UsePickerValueFieldResponse } from '../usePicker/usePickerValue.types';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -21,7 +26,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  * - DesktopTimePicker
  */
 export const useDesktopPicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -101,7 +106,27 @@ export const useDesktopPicker = <
     TDate,
     FieldSection,
     InferError<TExternalProps>
-  > = useSlotProps({
+  > = useSlotProps<
+    typeof Field,
+    UseDesktopPickerSlotProps<TDate, TView>['field'],
+    UsePickerValueFieldResponse<TDate | null, FieldSection, InferError<TExternalProps>> &
+      Partial<
+        Pick<
+          UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
+          | 'readOnly'
+          | 'disabled'
+          | 'className'
+          | 'sx'
+          | 'format'
+          | 'formatDensity'
+          | 'timezone'
+          | 'label'
+          | 'name'
+          | 'autoFocus'
+        > & { focused: true | undefined }
+      >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {

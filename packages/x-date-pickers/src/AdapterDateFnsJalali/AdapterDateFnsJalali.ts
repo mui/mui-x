@@ -159,6 +159,12 @@ const NUMBER_SYMBOL_MAP = {
   '0': '۰',
 };
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'date-fns-jalali': Date;
+  }
+}
+
 /**
  * Based on `@date-io/date-fns-jalali`
  *

@@ -2,37 +2,14 @@
   "props": {
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
-    "defaultCollapseIcon": { "type": { "name": "node" } },
-    "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultExpandIcon": { "type": { "name": "node" } },
-    "defaultParentIcon": { "type": { "name": "node" } },
     "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
-    "getItemId": {
-      "type": { "name": "func" },
-      "default": "`(item) => item.id`",
-      "signature": {
-        "type": "function(item: R) => string",
-        "describedArgs": ["item"],
-        "returned": "string"
-      }
-    },
-    "getItemLabel": {
-      "type": { "name": "func" },
-      "default": "`(item) => item.label`",
-      "signature": {
-        "type": "function(item: R) => string",
-        "describedArgs": ["item"],
-        "returned": "string"
-      }
-    },
     "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedNodesChange": {
@@ -72,7 +49,7 @@
     },
     "selectedNodes": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sx": {
       "type": {
         "name": "union",
@@ -81,16 +58,41 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [{ "class": null, "name": "root", "description": "" }],
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
     "import { TreeView } from '@mui/x-tree-view';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiTreeView" },
+  "slots": [
+    {
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "SimpleTreeViewRoot",
+      "class": "MuiTreeView-root"
+    },
+    {
+      "name": "collapseIcon",
+      "description": "The default icon used to collapse the node.",
+      "class": null
+    },
+    {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the node.",
+      "class": null
+    },
+    {
+      "name": "endIcon",
+      "description": "The default icon displayed next to an end node.\nThis is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
+    }
+  ],
+  "classes": [],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiTreeView",
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li></ul>",
+  "cssComponent": false
 }

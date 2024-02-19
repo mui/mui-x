@@ -154,13 +154,16 @@ const getChildren = (parentPath: string[]) => {
  */
 const fakeDataFetcher = (parentPath: string[] = []) =>
   new Promise<GridRowModel<Row>[]>((resolve) => {
-    setTimeout(() => {
-      const rows = getChildren(parentPath).map((row) => ({
-        ...row,
-        descendantCount: getChildren(row.hierarchy).length,
-      }));
-      resolve(rows);
-    }, 500 + Math.random() * 300);
+    setTimeout(
+      () => {
+        const rows = getChildren(parentPath).map((row) => ({
+          ...row,
+          descendantCount: getChildren(row.hierarchy).length,
+        }));
+        resolve(rows);
+      },
+      500 + Math.random() * 300,
+    );
   });
 
 const LoadingContainer = styled('div')({

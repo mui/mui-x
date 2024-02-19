@@ -7,8 +7,9 @@ import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import { PickerValidDate } from '../models';
 
-type DateTimePickerComponent = (<TDate>(
+type DateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: DateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -22,7 +23,7 @@ type DateTimePickerComponent = (<TDate>(
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
+const DateTimePicker = React.forwardRef(function DateTimePicker<TDate extends PickerValidDate>(
   inProps: DateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -62,9 +63,6 @@ DateTimePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
@@ -82,7 +80,7 @@ DateTimePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -126,7 +124,6 @@ DateTimePicker.propTypes = {
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -162,29 +159,29 @@ DateTimePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime: PropTypes.any,
+  maxDateTime: PropTypes.object,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime: PropTypes.any,
+  minDateTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -281,7 +278,7 @@ DateTimePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -410,7 +407,7 @@ DateTimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

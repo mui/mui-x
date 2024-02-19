@@ -96,7 +96,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
       if (!warnedOnce) {
         warnedOnce = true;
         console.error(
-          `MUI X: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
+          `MUI X Charts: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
         );
       }
     }

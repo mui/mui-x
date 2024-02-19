@@ -5,7 +5,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
-import useTicks from '../hooks/useTicks';
+import { useTicks } from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -175,7 +175,7 @@ ChartsYAxis.propTypes = {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

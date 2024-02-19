@@ -5,8 +5,8 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
-import useTicks, { TickItemType } from '../hooks/useTicks';
-import { ChartsXAxisProps } from '../models/axis';
+import { useTicks, TickItemType } from '../hooks/useTicks';
+import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -35,8 +35,10 @@ function addLabelDimension(
   {
     tickLabelStyle: style,
     tickLabelInterval,
+    reverse,
     isMounted,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> & { isMounted: boolean },
+  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
+    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
     if (!isMounted || tick.formattedValue === undefined) {
@@ -58,9 +60,9 @@ function addLabelDimension(
   }
 
   // Filter label to avoid overlap
-  let textStart = 0;
-  let textEnd = 0;
-
+  let currentTextLimit = 0;
+  let previouseTextLimit = 0;
+  const direction = reverse ? -1 : 1;
   return withDimension.map((item, labelIndex) => {
     const { width, offset, labelOffset, height } = item;
 
@@ -68,13 +70,13 @@ function addLabelDimension(
     const textPosition = offset + labelOffset;
     const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
-    textStart = textPosition - (gapRatio * distance) / 2;
-    if (labelIndex > 0 && textStart < textEnd) {
+    currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
+    if (labelIndex > 0 && direction * currentTextLimit < direction * previouseTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `textEnd` from being updated.
+      // Notice that the early return prevents `previouseTextLimit` from being updated.
       return { ...item, skipLabel: true };
     }
-    textEnd = textPosition + (gapRatio * distance) / 2;
+    previouseTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
     return item;
   });
 }
@@ -100,7 +102,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxisIds } = React.useContext(CartesianContext);
   const {
     xAxis: {
-      [props.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, ...settings },
+      [props.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -159,6 +161,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const xTicksWithDimension = addLabelDimension(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
+    reverse,
     isMounted,
   });
 
@@ -238,7 +241,7 @@ ChartsXAxis.propTypes = {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

@@ -1,5 +1,7 @@
 ---
 title: Charts - Line demonstration
+productId: x-charts
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot
 ---
 
 # Charts - Line demonstration

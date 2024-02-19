@@ -1,6 +1,4 @@
 import * as React from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
@@ -8,9 +6,7 @@ export default function FirstComponent() {
   return (
     <SimpleTreeView
       aria-label="file system navigator"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+      sx={{ height: 200, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
       <TreeItem nodeId="1" label="Applications">
         <TreeItem nodeId="2" label="Calendar" />

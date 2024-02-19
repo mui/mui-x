@@ -1,0 +1,11 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": { "description": "The height of the chart in px." },
+    "width": { "description": "The width of the chart in px." }
+  },
+  "classDescriptions": {}
+}

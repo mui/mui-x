@@ -29,13 +29,24 @@ const updateState = ({
     parentId: string | null,
   ): TreeViewNodeIdAndChildren => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
+
     if (id == null) {
       throw new Error(
         [
-          'MUI: The Tree View component requires all items to have a unique `id` property.',
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
           'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
           'An item was provided without id in the `items` prop:',
           JSON.stringify(item),
+        ].join('\n'),
+      );
+    }
+
+    if (nodeMap[id] != null) {
+      throw new Error(
+        [
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+          `Tow items were provided with the same id in the \`items\` prop: "${id}"`,
         ].join('\n'),
       );
     }
@@ -44,7 +55,7 @@ const updateState = ({
     if (label == null) {
       throw new Error(
         [
-          'MUI: The Tree View component requires all items to have a `label` property.',
+          'MUI X: The Tree View component requires all items to have a `label` property.',
           'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
           'An item was provided without label in the `items` prop:',
           JSON.stringify(item),
@@ -179,6 +190,10 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getNavigableChildrenIds,
     isNodeDisabled,
   });
+
+  return {
+    contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
+  };
 };
 
 useTreeViewNodes.getInitialState = (params) =>
@@ -188,3 +203,16 @@ useTreeViewNodes.getInitialState = (params) =>
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
   });
+
+useTreeViewNodes.getDefaultizedParams = (params) => ({
+  ...params,
+  disabledItemsFocusable: params.disabledItemsFocusable ?? false,
+});
+
+useTreeViewNodes.params = {
+  disabledItemsFocusable: true,
+  items: true,
+  isItemDisabled: true,
+  getItemLabel: true,
+  getItemId: true,
+};

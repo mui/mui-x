@@ -20,9 +20,9 @@ import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView } from '../models/views';
+import { TimeView, PickerValidDate } from '../models';
 
-type DesktopTimePickerComponent = (<TDate>(
+type DesktopTimePickerComponent = (<TDate extends PickerValidDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -36,10 +36,9 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
-  inProps: DesktopTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
+  TDate extends PickerValidDate,
+>(inProps: DesktopTimePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -147,9 +146,6 @@ DesktopTimePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
@@ -160,7 +156,7 @@ DesktopTimePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -214,12 +210,12 @@ DesktopTimePicker.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -299,7 +295,7 @@ DesktopTimePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -387,7 +383,7 @@ DesktopTimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

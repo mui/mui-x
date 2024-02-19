@@ -1,5 +1,6 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
 import { PickersTimezone } from './timezone';
+import { PickerValidDate } from './pickers';
 
 export interface AdapterFormats {
   // Token formats
@@ -153,7 +154,7 @@ export type DateBuilderReturnType<T extends string | null | undefined, TDate> = 
   ? null
   : TDate;
 
-export interface MuiPickersAdapter<TDate, TLocale = any> {
+export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any> {
   /**
    * A boolean confirming that the adapter used is an MUI adapter.
    */

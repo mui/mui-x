@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Typography from '@mui/material/Typography';
@@ -29,12 +27,8 @@ export default function TrackNodeSelectionToggle() {
           ? 'No node selection recorded'
           : `Last selected node: ${lastSelectedNode}`}
       </Typography>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
-        <SimpleTreeView
-          onNodeSelectionToggle={handleNodeSelectionToggle}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-        >
+      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
+        <SimpleTreeView onNodeSelectionToggle={handleNodeSelectionToggle}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
             <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />

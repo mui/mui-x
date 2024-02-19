@@ -14,8 +14,9 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
+import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
 
-const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
+const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {
     isNodeExpandable: () => false,
     isNodeExpanded: () => false,
@@ -26,13 +27,13 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<any> = {
     mapFirstCharFromJSX: () => {},
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
-  multiSelect: false,
   disabledItemsFocusable: false,
   icons: {
-    defaultCollapseIcon: null,
-    defaultExpandIcon: null,
-    defaultParentIcon: null,
-    defaultEndIcon: null,
+    slots: {},
+    slotProps: {},
+  },
+  selection: {
+    multiSelect: false,
   },
 };
 
@@ -105,25 +106,29 @@ describe('<TreeItem />', () => {
   });
 
   it('should display the right icons', () => {
-    const defaultEndIcon = <div data-test="defaultEndIcon" />;
-    const defaultExpandIcon = <div data-test="defaultExpandIcon" />;
-    const defaultCollapseIcon = <div data-test="defaultCollapseIcon" />;
-    const defaultParentIcon = <div data-test="defaultParentIcon" />;
-    const icon = <div data-test="icon" />;
-    const endIcon = <div data-test="endIcon" />;
-
     const { getByTestId } = render(
       <SimpleTreeView
-        defaultEndIcon={defaultEndIcon}
-        defaultExpandIcon={defaultExpandIcon}
-        defaultCollapseIcon={defaultCollapseIcon}
-        defaultParentIcon={defaultParentIcon}
+        slots={{
+          expandIcon: () => <div data-test="defaultExpandIcon" />,
+          collapseIcon: () => <div data-test="defaultCollapseIcon" />,
+          endIcon: () => <div data-test="defaultEndIcon" />,
+        }}
         defaultExpandedNodes={['1']}
       >
         <TreeItem nodeId="1" label="1" data-testid="1">
           <TreeItem nodeId="2" label="2" data-testid="2" />
-          <TreeItem nodeId="5" label="5" data-testid="5" icon={icon} />
-          <TreeItem nodeId="6" label="6" data-testid="6" endIcon={endIcon} />
+          <TreeItem
+            nodeId="5"
+            label="5"
+            data-testid="5"
+            slots={{ icon: () => <div data-test="icon" /> }}
+          />
+          <TreeItem
+            nodeId="6"
+            label="6"
+            data-testid="6"
+            slots={{ endIcon: () => <div data-test="endIcon" /> }}
+          />
         </TreeItem>
         <TreeItem nodeId="3" label="3" data-testid="3">
           <TreeItem nodeId="4" label="4" data-testid="4" />
@@ -172,6 +177,53 @@ describe('<TreeItem />', () => {
         <TreeItem nodeId="1" label="1" data-testid="1">
           <TreeItem nodeId="2" label="2" data-testid="2">
             {[]}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
+  it('should treat multiple empty conditional arrays as empty', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
+  it('should treat one conditional empty and one conditional with results as expandable', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[]}
+            {[1].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).to.have.attribute('aria-expanded', 'true');
+  });
+  it('should handle edge case of nested array of array', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[[]]}
           </TreeItem>
         </TreeItem>
       </SimpleTreeView>,
@@ -1141,6 +1193,36 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByRole('tree'), { key: ' ' });
 
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
+        });
+
+        it('should select a node when Enter is pressed and the node is not selected', () => {
+          const { getByRole, getByTestId } = render(
+            <SimpleTreeView>
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </SimpleTreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
+        });
+
+        it('should not un-select a node when Enter is pressed and the node is selected', () => {
+          const { getByRole, getByTestId } = render(
+            <SimpleTreeView defaultSelectedNodes="one">
+              <TreeItem nodeId="one" label="one" data-testid="one" />
+            </SimpleTreeView>,
+          );
+
+          act(() => {
+            getByRole('tree').focus();
+          });
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+
+          expect(getByTestId('one')).to.have.attribute('aria-selected');
         });
       });
 

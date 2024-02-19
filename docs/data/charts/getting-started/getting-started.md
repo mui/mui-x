@@ -1,16 +1,17 @@
 ---
 title: React Chart library - Getting started
+productId: x-charts
 githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
 ---
 
 # Charts - Getting Started
 
-<p class="description">Get started with the MUI X Charts components. Install the package, configure your application, and start using the components.</p>
+<p class="description">Get started with the MUI X Charts components. Install the package, configure your application, and start using the components.</p>
 
 ## Installation
 
-Run one of the following commands to add the MUI X Charts to your project:
+Run one of the following commands to add the MUI X Charts to your project:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -60,7 +61,7 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ### Style engine
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -77,11 +78,11 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ### Usage with Next.js
 
-If you're using MUI X Charts with Next.js, you might face the following error:
+If you're using MUI X Charts with Next.js, you might face the following error:
 
 ```bash
 [ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
@@ -113,12 +114,12 @@ Visit the [Composition page](/x/react-charts/composition/) for more details.
 
 ## Axis management
 
-MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
+MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
 
 Visit the [Axis page](/x/react-charts/axis/) for more details.
 
 ## Styling
 
-MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
+MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
 Visit the [Styling page](/x/react-charts/styling/) for more details.

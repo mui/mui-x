@@ -13,20 +13,22 @@ import {
   UseFieldResponse,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
-import { DateValidationError } from '@mui/x-date-pickers/models';
+import { DateValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
-import { DateRange } from '../../models/range';
 import {
   DateRangeComponentValidationProps,
   validateDateRange,
 } from '../../utils/validation/validateDateRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { DateRangeValidationError } from '../../../models';
+import { DateRangeValidationError, DateRange } from '../../../models';
 import { excludeProps } from './shared';
 
-export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({
+export const useMultiInputDateRangeField = <
+  TDate extends PickerValidDate,
+  TTextFieldSlotProps extends {},
+>({
   sharedProps: inSharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
@@ -100,10 +102,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateFieldComponentProps<
-    TDate,
-    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
-  > = {
+  const startFieldProps: UseDateFieldComponentProps<TDate, UseDateFieldDefaultizedProps<TDate>> = {
     error: !!validationError[0],
     ...startTextFieldProps,
     disabled,
@@ -120,10 +119,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     onSelectedSectionsChange,
   };
 
-  const endFieldProps: UseDateFieldComponentProps<
-    TDate,
-    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
-  > = {
+  const endFieldProps: UseDateFieldComponentProps<TDate, UseDateFieldDefaultizedProps<TDate>> = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,

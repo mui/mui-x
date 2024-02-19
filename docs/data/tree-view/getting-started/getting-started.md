@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree View - Getting started
-components: SimpleTreeView, RichTreeView, TreeItem
+components: SimpleTreeView, RichTreeView, TreeItem, TreeView
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -64,7 +64,7 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ### Style engine
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -81,7 +81,7 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Render your first component
 

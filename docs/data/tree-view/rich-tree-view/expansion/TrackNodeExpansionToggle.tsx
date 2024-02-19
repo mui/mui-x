@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import Typography from '@mui/material/Typography';
@@ -60,12 +58,10 @@ export default function TrackNodeExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
         </Typography>
       )}
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           onNodeExpansionToggle={handleNodeExpansionToggle}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
     </Stack>

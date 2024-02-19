@@ -20,9 +20,13 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year' ? '年份檢視表已打開，切換以檢視日曆' : '日曆檢視表已打開，切換以檢視年份',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '開始',
   end: '結束',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: '取消',
@@ -38,9 +42,7 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `選擇 ${views[view]}. ${
-      time === null ? '未選擇時間' : `已選擇${adapter.format(time, 'fullTime')}`
-    }`,
+    `選擇 ${views[view]}. ${time === null ? '未選擇時間' : `已選擇${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小時`,
   minutesClockNumberText: (minutes) => `${minutes}分鐘`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,

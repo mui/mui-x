@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
@@ -67,14 +65,12 @@ export default function ControlledSelection() {
           {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           selectedNodes={selectedNodes}
           onSelectedNodesChange={handleSelectedNodesChange}
           multiSelect
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
         />
       </Box>
     </Box>

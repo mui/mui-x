@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid',
+    'docsx/translations/api-docs/data-grid/data-grid-premium',
     false,
-    /\.\/data-grid-premium(-[a-z]{2})?\.json$/,
+    /\.\/data-grid-premium.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

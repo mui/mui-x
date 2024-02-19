@@ -8,7 +8,7 @@ export const useTreeViewContext = <TPlugins extends readonly TreeViewAnyPluginSi
   if (context == null) {
     throw new Error(
       [
-        'MUI: Could not find the Tree View context.',
+        'MUI X: Could not find the Tree View context.',
         'It looks like you rendered your component outside of a SimpleTreeView or RichTreeView parent component.',
         'This can also happen if you are bundling multiple versions of the Tree View.',
       ].join('\n'),

@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { FieldSection, BaseSingleInputFieldProps, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -20,7 +20,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  * - MobileTimePicker
  */
 export const useMobilePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -65,11 +65,9 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    InferError<TExternalProps>
+  const fieldProps: Omit<
+    BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, InferError<TExternalProps>>,
+    'referenceDate' | 'defaultValue'
   > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,

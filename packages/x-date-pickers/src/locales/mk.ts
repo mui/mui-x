@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const mkPickers: PickersLocaleText<any> = {
+const mkPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Предходен месец',
   nextMonth: 'Следен месец',
@@ -16,9 +16,13 @@ const mkPickers: PickersLocaleText<any> = {
       ? 'годишен приказ, отвори календарски приказ'
       : 'календарски приказ, отвори годишен приказ',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Почеток',
   end: 'Крај',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Откажи',
@@ -34,9 +38,7 @@ const mkPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
-      time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Select ${view}. ${time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,

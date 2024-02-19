@@ -17,7 +17,19 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   setState,
 }) => {
   const insertJSXNode = useEventCallback((node: TreeViewNode) => {
-    setState((prevState) => ({ ...prevState, nodeMap: { ...prevState.nodeMap, [node.id]: node } }));
+    setState((prevState) => {
+      if (prevState.nodeMap[node.id] != null) {
+        throw new Error(
+          [
+            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+            'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+            `Tow items were provided with the same id in the \`items\` prop: "${node.id}"`,
+          ].join('\n'),
+        );
+      }
+
+      return { ...prevState, nodeMap: { ...prevState.nodeMap, [node.id]: node } };
+    });
   });
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
@@ -59,7 +71,14 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
-  const expandable = Boolean(Array.isArray(children) ? children.length : children);
+  const isExpandable = (reactChildren: React.ReactNode) => {
+    if (Array.isArray(reactChildren)) {
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
+    }
+    return Boolean(reactChildren);
+  };
+
+  const expandable = isExpandable(children);
 
   const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -77,7 +96,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
-    if (instance && index !== -1) {
+    if (index !== -1) {
       instance.insertJSXNode({
         id: nodeId,
         idAttribute: id,
@@ -94,7 +113,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   }, [instance, parentId, index, nodeId, expandable, disabled, id]);
 
   React.useEffect(() => {
-    if (instance && label) {
+    if (label) {
       return instance.mapFirstCharFromJSX(
         nodeId,
         (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
@@ -117,3 +136,5 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
 };
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+
+useTreeViewJSXNodes.params = {};
