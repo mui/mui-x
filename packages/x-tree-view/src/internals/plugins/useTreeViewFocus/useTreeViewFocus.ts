@@ -16,24 +16,30 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   models,
   rootRef,
 }) => {
-  const test = () => {
-    console.log('test');
-  };
+  const focusedNodeId = state.focusedNodeId;
   const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
-    const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
-    setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+    const cleanNodeId = typeof nodeId === 'function' ? nodeId(focusedNodeId) : nodeId;
+    if (focusedNodeId !== cleanNodeId) {
+      setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+    }
   });
 
+  const isTreeFocused = React.useCallback(
+    () => rootRef.current === document.activeElement,
+    [rootRef],
+  );
+
   const isNodeFocused = React.useCallback(
-    (nodeId: string) => state.focusedNodeId === nodeId,
-    [state.focusedNodeId],
+    (nodeId: string) => focusedNodeId === nodeId && isTreeFocused(),
+    [focusedNodeId, isTreeFocused],
   );
 
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     if (nodeId) {
-      console.log('focusNode', nodeId);
+      if (!isTreeFocused()) {
+        instance.focusRoot();
+      }
       setFocusedNodeId(nodeId);
-
       if (params.onNodeFocus) {
         params.onNodeFocus(event, nodeId);
       }
@@ -51,7 +57,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
-    test,
     focusNode,
   });
 
@@ -70,7 +75,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const createHandleFocus =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
       otherHandlers.onFocus?.(event);
-      console.log('createHandleFocus', event);
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
         const isNodeVisible = (nodeId: string) => {
@@ -79,7 +83,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         };
 
         let nodeToFocusId: string | null | undefined;
-        if (Array.isArray(models.selectedNodes.value)) {
+        if (focusedNodeId) {
+          nodeToFocusId = focusedNodeId;
+        } else if (Array.isArray(models.selectedNodes.value)) {
           nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
         } else if (
           models.selectedNodes.value != null &&
@@ -91,7 +97,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         if (nodeToFocusId == null) {
           nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
         }
-
         instance.focusNode(event, nodeToFocusId);
       }
     };
@@ -102,7 +107,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       setFocusedNodeId(null);
     };
 
-  const focusedNode = instance.getNode(state.focusedNodeId!);
+  const focusedNode = instance.getNode(focusedNodeId!);
   const activeDescendant = focusedNode
     ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
     : null;
