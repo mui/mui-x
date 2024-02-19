@@ -11,7 +11,6 @@ function save(lines) {
 }
 
 const UNSUPPORTED_PATHS = ['/careers/', '/store/'];
-const UNSUPPORTED_ANCHORS_PATHS = ['/api/'];
 
 const buffer = [];
 
@@ -36,24 +35,24 @@ parseDocFolder(
 );
 
 function getPageUrlFromLink(link) {
+  // Determine if the link is an API path
+  // e.g. /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
+  const isApiPath = link.match(/^\/[\w-]+\/api\//);
+  if (!isApiPath) {
+    return link;
+  }
   const [rep] = link.split('/#');
-  return rep;
+  // if the link actually includes a hash, we need to re-add the necessary `/` at the end
+  return link.includes('/#') ? `${rep}/` : rep;
 }
 
 const usedLinks = { ...usedLinksCore, ...usedLinksX };
 const availableLinks = { ...availableLinksCore, ...availableLinksX };
 
-const removeUnsupportedHash = (link) => {
-  const doNotSupportAnchors = UNSUPPORTED_ANCHORS_PATHS.some((unsupportedPath) =>
-    link.includes(unsupportedPath),
-  );
-  const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
-  return rep;
-};
 write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
-  .filter((link) => !availableLinks[removeUnsupportedHash(link)])
+  .filter((link) => !availableLinks[getPageUrlFromLink(link)])
   // unstyled sections are added by scripts (cannot be found in markdown)
   .filter((link) => !link.includes('#unstyled'))
   .filter((link) => UNSUPPORTED_PATHS.every((unsupportedPath) => !link.includes(unsupportedPath)))
