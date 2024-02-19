@@ -26,7 +26,7 @@ Check-out their documentation page for more information:
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-time-range-picker/#props).
-Some [`MultiInputDateTimeRangeField` props](/x/api/date-pickers/multi-input-date-time-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them.
+Some [`MultiInputDateTimeRangeField` props](/x/api/date-pickers/multi-input-date-time-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
