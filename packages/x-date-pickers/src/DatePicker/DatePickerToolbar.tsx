@@ -1,7 +1,8 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -13,12 +14,16 @@ import {
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
-  classes?: Partial<DatePickerToolbarClasses>;
-  sx?: SxProps<Theme>;
-}
+export interface DatePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, DateView>,
+    ExportedDatePickerToolbarProps {}
 
-export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
+export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DatePickerToolbarClasses>;
+}
 
 const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;
@@ -72,6 +77,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
+    className,
     ...other
   } = props;
   const utils = useUtils<TDate>();
@@ -95,7 +101,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
       ref={ref}
       toolbarTitle={localeText.datePickerToolbarTitle}
       isLandscape={isLandscape}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       {...other}
     >
       <DatePickerToolbarTitle
@@ -116,6 +122,9 @@ DatePickerToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   /**
    * className applied to the root component.
@@ -136,6 +145,9 @@ DatePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

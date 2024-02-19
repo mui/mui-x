@@ -131,6 +131,9 @@ export interface DateRangeCalendarProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   className?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateRangeCalendarClasses>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

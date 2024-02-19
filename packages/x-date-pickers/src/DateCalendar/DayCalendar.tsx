@@ -105,6 +105,9 @@ export interface DayCalendarProps<TDate>
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DayCalendarClasses>;
 }
 
