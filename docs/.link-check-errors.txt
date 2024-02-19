@@ -1,18 +1,2 @@
 Broken links found by `yarn docs:link-check` that exist:
 
-- https://mui.com/base-ui/react-autocomplete/hooks-api/#use-autocomplete
-- https://mui.com/base-ui/react-portal/components-api/
-- https://mui.com/material-ui/api/button/#props
-- https://mui.com/material-ui/api/input-base/#InputBase-prop-disableInjectingGlobalStyles
-- https://mui.com/material-ui/api/menu-item/#css
-- https://mui.com/material-ui/api/popper/#props
-- https://mui.com/material-ui/guides/api/#native-properties
-- https://mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator
-- https://mui.com/system/styles/api/#serverstylesheets
-- https://mui.com/system/styles/api/#stylesprovider
-- https://mui.com/system/styles/api/#themeprovider
-- https://mui.com/x/api/charts/gauge/#classes
-- https://mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs
-- https://mui.com/x/api/data-grid/data-grid/#props
-- https://mui.com/x/api/data-grid/data-grid/#slots
-- https://mui.com/x/api/date-pickers/date-picker/#slots
