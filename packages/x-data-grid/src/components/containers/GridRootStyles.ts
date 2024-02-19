@@ -636,6 +636,7 @@ export const GridRootStyles = styled('div', {
       marginRight: t.spacing(2),
     },
 
+    /* ScrollbarFiller styles */
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
