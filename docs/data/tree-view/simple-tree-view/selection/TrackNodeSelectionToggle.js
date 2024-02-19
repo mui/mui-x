@@ -21,7 +21,7 @@ export default function TrackNodeSelectionToggle() {
           ? 'No node selection recorded'
           : `Last selected node: ${lastSelectedNode}`}
       </Typography>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
         <SimpleTreeView onNodeSelectionToggle={handleNodeSelectionToggle}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
