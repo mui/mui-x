@@ -78,7 +78,6 @@ Gauge.propTypes = {
   endAngle: PropTypes.number,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -142,7 +141,6 @@ Gauge.propTypes = {
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
 } as any;

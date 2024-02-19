@@ -30,7 +30,7 @@
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "height": { "type": { "name": "number" } },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
@@ -91,7 +91,7 @@
       },
       "default": "null"
     },
-    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",

@@ -17,7 +17,7 @@
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "focusedView": {
       "type": {
         "name": "enum",
