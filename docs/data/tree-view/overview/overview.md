@@ -14,7 +14,7 @@ packageName: '@mui/x-tree-view'
 
 ## Available components
 
-The MUI X Tree View package exposes two different versions of the component:
+The MUI X Tree View package exposes two different versions of the component:
 
 ### Simple Tree View
 

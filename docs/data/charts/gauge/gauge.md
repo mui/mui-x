@@ -113,7 +113,7 @@ To create your own components, use the `useGaugeState` hook which provides all y
 
 ## Accessibility
 
-The MUI X Gauge chart is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+The MUI X Gauge chart is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
 
 ### Label
 
