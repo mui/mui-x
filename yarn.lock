@@ -193,7 +193,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.23.5.tgz#ffb878728bb6bdcb6f4510aa51b1be9afb8cfd98"
   integrity sha512-uU27kfDRlhfKl+w1U6vp16IuvSLtjAxdArVXPa9BvLkrr7CYIsxH5adpHObeAGY/41+syctUWOZ140a2Rvkgjw==
 
-"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.7", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
+"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
   version "7.23.9"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.23.9.tgz#b028820718000f267870822fec434820e9b1e4d1"
   integrity sha512-5q0175NOjddqpvvzU+kDiSOAk4PfdO6FvwCWoQ6RO7rTzEe8vlo+4HVfcnAREhD4npMs0e9uZypjTwzZPCf/cw==
@@ -1796,7 +1796,7 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui-internal/docs-utils@1.0.0", "@mui-internal/docs-utils@^1.0.0":
+"@mui-internal/docs-utils@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.0.tgz#b1cd8fafe00dca045896daa2977e26eb551b891a"
   integrity sha512-TqbdoXrXAk9JhcsGjekriQVU6A0w7oo01CfTfm4mefcKT2Z+RhHeFzG4fJrugN718qLdolJKGMoD7f+u/yBSBw==
@@ -1804,21 +1804,12 @@
     rimraf "^5.0.5"
     typescript "^5.1.6"
 
-"@mui-internal/typescript-to-proptypes@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@mui-internal/typescript-to-proptypes/-/typescript-to-proptypes-1.0.2.tgz#93ccfe6f611ffc700e99570a34737842c6cc0c70"
-  integrity sha512-KpnPqY8MCQBHwmFMCZZxXwG3uREgMAbXKLBzcxlBhYxssZcYdsE/aImWE0B50QfVHBPjkNmt4dcI2UO2VEzS9w==
+"@mui-internal/docs-utils@https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils":
+  version "1.0.1"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils#7e71fe5378e9649a88fd94fb79339bcabd2e33d0"
   dependencies:
-    "@babel/core" "^7.23.7"
-    "@babel/plugin-syntax-class-properties" "^7.12.13"
-    "@babel/plugin-syntax-jsx" "^7.23.3"
-    "@babel/plugin-syntax-typescript" "^7.23.3"
-    "@babel/types" "^7.23.6"
-    "@mui-internal/docs-utils" "1.0.0"
-    doctrine "^3.0.0"
-    lodash "^4.17.21"
+    rimraf "^5.0.5"
     typescript "^5.3.3"
-    uuid "^9.0.1"
 
 "@mui/base@5.0.0-beta.36", "@mui/base@^5.0.0-beta.36":
   version "5.0.0-beta.36"
@@ -1844,6 +1835,21 @@
   integrity sha512-6tLQoM6RylQuDnHR6qQay0G0pJgKmrhn5MIm0IfrwtmSO8eV5iUFR+nNUTXsWa24gt7ZbIKnJ962UlYaeXa4bg==
   dependencies:
     "@babel/runtime" "^7.23.9"
+
+"@mui/internal-scripts@https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui/internal-scripts":
+  version "1.0.0"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui/internal-scripts#5e6c455f470253e736764a481f9c639d2e103e22"
+  dependencies:
+    "@babel/core" "^7.23.9"
+    "@babel/plugin-syntax-class-properties" "^7.12.13"
+    "@babel/plugin-syntax-jsx" "^7.23.3"
+    "@babel/plugin-syntax-typescript" "^7.23.3"
+    "@babel/types" "^7.23.9"
+    "@mui-internal/docs-utils" "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils"
+    doctrine "^3.0.0"
+    lodash "^4.17.21"
+    typescript "^5.3.3"
+    uuid "^9.0.1"
 
 "@mui/joy@^5.0.0-beta.27":
   version "5.0.0-beta.27"
