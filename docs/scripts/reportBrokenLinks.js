@@ -34,7 +34,7 @@ parseDocFolder(
   '',
 );
 
-function getPageUrlFromLink(link) {
+function removeApiLinkHash(link) {
   // Determine if the link is an API path
   // e.g. /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
   const isApiPath = link.match(/^\/[\w-]+\/api\//);
@@ -52,7 +52,7 @@ const availableLinks = { ...availableLinksCore, ...availableLinksX };
 write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
-  .filter((link) => !availableLinks[getPageUrlFromLink(link)])
+  .filter((link) => !availableLinks[removeApiLinkHash(link)])
   // these url segments are specific to Base UI and added by scripts (can not be found in markdown)
   .filter((link) =>
     ['components-api', 'hooks-api', '#unstyled'].every((str) => !link.includes(str)),
@@ -67,7 +67,7 @@ Object.keys(usedLinks)
     console.log('available anchors on the same page:');
     console.log(
       Object.keys(availableLinks)
-        .filter((link) => getPageUrlFromLink(link) === getPageUrlFromLink(linkKey))
+        .filter((link) => removeApiLinkHash(link) === removeApiLinkHash(linkKey))
         .sort()
         .map(getAnchor)
         .join('\n'),
