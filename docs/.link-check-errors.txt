@@ -1,5 +1,2 @@
 Broken links found by `yarn docs:link-check` that exist:
 
-- https://mui.com/material-ui/customization/right-to-left/
-- https://mui.com/material-ui/integrations/styled-components/
-- https://mui.com/material-ui/migration/pickers-migration/#imports
