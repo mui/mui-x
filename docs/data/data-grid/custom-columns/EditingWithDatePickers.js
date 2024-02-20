@@ -37,9 +37,6 @@ const dateColumnType = {
     InputComponentProps: { showTime: false },
   })),
   valueFormatter: (value) => {
-    if (typeof value === 'string') {
-      return value;
-    }
     if (value) {
       return dateAdapter.format(value, 'keyboardDate');
     }
@@ -53,7 +50,7 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props) {
-  const { InputProps, ...other } = props;
+  const { InputProps, focused, ...other } = props;
   return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
@@ -123,9 +120,6 @@ const dateTimeColumnType = {
     InputComponentProps: { showTime: true },
   })),
   valueFormatter: (value) => {
-    if (typeof value === 'string') {
-      return value;
-    }
     if (value) {
       return dateAdapter.format(value, 'keyboardDateTime');
     }
