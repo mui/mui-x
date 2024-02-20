@@ -1,5 +1,5 @@
 ---
-title: React Heat map chart
+title: React Heatmap chart
 productId: x-charts
 ---
 
