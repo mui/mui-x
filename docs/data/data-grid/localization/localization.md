@@ -107,7 +107,7 @@ Note that these translations of the Data Grid component depend on the [Localizat
 ## RTL Support
 
 Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
-Follow [this guide](/material-ui/guides/right-to-left/) to use them.
+Follow [this guide](/material-ui/customization/right-to-left/) to use them.
 
 The example below demonstrates how to use an RTL language (Arabic) with the data grid.
 

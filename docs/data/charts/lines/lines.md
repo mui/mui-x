@@ -1,7 +1,7 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
 ---
 
 # Charts - Lines
@@ -137,6 +137,14 @@ import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
 ```
 
 ## Styling
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
 
 ### Interpolation
 

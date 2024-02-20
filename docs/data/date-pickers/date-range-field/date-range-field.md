@@ -34,3 +34,11 @@ The value of the component can be uncontrolled or controlled.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
+
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+## Validation
+
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
