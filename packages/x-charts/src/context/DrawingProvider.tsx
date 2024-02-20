@@ -65,7 +65,7 @@ if (process.env.NODE_ENV !== 'production') {
   SvgContext.displayName = 'SvgContext';
 }
 
-function DrawingProvider(props: DrawingProviderProps) {
+export function DrawingProvider(props: DrawingProviderProps) {
   const { width, height, margin, svgRef, children } = props;
   const drawingArea = useChartDimensions(width, height, margin);
   const chartId = useId();
@@ -81,5 +81,3 @@ function DrawingProvider(props: DrawingProviderProps) {
     </SvgContext.Provider>
   );
 }
-
-export { DrawingProvider };
