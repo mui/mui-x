@@ -30,7 +30,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
-import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridColumnFieldsSelector,
   gridVisibleColumnFieldsSelector,
@@ -246,7 +246,7 @@ export const useGridRowEditing = (
 
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (isPasteShortcut(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;

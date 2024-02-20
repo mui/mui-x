@@ -29,7 +29,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
-import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import { buildWarning } from '../../../utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
@@ -171,7 +171,7 @@ export const useGridCellEditing = (
         }
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (isPasteShortcut(event)) {
           reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
