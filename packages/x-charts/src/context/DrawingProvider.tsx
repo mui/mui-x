@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
@@ -57,11 +56,6 @@ export const DrawingContext = React.createContext<
 });
 export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
-/**
- * API:
- *
- * - [DrawingProvider API](https://mui.com/x/api/charts/drawing-provider/)
- */
 function DrawingProvider(props: DrawingProviderProps) {
   const { width, height, margin, svgRef, children } = props;
   const drawingArea = useChartDimensions(width, height, margin);
@@ -78,30 +72,5 @@ function DrawingProvider(props: DrawingProviderProps) {
     </SVGContext.Provider>
   );
 }
-
-DrawingProvider.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  children: PropTypes.node,
-  height: PropTypes.number.isRequired,
-  /**
-   * The margin between the SVG and the drawing area.
-   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
-   */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
-  svgRef: PropTypes.shape({
-    current: PropTypes.object,
-  }).isRequired,
-  width: PropTypes.number.isRequired,
-} as any;
 
 export { DrawingProvider };

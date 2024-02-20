@@ -52,7 +52,7 @@ export default function TrackNodeExpansionToggle() {
         </Typography>
       )}
 
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           onNodeExpansionToggle={handleNodeExpansionToggle}

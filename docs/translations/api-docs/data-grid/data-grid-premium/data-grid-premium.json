@@ -490,13 +490,6 @@
         "details": "Additional details for this callback."
       }
     },
-    "onRowEditCommit": {
-      "description": "Callback fired when the row changes are committed.",
-      "typeDescriptions": {
-        "id": "The row id.",
-        "event": "The event that caused this prop to be called."
-      }
-    },
     "onRowEditStart": {
       "description": "Callback fired when the row turns to edit mode.",
       "typeDescriptions": {

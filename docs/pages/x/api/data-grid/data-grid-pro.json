@@ -409,13 +409,6 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
-    "onRowEditCommit": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(id: GridRowId, event: MuiEvent<MuiBaseEvent>) => void",
-        "describedArgs": ["id", "event"]
-      }
-    },
     "onRowEditStart": {
       "type": { "name": "func" },
       "signature": {

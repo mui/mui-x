@@ -1890,9 +1890,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/alexfauquette/material-ui.git#move-API--layout-config":
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.10"
-  resolved "https://github.com/alexfauquette/material-ui.git#aa46984694d4d799eb032ad96d7a58c5b70f4acf"
+  resolved "https://github.com/mui/material-ui.git#a367c25dcaaddf5e72cceb5a9d8ef571607486c2"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"

@@ -60,12 +60,12 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 ### Using another input
 
-#### With the Joy UI input
+#### With the Joy UI input
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 :::info
-A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
+A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
 :::
 
 {{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
