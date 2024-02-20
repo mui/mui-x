@@ -26,7 +26,7 @@ Check-out their documentation page for more information:
 - [Time Clock](/x/react-date-pickers/time-clock/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/time-picker/#props).
-Some [`TimeField` props](/x/api/date-pickers/time-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
+Some [TimeField props](/x/api/date-pickers/time-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 

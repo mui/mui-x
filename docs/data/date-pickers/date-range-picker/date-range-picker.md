@@ -25,7 +25,7 @@ Check-out their documentation page for more information:
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-range-picker/#props).
-Some [`MultiInputDateRangeField` props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
+Some [MultiInputDateRangeField props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
