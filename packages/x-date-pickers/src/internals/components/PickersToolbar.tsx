@@ -32,19 +32,24 @@ const PickersToolbarRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>(({ theme, ownerState }) => ({
+}>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
-  ...(ownerState.isLandscape && {
-    height: 'auto',
-    maxWidth: 160,
-    padding: 16,
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-  }),
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        height: 'auto',
+        maxWidth: 160,
+        padding: 16,
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+      },
+    },
+  ],
 }));
 
 const PickersToolbarContent = styled('div', {

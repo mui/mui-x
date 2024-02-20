@@ -228,24 +228,46 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     styles.rangeIntervalPreview,
   ],
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
-  ...(ownerState.isPreviewing &&
-    !ownerState.isHiddenDayFiller && {
-      borderRadius: 0,
-      border: `2px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      ...((ownerState.isStartOfPreviewing || ownerState.isFirstVisibleCell) && {
+  variants: [
+    {
+      props: { isPreviewing: true, isHiddenDayFiller: false },
+      style: {
+        borderRadius: 0,
+        border: `2px dashed ${(theme.vars || theme).palette.divider}`,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+      },
+    },
+    {
+      props: ({
+        isPreviewing,
+        isHiddenDayFiller,
+        isStartOfPreviewing,
+        isFirstVisibleCell,
+      }: OwnerState) =>
+        isPreviewing && isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
+      style: {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
-      }),
-      ...((ownerState.isEndOfPreviewing || ownerState.isLastVisibleCell) && {
+      },
+    },
+    {
+      props: ({
+        isPreviewing,
+        isHiddenDayFiller,
+        isEndOfPreviewing,
+        isLastVisibleCell,
+      }: OwnerState) =>
+        isPreviewing && isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
+      style: {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
-      }),
-    }),
+      },
+    },
+  ],
 }));
 
 DateRangePickerDayRangeIntervalPreview.propTypes = {
