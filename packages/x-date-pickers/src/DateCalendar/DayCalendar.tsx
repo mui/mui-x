@@ -74,7 +74,6 @@ export interface ExportedDayCalendarProps<TDate extends PickerValidDate>
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber?: number;
 }
@@ -103,6 +102,9 @@ export interface DayCalendarProps<TDate extends PickerValidDate>
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DayCalendarClasses>;
   /**
    * Overridable component slots.

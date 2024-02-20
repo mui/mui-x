@@ -32,6 +32,10 @@ const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 export default withDocsInfra({
+  experimental: {
+    workerThreads: true,
+    cpus: 3,
+  },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {

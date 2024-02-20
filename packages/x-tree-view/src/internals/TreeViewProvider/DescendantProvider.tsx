@@ -6,17 +6,6 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
  *  Modified slightly to suit our purposes.
  */
 
-// To replace with .findIndex() once we stop IE11 support.
-function findIndex<T>(array: T[], comp: (item: T) => boolean) {
-  for (let i = 0; i < array.length; i += 1) {
-    if (comp(array[i])) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
 function binaryFindElement(array: TreeItemDescendant[], element: HTMLLIElement) {
   let start = 0;
   let end = array.length - 1;
@@ -89,7 +78,7 @@ export function useDescendant(descendant: TreeItemDescendant) {
   // index on the following render, and we will re-register descendants
   // so that everything is up-to-date before the user interacts with a
   // collection.
-  const index = findIndex(descendants, (item) => item.element === descendant.element);
+  const index = descendants.findIndex((item) => item.element === descendant.element);
 
   const previousDescendants = usePrevious(descendants);
 
