@@ -11,7 +11,7 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
-import LicenseInfoContext from '../Unstable_LicenseInfoProvider/LicenseInfoContext';
+import LicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
 
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
