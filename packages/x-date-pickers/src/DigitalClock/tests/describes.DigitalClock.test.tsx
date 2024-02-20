@@ -11,7 +11,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

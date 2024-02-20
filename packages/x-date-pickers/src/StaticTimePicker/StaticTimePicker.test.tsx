@@ -9,7 +9,7 @@ import {
   describeValidation,
 } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticTimePicker />', () => {
   const { render, clock } = createPickerRenderer({

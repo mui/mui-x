@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputDateRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

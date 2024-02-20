@@ -13,7 +13,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

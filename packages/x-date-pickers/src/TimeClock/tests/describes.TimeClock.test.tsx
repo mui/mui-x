@@ -13,7 +13,7 @@ import {
   timeClockHandler,
   describeValue,
 } from 'test/utils/pickers';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();

@@ -21,7 +21,7 @@ import {
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>

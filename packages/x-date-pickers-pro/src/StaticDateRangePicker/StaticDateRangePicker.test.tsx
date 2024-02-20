@@ -9,7 +9,7 @@ import {
   adapterToUse,
   describeRangeValidation,
 } from 'test/utils/pickers';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({

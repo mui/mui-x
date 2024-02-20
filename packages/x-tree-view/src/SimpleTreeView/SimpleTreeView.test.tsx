@@ -5,7 +5,7 @@ import { act, createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-inte
 import Portal from '@mui/material/Portal';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();

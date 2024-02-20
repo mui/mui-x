@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid';
 import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext';
 import Popper from '@mui/material/Popper';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<GridPanel />', () => {
   const { render } = createRenderer();

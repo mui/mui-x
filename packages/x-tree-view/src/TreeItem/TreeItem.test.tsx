@@ -8,7 +8,7 @@ import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem'
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {

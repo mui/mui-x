@@ -15,7 +15,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

@@ -12,7 +12,7 @@ import {
   describeValue,
   describePicker,
 } from 'test/utils/pickers';
-import describeConformance from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
