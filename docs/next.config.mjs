@@ -76,6 +76,10 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
+          '@mui/docs': path.resolve(
+            currentDirectory,
+            '../node_modules/@mui/monorepo/packages/mui-docs/src',
+          ),
           docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
