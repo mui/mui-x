@@ -54,9 +54,18 @@ export const DrawingContext = React.createContext<
   width: 400,
   chartId: '',
 });
-export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
-function DrawingProvider(props: DrawingProviderProps) {
+if (process.env.NODE_ENV !== 'production') {
+  DrawingContext.displayName = 'DrawingContext';
+}
+
+export const SvgContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
+
+if (process.env.NODE_ENV !== 'production') {
+  SvgContext.displayName = 'SvgContext';
+}
+
+export function DrawingProvider(props: DrawingProviderProps) {
   const { width, height, margin, svgRef, children } = props;
   const drawingArea = useChartDimensions(width, height, margin);
   const chartId = useId();
@@ -67,10 +76,8 @@ function DrawingProvider(props: DrawingProviderProps) {
   );
 
   return (
-    <SVGContext.Provider value={svgRef}>
+    <SvgContext.Provider value={svgRef}>
       <DrawingContext.Provider value={value}>{children}</DrawingContext.Provider>
-    </SVGContext.Provider>
+    </SvgContext.Provider>
   );
 }
-
-export { DrawingProvider };

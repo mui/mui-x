@@ -90,6 +90,10 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
+if (process.env.NODE_ENV !== 'production') {
+  CartesianContext.displayName = 'CartesianContext';
+}
+
 function CartesianContextProvider(props: CartesianContextProviderProps) {
   const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
