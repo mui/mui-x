@@ -102,10 +102,11 @@ export const useGridInfiniteLoader = (
     }
   }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows]);
 
+  const hasOnRowsScrollEnd = !!props.onRowsScrollEnd;
   const lastVisibleRowRef = React.useCallback<GridInfiniteLoaderApi['unstable_lastVisibleRowRef']>(
     (node) => {
       // Prevent the infite loading working in combination with lazy loading
-      if (props.rowsLoadingMode !== 'client' || !props.onRowsScrollEnd) {
+      if (props.rowsLoadingMode !== 'client' || !hasOnRowsScrollEnd) {
         return;
       }
 
@@ -117,7 +118,7 @@ export const useGridInfiniteLoader = (
         }
       }
     },
-    [props.rowsLoadingMode],
+    [props.rowsLoadingMode, hasOnRowsScrollEnd],
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {
