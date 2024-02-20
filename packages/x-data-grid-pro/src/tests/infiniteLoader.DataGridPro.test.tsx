@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
@@ -9,35 +9,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Infnite loader', () => {
   const { render } = createRenderer();
 
-  function IntersectionObserverMock(callback: (entries: IntersectionObserverEntry[]) => void) {
-    return {
-      observe: (element: HTMLElement) => {
-        callback([
-          {
-            // @ts-ignore
-            boundingClientRect: {
-              y: element.getBoundingClientRect().y,
-            },
-            intersectionRatio: 1,
-            isIntersecting: true,
-          },
-        ]);
-      },
-      disconnect: () => null,
-    };
-  }
-
-  const originalIntersectionObserver = window.IntersectionObserver;
-
-  beforeEach(() => {
-    window.IntersectionObserver = IntersectionObserverMock as any;
-  });
-
-  afterEach(() => {
-    window.IntersectionObserver = originalIntersectionObserver;
-  });
-
-  it('call onRowsScrollEnd when viewport scroll reaches the bottom', function test() {
+  it('call onRowsScrollEnd when viewport scroll reaches the bottom', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -66,6 +38,8 @@ describe('<DataGridPro /> - Infnite loader', () => {
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
-    expect(handleRowsScrollEnd.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(handleRowsScrollEnd.callCount).to.equal(1);
+    });
   });
 });
