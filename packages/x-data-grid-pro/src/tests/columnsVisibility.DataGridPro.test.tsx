@@ -137,9 +137,10 @@ describe('<DataGridPro /> - Columns visibility', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
     const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
+    const mouseDownEvent = new MouseEvent('mousedown', { clientX: 100 });
+    fireEvent(separator, mouseDownEvent);
+    fireEvent(separator, new MouseEvent('mousemove', { clientX: 110, buttons: 1 }));
+    fireEvent(separator, new MouseEvent('mouseup'));
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
   });
