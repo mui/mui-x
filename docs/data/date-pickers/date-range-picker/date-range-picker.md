@@ -18,12 +18,14 @@ materialDesign: https://m2.material.io/components/date-pickers
 ## Component composition
 
 The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
-All the documented props of those two components can also be passed to the Date Range Picker component.
 
 Check-out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
+
+You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-range-picker/#props).
+Some [MultiInputDateRangeField props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
