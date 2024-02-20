@@ -51,10 +51,8 @@ const PickersMonthRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  variants: [
-    { props: { monthsPerRow: 3 }, style: { flexBasis: '33.33%' } },
-    { props: { monthsPerRow: 4 }, style: { flexBasis: '25%' } },
-  ],
+  flexBasis: '33.3%',
+  variants: [{ props: { monthsPerRow: 4 }, style: { flexBasis: '25%' } }],
 });
 
 const PickersMonthButton = styled('button', {

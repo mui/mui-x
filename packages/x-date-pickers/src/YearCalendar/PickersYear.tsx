@@ -47,12 +47,8 @@ const PickersYearRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  variants: [3, 4].map((yearsPerRow) => ({
-    props: { yearsPerRow },
-    style: {
-      flexBasis: `${Math.round((1 / yearsPerRow) * 1000) / 10}%`,
-    },
-  })),
+  flexBasis: '33.3%',
+  variants: [{ props: { yearsPerRow: 4 }, style: { flexBasis: '25%' } }],
 });
 
 const PickersYearButton = styled('button', {
