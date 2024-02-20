@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { scaleBand, scalePoint } from 'd3-scale';
-import PropTypes from 'prop-types';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -91,11 +90,6 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
-/**
- * API:
- *
- * - [CartesianContextProvider API](https://mui.com/x/api/charts/cartesian-context-provider/)
- */
 function CartesianContextProvider(props: CartesianContextProviderProps) {
   const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
@@ -314,99 +308,5 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
   // @ts-ignore
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
-
-CartesianContextProvider.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  children: PropTypes.node,
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
-  dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
-   */
-  xAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
-  ),
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
-   */
-  yAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
-  ),
-} as any;
 
 export { CartesianContextProvider };
