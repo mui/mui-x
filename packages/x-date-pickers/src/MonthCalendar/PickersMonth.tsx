@@ -51,12 +51,10 @@ const PickersMonthRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  variants: [3, 4].map((monthsPerRow) => ({
-    props: { monthsPerRow },
-    style: {
-      flexBasis: `${Math.round((1 / monthsPerRow) * 1000) / 10}%`,
-    },
-  })),
+  variants: [
+    { props: { monthsPerRow: 3 }, style: { flexBasis: '33.33%' } },
+    { props: { monthsPerRow: 4 }, style: { flexBasis: '25%' } },
+  ],
 });
 
 const PickersMonthButton = styled('button', {
