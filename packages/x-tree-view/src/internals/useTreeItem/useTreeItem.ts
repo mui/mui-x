@@ -28,7 +28,7 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItemUtils({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
-  const handleRootRef = useForkRef(rootRef, pluginRootRef);
+  const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent & MuiCancellableEvent) => {

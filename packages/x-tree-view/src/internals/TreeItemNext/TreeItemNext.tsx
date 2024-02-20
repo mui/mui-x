@@ -124,7 +124,7 @@ export const TreeItemNextIconContainer = styled('div', {
 
 export const TreeItemNextTransitionGroup = styled(Collapse, {
   name: 'MuiTreeItemNextTransitionGroup',
-  slot: 'IconContainer',
+  slot: 'TransitionGroup',
   overridesResolver: (props, styles) => styles.transitionGroup,
 })({
   margin: 0,

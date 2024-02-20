@@ -36,7 +36,7 @@ export interface UseTreeItemRootSlotOwnProps {
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
   onFocus: MuiCancellableEventHandler<React.FocusEvent>;
-  ref: React.Ref<HTMLLIElement>;
+  ref: React.RefCallback<HTMLLIElement>;
 }
 
 export type UseTreeItemRootSlotProps<ExternalProps = {}> = ExternalProps &
@@ -45,7 +45,7 @@ export type UseTreeItemRootSlotProps<ExternalProps = {}> = ExternalProps &
 export interface UseTreeItemContentSlotOwnProps {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
-  ref: React.Ref<HTMLElement>;
+  ref: React.RefCallback<HTMLDivElement> | null;
 }
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
