@@ -1892,11 +1892,10 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.10"
-  resolved "https://github.com/mui/material-ui.git#36bb1aa7f35b4b9d527716a5907e9be38d78ffd7"
+  resolved "https://github.com/mui/material-ui.git#a367c25dcaaddf5e72cceb5a9d8ef571607486c2"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
-    execa "^8.0.1"
     google-auth-library "^9.5.0"
 
 "@mui/private-theming@^5.15.9":

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui-internal/test-utils';
 import {
   GridPanel,
   gridPanelClasses as classes,
@@ -8,6 +8,7 @@ import {
 } from '@mui/x-data-grid';
 import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext';
 import Popper from '@mui/material/Popper';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<GridPanel />', () => {
   const { render } = createRenderer();

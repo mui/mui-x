@@ -614,7 +614,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
     },
-    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cell--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -789,10 +788,6 @@
       "nodeName": "the column headers wrapper",
       "conditions": "a column is being dragged"
     },
-    "columnHeaders": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column headers"
-    },
     "columnHeadersInner": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column headers&#39;s inner element"
@@ -837,10 +832,6 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
-    "columnsManagement": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the columns management body"
-    },
     "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management footer element"
@@ -864,10 +855,6 @@
     "detailPanel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the detail panel element"
-    },
-    "detailPanels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the detail panels wrapper element"
     },
     "detailPanelToggleCell": {
       "description": "Styles applied to {{nodeName}}.",
@@ -988,7 +975,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the overlay wrapper inner element"
     },
-    "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the panel content element"
@@ -1059,7 +1045,6 @@
       "nodeName": "the root element",
       "conditions": "user selection is disabled"
     },
-    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "row--detailPanelExpanded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
@@ -1181,5 +1166,77 @@
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
+  },
+  "slotDescriptions": {
+    "baseButton": "The custom Button component used in the grid.",
+    "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "baseChip": "The custom Chip component used in the grid.",
+    "baseFormControl": "The custom FormControl component used in the grid.",
+    "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInputAdornment": "The custom InputAdornment component used in the grid.",
+    "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "basePopper": "The custom Popper component used in the grid.",
+    "baseSelect": "The custom Select component used in the grid.",
+    "baseSelectOption": "The custom SelectOption component used in the grid.",
+    "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTextField": "The custom TextField component used in the grid.",
+    "baseTooltip": "The custom Tooltip component used in the grid.",
+    "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
+    "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "cell": "Component rendered for each cell.",
+    "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
+    "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
+    "columnHeaders": "Component responsible for rendering the column headers.",
+    "columnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
+    "columnMenuClearIcon": "Icon displayed in column menu for clearing values",
+    "columnMenuFilterIcon": "Icon displayed in column menu for filter",
+    "columnMenuHideIcon": "Icon displayed in column menu for hiding column",
+    "columnMenuIcon": "Icon displayed on the side of the column header title to display the filter input component.",
+    "columnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
+    "columnMenuPinLeftIcon": "Icon displayed in column menu for left pinning",
+    "columnMenuPinRightIcon": "Icon displayed in column menu for right pinning",
+    "columnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
+    "columnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "columnReorderIcon": "Icon displayed on the column reorder button.",
+    "columnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
+    "columnSelectorIcon": "Icon displayed on the column menu selector tab.",
+    "columnsManagement": "Component used inside Grid Columns panel to manage columns.",
+    "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
+    "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
+    "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
+    "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
+    "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
+    "detailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
+    "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "detailPanels": "Component responsible for rendering the detail panels.",
+    "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
+    "filterPanel": "Filter panel component rendered when clicking the filter button.",
+    "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
+    "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
+    "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
+    "footer": "Footer component rendered at the bottom of the grid viewport.",
+    "footerRowCount": "Row count component rendered in the footer",
+    "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
+    "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "headerFilterCell": "Component responsible for showing menu adornment in Header filter row",
+    "headerFilterMenu": "Component responsible for showing menu in Header filter row",
+    "loadIcon": "Icon displayed on the input while processing.",
+    "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
+    "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
+    "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
+    "pagination": "Pagination component rendered in the grid footer by default.",
+    "panel": "Panel component wrapping the filters and columns panels.",
+    "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "quickFilterIcon": "Icon displayed on the quick filter input.",
+    "row": "Component rendered for each row.",
+    "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "skeletonCell": "Component rendered for each skeleton cell.",
+    "toolbar": "Toolbar component rendered inside the Header component.",
+    "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }
 }

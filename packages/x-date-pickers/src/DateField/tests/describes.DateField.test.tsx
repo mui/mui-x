@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, userEvent } from '@mui-internal/test-utils';
+import { userEvent } from '@mui-internal/test-utils';
 import TextField from '@mui/material/TextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
@@ -12,6 +12,7 @@ import {
   describeValidation,
   describeValue,
 } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
