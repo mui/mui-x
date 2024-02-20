@@ -8,7 +8,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Link from 'docs/src/modules/components/Link';
 
-function components() {
+function getComponents() {
   return [
     {
       title: 'Bar Chart',
@@ -73,6 +73,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
       planned: true,
+      pro: true,
     },
     {
       title: 'Gantt Chart',
@@ -80,6 +81,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/gantt-dark.png',
       href: '/x/react-charts/gantt/',
       planned: true,
+      pro: true,
     },
     {
       title: 'Sankey Chart',
@@ -87,6 +89,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/sankey-dark.png',
       href: '/x/react-charts/sankey/',
       planned: true,
+      pro: true,
     },
   ];
 }
@@ -94,7 +97,7 @@ function components() {
 export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
-      {components().map((component) => (
+      {getComponents().map((component) => (
         <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={component.title}>
           <Card
             component={Link}
@@ -118,6 +121,7 @@ export default function ChartComponentsGrid() {
               component="img"
               alt=""
               image={component.srcLight}
+              loading="lazy"
               sx={(theme) => ({
                 aspectRatio: '16 / 9',
                 background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,

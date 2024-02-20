@@ -336,7 +336,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
 
 _Jan 26, 2024_
 
-We are glad to announce MUI X v7 beta!
+We are glad to announce MUI X v7 beta!
 This version has several improvements, bug fixes, and exciting features 🎉.
 We want to offer a big thanks to the 7 contributors who made this release possible ✨:
 
@@ -1353,7 +1353,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
 
-- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
@@ -2304,7 +2304,7 @@ Same changes as in `@mui/x-date-pickers@6.19.3`.
 - [docs] Fix docs:api when typo in slots typing (#11861) @alexfauquette
 - [docs] Improve Support page (#11556) @oliviertassinari
 - [docs] Sync support page with core @oliviertassinari
-- [docs] These API don't exist in MUI X v6 @oliviertassinari
+- [docs] These API don't exist in MUI X v6 @oliviertassinari
 - [docs] Update whats new page with v7 Beta blogpost content (#11886) @joserodolfofreitas
 
 ## 6.19.2

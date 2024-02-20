@@ -15,7 +15,6 @@ export type ChartsVoronoiHandlerProps = {
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
-   * @default undefined
    */
   voronoiMaxRadius?: number | undefined;
   /**
@@ -201,7 +200,6 @@ ChartsVoronoiHandler.propTypes = {
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
-   * @default undefined
    */
   voronoiMaxRadius: PropTypes.number,
 } as any;
