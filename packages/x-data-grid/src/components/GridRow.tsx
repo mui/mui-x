@@ -440,6 +440,17 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     );
   };
 
+  const handleRowRef = React.useCallback(
+    (element: HTMLDivElement | null) => {
+      if (isLastVisible) {
+        (apiRef as any).current.unstable_lastVisibleRowRef?.(element);
+      }
+
+      return handleRef && handleRef(element);
+    },
+    [handleRef, isLastVisible, apiRef],
+  );
+
   /* Start of rendering */
 
   if (!rowNode) {
@@ -503,14 +514,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const expandedWidth =
     dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
   const emptyCellWidth = Math.max(0, expandedWidth);
-
-  const handleRowRef = (element: HTMLDivElement | null) => {
-    if (isLastVisible && (rootProps as any).onRowsScrollEnd) {
-      (apiRef as any).current.unstable_lastVisibleRowRef(element);
-    }
-
-    return handleRef && handleRef(element);
-  };
 
   return (
     <div
