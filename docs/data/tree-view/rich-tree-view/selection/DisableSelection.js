@@ -34,7 +34,7 @@ const MUI_X_PRODUCTS = [
 
 export default function DisableSelection() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView disableSelection items={MUI_X_PRODUCTS} />
     </Box>
   );

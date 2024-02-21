@@ -189,8 +189,6 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-width': '0px',
     '--DataGrid-hasScrollX': '0',
     '--DataGrid-hasScrollY': '0',
-    '--DataGrid-offsetTop': '0px',
-    '--DataGrid-offsetLeft': '0px',
     '--DataGrid-scrollbarSize': '10px',
     '--DataGrid-rowWidth': '0px',
     '--DataGrid-columnsTotalWidth': '0px',
@@ -575,7 +573,6 @@ export const GridRootStyles = styled('div', {
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
       display: 'inline-block',
-      width: 'var(--DataGrid-offsetLeft)',
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',

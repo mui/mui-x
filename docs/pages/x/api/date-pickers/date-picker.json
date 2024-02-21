@@ -25,7 +25,7 @@
     "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },

@@ -23,7 +23,7 @@
       "default": "\"mobile\""
     },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "object" } },

@@ -7,7 +7,6 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
-import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -322,7 +321,7 @@ export const useGridSorting = (
         return;
       }
       // Ctrl + Enter opens the column menu
-      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
+      if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey) {
         sortColumn(field, undefined, event.shiftKey);
       }
     },

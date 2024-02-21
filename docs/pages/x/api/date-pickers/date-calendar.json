@@ -1,6 +1,7 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
@@ -16,7 +17,7 @@
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "focusedView": {
       "type": {
         "name": "enum",

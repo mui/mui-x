@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { userEvent, screen, describeConformance } from '@mui-internal/test-utils';
+import { userEvent, screen } from '@mui-internal/test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
   wrapPickerMount,
@@ -9,6 +9,7 @@ import {
   describeValidation,
   describeValue,
 } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<YearCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
