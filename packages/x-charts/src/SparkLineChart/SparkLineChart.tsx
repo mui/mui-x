@@ -102,6 +102,12 @@ export interface SparkLineChartProps
    */
   margin?: Partial<CardinalDirections<number>>;
   /**
+   * If `true`, bar animations are skiped.
+   * @deprecated In v7 animation are skiped for sparkline.
+   * @default false
+   */
+  skipAnimation?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -149,6 +155,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
+    skipAnimation = false,
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -191,7 +198,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     >
       {plotType === 'bar' && (
         <BarPlot
-          skipAnimation
+          skipAnimation={skipAnimation}
           slots={slots}
           slotProps={slotProps}
           sx={{ shapeRendering: 'auto' }}
@@ -303,6 +310,12 @@ SparkLineChart.propTypes = {
    * @default false
    */
   showTooltip: PropTypes.bool,
+  /**
+   * If `true`, bar animations are skiped.
+   * @deprecated In v7 animation are skiped for sparkline.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

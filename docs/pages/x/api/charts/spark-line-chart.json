@@ -25,6 +25,12 @@
     },
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "In v7 animation are skiped for sparkline."
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
