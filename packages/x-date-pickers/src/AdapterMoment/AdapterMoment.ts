@@ -540,6 +540,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.week();
   };
 
+  public getDayOfWeek = (value: Moment) => {
+    return value.day() + 1;
+  };
+
   public getYearRange([start, end]: [Moment, Moment]) {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);

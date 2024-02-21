@@ -660,6 +660,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.week();
   };
 
+  public getDayOfWeek(value: Dayjs): number {
+    return value.day() + 1;
+  }
+
   public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);

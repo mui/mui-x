@@ -3,7 +3,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
-import { getSectionValueText, parseSelectedSections } from './useField.utils';
+import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
 import {
   FieldSectionsBoundaries,
   UseFieldTextField,
@@ -426,7 +426,12 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           role: 'spinbutton',
           id: `${id}-${section.type}`,
           'aria-labelledby': `${id}-${section.type}`,
-          'aria-valuenow': section.value ? Number(section.value) : undefined,
+          'aria-valuenow': getSectionValueNow(
+            section,
+            utils,
+            // @ts-ignore
+            state.value,
+          ),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
           'aria-valuetext': ariaValueText,
@@ -469,6 +474,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     utils,
     sectionBoundaries,
     id,
+    state.value,
   ]);
 
   const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {

@@ -251,4 +251,8 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
   };
+
+  public getDayOfWeek = (value: Date) => {
+    return value.getDay() + 1;
+  };
 }

@@ -844,3 +844,23 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
       return null;
   }
 };
+
+export const getSectionValueNow = <TDate extends PickerValidDate, TValue extends TDate | null>(
+  section: FieldSection,
+  utils: MuiPickersAdapter<TDate>,
+  currentValue: TValue,
+): number | undefined => {
+  if (!section.value || currentValue === null) {
+    return undefined;
+  }
+  switch (section.type) {
+    case 'weekDay': {
+      if (section.contentType === 'letter') {
+        return utils.getDayOfWeek(currentValue);
+      }
+      return Number(section.value);
+    }
+    default:
+      return section.contentType !== 'letter' ? Number(section.value) : undefined;
+  }
+};

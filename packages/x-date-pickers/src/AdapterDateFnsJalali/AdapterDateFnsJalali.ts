@@ -502,6 +502,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return getWeek(date, { locale: this.locale });
   };
 
+  public getDayOfWeek(value: Date) {
+    return value.getDay() + 1;
+  }
+
   public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);
