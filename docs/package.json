@@ -91,7 +91,7 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@mui-internal/docs-utils": "^1.0.0",
+    "@mui-internal/docs-utils": "^1.0.2",
     "@mui-internal/typescript-to-proptypes": "^1.0.2",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",
