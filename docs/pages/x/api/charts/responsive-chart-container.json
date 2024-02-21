@@ -10,7 +10,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "height": { "type": { "name": "number" } },
     "margin": {
       "type": {
         "name": "shape",
@@ -18,7 +18,7 @@
       },
       "default": "object Depends on the charts type."
     },
-    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",

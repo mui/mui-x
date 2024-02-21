@@ -35,8 +35,6 @@ module.exports = function getBabelConfig(api) {
     ],
     plugins: [
       ...baseConfig.plugins,
-      // for IE 11 support
-      '@babel/plugin-transform-object-assign',
       'babel-plugin-preval',
       [
         'babel-plugin-module-resolver',

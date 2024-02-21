@@ -8,7 +8,7 @@
     "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "endAngle": { "type": { "name": "number" }, "default": "360" },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "height": { "type": { "name": "number" } },
     "innerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'80%'"
@@ -28,7 +28,7 @@
     "value": { "type": { "name": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },
     "valueMin": { "type": { "name": "number" }, "default": "0" },
-    "width": { "type": { "name": "number" }, "default": "undefined" }
+    "width": { "type": { "name": "number" } }
   },
   "name": "Gauge",
   "imports": [

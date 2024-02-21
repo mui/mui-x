@@ -32,7 +32,7 @@
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "height": { "type": { "name": "number" } },
     "leftAxis": {
       "type": {
         "name": "union",
@@ -82,8 +82,8 @@
       },
       "default": "null"
     },
-    "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" },
-    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "voronoiMaxRadius": { "type": { "name": "number" } },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",

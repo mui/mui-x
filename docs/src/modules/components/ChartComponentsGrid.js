@@ -6,9 +6,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Link from 'docs/src/modules/components/Link';
+import { Link } from '@mui/docs/Link';
 
-function components() {
+function getComponents() {
   return [
     {
       title: 'Bar Chart',
@@ -73,6 +73,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
       planned: true,
+      pro: true,
     },
     {
       title: 'Gantt Chart',
@@ -80,6 +81,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/gantt-dark.png',
       href: '/x/react-charts/gantt/',
       planned: true,
+      pro: true,
     },
     {
       title: 'Sankey Chart',
@@ -87,6 +89,7 @@ function components() {
       srcDark: '/static/x/component-illustrations/sankey-dark.png',
       href: '/x/react-charts/sankey/',
       planned: true,
+      pro: true,
     },
   ];
 }
@@ -94,7 +97,7 @@ function components() {
 export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
-      {components().map((component) => (
+      {getComponents().map((component) => (
         <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={component.title}>
           <Card
             component={Link}
@@ -118,13 +121,14 @@ export default function ChartComponentsGrid() {
               component="img"
               alt=""
               image={component.srcLight}
+              loading="lazy"
               sx={(theme) => ({
                 aspectRatio: '16 / 9',
                 background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
                 opacity: component.planned ? 0.4 : 1,
                 filter: component.planned ? 'grayscale(100%)' : undefined,
                 ...theme.applyDarkStyles({
-                  opacity: component.planned ? 0.2 : 1,
+                  opacity: component.planned ? 0.4 : 1,
                   content: `url(${component.srcDark})`,
                   background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
                 }),

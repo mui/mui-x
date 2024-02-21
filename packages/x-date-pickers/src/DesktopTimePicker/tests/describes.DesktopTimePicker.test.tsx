@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, describeConformance } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -13,6 +13,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
