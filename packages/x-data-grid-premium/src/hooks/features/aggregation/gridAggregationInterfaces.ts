@@ -50,7 +50,7 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**
    * Label of the aggregation function.
    * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
-   * @default `apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})`
+   * @default apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})
    */
   label?: string;
   /**
@@ -69,7 +69,7 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**
    * Indicates if the aggregated value have the same unit as the cells used to generate it.
    * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
-   * @default `true`
+   * @default true
    */
   hasCellUnit?: boolean;
   /**
