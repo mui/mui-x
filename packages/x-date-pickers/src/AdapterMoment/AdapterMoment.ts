@@ -59,6 +59,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  fullDayOfMonth: 'Do',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',

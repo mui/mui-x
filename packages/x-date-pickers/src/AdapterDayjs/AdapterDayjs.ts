@@ -4,6 +4,7 @@ import weekOfYearPlugin from 'dayjs/plugin/weekOfYear';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import advancedFormatPlugin from 'dayjs/plugin/advancedFormat';
 import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -17,6 +18,7 @@ import { buildWarning } from '../internals/utils/warning';
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(weekOfYearPlugin);
 defaultDayjs.extend(isBetweenPlugin);
+defaultDayjs.extend(advancedFormatPlugin);
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
@@ -73,6 +75,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  fullDayOfMonth: 'Do',
   weekday: 'dddd',
   weekdayShort: 'dd',
   hours24h: 'HH',

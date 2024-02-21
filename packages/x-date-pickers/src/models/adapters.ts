@@ -25,6 +25,11 @@ export interface AdapterFormats {
    */
   dayOfMonth: string;
   /**
+   * The day of the month with letters.
+   * @example "2nd"
+   */
+  fullDayOfMonth: string;
+  /**
    * The name of the day of the week.
    * @example "Wednesday"
    */

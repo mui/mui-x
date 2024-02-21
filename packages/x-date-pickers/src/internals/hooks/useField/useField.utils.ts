@@ -820,3 +820,27 @@ export const parseSelectedSections = (
 
   return selectedSections;
 };
+
+export const getSectionValueText = <TDate extends PickerValidDate>(
+  section: FieldSection,
+  utils: MuiPickersAdapter<TDate>,
+): string | null => {
+  if (!section.value) {
+    return null;
+  }
+  switch (section.type) {
+    case 'month':
+      return section.contentType === 'digit'
+        ? utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month')
+        : section.value;
+    case 'day':
+      return section.contentType === 'digit'
+        ? utils.format(
+            utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
+            'fullDayOfMonth',
+          )
+        : section.value;
+    default:
+      return null;
+  }
+};
