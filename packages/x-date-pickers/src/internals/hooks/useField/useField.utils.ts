@@ -611,7 +611,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
     }),
     meridiem: () => ({
       minimum: 0,
-      maximum: 0,
+      maximum: 1,
     }),
     empty: () => ({
       minimum: 0,
@@ -825,9 +825,9 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
   currentValue: TDate | null,
-): string | null => {
+): string | undefined => {
   if (!section.value) {
-    return null;
+    return undefined;
   }
   switch (section.type) {
     case 'month':
@@ -841,10 +841,12 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
             'fullDayOfMonth',
           )
         : section.value;
+    case 'meridiem':
+      return currentValue ? utils.format(currentValue, 'meridiem') : undefined;
     case 'weekDay':
-      return currentValue ? utils.format(currentValue, 'weekday') : null;
+      return currentValue ? utils.format(currentValue, 'weekday') : undefined;
     default:
-      return null;
+      return undefined;
   }
 };
 
@@ -862,6 +864,9 @@ export const getSectionValueNow = <TDate extends PickerValidDate>(
         return utils.getDayOfWeek(currentValue);
       }
       return Number(section.value);
+    }
+    case 'meridiem': {
+      return utils.getHours(currentValue) >= 12 ? 1 : 0;
     }
     default:
       return section.contentType !== 'letter' ? Number(section.value) : undefined;
