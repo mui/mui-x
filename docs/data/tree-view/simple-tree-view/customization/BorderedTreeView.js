@@ -16,7 +16,7 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
       opacity: 0.3,
     },
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: 15,
     paddingLeft: 18,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
