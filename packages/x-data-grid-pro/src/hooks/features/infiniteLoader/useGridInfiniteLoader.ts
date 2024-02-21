@@ -18,25 +18,19 @@ class ObserverManager {
   node: HTMLElement | undefined;
 
   stop() {
-    this.isActive = false;
     this.instance?.disconnect();
   }
 
   start() {
-    if (this.isActive) {
-      this.stop();
-    }
-    this.isActive = true;
+    this.stop();
     if (this.node) {
       this.instance?.observe(this.node);
     }
   }
 
-  setNode(newNode: HTMLElement) {
+  setNode(newNode?: HTMLElement) {
     this.node = newNode;
   }
-
-  isActive = true;
 }
 
 /**
@@ -54,21 +48,14 @@ export const useGridInfiniteLoader = (
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef(new ObserverManager());
-  const previousY = React.useRef<number | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
   const handleLoadMoreRows = unstable_useEventCallback(([entry]: IntersectionObserverEntry[]) => {
-    const currentY = entry.intersectionRect.y;
     const currentRatio = entry.intersectionRatio;
     const isIntersecting = entry.isIntersecting;
 
-    // Scrolling down check
-    if (
-      isIntersecting &&
-      currentRatio === 1 &&
-      (!previousY.current || currentY < previousY.current)
-    ) {
+    if (isIntersecting && currentRatio === 1) {
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const rowScrollEndParams: GridRowScrollEndParams = {
         visibleColumns,
@@ -78,13 +65,10 @@ export const useGridInfiniteLoader = (
       apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
       if (observer.current) {
         observer.current.stop();
-        apiRef.current.eventManager.once('rowsSet', () => {
-          observer.current?.start();
-        });
+        // do not observe this node anymore
+        observer.current.setNode(undefined);
       }
     }
-
-    previousY.current = currentY;
   });
 
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
@@ -96,15 +80,13 @@ export const useGridInfiniteLoader = (
     if (!virtualScroller) {
       return;
     }
-    observer.current.instance?.disconnect();
+    observer.current.stop();
     observer.current.instance = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
       root: virtualScroller,
       rootMargin: `0px 0px ${props.scrollEndThreshold}px 0px`,
     });
-    if (observer.current.isActive) {
-      observer.current.start();
-    }
+    observer.current.start();
   }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows, isEnabled]);
 
   const lastVisibleRowRef = React.useCallback<GridInfiniteLoaderApi['unstable_lastVisibleRowRef']>(
@@ -116,10 +98,7 @@ export const useGridInfiniteLoader = (
 
       if (observer.current.node !== node) {
         observer.current.setNode(node);
-        previousY.current = null;
-        if (node && observer.current.isActive) {
-          observer.current.start();
-        }
+        observer.current.start();
       }
     },
     [isEnabled],
