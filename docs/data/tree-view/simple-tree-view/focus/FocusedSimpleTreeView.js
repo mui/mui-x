@@ -14,9 +14,9 @@ export default function FocusedSimpleTreeView() {
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
-        <Button onClick={handleButtonClick}>focus third node</Button>
+        <Button onClick={handleButtonClick}>focus pickers node</Button>
       </Box>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 264, flexGrow: 1 }}>
         <SimpleTreeView {...{ apiRef }}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
