@@ -413,7 +413,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const isContainerEditable = parsedSelectedSections === 'all';
   const elements = React.useMemo<PickersSectionElement[]>(() => {
     return state.sections.map((section, index) => {
-      const ariaValueText = getSectionValueText(section, utils) || localeText.empty;
       const isEditable = !isContainerEditable && !disabled && !readOnly;
       return {
         container: {
@@ -434,7 +433,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           ),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
-          'aria-valuetext': ariaValueText,
+          'aria-valuetext': getSectionValueText(section, utils) || localeText.empty,
           'aria-label': localeText[section.type],
           'aria-disabled': disabled,
           spellCheck: isEditable ? false : undefined,

@@ -845,10 +845,10 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   }
 };
 
-export const getSectionValueNow = <TDate extends PickerValidDate, TValue extends TDate | null>(
+export const getSectionValueNow = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
-  currentValue: TValue,
+  currentValue: TDate | null,
 ): number | undefined => {
   if (!section.value || currentValue === null) {
     return undefined;
