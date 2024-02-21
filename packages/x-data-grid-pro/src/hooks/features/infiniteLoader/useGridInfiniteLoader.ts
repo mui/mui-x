@@ -56,6 +56,8 @@ export const useGridInfiniteLoader = (
   const observer = React.useRef(new ObserverManager());
   const previousY = React.useRef<number | null>(null);
 
+  const isEnabled = props.rowsLoadingMode === 'server' && !!props.onRowsScrollEnd;
+
   const handleLoadMoreRows = unstable_useEventCallback(([entry]: IntersectionObserverEntry[]) => {
     const currentY = entry.intersectionRect.y;
     const currentRatio = entry.intersectionRatio;
@@ -88,6 +90,9 @@ export const useGridInfiniteLoader = (
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
 
   React.useEffect(() => {
+    if (!isEnabled) {
+      return;
+    }
     if (!virtualScroller) {
       return;
     }
@@ -100,13 +105,12 @@ export const useGridInfiniteLoader = (
     if (observer.current.isActive) {
       observer.current.start();
     }
-  }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows]);
+  }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows, isEnabled]);
 
-  const hasOnRowsScrollEnd = !!props.onRowsScrollEnd;
   const lastVisibleRowRef = React.useCallback<GridInfiniteLoaderApi['unstable_lastVisibleRowRef']>(
     (node) => {
       // Prevent the infite loading working in combination with lazy loading
-      if (props.rowsLoadingMode !== 'client' || !hasOnRowsScrollEnd) {
+      if (!isEnabled) {
         return;
       }
 
@@ -118,7 +122,7 @@ export const useGridInfiniteLoader = (
         }
       }
     },
-    [props.rowsLoadingMode, hasOnRowsScrollEnd],
+    [isEnabled],
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {
