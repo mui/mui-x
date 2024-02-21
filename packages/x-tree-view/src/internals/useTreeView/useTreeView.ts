@@ -22,14 +22,13 @@ import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T> | undefined,
 ): React.MutableRefObject<T> {
-  const publicApiRef = React.useRef({}) as React.MutableRefObject<T>;
-  if (inputApiRef && !inputApiRef.current) {
-    inputApiRef.current = publicApiRef.current;
+  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+
+  if (inputApiRef) {
+    return inputApiRef;
   }
 
-  React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
-
-  return publicApiRef;
+  return fallbackPublicApiRef;
 }
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
