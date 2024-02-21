@@ -22,7 +22,7 @@ export default function InfiniteLoadingGrid() {
   const [loading, setLoading] = React.useState(false);
   const [loadedRows, setLoadedRows] = React.useState([]);
   const mounted = React.useRef(true);
-  const { data } = useDemoData({
+  const { data, loading: isInitialLoading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 6,
@@ -57,7 +57,7 @@ export default function InfiniteLoadingGrid() {
       <DataGridPro
         {...data}
         rows={data.rows.concat(loadedRows)}
-        loading={loading}
+        loading={isInitialLoading || loading}
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}
         slots={{
