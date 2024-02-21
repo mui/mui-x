@@ -198,10 +198,18 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   overridesResolver: (props, styles) => styles.separator,
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
-  margin: ownerState.toolbarVariant === 'desktop' ? 0 : '0 4px 0 2px',
+}>({
+  margin: '0 4px 0 2px',
   cursor: 'default',
-}));
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        margin: 0,
+      },
+    },
+  ],
+});
 
 // Taken from TimePickerToolbar
 const DateTimePickerToolbarAmPmSelection = styled('div', {
@@ -214,21 +222,26 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   ],
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
-  ...(ownerState.isLandscape && {
-    margin: '4px 0 auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  }),
   [`& .${dateTimePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
   },
-}));
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: '4px 0 auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+      },
+    },
+  ],
+});
 
 /**
  * Demos:
