@@ -120,7 +120,7 @@ The number of seats purchased on your license must correspond to the number of c
   'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
   Company 'B' must purchase ten seats.
 
-This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
+This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#2-5-required-quantity-of-licenses)
 
 ## License key
 
@@ -232,7 +232,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
 
 ## What is the key for?
 
-The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
+The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#2-4-license-key) with the EULA of the commercial licenses.
 While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
 ## License key security
@@ -296,7 +296,7 @@ This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
 
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
-Please check the [license key installation](#license-key-installation).
+Please check the [license key installation](/x/introduction/licensing/#license-key).
 
 ### 6. Invalid license key (TypeError: extracting license expiry timestamp)
 
