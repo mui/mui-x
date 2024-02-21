@@ -28,8 +28,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:legacy": "node ../../scripts/build.mjs legacy",
+    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
     "build:modern": "node ../../scripts/build.mjs modern",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",

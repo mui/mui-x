@@ -13,13 +13,14 @@ import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
+import { DocsProvider } from '@mui/docs/DocsProvider';
+import config from '../config';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
@@ -305,7 +306,7 @@ function AppWrapper(props) {
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
+      <DocsProvider config={config} defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
@@ -318,7 +319,7 @@ function AppWrapper(props) {
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>
-      </UserLanguageProvider>
+      </DocsProvider>
     </React.Fragment>
   );
 }

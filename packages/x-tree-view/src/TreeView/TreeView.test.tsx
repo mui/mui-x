@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui-internal/test-utils';
 import { TreeView, treeViewClasses as classes } from '@mui/x-tree-view/TreeView';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<TreeView />', () => {
   const { render } = createRenderer();
