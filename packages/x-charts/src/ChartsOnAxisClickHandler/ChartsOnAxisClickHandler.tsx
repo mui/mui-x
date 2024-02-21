@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SVGContext } from '../context/DrawingProvider';
+import { SvgContext } from '../context/DrawingProvider';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
@@ -24,7 +24,7 @@ export interface ChartsOnAxisClickHandlerProps {
 function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const { onAxisClick } = props;
 
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = React.useContext(SvgContext);
   const series = React.useContext(SeriesContext);
   const { axis } = React.useContext(InteractionContext);
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);

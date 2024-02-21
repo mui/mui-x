@@ -14,7 +14,7 @@ export interface GaugeValueTextProps extends Omit<ChartsTextProps, 'text'> {
 }
 
 function defaultFormatter({ value }: GaugeFormatterParams) {
-  return value === null ? 'NaN' : value.toLocaleString();
+  return value === null ? null : value.toLocaleString();
 }
 function GaugeValueText(props: GaugeValueTextProps) {
   const { text = defaultFormatter, className, ...other } = props;

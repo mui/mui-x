@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, screen } from '@mui-internal/test-utils';
+import { screen } from '@mui-internal/test-utils';
 import {
   clockPointerClasses,
   TimeClock,
@@ -13,6 +13,7 @@ import {
   timeClockHandler,
   describeValue,
 } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
