@@ -187,16 +187,22 @@ const DateRangePickerDayRoot = styled('div', {
       },
     },
     {
-      props: ({ isHiddenDayFiller, isStartOfHighlighting, isFirstVisibleCell }: OwnerState) =>
-        !isHiddenDayFiller && (isStartOfHighlighting || isFirstVisibleCell),
+      props: ({
+        ownerState: { isHiddenDayFiller, isStartOfHighlighting, isFirstVisibleCell },
+      }: {
+        ownerState: OwnerState;
+      }) => !isHiddenDayFiller && (isStartOfHighlighting || isFirstVisibleCell),
       style: {
         ...startBorderStyle,
         paddingLeft: 0,
       },
     },
     {
-      props: ({ isHiddenDayFiller, isEndOfHighlighting, isLastVisibleCell }: OwnerState) =>
-        !isHiddenDayFiller && (isEndOfHighlighting || isLastVisibleCell),
+      props: ({
+        ownerState: { isHiddenDayFiller, isEndOfHighlighting, isLastVisibleCell },
+      }: {
+        ownerState: OwnerState;
+      }) => !isHiddenDayFiller && (isEndOfHighlighting || isLastVisibleCell),
       style: {
         ...endBorderStyle,
         paddingRight: 0,
@@ -243,12 +249,10 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     {
       props: ({
-        isPreviewing,
-        isHiddenDayFiller,
-        isStartOfPreviewing,
-        isFirstVisibleCell,
-      }: OwnerState) =>
-        isPreviewing && isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
+        ownerState: { isPreviewing, isHiddenDayFiller, isStartOfPreviewing, isFirstVisibleCell },
+      }: {
+        ownerState: OwnerState;
+      }) => isPreviewing && isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
       style: {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
@@ -256,12 +260,10 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     {
       props: ({
-        isPreviewing,
-        isHiddenDayFiller,
-        isEndOfPreviewing,
-        isLastVisibleCell,
-      }: OwnerState) =>
-        isPreviewing && isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
+        ownerState: { isPreviewing, isHiddenDayFiller, isEndOfPreviewing, isLastVisibleCell },
+      }: {
+        ownerState: OwnerState;
+      }) => isPreviewing && isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
       style: {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
