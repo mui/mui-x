@@ -302,7 +302,10 @@ export const useField = <
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
-      case event.key === 'a' && (event.ctrlKey || event.metaKey): {
+      case (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === 'a' &&
+        !event.shiftKey &&
+        !event.altKey: {
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();

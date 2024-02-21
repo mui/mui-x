@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LicenseInfoContext from './LicenseInfoContext';
+import MuiLicenseInfoContext from './MuiLicenseInfoContext';
 import { MuiLicenseInfo } from '../utils/licenseInfo';
 
 /**
@@ -14,5 +14,5 @@ export interface LicenseInfoProviderProps {
  * @ignore - do not document.
  */
 export function LicenseInfoProvider({ info, children }: LicenseInfoProviderProps) {
-  return <LicenseInfoContext.Provider value={info}>{children}</LicenseInfoContext.Provider>;
+  return <MuiLicenseInfoContext.Provider value={info}>{children}</MuiLicenseInfoContext.Provider>;
 }
