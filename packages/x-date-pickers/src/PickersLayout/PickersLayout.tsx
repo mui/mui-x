@@ -43,7 +43,7 @@ const PickersLayoutRoot = styled('div', {
       props: { isLandscape: false },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
-        [`.${pickersLayoutClasses.shortcuts}`]: {
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
           gridColumn: theme.direction === 'rtl' ? 3 : 1,
           gridRow: '2 / 3',
         },
