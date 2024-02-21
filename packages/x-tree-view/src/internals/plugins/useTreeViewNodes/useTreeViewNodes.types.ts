@@ -36,7 +36,7 @@ export interface UseTreeViewNodesParameters<R extends {}> {
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The label of the item.
-   * @default `(item) => item.label`
+   * @default (item) => item.label
    */
   getItemLabel?: (item: R) => string;
   /**
@@ -45,7 +45,7 @@ export interface UseTreeViewNodesParameters<R extends {}> {
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The id of the item.
-   * @default `(item) => item.id`
+   * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
 }
