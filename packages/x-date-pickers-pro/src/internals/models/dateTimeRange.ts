@@ -29,7 +29,7 @@ export interface UseDateTimeRangeFieldProps<TDate extends PickerValidDate>
     BaseRangeProps {
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm?: boolean;
 }

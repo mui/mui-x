@@ -273,7 +273,7 @@ PickersCalendarHeader.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Format used to display the date.
-   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   * @default ${adapter.formats.month} ${adapter.formats.year}
    */
   format: PropTypes.string,
   labelId: PropTypes.string,
