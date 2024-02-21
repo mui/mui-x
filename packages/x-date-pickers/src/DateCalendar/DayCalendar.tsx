@@ -74,7 +74,6 @@ export interface ExportedDayCalendarProps<TDate extends PickerValidDate>
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber?: number;
 }
@@ -497,7 +496,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     [utils, selectedDays],
   );
 
-  // need a new ref whenever the `key` of the transition changes: http://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
+  // need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = currentMonthNumber;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);

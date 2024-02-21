@@ -2,19 +2,13 @@ import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  act,
-  createEvent,
-  createRenderer,
-  fireEvent,
-  screen,
-} from '@mui-internal/test-utils';
+import { act, createEvent, createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
+import { describeConformance } from 'test/utils/describeConformance';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {

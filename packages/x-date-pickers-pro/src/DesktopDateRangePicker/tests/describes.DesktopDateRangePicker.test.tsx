@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -13,6 +13,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
