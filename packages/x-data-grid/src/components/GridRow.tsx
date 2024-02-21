@@ -5,6 +5,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
+import { styled } from '@mui/system';
 import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
@@ -111,6 +112,14 @@ function EmptyCell({ width }: { width: number }) {
     />
   );
 }
+
+const InfiniteLoadingTriggerElement = styled('div')({
+  position: 'sticky',
+  bottom: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+});
 
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
@@ -440,17 +449,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     );
   };
 
-  const handleRowRef = React.useCallback(
-    (element: HTMLDivElement | null) => {
-      if (isLastVisible) {
-        (apiRef as any).current.unstable_lastVisibleRowRef?.(element);
-      }
-
-      return handleRef && handleRef(element);
-    },
-    [handleRef, isLastVisible, apiRef],
-  );
-
   /* Start of rendering */
 
   if (!rowNode) {
@@ -517,7 +515,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   return (
     <div
-      ref={handleRowRef}
+      ref={handleRef}
       data-id={rowId}
       data-rowindex={index}
       role="row"
@@ -528,6 +526,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...eventHandlers}
       {...other}
     >
+      {isLastVisible && (
+        <InfiniteLoadingTriggerElement ref={(apiRef as any).current.unstable_lastVisibleRowRef} />
+      )}
       {leftCells}
       <div
         role="presentation"
