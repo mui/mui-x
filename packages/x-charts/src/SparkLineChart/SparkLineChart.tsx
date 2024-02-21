@@ -103,7 +103,7 @@ export interface SparkLineChartProps
   margin?: Partial<CardinalDirections<number>>;
   /**
    * If `true`, bar animations are skiped.
-   * @deprecated In v7 animation are skiped for sparkline.
+   * @deprecated In v7 animations are skipped for sparkline.
    * @default false
    */
   skipAnimation?: boolean;
@@ -312,7 +312,7 @@ SparkLineChart.propTypes = {
   showTooltip: PropTypes.bool,
   /**
    * If `true`, bar animations are skiped.
-   * @deprecated In v7 animation are skiped for sparkline.
+   * @deprecated In v7 animations are skipped for sparkline.
    * @default false
    */
   skipAnimation: PropTypes.bool,

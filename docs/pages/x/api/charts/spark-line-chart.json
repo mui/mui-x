@@ -29,7 +29,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "In v7 animation are skiped for sparkline."
+      "deprecationInfo": "In v7 animations are skipped for sparkline."
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
