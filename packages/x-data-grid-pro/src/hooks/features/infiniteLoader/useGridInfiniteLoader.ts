@@ -56,7 +56,7 @@ export const useGridInfiniteLoader = (
   const observer = React.useRef(new ObserverManager());
   const previousY = React.useRef<number | null>(null);
 
-  const isEnabled = props.rowsLoadingMode === 'server' && !!props.onRowsScrollEnd;
+  const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
   const handleLoadMoreRows = unstable_useEventCallback(([entry]: IntersectionObserverEntry[]) => {
     const currentY = entry.intersectionRect.y;
