@@ -433,7 +433,13 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           ),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
-          'aria-valuetext': getSectionValueText(section, utils) || localeText.empty,
+          'aria-valuetext':
+            getSectionValueText(
+              section,
+              utils,
+              // @ts-ignore
+              state.value,
+            ) || localeText.empty,
           'aria-label': localeText[section.type],
           'aria-disabled': disabled,
           spellCheck: isEditable ? false : undefined,

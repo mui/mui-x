@@ -824,6 +824,7 @@ export const parseSelectedSections = (
 export const getSectionValueText = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
+  currentValue: TDate | null,
 ): string | null => {
   if (!section.value) {
     return null;
@@ -840,6 +841,8 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
             'fullDayOfMonth',
           )
         : section.value;
+    case 'weekDay':
+      return currentValue ? utils.format(currentValue, 'weekday') : null;
     default:
       return null;
   }
