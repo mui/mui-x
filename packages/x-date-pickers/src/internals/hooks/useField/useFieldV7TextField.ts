@@ -425,6 +425,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           role: 'spinbutton',
           id: `${id}-${section.type}`,
           'aria-labelledby': `${id}-${section.type}`,
+          'aria-readonly': readOnly,
           'aria-valuenow': getSectionValueNow(section, utils),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
