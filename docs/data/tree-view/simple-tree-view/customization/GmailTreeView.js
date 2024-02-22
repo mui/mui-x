@@ -68,8 +68,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     nodeId,
     label,
     children,
-    slots,
-    slotProps,
     bgColor,
     color,
     labelIcon: LabelIcon,
@@ -108,7 +106,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           ownerState={status}
         >
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            <TreeItemIcon status={status} />
           </CustomTreeItemIconContainer>
           <Box
             sx={{
