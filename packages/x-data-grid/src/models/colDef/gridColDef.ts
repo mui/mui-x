@@ -197,6 +197,12 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   cellClassName?: GridCellClassNamePropType<R, V>;
   /**
+   * Display mode for the cell:
+   *  - 'text': For text-based cells (default)
+   *  - 'flex': For cells with HTMLElement children
+   */
+  display?: 'text' | 'flex';
+  /**
    * Allows to override the component rendered as cell for this column.
    * @template R, V, F
    * @param {GridRenderCellParams<R, V, F>} params Object containing parameters for the renderer.
