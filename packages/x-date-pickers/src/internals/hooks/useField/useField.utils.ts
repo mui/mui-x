@@ -824,7 +824,7 @@ export const parseSelectedSections = (
 export const getSectionValueText = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
-  currentValue: TDate | null,
+  currentDate: TDate | null,
 ): string | undefined => {
   if (!section.value) {
     return undefined;
@@ -832,8 +832,8 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return currentValue && utils.isValid(currentValue)
-          ? utils.format(currentValue, 'month')
+        return currentDate && utils.isValid(currentDate)
+          ? utils.format(currentDate, 'month')
           : utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
       }
       const parsedDate = utils.parse(section.value, section.format);
@@ -847,12 +847,12 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
           )
         : section.value;
     case 'meridiem':
-      return currentValue && utils.isValid(currentValue)
-        ? utils.format(currentValue, 'meridiem')
+      return currentDate && utils.isValid(currentDate)
+        ? utils.format(currentDate, 'meridiem')
         : undefined;
     case 'weekDay':
-      return currentValue && utils.isValid(currentValue)
-        ? utils.format(currentValue, 'weekday')
+      return currentDate && utils.isValid(currentDate)
+        ? utils.format(currentDate, 'weekday')
         : undefined;
     default:
       return undefined;
@@ -862,24 +862,24 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
 export const getSectionValueNow = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
-  currentValue: TDate | null,
+  currentDate: TDate | null,
 ): number | undefined => {
-  if (!section.value || currentValue === null) {
+  if (!section.value || currentDate === null) {
     return undefined;
   }
   switch (section.type) {
     case 'weekDay': {
       if (section.contentType === 'letter') {
-        // TODO: consider handling case when `currentValue` is not valid
-        if (utils.isValid(currentValue)) {
-          return utils.getDayOfWeek(currentValue);
+        // TODO: consider handling case when `currentDate` is not valid
+        if (utils.isValid(currentDate)) {
+          return utils.getDayOfWeek(currentDate);
         }
         return undefined;
       }
       return Number(section.value);
     }
     case 'meridiem': {
-      if (!utils.isValid(currentValue)) {
+      if (!utils.isValid(currentDate)) {
         const parsedDate = utils.parse(
           `01:00 ${section.value}`,
           `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
@@ -889,7 +889,7 @@ export const getSectionValueNow = <TDate extends PickerValidDate>(
         }
         return undefined;
       }
-      return utils.getHours(currentValue) >= 12 ? 1 : 0;
+      return utils.getHours(currentDate) >= 12 ? 1 : 0;
     }
     case 'day':
       return section.contentType === 'digit-with-letter'
