@@ -14,7 +14,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers/models';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -29,6 +29,7 @@ interface BrowserFieldProps
   focused?: boolean;
   ownerState?: any;
   sx?: any;
+  enableAccessibleFieldDOMStructure: boolean;
 }
 
 type BrowserFieldComponent = ((
@@ -38,6 +39,9 @@ type BrowserFieldComponent = ((
 const BrowserField = React.forwardRef(
   (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      enableAccessibleFieldDOMStructure,
+
       disabled,
       id,
       label,
@@ -68,11 +72,12 @@ const BrowserField = React.forwardRef(
 ) as BrowserFieldComponent;
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false,
       DateValidationError
     > {}
 
@@ -80,7 +85,10 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>(textFieldProps);
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...textFieldProps,
+      enableAccessibleFieldDOMStructure: false,
+    });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -94,9 +102,9 @@ const BrowserDateField = React.forwardRef(
 );
 
 const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     return (
-      <DatePicker
+      <DatePicker<Dayjs, false>
         ref={ref}
         {...props}
         slots={{ ...props.slots, field: BrowserDateField }}
@@ -105,7 +113,7 @@ const BrowserDatePicker = React.forwardRef(
   },
 );
 
-export default function PickerWithBrowserField() {
+export default function BrowserV6Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDatePicker

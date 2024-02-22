@@ -3,44 +3,38 @@ import {
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
-import {
-  UseDateFieldProps,
-  UseDateFieldDefaultizedProps,
-  UseDateFieldComponentProps,
-} from './DateField.types';
+import { UseDateFieldProps } from './DateField.types';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { applyDefaultDate } from '../internals/utils/date-utils';
-import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { PickerValidDate } from '../models';
+import { FieldSection, PickerValidDate } from '../models';
+import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
 
-const useDefaultizedDateField = <TDate extends PickerValidDate, AdditionalProps extends {}>(
-  props: UseDateFieldProps<TDate>,
-): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
-  } as any;
-};
-
-export const useDateField = <TDate extends PickerValidDate, TChildProps extends {}>(
-  inProps: UseDateFieldComponentProps<TDate, TChildProps>,
+export const useDateField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+>(
+  inProps: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<TDate, TChildProps>(inProps);
+  const props = useDefaultizedDateField<
+    TDate,
+    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseDateFieldProps<TDate>
+    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(props, 'date');
 
-  return useField({
+  return useField<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: singleItemValueManager,

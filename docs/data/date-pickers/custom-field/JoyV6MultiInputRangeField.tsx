@@ -29,16 +29,17 @@ import {
   BaseMultiInputFieldProps,
   DateRange,
   DateRangeValidationError,
-  UseDateRangeFieldProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers-pro/models';
+import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
+  enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -53,6 +54,9 @@ type JoyFieldComponent = ((
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      enableAccessibleFieldDOMStructure,
+
       disabled,
       id,
       label,
@@ -128,11 +132,12 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs>,
+  extends UseDateRangeFieldProps<Dayjs, false>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
       Dayjs,
       RangeFieldSection,
+      false,
       DateRangeValidationError
     > {}
 
@@ -175,6 +180,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useMultiInputDateRangeField<
       Dayjs,
+      false,
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
@@ -192,6 +198,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
         disablePast,
         selectedSections,
         onSelectedSectionsChange,
+        enableAccessibleFieldDOMStructure: false,
       },
       startTextFieldProps,
       endTextFieldProps,
@@ -233,7 +240,7 @@ function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   return null;
 }
 
-export default function RangePickerWithJoyField() {
+export default function JoyV6MultiInputRangeField() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>

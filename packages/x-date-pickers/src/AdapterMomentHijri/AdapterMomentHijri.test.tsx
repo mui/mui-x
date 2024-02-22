@@ -1,15 +1,13 @@
-import * as React from 'react';
 import moment from 'moment';
 import { expect } from 'chai';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   describeHijriAdapter,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 import 'moment/locale/ar';
 
@@ -64,25 +62,34 @@ describe('<AdapterMomentHijri />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment-hijri',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

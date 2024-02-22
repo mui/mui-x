@@ -1,18 +1,16 @@
-import * as React from 'react';
 import moment, { Moment } from 'moment';
 import momentTZ from 'moment-timezone';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
@@ -150,25 +148,34 @@ describe('<AdapterMoment />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

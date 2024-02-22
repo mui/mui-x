@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, act, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui-internal/test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { getExpectedOnChangeCount } from 'test/utils/pickers';
+import {
+  getAllFieldInputRoot,
+  getExpectedOnChangeCount,
+  getFieldInputRoot,
+} from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -26,30 +30,41 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
-      render(<ElementToTest defaultValue={values[0]} />);
+      renderWithProps({ enableAccessibleFieldDOMStructure: true, defaultValue: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if passed', () => {
-      render(<ElementToTest value={values[0]} />);
+      renderWithProps({ enableAccessibleFieldDOMStructure: true, value: values[0] });
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if both `props.defaultValue` and `props.value` are passed', () => {
-      render(<ElementToTest defaultValue={values[0]} value={values[1]} />);
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: values[0],
+        value: values[1],
+      });
       assertRenderedValue(values[1]);
     });
 
     it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
-      render(<ElementToTest />);
+      renderWithProps({ enableAccessibleFieldDOMStructure: true });
       assertRenderedValue(emptyValue);
     });
 
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
-      const newValue = setNewValue(values[0], { selectSection });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: values[0],
+        onChange,
+      });
+      const newValue = setNewValue(values[0], {
+        selectSection: v7Response.selectSection,
+        pressKey: v7Response.pressKey,
+      });
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
@@ -78,11 +93,14 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return { value, onChange: handleChange };
       };
 
-      const { selectSection } = renderWithProps(
-        { value: values[0], onChange },
-        useControlledElement,
+      const v7Response = renderWithProps(
+        { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
+        { hook: useControlledElement },
       );
-      const newValue = setNewValue(values[0], { selectSection });
+      const newValue = setNewValue(values[0], {
+        selectSection: v7Response.selectSection,
+        pressKey: v7Response.pressKey,
+      });
 
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
@@ -95,23 +113,43 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should react to `props.value` update', () => {
-      const { setProps } = render(<ElementToTest value={values[0]} />);
-      setProps({ value: values[1] });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+      });
+      v7Response.setProps({ value: values[1] });
       assertRenderedValue(values[1]);
     });
 
-    ['readOnly', 'disabled'].forEach((prop) => {
-      it(`should apply ${prop}="true" prop`, () => {
-        if (!['field', 'picker'].includes(componentFamily)) {
-          return;
-        }
-        const handleChange = spy();
-        render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
+    it(`should apply disabled="true" prop`, () => {
+      if (!['field', 'picker'].includes(componentFamily)) {
+        return;
+      }
 
-        const textBoxes = screen.getAllByRole('textbox');
-        textBoxes.forEach((textbox) => {
-          expect(textbox).to.have.attribute(prop.toLowerCase());
-        });
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+        disabled: true,
+      });
+
+      getAllFieldInputRoot().forEach((fieldRoot) => {
+        expect(fieldRoot).to.have.class('Mui-disabled');
+      });
+    });
+
+    it(`should apply readOnly="true" prop`, () => {
+      if (!['field', 'picker'].includes(componentFamily)) {
+        return;
+      }
+
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: values[0],
+        readOnly: true,
+      });
+
+      getAllFieldInputRoot().forEach((fieldInputRoot) => {
+        expect(fieldInputRoot).to.have.class('Mui-readOnly');
       });
     });
 
@@ -119,16 +157,15 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
+
       const handleChange = spy();
 
-      render(<ElementToTest defaultValue={values[0]} onChange={handleChange} />);
-      const input = screen.getAllByRole('textbox')[0];
-      act(() => {
-        input.focus();
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        onChange: handleChange,
       });
-      clock.runToLast();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
-      clock.runToLast();
+      v7Response.selectSection(undefined);
+      userEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
       expect(handleChange.callCount).to.equal(0);
     });
 
@@ -140,13 +177,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      render(
-        <ElementToTest
-          open
-          slotProps={{ toolbar: { hidden: false } }}
-          localeText={{ toolbarTitle: 'Test toolbar' }}
-        />,
-      );
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        open: true,
+        slotProps: { toolbar: { hidden: false } },
+        localeText: { toolbarTitle: 'Test toolbar' },
+      });
+
       expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
     });
 
@@ -158,20 +195,20 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      render(
-        <ElementToTest
-          open
-          {...(params.type === 'date-range'
-            ? {
-                localeText: {
-                  start: 'test',
-                  end: 'relationship',
-                },
-              }
-            : { label: 'test relationship' })}
-          slotProps={{ toolbar: { hidden: true } }}
-        />,
-      );
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        open: true,
+        slotProps: { toolbar: { hidden: true } },
+        ...(params.type === 'date-range'
+          ? {
+              localeText: {
+                start: 'test',
+                end: 'relationship',
+              },
+            }
+          : { label: 'test relationship' }),
+      });
+
       expect(screen.getByLabelText('test relationship', { selector: 'div' })).to.have.attribute(
         'role',
         'dialog',
@@ -190,6 +227,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         <div>
           <div id="label-id">external label</div>
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             open
             {...(params.type === 'date-range' && {
               localeText: {
@@ -214,13 +252,21 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         if (!['field', 'picker'].includes(componentFamily)) {
           return;
         }
-        render(<ElementToTest slotProps={{ textField: { error: true } }} />);
 
-        const textBoxes = screen.getAllByRole('textbox');
-        textBoxes.forEach((textbox) => {
-          expect(textbox.parentElement).to.have.class(inputBaseClasses.error);
-          expect(textbox).to.have.attribute('aria-invalid', 'true');
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          slotProps: { textField: { error: true } },
         });
+
+        const fieldRoot = getFieldInputRoot();
+        expect(fieldRoot).to.have.class(inputBaseClasses.error);
+        expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
+
+        if (params.type === 'date-range' && !params.isSingleInput) {
+          const fieldRootEnd = getFieldInputRoot(1);
+          expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
+          expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');
+        }
       });
     });
   });
