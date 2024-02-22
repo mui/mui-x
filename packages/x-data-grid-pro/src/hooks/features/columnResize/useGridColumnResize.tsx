@@ -379,17 +379,24 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
+    // This block of code checks if the current mouse event is a double-click by comparing it with the previous mouse click event.
+    // It prevents unintentional double-clicks from being interpreted as two separate clicks.
     if (previousMouseClickEvent.current) {
+      // Retrieve the details of the previous mouse click event.
       const prevEvent = previousMouseClickEvent.current;
       const prevTimeStamp = prevEvent.timeStamp;
       const prevClientX = prevEvent.clientX;
       const prevClientY = prevEvent.clientY;
 
+      // Check if the time elapsed between the current and previous mouse clicks is less than 300 milliseconds,
+      // and if the current mouse click occurred at the same position as the previous one.
       if (
         nativeEvent.timeStamp - prevTimeStamp < 300 &&
         nativeEvent.clientX === prevClientX &&
         nativeEvent.clientY === prevClientY
       ) {
+        // If the conditions are met, it indicates that the current event is part of a double-click,
+        // so we clear the previous mouse click event and return early to ignore it.
         previousMouseClickEvent.current = undefined;
         return;
       }
