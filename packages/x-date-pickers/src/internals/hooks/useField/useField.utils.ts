@@ -842,9 +842,13 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
           )
         : section.value;
     case 'meridiem':
-      return currentValue ? utils.format(currentValue, 'meridiem') : undefined;
+      return currentValue && utils.isValid(currentValue)
+        ? utils.format(currentValue, 'meridiem')
+        : undefined;
     case 'weekDay':
-      return currentValue ? utils.format(currentValue, 'weekday') : undefined;
+      return currentValue && utils.isValid(currentValue)
+        ? utils.format(currentValue, 'weekday')
+        : undefined;
     default:
       return undefined;
   }
