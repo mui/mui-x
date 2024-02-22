@@ -5,7 +5,6 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -77,7 +76,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }, [hasFocus]);
 
     const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
-      if (isSpaceKey(event.key)) {
+      if (event.key === ' ') {
         // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
         // TODO: Remove and add a check inside useGridKeyboardNavigation
         event.stopPropagation();

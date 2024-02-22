@@ -1,9 +1,9 @@
 ---
-title: React Heat map chart
+title: React Heatmap chart
 productId: x-charts
 ---
 
-# Charts - Heatmap 🚧
+# Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">Heatmap charts allow to highlight correlation between categories.</p>
 

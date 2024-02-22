@@ -32,6 +32,10 @@ const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 export default withDocsInfra({
+  experimental: {
+    workerThreads: true,
+    cpus: 3,
+  },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -72,6 +76,10 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
+          '@mui/docs': path.resolve(
+            currentDirectory,
+            '../node_modules/@mui/monorepo/packages/mui-docs/src',
+          ),
           docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },

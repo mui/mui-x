@@ -34,7 +34,7 @@ const productionPlugins = [
 ];
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
+  const useESModules = api.env(['modern', 'stable', 'rollup']);
 
   const presets = [
     [
@@ -153,12 +153,6 @@ module.exports = function getBabelConfig(api) {
               root: ['./'],
             },
           ],
-        ],
-      },
-      legacy: {
-        plugins: [
-          // IE11 support
-          '@babel/plugin-transform-object-assign',
         ],
       },
       test: {

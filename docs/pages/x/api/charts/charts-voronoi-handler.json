@@ -7,7 +7,7 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
-    "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" }
+    "voronoiMaxRadius": { "type": { "name": "number" } }
   },
   "name": "ChartsVoronoiHandler",
   "imports": [

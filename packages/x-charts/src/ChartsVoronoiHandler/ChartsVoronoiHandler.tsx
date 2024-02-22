@@ -4,7 +4,7 @@ import { Delaunay } from 'd3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { SVGContext, DrawingContext } from '../context/DrawingProvider';
+import { SvgContext, DrawingContext } from '../context/DrawingProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { getSVGPoint } from '../internals/utils';
@@ -15,7 +15,6 @@ export type ChartsVoronoiHandlerProps = {
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
-   * @default undefined
    */
   voronoiMaxRadius?: number | undefined;
   /**
@@ -28,7 +27,7 @@ export type ChartsVoronoiHandlerProps = {
 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = React.useContext(SvgContext);
   const { width, height, top, left } = React.useContext(DrawingContext);
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
@@ -201,7 +200,6 @@ ChartsVoronoiHandler.propTypes = {
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
-   * @default undefined
    */
   voronoiMaxRadius: PropTypes.number,
 } as any;
