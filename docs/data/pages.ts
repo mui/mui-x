@@ -464,6 +464,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
+              { pathname: '/x/react-charts/gauge', title: 'Gauge', planned: true },
               { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
               { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
               {
