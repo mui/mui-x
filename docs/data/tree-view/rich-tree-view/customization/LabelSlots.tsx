@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   TreeItemNext,
   TreeItemNextLabel,
   TreeItemNextProps,
 } from '@mui/x-tree-view/internals/TreeItemNext';
-import Typography, { TypographyProps } from '@mui/material/Typography';
 import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
 
 interface CustomLabelProps {
@@ -124,7 +122,8 @@ export default function LabelSlots() {
           const walkTree = (item: TreeViewBaseItem): TreeViewBaseItem => {
             if (item.id === nodeId) {
               return { ...item, label };
-            } else if (item.children) {
+            }
+            if (item.children) {
               return { ...item, children: item.children.map(walkTree) };
             }
 
