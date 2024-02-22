@@ -164,6 +164,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
       fireEvent.doubleClick(separator);
       await microtasks();
+      expect(onColumnWidthChange.callCount).to.equal(2);
       expect(onColumnWidthChange.args[1][0].width).to.equal(116);
     });
 
