@@ -527,7 +527,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...other}
     >
       {isLastVisible && (
-        <InfiniteLoadingTriggerElement ref={(apiRef as any).current.unstable_lastVisibleRowRef} />
+        <InfiniteLoadingTriggerElement
+          ref={(apiRef as any).current.unstable_infiniteLoadingTriggerRef}
+        />
       )}
 
       {leftCells}

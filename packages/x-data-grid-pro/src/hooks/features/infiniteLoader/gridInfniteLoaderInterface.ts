@@ -1,8 +1,7 @@
 export interface GridInfiniteLoaderApi {
   /**
-   * Handles the last visible row ref.
-   * @param {HTMLElement} node The HTML element that the ref is attatched to.
-   * @ignore - do not document. Remove before releasing v5 stable version.
+   * Stores the ref of the element at the bottom of the virtual scroller content that triggers the infinite loading.
+   * @ignore - do not document.
    */
-  unstable_lastVisibleRowRef: (node: HTMLElement | null) => void;
+  unstable_infiniteLoadingTriggerRef: (node: HTMLElement | null) => void;
 }
