@@ -824,7 +824,6 @@ export const parseSelectedSections = (
 export const getSectionValueText = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
-  currentDate: TDate | null,
 ): string | undefined => {
   if (!section.value) {
     return undefined;
@@ -832,9 +831,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return currentDate && utils.isValid(currentDate)
-          ? utils.format(currentDate, 'month')
-          : utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
+        return utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
       }
       const parsedDate = utils.parse(section.value, section.format);
       return parsedDate ? utils.format(parsedDate, 'month') : undefined;
@@ -846,14 +843,9 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
             'dayOfMonthFull',
           )
         : section.value;
-    case 'meridiem':
-      return currentDate && utils.isValid(currentDate)
-        ? utils.format(currentDate, 'meridiem')
-        : undefined;
     case 'weekDay':
-      return currentDate && utils.isValid(currentDate)
-        ? utils.format(currentDate, 'weekday')
-        : undefined;
+      // TODO: improve by providing the label of the week day
+      return undefined;
     default:
       return undefined;
   }
@@ -862,34 +854,27 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
 export const getSectionValueNow = <TDate extends PickerValidDate>(
   section: FieldSection,
   utils: MuiPickersAdapter<TDate>,
-  currentDate: TDate | null,
 ): number | undefined => {
-  if (!section.value || currentDate === null) {
+  if (!section.value) {
     return undefined;
   }
   switch (section.type) {
     case 'weekDay': {
       if (section.contentType === 'letter') {
-        // TODO: consider handling case when `currentDate` is not valid
-        if (utils.isValid(currentDate)) {
-          return utils.getDayOfWeek(currentDate);
-        }
+        // TODO: improve by resolving the week day number from a letter week day
         return undefined;
       }
       return Number(section.value);
     }
     case 'meridiem': {
-      if (!utils.isValid(currentDate)) {
-        const parsedDate = utils.parse(
-          `01:00 ${section.value}`,
-          `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
-        );
-        if (parsedDate) {
-          return utils.getHours(parsedDate) >= 12 ? 1 : 0;
-        }
-        return undefined;
+      const parsedDate = utils.parse(
+        `01:00 ${section.value}`,
+        `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
+      );
+      if (parsedDate) {
+        return utils.getHours(parsedDate) >= 12 ? 1 : 0;
       }
-      return utils.getHours(currentDate) >= 12 ? 1 : 0;
+      return undefined;
     }
     case 'day':
       return section.contentType === 'digit-with-letter'

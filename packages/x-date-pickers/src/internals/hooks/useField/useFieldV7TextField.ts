@@ -425,22 +425,10 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           role: 'spinbutton',
           id: `${id}-${section.type}`,
           'aria-labelledby': `${id}-${section.type}`,
-          'aria-valuenow': getSectionValueNow(
-            section,
-            utils,
-            // @ts-ignore
-            state.value,
-          ),
+          'aria-valuenow': getSectionValueNow(section, utils),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
-          'aria-valuetext': section.value
-            ? getSectionValueText(
-                section,
-                utils,
-                // @ts-ignore
-                state.value,
-              )
-            : localeText.empty,
+          'aria-valuetext': section.value ? getSectionValueText(section, utils) : localeText.empty,
           'aria-label': localeText[section.type],
           'aria-disabled': disabled,
           spellCheck: isEditable ? false : undefined,
@@ -480,7 +468,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     utils,
     sectionBoundaries,
     id,
-    state.value,
   ]);
 
   const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
