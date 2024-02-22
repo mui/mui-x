@@ -872,6 +872,10 @@ export const getSectionValueNow = <TDate extends PickerValidDate>(
     case 'meridiem': {
       return utils.getHours(currentValue) >= 12 ? 1 : 0;
     }
+    case 'day':
+      return section.contentType === 'digit-with-letter'
+        ? parseInt(section.value, 10)
+        : Number(section.value);
     default:
       return section.contentType !== 'letter' ? Number(section.value) : undefined;
   }
