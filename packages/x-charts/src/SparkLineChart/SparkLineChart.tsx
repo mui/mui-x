@@ -373,6 +373,8 @@ SparkLineChart.propTypes = {
     tickMinStep: PropTypes.number,
     tickNumber: PropTypes.number,
     tickSize: PropTypes.number,
+    tickValueFormatter: PropTypes.func,
+    tooltipValueFormatter: PropTypes.func,
     valueFormatter: PropTypes.func,
   }),
 } as any;
