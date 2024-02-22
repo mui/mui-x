@@ -3,13 +3,14 @@ import { createRenderer, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
+import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Infnite loader', () => {
   const { render } = createRenderer();
 
-  it('call onRowsScrollEnd when viewport scroll reaches the bottom', async function test() {
+  it('should call `onRowsScrollEnd` when viewport scroll reaches the bottom', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -56,5 +57,96 @@ describe('<DataGridPro /> - Infnite loader', () => {
     await waitFor(() => {
       expect(handleRowsScrollEnd.callCount).to.equal(2);
     });
+  });
+
+  it('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    const allRows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Under Armor' },
+      { id: 4, brand: 'Jordan' },
+      { id: 5, brand: 'Reebok' },
+    ];
+    const initialRows = [allRows[0]];
+    const getRow = spy((id) => {
+      return allRows.find((row) => row.id === id);
+    });
+
+    const scrollEndThreshold = 60;
+    const rowHeight = 50;
+    const gridHeight =
+      4 * rowHeight +
+      // header
+      56 +
+      // border
+      2;
+
+    function TestCase() {
+      const [rows, setRows] = React.useState(initialRows);
+      const [loading, setLoading] = React.useState(false);
+      const handleRowsScrollEnd = React.useCallback(async () => {
+        setLoading(true);
+        await sleep(100);
+        setRows((prevRows) => {
+          const lastRowId = prevRows[prevRows.length - 1].id;
+          const nextRow = getRow(lastRowId + 1);
+          return nextRow ? prevRows.concat(nextRow) : prevRows;
+        });
+        setLoading(false);
+      }, []);
+      return (
+        <div style={{ width: 300, height: gridHeight }}>
+          <DataGridPro
+            columns={[{ field: 'id' }, { field: 'brand', width: 100 }]}
+            rows={rows}
+            loading={loading}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            scrollEndThreshold={scrollEndThreshold}
+            rowHeight={rowHeight}
+            hideFooter
+          />
+        </div>
+      );
+    }
+    render(<TestCase />);
+
+    // data grid should have loaded 6 rows:
+    //   1 initial row
+    //   5 rows loaded one by one through `onRowsScrollEnd` callback
+
+    expect(getColumnValues(0)).to.deep.equal(['0']);
+    await waitFor(() => {
+      expect(getRow.callCount).to.equal(1);
+    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+
+    await waitFor(() => {
+      expect(getRow.callCount).to.equal(2);
+    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+
+    await waitFor(() => {
+      expect(getRow.callCount).to.equal(3);
+    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+
+    await waitFor(() => {
+      expect(getRow.callCount).to.equal(4);
+    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+
+    await waitFor(() => {
+      expect(getRow.callCount).to.equal(5);
+    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+
+    await sleep(200);
+    // should not load more rows because the threshold is not reached
+    expect(getRow.callCount).to.equal(5);
   });
 });
