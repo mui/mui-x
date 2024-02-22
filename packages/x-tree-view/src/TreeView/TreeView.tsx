@@ -91,7 +91,7 @@ TreeView.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusNode: PropTypes.func.isRequired,
+      focusNode: PropTypes.func,
     }).isRequired,
   }),
   /**

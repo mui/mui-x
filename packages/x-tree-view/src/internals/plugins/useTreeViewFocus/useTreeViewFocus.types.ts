@@ -12,7 +12,7 @@ export interface UseTreeViewFocusInstance {
   focusRoot: () => void;
 }
 export interface UseTreeViewFocusPublicAPI {
-  focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
+  focusNode?: (event: React.SyntheticEvent, nodeId: string | null) => void;
 }
 
 export interface UseTreeViewFocusParameters {
