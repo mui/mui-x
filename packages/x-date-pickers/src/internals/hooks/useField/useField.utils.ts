@@ -870,7 +870,11 @@ export const getSectionValueNow = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'weekDay': {
       if (section.contentType === 'letter') {
-        return utils.getDayOfWeek(currentValue);
+        // TODO: consider handling case when `currentValue` is not valid
+        if (utils.isValid(currentValue)) {
+          return utils.getDayOfWeek(currentValue);
+        }
+        return undefined;
       }
       return Number(section.value);
     }
