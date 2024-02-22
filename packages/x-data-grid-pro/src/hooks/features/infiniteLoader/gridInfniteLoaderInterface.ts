@@ -4,5 +4,5 @@ export interface GridInfiniteLoaderApi {
    * @param {HTMLElement} node The HTML element that the ref is attatched to.
    * @ignore - do not document. Remove before releasing v5 stable version.
    */
-  unstable_lastVisibleRowRef: (node: HTMLElement) => void;
+  unstable_lastVisibleRowRef: (node: HTMLElement | null) => void;
 }

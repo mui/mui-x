@@ -12,27 +12,6 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridInfiniteLoaderApi } from './gridInfniteLoaderInterface';
 
-class ObserverManager {
-  instance?: IntersectionObserver;
-
-  node: HTMLElement | undefined;
-
-  stop() {
-    this.instance?.disconnect();
-  }
-
-  start() {
-    this.stop();
-    if (this.node) {
-      this.instance?.observe(this.node);
-    }
-  }
-
-  setNode(newNode?: HTMLElement) {
-    this.node = newNode;
-  }
-}
-
 /**
  * @requires useGridColumns (state)
  * @requires useGridDimensions (method) - can be after
@@ -47,7 +26,8 @@ export const useGridInfiniteLoader = (
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
-  const observer = React.useRef(new ObserverManager());
+  const observer = React.useRef<IntersectionObserver>();
+  const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
@@ -64,9 +44,11 @@ export const useGridInfiniteLoader = (
       };
       apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
       if (observer.current) {
-        observer.current.stop();
+        if (triggerElement.current) {
+          observer.current?.unobserve(triggerElement.current);
+        }
         // do not observe this node anymore
-        observer.current.setNode(undefined);
+        triggerElement.current = null;
       }
     }
   });
@@ -80,13 +62,17 @@ export const useGridInfiniteLoader = (
     if (!virtualScroller) {
       return;
     }
-    observer.current.stop();
-    observer.current.instance = new IntersectionObserver(handleLoadMoreRows, {
+    if (triggerElement.current) {
+      observer.current?.unobserve(triggerElement.current);
+    }
+    observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
       root: virtualScroller,
       rootMargin: `0px 0px ${props.scrollEndThreshold}px 0px`,
     });
-    observer.current.start();
+    if (triggerElement.current) {
+      observer.current.observe(triggerElement.current);
+    }
   }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows, isEnabled]);
 
   const lastVisibleRowRef = React.useCallback<GridInfiniteLoaderApi['unstable_lastVisibleRowRef']>(
@@ -96,9 +82,15 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      if (observer.current.node !== node) {
-        observer.current.setNode(node);
-        observer.current.start();
+      if (triggerElement.current !== node) {
+        if (triggerElement.current) {
+          observer.current?.unobserve(triggerElement.current);
+        }
+
+        triggerElement.current = node;
+        if (triggerElement.current) {
+          observer.current?.observe(triggerElement.current);
+        }
       }
     },
     [isEnabled],
