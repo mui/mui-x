@@ -533,7 +533,7 @@ describe('<SimpleTreeView />', () => {
 
       expect(onNodeFocus.lastCall.lastArg).to.equal('1');
     });
-    it('should focus specific node', () => {
+    it('should focus specific node using `apiRef`', () => {
       let apiRef: SimpleTreeViewApiRef;
       const onNodeFocus = spy();
 
