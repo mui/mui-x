@@ -79,10 +79,10 @@ describe('<DataGridPro /> - Infnite loader', () => {
 
     const scrollEndThreshold = 60;
     const rowHeight = 50;
+    const columnHeaderHeight = 50;
     const gridHeight =
       4 * rowHeight +
-      // header
-      56 +
+      columnHeaderHeight +
       // border
       2;
 
@@ -108,6 +108,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
             onRowsScrollEnd={handleRowsScrollEnd}
             scrollEndThreshold={scrollEndThreshold}
             rowHeight={rowHeight}
+            columnHeaderHeight={columnHeaderHeight}
             hideFooter
           />
         </div>
