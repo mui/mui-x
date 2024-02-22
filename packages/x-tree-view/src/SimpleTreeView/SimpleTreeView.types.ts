@@ -4,6 +4,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import { SxProps } from '@mui/system';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import {
+  SimpleTreeViewApiRef,
   SimpleTreeViewPluginParameters,
   SimpleTreeViewPluginSlotProps,
   SimpleTreeViewPluginSlots,
@@ -45,4 +46,8 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef?: SimpleTreeViewApiRef;
 }

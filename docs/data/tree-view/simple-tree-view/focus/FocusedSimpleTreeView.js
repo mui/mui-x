@@ -17,7 +17,7 @@ export default function FocusedSimpleTreeView() {
         <Button onClick={handleButtonClick}>focus pickers node</Button>
       </Box>
       <Box sx={{ minHeight: 264, flexGrow: 1 }}>
-        <SimpleTreeView {...{ apiRef }}>
+        <SimpleTreeView apiRef={apiRef}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
             <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
