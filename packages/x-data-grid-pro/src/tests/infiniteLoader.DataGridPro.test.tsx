@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
       const [loading, setLoading] = React.useState(false);
       const handleRowsScrollEnd = React.useCallback(async () => {
         setLoading(true);
-        await sleep(100);
+        await sleep(50);
         setRows((prevRows) => {
           const lastRowId = prevRows[prevRows.length - 1].id;
           const nextRow = getRow(lastRowId + 1);
