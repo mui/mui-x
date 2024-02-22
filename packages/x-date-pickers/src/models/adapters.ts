@@ -28,7 +28,7 @@ export interface AdapterFormats {
    * The day of the month with letters.
    * @example "2nd"
    */
-  fullDayOfMonth: string;
+  dayOfMonthFull: string;
   /**
    * The name of the day of the week.
    * @example "Wednesday"

@@ -838,7 +838,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
       return section.contentType === 'digit'
         ? utils.format(
             utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
-            'fullDayOfMonth',
+            'dayOfMonthFull',
           )
         : section.value;
     case 'meridiem':
