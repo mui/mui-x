@@ -4,6 +4,7 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { unstable_useEventCallback } from '@mui/utils';
@@ -54,6 +55,7 @@ export const useGridInfiniteLoader = (
   });
 
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   React.useEffect(() => {
     if (!isEnabled) {
@@ -65,19 +67,27 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current?.unobserve(triggerElement.current);
     }
+    const marginBottom =
+      props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
       root: virtualScroller,
-      rootMargin: `0px 0px ${props.scrollEndThreshold}px 0px`,
+      rootMargin: `0px 0px ${marginBottom}px 0px`,
     });
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [virtualScroller, props.scrollEndThreshold, handleLoadMoreRows, isEnabled]);
+  }, [
+    virtualScroller,
+    props.scrollEndThreshold,
+    handleLoadMoreRows,
+    isEnabled,
+    dimensions.hasScrollX,
+    dimensions.scrollbarSize,
+  ]);
 
-  const lastVisibleRowRef = React.useCallback<
-    GridInfiniteLoaderApi['unstable_infiniteLoadingTriggerRef']
-  >(
+  const triggerRef = React.useCallback<GridInfiniteLoaderApi['unstable_infiniteLoadingTriggerRef']>(
     (node) => {
       // Prevent the infite loading working in combination with lazy loading
       if (!isEnabled) {
@@ -99,7 +109,7 @@ export const useGridInfiniteLoader = (
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {
-    unstable_infiniteLoadingTriggerRef: lastVisibleRowRef,
+    unstable_infiniteLoadingTriggerRef: triggerRef,
   };
 
   useGridApiMethod(apiRef, infiteLoaderApi, 'public');
