@@ -58,6 +58,19 @@ Some series types also require specific axis attributes:
 - line plots require an `xAxis` to have `data` provided
 - bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
 
+### Axis formatter
+
+Axis data can be displayed in the axes ticks, and the in the tooltip.
+To modify how data is displayed use the `valueFormatter` property.
+
+For finner customization, use `tickValueFormatter` or `tooltipValueFormatter`.
+Those formatters only impact the associated element and override the `valueFormatter`.
+
+In the next demo `tickValueFormatter` is used to shorten months and introduce a breaking space for ticks only.
+In the tooltip header, the value is computed by the `valueFormatter`.
+
+{{"demo": "FormatterDemoNoSnap.js"}}
+
 ### Axis sub domain
 
 By default, the axis domain is computed such that all your data is visible.
