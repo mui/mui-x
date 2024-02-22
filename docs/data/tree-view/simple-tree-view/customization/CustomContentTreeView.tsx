@@ -3,13 +3,15 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItem } from '@mui/x-tree-view/internals/useTreeItem';
+import {
+  useTreeItem,
+  UseTreeItemParameters,
+} from '@mui/x-tree-view/internals/useTreeItem';
 import {
   TreeItemNextContent,
   TreeItemNextIconContainer,
   TreeItemNextTransitionGroup,
   TreeItemNextLabel,
-  TreeItemNextProps,
   TreeItemNextRoot,
 } from '@mui/x-tree-view/internals/TreeItemNext';
 import { TreeItemIcon } from '@mui/x-tree-view/internals/TreeItemIcon';
@@ -20,18 +22,10 @@ const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItemNextProps,
+  props: Omit<UseTreeItemParameters, 'rootRef'>,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const {
-    id,
-    nodeId,
-    label,
-    children,
-    slots = {},
-    slotProps = {},
-    ...other
-  } = props;
+  const { id, nodeId, label, children, ...other } = props;
 
   const {
     getRootProps,
@@ -47,7 +41,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <TreeItemNextRoot {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()} ownerState={status}>
           <TreeItemNextIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            <TreeItemIcon status={status} />
           </TreeItemNextIconContainer>
           <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Avatar

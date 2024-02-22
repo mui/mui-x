@@ -166,7 +166,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getNodesToRender = useEventCallback(() => {
+  const getNodesToRender = () => {
     const getPropsFromNodeId = ({
       id,
       children,
@@ -181,7 +181,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     };
 
     return state.nodeTree.map(getPropsFromNodeId);
-  });
+  };
 
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,

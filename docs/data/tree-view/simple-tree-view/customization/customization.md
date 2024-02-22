@@ -34,12 +34,26 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 {{"demo": "CustomStyling.js"}}
 
-### Adding custom content
+### Custom label
 
-Use the `ContentComponent` prop and the `useTreeItemState` hook to replace the Tree Item content with an entirely custom component.
+Use the `label` slot to customize the Tree Item label or to replace it with an entirely custom component.
+
+The `slotProps` prop allows you to pass props to the default label component.
+The demo below show how to pass an `id` attribute to the Tree Item label:
+
+{{"demo": "LabelSlotProps.js", "defaultCodeOpen": false }}
+
+The `slots` prop allows you to replace the default label with your own component:
+The demo below shows how to add a tooltip on the Tree Item label:
+
+{{"demo": "LabelSlots.js", "defaultCodeOpen": false}}
+
+### Headless API
+
+Use the `useTreeItem` hook to create your own component.
 The demo below shows how to add an avatar and custom typography elements.
 
-{{"demo": "CustomContentTreeView.js"}}
+{{"demo": "CustomContentTreeView.js", "defaultCodeOpen": false}}
 
 ## Common examples
 

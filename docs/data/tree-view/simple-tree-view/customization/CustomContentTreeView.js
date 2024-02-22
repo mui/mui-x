@@ -19,15 +19,7 @@ const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const {
-    id,
-    nodeId,
-    label,
-    children,
-    slots = {},
-    slotProps = {},
-    ...other
-  } = props;
+  const { id, nodeId, label, children, ...other } = props;
 
   const {
     getRootProps,
@@ -43,7 +35,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
       <TreeItemNextRoot {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()} ownerState={status}>
           <TreeItemNextIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            <TreeItemIcon status={status} />
           </TreeItemNextIconContainer>
           <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Avatar
