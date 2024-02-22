@@ -34,14 +34,39 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     [focusedNodeId, isTreeFocused],
   );
 
+  const isNodeVisible = (nodeId: string) => {
+    const node = instance.getNode(nodeId);
+    return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
+  };
+
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
-    if (nodeId) {
+    let nodeToFocusId: string | null | undefined;
+
+    // if we receive a nodeId, and it is visible, the focus will be set to it
+    if (nodeId && isNodeVisible(nodeId)) {
+      nodeToFocusId = nodeId;
+    } else if (!nodeId) {
+      // if we don't receive a nodeId, we will try to find the first focusable node
+      if (Array.isArray(models.selectedNodes.value)) {
+        nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
+      } else if (models.selectedNodes.value != null && isNodeVisible(models.selectedNodes.value)) {
+        nodeToFocusId = models.selectedNodes.value;
+      }
+
+      if (nodeToFocusId == null) {
+        nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
+      }
+    }
+
+    // if we have a focusable node, we set the focus to it
+    // if nodeToFocusId is undefined, nothing happens
+    if (nodeToFocusId) {
       if (!isTreeFocused()) {
         instance.focusRoot();
       }
-      setFocusedNodeId(nodeId);
+      setFocusedNodeId(nodeToFocusId);
       if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeId);
+        params.onNodeFocus(event, nodeToFocusId);
       }
     }
   });
@@ -77,27 +102,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       otherHandlers.onFocus?.(event);
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
-        const isNodeVisible = (nodeId: string) => {
-          const node = instance.getNode(nodeId);
-          return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
-        };
-
-        let nodeToFocusId: string | null | undefined;
-        if (focusedNodeId) {
-          nodeToFocusId = focusedNodeId;
-        } else if (Array.isArray(models.selectedNodes.value)) {
-          nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
-        } else if (
-          models.selectedNodes.value != null &&
-          isNodeVisible(models.selectedNodes.value)
-        ) {
-          nodeToFocusId = models.selectedNodes.value;
-        }
-
-        if (nodeToFocusId == null) {
-          nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
-        }
-        instance.focusNode(event, nodeToFocusId);
+        instance.focusNode(event, null);
       }
     };
 
