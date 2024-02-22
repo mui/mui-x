@@ -1,5 +1,5 @@
 import { UseFieldResponse } from '@mui/x-date-pickers/internals';
-import { MultiInputFieldRefs } from '../../models/fields';
+import { MultiInputFieldRefs } from '../../../models';
 
 export interface UseMultiInputRangeFieldParams<
   TSharedProps extends {},
@@ -10,7 +10,10 @@ export interface UseMultiInputRangeFieldParams<
   endTextFieldProps: TTextFieldSlotProps;
 }
 
-export interface UseMultiInputRangeFieldResponse<TForwardedProps extends {}> {
-  startDate: UseFieldResponse<TForwardedProps>;
-  endDate: UseFieldResponse<TForwardedProps>;
+export interface UseMultiInputRangeFieldResponse<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends {},
+> {
+  startDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+  endDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
 }

@@ -107,7 +107,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -258,8 +258,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
-      "default": "TextField from '@mui/material'",
+      "description": "Form control with an input to render the value inside the default field.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
       "class": null
     },
     {

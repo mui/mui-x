@@ -59,9 +59,9 @@ export interface PickersComponentsPropsList {
   MuiClockNumber: ClockNumberProps;
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps<PickerValidDate>;
-  MuiDateField: DateFieldProps<PickerValidDate>;
+  MuiDateField: DateFieldProps<PickerValidDate, any>;
   MuiDatePickerToolbar: DatePickerToolbarProps<PickerValidDate>;
-  MuiDateTimeField: DateTimeFieldProps<PickerValidDate>;
+  MuiDateTimeField: DateTimeFieldProps<PickerValidDate, any>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<PickerValidDate>;
   MuiDayCalendar: DayCalendarProps<PickerValidDate>;
@@ -84,7 +84,7 @@ export interface PickersComponentsPropsList {
   MuiPickersLayout: PickersLayoutProps<unknown, PickerValidDate, DateOrTimeView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps<PickerValidDate>;
-  MuiTimeField: TimeFieldProps<PickerValidDate>;
+  MuiTimeField: TimeFieldProps<PickerValidDate, any>;
   MuiTimePickerToolbar: TimePickerToolbarProps<PickerValidDate>;
   MuiYearCalendar: YearCalendarProps<PickerValidDate>;
 
