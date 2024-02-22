@@ -3,7 +3,146 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v7.0.0-beta.3
+## 7.0.0-beta.4
+
+_Feb 23, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce a new DOM structure for the field components that provides a better accessibility
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-beta.4`
+
+- [DataGrid] Performance: DOM changes (#12013) @romgrk
+- [DataGrid] SingleSelect columns stopped getting the label correctly for "is any of" starting from 7.0.0-alpha.7 (#11939) @gitstart
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.4`.
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
+
+### Date Pickers
+
+#### Breaking changes
+
+- The `selectedSections` prop no longer accepts start and end indexes.
+  When selecting several — but not all — sections, the field components were not behaving correctly, you can now only select one or all sections:
+
+  ```diff
+   <DateField
+  -  selectedSections={{ startIndex: 0, endIndex: 0 }}
+  +  selectedSections={0}
+  
+     // If the field has 3 sections
+  -  selectedSections={{ startIndex: 0, endIndex: 2 }}
+  +  selectedSections="all"
+   />
+  ```
+
+- The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
+  This is used to know if the current UI expected is built using the accessible DOM structure or not. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+
+ When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+
+  ```diff
+    function MyCustomTextField(props) {
+      const {
+  +     // Should be ignored
+  +     enableAccessibleFieldDOMStructure,
+  
+        // ... rest of the props you are using
+      }
+  
+      return ( /* Some UI to edit the date */ )
+    }
+  
+    function MyCustomField(props) {
+      const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+        ...props,
+  +     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
+  +     enableAccessibleFieldDOMStructure: false,
+      });
+  
+      return <MyCustomTextField ref={ref} {...fieldResponse} />;
+    }
+  
+    function App() {
+      return <DatePicker slots={{ field: MyCustomField }} />;
+    }
+  ```
+
+- The following internal types were exported by mistake and have been removed from the public API:
+
+  - `UseDateFieldDefaultizedProps`
+  - `UseTimeFieldDefaultizedProps`
+  - `UseDateTimeFieldDefaultizedProps`
+  - `UseSingleInputDateRangeFieldComponentProps`
+  - `UseSingleInputTimeRangeFieldComponentProps`
+  - `UseSingleInputDateTimeRangeFieldComponentProps`
+
+
+#### `@mui/x-date-pickers@7.0.0-beta.4`
+
+- [fields] Use the `PickersTextField` component in the fields (#10649) @flaviendelangle
+- [pickers] Fix styling props propagation to `DateTimePickerTabs` (#12096) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.4`.
+
+### Charts / `@mui/x-charts@7.0.0-beta.4`
+
+#### Breaking changes
+
+Those components are not longer exported by `@mui/x-charts`:
+
+- `CartesianContextProvider`
+- `DrawingProvider`
+
+#### `@mui/x-charts@7.0.0-beta.4`
+
+- [charts] Don't display text if no value provided (#12127) @alexfauquette
+- [charts] Remove export of context providers (#12123) @oliviertassinari
+
+### Tree View / `@mui/x-tree-view@7.0.0-beta.4`
+
+- [TreeView] Stop using custom `findIndex` to support IE11 (#12129) @flaviendelangle
+
+### Docs
+
+- [docs] Add recipe for hiding separator on non-resizable columns (#12134) @michelengelen
+- [docs] Clarify Pickers `Component composition` section (#12097) @LukasTy
+- [docs] Fix "Licensing" page link (#12156) @LukasTy
+- [docs] Fix error raised by Grammarly on the page @oliviertassinari
+- [docs] Improve performance on charts entry point @oliviertassinari
+- [docs] Link to react-transition group with https @oliviertassinari
+- [docs] Move Heat map to pro (#12047) @alexfauquette
+- [docs] Reduce number of Vale errors @oliviertassinari
+- [docs] Remove default value set to undefined (#12128) @alexfauquette
+
+### Core
+
+- [core] Fix docs link check (#12135) @LukasTy
+- [core] Fix missing context display names (#12124) @oliviertassinari
+- [core] Fix shortcuts when Caps Lock enabled (#12121) @oliviertassinari
+- [core] Remove IE 11 compat logic (#12119) @oliviertassinari
+- [core] Simplify key utils (#12120) @oliviertassinari
+- [core] Use the @mui/internal-scripts package (#12142) @michaldudak
+- [all components] Remove legacy IE 11 bundle (#12151) @flaviendelangle
+- [charts][docs] Add small improvements to the Gauge page (#12076) @danilo-leal
+- [code-infra] Bump monorepo (#11880) @Janpot
+- [code-infra] Use `experimental.cpus` to control amount of export workers in Next.js (#12095) @Janpot
+- [docs-infra] Remove randomized API page layout (#11876) @alexfauquette
+- [test] Create local wrapper over describeConformance (#12130) @michaldudak
+
+## 7.0.0-beta.3
 
 _Feb 16, 2024_
 
@@ -67,7 +206,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.3`.
 - [core] Sort prop asc (#12033) @oliviertassinari
 - [core] Bump monorepo (#12055) @alexfauquette
 
-## v7.0.0-beta.2
+## 7.0.0-beta.2
 
 _Feb 9, 2024_
 
