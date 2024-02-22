@@ -101,7 +101,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
       UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
     >,
-    UseRangePositionResponse {
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
   wrapperVariant: WrapperVariant;
   fieldType: FieldType;
   readOnly?: boolean;
