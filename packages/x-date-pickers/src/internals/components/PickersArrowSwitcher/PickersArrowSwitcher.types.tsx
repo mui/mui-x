@@ -15,6 +15,9 @@ export interface ExportedPickersArrowSwitcherProps {
    * @default {}
    */
   slotProps?: PickersArrowSwitcherSlotProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersArrowSwitcherClasses>;
   /**
    * Format used to display the date.

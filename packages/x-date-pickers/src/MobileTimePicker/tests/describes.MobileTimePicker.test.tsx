@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
-  describeConformance,
   screen,
   fireEvent,
   userEvent,
-  fireTouchChangedEvent,
-} from '@mui-internal/test-utils';
+  fireTouchChangedEvent} from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -20,6 +18,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

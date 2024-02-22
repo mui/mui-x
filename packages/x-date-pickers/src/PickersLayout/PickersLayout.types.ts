@@ -115,11 +115,17 @@ export interface PickersLayoutProps<
   value?: TValue;
   className?: string;
   children?: React.ReactNode;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * Ref to pass to the root element
    */
   ref?: React.Ref<HTMLDivElement>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersLayoutClasses>;
   /**
    * Overridable component slots.

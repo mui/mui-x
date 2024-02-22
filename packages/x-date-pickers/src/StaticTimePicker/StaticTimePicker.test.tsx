@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  fireTouchChangedEvent,
-  screen,
-  getAllByRole,
-  fireEvent,
-} from '@mui-internal/test-utils';
+import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   wrapPickerMount,
@@ -15,6 +9,7 @@ import {
   describeValidation,
 } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticTimePicker />', () => {
   const { render, clock } = createPickerRenderer({

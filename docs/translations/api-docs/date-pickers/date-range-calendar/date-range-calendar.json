@@ -8,6 +8,7 @@
       "description": "Range positions available for selection. This list is checked against when checking if a next range position can be selected.<br>Used on Date Time Range pickers with current <code>rangePosition</code> to force a <code>finish</code> selection after just one range position selection."
     },
     "calendars": { "description": "The number of calendars to render." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "currentMonthCalendarPosition": { "description": "Position the current month is rendered in." },
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
