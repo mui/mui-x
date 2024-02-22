@@ -49,6 +49,10 @@ export interface GridClasses {
    */
   'cell--editing': string;
   /**
+   * Styles applied to the cell element in flex display mode.
+   */
+  'cell--flex': string;
+  /**
    * Styles applied to the cell element if `align="center"`.
    */
   'cell--textCenter': string;
@@ -60,10 +64,6 @@ export interface GridClasses {
    * Styles applied to the cell element if `align="right"`.
    */
   'cell--textRight': string;
-  /**
-   * Styles applied to the cell element if the cell has a custom renderer.
-   */
-  'cell--withRenderer': string;
   /**
    * Styles applied to the cell element if it is at the top edge of a cell selection range.
    */
@@ -96,10 +96,6 @@ export interface GridClasses {
    * Styles applied to the cell element.
    */
   cell: string;
-  /**
-   * Styles applied to the element that wraps the cell content.
-   */
-  cellContent: string;
   /**
    * Styles applied to the cell checkbox element.
    */
@@ -535,6 +531,26 @@ export interface GridClasses {
    */
   'scrollbar--vertical': string;
   /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell.
+   */
+  scrollbarFiller: string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, in header position.
+   */
+  'scrollbarFiller--header': string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, with a border top.
+   */
+  'scrollbarFiller--borderTop': string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell.
+   */
+  'scrollbarFiller--pinnedRight': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -623,10 +639,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'booleanCell',
   'cell--editable',
   'cell--editing',
+  'cell--flex',
   'cell--textCenter',
   'cell--textLeft',
   'cell--textRight',
-  'cell--withRenderer',
   'cell--rangeTop',
   'cell--rangeBottom',
   'cell--rangeLeft',
@@ -635,7 +651,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--pinnedRight',
   'cell--selectionMode',
   'cell',
-  'cellContent',
   'cellCheckbox',
   'cellEmpty',
   'cellSkeleton',
@@ -736,6 +751,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar',
   'scrollbar--vertical',
   'scrollbar--horizontal',
+  'scrollbarFiller',
+  'scrollbarFiller--header',
+  'scrollbarFiller--borderTop',
+  'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',

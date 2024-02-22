@@ -214,10 +214,7 @@ function extractColumnWidths(
     const cells = findGridCells(apiRef.current, column.field);
 
     const widths = cells.map((cell) => {
-      const style = window.getComputedStyle(cell, null);
-      const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
-      return paddingWidth + contentWidth;
+      return cell.getBoundingClientRect().width ?? 0;
     });
 
     const filteredWidths = options.includeOutliers
