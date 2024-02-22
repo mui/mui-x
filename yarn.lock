@@ -1796,17 +1796,10 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui-internal/docs-utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.0.tgz#b1cd8fafe00dca045896daa2977e26eb551b891a"
-  integrity sha512-TqbdoXrXAk9JhcsGjekriQVU6A0w7oo01CfTfm4mefcKT2Z+RhHeFzG4fJrugN718qLdolJKGMoD7f+u/yBSBw==
-  dependencies:
-    rimraf "^5.0.5"
-    typescript "^5.1.6"
-
-"@mui-internal/docs-utils@https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils":
-  version "1.0.1"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils#7e71fe5378e9649a88fd94fb79339bcabd2e33d0"
+"@mui-internal/docs-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.2.tgz#6b98ed43f0dda40d164875c9d0ba14034468e393"
+  integrity sha512-Rqj9SVLK8MktX3lc0A/LJbF7/N8tLXxa7i6IpYnEYREx5MG98oHn7CSXQ978T7FLIYb3AObtJb6Ujy8JemcIcQ==
   dependencies:
     rimraf "^5.0.5"
     typescript "^5.3.3"
@@ -1836,16 +1829,17 @@
   dependencies:
     "@babel/runtime" "^7.23.9"
 
-"@mui/internal-scripts@https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui/internal-scripts":
-  version "1.0.0"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui/internal-scripts#5e6c455f470253e736764a481f9c639d2e103e22"
+"@mui/internal-scripts@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mui/internal-scripts/-/internal-scripts-1.0.1.tgz#9c4d4bdc9d9434688ca2d57d044729b366d98215"
+  integrity sha512-vUSVgbEDsfEZt4/pvBKoqPZ0iCi/jujhQxoK6zLnzDITzzWf+gyhKqWcN/jNQjlKD0vLc2Xiqpqk3yj9C2RT+A==
   dependencies:
     "@babel/core" "^7.23.9"
     "@babel/plugin-syntax-class-properties" "^7.12.13"
     "@babel/plugin-syntax-jsx" "^7.23.3"
     "@babel/plugin-syntax-typescript" "^7.23.3"
     "@babel/types" "^7.23.9"
-    "@mui-internal/docs-utils" "https://pkg.csb.dev/mui/material-ui/commit/299402d7/@mui-internal/docs-utils"
+    "@mui-internal/docs-utils" "^1.0.2"
     doctrine "^3.0.0"
     lodash "^4.17.21"
     typescript "^5.3.3"
@@ -14445,7 +14439,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@>=3 < 6", typescript@^5.1.6, typescript@^5.3.3:
+"typescript@>=3 < 6", typescript@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
