@@ -40,34 +40,33 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
-    let nodeToFocusId: string | null | undefined;
-
     // if we receive a nodeId, and it is visible, the focus will be set to it
     if (nodeId && isNodeVisible(nodeId)) {
-      nodeToFocusId = nodeId;
-    } else if (!nodeId) {
-      // if we don't receive a nodeId, we will try to find the first focusable node
-      if (Array.isArray(models.selectedNodes.value)) {
-        nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
-      } else if (models.selectedNodes.value != null && isNodeVisible(models.selectedNodes.value)) {
-        nodeToFocusId = models.selectedNodes.value;
-      }
-
-      if (nodeToFocusId == null) {
-        nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
-      }
-    }
-
-    // if we have a focusable node, we set the focus to it
-    // if nodeToFocusId is undefined, nothing happens
-    if (nodeToFocusId) {
       if (!isTreeFocused()) {
         instance.focusRoot();
       }
-      setFocusedNodeId(nodeToFocusId);
+      setFocusedNodeId(nodeId);
       if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeToFocusId);
+        params.onNodeFocus(event, nodeId);
       }
+    }
+  });
+
+  const focusDefaultNode = useEventCallback((event: React.SyntheticEvent) => {
+    let nodeToFocusId: string | null | undefined;
+    if (Array.isArray(models.selectedNodes.value)) {
+      nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
+    } else if (models.selectedNodes.value != null && isNodeVisible(models.selectedNodes.value)) {
+      nodeToFocusId = models.selectedNodes.value;
+    }
+
+    if (nodeToFocusId == null) {
+      nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
+    }
+
+    setFocusedNodeId(nodeToFocusId);
+    if (params.onNodeFocus) {
+      params.onNodeFocus(event, nodeToFocusId);
     }
   });
 
@@ -79,6 +78,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     isNodeFocused,
     focusNode,
     focusRoot,
+    focusDefaultNode,
   });
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
@@ -102,7 +102,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       otherHandlers.onFocus?.(event);
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
-        instance.focusNode(event, null);
+        instance.focusDefaultNode(event);
       }
     };
 
