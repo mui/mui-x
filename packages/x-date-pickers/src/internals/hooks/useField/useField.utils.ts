@@ -875,6 +875,16 @@ export const getSectionValueNow = <TDate extends PickerValidDate>(
       return Number(section.value);
     }
     case 'meridiem': {
+      if (!utils.isValid(currentValue)) {
+        const parsedDate = utils.parse(
+          `01:00 ${section.value}`,
+          `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
+        );
+        if (parsedDate) {
+          return utils.getHours(parsedDate) >= 12 ? 1 : 0;
+        }
+        return undefined;
+      }
       return utils.getHours(currentValue) >= 12 ? 1 : 0;
     }
     case 'day':
