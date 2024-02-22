@@ -106,6 +106,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     labelStyle: inLabelStyle,
   } = props;
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const labelStyle = React.useMemo(
     () =>
@@ -276,16 +277,26 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
-          <g key={id} className={classes.series} transform={`translate(${positionX} ${positionY})`}>
+        {seriesWithPosition.map(({ id, label, color, positionX, positionY, innerWidth }) => (
+          <g
+            key={id}
+            className={classes.series}
+            transform={`translate(${isRTL ? availableWidth - positionX : positionX} ${positionY})`}
+          >
             <rect
               className={classes.mark}
+              x={isRTL ? -innerWidth : 0}
               y={-itemMarkHeight / 2}
               width={itemMarkWidth}
               height={itemMarkHeight}
               fill={color}
             />
-            <ChartsText style={labelStyle} text={label} x={itemMarkWidth + markGap} y={0} />
+            <ChartsText
+              style={labelStyle}
+              text={label}
+              x={isRTL ? 0 : itemMarkWidth + markGap}
+              y={0}
+            />
           </g>
         ))}
       </ChartsLegendRoot>
