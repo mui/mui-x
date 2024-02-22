@@ -209,7 +209,26 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
+  /**
+   * Formats the axis value.
+   * @param {V} value The value to format.
+   * @returns {string} The string to display.
+   */
   valueFormatter?: (value: V) => string;
+  /**
+   * Formats the axis value to be displayed in axis ticks.
+   * If defined, this formatter overrides the `valueFormatter` for ticks.
+   * @param {V} value The value to format.
+   * @returns {string} The string to display.
+   */
+  tickValueFormatter?: (value: V) => string;
+  /**
+   * Formats the axis value to be displayed in the tooltip.
+   * If defined, this formatter overrides the `valueFormatter` for the tooltip.
+   * @param {V} value The value to format.
+   * @returns {string} The string to display.
+   */
+  tooltipValueFormatter?: (value: V) => string;
   /**
    * If `true`, hide this value in the tooltip
    */

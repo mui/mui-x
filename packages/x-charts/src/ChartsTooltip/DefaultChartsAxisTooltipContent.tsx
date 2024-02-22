@@ -20,6 +20,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   }
 
   const axisFormatter =
+    axis.tooltipValueFormatter ??
     axis.valueFormatter ??
     ((v: string | number | Date) =>
       axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
