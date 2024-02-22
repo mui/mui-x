@@ -5,7 +5,6 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import { styled } from '@mui/system';
 import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
@@ -112,14 +111,6 @@ function EmptyCell({ width }: { width: number }) {
     />
   );
 }
-
-const InfiniteLoadingTriggerElement = styled('div')({
-  position: 'sticky',
-  left: 0,
-  // Can't be 0, otherwise IntersectionObserver will not tolerate the threshold: 1 and act as if threshold: 0
-  width: 0.01,
-  flex: '0 0 auto',
-});
 
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
@@ -526,12 +517,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...eventHandlers}
       {...other}
     >
-      {isLastVisible && (
-        <InfiniteLoadingTriggerElement
-          ref={(apiRef as any).current.unstable_infiniteLoadingTriggerRef}
-        />
-      )}
-
       {leftCells}
       <div
         role="presentation"

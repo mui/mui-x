@@ -6,6 +6,7 @@ import {
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
+import { styled } from '@mui/system';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -42,6 +43,13 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
+
+const InfiniteLoadingTriggerElement = styled('div')({
+  position: 'sticky',
+  left: 0,
+  width: 0,
+  height: 0,
+});
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext();
@@ -229,6 +237,8 @@ export const useGridVirtualScroller = () => {
 
   const minFirstColumn = pinnedColumns.left.length;
   const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
+  const isInfiniteLoadingEnabled =
+    (rootProps as any).rowsLoadingMode === 'client' && !!(rootProps as any).onRowsScrollEnd;
 
   const getRows = (
     params: {
@@ -427,6 +437,16 @@ export const useGridVirtualScroller = () => {
       const panel = panels.get(id);
       if (panel) {
         rows.push(panel);
+      }
+      if (isInfiniteLoadingEnabled && isLastVisible) {
+        rows.push(
+          <InfiniteLoadingTriggerElement
+            ref={(apiRef as any).current.unstable_infiniteLoadingTriggerRef}
+            // Force rerender on last row change to start observing the new trigger
+            key={`trigger-${id}`}
+            role="presentation"
+          />,
+        );
       }
     }
 
