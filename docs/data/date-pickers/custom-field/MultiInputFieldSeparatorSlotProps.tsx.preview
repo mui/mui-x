@@ -1,2 +1,2 @@
-<DateRangePicker slotProps={{ fieldSeparator: { children: 'to' } }} />
+<DateRangePicker slotProps={{ fieldSeparator: { sx: { color: 'red' } } }} />
 <DateRangePicker slotProps={{ fieldSeparator: { sx: { opacity: 0.5 } } }} />

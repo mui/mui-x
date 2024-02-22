@@ -8,7 +8,7 @@ export default function MultiInputFieldSeparatorSlotProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
-        <DateRangePicker slotProps={{ fieldSeparator: { children: 'to' } }} />
+        <DateRangePicker slotProps={{ fieldSeparator: { sx: { color: 'red' } } }} />
         <DateRangePicker slotProps={{ fieldSeparator: { sx: { opacity: 0.5 } } }} />
       </DemoContainer>
     </LocalizationProvider>
