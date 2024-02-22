@@ -51,7 +51,7 @@ const defaultFormats: AdapterFormats = {
   dayOfMonth: 'jD',
   // Full day of the month format (i.e. 3rd) is not supported
   // Falling back to regular format
-  fullDayOfMonth: 'jDo',
+  fullDayOfMonth: 'jD',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
