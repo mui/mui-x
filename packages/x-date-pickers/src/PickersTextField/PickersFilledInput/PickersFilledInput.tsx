@@ -23,7 +23,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersFilledInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerStateType }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
@@ -51,65 +51,84 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
     [`&.${pickersFilledInputClasses.disabled}`]: {
       backgroundColor: theme.vars ? theme.vars.palette.FilledInput.disabledBg : disabledBackground,
     },
-    ...(!ownerState.disableUnderline && {
-      '&::after': {
-        borderBottom: `2px solid ${
-          (theme.vars || theme).palette[ownerState.color || 'primary']?.main
-        }`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '""',
-        position: 'absolute',
-        right: 0,
-        transform: 'scaleX(0)',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shorter,
-          easing: theme.transitions.easing.easeOut,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
-      },
-      [`&.${pickersFilledInputClasses.focused}:after`]: {
-        // translateX(0) is a workaround for Safari transform scale bug
-        // See https://github.com/mui/material-ui/issues/31766
-        transform: 'scaleX(1) translateX(0)',
-      },
-      [`&.${pickersFilledInputClasses.error}`]: {
-        '&:before, &:after': {
-          borderBottomColor: (theme.vars || theme).palette.error.main,
+    variants: [
+      ...Object.keys((theme.vars ?? theme).palette)
+        .filter((key) => (theme.vars ?? theme).palette[key].main)
+        .map((color) => ({
+          props: { color },
+          style: {
+            '&::after': {
+              borderBottom: `2px solid ${(theme.vars || theme).palette[color]?.main}`,
+            },
+          },
+        })),
+      {
+        props: { disableUnderline: false },
+        style: {
+          '&::after': {
+            left: 0,
+            bottom: 0,
+            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            content: '""',
+            position: 'absolute',
+            right: 0,
+            transform: 'scaleX(0)',
+            transition: theme.transitions.create('transform', {
+              duration: theme.transitions.duration.shorter,
+              easing: theme.transitions.easing.easeOut,
+            }),
+            pointerEvents: 'none', // Transparent to the hover style.
+          },
+          [`&.${pickersFilledInputClasses.focused}:after`]: {
+            // translateX(0) is a workaround for Safari transform scale bug
+            // See https://github.com/mui/material-ui/issues/31766
+            transform: 'scaleX(1) translateX(0)',
+          },
+          [`&.${pickersFilledInputClasses.error}`]: {
+            '&:before, &:after': {
+              borderBottomColor: (theme.vars || theme).palette.error.main,
+            },
+          },
+          '&::before': {
+            borderBottom: `1px solid ${
+              theme.vars
+                ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`
+                : bottomLineColor
+            }`,
+            left: 0,
+            bottom: 0,
+            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            content: '"\\00a0"',
+            position: 'absolute',
+            right: 0,
+            transition: theme.transitions.create('border-bottom-color', {
+              duration: theme.transitions.duration.shorter,
+            }),
+            pointerEvents: 'none', // Transparent to the hover style.
+          },
+          [`&:hover:not(.${pickersFilledInputClasses.disabled}, .${pickersFilledInputClasses.error}):before`]:
+            {
+              borderBottom: `1px solid ${(theme.vars || theme).palette.text.primary}`,
+            },
+          [`&.${pickersFilledInputClasses.disabled}:before`]: {
+            borderBottomStyle: 'dotted',
+          },
         },
       },
-      '&::before': {
-        borderBottom: `1px solid ${
-          theme.vars
-            ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`
-            : bottomLineColor
-        }`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '"\\00a0"',
-        position: 'absolute',
-        right: 0,
-        transition: theme.transitions.create('border-bottom-color', {
-          duration: theme.transitions.duration.shorter,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
-      },
-      [`&:hover:not(.${pickersFilledInputClasses.disabled}, .${pickersFilledInputClasses.error}):before`]:
-        {
-          borderBottom: `1px solid ${(theme.vars || theme).palette.text.primary}`,
+      {
+        props: ({ ownerState: { startAdornment } }: { ownerState: OwnerStateType }) =>
+          !!startAdornment,
+        style: {
+          paddingLeft: 12,
         },
-      [`&.${pickersFilledInputClasses.disabled}:before`]: {
-        borderBottomStyle: 'dotted',
       },
-    }),
-    ...(ownerState.startAdornment && {
-      paddingLeft: 12,
-    }),
-    ...(ownerState.endAdornment && {
-      paddingRight: 12,
-    }),
+      {
+        props: ({ ownerState: { endAdornment } }: { ownerState: OwnerStateType }) => !!endAdornment,
+        style: {
+          paddingRight: 12,
+        },
+      },
+    ],
   };
 });
 
@@ -117,31 +136,48 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   name: 'MuiPickersFilledInput',
   slot: 'sectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+})<{ ownerState: OwnerStateType }>({
   paddingTop: 25,
   paddingRight: 12,
   paddingBottom: 8,
   paddingLeft: 12,
-  ...(ownerState.size === 'small' && {
-    paddingTop: 21,
-    paddingBottom: 4,
-  }),
-  ...(ownerState.startAdornment && {
-    paddingLeft: 0,
-  }),
-  ...(ownerState.endAdornment && {
-    paddingRight: 0,
-  }),
-  ...(ownerState.hiddenLabel && {
-    paddingTop: 16,
-    paddingBottom: 17,
-  }),
-  ...(ownerState.hiddenLabel &&
-    ownerState.size === 'small' && {
-      paddingTop: 8,
-      paddingBottom: 9,
-    }),
-}));
+  variants: [
+    {
+      props: { size: 'small' },
+      style: {
+        paddingTop: 21,
+        paddingBottom: 4,
+      },
+    },
+    {
+      props: ({ ownerState: { startAdornment } }: { ownerState: OwnerStateType }) =>
+        !!startAdornment,
+      style: {
+        paddingLeft: 0,
+      },
+    },
+    {
+      props: ({ ownerState: { endAdornment } }: { ownerState: OwnerStateType }) => !!endAdornment,
+      style: {
+        paddingRight: 0,
+      },
+    },
+    {
+      props: { hiddenLabel: true },
+      style: {
+        paddingTop: 16,
+        paddingBottom: 17,
+      },
+    },
+    {
+      props: { hiddenLabel: true, size: 'small' },
+      style: {
+        paddingTop: 8,
+        paddingBottom: 9,
+      },
+    },
+  ],
+});
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
   const { classes, disableUnderline } = ownerState;
@@ -175,7 +211,13 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     name: 'MuiPickersFilledInput',
   });
 
-  const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
+  const {
+    label,
+    autoFocus,
+    disableUnderline = false,
+    ownerState: ownerStateProp,
+    ...other
+  } = props;
 
   const muiFormControl = useFormControl();
 
@@ -183,6 +225,7 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     ...props,
     ...ownerStateProp,
     ...muiFormControl,
+    disableUnderline,
     color: muiFormControl?.color || 'primary',
   };
   const classes = useUtilityClasses(ownerState);
