@@ -227,7 +227,7 @@ We'd like to offer a big thanks to the ${
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
-<!--/ DO_NOT_REMOVE /-->
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
