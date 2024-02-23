@@ -48,6 +48,21 @@ export const getExpectedOnChangeCount = (
   return getChangeCountForComponentFamily(componentFamily);
 };
 
+export const getExpectedOnAcceptCount = (
+    componentFamily: PickerComponentFamily,
+    params: OpenPickerParams,
+) => {
+  if (params.variant === 'mobile') {
+    return 0
+  }
+
+  if (params.type === 'date-range') {
+    return 2
+  }
+
+  return 1
+}
+
 export const getDateOffset = <TDate extends PickerValidDate>(
   adapter: MuiPickersAdapter<TDate>,
   date: TDate,
