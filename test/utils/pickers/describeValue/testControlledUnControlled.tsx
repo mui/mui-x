@@ -209,10 +209,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           : { label: 'test relationship' }),
       });
 
-      expect(screen.getByLabelText('test relationship', { selector: 'div' })).to.have.attribute(
-        'role',
-        'dialog',
-      );
+      expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);
     });
 
     it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {

@@ -83,6 +83,19 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'pp',
   fieldSecondsPlaceholder: () => 'mm',
   fieldMeridiemPlaceholder: () => 'dd',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const huHU = getPickersLocalization(huHUPickers);
