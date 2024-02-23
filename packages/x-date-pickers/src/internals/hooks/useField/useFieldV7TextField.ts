@@ -2,10 +2,16 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { parseSelectedSections } from './useField.utils';
-import { UseFieldTextField, UseFieldTextFieldInteractions } from './useField.types';
+import useId from '@mui/utils/useId';
+import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
+import {
+  FieldSectionsBoundaries,
+  UseFieldTextField,
+  UseFieldTextFieldInteractions,
+} from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import { useLocaleText, useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
@@ -32,10 +38,14 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     updateValueFromValueStr,
     sectionOrder,
     areAllSectionsEmpty,
+    sectionsValueBoundaries,
   } = params;
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
+  const localeText = useLocaleText();
+  const utils = useUtils();
+  const id = useId();
 
   const [focused, setFocused] = React.useState(false);
 
@@ -389,9 +399,21 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     }
   }, [parsedSelectedSections, focused]);
 
+  const sectionBoundaries = React.useMemo(() => {
+    return state.sections.reduce((acc, next) => {
+      acc[next.type] = sectionsValueBoundaries[next.type]({
+        currentDate: null,
+        contentType: next.contentType,
+        format: next.format,
+      });
+      return acc;
+    }, {} as FieldSectionsBoundaries);
+  }, [sectionsValueBoundaries, state.sections]);
+
   const isContainerEditable = parsedSelectedSections === 'all';
   const elements = React.useMemo<PickersSectionElement[]>(() => {
     return state.sections.map((section, index) => {
+      const isEditable = !isContainerEditable && !disabled && !readOnly;
       return {
         container: {
           'data-sectionindex': index,
@@ -401,8 +423,21 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           tabIndex: isContainerEditable ? undefined : 0,
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
-          'aria-label': section.placeholder,
+          id: `${id}-${section.type}`,
+          'aria-labelledby': `${id}-${section.type}`,
+          'aria-readonly': readOnly,
+          'aria-valuenow': getSectionValueNow(section, utils),
+          'aria-valuemin': sectionBoundaries[section.type].minimum,
+          'aria-valuemax': sectionBoundaries[section.type].maximum,
+          'aria-valuetext': section.value ? getSectionValueText(section, utils) : localeText.empty,
+          'aria-label': localeText[section.type],
           'aria-disabled': disabled,
+          spellCheck: isEditable ? false : undefined,
+          autoCapitalize: isEditable ? 'off' : undefined,
+          autoCorrect: isEditable ? 'off' : undefined,
+          [parseInt(React.version, 10) >= 17 ? 'enterKeyHint' : 'enterkeyhint']: isEditable
+            ? 'next'
+            : undefined,
           children: section.value || section.placeholder,
           onInput: handleInputContentInput,
           onPaste: handleInputContentPaste,
@@ -430,6 +465,10 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     disabled,
     readOnly,
     isContainerEditable,
+    localeText,
+    utils,
+    sectionBoundaries,
+    id,
   ]);
 
   const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {

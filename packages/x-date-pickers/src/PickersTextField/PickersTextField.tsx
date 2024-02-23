@@ -154,6 +154,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         sectionListRef={sectionListRef}
         label={label}
         name={name}
+        role="group"
+        aria-labelledby={inputLabelId}
         {...InputProps}
       />
       {helperText && (
