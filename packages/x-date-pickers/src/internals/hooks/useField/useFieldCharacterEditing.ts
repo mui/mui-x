@@ -22,18 +22,26 @@ interface CharacterEditingQuery {
   sectionType: FieldSectionType;
 }
 
-interface ApplyCharacterEditingParams {
+export interface ApplyCharacterEditingParams {
   keyPressed: string;
   sectionIndex: number;
 }
 
-interface UseFieldEditingParams<TDate extends PickerValidDate, TSection extends FieldSection> {
+interface UseFieldCharacterEditingParams<
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   sections: TSection[];
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
   localizedDigits: string[];
   setTempAndroidValueStr: (newValue: string | null) => void;
   timezone: PickersTimezone;
+}
+
+export interface UseFieldCharacterEditingResponse {
+  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
+  resetCharacterQuery: () => void;
 }
 
 /**
@@ -88,7 +96,7 @@ export const useFieldCharacterEditing = <
   localizedDigits,
   setTempAndroidValueStr,
   timezone,
-}: UseFieldEditingParams<TDate, TSection>) => {
+}: UseFieldCharacterEditingParams<TDate, TSection>): UseFieldCharacterEditingResponse => {
   const utils = useUtils<TDate>();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
@@ -358,6 +366,7 @@ export const useFieldCharacterEditing = <
           'MM',
           activeSection.format,
         );
+
         return {
           ...response,
           sectionValue: formattedValue,
@@ -400,13 +409,14 @@ export const useFieldCharacterEditing = <
       : applyLetterEditing(params);
     if (response == null) {
       setTempAndroidValueStr(null);
-    } else {
-      updateSectionValue({
-        activeSection,
-        newSectionValue: response.sectionValue,
-        shouldGoToNextSection: response.shouldGoToNextSection,
-      });
+      return;
     }
+
+    updateSectionValue({
+      activeSection,
+      newSectionValue: response.sectionValue,
+      shouldGoToNextSection: response.shouldGoToNextSection,
+    });
   });
 
   return {

@@ -4,14 +4,19 @@ import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
-import { TimeFieldProps, TimeFieldSlotProps } from './TimeField.types';
+import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
+import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 import { PickerValidDate } from '../models';
 
-type TimeFieldComponent = (<TDate extends PickerValidDate>(
-  props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimeFieldComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,8 +29,11 @@ type TimeFieldComponent = (<TDate extends PickerValidDate>(
  *
  * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
  */
-const TimeField = React.forwardRef(function TimeField<TDate extends PickerValidDate>(
-  inProps: TimeFieldProps<TDate>,
+const TimeField = React.forwardRef(function TimeField<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -37,13 +45,10 @@ const TimeField = React.forwardRef(function TimeField<TDate extends PickerValidD
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: TimeFieldProps<TDate> = useSlotProps<
-    typeof TextField,
-    TimeFieldSlotProps<TDate>['textField'],
-    TimeFieldProps<TDate>,
-    TimeFieldProps<TDate>
-  >({
+  const TextField =
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+  const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -51,13 +56,17 @@ const TimeField = React.forwardRef(function TimeField<TDate extends PickerValidD
     additionalProps: {
       ref: inRef,
     },
-  });
+  }) as TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useTimeField<TDate, typeof textFieldProps>(textFieldProps);
+  const fieldResponse = useTimeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof textFieldProps
+  >(textFieldProps);
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -122,6 +131,10 @@ TimeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -255,11 +268,11 @@ TimeField.propTypes = {
   required: PropTypes.bool,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -276,10 +289,6 @@ TimeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.

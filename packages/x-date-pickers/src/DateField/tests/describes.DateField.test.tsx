@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { userEvent } from '@mui-internal/test-utils';
-import TextField from '@mui/material/TextField';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
   wrapPickerMount,
-  expectInputValue,
-  expectInputPlaceholder,
+  expectFieldValueV7,
   adapterToUse,
-  getTextbox,
   describeValidation,
   describeValue,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
@@ -24,9 +22,9 @@ describe('<DateField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateField />, () => ({
+  describeConformance(<DateField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
-    inheritComponent: TextField,
+    inheritComponent: PickersTextField,
     render,
     muiName: 'MuiDateField',
     wrapMount: wrapPickerMount,
@@ -49,20 +47,19 @@ describe('<DateField /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, 'MM/DD/YYYY');
-      }
-      expectInputValue(
-        input,
-        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-      );
+      const fieldRoot = getFieldInputRoot();
+
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, 'keyboardDate')
+        : 'MM/DD/YYYY';
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value, 1);
       selectSection('day');
-      const input = getTextbox();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      pressKey(undefined, 'ArrowUp');
+
       return newValue;
     },
   }));

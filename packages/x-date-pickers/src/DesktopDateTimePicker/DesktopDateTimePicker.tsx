@@ -22,8 +22,12 @@ import {
 import { PickersActionBarAction } from '../PickersActionBar';
 import { PickerValidDate } from '../models';
 
-type DesktopDateTimePickerComponent = (<TDate extends PickerValidDate>(
-  props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -38,7 +42,11 @@ type DesktopDateTimePickerComponent = (<TDate extends PickerValidDate>(
  */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   TDate extends PickerValidDate,
->(inProps: DesktopDateTimePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -46,7 +54,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeViewWithMeridiem,
-    DesktopDateTimePickerProps<TDate>
+    DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimePicker');
 
   const {
@@ -124,7 +132,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeViewWithMeridiem, typeof props>({
+  const { renderPicker } = useDesktopPicker<
+    TDate,
+    DateOrTimeViewWithMeridiem,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -210,6 +223,10 @@ DesktopDateTimePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -376,11 +393,11 @@ DesktopDateTimePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -397,10 +414,6 @@ DesktopDateTimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.

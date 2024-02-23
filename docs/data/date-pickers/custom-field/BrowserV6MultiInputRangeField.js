@@ -11,6 +11,8 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
     disabled,
     id,
     label,
@@ -57,6 +59,8 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     selectedSections,
     onSelectedSectionsChange,
     className,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   } = props;
 
   const startTextFieldProps = useSlotProps({
@@ -87,9 +91,12 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      enableAccessibleFieldDOMStructure: false,
     },
     startTextFieldProps,
     endTextFieldProps,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   });
 
   return (
@@ -117,7 +124,7 @@ const BrowserDateRangePicker = React.forwardRef((props, ref) => {
   );
 });
 
-export default function RangePickerWithBrowserField() {
+export default function BrowserV6MultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDateRangePicker />

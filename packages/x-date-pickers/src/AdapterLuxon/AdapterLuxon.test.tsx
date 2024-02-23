@@ -1,17 +1,15 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import { DateTime, Settings } from 'luxon';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   cleanText,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 
 describe('<AdapterLuxon />', () => {
@@ -96,25 +94,34 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });
@@ -146,25 +153,38 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, adapter, clock } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker format="DD" />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            format: 'DD',
+          });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} format="DD" />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+            format: 'DD',
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

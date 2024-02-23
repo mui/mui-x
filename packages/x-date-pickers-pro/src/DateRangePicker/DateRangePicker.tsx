@@ -8,8 +8,12 @@ import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TDate extends PickerValidDate>(
-  props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -22,8 +26,11 @@ type DatePickerComponent = (<TDate extends PickerValidDate>(
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-const DateRangePicker = React.forwardRef(function DateRangePicker<TDate extends PickerValidDate>(
-  inProps: DateRangePickerProps<TDate>,
+const DateRangePicker = React.forwardRef(function DateRangePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
@@ -131,6 +138,10 @@ DateRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -260,11 +271,11 @@ DateRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -281,10 +292,6 @@ DateRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.

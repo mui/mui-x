@@ -368,6 +368,7 @@ const columns = [
     flex: 0.2,
     minWidth: 100,
     groupable: false,
+    display: 'flex',
     renderCell: (params) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
@@ -430,6 +431,7 @@ const columns = [
     flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
+    display: 'flex',
     renderCell: (params) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;

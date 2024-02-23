@@ -21,6 +21,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   disableReorder: true,
   disableExport: true,
   getApplyQuickFilterFn: undefined,
+  display: 'flex',
   valueGetter: (value, row, column, apiRef) => {
     const selectionLookup = selectedIdsLookupSelector(apiRef);
     const rowId = apiRef.current.getRowId(row);

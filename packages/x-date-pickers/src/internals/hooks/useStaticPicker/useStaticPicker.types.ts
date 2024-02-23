@@ -27,6 +27,7 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
   /**
    * If `true`, the view is focused during the first mount.
+   * @default false
    */
   autoFocus?: boolean;
   /**
