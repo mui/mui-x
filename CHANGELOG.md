@@ -93,7 +93,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
   - `UseSingleInputTimeRangeFieldComponentProps`
   - `UseSingleInputDateTimeRangeFieldComponentProps`
 
-
 #### `@mui/x-date-pickers@7.0.0-beta.4`
 
 - [fields] Add a11y support to multi-HTML field (#12173) @LukasTy
