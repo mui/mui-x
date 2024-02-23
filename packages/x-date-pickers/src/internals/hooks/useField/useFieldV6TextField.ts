@@ -214,7 +214,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
-    window.clearTimeout(focusTimeoutRef.current);
+    clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (!input || input !== inputRef.current) {
@@ -404,7 +404,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       setSelectedSections('all');
     }
 
-    return () => window.clearTimeout(focusTimeoutRef.current);
+    return () => {
+      clearTimeout(focusTimeoutRef.current);
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const inputMode = React.useMemo(() => {

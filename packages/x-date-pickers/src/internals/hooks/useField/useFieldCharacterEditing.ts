@@ -114,7 +114,7 @@ export const useFieldCharacterEditing = <
       const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
 
       return () => {
-        window.clearTimeout(timeout);
+        clearTimeout(timeout);
       };
     }
 
