@@ -1,13 +1,13 @@
 ---
 productId: x-tree-view
-title: Simple Tree View - Focus
-components: SimpleTreeView, TreeItem
+title: Rich Tree View - Focus
+components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Simple Tree View - Focus
+# Rich Tree View - Focus
 
 <p class="description">Learn how to focus Tree View items.</p>
 
@@ -21,4 +21,4 @@ The `focusNode` receives two parameters: `event` and `nodeId`.
 The focus behavior is only supported for nodes that are currently visible.
 :::
 
-{{"demo": "FocusedSimpleTreeView.js"}}
+{{"demo": "FocusedRichTreeView.js"}}

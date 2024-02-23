@@ -14,7 +14,7 @@ export default function FocusedSimpleTreeView() {
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
-        <Button onClick={handleButtonClick}>focus pickers node</Button>
+        <Button onClick={handleButtonClick}>Focus pickers node</Button>
       </Box>
       <Box sx={{ minHeight: 264, flexGrow: 1 }}>
         <SimpleTreeView apiRef={apiRef}>
