@@ -20,9 +20,13 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '开始',
   end: '结束',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: '取消',
@@ -38,9 +42,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `选择 ${views[view]}. ${
-      time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`
-    }`,
+    `选择 ${views[view]}. ${time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -78,6 +80,19 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

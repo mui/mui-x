@@ -1,17 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  act,
-  createRenderer,
-  ErrorBoundary,
-  fireEvent,
-  screen,
-  describeConformance,
-} from '@mui-internal/test-utils';
+import { act, createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
 import Portal from '@mui/material/Portal';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();
@@ -433,7 +427,7 @@ describe('<SimpleTreeView />', () => {
 
       const { getByTestId } = render(
         <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
-          <TreeItem icon={<div data-testid="icon" />} nodeId="1" label="outer">
+          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
         </SimpleTreeView>,

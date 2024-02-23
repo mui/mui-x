@@ -31,6 +31,22 @@ To have the option of using the latest API from `@mui/material`, the package pee
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
+## Update the license package
+
+If you're using the commercial version of the Pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
+
+```diff
+-import { LicenseInfo } from '@mui/x-license-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
+
+```diff
+-"@mui/x-license-pro": "6.x.x",
++"@mui/x-license": "next",
+```
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7. You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target Data Grid as well.
@@ -74,7 +90,7 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, they were deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
 And are removed from the v7.
 
@@ -221,11 +237,28 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 
    // If you were already using the day object, just remove the first argument.
 -  dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
-+  dayOfWeekFormatter={day => `${day.format('dd')}.`
++  dayOfWeekFormatter={day => `${day.format('dd')}.`}
  />
 ```
 
 ## Field components
+
+### Update the format of `selectedSections`
+
+The `selectedSections` prop no longer accepts start and end indexes.
+When selecting several — but not all — sections,
+the field components were not behaving correctly, you can now only select one or all sections:
+
+```diff
+ <DateField
+-  selectedSections={{ startIndex: 0, endIndex: 0 }}
++  selectedSections={0}
+
+   // If the field has 3 sections
+-  selectedSections={{ startIndex: 0, endIndex: 2 }}
++  selectedSections="all"
+ />
+```
 
 ### Replace the section `hasLeadingZeros` property
 
@@ -341,6 +374,41 @@ You should now be able to directly pass the returned value from your field hook 
 If your custom field is based on one of the examples of the [Custom field](/x/react-date-pickers/custom-field/) page,
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::
+
+#### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
+
+The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
+This is used to know if the current UI expected is built using the accessible DOM structure or not.
+Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+
+When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+
+```diff
+  function MyCustomTextField(props) {
+    const {
++     // Should be ignored
++     enableAccessibleFieldDOMStructure,
+
+      // ... rest of the props you are using
+    }
+
+    return ( /* Some UI to edit the date */ )
+  }
+
+  function MyCustomField(props) {
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...props,
++     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     enableAccessibleFieldDOMStructure: false,
+    });
+
+    return <MyCustomTextField ref={ref} {...fieldResponse} />;
+  }
+
+  function App() {
+    return <DatePicker slots={{ field: MyCustomField }} />;
+  }
+```
 
 ## Date management
 
@@ -836,3 +904,14 @@ Which is the same type as the one accepted by the components `value` prop.
 ```
 
 </details>
+
+## Removed internal types
+
+The following internal types were exported by mistake and have been removed from the public API:
+
+- `UseDateFieldDefaultizedProps`
+- `UseTimeFieldDefaultizedProps`
+- `UseDateTimeFieldDefaultizedProps`
+- `UseSingleInputDateRangeFieldComponentProps`
+- `UseSingleInputTimeRangeFieldComponentProps`
+- `UseSingleInputDateTimeRangeFieldComponentProps`

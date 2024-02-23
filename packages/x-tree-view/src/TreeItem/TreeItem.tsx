@@ -59,11 +59,13 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     ];
   },
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
-  padding: '0 8px',
+  padding: theme.spacing(0.5, 1),
+  borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   display: 'flex',
   alignItems: 'center',
+  gap: theme.spacing(1),
   [`&.${treeItemClasses.interactive}`]: {
     cursor: 'pointer',
   },
@@ -110,8 +112,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: 4,
-    width: 15,
+    width: 16,
     display: 'flex',
     flexShrink: 0,
     justifyContent: 'center',
@@ -120,7 +121,6 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     },
   },
   [`& .${treeItemClasses.label}`]: {
-    paddingLeft: 4,
     width: '100%',
     boxSizing: 'border-box', // prevent width + padding to overflow
     // fixes overflow - see https://github.com/mui/material-ui/issues/27372
@@ -137,7 +137,7 @@ const TreeItemGroup = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
-  marginLeft: 17,
+  paddingLeft: 12,
 });
 
 /**
@@ -173,8 +173,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    endIcon,
-    icon,
     nodeId,
     id,
     label,
@@ -188,9 +186,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
     collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
+    endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
+    icon: inSlots?.icon,
   };
 
-  const expandable = Boolean(Array.isArray(children) ? children.length : children);
+  const isExpandable = (reactChildren: React.ReactNode) => {
+    if (Array.isArray(reactChildren)) {
+      return reactChildren.length > 0 && reactChildren.some(isExpandable);
+    }
+    return Boolean(reactChildren);
+  };
+  const expandable = isExpandable(children);
   const expanded = instance.isNodeExpanded(nodeId);
   const focused = instance.isNodeFocused(nodeId);
   const selected = instance.isNodeSelected(nodeId);
@@ -209,7 +215,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
-    ownerState: undefined,
+    ownerState: {},
     externalSlotProps: (tempOwnerState: any) => {
       if (expanded) {
         return {
@@ -224,16 +230,33 @@ export const TreeItem = React.forwardRef(function TreeItem(
       };
     },
   });
-
   const expansionIcon =
     expandable && !!ExpansionIcon ? <ExpansionIcon {...expansionIconProps} /> : null;
 
-  let displayIcon: React.ReactNode;
-  if (expandable) {
-    displayIcon = contextIcons.defaultParentIcon;
-  } else {
-    displayIcon = endIcon || contextIcons.defaultEndIcon;
-  }
+  const DisplayIcon = expandable ? undefined : slots.endIcon;
+  const { ownerState: displayIconOwnerState, ...displayIconProps } = useSlotProps({
+    elementType: DisplayIcon,
+    ownerState: {},
+    externalSlotProps: (tempOwnerState: any) => {
+      if (expandable) {
+        return {};
+      }
+
+      return {
+        ...resolveComponentProps(contextIcons.slotProps.endIcon, tempOwnerState),
+        ...resolveComponentProps(inSlotProps?.endIcon, tempOwnerState),
+      };
+    },
+  });
+  const displayIcon = DisplayIcon ? <DisplayIcon {...displayIconProps} /> : null;
+
+  const Icon = slots.icon;
+  const { ownerState: iconOwnerState, ...iconProps } = useSlotProps({
+    elementType: Icon,
+    ownerState: {},
+    externalSlotProps: inSlotProps?.icon,
+  });
+  const icon = Icon ? <Icon {...iconProps} /> : null;
 
   let ariaSelected;
   if (multiSelect) {
@@ -346,14 +369,6 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * The icon displayed next to an end node.
-   */
-  endIcon: PropTypes.node,
-  /**
-   * The icon to display next to the tree node's label.
-   */
-  icon: PropTypes.node,
-  /**
    * The tree node label.
    */
   label: PropTypes.node,
@@ -392,7 +407,7 @@ TreeItem.propTypes = {
   TransitionComponent: PropTypes.elementType,
   /**
    * Props applied to the transition element.
-   * By default, the element is based on this [`Transition`](http://reactcommunity.org/react-transition-group/transition/) component.
+   * By default, the element is based on this [`Transition`](https://reactcommunity.org/react-transition-group/transition/) component.
    */
   TransitionProps: PropTypes.object,
 } as any;

@@ -16,16 +16,20 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Další měsíc',
 
   // View navigation
-  openPreviousView: 'otevřít předchozí zobrazení',
-  openNextView: 'otevřít další zobrazení',
+  openPreviousView: 'Otevřít předchozí zobrazení',
+  openNextView: 'Otevřít další zobrazení',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
       : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začátek',
   end: 'Konec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Zrušit',
@@ -41,9 +45,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybrány. ${
-      time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} vybrány. ${time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
@@ -81,6 +83,19 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const csCZ = getPickersLocalization(csCZPickers);

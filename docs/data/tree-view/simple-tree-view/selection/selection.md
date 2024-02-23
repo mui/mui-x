@@ -9,13 +9,19 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Selection
 
-<p class="description">Handle how users can select items.</p>
+<p class="description">Learn how to enable item selection for the Tree View component.</p>
 
 ## Multi selection
 
-The Tree View also supports multi-selection:
+Apply the `multiSelect` prop on the Tree View to let users select multiple items.
 
 {{"demo": "MultiSelectTreeView.js"}}
+
+## Disable selection
+
+Use the `disableSelection` prop if you don't want your items to be selectable:
+
+{{"demo": "DisableSelection.js"}}
 
 ## Checkbox selection
 
@@ -29,9 +35,8 @@ This is also compatible with multi selection:
 
 ## Controlled selection
 
-Use the `selectedNodes` prop to control the selected items.
-
-You can use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
+Use the `selectedNodes` prop to control selected Tree View items.
+You can also use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 
@@ -45,6 +50,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track node selection change
 
-Use the `onNodeSelectionToggle` if you want to react to a node selection change:
+Use the `onNodeSelectionToggle` prop if you want to react to a node selection change:
 
 {{"demo": "TrackNodeSelectionToggle.js"}}

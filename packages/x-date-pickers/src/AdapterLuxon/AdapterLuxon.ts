@@ -60,6 +60,9 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'd',
   weekday: 'cccc',
   weekdayShort: 'ccccc',
   hours24h: 'HH',
@@ -82,6 +85,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    luxon: DateTime;
+  }
+}
 
 /**
  * Based on `@date-io/luxon`
@@ -318,8 +327,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isWithinRange = (value: DateTime, [start, end]: [DateTime, DateTime]) => {
     return (
-      value.equals(start) ||
-      value.equals(end) ||
+      this.isEqual(value, start) ||
+      this.isEqual(value, end) ||
       (this.isAfter(value, start) && this.isBefore(value, end))
     );
   };
@@ -471,6 +480,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public getWeekNumber = (value: DateTime) => {
     return value.localWeekNumber ?? value.weekNumber;
+  };
+
+  public getDayOfWeek = (value: DateTime) => {
+    return value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

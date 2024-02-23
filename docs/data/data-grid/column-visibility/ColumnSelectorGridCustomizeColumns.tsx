@@ -45,7 +45,7 @@ export default function ColumnSelectorGridCustomizeColumns() {
           toolbar: GridToolbar,
         }}
         slotProps={{
-          columnsPanel: {
+          columnsManagement: {
             getTogglableColumns,
           },
         }}

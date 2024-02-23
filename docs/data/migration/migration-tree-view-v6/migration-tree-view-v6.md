@@ -178,6 +178,81 @@ you need to use the new `collapseIcon` slot on this component:
   </SimpleTreeView>
 ```
 
+#### Replace `parentIcon`
+
+The `parentIcon` prop has been removed from the Tree View components.
+
+If you were passing an icon to your Tree View component,
+you can achieve the same behavior
+by passing the same icon to both the `collapseIcon` and the `expandIcon` slots on this component:
+
+```diff
+  <SimpleTreeView
+-   defaultParentIcon={<MyCustomParentIcon />}
++   slots={{ collapseIcon: MyCustomParentIcon, expandIcon: MyCustomParentIcon }}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+#### Define `endIcon`
+
+The icon rendered next to an item without children
+is now defined as a slot both on the Tree View and the Tree Item components.
+
+If you were passing an icon to your Tree View component,
+you need to use the new `endIcon` slot on this component:
+
+```diff
+  <SimpleTreeView
+-   defaultEndIcon={<MyCustomEndIcon />}
++   slots={{ endIcon: MyCustomEndIcon }}
+  >
+    {items}
+  </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
+If you were passing an icon to your Tree Item component,
+you need to use the new `endIcon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     endIcon={<MyCustomEndIcon />}
++     slots={{ endIcon: MyCustomEndIcon }}
+    />
+  </SimpleTreeView>
+```
+
+#### Define `icon`
+
+The icon rendered next to an item
+is now defined as a slot on the Tree Item component.
+
+If you were passing an icon to your Tree Item component,
+you need to use the new `icon` slot on this component:
+
+```diff
+  <SimpleTreeView>
+    <TreeItem
+      nodeId="1"
+      label="Node 1"
+-     icon={<MyCustomIcon />}
++     slots={{ icon: MyCustomIcon }}
+    />
+  </SimpleTreeView>
+```
+
+:::warning
+Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
+:::
+
 ### ✅ Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
 The expansion props have been renamed to better describe their behaviors:

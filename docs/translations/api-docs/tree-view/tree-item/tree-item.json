@@ -9,8 +9,6 @@
     },
     "ContentProps": { "description": "Props applied to ContentComponent." },
     "disabled": { "description": "If <code>true</code>, the node is disabled." },
-    "endIcon": { "description": "The icon displayed next to an end node." },
-    "icon": { "description": "The icon to display next to the tree node&#39;s label." },
     "label": { "description": "The tree node label." },
     "nodeId": { "description": "The id of the node." },
     "onFocus": {
@@ -25,7 +23,7 @@
       "description": "The component used for the transition. <a href=\"/material-ui/transitions/#transitioncomponent-prop\">Follow this guide</a> to learn more about the requirements for this component."
     },
     "TransitionProps": {
-      "description": "Props applied to the transition element. By default, the element is based on this <a href=\"http://reactcommunity.org/react-transition-group/transition/\"><code>Transition</code></a> component."
+      "description": "Props applied to the transition element. By default, the element is based on this <a href=\"https://reactcommunity.org/react-transition-group/transition/\"><code>Transition</code></a> component."
     }
   },
   "classDescriptions": {
@@ -68,5 +66,11 @@
       "nodeName": "the content element",
       "conditions": "selected and not using the checkbox selection"
     }
+  },
+  "slotDescriptions": {
+    "collapseIcon": "The icon used to collapse the node.",
+    "endIcon": "The icon displayed next to an end node.",
+    "expandIcon": "The icon used to expand the node.",
+    "icon": "The icon to display next to the tree node&#39;s label."
   }
 }

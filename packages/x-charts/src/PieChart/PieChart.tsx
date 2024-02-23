@@ -58,15 +58,36 @@ export interface PieChartProps
    * @default null
    */
   leftAxis?: null | string | ChartsYAxisProps;
+  /**
+   * The series to display in the pie chart.
+   */
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip?: ChartsTooltipProps;
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'none', y: 'none' }
+   */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
+   * The props of the legend.
+   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
    * @deprecated Consider using `slotProps.legend` instead.
    */
   legend?: ChartsLegendProps;
-  onClick?: PiePlotProps['onClick'];
-
+  /**
+   * Callback fired when a pie arc is clicked.
+   */
+  onItemClick?: PiePlotProps['onItemClick'];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: PieChartSlots;
   /**
    * The props used for each component slot.
@@ -108,7 +129,7 @@ function PieChart(props: PieChartProps) {
     children,
     slots,
     slotProps,
-    onClick,
+    onItemClick,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -147,7 +168,7 @@ function PieChart(props: PieChartProps) {
       <PiePlot
         slots={slots}
         slotProps={slotProps}
-        onClick={onClick}
+        onItemClick={onItemClick}
         skipAnimation={skipAnimation}
       />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
@@ -163,6 +184,11 @@ PieChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @default { x: 'none', y: 'none' }
+   */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -174,7 +200,7 @@ PieChart.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -221,7 +247,6 @@ PieChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -231,7 +256,7 @@ PieChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -259,6 +284,8 @@ PieChart.propTypes = {
     PropTypes.string,
   ]),
   /**
+   * The props of the legend.
+   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
    * @deprecated Consider using `slotProps.legend` instead.
    */
   legend: PropTypes.shape({
@@ -284,7 +311,10 @@ PieChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
-  onClick: PropTypes.func,
+  /**
+   * Callback fired when a pie arc is clicked.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -292,7 +322,7 @@ PieChart.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -319,64 +349,12 @@ PieChart.propTypes = {
     }),
     PropTypes.string,
   ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      arcLabel: PropTypes.oneOfType([
-        PropTypes.oneOf(['formattedValue', 'label', 'value']),
-        PropTypes.func,
-      ]),
-      arcLabelMinAngle: PropTypes.number,
-      arcLabelRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      color: PropTypes.string,
-      cornerRadius: PropTypes.number,
-      cx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      data: PropTypes.arrayOf(
-        PropTypes.shape({
-          color: PropTypes.string,
-          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-          label: PropTypes.string,
-          value: PropTypes.number.isRequired,
-        }),
-      ).isRequired,
-      endAngle: PropTypes.number,
-      faded: PropTypes.shape({
-        additionalRadius: PropTypes.number,
-        arcLabelRadius: PropTypes.number,
-        color: PropTypes.string,
-        cornerRadius: PropTypes.number,
-        innerRadius: PropTypes.number,
-        outerRadius: PropTypes.number,
-        paddingAngle: PropTypes.number,
-      }),
-      highlighted: PropTypes.shape({
-        additionalRadius: PropTypes.number,
-        arcLabelRadius: PropTypes.number,
-        color: PropTypes.string,
-        cornerRadius: PropTypes.number,
-        innerRadius: PropTypes.number,
-        outerRadius: PropTypes.number,
-        paddingAngle: PropTypes.number,
-      }),
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      innerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      paddingAngle: PropTypes.number,
-      sortingValues: PropTypes.oneOfType([
-        PropTypes.oneOf(['asc', 'desc', 'none']),
-        PropTypes.func,
-      ]),
-      startAngle: PropTypes.number,
-      type: PropTypes.oneOf(['pie']),
-      valueFormatter: PropTypes.func,
-    }),
-  ).isRequired,
   /**
-   * If `true`, animations are skiped.
+   * The series to display in the pie chart.
+   */
+  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,
@@ -385,6 +363,10 @@ PieChart.propTypes = {
    * @default {}
    */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
@@ -392,6 +374,11 @@ PieChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
     classes: PropTypes.object,
@@ -407,7 +394,7 @@ PieChart.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -442,7 +429,6 @@ PieChart.propTypes = {
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
   /**
@@ -451,7 +437,7 @@ PieChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -459,13 +445,14 @@ PieChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -491,7 +478,7 @@ PieChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -499,13 +486,14 @@ PieChart.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,

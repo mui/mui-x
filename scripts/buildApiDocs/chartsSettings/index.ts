@@ -4,6 +4,10 @@ import { ProjectSettings } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
 import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_isGlobalState as isGlobalState,
+} from '@mui/utils';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
@@ -54,7 +58,14 @@ export default apiPages;
   getComponentInfo,
   translationLanguages: LANGUAGES,
   skipComponent(filename) {
-    return filename.includes('/context/');
+    if (filename.includes('/context/')) {
+      return true;
+    }
+    return [
+      'x-charts/src/Gauge/GaugeReferenceArc.tsx',
+      'x-charts/src/Gauge/GaugeValueArc.tsx',
+      'x-charts/src/Gauge/GaugeValueText.tsx',
+    ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/charts',
@@ -63,4 +74,6 @@ export default apiPages;
   propsSettings: {
     // propsWithoutDefaultVerification: [],
   },
+  generateClassName: generateUtilityClass,
+  isGlobalClassName: isGlobalState,
 };

@@ -327,7 +327,8 @@ const pages: MuiPage[] = [
             children: [
               {
                 pathname: '/x/react-date-pickers/date-time-range-picker',
-                title: 'Date Time Range Picker 🚧',
+                title: 'Date Time Range Picker',
+                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
@@ -435,6 +436,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/sparkline',
             title: 'Sparkline',
           },
+          { pathname: '/x/react-charts/gauge', title: 'Gauge' },
           {
             pathname: '/x/api/charts-group',
             title: 'API Reference',
@@ -457,13 +459,17 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/gauge', title: 'Gauge', planned: true },
-              { pathname: '/x/react-charts/heat-map', title: 'Heat map', planned: true },
               { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
               { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              {
+                pathname: '/x/react-charts/heat-map',
+                title: 'Heatmap',
+                plan: 'pro',
+                planned: true,
+              },
               { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', title: 'Sankey', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
             ],
           },
         ],

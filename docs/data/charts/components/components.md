@@ -1,6 +1,7 @@
 ---
 title: Charts - Custom components
-components: ChartsClipPath, ChartsSurface, CartesianContextProvider, DrawingProvider, HighlightProvider, InteractionProvider, SeriesContextProvider
+productId: x-charts
+components: ChartsClipPath, ChartsSurface
 ---
 
 # Charts - Custom components

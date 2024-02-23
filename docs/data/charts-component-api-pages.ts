@@ -2,6 +2,14 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
+    pathname: '/x/api/charts/animated-area',
+    title: 'AnimatedArea',
+  },
+  {
+    pathname: '/x/api/charts/animated-line',
+    title: 'AnimatedLine',
+  },
+  {
     pathname: '/x/api/charts/area-element',
     title: 'AreaElement',
   },
@@ -22,6 +30,10 @@ const apiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/chart-container',
+    title: 'ChartContainer',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -38,12 +50,20 @@ const apiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-grid',
+    title: 'ChartsGrid',
+  },
+  {
     pathname: '/x/api/charts/charts-item-tooltip-content',
     title: 'ChartsItemTooltipContent',
   },
   {
     pathname: '/x/api/charts/charts-legend',
     title: 'ChartsLegend',
+  },
+  {
+    pathname: '/x/api/charts/charts-on-axis-click-handler',
+    title: 'ChartsOnAxisClickHandler',
   },
   {
     pathname: '/x/api/charts/charts-reference-line',
@@ -72,6 +92,18 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/default-charts-item-tooltip-content',
     title: 'DefaultChartsItemTooltipContent',
+  },
+  {
+    pathname: '/x/api/charts/default-charts-legend',
+    title: 'DefaultChartsLegend',
+  },
+  {
+    pathname: '/x/api/charts/gauge',
+    title: 'Gauge',
+  },
+  {
+    pathname: '/x/api/charts/gauge-container',
+    title: 'GaugeContainer',
   },
   {
     pathname: '/x/api/charts/line-chart',
@@ -124,6 +156,10 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/responsive-chart-container',
+    title: 'ResponsiveChartContainer',
   },
   {
     pathname: '/x/api/charts/scatter',

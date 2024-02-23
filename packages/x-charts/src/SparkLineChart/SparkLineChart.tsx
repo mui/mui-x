@@ -61,7 +61,7 @@ export interface SparkLineChartProps
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number | null) => (v === null ? '' : v.toString())
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter?: (value: number | null) => string;
   /**
@@ -143,7 +143,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     slotProps,
     data,
     plotType = 'line',
-    valueFormatter = (v: number | null) => (v === null ? '' : v.toString()),
+    valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
   } = props;
@@ -197,8 +197,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
       {plotType === 'line' && (
         <React.Fragment>
-          <AreaPlot slots={slots} slotProps={slotProps} />
-          <LinePlot slots={slots} slotProps={slotProps} />
+          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
           <LineHighlightPlot slots={slots} slotProps={slotProps} />
         </React.Fragment>
       )}
@@ -263,7 +263,6 @@ SparkLineChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -328,7 +327,7 @@ SparkLineChart.propTypes = {
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
    * @returns {string} the formatted value.
-   * @default (v: number | null) => (v === null ? '' : v.toString())
+   * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({
@@ -339,7 +338,6 @@ SparkLineChart.propTypes = {
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
   /**
@@ -347,7 +345,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single configuration object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.string,
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     data: PropTypes.array,
     dataKey: PropTypes.string,
@@ -355,13 +353,14 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+    reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
     slots: PropTypes.object,

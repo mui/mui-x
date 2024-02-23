@@ -8,15 +8,19 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TDate>(
-  props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +33,21 @@ type MobileDatePickerComponent = (<TDate>(
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
-  inProps: MobileDatePickerProps<TDate>,
+const MobileDatePicker = React.forwardRef(function MobileDatePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<TDate, MobileDatePickerProps<TDate>>(
-    inProps,
-    'MuiMobileDatePicker',
-  );
+  const defaultizedProps = useDatePickerDefaultizedProps<
+    TDate,
+    MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+  >(inProps, 'MuiMobileDatePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
@@ -72,7 +79,12 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, DateView, typeof props>({
+  const { renderPicker } = useMobilePicker<
+    TDate,
+    DateView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
@@ -113,7 +125,7 @@ MobileDatePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -144,9 +156,12 @@ MobileDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -182,11 +197,11 @@ MobileDatePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -278,7 +293,7 @@ MobileDatePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -287,11 +302,11 @@ MobileDatePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -308,10 +323,6 @@ MobileDatePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -378,7 +389,7 @@ MobileDatePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, userEvent } from '@mui-internal/test-utils';
@@ -9,6 +8,7 @@ import {
   createPickerRenderer,
   openPicker,
   getClockTouchEvent,
+  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
@@ -17,6 +17,7 @@ describe('<MobileDateTimePicker />', () => {
   it('should render date and time by default', () => {
     render(
       <MobileDateTimePicker
+        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -33,9 +34,9 @@ describe('<MobileDateTimePicker />', () => {
   it('should render toolbar and tabs by default', () => {
     render(
       <MobileDateTimePicker
+        enableAccessibleFieldDOMStructure
         open
         value={adapterToUse.date('2021-11-20T10:01:22')}
-        defaultValue={(params) => <TextField {...params} />}
       />,
     );
 
@@ -46,6 +47,7 @@ describe('<MobileDateTimePicker />', () => {
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
+        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
@@ -60,6 +62,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
+          enableAccessibleFieldDOMStructure
           open
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
           slotProps={{
@@ -77,6 +80,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render only toolbar when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
+          enableAccessibleFieldDOMStructure
           open
           slotProps={{ toolbar: { hidden: true } }}
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -89,12 +93,12 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking "Choose date"', () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileDateTimePicker onOpen={onOpen} defaultValue={null} />);
+      render(<MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -112,6 +116,7 @@ describe('<MobileDateTimePicker />', () => {
 
       render(
         <MobileDateTimePicker
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

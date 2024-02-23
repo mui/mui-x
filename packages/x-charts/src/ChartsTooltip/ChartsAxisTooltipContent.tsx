@@ -5,14 +5,11 @@ import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
+import { isCartesianSeriesType } from './utils';
 
 export type ChartsAxisContentProps = {
   /**
@@ -63,19 +60,17 @@ function ChartsAxisTooltipContent(props: {
 
   const relevantSeries = React.useMemo(() => {
     const rep: any[] = [];
-    (
-      Object.keys(series).filter((seriesType) =>
-        ['bar', 'line', 'scatter'].includes(seriesType),
-      ) as CartesianChartSeriesType[]
-    ).forEach((seriesType) => {
-      series[seriesType]!.seriesOrder.forEach((seriesId) => {
-        const item = series[seriesType]!.series[seriesId];
-        const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
-        if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-          rep.push(series[seriesType]!.series[seriesId]);
-        }
+    Object.keys(series)
+      .filter(isCartesianSeriesType)
+      .forEach((seriesType) => {
+        series[seriesType]!.seriesOrder.forEach((seriesId) => {
+          const item = series[seriesType]!.series[seriesId];
+          const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
+          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+            rep.push(series[seriesType]!.series[seriesId]);
+          }
+        });
       });
-    });
     return rep;
   }, [USED_AXIS_ID, isXaxis, series]);
 
@@ -109,105 +104,35 @@ ChartsAxisTooltipContent.propTypes = {
   axisData: PropTypes.shape({
     x: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
     y: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
   }).isRequired,
   classes: PropTypes.object.isRequired,
   content: PropTypes.elementType,
   contentProps: PropTypes.shape({
-    axis: PropTypes.shape({
-      axisId: PropTypes.string,
-      classes: PropTypes.object,
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scale: PropTypes.func.isRequired,
-      scaleType: PropTypes.oneOf(['time']).isRequired,
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number.isRequired,
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
+    axis: PropTypes.object,
     axisData: PropTypes.shape({
       x: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
       y: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
     }),
     axisValue: PropTypes.any,
     classes: PropTypes.object,
     dataIndex: PropTypes.number,
-    series: PropTypes.arrayOf(
-      PropTypes.shape({
-        area: PropTypes.bool,
-        color: PropTypes.string.isRequired,
-        connectNulls: PropTypes.bool,
-        curve: PropTypes.oneOf([
-          'catmullRom',
-          'linear',
-          'monotoneX',
-          'monotoneY',
-          'natural',
-          'step',
-          'stepAfter',
-          'stepBefore',
-        ]),
-        data: PropTypes.arrayOf(PropTypes.number).isRequired,
-        dataKey: PropTypes.string,
-        disableHighlight: PropTypes.bool,
-        highlightScope: PropTypes.shape({
-          faded: PropTypes.oneOf(['global', 'none', 'series']),
-          highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-        }),
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string,
-        showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-        stack: PropTypes.string,
-        stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-        stackOrder: PropTypes.oneOf([
-          'appearance',
-          'ascending',
-          'descending',
-          'insideOut',
-          'none',
-          'reverse',
-        ]),
-        type: PropTypes.oneOf(['line']).isRequired,
-        valueFormatter: PropTypes.func.isRequired,
-        xAxisKey: PropTypes.string,
-        yAxisKey: PropTypes.string,
-      }),
-    ),
+    series: PropTypes.arrayOf(PropTypes.object),
     sx: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
       PropTypes.func,

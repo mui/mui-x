@@ -10,6 +10,7 @@ import {
   BasePickerInputProps,
   PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangeValidationError, DateRange } from '../models';
 import {
   DateRangeCalendarSlots,
@@ -23,7 +24,8 @@ import {
 } from './DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 
-export interface BaseDateRangePickerSlots<TDate> extends DateRangeCalendarSlots<TDate> {
+export interface BaseDateRangePickerSlots<TDate extends PickerValidDate>
+  extends DateRangeCalendarSlots<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -31,11 +33,12 @@ export interface BaseDateRangePickerSlots<TDate> extends DateRangeCalendarSlots<
   toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateRangePickerSlotProps<TDate> extends DateRangeCalendarSlotProps<TDate> {
+export interface BaseDateRangePickerSlotProps<TDate extends PickerValidDate>
+  extends DateRangeCalendarSlotProps<TDate> {
   toolbar?: ExportedDateRangePickerToolbarProps;
 }
 
-export interface BaseDateRangePickerProps<TDate>
+export interface BaseDateRangePickerProps<TDate extends PickerValidDate>
   extends Omit<
       BasePickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
@@ -63,12 +66,12 @@ export interface BaseDateRangePickerProps<TDate>
 }
 
 type UseDateRangePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends BaseDateRangePickerProps<TDate>,
 > = LocalizedComponent<TDate, DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
 
 export function useDateRangePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends BaseDateRangePickerProps<TDate>,
 >(props: Props, name: string): UseDateRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();

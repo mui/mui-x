@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -12,8 +13,12 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../models';
 
-type DesktopDateRangePickerComponent = (<TDate>(
-  props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,14 +31,17 @@ type DesktopDateRangePickerComponent = (<TDate>(
  *
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
-const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
-  inProps: DesktopDateRangePickerProps<TDate>,
+const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
-    DesktopDateRangePickerProps<TDate>
+    DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateRangePicker');
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
@@ -65,7 +73,12 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
+  const { renderPicker } = useDesktopRangePicker<
+    TDate,
+    'day',
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -120,7 +133,7 @@ DesktopDateRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -161,9 +174,12 @@ DesktopDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -201,11 +217,11 @@ DesktopDateRangePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Name attribute used by the `input` element in the Field.
    * Ignored if the field has several inputs.
@@ -281,7 +297,7 @@ DesktopDateRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -290,11 +306,11 @@ DesktopDateRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -311,10 +327,6 @@ DesktopDateRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -368,7 +380,7 @@ DesktopDateRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

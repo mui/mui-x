@@ -51,3 +51,10 @@ export function getPercentageValue(value: number | string, refValue: number) {
     `MUI-Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
   );
 }
+
+/**
+ * Remove spaces to have viable ids
+ */
+export function cleanId(id: string) {
+  return id.replace(' ', '_');
+}
