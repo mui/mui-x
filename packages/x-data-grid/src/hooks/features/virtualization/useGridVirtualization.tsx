@@ -11,7 +11,6 @@ export type GridVirtualizationState = {
   enabled: boolean;
   enabledForColumns: boolean;
   renderContext: GridRenderContext;
-  offsetLeft: number;
 };
 
 export const EMPTY_RENDER_CONTEXT = {
@@ -26,7 +25,6 @@ export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
     enabled: !props.disableVirtualization,
     enabledForColumns: true,
     renderContext: EMPTY_RENDER_CONTEXT,
-    offsetLeft: 0,
   };
 
   return {

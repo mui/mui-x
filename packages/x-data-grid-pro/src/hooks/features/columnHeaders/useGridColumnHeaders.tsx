@@ -133,6 +133,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
+        ownerState={rootProps}
       >
         {otherProps.getFillers(params, filters, 0, true)}
       </GridColumnHeaderRow>

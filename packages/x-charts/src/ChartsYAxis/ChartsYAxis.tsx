@@ -5,7 +5,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
-import useTicks from '../hooks/useTicks';
+import { useTicks } from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -260,7 +260,7 @@ ChartsYAxis.propTypes = {
    */
   tickMaxStep: PropTypes.number,
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */

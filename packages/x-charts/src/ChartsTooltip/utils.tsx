@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { SVGContext } from '../context/DrawingProvider';
+import { SvgContext } from '../context/DrawingProvider';
 import {
   CartesianChartSeriesType,
   ChartSeriesDefaultized,
@@ -41,7 +41,7 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
 }
 
 export function useMouseTracker() {
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = React.useContext(SvgContext);
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);

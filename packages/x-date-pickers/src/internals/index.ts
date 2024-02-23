@@ -52,14 +52,13 @@ export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
-  createDateStrForInputFromSections,
-  addPositionPropertiesToSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
-  UseFieldForwardedProps,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -102,7 +101,7 @@ export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
+export type { BaseFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BasePickerInputProps,
@@ -111,7 +110,7 @@ export type {
 export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
 export type {
   WrapperVariant,
   TimeViewWithMeridiem,
@@ -146,6 +145,11 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
+export {
+  useDefaultizedDateField,
+  useDefaultizedTimeField,
+  useDefaultizedDateTimeField,
+} from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { extractValidationProps } from './utils/validation/extractValidationProps';
 export { validateDate } from './utils/validation/validateDate';

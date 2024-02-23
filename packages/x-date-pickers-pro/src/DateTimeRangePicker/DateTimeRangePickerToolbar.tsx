@@ -46,6 +46,9 @@ export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
 }
 
 export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateTimeRangePickerToolbarClasses>;
 }
 
@@ -195,6 +198,9 @@ DateTimeRangePickerToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
@@ -214,6 +220,9 @@ DateTimeRangePickerToolbar.propTypes = {
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -20,6 +20,7 @@ import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
+  isPasteShortcut,
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
@@ -303,16 +304,6 @@ function defaultPasteResolver({
     }
   });
 }
-
-const isPasteShortcut = (event: React.KeyboardEvent) => {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v') {
-    if (event.shiftKey || event.altKey) {
-      return false;
-    }
-    return true;
-  }
-  return false;
-};
 
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,

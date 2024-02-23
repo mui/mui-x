@@ -14,11 +14,12 @@ import {
 } from '@mui/x-date-pickers/models';
 
 interface AutoCompleteFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false,
       DateValidationError
     > {
   /**
@@ -127,8 +128,8 @@ function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
 
   return (
     <DatePicker<Dayjs>
-      slots={{ field: AutocompleteField, ...props.slots }}
-      slotProps={{ field: { options } as any }}
+      slots={{ ...props.slots, field: AutocompleteField }}
+      slotProps={{ ...props.slotProps, field: { options } as any }}
       shouldDisableDate={(date) => !optionsLookup[date.startOf('day').toISOString()]}
       {...other}
     />

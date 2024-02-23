@@ -417,9 +417,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-<!-- ### Editing
+### Editing
 
-- -->
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 
@@ -437,7 +437,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   ```
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
-  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
@@ -466,7 +466,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 - The `.MuiDataGrid-cell--withRenderer` class has been removed.
-- The cell element isn't `display: flex` by default. You can use `cellClassName: gridClasses['cell--flex']` to restore the behavior.
+- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
 
 ### Changes to the public API
 

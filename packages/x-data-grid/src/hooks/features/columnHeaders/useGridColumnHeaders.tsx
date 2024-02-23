@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled, useTheme } from '@mui/material/styles';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
+import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -71,7 +73,13 @@ const SpaceFiller = styled('div')({
   },
 });
 
-export const GridColumnHeaderRow = styled('div')({
+type OwnerState = DataGridProcessedProps;
+
+export const GridColumnHeaderRow = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderRow',
+  overridesResolver: (_, styles) => styles.columnHeaderRow,
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   height: 'var(--DataGrid-headerHeight)',
 });
@@ -98,6 +106,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridPrivateApiContext();
   const theme = useTheme();
+  const rootProps = useGridRootProps();
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
   const innerRef = React.useRef<HTMLDivElement>(null);
@@ -224,7 +233,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+      <GridColumnHeaderRow
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+        ownerState={rootProps}
+      >
         {getFillers(params, columns, 0)}
       </GridColumnHeaderRow>
     );
@@ -346,7 +359,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
 
       columns.push(
-        <GridColumnHeaderRow key={depthIndex} role="row" aria-rowindex={depthIndex + 1}>
+        <GridColumnHeaderRow
+          key={depthIndex}
+          role="row"
+          aria-rowindex={depthIndex + 1}
+          ownerState={rootProps}
+        >
           {getFillers(params, children, depthInfo.leftOverflow)}
         </GridColumnHeaderRow>,
       );

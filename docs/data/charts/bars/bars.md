@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsOnAxisClickHandler
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
 ---
 
 # Charts - Bars
@@ -63,6 +63,14 @@ Bar charts can be rendered with a horizontal layout by providing the `layout="ho
 If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
 
 ## Click event
 
