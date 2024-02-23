@@ -17,4 +17,4 @@ jobs:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: MUI Releases
           avatar-url: 'https://raw.githubusercontent.com/mui/material-ui/master/docs/public/static/logo.png'
-          separator: '<!--/ DO_NOT_REMOVE /-->'
+          separator: '<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->'
