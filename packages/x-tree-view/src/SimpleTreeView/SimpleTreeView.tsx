@@ -115,7 +115,7 @@ SimpleTreeView.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
       focusNode: PropTypes.func.isRequired,
-    }).isRequired,
+    }),
   }),
   /**
    * The content of the component.

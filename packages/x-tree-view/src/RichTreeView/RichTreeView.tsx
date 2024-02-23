@@ -152,7 +152,7 @@ RichTreeView.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
       focusNode: PropTypes.func.isRequired,
-    }).isRequired,
+    }),
   }),
   /**
    * Override or extend the styles applied to the component.

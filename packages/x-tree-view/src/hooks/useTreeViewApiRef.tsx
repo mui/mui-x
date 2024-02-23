@@ -7,4 +7,4 @@ import { TreeViewAnyPluginSignature, TreeViewUsedPublicAPI } from '../internals/
 export const useTreeViewApiRef = <
   T extends TreeViewAnyPluginSignature,
   Api extends TreeViewUsedPublicAPI<T>,
->() => React.useRef({}) as React.MutableRefObject<Api>;
+>() => React.useRef(undefined) as React.MutableRefObject<Api>;

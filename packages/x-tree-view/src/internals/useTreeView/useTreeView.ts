@@ -25,6 +25,9 @@ export function useTreeViewApiInitialization<T>(
   const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
 
   if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      inputApiRef.current = {} as T;
+    }
     return inputApiRef;
   }
 

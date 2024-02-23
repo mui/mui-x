@@ -81,5 +81,9 @@ export const populatePublicAPI = <T extends TreeViewAnyPluginSignature>(
   publicAPI: TreeViewUsedPublicAPI<T>,
   methods: T['publicAPI'],
 ) => {
+  if (!publicAPI) {
+    publicAPI = {} as TreeViewUsedPublicAPI<T>;
+  }
+
   Object.assign(publicAPI, methods);
 };

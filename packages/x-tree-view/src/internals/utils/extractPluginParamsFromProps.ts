@@ -14,7 +14,9 @@ export const extractPluginParamsFromProps = <
   TProps extends {
     slots?: TSlots;
     slotProps?: TSlotProps;
-    apiRef?: React.MutableRefObject<TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>>>;
+    apiRef?: React.MutableRefObject<
+      TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>> | undefined
+    >;
   },
 >({
   props: { slots, slotProps, apiRef, ...props },
