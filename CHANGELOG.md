@@ -2344,7 +2344,68 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
-## v6.19.4
+## 6.19.5
+
+_Feb 23, 2024_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.5`
+
+- [DataGrid] Fix styling grid filter input single select (#12079) @FreakDroid
+
+#### `@mui/x-data-grid-pro@6.19.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.5`.
+
+#### `@mui/x-data-grid-premium@6.19.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.5`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.5`
+
+- [pickers] Fix `referenceDate` day calendar focus (#12136) @LukasTy
+- [pickers] Fix styling props propagation to `DateTimePickerTabs` (#12131) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.5`.
+
+### Charts / `@mui/x-charts@6.19.5`
+
+- [charts] Allow to skip animation on sparkline bar (#12160) @alexfauquette
+
+### Docs
+
+- [docs] Clarify Pickers 'Component composition' section (#12147) @LukasTy
+- [docs] Fix 301 redirection to StackBlitz @oliviertassinari
+- [docs] Fix 301 to Material UI @oliviertassinari
+- [docs] Fix 301 to Material UI @oliviertassinari
+- [docs] Fix 404 links to translation source @oliviertassinari
+- [docs] Fix dead link to translations @oliviertassinari
+- [docs] Fix the Treemap illustration (#12189) @danilo-leal
+- [docs] Fix typo for `AdapterDateFnsV3` (#12037) @flaviendelangle
+- [docs] Improve performance on Charts entry point @oliviertassinari
+- [docs] Move Heatmap to pro (#12170) @alexfauquette
+- [docs] Remove Charts installation next tag call-out (#12133) @LukasTy
+- [docs] Removed `focused` prop from demo (#12126) @michelengelen
+- [docs] Add missing Heatmap pro icon @oliviertassinari
+- [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
+- [docs] Avoid use of shorthand (#12009) @oliviertassinari
+
+### Core
+
+- [core] Fix CI @oliviertassinari
+- [core] Fix docs link check (#12137) @LukasTy
+
+## 6.19.4
 
 _Feb 9, 2024_
 
@@ -2356,7 +2417,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@v6.19.4`
+#### `@mui/x-data-grid@6.19.4`
 
 - [DataGrid] Add support for dialogs in menu actions (#11937) @cherniavskii
 - [DataGrid] Allow passing readonly arrays to `pageSizeOptions` prop (#11992) @pcorpet
@@ -2364,28 +2425,28 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Replace `eval` with `new Function` (#11962) @cherniavskii
 - [l10n] Improve Danish (da-DK) locale (#11972) @ShahrazH
 
-#### `@mui/x-data-grid-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@v6.19.4`.
+Same changes as in `@mui/x-data-grid@6.19.4`.
 
-#### `@mui/x-data-grid-premium@v6.19.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@6.19.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@v6.19.4`, plus:
+Same changes as in `@mui/x-data-grid-pro@6.19.4`, plus:
 
 - [DataGridPremium] Fix autosize grouping cell (#11990) @romgrk
 - [DataGridPremium] Fix error after closing print export (#11889) @cherniavskii
 
 ### Date Pickers
 
-#### `@mui/x-date-pickers@v6.19.4`
+#### `@mui/x-date-pickers@6.19.4`
 
 - [pickers] Avoid relying on locale in Luxon `isWithinRange` method (#11940) @LukasTy
 
-#### `@mui/x-date-pickers-pro@v6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@6.19.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@v6.19.4`.
+Same changes as in `@mui/x-date-pickers@6.19.4`.
 
-### Charts / `@mui/x-charts@v6.19.4`
+### Charts / `@mui/x-charts@6.19.4`
 
 - [charts] Add `reverse` property to axes (#11959) @alexfauquette
 - [charts] Allow series ids to be numbers (#11960) @alexfauquette
