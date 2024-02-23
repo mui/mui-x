@@ -53,11 +53,13 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
     },
     variants: [
       ...Object.keys((theme.vars ?? theme).palette)
+        // @ts-ignore
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
           props: { color },
           style: {
             '&::after': {
+              // @ts-ignore
               borderBottom: `2px solid ${(theme.vars || theme).palette[color]?.main}`,
             },
           },
