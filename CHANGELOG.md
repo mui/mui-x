@@ -43,17 +43,18 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 
 ### Docs
 
-- [docs] Clarify Pickers `Component composition` section (#12147) @LukasTy
+- [docs] Clarify Pickers 'Component composition' section (#12147) @LukasTy
 - [docs] Fix 301 redirection to StackBlitz @oliviertassinari
 - [docs] Fix 301 to Material UI @oliviertassinari
 - [docs] Fix 301 to Material UI @oliviertassinari
 - [docs] Fix 404 links to translation source @oliviertassinari
 - [docs] Fix dead link to translations @oliviertassinari
-- [docs] Fix typo for AdapterDateFnsV3 (#12037) @flaviendelangle
-- [docs] Improve performance on charts entry point @oliviertassinari
-- [docs] Move Heat map to pro (#12170) @alexfauquette
+- [docs] Fix the Treemap illustration (#12189) @danilo-leal
+- [docs] Fix typo for `AdapterDateFnsV3` (#12037) @flaviendelangle
+- [docs] Improve performance on Charts entry point @oliviertassinari
+- [docs] Move Heatmap to pro (#12170) @alexfauquette
 - [docs] Remove Charts installation next tag call-out (#12133) @LukasTy
-- [docs] cherry pick of #12092 (#12126) @michelengelen
+- [docs] Removed `focused` prop from demo (#12092) @michelengelen
 - [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
 - [docs] Avoid use of shorthand (#12009) @oliviertassinari
 
