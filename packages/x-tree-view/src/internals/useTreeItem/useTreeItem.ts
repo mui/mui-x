@@ -124,6 +124,7 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
+      status,
     };
   };
 

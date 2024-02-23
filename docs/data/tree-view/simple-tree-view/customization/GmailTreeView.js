@@ -103,7 +103,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
               focused: status.focused,
             }),
           })}
-          ownerState={status}
         >
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />

@@ -3,9 +3,10 @@ import clsx from 'clsx';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import { useSlotProps } from '@mui/base/utils';
+import { shouldForwardProp } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types';
-import { useTreeItem, UseTreeItemStatus } from '../useTreeItem';
+import { useTreeItem, UseTreeItemContentSlotOwnProps } from '../useTreeItem';
 import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -25,7 +26,8 @@ export const TreeItemNextContent = styled('div', {
   name: 'MuiTreeItemNext',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-})<{ ownerState: UseTreeItemStatus }>(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
+})(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
@@ -49,18 +51,18 @@ export const TreeItemNextContent = styled('div', {
   },
   variants: [
     {
-      props: { disabled: true },
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
       style: {
         opacity: (theme.vars || theme).palette.action.disabledOpacity,
         backgroundColor: 'transparent',
       },
     },
     {
-      props: { focused: true },
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.focused,
       style: { backgroundColor: (theme.vars || theme).palette.action.focus },
     },
     {
-      props: { selected: true },
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
       style: {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
@@ -82,7 +84,7 @@ export const TreeItemNextContent = styled('div', {
       },
     },
     {
-      props: { selected: true, focused: true },
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected && status.focused,
       style: {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
@@ -191,7 +193,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     elementType: Content,
     getSlotProps: getContentProps,
     externalSlotProps: slotProps.content,
-    ownerState: status,
+    ownerState: {},
     className: clsx(classes.content, {
       [classes.expanded]: status.expanded,
       [classes.selected]: status.selected,

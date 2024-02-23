@@ -46,6 +46,7 @@ export interface UseTreeItemContentSlotOwnProps {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
+  status: UseTreeItemStatus;
 }
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &

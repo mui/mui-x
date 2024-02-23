@@ -33,7 +33,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   return (
     <TreeItemProvider nodeId={nodeId}>
       <TreeItemNextRoot {...getRootProps(other)}>
-        <CustomTreeItemContent {...getContentProps()} ownerState={status}>
+        <CustomTreeItemContent {...getContentProps()}>
           <TreeItemNextIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemNextIconContainer>
