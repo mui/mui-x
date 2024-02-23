@@ -10,6 +10,7 @@ _Feb 23, 2024_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Introduce a new DOM structure for the field components that provides a better accessibility
+- 🚀 Simplify Data Grid DOM structure for improved performance (#12013) @romgrk
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -17,8 +18,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.0.0-beta.4`
 
-- [DataGrid] Performance: DOM changes (#12013) @romgrk
-- [DataGrid] SingleSelect columns stopped getting the label correctly for "is any of" starting from 7.0.0-alpha.7 (#11939) @gitstart
+- [DataGrid] Simplify cell DOM structure (#12013) @romgrk
+- [DataGrid] Fix values labels in `is any of` filter operator (#11939) @gitstart
 
 #### `@mui/x-data-grid-pro@7.0.0-beta.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -46,8 +47,8 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
    />
   ```
 
-- The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
-  This is used to know if the current UI expected is built using the accessible DOM structure or not. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+- The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
+  This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
  When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
@@ -56,9 +57,8 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
       const {
   +     // Should be ignored
   +     enableAccessibleFieldDOMStructure,
-  
         // ... rest of the props you are using
-      }
+      } = props;
   
       return ( /* Some UI to edit the date */ )
     }
@@ -90,6 +90,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
 
 #### `@mui/x-date-pickers@7.0.0-beta.4`
 
+- [fields] Add a11y support to multi-HTML field (#12173) @LukasTy
 - [fields] Use the `PickersTextField` component in the fields (#10649) @flaviendelangle
 - [pickers] Fix styling props propagation to `DateTimePickerTabs` (#12096) @LukasTy
 
@@ -101,14 +102,14 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.4`.
 
 #### Breaking changes
 
-Those components are not longer exported by `@mui/x-charts`:
+These components are no longer exported from `@mui/x-charts`:
 
 - `CartesianContextProvider`
 - `DrawingProvider`
 
 #### `@mui/x-charts@7.0.0-beta.4`
 
-- [charts] Don't display text if no value provided (#12127) @alexfauquette
+- [charts] Don't display text if no value is provided (#12127) @alexfauquette
 - [charts] Remove export of context providers (#12123) @oliviertassinari
 
 ### Tree View / `@mui/x-tree-view@7.0.0-beta.4`
@@ -118,14 +119,17 @@ Those components are not longer exported by `@mui/x-charts`:
 ### Docs
 
 - [docs] Add recipe for hiding separator on non-resizable columns (#12134) @michelengelen
-- [docs] Clarify Pickers `Component composition` section (#12097) @LukasTy
+- [docs] Add small improvements to the Gauge Chart page (#12076) @danilo-leal
+- [docs] Add the 'point' scaleType to the axis documentation (#12179) @alexfauquette
+- [docs] Clarify Pickers 'Component composition' section (#12097) @LukasTy
 - [docs] Fix "Licensing" page link (#12156) @LukasTy
+- [docs] Fix the Treemap illustration (#12185) @danilo-leal
 - [docs] Fix error raised by Grammarly on the page @oliviertassinari
-- [docs] Improve performance on charts entry point @oliviertassinari
-- [docs] Link to react-transition group with https @oliviertassinari
-- [docs] Move Heat map to pro (#12047) @alexfauquette
+- [docs] Improve performance on Charts entry point @oliviertassinari
+- [docs] Link to React Transition Group with https @oliviertassinari
+- [docs] Move Heatmap to `pro` plan (#12047) @alexfauquette
 - [docs] Reduce number of Vale errors @oliviertassinari
-- [docs] Remove default value set to undefined (#12128) @alexfauquette
+- [docs] Remove default value set to `undefined` (#12128) @alexfauquette
 
 ### Core
 
@@ -136,11 +140,10 @@ Those components are not longer exported by `@mui/x-charts`:
 - [core] Simplify key utils (#12120) @oliviertassinari
 - [core] Use the @mui/internal-scripts package (#12142) @michaldudak
 - [all components] Remove legacy IE 11 bundle (#12151) @flaviendelangle
-- [charts][docs] Add small improvements to the Gauge page (#12076) @danilo-leal
 - [code-infra] Bump monorepo (#11880) @Janpot
 - [code-infra] Use `experimental.cpus` to control amount of export workers in Next.js (#12095) @Janpot
 - [docs-infra] Remove randomized API page layout (#11876) @alexfauquette
-- [test] Create local wrapper over describeConformance (#12130) @michaldudak
+- [test] Create local wrapper over `describeConformance` (#12130) @michaldudak
 
 ## 7.0.0-beta.3
 
