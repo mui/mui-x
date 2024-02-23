@@ -54,7 +54,8 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 - [docs] Improve performance on Charts entry point @oliviertassinari
 - [docs] Move Heatmap to pro (#12170) @alexfauquette
 - [docs] Remove Charts installation next tag call-out (#12133) @LukasTy
-- [docs] Removed `focused` prop from demo (#12092) @michelengelen
+- [docs] Removed `focused` prop from demo (#12126) @michelengelen
+- [docs] Add missing Heatmap pro icon @oliviertassinari
 - [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
 - [docs] Avoid use of shorthand (#12009) @oliviertassinari
 
