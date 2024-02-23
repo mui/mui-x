@@ -96,8 +96,9 @@ export default withDocsInfra({
                 use: [
                   options.defaultLoaders.babel,
                   {
-                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    loader: require.resolve('@mui/internal-markdown/loader'),
                     options: {
+                      workspaceRoot,
                       env: {
                         SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
                         LIB_VERSION: options.config.env.LIB_VERSION,

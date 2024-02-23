@@ -1810,17 +1810,39 @@
     clsx "^2.1.0"
     prop-types "^15.8.1"
 
-"@mui/core-downloads-tracker@^5.15.9":
-  version "5.15.9"
-  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.15.9.tgz#c29138c70cc0fb49cd909c29beef3fb0647e5af7"
-  integrity sha512-CSDpVevGaxsvMkiYBZ8ztki1z/eT0mM2MqUT21eCRiMz3DU4zQw5rXG5ML/yTuJF9Z2Wv9SliIeaRAuSR/9Nig==
-
-"@mui/icons-material@^5.15.9":
-  version "5.15.9"
-  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.15.9.tgz#8d11839d35cf3cfd62df40934d8e9485f66be620"
-  integrity sha512-6tLQoM6RylQuDnHR6qQay0G0pJgKmrhn5MIm0IfrwtmSO8eV5iUFR+nNUTXsWa24gt7ZbIKnJ962UlYaeXa4bg==
+"@mui/base@^5.0.0-beta.37":
+  version "5.0.0-beta.37"
+  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.37.tgz#0e7e0f28402391fcfbb05476d5acc6c4f2d817b1"
+  integrity sha512-/o3anbb+DeCng8jNsd3704XtmmLDZju1Fo8R2o7ugrVtPQ/QpcqddwKNzKPZwa0J5T8YNW3ZVuHyQgbTnQLisQ==
   dependencies:
     "@babel/runtime" "^7.23.9"
+    "@floating-ui/react-dom" "^2.0.8"
+    "@mui/types" "^7.2.13"
+    "@mui/utils" "^5.15.11"
+    "@popperjs/core" "^2.11.8"
+    clsx "^2.1.0"
+    prop-types "^15.8.1"
+
+"@mui/core-downloads-tracker@^5.15.10":
+  version "5.15.11"
+  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.15.11.tgz#dcaf6156880e81e4547237fb781700485453e964"
+  integrity sha512-JVrJ9Jo4gyU707ujnRzmE8ABBWpXd6FwL9GYULmwZRtfPg89ggXs/S3MStQkpJ1JRWfdLL6S5syXmgQGq5EDAw==
+
+"@mui/icons-material@^5.15.10":
+  version "5.15.10"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.15.10.tgz#24f65945f8f02499e4da0213d6a12ac714305679"
+  integrity sha512-9cF8oUHZKo9oQ7EQ3pxPELaZuZVmphskU4OI6NiJNDVN7zcuvrEsuWjYo1Zh4fLiC39Nrvm30h/B51rcUjvSGA==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+
+"@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6b43d3e1/@mui/internal-markdown":
+  version "1.0.0"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/6b43d3e1/@mui/internal-markdown#c92d4479f5e6cafbbf5f92b49e106c911154dea6"
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+    lodash "^4.17.21"
+    marked "^5.1.2"
+    prismjs "^1.29.0"
 
 "@mui/internal-scripts@^1.0.1":
   version "1.0.1"
@@ -1838,14 +1860,14 @@
     typescript "^5.3.3"
     uuid "^9.0.1"
 
-"@mui/joy@^5.0.0-beta.27":
-  version "5.0.0-beta.27"
-  resolved "https://registry.yarnpkg.com/@mui/joy/-/joy-5.0.0-beta.27.tgz#b408b3312d2408d6c4648ccb14881af68545ad88"
-  integrity sha512-WuyE3c8l77Ph5aBPd9FZAfScx+bMxDS0dLpe5+cno2fMFW1Hua1muTd1Id2e3hebNMwos1NzqaeYFXHgd1yfBw==
+"@mui/joy@^5.0.0-beta.28":
+  version "5.0.0-beta.28"
+  resolved "https://registry.yarnpkg.com/@mui/joy/-/joy-5.0.0-beta.28.tgz#e820cd23261c4111f8dc4e9c9c43da5a6eed9ac5"
+  integrity sha512-K3a2GhYix+oOGkJwDn3+SLL1+Z8ZXwJyQaEZPzQllMvU8fn4JyfFN4lGukJScVzTR0mWDG7MPxHsP0ozVNi8Mg==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@mui/base" "5.0.0-beta.36"
-    "@mui/core-downloads-tracker" "^5.15.9"
+    "@mui/core-downloads-tracker" "^5.15.10"
     "@mui/system" "^5.15.9"
     "@mui/types" "^7.2.13"
     "@mui/utils" "^5.15.9"
@@ -1865,14 +1887,14 @@
     clsx "^2.1.0"
     prop-types "^15.8.1"
 
-"@mui/material@^5.15.9":
-  version "5.15.9"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.15.9.tgz#4d6a4aee002c6a2d0e174e08c6d23245c18dd828"
-  integrity sha512-kbHTZDcFmN8GHKzRpImUEl9AJfFWI/0Kl+DsYVT3kHzQWUuHiKm3uHXR1RCOqr7H8IgHFPdbxItmCSQ/mj7zgg==
+"@mui/material@^5.15.10":
+  version "5.15.10"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.15.10.tgz#6533ba53edbd0790dbc5bb7e9e173f6069ffd7e6"
+  integrity sha512-YJJGHjwDOucecjDEV5l9ISTCo+l9YeWrho623UajzoHRYxuKUmwrGVYOW4PKwGvCx9SU9oklZnbbi2Clc5XZHw==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@mui/base" "5.0.0-beta.36"
-    "@mui/core-downloads-tracker" "^5.15.9"
+    "@mui/core-downloads-tracker" "^5.15.10"
     "@mui/system" "^5.15.9"
     "@mui/types" "^7.2.13"
     "@mui/utils" "^5.15.9"
@@ -1883,9 +1905,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.15.10"
-  resolved "https://github.com/mui/material-ui.git#daee6ef96a246bec6ba96f0ef580b17772d0e1ea"
+"@mui/monorepo@https://github.com/michaldudak/material-ui.git#npm-publishing/markdown":
+  version "5.15.11"
+  resolved "https://github.com/michaldudak/material-ui.git#6b43d3e13922fd4fa54d30666155acc3d2c10028"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
@@ -1911,10 +1933,10 @@
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.15.9":
-  version "5.15.9"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.15.9.tgz#b123e49c52578911354abd7adf9b63a9c360461d"
-  integrity sha512-xwQ1uI2rB6Ra9fZM0jPjmUWsr2Jbtf8+VMNs7DiallJDrzdmmvHzBkVe74bTWWmHq1HdsYIz2vIcH0wnFYGe4Q==
+"@mui/styles@^5.15.10":
+  version "5.15.10"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.15.10.tgz#78c5ded89cc7a1a0d35cbf3ef53c300ab71a1140"
+  integrity sha512-VUl9rCK89lkCZ+ctYv1hSCN9gBke9CfnXF9BtGPkw9jTxPkrW6fQQYep2wcHdzLORE3w96oq9BbSXDqrOnSEPA==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@emotion/hash" "^0.9.1"
@@ -1952,6 +1974,16 @@
   version "7.2.13"
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.13.tgz#d1584912942f9dc042441ecc2d1452be39c666b8"
   integrity sha512-qP9OgacN62s+l8rdDhSFRe05HWtLLJ5TGclC9I1+tQngbssu0m2dmFZs+Px53AcOs9fD7TbYd4gc9AXzVqO/+g==
+
+"@mui/utils@^5.15.11":
+  version "5.15.11"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.11.tgz#a71804d6d6025783478fd1aca9afbf83d9b789c7"
+  integrity sha512-D6bwqprUa9Stf8ft0dcMqWyWDKEo7D+6pB1k8WajbqlYIRA8J8Kw9Ra7PSZKKePGBGWO+/xxrX1U8HpG/aXQCw==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+    "@types/prop-types" "^15.7.11"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
 
 "@mui/utils@^5.15.9":
   version "5.15.9"
