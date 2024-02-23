@@ -16,6 +16,10 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Data Grid
 
+#### Breaking changes
+
+- The cell inner wrapper `.MuiDataGrid-cellContent` has been removed, use `.MuiDataGrid-cell` to style the cells.
+
 #### `@mui/x-data-grid@7.0.0-beta.4`
 
 - [DataGrid] Simplify cell DOM structure (#12013) @romgrk
