@@ -145,7 +145,7 @@
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",
     "jss-rtl": "^0.3.0",
-    "karma": "^6.4.2",
+    "karma": "^6.4.3",
     "karma-chrome-launcher": "^3.2.0",
     "karma-mocha": "^2.0.1",
     "karma-parallel": "^0.3.1",
