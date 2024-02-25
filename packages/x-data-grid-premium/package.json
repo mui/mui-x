@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "7.0.0-beta.3",
+  "version": "7.0.0-beta.4",
   "description": "The Premium plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -45,8 +45,8 @@
     "@babel/runtime": "^7.23.9",
     "@mui/system": "^5.15.9",
     "@mui/utils": "^5.15.9",
-    "@mui/x-data-grid": "7.0.0-beta.3",
-    "@mui/x-data-grid-pro": "7.0.0-beta.3",
+    "@mui/x-data-grid": "7.0.0-beta.4",
+    "@mui/x-data-grid-pro": "7.0.0-beta.4",
     "@mui/x-license": "7.0.0-beta.2",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.0",
