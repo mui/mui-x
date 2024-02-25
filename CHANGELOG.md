@@ -2394,8 +2394,8 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 
 - [docs] Clarify Pickers 'Component composition' section (#12147) @LukasTy
 - [docs] Fix 301 redirection to StackBlitz @oliviertassinari
-- [docs] Fix 301 to Material UI @oliviertassinari
-- [docs] Fix 301 to Material UI @oliviertassinari
+- [docs] Fix 301 to Material UI @oliviertassinari
+- [docs] Fix 301 to Material UI @oliviertassinari
 - [docs] Fix 404 links to translation source @oliviertassinari
 - [docs] Fix dead link to translations @oliviertassinari
 - [docs] Fix the Treemap illustration (#12189) @danilo-leal
