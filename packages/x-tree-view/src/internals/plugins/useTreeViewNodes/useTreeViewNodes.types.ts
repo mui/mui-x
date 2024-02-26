@@ -69,6 +69,7 @@ export interface TreeViewNodeIdAndChildren {
 export interface UseTreeViewNodesState {
   nodeTree: TreeViewNodeIdAndChildren[];
   nodeMap: TreeViewNodeMap;
+  firstItemId: string | null;
 }
 
 interface UseTreeViewNodesContextValue

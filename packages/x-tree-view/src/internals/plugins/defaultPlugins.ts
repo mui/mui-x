@@ -4,6 +4,10 @@ import { useTreeViewExpansion, UseTreeViewExpansionParameters } from './useTreeV
 import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeViewSelection';
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
+import {
+  useTreeViewNodesReorder,
+  UseTreeViewNodesReorderParameters,
+} from './useTreeViewNodesReorder';
 import { useTreeViewIcons, UseTreeViewIconsParameters } from './useTreeViewIcons';
 import { ConvertPluginsIntoSignatures, MergePluginsProperty } from '../models';
 
@@ -14,6 +18,7 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
+  useTreeViewNodesReorder,
   useTreeViewIcons,
 ] as const;
 
@@ -33,4 +38,5 @@ export interface DefaultTreeViewPluginParameters<R extends {}, Multiple extends 
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
+    UseTreeViewNodesReorderParameters,
     UseTreeViewIconsParameters {}

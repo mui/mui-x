@@ -161,7 +161,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     lastSelectionWasRange.current = true;
   };
 
-  const rangeSelectToFirst = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+  const rangeSelectToFirst = (event: React.KeyboardEvent, nodeId: string) => {
     if (!lastSelectedNode.current) {
       lastSelectedNode.current = nodeId;
     }
@@ -174,7 +174,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     });
   };
 
-  const rangeSelectToLast = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+  const rangeSelectToLast = (event: React.KeyboardEvent, nodeId: string) => {
     if (!lastSelectedNode.current) {
       lastSelectedNode.current = nodeId;
     }

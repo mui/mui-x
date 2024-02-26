@@ -52,7 +52,7 @@ export function useTreeItemState(nodeId: string) {
   const preventSelection = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.shiftKey || event.ctrlKey || event.metaKey || disabled) {
       // Prevent text selection
-      event.preventDefault();
+      // event.preventDefault();
     }
   };
 

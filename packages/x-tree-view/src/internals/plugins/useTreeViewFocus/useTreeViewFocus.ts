@@ -6,6 +6,7 @@ import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
+import { getActiveElement } from '../../utils/utils';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
@@ -35,14 +36,17 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
-  const focusRoot = useEventCallback(() => {
-    rootRef.current?.focus({ preventScroll: true });
-  });
+  const canNodeBeTabbed = React.useCallback(
+    (nodeId: string) => {
+      return nodeId === state.firstItemId;
+    },
+    [state.firstItemId],
+  );
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
+    canNodeBeTabbed,
     focusNode,
-    focusRoot,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
@@ -88,8 +92,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const createHandleBlur =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
+      window.setTimeout(() => {
+        const activeElement = getActiveElement(ownerDocument(rootRef.current));
+        if (rootRef.current && !rootRef.current.contains(activeElement)) {
+          setFocusedNodeId(null);
+        }
+      });
       otherHandlers.onBlur?.(event);
-      setFocusedNodeId(null);
     };
 
   const focusedNode = instance.getNode(state.focusedNodeId!);

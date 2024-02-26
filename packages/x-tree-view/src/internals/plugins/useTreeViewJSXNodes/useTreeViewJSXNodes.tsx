@@ -28,7 +28,11 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
         );
       }
 
-      return { ...prevState, nodeMap: { ...prevState.nodeMap, [node.id]: node } };
+      return {
+        ...prevState,
+        nodeMap: { ...prevState.nodeMap, [node.id]: node },
+        firstItemId: node.index === 0 && node.parentId == null ? node.id : prevState.firstItemId,
+      };
     });
   });
 

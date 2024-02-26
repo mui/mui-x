@@ -6,6 +6,8 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
@@ -13,6 +15,8 @@ import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
+import { useTreeItemReorder } from './useTreeItemReorder';
+import { getActiveElement } from '../internals/utils/utils';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -162,6 +166,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
   const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+  const handleRootRef = React.useRef<HTMLLIElement>(null);
+  const rootRef = useForkRef(ref, handleRootRef);
 
   const {
     children,
@@ -269,18 +275,34 @@ export const TreeItem = React.forwardRef(function TreeItem(
   }
 
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
-    // DOM focus stays on the tree which manages focus with aria-activedescendant
-    if (event.target === event.currentTarget) {
-      instance.focusRoot();
-    }
-
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
       instance.focusNode(event, nodeId);
     }
   }
 
+  function handleBlur(event: React.FormEvent<HTMLLIElement>) {
+    instance.focusNode(event, null);
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    instance.handleItemKeyDown(event, nodeId);
+  };
+
+  const reorderProps = useTreeItemReorder();
   const idAttribute = instance.getTreeItemId(nodeId, id);
+  const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
+
+  React.useEffect(() => {
+    if (!focused || !handleRootRef.current) {
+      return;
+    }
+
+    const activeElement = getActiveElement(ownerDocument(handleRootRef.current));
+    if (!handleRootRef.current.contains(activeElement)) {
+      handleRootRef.current.focus({ preventScroll: true });
+    }
+  }, [focused]);
 
   const item = (
     <TreeItemRoot
@@ -290,11 +312,14 @@ export const TreeItem = React.forwardRef(function TreeItem(
       aria-selected={ariaSelected}
       aria-disabled={disabled || undefined}
       id={idAttribute}
-      tabIndex={-1}
+      tabIndex={tabIndex}
       {...other}
       ownerState={ownerState}
       onFocus={handleFocus}
-      ref={ref}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      {...reorderProps}
+      ref={rootRef}
     >
       <StyledTreeItemContent
         as={ContentComponent}
