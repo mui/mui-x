@@ -144,6 +144,12 @@ DateRangePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
   /**
@@ -165,6 +171,14 @@ DateRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['day']).isRequired,
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };
