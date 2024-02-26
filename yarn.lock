@@ -1835,9 +1835,10 @@
   dependencies:
     "@babel/runtime" "^7.23.9"
 
-"@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6b43d3e1/@mui/internal-markdown":
+"@mui/internal-markdown@^1.0.0":
   version "1.0.0"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/6b43d3e1/@mui/internal-markdown#c92d4479f5e6cafbbf5f92b49e106c911154dea6"
+  resolved "https://registry.yarnpkg.com/@mui/internal-markdown/-/internal-markdown-1.0.0.tgz#e7c19efc9a8989dff410c99bfb7d09f491ed4738"
+  integrity sha512-jbj1XYQZN5Jqphq9K/Tyt42v/eRPmXEZzAYOHbsvHfFo9XnMC2OKJAsYOwpXGVmZQpvkg1z9vA55gOe6ceTW/w==
   dependencies:
     "@babel/runtime" "^7.23.9"
     lodash "^4.17.21"
@@ -1905,9 +1906,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/michaldudak/material-ui.git#npm-publishing/markdown":
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.11"
-  resolved "https://github.com/michaldudak/material-ui.git#6b43d3e13922fd4fa54d30666155acc3d2c10028"
+  resolved "https://github.com/mui/material-ui.git#5e4e18a10085b7e65955ca11ba6c93c838003e0c"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
