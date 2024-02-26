@@ -77,6 +77,8 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     toolbarPlaceholder = '––',
     views,
     className,
+    onViewChange,
+    view,
     ...other
   } = props;
   const utils = useUtils<TDate>();
