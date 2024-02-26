@@ -61,7 +61,7 @@ export type TickItemType = {
 export function useTicks(
   options: {
     scale: D3Scale;
-    valueFormatter: AxisConfig['valueFormatter'];
+    valueFormatter?: AxisConfig['valueFormatter'];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval'>,
 ): TickItemType[] {
   const { scale, tickNumber, valueFormatter, tickInterval } = options;
