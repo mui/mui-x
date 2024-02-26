@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "ampm": { "description": "12h/24h view for hour selection clock." },
+    "autoFocus": {
+      "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
+    },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
@@ -64,7 +67,7 @@
       "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set."
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",

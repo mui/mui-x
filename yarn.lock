@@ -193,7 +193,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.23.5.tgz#ffb878728bb6bdcb6f4510aa51b1be9afb8cfd98"
   integrity sha512-uU27kfDRlhfKl+w1U6vp16IuvSLtjAxdArVXPa9BvLkrr7CYIsxH5adpHObeAGY/41+syctUWOZ140a2Rvkgjw==
 
-"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.7", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
+"@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.23.9", "@babel/core@^7.7.5":
   version "7.23.9"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.23.9.tgz#b028820718000f267870822fec434820e9b1e4d1"
   integrity sha512-5q0175NOjddqpvvzU+kDiSOAk4PfdO6FvwCWoQ6RO7rTzEe8vlo+4HVfcnAREhD4npMs0e9uZypjTwzZPCf/cw==
@@ -1789,29 +1789,13 @@
     react-test-renderer "^18.0.0"
     semver "^5.7.0"
 
-"@mui-internal/docs-utils@1.0.0", "@mui-internal/docs-utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.0.tgz#b1cd8fafe00dca045896daa2977e26eb551b891a"
-  integrity sha512-TqbdoXrXAk9JhcsGjekriQVU6A0w7oo01CfTfm4mefcKT2Z+RhHeFzG4fJrugN718qLdolJKGMoD7f+u/yBSBw==
+"@mui-internal/docs-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@mui-internal/docs-utils/-/docs-utils-1.0.2.tgz#6b98ed43f0dda40d164875c9d0ba14034468e393"
+  integrity sha512-Rqj9SVLK8MktX3lc0A/LJbF7/N8tLXxa7i6IpYnEYREx5MG98oHn7CSXQ978T7FLIYb3AObtJb6Ujy8JemcIcQ==
   dependencies:
     rimraf "^5.0.5"
-    typescript "^5.1.6"
-
-"@mui-internal/typescript-to-proptypes@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@mui-internal/typescript-to-proptypes/-/typescript-to-proptypes-1.0.2.tgz#93ccfe6f611ffc700e99570a34737842c6cc0c70"
-  integrity sha512-KpnPqY8MCQBHwmFMCZZxXwG3uREgMAbXKLBzcxlBhYxssZcYdsE/aImWE0B50QfVHBPjkNmt4dcI2UO2VEzS9w==
-  dependencies:
-    "@babel/core" "^7.23.7"
-    "@babel/plugin-syntax-class-properties" "^7.12.13"
-    "@babel/plugin-syntax-jsx" "^7.23.3"
-    "@babel/plugin-syntax-typescript" "^7.23.3"
-    "@babel/types" "^7.23.6"
-    "@mui-internal/docs-utils" "1.0.0"
-    doctrine "^3.0.0"
-    lodash "^4.17.21"
     typescript "^5.3.3"
-    uuid "^9.0.1"
 
 "@mui/base@5.0.0-beta.36", "@mui/base@^5.0.0-beta.36":
   version "5.0.0-beta.36"
@@ -1837,6 +1821,22 @@
   integrity sha512-6tLQoM6RylQuDnHR6qQay0G0pJgKmrhn5MIm0IfrwtmSO8eV5iUFR+nNUTXsWa24gt7ZbIKnJ962UlYaeXa4bg==
   dependencies:
     "@babel/runtime" "^7.23.9"
+
+"@mui/internal-scripts@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mui/internal-scripts/-/internal-scripts-1.0.1.tgz#9c4d4bdc9d9434688ca2d57d044729b366d98215"
+  integrity sha512-vUSVgbEDsfEZt4/pvBKoqPZ0iCi/jujhQxoK6zLnzDITzzWf+gyhKqWcN/jNQjlKD0vLc2Xiqpqk3yj9C2RT+A==
+  dependencies:
+    "@babel/core" "^7.23.9"
+    "@babel/plugin-syntax-class-properties" "^7.12.13"
+    "@babel/plugin-syntax-jsx" "^7.23.3"
+    "@babel/plugin-syntax-typescript" "^7.23.3"
+    "@babel/types" "^7.23.9"
+    "@mui-internal/docs-utils" "^1.0.2"
+    doctrine "^3.0.0"
+    lodash "^4.17.21"
+    typescript "^5.3.3"
+    uuid "^9.0.1"
 
 "@mui/joy@^5.0.0-beta.27":
   version "5.0.0-beta.27"
@@ -14492,7 +14492,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@>=3 < 6", typescript@^5.1.6, typescript@^5.3.3:
+"typescript@>=3 < 6", typescript@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==

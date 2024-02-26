@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { screen } from '@mui-internal/test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -11,9 +12,9 @@ describe('<DatePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<DatePicker />);
+    render(<DatePicker enableAccessibleFieldDOMStructure />);
 
-    expect(screen.getByLabelText(/Choose date/)).to.have.tagName('input');
+    expect(screen.getByLabelText(/Choose date/)).to.have.class(pickersInputBaseClasses.input);
 
     window.matchMedia = originalMatchMedia;
   });

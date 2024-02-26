@@ -95,6 +95,19 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   fieldMinutesPlaceholder: (params: { format: string }) => string;
   fieldSecondsPlaceholder: (params: { format: string }) => string;
   fieldMeridiemPlaceholder: (params: { format: string }) => string;
+
+  // View names - reflects available `FieldSectionType` options
+  year: string;
+  month: string;
+  day: string;
+  weekDay: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+  meridiem: string;
+
+  // Common
+  empty: string;
 }
 
 export interface PickersLocaleText<TDate extends PickerValidDate>

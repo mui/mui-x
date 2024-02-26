@@ -7,7 +7,13 @@ interface ProgressBarProps {
   value: number;
 }
 
-const Root = styled('div')(({ theme }) => ({
+const Center = styled('div')({
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const Element = styled('div')(({ theme }) => ({
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   position: 'relative',
   overflow: 'hidden',
@@ -42,7 +48,7 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
   const valueInPercent = value * 100;
 
   return (
-    <Root>
+    <Element>
       <Value>{`${valueInPercent.toLocaleString()} %`}</Value>
       <Bar
         className={clsx({
@@ -52,7 +58,7 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
         })}
         style={{ maxWidth: `${valueInPercent}%` }}
       />
-    </Root>
+    </Element>
   );
 });
 
@@ -67,5 +73,9 @@ export function renderProgress(params: GridRenderCellParams<any, number, any>) {
     return null;
   }
 
-  return <ProgressBar value={params.value} />;
+  return (
+    <Center>
+      <ProgressBar value={params.value} />
+    </Center>
+  );
 }

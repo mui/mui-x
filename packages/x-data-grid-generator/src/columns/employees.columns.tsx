@@ -39,6 +39,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     field: 'avatar',
     headerName: 'Avatar',
     generateData: randomColor,
+    display: 'flex',
     renderCell: renderAvatar,
     valueGetter: (value, row) =>
       row.name == null || row.avatar == null ? null : { name: row.name, color: row.avatar },
@@ -72,6 +73,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     field: 'rating',
     headerName: 'Rating',
     generateData: randomRating,
+    display: 'flex',
     renderCell: renderRating,
     renderEditCell: renderEditRating,
     width: 180,

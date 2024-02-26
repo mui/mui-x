@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { useSlotProps } from '@mui/base/utils';
-import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
@@ -11,34 +11,73 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
-const BrowserField = React.forwardRef((props, ref) => {
+const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
+  {
+    border: '1px solid grey',
+    fontSize: 13.33333,
+    lineHeight: 'normal',
+    padding: '1px 2px',
+    whiteSpace: 'nowrap',
+  },
+);
+
+const BrowserTextField = React.forwardRef((props, ref) => {
   const {
-    disabled,
-    id,
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
+    // Should be passed to the PickersSectionList component
+    elements,
+    sectionListRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
+    // Can be used to render a custom label
     label,
-    inputRef,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
-    error,
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
     focused,
-    ownerState,
-    sx,
+    error,
+    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+    // The rest can be passed to the root element
     ...other
   } = props;
 
-  const handleRef = useForkRef(containerRef, ref);
+  const handleRef = useForkRef(InputPropsRef, ref);
 
   return (
-    <Box
-      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
-      id={id}
-      ref={handleRef}
-    >
+    <BrowserFieldRoot ref={handleRef} {...other}>
       {startAdornment}
-      <input disabled={disabled} ref={inputRef} {...other} />
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionListRef={sectionListRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
+        />
+      </BrowserFieldContent>
       {endAdornment}
-    </Box>
+    </BrowserFieldRoot>
   );
 });
 
@@ -63,7 +102,10 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ),
   };
 
-  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
+  const fieldResponse = useSingleInputDateRangeField({
+    ...textFieldProps,
+    enableAccessibleFieldDOMStructure: true,
+  });
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({
@@ -73,7 +115,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   });
 
   return (
-    <BrowserField
+    <BrowserTextField
       {...processedFieldProps}
       ref={ref}
       style={{
@@ -113,7 +155,7 @@ const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
   );
 });
 
-export default function RangePickerWithSingleInputBrowserField() {
+export default function BrowserV7SingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserSingleInputDateRangePicker

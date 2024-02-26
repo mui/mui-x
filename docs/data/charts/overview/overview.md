@@ -16,7 +16,7 @@ packageName: '@mui/x-charts'
 The `@mui/x-charts` is an MIT library for rendering charts relying on [D3.js](https://d3js.org/) for data manipulation and SVG for rendering.
 And, like other MUI X components, charts are production-ready components that integrate smoothly into your app.
 
-With a high level of customization, MUI X Charts provides on three levels of customization layers: **single components** with great defaults, extensive **configuration props**, and **subcomponents** for flexible composition.
+With a high level of customization, MUI X Charts provides three levels of customization layers: **single components** with great defaults, extensive **configuration props**, and **subcomponents** for flexible composition.
 Additionally, you can also use all the [MUI System](https://mui.com/system/getting-started/) tools, such as the theme override or the `sx` prop.
 
 {{"demo": "ChartsOverviewDemo.js", "defaultCodeOpen": true}}
