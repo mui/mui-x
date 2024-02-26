@@ -36,6 +36,7 @@
         "returned": "boolean"
       }
     },
+    "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedNodesChange": {
       "type": { "name": "func" },

@@ -11,6 +11,5 @@ export const useTreeItemReorder = (): React.HTMLAttributes<HTMLLIElement> => {
 
   return {
     draggable: true,
-    onDragStart: () => console.log('AAAAAAAAAAAAAAAAA'),
   };
 };

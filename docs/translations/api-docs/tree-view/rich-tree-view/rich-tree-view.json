@@ -33,6 +33,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "itemsReordering": {
+      "description": "If <code>true</code>, the reordering of items is enabled."
+    },
     "multiSelect": {
       "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },

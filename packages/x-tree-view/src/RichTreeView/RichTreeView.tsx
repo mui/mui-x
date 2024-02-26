@@ -210,6 +210,11 @@ RichTreeView.propTypes = {
   isItemDisabled: PropTypes.func,
   items: PropTypes.array.isRequired,
   /**
+   * If `true`, the reordering of items is enabled.
+   * @default false
+   */
+  itemsReordering: PropTypes.bool,
+  /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
    */

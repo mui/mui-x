@@ -19,6 +19,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
     isNodeDisabled: () => false,
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => {},
+    canNodeBeTabbed: () => false,
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   disabledItemsFocusable: false,
@@ -29,6 +30,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   selection: {
     multiSelect: false,
   },
+  itemsReordering: false,
 };
 
 describe('<TreeItem />', () => {
