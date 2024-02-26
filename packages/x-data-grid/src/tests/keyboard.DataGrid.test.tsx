@@ -10,7 +10,14 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridActionsCellItem, GridColDef, GridColType, GridValueSetter } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridActionsCellItem,
+  GridColDef,
+  GridColType,
+  GridValueSetter,
+} from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 
