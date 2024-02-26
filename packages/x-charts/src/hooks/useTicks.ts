@@ -10,7 +10,7 @@ export interface TickParams {
    */
   tickMaxStep?: number;
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
@@ -58,7 +58,7 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-function useTicks(
+export function useTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: (value: any) => string;
@@ -112,5 +112,3 @@ function useTicks(
     }));
   }, [tickNumber, scale, valueFormatter, tickInterval]);
 }
-
-export default useTicks;

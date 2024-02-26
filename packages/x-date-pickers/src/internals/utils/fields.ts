@@ -13,12 +13,14 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'formatDensity',
   'onChange',
   'timezone',
-  'readOnly',
   'onError',
   'shouldRespectLeadingZeros',
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
+  'enableAccessibleFieldDOMStructure',
+  'disabled',
+  'readOnly',
 ] as const;
 
 export const splitFieldInternalAndForwardedProps = <

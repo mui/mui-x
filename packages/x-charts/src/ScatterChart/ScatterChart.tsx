@@ -31,6 +31,7 @@ import {
   ChartsVoronoiHandler,
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -63,6 +64,10 @@ export interface ScatterChartProps
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
@@ -115,6 +120,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     margin,
     colors,
     sx,
+    grid,
     topAxis,
     leftAxis,
     rightAxis,
@@ -151,6 +157,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         slots={slots}
         slotProps={slotProps}
       />
+      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
       <ScatterPlot
         slots={slots}
         slotProps={slotProps}
@@ -236,8 +243,14 @@ ScatterChart.propTypes = {
    */
   disableVoronoi: PropTypes.bool,
   /**
+   * Option to display a cartesian grid in the background.
+   */
+  grid: PropTypes.shape({
+    horizontal: PropTypes.bool,
+    vertical: PropTypes.bool,
+  }),
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -416,12 +429,10 @@ ScatterChart.propTypes = {
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
-   * @default undefined
    */
   voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
   /**

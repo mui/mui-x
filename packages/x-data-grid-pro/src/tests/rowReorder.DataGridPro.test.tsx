@@ -85,7 +85,7 @@ describe('<DataGridPro /> - Row reorder', () => {
 
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-    const rowReorderCell = getCell(0, 0).firstChild!;
+    const rowReorderCell = getCell(0, 0)!;
     fireEvent.dragStart(rowReorderCell);
     expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });

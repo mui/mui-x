@@ -60,6 +60,9 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'd',
   weekday: 'cccc',
   weekdayShort: 'ccccc',
   hours24h: 'HH',
@@ -477,6 +480,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public getWeekNumber = (value: DateTime) => {
     return value.localWeekNumber ?? value.weekNumber;
+  };
+
+  public getDayOfWeek = (value: DateTime) => {
+    return value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

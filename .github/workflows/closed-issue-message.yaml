@@ -1,4 +1,5 @@
-name: Add comment to closed issue
+name: Add comment
+
 on:
   issues:
     types:

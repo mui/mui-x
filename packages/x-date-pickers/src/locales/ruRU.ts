@@ -83,6 +83,19 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(д|п)п',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);
