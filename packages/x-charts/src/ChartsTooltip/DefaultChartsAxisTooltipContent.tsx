@@ -20,7 +20,6 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   }
 
   const axisFormatter =
-    axis.tooltipValueFormatter ??
     axis.valueFormatter ??
     ((v: string | number | Date) =>
       axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
@@ -32,7 +31,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
           <thead>
             <ChartsTooltipRow>
               <ChartsTooltipCell colSpan={3}>
-                <Typography>{axisFormatter(axisValue)}</Typography>
+                <Typography>{axisFormatter(axisValue, { location: 'tooltip' })}</Typography>
               </ChartsTooltipCell>
             </ChartsTooltipRow>
           </thead>

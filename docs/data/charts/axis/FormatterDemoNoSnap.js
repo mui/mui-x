@@ -2,8 +2,15 @@ import * as React from 'react';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const chartSetting = {
+const otherSetting = {
   height: 300,
+  yAxis: [{ label: 'rainfall (mm)' }],
+  grid: { horizontal: true },
+  sx: {
+    [`& .${axisClasses.left} .${axisClasses.label}`]: {
+      transform: 'translateX(-10px)',
+    },
+  },
 };
 
 const dataset = [
@@ -99,23 +106,18 @@ export default function FormatterDemoNoSnap() {
   return (
     <BarChart
       dataset={dataset}
-      yAxis={[{ label: 'rainfall (mm)' }]}
       xAxis={[
         {
           scaleType: 'band',
           dataKey: 'month',
-          valueFormatter: (month) => `${month} 2023`,
-          tickValueFormatter: (month) => `${month.slice(0, 3)}. \n2023`,
+          valueFormatter: (month, context) =>
+            context.location === 'tick'
+              ? `${month.slice(0, 3)}. \n2023`
+              : `${month} 2023`,
         },
       ]}
       series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
-      grid={{ horizontal: true }}
-      sx={{
-        [`& .${axisClasses.left} .${axisClasses.label}`]: {
-          transform: 'translateX(-10px)',
-        },
-      }}
-      {...chartSetting}
+      {...otherSetting}
     />
   );
 }

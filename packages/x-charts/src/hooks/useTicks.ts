@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { D3Scale } from '../models/axis';
+import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 
 export interface TickParams {
@@ -61,7 +61,7 @@ export type TickItemType = {
 export function useTicks(
   options: {
     scale: D3Scale;
-    valueFormatter?: (value: any) => string;
+    valueFormatter: AxisConfig['valueFormatter'];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval'>,
 ): TickItemType[] {
   const { scale, tickNumber, valueFormatter, tickInterval } = options;
@@ -76,7 +76,7 @@ export function useTicks(
         return [
           ...domain.map((value) => ({
             value,
-            formattedValue: valueFormatter?.(value) ?? `${value}`,
+            formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
             offset: scale(value)! - (scale.step() - scale.bandwidth()) / 2,
             labelOffset: scale.step() / 2,
           })),
@@ -97,7 +97,7 @@ export function useTicks(
 
       return filteredDomain.map((value) => ({
         value,
-        formattedValue: valueFormatter?.(value) ?? `${value}`,
+        formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
@@ -106,7 +106,8 @@ export function useTicks(
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
     return ticks.map((value: any) => ({
       value,
-      formattedValue: valueFormatter?.(value) ?? scale.tickFormat(tickNumber)(value),
+      formattedValue:
+        valueFormatter?.(value, { location: 'tick' }) ?? scale.tickFormat(tickNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));

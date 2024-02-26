@@ -120,7 +120,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
-    tickValueFormatter,
     slots,
     slotProps,
     tickInterval,
@@ -160,7 +159,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const xTicks = useTicks({
     scale: xScale,
     tickNumber,
-    valueFormatter: tickValueFormatter ?? valueFormatter,
+    valueFormatter,
     tickInterval,
   });
 
