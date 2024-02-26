@@ -321,19 +321,19 @@ describe('<SimpleTreeView />', () => {
       getByRole('tree').focus();
     });
 
-    expect(getByTestId('one')).toHaveVirtualFocus();
+    expect(getByTestId('one')).toHaveFocus();
 
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
 
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    expect(getByTestId('two')).toHaveFocus();
 
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowUp' });
 
-    expect(getByTestId('one')).toHaveVirtualFocus();
+    expect(getByTestId('one')).toHaveFocus();
 
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
 
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    expect(getByTestId('two')).toHaveFocus();
   });
 
   it('should support conditional rendered tree items', () => {
@@ -374,15 +374,15 @@ describe('<SimpleTreeView />', () => {
     });
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
 
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    expect(getByTestId('two')).toHaveFocus();
 
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
 
-    expect(getByTestId('three')).toHaveVirtualFocus();
+    expect(getByTestId('three')).toHaveFocus();
 
     fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
 
-    expect(getByTestId('four')).toHaveVirtualFocus();
+    expect(getByTestId('four')).toHaveFocus();
   });
 
   describe('onNodeFocus', () => {

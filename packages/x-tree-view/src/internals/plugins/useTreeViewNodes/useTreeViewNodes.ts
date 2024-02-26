@@ -22,8 +22,6 @@ const updateState = ({
   'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
 >): UseTreeViewNodesState => {
   const nodeMap: TreeViewNodeMap = {};
-  let firstItemId: string | null = null;
-
   const processItem = (
     item: TreeViewBaseItem,
     index: number,
@@ -64,10 +62,6 @@ const updateState = ({
       );
     }
 
-    if (index === 0 && parentId == null) {
-      firstItemId = id;
-    }
-
     nodeMap[id] = {
       id,
       label,
@@ -89,7 +83,6 @@ const updateState = ({
   return {
     nodeMap,
     nodeTree,
-    firstItemId,
   };
 };
 
