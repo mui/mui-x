@@ -22,11 +22,7 @@ To use the `apiRef` object, you need to initialize it using the `useTreeViewApiR
 ```tsx
 const apiRef = useTreeViewApiRef();
 
-return (
-  <RichTreeView apiRef={apiRef}>
-    {children}
-  </RichTreeView>
-);
+return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 ```
 
 `apiRef` will be undefined during the first render and will then contain methods allowing you to imperatively interact with the Tree View.

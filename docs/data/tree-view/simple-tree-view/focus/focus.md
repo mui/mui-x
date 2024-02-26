@@ -13,12 +13,26 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Focus a specific node
 
-You can access the `focusNode` method using the `apiRef` variable. To access this variable, use the `useTreeViewApiRef` hook.
+You can use the the `apiRef.focusNode` method to focus a specific node.
+This methods receives two parameters: `event` and `nodeId`.
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+`apiRef` will be undefined during the first render and will then contain methods allowing you to imperatively interact with the Tree View.
+:::
 
 The `focusNode` receives two parameters: `event` and `nodeId`.
 
 :::info
-The focus behavior is only supported for nodes that are currently visible.
+This method only works with nodes that are currently visible.
+Calling `apiRef.focusNode` on a node whose parent is collapsed will do nothing.
 :::
 
 {{"demo": "FocusedSimpleTreeView.js"}}
