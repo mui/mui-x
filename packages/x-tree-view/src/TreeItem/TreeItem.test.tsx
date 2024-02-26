@@ -33,7 +33,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   itemsReordering: false,
 };
 
-describe.only('<TreeItem />', () => {
+describe('<TreeItem />', () => {
   const { render } = createRenderer();
 
   describeConformance(<TreeItem nodeId="one" label="one" />, () => ({
@@ -514,8 +514,8 @@ describe.only('<TreeItem />', () => {
     describe('Navigation', () => {
       describe('right arrow interaction', () => {
         it('should open the node and not move the focus if focus is on a closed node', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" />
               </TreeItem>
@@ -525,17 +525,17 @@ describe.only('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowRight' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowRight' });
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
           expect(getByTestId('one')).toHaveFocus();
         });
 
         it('should move focus to the first child if focus is on an open node', () => {
-          const { getByTestId, getByRole } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -545,29 +545,28 @@ describe.only('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowRight' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowRight' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
 
         it('should do nothing if focus is on an end node', () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
             </SimpleTreeView>,
           );
 
-          fireEvent.click(getByText('two'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('two').focus();
           });
 
           expect(getByTestId('two')).toHaveFocus();
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowRight' });
+          fireEvent.keyDown(getByTestId('two'), { key: 'ArrowRight' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
@@ -651,8 +650,8 @@ describe.only('<TreeItem />', () => {
         });
 
         it('should do nothing if focus is on a root node that is closed', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" />
               </TreeItem>
@@ -660,25 +659,25 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowLeft' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowLeft' });
           expect(getByTestId('one')).toHaveFocus();
         });
 
         it('should do nothing if focus is on a root node that is an end node', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowLeft' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowLeft' });
 
           expect(getByTestId('one')).toHaveFocus();
         });
@@ -686,24 +685,24 @@ describe.only('<TreeItem />', () => {
 
       describe('down arrow interaction', () => {
         it('moves focus to a sibling node', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
 
         it('moves focus to a child node', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -713,9 +712,9 @@ describe.only('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
@@ -733,7 +732,7 @@ describe.only('<TreeItem />', () => {
                 >
                   Toggle Hide
                 </button>
-                <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+                <SimpleTreeView defaultExpandedNodes={['one']}>
                   {!hide && (
                     <TreeItem nodeId="one" label="one" data-testid="one">
                       <TreeItem nodeId="two" label="two" data-testid="two" />
@@ -745,7 +744,7 @@ describe.only('<TreeItem />', () => {
             );
           }
 
-          const { getByRole, queryByTestId, getByTestId, getByText } = render(<TestComponent />);
+          const { queryByTestId, getByTestId, getByText } = render(<TestComponent />);
 
           expect(getByTestId('one')).not.to.equal(null);
           fireEvent.click(getByText('Toggle Hide'));
@@ -754,16 +753,16 @@ describe.only('<TreeItem />', () => {
           expect(getByTestId('one')).not.to.equal(null);
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
 
         it("moves focus to a parent's sibling", () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -773,14 +772,13 @@ describe.only('<TreeItem />', () => {
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
-          fireEvent.click(getByText('two'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('two').focus();
           });
 
           expect(getByTestId('two')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+          fireEvent.keyDown(getByTestId('two'), { key: 'ArrowDown' });
 
           expect(getByTestId('three')).toHaveFocus();
         });
@@ -788,28 +786,27 @@ describe.only('<TreeItem />', () => {
 
       describe('up arrow interaction', () => {
         it('moves focus to a sibling node', () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
             </SimpleTreeView>,
           );
 
-          fireEvent.click(getByText('two'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('two').focus();
           });
 
           expect(getByTestId('two')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowUp' });
+          fireEvent.keyDown(getByTestId('two'), { key: 'ArrowUp' });
 
           expect(getByTestId('one')).toHaveFocus();
         });
 
         it('moves focus to a parent', () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -818,21 +815,20 @@ describe.only('<TreeItem />', () => {
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
-          fireEvent.click(getByText('two'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('two').focus();
           });
 
           expect(getByTestId('two')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowUp' });
+          fireEvent.keyDown(getByTestId('two'), { key: 'ArrowUp' });
 
           expect(getByTestId('one')).toHaveFocus();
         });
 
         it("moves focus to a sibling's child", () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView defaultExpandedNodes={['one']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -842,14 +838,13 @@ describe.only('<TreeItem />', () => {
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
-          fireEvent.click(getByText('three'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('three').focus();
           });
 
           expect(getByTestId('three')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'ArrowUp' });
+          fireEvent.keyDown(getByTestId('three'), { key: 'ArrowUp' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
@@ -857,8 +852,8 @@ describe.only('<TreeItem />', () => {
 
       describe('home key interaction', () => {
         it('moves focus to the first node in the tree', () => {
-          const { getByRole, getByTestId, getByText } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
               <TreeItem nodeId="three" label="three" data-testid="three" />
@@ -866,14 +861,13 @@ describe.only('<TreeItem />', () => {
             </SimpleTreeView>,
           );
 
-          fireEvent.click(getByText('four'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('four').focus();
           });
 
           expect(getByTestId('four')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'Home' });
+          fireEvent.keyDown(getByTestId('four'), { key: 'Home' });
 
           expect(getByTestId('one')).toHaveFocus();
         });
@@ -881,8 +875,8 @@ describe.only('<TreeItem />', () => {
 
       describe('end key interaction', () => {
         it('moves focus to the last node in the tree without expanded items', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
               <TreeItem nodeId="three" label="three" data-testid="three" />
@@ -891,19 +885,19 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'End' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'End' });
 
           expect(getByTestId('four')).toHaveFocus();
         });
 
         it('moves focus to the last node in the tree with expanded items', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView defaultExpandedNodes={['four', 'five']} id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView defaultExpandedNodes={['four', 'five']}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
               <TreeItem nodeId="three" label="three" data-testid="three" />
@@ -916,12 +910,12 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'End' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'End' });
 
           expect(getByTestId('six')).toHaveFocus();
         });
@@ -929,7 +923,7 @@ describe.only('<TreeItem />', () => {
 
       describe('type-ahead functionality', () => {
         it('moves focus to the next node with a name that starts with the typed character', () => {
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView id="tree">
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label={<span>two</span>} data-testid="two" />
@@ -939,27 +933,27 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 't' });
+          fireEvent.keyDown(getByTestId('one'), { key: 't' });
 
           expect(getByTestId('two')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'f' });
+          fireEvent.keyDown(getByTestId('two'), { key: 'f' });
 
           expect(getByTestId('four')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'o' });
+          fireEvent.keyDown(getByTestId('four'), { key: 'o' });
 
           expect(getByTestId('one')).toHaveFocus();
         });
 
         it('moves focus to the next node with the same starting character', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
+          const { getByTestId } = render(
+            <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" data-testid="two" />
               <TreeItem nodeId="three" label="three" data-testid="three" />
@@ -968,51 +962,51 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 't' });
+          fireEvent.keyDown(getByTestId('one'), { key: 't' });
 
           expect(getByTestId('two')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 't' });
+          fireEvent.keyDown(getByTestId('two'), { key: 't' });
 
           expect(getByTestId('three')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 't' });
+          fireEvent.keyDown(getByTestId('three'), { key: 't' });
 
           expect(getByTestId('two')).toHaveFocus();
         });
 
         it('should not move focus when pressing a modifier key + letter', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView id="tree">
-              <TreeItem nodeId="apple" label="apple" data-testid="apple" />
-              <TreeItem nodeId="lemon" label="lemon" data-testid="lemon" />
-              <TreeItem nodeId="coconut" label="coconut" data-testid="coconut" />
-              <TreeItem nodeId="vanilla" label="vanilla" data-testid="vanilla" />
+          const { getByTestId } = render(
+            <SimpleTreeView>
+              <TreeItem nodeId="one" data-testid="one" />
+              <TreeItem nodeId="two" data-testid="two" />
+              <TreeItem nodeId="three" data-testid="three" />
+              <TreeItem nodeId="four" data-testid="four" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
-          expect(getByTestId('apple')).toHaveFocus();
+          expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'v', ctrlKey: true });
+          fireEvent.keyDown(getByTestId('one'), { key: 'f', ctrlKey: true });
 
-          expect(getByTestId('apple')).toHaveFocus();
+          expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'v', metaKey: true });
+          fireEvent.keyDown(getByTestId('one'), { key: 'f', metaKey: true });
 
-          expect(getByTestId('apple')).toHaveFocus();
+          expect(getByTestId('one')).toHaveFocus();
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'v', shiftKey: true });
+          fireEvent.keyDown(getByTestId('one'), { key: 'f', shiftKey: true });
 
-          expect(getByTestId('apple')).toHaveFocus();
+          expect(getByTestId('one')).toHaveFocus();
         });
 
         it('should not throw when an item is removed', () => {
@@ -1023,7 +1017,7 @@ describe.only('<TreeItem />', () => {
                 <button type="button" onClick={() => setState(true)}>
                   Hide
                 </button>
-                <SimpleTreeView id="tree">
+                <SimpleTreeView>
                   {!hide && <TreeItem nodeId="hide" label="ab" />}
                   <TreeItem nodeId="keyDown" label="keyDown" data-testid="keyDown" />
                   <TreeItem nodeId="navTo" label="ac" data-testid="navTo" />
@@ -1032,18 +1026,18 @@ describe.only('<TreeItem />', () => {
             );
           }
 
-          const { getByRole, getByText, getByTestId } = render(<TestComponent />);
+          const { getByText, getByTestId } = render(<TestComponent />);
           fireEvent.click(getByText('Hide'));
           expect(getByTestId('navTo')).not.toHaveFocus();
 
           expect(() => {
             act(() => {
-              getByRole('tree').focus();
+              getByTestId('keyDown').focus();
             });
 
             expect(getByTestId('keyDown')).toHaveFocus();
 
-            fireEvent.keyDown(getByRole('tree'), { key: 'a' });
+            fireEvent.keyDown(getByTestId('keyDown'), { key: 'a' });
           }).not.to.throw();
 
           expect(getByTestId('navTo')).toHaveFocus();
@@ -1054,7 +1048,7 @@ describe.only('<TreeItem />', () => {
         it('expands all siblings that are at the same level as the current node', () => {
           const onExpandedNodesChange = spy();
 
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
@@ -1072,14 +1066,14 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
           expect(getByTestId('three')).to.have.attribute('aria-expanded', 'false');
           expect(getByTestId('five')).to.have.attribute('aria-expanded', 'false');
 
-          fireEvent.keyDown(getByRole('tree'), { key: '*' });
+          fireEvent.keyDown(getByTestId('one'), { key: '*' });
 
           expect(onExpandedNodesChange.args[0][1]).to.have.length(3);
 
@@ -1095,7 +1089,7 @@ describe.only('<TreeItem />', () => {
     describe('Expansion', () => {
       describe('enter key interaction', () => {
         it('expands a node with children', () => {
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
@@ -1104,18 +1098,18 @@ describe.only('<TreeItem />', () => {
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+          fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
         });
 
         it('collapses a node with children', () => {
-          const { getByRole, getByTestId, getByText } = render(
+          const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
@@ -1123,15 +1117,16 @@ describe.only('<TreeItem />', () => {
             </SimpleTreeView>,
           );
 
-          fireEvent.click(getByText('one'));
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
+          expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
+
+          fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
 
-          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
-
+          fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
         });
       });
@@ -1140,53 +1135,53 @@ describe.only('<TreeItem />', () => {
     describe('Single Selection', () => {
       describe('keyboard', () => {
         it('should select a node when space is pressed', () => {
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
 
-          fireEvent.keyDown(getByRole('tree'), { key: ' ' });
+          fireEvent.keyDown(getByTestId('one'), { key: ' ' });
 
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
         });
 
         it('should not deselect a node when space is pressed on a selected node', () => {
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView defaultSelectedNodes="one">
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
 
           expect(getByTestId('one')).toHaveFocus();
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
 
-          fireEvent.keyDown(getByRole('tree'), { key: ' ' });
+          fireEvent.keyDown(getByTestId('one'), { key: ' ' });
 
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
         });
 
         it('should not select a node when space is pressed and disableSelection', () => {
-          const { getByRole, getByTestId } = render(
+          const { getByTestId } = render(
             <SimpleTreeView disableSelection>
               <TreeItem nodeId="one" label="one" data-testid="one" />
             </SimpleTreeView>,
           );
 
           act(() => {
-            getByRole('tree').focus();
+            getByTestId('one').focus();
           });
-          fireEvent.keyDown(getByRole('tree'), { key: ' ' });
+          fireEvent.keyDown(getByTestId('one'), { key: ' ' });
 
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
         });

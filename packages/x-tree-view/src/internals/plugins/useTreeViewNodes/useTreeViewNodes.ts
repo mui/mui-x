@@ -123,11 +123,13 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.values(state.nodeMap)
-      .filter((node) => node.parentId === nodeId)
-      .sort((a, b) => a.index - b.index)
-      .map((child) => child.id),
+  const getChildrenIds = React.useCallback(
+    (nodeId: string | null) =>
+      Object.values(state.nodeMap)
+        .filter((node) => node.parentId === nodeId)
+        .sort((a, b) => a.index - b.index)
+        .map((child) => child.id),
+    [state.nodeMap],
   );
 
   const getNavigableChildrenIds = (nodeId: string | null) => {
