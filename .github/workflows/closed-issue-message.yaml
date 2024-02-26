@@ -1,8 +1,12 @@
 name: Add comment
+
 on:
   issues:
     types:
       - closed
+
+permissions: {}
+
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_REPO: ${{ github.repository }}

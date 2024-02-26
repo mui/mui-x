@@ -47,9 +47,9 @@ You have a few possible options to provide it:
   - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
   - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
-## Stack Overflow
+## Stack Overflow
 
-We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
 
 You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x+or+mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker):
 
@@ -110,7 +110,7 @@ Our tools are used by thousands of developers and teams all around the world, ma
 You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
 
 :::warning
-How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
+How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
 :::
 
 ## Custom work

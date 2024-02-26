@@ -27,6 +27,8 @@ const joyTheme = extendJoyTheme();
 
 const JoyField = React.forwardRef((props, ref) => {
   const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
     disabled,
     id,
     label,
@@ -148,6 +150,7 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      enableAccessibleFieldDOMStructure: false,
     },
     startTextFieldProps,
     endTextFieldProps,
@@ -186,7 +189,7 @@ function SyncThemeMode({ mode }) {
   return null;
 }
 
-export default function RangePickerWithJoyField() {
+export default function JoyV6MultiInputRangeField() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>

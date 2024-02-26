@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { refType } from '@mui/utils';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
@@ -36,11 +37,23 @@ import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
-const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: DefaultizedProps<
-    Omit<UseMobileRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
+    Omit<
+      UseMobileRangePickerProps<
+        TDate,
+        DateTimeRangePickerView,
+        TEnableAccessibleFieldDOMStructure,
+        any,
+        any
+      >,
+      'onChange'
+    >,
     'rangePosition' | 'onRangePositionChange' | 'openTo'
   >,
 ) {
@@ -103,17 +116,25 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
   });
 };
 
-type MobileDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
   TDate extends PickerValidDate,
->(inProps: MobileDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
-    MobileDateTimeRangePickerProps<TDate>
+    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
@@ -164,7 +185,12 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<TDate, DateTimeRangePickerView, typeof props>({
+  const { renderPicker } = useMobileRangePicker<
+    TDate,
+    DateTimeRangePickerView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -266,6 +292,10 @@ MobileDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
@@ -285,12 +315,7 @@ MobileDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.
@@ -434,11 +459,11 @@ MobileDateTimeRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -455,10 +480,6 @@ MobileDateTimeRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.

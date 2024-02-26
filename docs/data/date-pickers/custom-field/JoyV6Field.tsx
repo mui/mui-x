@@ -33,6 +33,7 @@ const joyTheme = extendJoyTheme();
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
+  enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -48,6 +49,9 @@ type JoyFieldComponent = ((
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
+      // Should be ignored
+      enableAccessibleFieldDOMStructure,
+
       disabled,
       id,
       label,
@@ -96,11 +100,12 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false,
       DateValidationError
     > {}
 
@@ -108,7 +113,10 @@ const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, typeof textFieldProps>(textFieldProps);
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...textFieldProps,
+      enableAccessibleFieldDOMStructure: false,
+    });
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -117,12 +125,12 @@ const JoyDateField = React.forwardRef(
       slotProps,
     });
 
-    return <JoyField {...processedFieldProps} ref={ref} />;
+    return <JoyField ref={ref} {...processedFieldProps} />;
   },
 );
 
 const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}
@@ -156,7 +164,7 @@ function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   return null;
 }
 
-export default function PickerWithJoyField() {
+export default function JoyV6Field() {
   const materialTheme = useMaterialTheme();
   return (
     <MaterialCssVarsProvider>
