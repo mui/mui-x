@@ -21,17 +21,17 @@ import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
 
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T> | undefined,
-): React.MutableRefObject<T> {
+): T {
   const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
 
   if (inputApiRef) {
     if (inputApiRef.current == null) {
       inputApiRef.current = {} as T;
     }
-    return inputApiRef;
+    return inputApiRef.current;
   }
 
-  return fallbackPublicApiRef;
+  return fallbackPublicApiRef.current;
 }
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
@@ -57,8 +57,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   );
   const instance = instanceRef.current as TreeViewInstance<Signatures>;
 
-  const publicAPIRef = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
-  const publicAPI = publicAPIRef.current as TreeViewPublicAPI<Signatures>;
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
 
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
