@@ -182,6 +182,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     TransitionComponent = Collapse,
     TransitionProps,
     onFocus,
+    onBlur,
+    onKeyDown,
     ...other
   } = props;
 
@@ -287,10 +289,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
   }
 
   function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
+    onBlur?.(event);
     instance.focusNode(event, null);
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    onKeyDown?.(event);
     instance.handleItemKeyDown(event, nodeId);
   };
 

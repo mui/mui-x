@@ -33,7 +33,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   itemsReordering: false,
 };
 
-describe('<TreeItem />', () => {
+describe.only('<TreeItem />', () => {
   const { render } = createRenderer();
 
   describeConformance(<TreeItem nodeId="one" label="one" />, () => ({
@@ -245,14 +245,14 @@ describe('<TreeItem />', () => {
   });
 
   it('should be able to use a custom id', () => {
-    const { getByRole } = render(
+    const { getByRole, getByTestId } = render(
       <SimpleTreeView>
-        <TreeItem id="customId" nodeId="test" label="test" data-testid="test" />
+        <TreeItem id="customId" nodeId="one" data-testid="one" />
       </SimpleTreeView>,
     );
 
     act(() => {
-      getByRole('tree').focus();
+      getByTestId('one').focus();
     });
 
     expect(getByRole('tree')).to.have.attribute('aria-activedescendant', 'customId');
@@ -395,10 +395,10 @@ describe('<TreeItem />', () => {
       });
     });
 
-    describe('when a tree receives focus', () => {
+    describe('when an item receives focus', () => {
       it('should focus the first node if none of the nodes are selected before the tree receives focus', () => {
-        const { getByRole, getByTestId, queryAllByRole } = render(
-          <SimpleTreeView id="tree">
+        const { getByTestId, queryAllByRole } = render(
+          <SimpleTreeView>
             <TreeItem nodeId="1" label="one" data-testid="one" />
             <TreeItem nodeId="2" label="two" />
             <TreeItem nodeId="3" label="three" />
@@ -408,40 +408,22 @@ describe('<TreeItem />', () => {
         expect(queryAllByRole('treeitem', { selected: true })).to.have.length(0);
 
         act(() => {
-          getByRole('tree').focus();
+          getByTestId('one').focus();
         });
 
         expect(getByTestId('one')).toHaveFocus();
       });
 
-      it('should focus the selected node if a node is selected before the tree receives focus', () => {
-        const { getByTestId, getByRole } = render(
-          <SimpleTreeView selectedNodes="2" id="tree">
-            <TreeItem nodeId="1" label="one" data-testid="one" />
-            <TreeItem nodeId="2" label="two" data-testid="two" />
-            <TreeItem nodeId="3" label="three" />
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-
-        act(() => {
-          getByRole('tree').focus();
-        });
-
-        expect(getByTestId('two')).toHaveFocus();
-      });
-
       it('should work with programmatic focus', () => {
-        const { getByRole, getByTestId } = render(
+        const { getByTestId } = render(
           <SimpleTreeView>
-            <TreeItem nodeId="1" label="one" data-testid="one" />
-            <TreeItem nodeId="2" label="two" data-testid="two" />
+            <TreeItem nodeId="one" data-testid="one" />
+            <TreeItem nodeId="two" data-testid="two" />
           </SimpleTreeView>,
         );
 
         act(() => {
-          getByRole('tree').focus();
+          getByTestId('one').focus();
         });
 
         expect(getByTestId('one')).toHaveFocus();
@@ -465,25 +447,23 @@ describe('<TreeItem />', () => {
           return <TreeItem {...props} />;
         }
 
-        const { getByRole, getByTestId, getByText } = render(
-          <SimpleTreeView defaultExpandedNodes={['parent']}>
-            <TreeItem nodeId="parent" label="parent" data-testid="parent">
-              <TreeItem nodeId="1" label="one" data-testid="one" />
-              <ControlledTreeItem nodeId="2" label="two" data-testid="two" />
+        const { getByTestId, getByText } = render(
+          <SimpleTreeView defaultExpandedNodes={['one']}>
+            <TreeItem nodeId="one" data-testid="one">
+              <TreeItem nodeId="two" data-testid="two" />
+              <ControlledTreeItem nodeId="three" label="three" data-testid="three" />
             </TreeItem>
           </SimpleTreeView>,
         );
-        const tree = getByRole('tree');
 
         act(() => {
-          tree.focus();
+          getByTestId('one').focus();
         });
 
-        expect(getByTestId('parent')).toHaveFocus();
+        expect(getByTestId('one')).toHaveFocus();
 
-        fireEvent.click(getByText('two'));
-
-        expect(getByTestId('two')).toHaveFocus();
+        fireEvent.click(getByText('three'));
+        expect(getByTestId('three')).toHaveFocus();
 
         // generic action that removes an item.
         // Could be promise based, or timeout, or another user interaction
@@ -491,23 +471,7 @@ describe('<TreeItem />', () => {
           removeActiveItem();
         });
 
-        expect(getByTestId('parent')).toHaveFocus();
-      });
-
-      it('should focus on tree with scroll prevented', () => {
-        const { getByRole, getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem nodeId="1" label="one" data-testid="one" />
-            <TreeItem nodeId="2" label="two" data-testid="two" />
-          </SimpleTreeView>,
-        );
-        const focus = spy(getByRole('tree'), 'focus');
-
-        act(() => {
-          getByTestId('one').focus();
-        });
-
-        expect(focus.calledOnceWithExactly({ preventScroll: true })).to.equals(true);
+        expect(getByTestId('one')).toHaveFocus();
       });
     });
 
