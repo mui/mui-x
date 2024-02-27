@@ -56,10 +56,12 @@ The data grid builds the vertical scroll as if all the rows are already there, a
 
 To enable lazy loading, there are a few steps you need to follow:
 
-First, set `rowsLoadingMode="server"`.
-Then, set `rowCount` to reflect the number of available rows on the server.
-Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
-Finally, replace the empty rows with the newly fetched ones using `apiRef.current.unstable_replaceRows()` like in the demo below.
+- First, set `rowsLoadingMode="server"`.
+- Then, set `rowCount` to reflect the number of available rows on the server.
+If the number of rows is unknown, set `rowCount` to a number that will be enough to cover the viewport with skeleton rows.
+When the initial data is loaded and the actual number of rows is known – update the `rowCount`.
+- Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
+- Finally, replace the empty rows with the newly fetched ones using `apiRef.current.unstable_replaceRows()` like in the demo below.
 
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
