@@ -133,7 +133,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     hidden,
     toolbarFormat,
     toolbarPlaceholder,
-    titleId,
   };
 
   const localeText = useLocaleText<TDate>();
@@ -203,6 +202,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'start' ? view : undefined}
         className={classes.startToolbar}
         onChange={handleOnChange}
+        titleId={titleId ? `${titleId}-start-toolbar` : undefined}
         {...commonToolbarProps}
       />
       <DateTimeRangePickerToolbarEnd<TDate>
@@ -214,6 +214,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'end' ? view : undefined}
         className={classes.endToolbar}
         onChange={handleOnChange}
+        titleId={titleId ? `${titleId}-end-toolbar` : undefined}
         {...commonToolbarProps}
       />
     </DateTimeRangePickerToolbarRoot>
