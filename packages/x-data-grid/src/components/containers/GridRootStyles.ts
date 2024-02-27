@@ -476,6 +476,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.cellEmpty}`]: {
       padding: 0,
+      height: 'unset',
     },
     [`& .${c.cell}.${c['cell--selectionMode']}`]: {
       cursor: 'default',
