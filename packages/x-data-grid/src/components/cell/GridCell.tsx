@@ -228,7 +228,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       .join(' '),
   );
 
-  const classNames = [pipesClassName];
+  const classNames = [pipesClassName] as (string | undefined)[];
 
   if (column.cellClassName) {
     classNames.push(
