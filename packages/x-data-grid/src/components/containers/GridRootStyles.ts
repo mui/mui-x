@@ -476,6 +476,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.cellEmpty}`]: {
       padding: 0,
+      height: 'unset',
     },
     [`& .${c.cell}.${c['cell--selectionMode']}`]: {
       cursor: 'default',
@@ -590,6 +591,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
       display: 'inline-block',
+    },
+    [`& .${c.cellSkeleton}`]: {
+      flex: '0 0 auto',
+      height: '100%',
+      display: 'inline-flex',
+      alignItems: 'center',
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
