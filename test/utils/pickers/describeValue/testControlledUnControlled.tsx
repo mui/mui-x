@@ -184,7 +184,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         localeText: { toolbarTitle: 'Test toolbar' },
       });
 
-      expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+      if (params.variant === 'mobile' && params.type === 'date-time-range') {
+        expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
+      } else {
+        expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+      }
     });
 
     it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
