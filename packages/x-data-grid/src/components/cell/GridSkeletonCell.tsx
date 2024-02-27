@@ -43,7 +43,7 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
 
   return (
     <div className={classes.root} style={{ height, maxWidth: width, minWidth: width }} {...other}>
-      <Skeleton width={`${contentWidth}%`} />
+      <Skeleton width={`${contentWidth}%`} height={25} />
     </div>
   );
 }
