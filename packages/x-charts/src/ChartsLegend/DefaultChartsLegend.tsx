@@ -147,7 +147,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const availableWidth = totalWidth - padding.left - padding.right;
   const availableHeight = totalHeight - padding.top - padding.bottom;
 
-  const seriesWithPosition = React.useMemo(() => {
+  const [seriesWithPosition, legendWidth] = React.useMemo(() => {
     // Start at 0, 0. Will be modified later by padding and position.
     let x = 0;
     let y = 0;
@@ -240,18 +240,21 @@ function DefaultChartsLegend(props: LegendRendererProps) {
         gapY = (totalHeight - totalHeightUsed) / 2;
         break;
     }
-    return seriesWithRawPosition.map((item) => ({
-      ...item,
-      // Add the gap due to the position
-      positionX: item.positionX + gapX,
-      // Add the gap due to the position
-      positionY:
-        item.positionY +
-        gapY +
-        (direction === 'row'
-          ? rowMaxHeight[item.rowIndex] / 2 // Get the center of the entire row
-          : item.outerHeight / 2), // Get the center of the item
-    }));
+    return [
+      seriesWithRawPosition.map((item) => ({
+        ...item,
+        // Add the gap due to the position
+        positionX: item.positionX + gapX,
+        // Add the gap due to the position
+        positionY:
+          item.positionY +
+          gapY +
+          (direction === 'row'
+            ? rowMaxHeight[item.rowIndex] / 2 // Get the center of the entire row
+            : item.outerHeight / 2), // Get the center of the item
+      })),
+      totalWidthUsed,
+    ];
   }, [
     seriesToDisplay,
     position.horizontal,
@@ -277,15 +280,15 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY, innerWidth }) => (
+        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
           <g
             key={id}
             className={classes.series}
-            transform={`translate(${isRTL ? availableWidth - positionX : positionX} ${positionY})`}
+            transform={`translate(${isRTL ? legendWidth - positionX : positionX} ${positionY})`}
           >
             <rect
               className={classes.mark}
-              x={isRTL ? -innerWidth : 0}
+              x={isRTL ? -itemMarkWidth : 0}
               y={-itemMarkHeight / 2}
               width={itemMarkWidth}
               height={itemMarkHeight}
@@ -294,7 +297,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
             <ChartsText
               style={labelStyle}
               text={label}
-              x={isRTL ? 0 : itemMarkWidth + markGap}
+              x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
               y={0}
             />
           </g>
