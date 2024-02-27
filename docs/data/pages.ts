@@ -500,6 +500,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/items' },
           { pathname: '/x/react-tree-view/rich-tree-view/selection' },
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/rich-tree-view/customization' },
         ],
       },
       {
