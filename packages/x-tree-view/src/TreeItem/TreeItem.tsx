@@ -6,6 +6,7 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
+import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
@@ -177,8 +178,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
     onMouseDown,
     TransitionComponent = Collapse,
     TransitionProps,
+    onFocus,
+    onBlur,
+    onKeyDown,
     ...other
   } = props;
+
+  const handleContentRef = React.useRef<HTMLDivElement>(null);
+  const contentRef = useForkRef(ContentProps?.ref, handleContentRef);
+
+  const handleRootRef = React.useRef<HTMLLIElement>(null);
+  const rootRef = useForkRef(ref, handleRootRef);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
@@ -269,18 +279,24 @@ export const TreeItem = React.forwardRef(function TreeItem(
   }
 
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
-    // DOM focus stays on the tree which manages focus with aria-activedescendant
-    if (event.target === event.currentTarget) {
-      instance.focusRoot();
-    }
-
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
       instance.focusNode(event, nodeId);
     }
   }
 
+  function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
+    onBlur?.(event);
+    instance.focusNode(event, null);
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    onKeyDown?.(event);
+    instance.handleItemKeyDown(event, nodeId);
+  };
+
   const idAttribute = instance.getTreeItemId(nodeId, id);
+  const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
 
   const item = (
     <TreeItemRoot
@@ -290,11 +306,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
       aria-selected={ariaSelected}
       aria-disabled={disabled || undefined}
       id={idAttribute}
-      tabIndex={-1}
       {...other}
       ownerState={ownerState}
+      tabIndex={tabIndex}
       onFocus={handleFocus}
-      ref={ref}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      ref={rootRef}
     >
       <StyledTreeItemContent
         as={ContentComponent}
@@ -316,6 +334,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
         displayIcon={displayIcon}
         ownerState={ownerState}
         {...ContentProps}
+        ref={contentRef}
       />
       {children && (
         <TreeItemGroup

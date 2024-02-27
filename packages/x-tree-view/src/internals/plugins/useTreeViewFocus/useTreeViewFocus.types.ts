@@ -7,8 +7,9 @@ import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
-  focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
-  focusRoot: () => void;
+  isTreeViewFocused: () => boolean;
+  canNodeBeTabbed: (nodeId: string) => boolean;
+  focusNode: (event: React.SyntheticEvent | null, nodeId: string | null) => void;
 }
 
 export interface UseTreeViewFocusParameters {
@@ -18,7 +19,7 @@ export interface UseTreeViewFocusParameters {
    * @param {string} nodeId The id of the node focused.
    * @param {string} value of the focused node.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onNodeFocus?: (event: React.SyntheticEvent | null, nodeId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;

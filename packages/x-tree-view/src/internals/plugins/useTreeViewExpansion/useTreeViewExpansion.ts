@@ -51,7 +51,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+  const expandAllSiblings = (event: React.KeyboardEvent, nodeId: string) => {
     const node = instance.getNode(nodeId);
     const siblings = instance.getChildrenIds(node.parentId);
 
