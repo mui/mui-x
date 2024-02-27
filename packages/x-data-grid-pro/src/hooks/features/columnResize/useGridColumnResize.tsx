@@ -724,13 +724,15 @@ export const useGridColumnResize = (
 
         apiRef.current.updateColumns(newColumns);
 
-        newColumns.forEach((newColumn) => {
-          const width: number = newColumn.width as number;
-          apiRef.current.publishEvent('columnWidthChange', {
-            element: apiRef.current.getColumnHeaderElement(newColumn.field),
-            colDef: newColumn,
-            width,
-          });
+        newColumns.forEach((newColumn, index) => {
+          if (newColumn.width != columns[index].width) {
+            const width = newColumn.width;
+            apiRef.current.publishEvent('columnWidthChange', {
+              element: apiRef.current.getColumnHeaderElement(newColumn.field),
+              colDef: newColumn,
+              width,
+            });
+          }
         });
       } finally {
         apiRef.current.unstable_setColumnVirtualization(true);
