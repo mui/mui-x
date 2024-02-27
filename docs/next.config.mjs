@@ -31,7 +31,13 @@ const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
+let localSettings = {};
+try {
+  localSettings = require('./next.config.local.js');
+} catch (_) {}
+
 export default withDocsInfra({
+  ...localSettings,
   experimental: {
     workerThreads: true,
     cpus: 3,
