@@ -81,6 +81,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   [`&.${treeItemClasses.disabled}`]: {
     opacity: (theme.vars || theme).palette.action.disabledOpacity,
     backgroundColor: 'transparent',
+    pointerEvents: 'none',
   },
   [`&.${treeItemClasses.focused}`]: {
     backgroundColor: (theme.vars || theme).palette.action.focus,
@@ -303,7 +304,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
 
   React.useEffect(() => {
-    if (!focused || !handleContentRef.current || !handleRootRef.current) {
+    if (
+      !focused ||
+      !handleContentRef.current ||
+      !handleRootRef.current ||
+      !instance.isTreeViewFocused()
+    ) {
       return;
     }
 
@@ -311,7 +317,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
     if (!handleContentRef.current.contains(activeElement)) {
       handleRootRef.current.focus({ preventScroll: true });
     }
-  }, [focused]);
+  }, [focused]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const focusedRef = React.useRef(focused);
+  React.useEffect(() => {
+    focusedRef.current = focused;
+  });
 
   const item = (
     <TreeItemRoot

@@ -51,6 +51,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     [state.focusedNodeId],
   );
 
+  const isTreeViewFocused = () =>
+    !!rootRef.current && rootRef.current.contains(getActiveElement(ownerDocument(rootRef.current)));
+
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     if (nodeId) {
       setFocusedNodeId(nodeId);
@@ -65,6 +68,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
+    isTreeViewFocused,
     canNodeBeTabbed,
     focusNode,
   });

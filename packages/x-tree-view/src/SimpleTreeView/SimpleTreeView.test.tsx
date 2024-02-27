@@ -264,7 +264,6 @@ describe('<SimpleTreeView />', () => {
           onNodeFocus={() => {
             setState(Math.random);
           }}
-          id="tree"
         >
           <TreeItem nodeId="one" data-testid="one">
             <TreeItem nodeId="two" data-testid="two" />
@@ -397,10 +396,8 @@ describe('<SimpleTreeView />', () => {
 
   describe('useTreeViewFocus', () => {
     it('should set tabIndex={0} on the selected item', () => {
-      const onNodeFocus = spy();
-
       const { getByTestId } = render(
-        <SimpleTreeView selectedNodes="one" onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedNodes="one">
           <TreeItem nodeId="one" data-testid="one" />
           <TreeItem nodeId="two" data-testid="two" />
         </SimpleTreeView>,
@@ -411,10 +408,8 @@ describe('<SimpleTreeView />', () => {
     });
 
     it('should set tabIndex={0} on the selected item (multi select)', () => {
-      const onNodeFocus = spy();
-
       const { getByTestId } = render(
-        <SimpleTreeView multiSelect selectedNodes={['one']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['one']}>
           <TreeItem nodeId="one" data-testid="one" />
           <TreeItem nodeId="two" data-testid="two" />
         </SimpleTreeView>,
@@ -425,10 +420,8 @@ describe('<SimpleTreeView />', () => {
     });
 
     it('should set tabIndex={0} on the first visible selected item (multi select)', () => {
-      const onNodeFocus = spy();
-
       const { getByTestId } = render(
-        <SimpleTreeView multiSelect selectedNodes={['two', 'three']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['two', 'three']}>
           <TreeItem nodeId="one" data-testid="one">
             <TreeItem nodeId="two" data-testid="two" />
           </TreeItem>
@@ -441,10 +434,8 @@ describe('<SimpleTreeView />', () => {
     });
 
     it('should set tabIndex={0} on the first item if the selected item is not visible', () => {
-      const onNodeFocus = spy();
-
       const { getByTestId } = render(
-        <SimpleTreeView selectedNodes="two" onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedNodes="two">
           <TreeItem nodeId="one" data-testid="one">
             <TreeItem nodeId="two" data-testid="two" />
           </TreeItem>
@@ -457,10 +448,8 @@ describe('<SimpleTreeView />', () => {
     });
 
     it('should set tabIndex={0} on the first item if no selected item is visible (multi select)', () => {
-      const onNodeFocus = spy();
-
       const { getByTestId } = render(
-        <SimpleTreeView multiSelect selectedNodes={['two']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['two']}>
           <TreeItem nodeId="one" data-testid="one">
             <TreeItem nodeId="two" data-testid="two" />
           </TreeItem>
