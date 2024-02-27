@@ -845,7 +845,10 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   describe('After pressing the backspace/delete key, the reset value type should match the column type', () => {
-    const setupTest = (rows: any, columns: GridColDef[]) => {
+    function setupTest(
+      rows: Record<string, string | number | Date | boolean>[],
+      columns: GridColDef[],
+    ) {
       const valueSetterMock = spy<GridValueSetter<(typeof columns)[number]>>(
         (value, row, column) => {
           return {
@@ -861,13 +864,13 @@ describe('<DataGrid /> - Keyboard', () => {
       render(<DataGrid rows={rows} columns={columns} autoHeight />);
 
       return { valueSetterMock };
-    };
+    }
 
     function testResetValue(
       keyType: 'Delete' | 'Backspace',
       field: string,
       type: GridColType,
-      value: any,
+      value: string | number | Date | boolean,
     ) {
       const columns: GridColDef[] = [
         { field: 'id', editable: true },
