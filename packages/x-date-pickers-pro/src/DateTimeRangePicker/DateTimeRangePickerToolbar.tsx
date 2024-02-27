@@ -182,6 +182,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     [onChange, onRangePositionChange, props.value, rangePosition, utils],
   );
 
+  if (hidden) {
+    return null;
+  }
+
   return (
     <DateTimeRangePickerToolbarRoot
       className={clsx(className, classes.root)}
