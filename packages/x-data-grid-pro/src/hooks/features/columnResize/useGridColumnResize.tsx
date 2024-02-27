@@ -725,7 +725,7 @@ export const useGridColumnResize = (
         apiRef.current.updateColumns(newColumns);
 
         newColumns.forEach((newColumn, index) => {
-          if (newColumn.width != columns[index].width) {
+          if (newColumn.width !== columns[index].width) {
             const width = newColumn.width;
             apiRef.current.publishEvent('columnWidthChange', {
               element: apiRef.current.getColumnHeaderElement(newColumn.field),
