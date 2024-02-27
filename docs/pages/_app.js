@@ -20,6 +20,7 @@ import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
+import { mapTranslations } from '@mui/docs/i18n';
 import config from '../config';
 
 // Remove the license warning from demonstration purposes
@@ -306,7 +307,11 @@ function AppWrapper(props) {
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <DocsProvider config={config} defaultUserLanguage={pageProps.userLanguage}>
+      <DocsProvider
+        config={config}
+        defaultUserLanguage={pageProps.userLanguage}
+        translations={pageProps.translations}
+      >
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
@@ -349,6 +354,9 @@ MyApp.propTypes = {
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   let pageProps = {};
 
+  const req = require.context('../translations', false, /translations.*\.json$/);
+  const translations = mapTranslations(req);
+
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
@@ -356,6 +364,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
   return {
     pageProps: {
       userLanguage: ctx.query.userLanguage || 'en',
+      translations,
       ...pageProps,
     },
   };
