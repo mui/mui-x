@@ -55,7 +55,7 @@ GridSkeletonCell.propTypes = {
   // ----------------------------------------------------------------------
   align: PropTypes.string.isRequired,
   field: PropTypes.string.isRequired,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   width: PropTypes.number.isRequired,
 } as any;
 
