@@ -197,7 +197,9 @@ export const useMobileRangePicker = <
     ...localeText,
   };
   let labelledById =
-    pickerParams.valueType === 'date-time' ? `${labelId}-start-toolbar ${labelId}-end-toolbar` : labelId;
+    pickerParams.valueType === 'date-time'
+      ? `${labelId}-start-toolbar ${labelId}-end-toolbar`
+      : labelId;
   if (isToolbarHidden) {
     const labels: string[] = [];
     if (fieldType === 'multi-input') {
