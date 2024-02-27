@@ -318,6 +318,7 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteEnd'
     | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
+    | 'onClipboardPasteBeforeStart'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -327,6 +328,8 @@ export const useGridClipboardImport = (
   const rootEl = apiRef.current.rootElementRef?.current;
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
+
+  const { pagination, onClipboardPasteBeforeStart } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -360,6 +363,15 @@ export const useGridClipboardImport = (
         return;
       }
 
+      if (onClipboardPasteBeforeStart) {
+        try {
+          await onClipboardPasteBeforeStart({ data: pastedData });
+        } catch (error) {
+          // Cancel paste operation
+          return;
+        }
+      }
+
       const cellUpdater = new CellValueUpdater({
         apiRef,
         processRowUpdate,
@@ -377,7 +389,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
-        pagination: props.pagination,
+        pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -390,7 +402,8 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
-      props.pagination,
+      pagination,
+      onClipboardPasteBeforeStart,
     ],
   );
 

@@ -2,6 +2,14 @@ import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+const confirmPaste = () => {
+  const confirmed = window.confirm('Are you sure you want to paste?');
+  if (!confirmed) {
+    return Promise.reject();
+  }
+  return undefined;
+};
+
 export default function ClipboardPasteEvents() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -36,9 +44,11 @@ export default function ClipboardPasteEvents() {
         initialState={initialState}
         cellSelection
         processRowUpdate={processRowUpdate}
+        onClipboardPasteBeforeStart={confirmPaste}
         onClipboardPasteStart={() => setLoading(true)}
         onClipboardPasteEnd={() => setLoading(false)}
         ignoreValueFormatterDuringExport
+        disableRowSelectionOnClick
       />
     </div>
   );

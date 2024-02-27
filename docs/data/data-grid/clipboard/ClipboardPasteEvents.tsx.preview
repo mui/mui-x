@@ -4,7 +4,9 @@
   initialState={initialState}
   cellSelection
   processRowUpdate={processRowUpdate}
+  onClipboardPasteBeforeStart={confirmPaste}
   onClipboardPasteStart={() => setLoading(true)}
   onClipboardPasteEnd={() => setLoading(false)}
   ignoreValueFormatterDuringExport
+  disableRowSelectionOnClick
 />

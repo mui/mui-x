@@ -305,6 +305,10 @@
       "description": "Callback called when the data is copied to the clipboard.",
       "typeDescriptions": { "data": "The data copied to the clipboard." }
     },
+    "onClipboardPasteBeforeStart": {
+      "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",
+      "typeDescriptions": { "params": "Params passed to the callback." }
+    },
     "onClipboardPasteEnd": {
       "description": "Callback fired when the clipboard paste operation ends."
     },

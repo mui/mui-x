@@ -87,7 +87,10 @@ For convenience, you can also listen to these events using their respective prop
 - `onClipboardPasteStart`
 - `onClipboardPasteEnd`
 
-The demo below shows how to use these events to display a loading indicator while the clipboard paste operation is in progress:
+Additionally, there is the `onClipboardPasteBeforeStart` prop, which is called before the clipboard paste operation starts
+and can be used to cancel or confirm the paste operation.
+
+The demo below calls [`window.confirm()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm) before pasting. If confirmed, it displays a loading indicator during the paste operation.
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 
