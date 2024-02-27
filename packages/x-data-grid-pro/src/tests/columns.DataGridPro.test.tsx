@@ -150,7 +150,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
     });
 
-    it('should call onColumnWidthChange with correct width after resizing and then clicking the seprator', async () => {
+    it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
@@ -166,6 +166,7 @@ describe('<DataGridPro /> - Columns', () => {
       await microtasks();
       expect(onColumnWidthChange.callCount).to.equal(2);
       expect(onColumnWidthChange.args[1][0].width).to.equal(116);
+      expect(onColumnWidthChange.args[1][0].colDef.width).to.equal(116);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
