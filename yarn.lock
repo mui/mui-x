@@ -1884,8 +1884,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.15.10"
-  resolved "https://github.com/mui/material-ui.git#daee6ef96a246bec6ba96f0ef580b17772d0e1ea"
+  version "5.15.11"
+  resolved "https://github.com/mui/material-ui.git#8bdcff4a75e0e77137bc3df44560413f2c4241a7"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@slack/bolt" "^3.17.1"
