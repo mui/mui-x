@@ -147,7 +147,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const availableWidth = totalWidth - padding.left - padding.right;
   const availableHeight = totalHeight - padding.top - padding.bottom;
 
-  const [seriesWithPosition, legendWidth] = React.useMemo(() => {
+  const [seriesWithPosition, legendWidth, legendHeight] = React.useMemo(() => {
     // Start at 0, 0. Will be modified later by padding and position.
     let x = 0;
     let y = 0;
@@ -215,63 +215,49 @@ function DefaultChartsLegend(props: LegendRendererProps) {
       return rep;
     });
 
-    // Move the legend according to padding and position
-    let gapX = 0;
-    let gapY = 0;
-    switch (position.horizontal) {
-      case 'left':
-        gapX = padding.left;
-        break;
-      case 'right':
-        gapX = totalWidth - padding.right - totalWidthUsed;
-        break;
-      default:
-        gapX = (totalWidth - totalWidthUsed) / 2;
-        break;
-    }
-    switch (position.vertical) {
-      case 'top':
-        gapY = padding.top;
-        break;
-      case 'bottom':
-        gapY = totalHeight - padding.bottom - totalHeightUsed;
-        break;
-      default:
-        gapY = (totalHeight - totalHeightUsed) / 2;
-        break;
-    }
     return [
       seriesWithRawPosition.map((item) => ({
         ...item,
-        // Add the gap due to the position
-        positionX: item.positionX + gapX,
-        // Add the gap due to the position
         positionY:
           item.positionY +
-          gapY +
           (direction === 'row'
             ? rowMaxHeight[item.rowIndex] / 2 // Get the center of the entire row
             : item.outerHeight / 2), // Get the center of the item
       })),
       totalWidthUsed,
+      totalHeightUsed,
     ];
   }, [
     seriesToDisplay,
-    position.horizontal,
-    position.vertical,
     getItemSpace,
     labelStyle,
     direction,
     availableWidth,
     availableHeight,
     itemGap,
-    padding.left,
-    padding.right,
-    padding.top,
-    padding.bottom,
-    totalWidth,
-    totalHeight,
   ]);
+
+  const gapX = React.useMemo(() => {
+    switch (position.horizontal) {
+      case 'left':
+        return padding.left;
+      case 'right':
+        return totalWidth - padding.right - legendWidth;
+      default:
+        return (totalWidth - legendWidth) / 2;
+    }
+  }, [position.horizontal, padding.left, padding.right, totalWidth, legendWidth]);
+
+  const gapY = React.useMemo(() => {
+    switch (position.vertical) {
+      case 'top':
+        return padding.top;
+      case 'bottom':
+        return totalHeight - padding.bottom - legendHeight;
+      default:
+        return (totalHeight - legendHeight) / 2;
+    }
+  }, [position.vertical, padding.top, padding.bottom, totalHeight, legendHeight]);
 
   if (hidden) {
     return null;
@@ -284,7 +270,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
           <g
             key={id}
             className={classes.series}
-            transform={`translate(${isRTL ? legendWidth - positionX : positionX} ${positionY})`}
+            transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
           >
             <rect
               className={classes.mark}
