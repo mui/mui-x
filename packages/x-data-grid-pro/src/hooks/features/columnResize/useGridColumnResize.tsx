@@ -724,16 +724,14 @@ export const useGridColumnResize = (
 
         apiRef.current.updateColumns(newColumns);
 
-        if (colDefRef.current) {
-          const columnsState = gridColumnsStateSelector(apiRef.current.state);
-          const column: GridStateColDef = columnsState.lookup[colDefRef.current.field];
-          const width: number = column.width as number;
+        newColumns.forEach((newColumn) => {
+          const width: number = newColumn.width as number;
           apiRef.current.publishEvent('columnWidthChange', {
-            element: apiRef.current.getColumnHeaderElement(colDefRef.current.field),
-            colDef: { ...colDefRef.current, width },
+            element: apiRef.current.getColumnHeaderElement(newColumn.field),
+            colDef: newColumn,
             width,
           });
-        }
+        });
       } finally {
         apiRef.current.unstable_setColumnVirtualization(true);
         isAutosizingRef.current = false;
