@@ -326,7 +326,7 @@ ChartsXAxis.propTypes = {
    */
   tickMaxStep: PropTypes.number,
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */

@@ -1,22 +1,29 @@
+'use client';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 
-class Timeout {
+export class Timeout {
   static create() {
     return new Timeout();
   }
 
-  currentId: number = 0;
+  currentId: ReturnType<typeof setTimeout> | null = null;
 
+  /**
+   * Executes `fn` after `delay`, clearing any previously scheduled call.
+   */
   start(delay: number, fn: Function) {
     this.clear();
-    this.currentId = setTimeout(fn, delay);
+    this.currentId = setTimeout(() => {
+      this.currentId = null;
+      fn();
+    }, delay);
   }
 
   clear = () => {
-    if (this.currentId !== 0) {
+    if (this.currentId !== null) {
       clearTimeout(this.currentId);
-      this.currentId = 0;
+      this.currentId = null;
     }
   };
 

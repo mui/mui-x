@@ -229,6 +229,13 @@ export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
   }) => FieldSectionValueBoundaries<TDate, SectionType>;
 };
 
+export type FieldSectionsBoundaries = {
+  [SectionType in FieldSectionType]: {
+    minimum: number;
+    maximum: number;
+  };
+};
+
 export type FieldChangeHandler<TValue, TError> = (
   value: TValue,
   context: FieldChangeHandlerContext<TError>,
