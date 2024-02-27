@@ -28,6 +28,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   const params = pickerParams as DescribeValueOptions<'picker', any>;
 
+  const isRangeType = ['date-range', 'date-time-range'].includes(params.type);
+  const isDesktopRange = params.variant === 'desktop' && isRangeType;
+
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
       renderWithProps({ enableAccessibleFieldDOMStructure: true, defaultValue: values[0] });
@@ -170,10 +173,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship when toolbar is shown', () => {
-      if (
-        componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && params.type === 'date-range')
-      ) {
+      if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
@@ -188,10 +188,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
-      if (
-        componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && params.type === 'date-range')
-      ) {
+      if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
@@ -199,7 +196,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         enableAccessibleFieldDOMStructure: true,
         open: true,
         slotProps: { toolbar: { hidden: true } },
-        ...(params.type === 'date-range'
+        ...(isRangeType
           ? {
               localeText: {
                 start: 'test',
@@ -213,10 +210,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
-      if (
-        componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && params.type === 'date-range')
-      ) {
+      if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
@@ -226,7 +220,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           <ElementToTest
             enableAccessibleFieldDOMStructure
             open
-            {...(params.type === 'date-range' && {
+            {...(isRangeType && {
               localeText: {
                 start: '',
                 end: '',
@@ -259,7 +253,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         expect(fieldRoot).to.have.class(inputBaseClasses.error);
         expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
 
-        if (params.type === 'date-range' && !params.isSingleInput) {
+        if (
+          (params.type === 'date-range' || params.type === 'date-time-range') &&
+          !params.isSingleInput
+        ) {
           const fieldRootEnd = getFieldInputRoot(1);
           expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
           expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');

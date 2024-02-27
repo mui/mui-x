@@ -40,6 +40,12 @@ export const getExpectedOnChangeCount = (
       params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
     );
   }
+  if (componentFamily === 'picker' && params.type === 'date-time-range') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily('multi-section-digital-clock')
+    );
+  }
   if (componentFamily === 'clock') {
     // the `TimeClock` fires change for both touch move and touch end
     // but does not have meridiem control
