@@ -37,7 +37,6 @@ try {
 } catch (_) {}
 
 export default withDocsInfra({
-  ...localSettings,
   experimental: {
     workerThreads: true,
     cpus: 3,
@@ -206,4 +205,5 @@ export default withDocsInfra({
           },
         ],
       }),
+  ...localSettings,
 });
