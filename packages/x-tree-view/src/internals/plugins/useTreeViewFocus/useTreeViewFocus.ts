@@ -6,6 +6,7 @@ import { TreeViewPlugin } from '../../models';
 import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
+import { getActiveElement } from '../../utils/utils';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
@@ -24,14 +25,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
-  const isTreeFocused = React.useCallback(
-    () => rootRef.current === document.activeElement,
+  const isTreeViewFocused = React.useCallback(
+    () => !!rootRef.current && rootRef.current === getActiveElement(ownerDocument(rootRef.current)),
     [rootRef],
   );
 
   const isNodeFocused = React.useCallback(
-    (nodeId: string) => focusedNodeId === nodeId && isTreeFocused(),
-    [focusedNodeId, isTreeFocused],
+    (nodeId: string) => focusedNodeId === nodeId && isTreeViewFocused(),
+    [focusedNodeId, isTreeViewFocused],
   );
 
   const isNodeVisible = (nodeId: string) => {
@@ -42,7 +43,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     // if we receive a nodeId, and it is visible, the focus will be set to it
     if (nodeId && isNodeVisible(nodeId)) {
-      if (!isTreeFocused()) {
+      if (!isTreeViewFocused()) {
         instance.focusRoot();
       }
       setFocusedNodeId(nodeId);
