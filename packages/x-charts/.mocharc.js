@@ -11,7 +11,16 @@ module.exports = {
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
   reporter: 'dot',
-  require: [require.resolve('./test/utils/setupBabel'), require.resolve('./test/utils/setupJSDOM')],
+  require: [
+    require.resolve('../../test/utils/setupBabel'),
+    // Not strictly necessary, but just to keep the babel plugins in the loop for the tests
+    // For compiling pure ESM modules that @babel/register can't handle.
+    // See https://babeljs.io/docs/babel-register#experimental-babel-8-implementation
+    //   Note: @babel/register does not support compiling native Node.js ES modules on the fly,
+    //   since currently there is no stable API for intercepting ES modules loading.
+    require.resolve('tsx/cjs'),
+    require.resolve('../../test/utils/setupJSDOM'),
+  ],
   'watch-ignore': [
     // default
     '.git',
@@ -21,8 +30,5 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  spec: [
-    'packages/{,!(x-charts)/**}/*.test.{js,ts,tsx}', // x-charts requires 'tsx/cjs' which conflict with the babel deat-fns override for picker tests
-    'docs/src/modules/**/*.test.{js,ts,tsx}',
-  ],
+  spec: ['packages/x-charts/**/*.test.{js,ts,tsx}', 'docs/src/modules/**/*.test.{js,ts,tsx}'],
 };
