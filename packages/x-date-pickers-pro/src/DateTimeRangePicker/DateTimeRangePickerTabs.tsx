@@ -119,6 +119,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     rangePosition,
     onRangePositionChange,
     className,
+    sx,
   } = props;
 
   const localeText = useLocaleText();
@@ -166,7 +167,11 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   }
 
   return (
-    <DateTimeRangePickerTabsRoot ownerState={props} className={clsx(classes.root, className)}>
+    <DateTimeRangePickerTabsRoot
+      ownerState={props}
+      className={clsx(classes.root, className)}
+      sx={sx}
+    >
       {!isPreviousHidden ? (
         <IconButton
           onClick={changeToPreviousTab}
@@ -229,6 +234,14 @@ DateTimeRangePickerTabs.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Time tab icon.
    * @default TimeIcon

@@ -11,7 +11,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "height": { "type": { "name": "number" } },
     "margin": {
       "type": {
         "name": "shape",
@@ -33,14 +33,14 @@
     },
     "valueFormatter": {
       "type": { "name": "func" },
-      "default": "(v: number | null) => (v === null ? '' : v.toString())",
+      "default": "(value: number | null) => (value === null ? '' : value.toString())",
       "signature": {
         "type": "function(value: number) => string",
         "describedArgs": ["value"],
         "returned": "string"
       }
     },
-    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "shape",

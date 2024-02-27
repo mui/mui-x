@@ -18,13 +18,15 @@ materialDesign: https://m2.material.io/components/time-pickers
 ## Component composition
 
 The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
-All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
 
 - [Time Field](/x/react-date-pickers/time-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
+
+You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/time-picker/#props).
+Some [TimeField props](/x/api/date-pickers/time-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 

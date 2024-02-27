@@ -74,7 +74,14 @@ export const useGridClipboard = (
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      if (!((event.ctrlKey || event.metaKey) && event.key === 'c')) {
+      if (
+        !(
+          (event.ctrlKey || event.metaKey) &&
+          event.key.toLowerCase() === 'c' &&
+          !event.shiftKey &&
+          !event.altKey
+        )
+      ) {
         return;
       }
 

@@ -118,6 +118,16 @@ The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses t
 
 {{"demo": "ExtendedSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Asymmetric comparator
+
+The Data Grid considers the `sortComparator` function symmetric, automatically reversing the return value for descending sorting by multiplying it by `-1`.
+
+While this is sufficient for most use cases, it is possible to define an asymmetric comparator using the `getSortComparator` function – it receives the sorting direction as an argument and returns a comparator function.
+
+In the demo below, the `getSortComparator` function is used in the "Quantity" column to keep the `null` values at the bottom when sorting is applied (regardless of the sorting direction):
+
+{{"demo": "GetSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom sort order
 
 By default, the sort order cycles between these three different modes:

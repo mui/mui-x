@@ -1,7 +1,6 @@
 import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
@@ -26,7 +25,7 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
 
   function WrappedElementToTest(
     props: BasePickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps<TValue, FieldSection> & { hook?: any },
+      UsePickerValueNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);
@@ -37,17 +36,33 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   if (componentFamily === 'field' || componentFamily === 'picker') {
     const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
 
-    renderWithProps = (props: any, hook?: any) =>
-      interactions.renderWithProps({ ...defaultProps, ...props }, hook, componentFamily);
+    renderWithProps = (props: any, config?: any) =>
+      interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
   } else {
-    renderWithProps = (props: any, hook?: any) => {
-      const response = render(<WrappedElementToTest {...props} hook={hook} />);
+    renderWithProps = ({ enableAccessibleFieldDOMStructure, ...props }: any, config?: any) => {
+      const response = render(<WrappedElementToTest {...props} hook={config?.hook} />);
 
       return {
         ...response,
-        input: null as any,
+        getSectionsContainer: () => {
+          throw new Error(
+            'You can only use `getSectionsContainer` on components that render a field',
+          );
+        },
         selectSection: () => {
-          throw new Error('You can only select a section on components that render a field');
+          throw new Error('You can only use `selectSection` on components that render a field');
+        },
+        getHiddenInput: () => {
+          throw new Error('You can only use `getHiddenInput` on components that render a field');
+        },
+        getActiveSection: () => {
+          throw new Error('You can only use `getActiveSection` on components that render a field');
+        },
+        getSection: () => {
+          throw new Error('You can only use `getSection` on components that render a field');
+        },
+        pressKey: () => {
+          throw new Error('You can only use `pressKey` on components that render a field');
         },
       };
     };

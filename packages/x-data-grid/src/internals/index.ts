@@ -146,7 +146,7 @@ export {
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey } from '../utils/keyboardUtils';
+export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';

@@ -14,6 +14,9 @@ export interface PickersFadeTransitionGroupProps {
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersFadeTransitionGroupClasses>;
 }
 

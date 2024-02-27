@@ -4,6 +4,18 @@ import { screen } from '@mui-internal/test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
+const queryByTextInView = (text: string) => {
+  const view = screen.queryByRole('dialog');
+
+  return screen.queryByText((content, element) => {
+    if (view && !view.contains(element)) {
+      return false;
+    }
+
+    return content === text;
+  });
+};
+
 export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render } = getOptions();
 
@@ -31,18 +43,18 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         <ElementToTest
           {...defaultProps}
           value={null}
-          shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
+          shouldDisableYear={(date: any) => adapterToUse.getYear(date) === 2018}
         />,
       );
 
-      expect(screen.queryByText('2018')).to.have.attribute('disabled');
-      expect(screen.queryByText('2019')).not.to.have.attribute('disabled');
-      expect(screen.queryByText('2017')).not.to.have.attribute('disabled');
+      expect(queryByTextInView('2018')).to.have.attribute('disabled');
+      expect(queryByTextInView('2019')).not.to.have.attribute('disabled');
+      expect(queryByTextInView('2017')).not.to.have.attribute('disabled');
     });
 
     it('should apply disablePast', function test() {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -51,20 +63,18 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       const nextYear = adapterToUse.addYears(now, 1);
       const prevYear = adapterToUse.addYears(now, -1);
 
-      expect(screen.queryByText(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+      expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute('disabled');
+      expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).not.to.have.attribute(
         'disabled',
       );
-      expect(screen.queryByText(adapterToUse.format(nextYear, 'year'))).not.to.have.attribute(
-        'disabled',
-      );
-      expect(screen.queryByText(adapterToUse.format(prevYear, 'year'))).to.have.attribute(
+      expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).to.have.attribute(
         'disabled',
       );
     });
 
     it('should apply disableFuture', function test() {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -73,13 +83,11 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       const nextYear = adapterToUse.addYears(now, 1);
       const prevYear = adapterToUse.addYears(now, -1);
 
-      expect(screen.queryByText(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+      expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute('disabled');
+      expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).to.have.attribute(
         'disabled',
       );
-      expect(screen.queryByText(adapterToUse.format(nextYear, 'year'))).to.have.attribute(
-        'disabled',
-      );
-      expect(screen.queryByText(adapterToUse.format(prevYear, 'year'))).not.to.have.attribute(
+      expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).not.to.have.attribute(
         'disabled',
       );
     });
@@ -93,9 +101,9 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         />,
       );
 
-      expect(screen.queryByText('2018')).to.equal(null);
-      expect(screen.queryByText('2019')).not.to.equal(null);
-      expect(screen.queryByText('2020')).not.to.equal(null);
+      expect(queryByTextInView('2018')).to.equal(null);
+      expect(queryByTextInView('2019')).not.to.equal(null);
+      expect(queryByTextInView('2020')).not.to.equal(null);
     });
 
     it('should apply maxDate', function test() {
@@ -107,9 +115,9 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         />,
       );
 
-      expect(screen.queryByText('2018')).not.to.equal(null);
-      expect(screen.queryByText('2019')).not.to.equal(null);
-      expect(screen.queryByText('2020')).to.equal(null);
+      expect(queryByTextInView('2018')).not.to.equal(null);
+      expect(queryByTextInView('2019')).not.to.equal(null);
+      expect(queryByTextInView('2020')).to.equal(null);
     });
   });
 };

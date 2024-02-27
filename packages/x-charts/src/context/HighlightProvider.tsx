@@ -56,6 +56,10 @@ export const HighlighContext = React.createContext<HighlighState>({
   dispatch: () => null,
 });
 
+if (process.env.NODE_ENV !== 'production') {
+  HighlighContext.displayName = 'HighlighContext';
+}
+
 const dataReducer: React.Reducer<Omit<HighlighState, 'dispatch'>, HighlighActions> = (
   prevState,
   action,

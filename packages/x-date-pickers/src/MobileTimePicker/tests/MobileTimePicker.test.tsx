@@ -8,18 +8,19 @@ import {
   adapterToUse,
   openPicker,
   getClockTouchEvent,
+  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
-    it('should open when clicking the textbox', () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileTimePicker onOpen={onOpen} />);
+      render(<MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -29,6 +30,7 @@ describe('<MobileTimePicker />', () => {
       const handleChange = spy();
       render(
         <MobileTimePicker
+          enableAccessibleFieldDOMStructure
           ampm
           onChange={handleChange}
           open
@@ -58,6 +60,7 @@ describe('<MobileTimePicker />', () => {
 
       render(
         <MobileTimePicker
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

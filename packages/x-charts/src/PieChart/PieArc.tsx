@@ -61,32 +61,32 @@ const PieArcRoot = styled(animated.path, {
 
 export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
   PieArcOwnerState & {
-    startAngle: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
-    outerRadius: SpringValue<number>;
     cornerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
+    endAngle: SpringValue<number>;
     highlightScope?: Partial<HighlightScope>;
+    innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+    outerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
+    startAngle: SpringValue<number>;
   };
 
 function PieArc(props: PieArcProps) {
   const {
-    id,
-    dataIndex,
     classes: innerClasses,
     color,
+    cornerRadius,
+    dataIndex,
+    endAngle,
     highlightScope,
-    onClick,
+    id,
+    innerRadius,
     isFaded,
     isHighlighted,
-    startAngle,
-    endAngle,
-    paddingAngle,
-    innerRadius,
+    onClick,
     outerRadius,
-    cornerRadius,
+    paddingAngle,
+    startAngle,
     ...other
   } = props;
 

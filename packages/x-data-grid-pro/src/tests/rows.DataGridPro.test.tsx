@@ -6,6 +6,7 @@ import {
   $,
   $$,
   grid,
+  gridOffsetTop,
   getCell,
   getRow,
   getColumnValues,
@@ -445,7 +446,6 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
 
-      const root = grid('root')!;
       const virtualScroller = grid('virtualScroller')!;
       const renderingZone = grid('virtualScrollerRenderZone')!;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
@@ -458,9 +458,7 @@ describe('<DataGridPro /> - Rows', () => {
       ); // Subtracting 1 is needed because of the column header borders
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
-      const styles = getComputedStyle(root);
-      const offsetTop = parseInt(styles.getPropertyValue('--DataGrid-offsetTop'), 10);
-      expect(offsetTop).to.equal(distanceToFirstRow);
+      expect(gridOffsetTop()).to.equal(distanceToFirstRow);
       expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
     });
 

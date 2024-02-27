@@ -171,4 +171,26 @@ describe('<DataGridPro /> - Lazy loader', () => {
     expect(apiRef.current.getRowNode(4)).to.not.equal(null);
     expect(apiRef.current.getRowNode(5)).to.not.equal(null);
   });
+
+  it('should update rows when `apiRef.current.updateRows` with data reversed', () => {
+    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+
+    const newRows: GridRowModel[] = [
+      {
+        id: 3,
+        first: 'Jim',
+      },
+      {
+        id: 2,
+        first: 'Jack',
+      },
+      {
+        id: 1,
+        first: 'Mike',
+      },
+    ];
+
+    act(() => apiRef.current.unstable_replaceRows(0, newRows));
+    expect(getColumnValues(1)).to.deep.equal(['Jim', 'Jack', 'Mike']);
+  });
 });

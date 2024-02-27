@@ -1,31 +1,33 @@
 import {
   BaseTimeValidationProps,
   TimeValidationProps,
-  DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { TimeRangeValidationError, DateRange } from '../../models';
-import { BaseRangeProps } from './dateRange';
-import { RangeFieldSection } from './fields';
+import { TimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
-export interface UseTimeRangeFieldProps<TDate extends PickerValidDate>
-  extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, TimeRangeValidationError>,
+export interface UseTimeRangeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
+      Omit<
+        UseFieldInternalProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          TimeRangeValidationError
+        >,
+        'unstableFieldRef'
+      >,
       'format'
     >,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps,
-    BaseRangeProps {
+    BaseTimeValidationProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
 }
-
-export type UseTimeRangeFieldDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
-  UseTimeRangeFieldProps<TDate>,
-  keyof BaseTimeValidationProps | 'format'
->;

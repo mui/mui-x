@@ -296,7 +296,7 @@ This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
 
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
-Please check the [license key installation](#license-key-installation).
+Please check the [license key installation](/x/introduction/licensing/#license-key).
 
 ### 6. Invalid license key (TypeError: extracting license expiry timestamp)
 

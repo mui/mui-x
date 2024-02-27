@@ -1,16 +1,14 @@
-import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   createPickerRenderer,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
@@ -126,25 +124,34 @@ describe('<AdapterDayjs />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'dayjs',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });
