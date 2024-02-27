@@ -65,7 +65,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
           element.tabIndex = -1;
         }
       }
-    }, [tabIndex]);
+    }, [apiRef, tabIndex]);
 
     React.useEffect(() => {
       if (hasFocus) {
