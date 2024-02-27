@@ -355,7 +355,7 @@ export const useGridColumnResize = (
     const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
-      updateProperty(fillerLeftRef.current!, 'width', widthDiff);
+      updateProperty(fillerLeftRef.current, 'width', widthDiff);
 
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
@@ -363,7 +363,7 @@ export const useGridColumnResize = (
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
-      updateProperty(fillerRightRef.current!, 'width', widthDiff);
+      updateProperty(fillerRightRef.current, 'width', widthDiff);
 
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
@@ -746,6 +746,13 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
-function updateProperty(element: HTMLElement, property: 'right' | 'left' | 'width', delta: number) {
+function updateProperty(
+  element: HTMLElement | undefined,
+  property: 'right' | 'left' | 'width',
+  delta: number,
+) {
+  if (!element) {
+    return;
+  }
   element.style[property] = `${parseInt(element.style[property], 10) + delta}px`;
 }
