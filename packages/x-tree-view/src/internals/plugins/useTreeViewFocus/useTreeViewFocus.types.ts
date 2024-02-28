@@ -11,6 +11,7 @@ export interface UseTreeViewFocusInstance {
   canNodeBeTabbed: (nodeId: string) => boolean;
   focusNode: (event: React.SyntheticEvent, nodeId: string) => void;
   focusDefaultNode: (event: React.SyntheticEvent | null) => void;
+  removeFocusedNode: () => void;
 }
 export interface UseTreeViewFocusPublicAPI {
   focusNode: (event: React.SyntheticEvent, nodeId: string) => void;

@@ -101,6 +101,22 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     innerFocusNode(event, nodeToFocusId);
   });
 
+  const removeFocusedNode = useEventCallback(() => {
+    if (state.focusedNodeId == null) {
+      return;
+    }
+
+    const node = instance.getNode(state.focusedNodeId);
+    const nodeElement = document.getElementById(
+      instance.getTreeItemId(state.focusedNodeId, node.idAttribute),
+    );
+    if (nodeElement) {
+      nodeElement.blur();
+    }
+
+    setFocusedNodeId(null);
+  });
+
   const canNodeBeTabbed = (nodeId: string) => nodeId === tabbableNodeId;
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
@@ -109,6 +125,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     canNodeBeTabbed,
     focusNode,
     focusDefaultNode,
+    removeFocusedNode,
   });
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {

@@ -287,7 +287,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
     onBlur?.(event);
-    instance.focusNode(event, null);
+    instance.removeFocusedNode();
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
