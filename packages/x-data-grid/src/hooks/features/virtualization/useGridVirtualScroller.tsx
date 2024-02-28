@@ -22,6 +22,7 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
+import { useGridApiEventHandler } from '../../utils';
 import { clamp, range } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry, GridRowId, GridValidRowModel } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
@@ -264,8 +265,6 @@ export const useGridVirtualScroller = () => {
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
 
-      const rowIndex = rowIndexOffset + rowIndexInPage;
-
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
       if (hasColSpan) {
         const minFirstColumn = pinnedColumns.left.length;
@@ -312,7 +311,7 @@ export const useGridVirtualScroller = () => {
 
       let isFirstVisible = false;
       if (params.position === undefined) {
-        isFirstVisible = rowIndex === 0;
+        isFirstVisible = rowIndexInPage === 0;
       }
 
       let isLastVisible = false;
@@ -325,11 +324,11 @@ export const useGridVirtualScroller = () => {
             isLastVisible = true;
           }
         } else {
-          isLastVisible = rowIndex === rowModels.length - 1;
+          isLastVisible = rowIndexInPage === rowModels.length - 1;
         }
       }
 
-      const isVirtualRow = rowIndex === virtualRowIndex;
+      const isVirtualRow = rowIndexInPage === virtualRowIndex;
       const isNotVisible = isVirtualRow;
 
       let tabbableCell: GridRowProps['tabbableCell'] = null;
@@ -344,6 +343,8 @@ export const useGridVirtualScroller = () => {
         theme.direction,
         pinnedColumns.left.length,
       );
+
+      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       rows.push(
         <rootProps.slots.row
@@ -450,6 +451,11 @@ export const useGridVirtualScroller = () => {
   apiRef.current.register('private', {
     updateRenderContext: forceUpdateRenderContext,
   });
+
+  useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
+  useGridApiEventHandler(apiRef, 'aggregationModelChange', forceUpdateRenderContext);
 
   return {
     renderContext,
