@@ -23,10 +23,6 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // DateRange placeholders
   start: '开始',
   end: '结束',
-  startDate: '开始日期',
-  startTime: '开始时间',
-  endDate: '结束日期',
-  endTime: '结束时间',
 
   // Action bar
   cancelButtonLabel: '取消',
@@ -82,19 +78,6 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
-
-  // View names
-  year: '年份',
-  month: '月份',
-  day: '日期',
-  weekDay: '星期',
-  hours: '时',
-  minutes: '分',
-  seconds: '秒',
-  meridiem: '十二小时制',
-
-  // Common
-  empty: '空',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);
