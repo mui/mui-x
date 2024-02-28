@@ -533,6 +533,7 @@ describe('<SimpleTreeView />', () => {
 
       expect(onNodeFocus.lastCall.lastArg).to.equal('1');
     });
+
     it('should focus specific node using `apiRef`', () => {
       let apiRef: SimpleTreeViewApiRef;
       const onNodeFocus = spy();
@@ -558,6 +559,7 @@ describe('<SimpleTreeView />', () => {
       expect(getByRole('tree')).toHaveFocus();
       expect(onNodeFocus.lastCall.lastArg).to.equal('2');
     });
+
     it('should not focus node if parent is collapsed', () => {
       let apiRef: SimpleTreeViewApiRef;
       const onNodeFocus = spy();

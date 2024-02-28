@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeViewAnyPluginSignature, TreeViewUsedPublicAPI } from '../internals/models';
 
 /**
- * Hook that instantiate a [[TreeViewApiRef]].
+ * Hook that instantiates a [[TreeViewApiRef]].
  */
 export const useTreeViewApiRef = <
   T extends TreeViewAnyPluginSignature,

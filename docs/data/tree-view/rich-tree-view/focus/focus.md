@@ -28,8 +28,6 @@ return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 `apiRef` will be undefined during the first render and will then contain methods allowing you to imperatively interact with the Tree View.
 :::
 
-The `focusNode` receives two parameters: `event` and `nodeId`.
-
 :::info
 This method only works with nodes that are currently visible.
 Calling `apiRef.focusNode` on a node whose parent is collapsed will do nothing.

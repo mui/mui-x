@@ -18,7 +18,7 @@ export type UseTreeViewParameters<
 export interface UseTreeViewBaseParameters<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 > {
-  apiRef?:
+  apiRef:
     | React.MutableRefObject<TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>>>
     | undefined;
   rootRef?: React.Ref<HTMLUListElement> | undefined;
