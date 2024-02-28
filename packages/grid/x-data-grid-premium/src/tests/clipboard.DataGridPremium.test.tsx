@@ -116,7 +116,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         <DataGridPremium
           columns={columns}
           rows={rows}
-          cellSelection
+          unstable_cellSelection
           sortModel={[{ field: 'brand', sort: 'asc' }]}
         />,
       );
