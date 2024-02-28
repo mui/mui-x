@@ -458,7 +458,6 @@ export const useGridVirtualScroller = () => {
   useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
-  useGridApiEventHandler(apiRef, 'aggregationModelChange', forceUpdateRenderContext);
 
   return {
     renderContext,
