@@ -42,7 +42,7 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
   const classes = useUtilityClasses(rootProps);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0
+  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
 
   return (
     <VirtualScrollerRenderZoneRoot

@@ -24,7 +24,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import { clamp, range } from '../../../utils/utils';
-import { GridRenderContext, GridRowEntry, GridRowId, GridValidRowModel } from '../../../models';
+import { GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
@@ -246,16 +246,16 @@ export const useGridVirtualScroller = () => {
 
     const rowIndexes = params.rows
       ? range(0, params.rows.length)
-      : range(firstRowToRender, lastRowToRender)
+      : range(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
     if (!isPinnedSection && focusedCell.rowIndex !== -1) {
       if (focusedCell.rowIndex < firstRowToRender) {
-        virtualRowIndex = focusedCell.rowIndex
+        virtualRowIndex = focusedCell.rowIndex;
         rowIndexes.unshift(virtualRowIndex);
       }
       if (focusedCell.rowIndex >= lastRowToRender) {
-        virtualRowIndex = focusedCell.rowIndex
+        virtualRowIndex = focusedCell.rowIndex;
         rowIndexes.push(virtualRowIndex);
       }
     }
