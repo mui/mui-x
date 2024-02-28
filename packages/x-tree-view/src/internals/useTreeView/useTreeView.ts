@@ -16,12 +16,17 @@ import {
 } from './useTreeView.types';
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
-import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginsSignature } from '../corePlugins';
 
-export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
-  inParams: UseTreeViewParameters<Plugins>,
-): UseTreeViewReturnValue<ConvertPluginsIntoSignatures<Plugins>> => {
-  const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins];
+export const useTreeView = <
+  InPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
+>(
+  inParams: UseTreeViewParameters<InPlugins>,
+): UseTreeViewReturnValue<
+  [TreeViewCorePluginsSignature, ...ConvertPluginsIntoSignatures<InPlugins>]
+> => {
+  const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins] as const;
+  type Plugins = typeof plugins;
   type Signatures = ConvertPluginsIntoSignatures<typeof plugins>;
 
   const params = plugins.reduce((acc, plugin) => {
@@ -49,7 +54,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
       if (plugin.getInitialState) {
         Object.assign(
           temp,
-          plugin.getInitialState(params as UseTreeViewDefaultizedParameters<any>),
+          plugin.getInitialState(params as UseTreeViewDefaultizedParameters<Plugins>),
         );
       }
     });

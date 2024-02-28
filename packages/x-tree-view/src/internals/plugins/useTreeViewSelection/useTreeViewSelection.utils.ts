@@ -1,5 +1,5 @@
 import { TreeViewInstance } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewNodesSignature } from '../../corePlugins/useTreeViewNodes';
 
 /**
  * This is used to determine the start and end of a selection range so

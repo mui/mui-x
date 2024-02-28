@@ -1,15 +1,12 @@
-import { useTreeViewId, UseTreeViewIdParameters } from './useTreeViewId';
-import { useTreeViewNodes, UseTreeViewNodesParameters } from './useTreeViewNodes';
 import { useTreeViewExpansion, UseTreeViewExpansionParameters } from './useTreeViewExpansion';
 import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeViewSelection';
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { useTreeViewIcons, UseTreeViewIconsParameters } from './useTreeViewIcons';
 import { ConvertPluginsIntoSignatures, MergePluginsProperty } from '../models';
+import { TreeViewCorePluginsParameters } from '../corePlugins';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
-  useTreeViewId,
-  useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
@@ -28,8 +25,7 @@ export type DefaultTreeViewPluginSlotProps = MergePluginsProperty<
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface DefaultTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
-  extends UseTreeViewIdParameters,
-    UseTreeViewNodesParameters<R>,
+  extends TreeViewCorePluginsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
