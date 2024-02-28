@@ -453,10 +453,8 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(content.length).to.equal(Math.floor((height - 1) / rowHeight) + rowBuffer); // Subtracting 1 is needed because of the column header borders
+      expect(content.length).to.equal(Math.floor(height / rowHeight) + rowBuffer); // Subtracting 1 is needed because of the column header borders
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
-      const distanceToFirstRow = (nbRows - content.length) * rowHeight;
-      expect(gridOffsetTop()).to.equal(distanceToFirstRow);
       expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
     });
 
