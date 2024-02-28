@@ -1149,10 +1149,6 @@
       "nodeName": "the virtualization content",
       "conditions": "its height is bigger than the virtualization container"
     },
-    "virtualScrollerRenderZone": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the virtualization render zone"
-    },
     "withBorderColor": {
       "description": "Styles applied to {{nodeName}}, {{conditions}}. Sets border color only.",
       "nodeName": "cells",

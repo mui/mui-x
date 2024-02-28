@@ -586,7 +586,7 @@ GridRow.propTypes = {
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
    */
-  focusedCell: PropTypes.string,
+  focusedColumnIndex: PropTypes.number,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
@@ -594,7 +594,7 @@ GridRow.propTypes = {
   index: PropTypes.number.isRequired,
   isFirstVisible: PropTypes.bool.isRequired,
   isLastVisible: PropTypes.bool.isRequired,
-  isNotVisible: PropTypes.bool,
+  isNotVisible: PropTypes.bool.isRequired,
   offsetLeft: PropTypes.number.isRequired,
   offsetTop: PropTypes.number,
   onClick: PropTypes.func,
@@ -602,7 +602,13 @@ GridRow.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
-  row: PropTypes.object,
+  renderContext: PropTypes.shape({
+    firstColumnIndex: PropTypes.number.isRequired,
+    firstRowIndex: PropTypes.number.isRequired,
+    lastColumnIndex: PropTypes.number.isRequired,
+    lastRowIndex: PropTypes.number.isRequired,
+  }).isRequired,
+  row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,

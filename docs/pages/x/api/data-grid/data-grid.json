@@ -1658,12 +1658,6 @@
       "isGlobal": false
     },
     {
-      "key": "virtualScrollerRenderZone",
-      "className": "MuiDataGrid-virtualScrollerRenderZone",
-      "description": "Styles applied to the virtualization render zone.",
-      "isGlobal": false
-    },
-    {
       "key": "withBorderColor",
       "className": "MuiDataGrid-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",

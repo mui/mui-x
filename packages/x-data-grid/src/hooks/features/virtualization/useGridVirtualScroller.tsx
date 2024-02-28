@@ -125,7 +125,6 @@ export const useGridVirtualScroller = () => {
     },
     [
       apiRef,
-      pinnedColumns.left.length,
       theme.direction,
       dimensions.isReady,
       dimensions.columnsTotalWidth,
