@@ -94,6 +94,7 @@ const updateNodesState = ({
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
+  publicAPI,
   params,
   state,
   setState,
@@ -205,7 +206,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     isNodeDisabled,
   });
 
-  populatePublicAPI<UseTreeViewNodesSignature>(instance, {
+  populatePublicAPI<UseTreeViewNodesSignature>(publicAPI, {
     getItem,
   });
 

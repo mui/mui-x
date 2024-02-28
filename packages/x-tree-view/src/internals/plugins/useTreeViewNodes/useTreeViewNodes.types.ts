@@ -85,6 +85,7 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
   params: UseTreeViewNodesParameters<any>;
   defaultizedParams: UseTreeViewNodesDefaultizedParameters<any>;
   instance: UseTreeViewNodesInstance<any>;
+  publicAPI: UseTreeViewNodesPublicAPI<any>;
   events: UseTreeViewNodesEventLookup;
   state: UseTreeViewNodesState<any>;
   contextValue: UseTreeViewNodesContextValue;
