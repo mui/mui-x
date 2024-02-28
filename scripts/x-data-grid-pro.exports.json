@@ -484,7 +484,7 @@
   { "name": "GridSeparatorIcon", "kind": "Variable" },
   { "name": "GridSignature", "kind": "Enum" },
   { "name": "GridSingleSelectColDef", "kind": "Interface" },
-  { "name": "GridSkeletonCell", "kind": "Function" },
+  { "name": "GridSkeletonCell", "kind": "Variable" },
   { "name": "GridSkeletonCellProps", "kind": "Interface" },
   { "name": "GridSkeletonRowNode", "kind": "Interface" },
   { "name": "GridSlotProps", "kind": "Interface" },

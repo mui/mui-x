@@ -217,10 +217,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
-  const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
-    id: rowId,
-    field,
-  }) as (string | undefined)[];
+  // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
+  const pipesClassName = useGridSelector(apiRef, () =>
+    apiRef.current
+      .unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field,
+      })
+      .filter(Boolean)
+      .join(' '),
+  );
+
+  const classNames = [pipesClassName] as (string | undefined)[];
 
   if (column.cellClassName) {
     classNames.push(

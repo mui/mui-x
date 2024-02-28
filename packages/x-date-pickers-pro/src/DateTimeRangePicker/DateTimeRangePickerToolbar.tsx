@@ -111,8 +111,30 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     onChange,
     classes: inClasses,
     view,
+    isLandscape,
+    views,
+    ampm,
+    disabled,
+    readOnly,
+    hidden,
+    toolbarFormat,
+    toolbarPlaceholder,
+    titleId,
+    sx,
     ...other
   } = props;
+
+  const commonToolbarProps = {
+    isLandscape,
+    views,
+    ampm,
+    disabled,
+    readOnly,
+    hidden,
+    toolbarFormat,
+    toolbarPlaceholder,
+    titleId,
+  };
 
   const localeText = useLocaleText<TDate>();
 
@@ -165,9 +187,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
+      sx={sx}
+      {...other}
     >
       <DateTimeRangePickerToolbarStart<TDate>
-        {...other}
         value={start}
         onViewChange={handleStartRangeViewChange}
         toolbarTitle={localeText.start}
@@ -176,9 +199,9 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'start' ? view : undefined}
         className={classes.startToolbar}
         onChange={handleOnChange}
+        {...commonToolbarProps}
       />
       <DateTimeRangePickerToolbarEnd<TDate>
-        {...other}
         value={end}
         onViewChange={handleEndRangeViewChange}
         toolbarTitle={localeText.end}
@@ -187,6 +210,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'end' ? view : undefined}
         className={classes.endToolbar}
         onChange={handleOnChange}
+        {...commonToolbarProps}
       />
     </DateTimeRangePickerToolbarRoot>
   );
@@ -244,6 +268,9 @@ DateTimeRangePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
   ).isRequired,
