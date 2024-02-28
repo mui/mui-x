@@ -490,6 +490,7 @@ export const useGridVirtualScroller = () => {
       style: contentSize,
       role: 'presentation',
     }),
+    getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
     getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
   };
