@@ -1279,7 +1279,7 @@
     core-js "^2.6.12"
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.8", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   version "7.23.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.9.tgz#47791a15e4603bb5f905bc0753801cf21d6345f7"
   integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
@@ -1953,6 +1953,16 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.13.tgz#d1584912942f9dc042441ecc2d1452be39c666b8"
   integrity sha512-qP9OgacN62s+l8rdDhSFRe05HWtLLJ5TGclC9I1+tQngbssu0m2dmFZs+Px53AcOs9fD7TbYd4gc9AXzVqO/+g==
 
+"@mui/utils@^5.15.6":
+  version "5.15.11"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.11.tgz#a71804d6d6025783478fd1aca9afbf83d9b789c7"
+  integrity sha512-D6bwqprUa9Stf8ft0dcMqWyWDKEo7D+6pB1k8WajbqlYIRA8J8Kw9Ra7PSZKKePGBGWO+/xxrX1U8HpG/aXQCw==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+    "@types/prop-types" "^15.7.11"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
+
 "@mui/utils@^5.15.9":
   version "5.15.9"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.9.tgz#2bdf925e274d87cbe90c14eb52d0835318205e86"
@@ -1962,6 +1972,14 @@
     "@types/prop-types" "^15.7.11"
     prop-types "^15.8.1"
     react-is "^18.2.0"
+
+"@mui/x-license-pro@7.0.0-beta.0":
+  version "7.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-7.0.0-beta.0.tgz#bcc5df9e2031d9201e477f5a7786efed2a0b0b86"
+  integrity sha512-Y7WT6ZeGQidtELQTWwLNHX5x6uBIUKEX0rn2gWSq3V3UCpjxLfEM9onlgkzQo87jzPZv7cg9P58LpvimmKKQiA==
+  dependencies:
+    "@babel/runtime" "^7.23.8"
+    "@mui/utils" "^5.15.6"
 
 "@next/env@14.1.0":
   version "14.1.0"

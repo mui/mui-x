@@ -24,6 +24,8 @@
       "@mui/x-charts/*": ["./packages/x-charts/src/*"],
       "@mui/x-tree-view": ["./packages/x-tree-view/src"],
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
+      "@mui/x-tree-view-pro": ["./packages/x-tree-view-pro/src"],
+      "@mui/x-tree-view-pro/*": ["./packages/x-tree-view-pro/src/*"],
       "@mui/x-license": ["./packages/x-license/src"],
       "@mui/x-license/*": ["./packages/x-license/src/*"],
       "@mui-internal/test-utils": ["./node_modules/@mui/monorepo/packages/test-utils/src"],

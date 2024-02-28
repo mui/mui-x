@@ -1,6 +1,6 @@
 # MUI X Tree View
 
-This package is the Community plan edition of the Tree View components.
+This package is the Pro plan edition of the Tree View components.
 It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
 
 ## Installation
@@ -8,7 +8,7 @@ It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, 
 Install the package in your project directory with:
 
 ```bash
-npm install @mui/x-tree-view
+npm install @mui/x-tree-view-pro
 ```
 
 This component has the following peer dependencies that you will need to install as well.
