@@ -6,7 +6,6 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
-import ownerDocument from '@mui/utils/ownerDocument';
 import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { TreeItemContent } from './TreeItemContent';
@@ -16,7 +15,6 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { useTreeItemReorder } from './useTreeItemReorder';
-import { getActiveElement } from '../internals/utils/utils';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -299,30 +297,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, nodeId);
   };
 
-  const reorderProps = useTreeItemReorder();
   const idAttribute = instance.getTreeItemId(nodeId, id);
   const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
 
-  React.useEffect(() => {
-    if (
-      !focused ||
-      !handleContentRef.current ||
-      !handleRootRef.current ||
-      !instance.isTreeViewFocused()
-    ) {
-      return;
-    }
-
-    const activeElement = getActiveElement(ownerDocument(handleContentRef.current));
-    if (!handleContentRef.current.contains(activeElement)) {
-      handleRootRef.current.focus({ preventScroll: true });
-    }
-  }, [focused]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const focusedRef = React.useRef(focused);
-  React.useEffect(() => {
-    focusedRef.current = focused;
-  });
+  const reorderProps = useTreeItemReorder();
 
   const item = (
     <TreeItemRoot

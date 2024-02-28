@@ -68,9 +68,18 @@ const parseSortItem = (
     return null;
   }
 
-  const comparator: GridComparatorFn = isDesc(sortItem.sort)
-    ? (...args) => -1 * column.sortComparator!(...args)
-    : column.sortComparator!;
+  let comparator: GridComparatorFn | undefined;
+  if (column.getSortComparator) {
+    comparator = column.getSortComparator(sortItem.sort);
+  } else {
+    comparator = isDesc(sortItem.sort)
+      ? (...args) => -1 * column.sortComparator!(...args)
+      : column.sortComparator!;
+  }
+
+  if (!comparator) {
+    return null;
+  }
 
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,

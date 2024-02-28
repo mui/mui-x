@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridSortModel,
+  useGridApiRef,
+  GridApi,
+  GridColDef,
+  gridStringOrNumberComparator,
+} from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { GridInitialState } from '@mui/x-data-grid-pro';
@@ -702,6 +710,52 @@ describe('<DataGrid /> - Sorting', () => {
     await waitFor(() => {
       expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
       expect(onSortModelChange.callCount).to.equal(0);
+    });
+  });
+
+  describe('getSortComparator', () => {
+    it('should allow to define sort comparators depending on the sort direction', async () => {
+      const cols: GridColDef[] = [
+        {
+          field: 'value',
+          getSortComparator: (sortDirection) => {
+            const modifier = sortDirection === 'desc' ? -1 : 1;
+            return (value1, value2, cellParams1, cellParams2) => {
+              if (value1 === null) {
+                return 1;
+              }
+              if (value2 === null) {
+                return -1;
+              }
+              return (
+                modifier * gridStringOrNumberComparator(value1, value2, cellParams1, cellParams2)
+              );
+            };
+          },
+        },
+      ];
+      const rows = [
+        { id: 1, value: 'a' },
+        { id: 2, value: null },
+        { id: 3, value: 'b' },
+        { id: 4, value: null },
+      ];
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
+        </div>,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['a', '', 'b', '']);
+
+      const header = getColumnHeaderCell(0);
+      fireEvent.click(header);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
+      });
+
+      fireEvent.click(header);
+      expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
     });
   });
 });

@@ -52,7 +52,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
-    const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
@@ -60,10 +59,13 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     };
 
     React.useLayoutEffect(() => {
-      if (tabIndex === 0 && element) {
-        element!.tabIndex = -1;
+      if (tabIndex === 0) {
+        const element = apiRef.current.getCellElement(id, field);
+        if (element) {
+          element.tabIndex = -1;
+        }
       }
-    }, [element, tabIndex]);
+    }, [apiRef, tabIndex, id, field]);
 
     React.useEffect(() => {
       if (hasFocus) {

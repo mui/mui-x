@@ -76,7 +76,7 @@ createTheme({
       defaultProps: {
         toolbarPlaceholder: 'empty',
         // @ts-expect-error invalid MuiDateRangePickerToolbar prop
-        someRandomProp: true,
+        view: 'day',
       },
       styleOverrides: {
         root: {
@@ -96,7 +96,7 @@ createTheme({
       defaultProps: {
         toolbarPlaceholder: 'empty',
         // @ts-expect-error invalid MuiDateTimeRangePickerToolbar prop
-        someRandomProp: true,
+        view: 'day',
       },
       styleOverrides: {
         root: {

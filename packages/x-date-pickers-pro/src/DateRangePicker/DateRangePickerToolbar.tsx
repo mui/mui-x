@@ -31,18 +31,16 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 };
 
 export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
-  extends Omit<
-      BaseToolbarProps<DateRange<TDate>, 'day'>,
-      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
-    >,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+  extends ExportedDateRangePickerToolbarProps,
+    Omit<BaseToolbarProps<DateRange<TDate>, 'day'>, 'onChange' | 'isLandscape'>,
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+
+export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
-
-export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',
@@ -82,6 +80,9 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     onRangePositionChange,
     toolbarFormat,
     className,
+    onViewChange,
+    view,
+    views,
     ...other
   } = props;
 
@@ -143,6 +144,12 @@ DateRangePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
   /**
@@ -164,6 +171,14 @@ DateRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['day']).isRequired,
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

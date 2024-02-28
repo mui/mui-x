@@ -410,6 +410,7 @@ export const useGridRows = (
       const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
       const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const rootGroupChildren = [...rootGroup.children];
+      const seenIds = new Set<GridRowId>();
 
       for (let i = 0; i < newRows.length; i += 1) {
         const rowModel = newRows[i];
@@ -419,11 +420,13 @@ export const useGridRows = (
           'A row was provided without id when calling replaceRows().',
         );
 
-        const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
+        const [removedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
 
-        delete dataRowIdToModelLookup[replacedRowId];
-        delete dataRowIdToIdLookup[replacedRowId];
-        delete tree[replacedRowId];
+        if (!seenIds.has(removedRowId)) {
+          delete dataRowIdToModelLookup[removedRowId];
+          delete dataRowIdToIdLookup[removedRowId];
+          delete tree[removedRowId];
+        }
 
         const rowTreeNodeConfig: GridLeafNode = {
           id: rowId,
@@ -435,6 +438,8 @@ export const useGridRows = (
         dataRowIdToModelLookup[rowId] = rowModel;
         dataRowIdToIdLookup[rowId] = rowId;
         tree[rowId] = rowTreeNodeConfig;
+
+        seenIds.add(rowId);
       }
 
       tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };

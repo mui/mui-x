@@ -17,7 +17,7 @@ export interface StaticDateRangePickerSlots<TDate extends PickerValidDate>
 
 export interface StaticDateRangePickerSlotProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerSlotProps<TDate>,
-    UseStaticRangePickerSlotProps<TDate, 'day'> {}
+    Omit<UseStaticRangePickerSlotProps<TDate, 'day'>, 'toolbar'> {}
 
 export interface StaticDateRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerProps<TDate>,

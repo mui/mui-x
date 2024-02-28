@@ -54,15 +54,27 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const isTreeViewFocused = () =>
     !!rootRef.current && rootRef.current.contains(getActiveElement(ownerDocument(rootRef.current)));
 
-  const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
-    if (nodeId) {
-      setFocusedNodeId(nodeId);
+  const focusNode = useEventCallback(
+    (event: React.SyntheticEvent | null, nodeId: string | null) => {
+      if (nodeId) {
+        const node = instance.getNode(nodeId);
+        const nodeElement = document.getElementById(
+          instance.getTreeItemId(nodeId, node.idAttribute),
+        );
+        if (nodeElement) {
+          nodeElement.focus({ preventScroll: true });
+        }
 
-      if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeId);
+        setFocusedNodeId(nodeId);
+
+        if (params.onNodeFocus) {
+          params.onNodeFocus(event, nodeId);
+        }
+      } else {
+        setFocusedNodeId(null);
       }
-    }
-  });
+    },
+  );
 
   const canNodeBeTabbed = (nodeId: string) => nodeId === tabbableNodeId;
 
@@ -74,12 +86,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
-    setFocusedNodeId((oldFocusedNodeId) => {
-      if (oldFocusedNodeId === id) {
-        return instance.getChildrenIds(null)[0];
-      }
-      return oldFocusedNodeId;
-    });
+    if (state.focusedNodeId === id) {
+      instance.focusNode(null, instance.getChildrenIds(null)[0]);
+    }
   });
 
   const createHandleFocus =
@@ -111,17 +120,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
     };
 
-  const createHandleBlur =
-    (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
-      window.setTimeout(() => {
-        const activeElement = getActiveElement(ownerDocument(rootRef.current));
-        if (rootRef.current && !rootRef.current.contains(activeElement)) {
-          setFocusedNodeId(null);
-        }
-      });
-      otherHandlers.onBlur?.(event);
-    };
-
   const focusedNode = instance.getNode(state.focusedNodeId!);
   const activeDescendant = focusedNode
     ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
@@ -130,7 +128,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   return {
     getRootProps: (otherHandlers) => ({
       onFocus: createHandleFocus(otherHandlers),
-      onBlur: createHandleBlur(otherHandlers),
       'aria-activedescendant': activeDescendant ?? undefined,
     }),
   };

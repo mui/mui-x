@@ -433,6 +433,42 @@ describe('<TreeItem />', () => {
         });
         expect(getByTestId('two')).toHaveFocus();
       });
+
+      it('should work when focused node is removed', () => {
+        let removeActiveItem;
+        // a TreeItem which can remove from the tree by calling `removeActiveItem`
+        function ControlledTreeItem(props) {
+          const [mounted, setMounted] = React.useReducer(() => false, true);
+          removeActiveItem = setMounted;
+
+          if (!mounted) {
+            return null;
+          }
+          return <TreeItem {...props} />;
+        }
+
+        const { getByTestId } = render(
+          <SimpleTreeView defaultExpandedNodes={['one']}>
+            <TreeItem nodeId="one" data-testid="one">
+              <TreeItem nodeId="two" data-testid="two" />
+              <ControlledTreeItem nodeId="three" data-testid="three" />
+            </TreeItem>
+          </SimpleTreeView>,
+        );
+
+        act(() => {
+          getByTestId('three').focus();
+        });
+        expect(getByTestId('three')).toHaveFocus();
+
+        // generic action that removes an item.
+        // Could be promise based, or timeout, or another user interaction
+        act(() => {
+          removeActiveItem();
+        });
+
+        expect(getByTestId('one')).toHaveFocus();
+      });
     });
 
     describe('Navigation', () => {
@@ -1253,7 +1289,7 @@ describe('<TreeItem />', () => {
             </SimpleTreeView>,
           );
 
-          getByText('three').click();
+          fireEvent.click(getByText('three'));
           act(() => {
             getByTestId('three').focus();
           });
@@ -1999,16 +2035,16 @@ describe('<TreeItem />', () => {
     describe('focus', () => {
       describe('`disabledItemsFocusable={true}`', () => {
         it('should prevent focus by mouse', () => {
-          const focusSpy = spy();
+          const onNodeFocus = spy();
           const { getByText } = render(
-            <SimpleTreeView disabledItemsFocusable onNodeFocus={focusSpy}>
+            <SimpleTreeView disabledItemsFocusable onNodeFocus={onNodeFocus}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" disabled data-testid="two" />
             </SimpleTreeView>,
           );
 
           fireEvent.click(getByText('two'));
-          expect(focusSpy.callCount).to.equal(0);
+          expect(onNodeFocus.callCount).to.equal(0);
         });
 
         it('should not prevent programmatic focus', () => {
@@ -2062,16 +2098,36 @@ describe('<TreeItem />', () => {
 
       describe('`disabledItemsFocusable=false`', () => {
         it('should prevent focus by mouse', () => {
-          const focusSpy = spy();
+          const onNodeFocus = spy();
           const { getByText } = render(
-            <SimpleTreeView onNodeFocus={focusSpy}>
+            <SimpleTreeView onNodeFocus={onNodeFocus}>
               <TreeItem nodeId="one" label="one" data-testid="one" />
               <TreeItem nodeId="two" label="two" disabled data-testid="two" />
             </SimpleTreeView>,
           );
 
           fireEvent.click(getByText('two'));
-          expect(focusSpy.callCount).to.equal(0);
+          expect(onNodeFocus.callCount).to.equal(0);
+        });
+
+        it('should prevent focus when clicking', () => {
+          const handleMouseDown = spy();
+
+          const { getByText } = render(
+            <SimpleTreeView>
+              <TreeItem
+                nodeId="one"
+                label="one"
+                disabled
+                data-testid="one"
+                ContentProps={{ onMouseDown: handleMouseDown }}
+              />
+              <TreeItem nodeId="two" label="two" data-testid="two" />
+            </SimpleTreeView>,
+          );
+
+          fireEvent.mouseDown(getByText('one'));
+          expect(handleMouseDown.lastCall.firstArg.defaultPrevented).to.equal(true);
         });
 
         it('should prevent focus by type-ahead', () => {

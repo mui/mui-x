@@ -195,9 +195,9 @@ createTheme({
     },
     MuiDatePickerToolbar: {
       defaultProps: {
-        disabled: true,
+        hidden: false,
         // @ts-expect-error invalid MuiDatePickerToolbar prop
-        someRandomProp: true,
+        view: 'day',
       },
       styleOverrides: {
         root: {
@@ -230,9 +230,9 @@ createTheme({
     },
     MuiDateTimePickerToolbar: {
       defaultProps: {
-        disabled: true,
+        hidden: false,
         // @ts-expect-error invalid MuiDateTimePickerToolbar prop
-        someRandomProp: true,
+        view: 'day',
       },
       styleOverrides: {
         root: {
@@ -523,9 +523,9 @@ createTheme({
     },
     MuiTimePickerToolbar: {
       defaultProps: {
-        disabled: true,
+        hidden: false,
         // @ts-expect-error invalid MuiTimePickerToolbar prop
-        someRandomProp: true,
+        view: 'hours',
       },
       styleOverrides: {
         root: {
