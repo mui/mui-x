@@ -123,7 +123,7 @@ export const useGridVirtualScroller = () => {
       previousContext.current = rawRenderContext;
       prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
-    [apiRef, theme.direction, dimensions.isReady, dimensions.columnsTotalWidth],
+    [apiRef, dimensions.isReady, dimensions.columnsTotalWidth],
   );
 
   const triggerUpdateRenderContext = () => {
