@@ -66,12 +66,12 @@ export function getComponentImports(name: string, filename: string) {
   const githubPath = toGitHubPath(filename);
 
   const rootImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/.*/,
+    /\/packages\/(.+?)?\/src\/.*/,
     (match, dash, pkg) => `@mui/${pkg}`,
   );
 
   const subdirectoryImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/([^\\/]+)\/.*/,
+    /\/packages\/(.+?)?\/src\/([^\\/]+)\/.*/,
     (match, dash, pkg, directory) => `@mui/${pkg}/${directory}`,
   );
 
