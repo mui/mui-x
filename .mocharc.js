@@ -22,7 +22,7 @@ module.exports = {
     'docs/.next/**',
   ],
   spec: [
-    'packages/{,!(x-charts)/**}/*.test.{js,ts,tsx}', // x-charts requires 'tsx/cjs' which conflict with the babel deat-fns override for picker tests
+    'packages/{,!(x-charts)/**}/*.test.{js,ts,tsx}', // x-charts requires 'tsx/cjs' which conflict with the babel date-fns override for picker tests
     'docs/src/modules/**/*.test.{js,ts,tsx}',
   ],
 };
