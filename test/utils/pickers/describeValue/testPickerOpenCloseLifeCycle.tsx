@@ -16,7 +16,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     return;
   }
 
-  const isRangeType = ['date-range', 'date-time-range'].includes(pickerParams.type);
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
   const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
   describe('Picker open / close lifecycle', () => {

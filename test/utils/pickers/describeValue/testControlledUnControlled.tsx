@@ -28,7 +28,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   const params = pickerParams as DescribeValueOptions<'picker', any>;
 
-  const isRangeType = ['date-range', 'date-time-range'].includes(params.type);
+  const isRangeType = params.type === 'date-range' || params.type === 'date-time-range';
   const isDesktopRange = params.variant === 'desktop' && isRangeType;
 
   describe('Controlled / uncontrolled value', () => {
@@ -257,10 +257,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         expect(fieldRoot).to.have.class(inputBaseClasses.error);
         expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
 
-        if (
-          (params.type === 'date-range' || params.type === 'date-time-range') &&
-          !params.isSingleInput
-        ) {
+        if (isRangeType && !params.isSingleInput) {
           const fieldRootEnd = getFieldInputRoot(1);
           expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
           expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');

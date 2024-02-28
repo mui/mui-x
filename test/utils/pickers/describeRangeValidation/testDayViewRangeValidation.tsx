@@ -3,10 +3,10 @@ import { expect } from 'chai';
 import { screen } from '@mui-internal/test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 
-const isDisable = (el: HTMLElement) => el.getAttribute('disabled') !== null;
+const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 
 const testDisabledDate = (day: string, expectedAnswer: boolean[], isSingleCalendar: boolean) => {
-  expect(screen.getAllByRole('gridcell', { name: day }).map(isDisable)).to.deep.equal(
+  expect(screen.getAllByRole('gridcell', { name: day }).map(isDisabled)).to.deep.equal(
     isSingleCalendar ? expectedAnswer.slice(0, 1) : expectedAnswer,
   );
 };

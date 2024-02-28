@@ -18,12 +18,12 @@ export type OpenPickerParams =
     };
 
 export const openPicker = (params: OpenPickerParams) => {
-  const isRangePicker = params.type === 'date-range' || params.type === 'date-time-range';
+  const isRangeType = params.type === 'date-range' || params.type === 'date-time-range';
   const fieldSectionsContainer = getFieldSectionsContainer(
-    isRangePicker && !params.isSingleInput && params.initialFocus === 'end' ? 1 : 0,
+    isRangeType && !params.isSingleInput && params.initialFocus === 'end' ? 1 : 0,
   );
 
-  if (isRangePicker) {
+  if (isRangeType) {
     userEvent.mousePress(fieldSectionsContainer);
 
     if (params.isSingleInput && params.initialFocus === 'end') {

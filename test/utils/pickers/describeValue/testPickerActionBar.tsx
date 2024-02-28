@@ -27,7 +27,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     return;
   }
 
-  const isRangeType = ['date-range', 'date-time-range'].includes(pickerParams.type);
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
