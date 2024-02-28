@@ -589,6 +589,7 @@ async function initializeEnvironment(
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
       });
+
       describe('<MobileDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
@@ -606,6 +607,7 @@ async function initializeEnvironment(
         });
       });
     });
+
     describe('<DesktopDateTimePicker />', () => {
       it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicDesktopDateTimePicker');
@@ -695,6 +697,7 @@ async function initializeEnvironment(
         });
       });
     });
+
     describe('<DateRangePicker />', () => {
       it('should allow selecting a range value', async () => {
         // firefox in CI is not happy with this test

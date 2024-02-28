@@ -160,10 +160,12 @@ describe('<DesktopDatePicker />', () => {
 
     let originalScrollX: number;
     let originalScrollY: number;
+
     beforeEach(() => {
       originalScrollX = window.screenX;
       originalScrollY = window.scrollY;
     });
+
     afterEach(() => {
       window.scrollTo(originalScrollX, originalScrollY);
     });
