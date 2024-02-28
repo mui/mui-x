@@ -153,7 +153,7 @@
     "karma-webpack": "^5.0.1",
     "lerna": "^8.0.2",
     "markdownlint-cli2": "^0.12.1",
-    "mocha": "^10.2.0",
+    "mocha": "^10.3.0",
     "nyc": "^15.1.0",
     "patch-package": "^7.0.2",
     "postinstall-postinstall": "^2.1.0",
