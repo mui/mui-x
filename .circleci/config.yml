@@ -130,8 +130,11 @@ jobs:
       - checkout
       - install_js
       - run:
+          name: Tests charts
+          command: yarn test:charts:unit
+      - run:
           name: Tests fake browser
-          command: yarn test:coverage & yarn test:charts:unit
+          command: yarn test:coverage
       - run:
           name: Check coverage generated
           command: |
