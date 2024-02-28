@@ -1,5 +1,6 @@
 {
   "props": {
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: { focusNode: func } }" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedNodes": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
@@ -128,6 +129,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li></ul>",
   "cssComponent": false
 }

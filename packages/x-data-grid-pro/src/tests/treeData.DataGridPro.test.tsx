@@ -442,6 +442,7 @@ describe('<DataGridPro /> - Tree data', () => {
         />
       );
     }
+
     it('should respect the pageSize for the top level rows when toggling children expansion', () => {
       render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);

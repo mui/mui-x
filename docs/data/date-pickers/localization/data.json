@@ -35,7 +35,7 @@
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/zhCN.ts"
   },

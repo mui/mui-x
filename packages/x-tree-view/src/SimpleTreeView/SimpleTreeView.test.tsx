@@ -6,6 +6,8 @@ import Portal from '@mui/material/Portal';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { describeConformance } from 'test/utils/describeConformance';
+import { useTreeViewApiRef } from '../hooks';
+import { SimpleTreeViewApiRef } from './SimpleTreeView.types';
 
 describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();
@@ -530,6 +532,57 @@ describe('<SimpleTreeView />', () => {
       });
 
       expect(onNodeFocus.lastCall.lastArg).to.equal('1');
+    });
+
+    it('should focus specific node using `apiRef`', () => {
+      let apiRef: SimpleTreeViewApiRef;
+      const onNodeFocus = spy();
+
+      function TestCase() {
+        apiRef = useTreeViewApiRef();
+        return (
+          <SimpleTreeView apiRef={apiRef} onNodeFocus={onNodeFocus}>
+            <TreeItem nodeId="1" label="1">
+              <TreeItem nodeId="1.1" label="1.1" />
+            </TreeItem>
+            <TreeItem nodeId="2" label="2" />
+          </SimpleTreeView>
+        );
+      }
+
+      const { getByRole } = render(<TestCase />);
+
+      act(() => {
+        apiRef.current?.focusNode({} as React.SyntheticEvent, '2');
+      });
+
+      expect(getByRole('tree')).toHaveFocus();
+      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+    });
+
+    it('should not focus node if parent is collapsed', () => {
+      let apiRef: SimpleTreeViewApiRef;
+      const onNodeFocus = spy();
+
+      function TestCase() {
+        apiRef = useTreeViewApiRef();
+        return (
+          <SimpleTreeView apiRef={apiRef} onNodeFocus={onNodeFocus}>
+            <TreeItem nodeId="1" label="1">
+              <TreeItem nodeId="1.1" label="1.1" />
+            </TreeItem>
+            <TreeItem nodeId="2" label="2" />
+          </SimpleTreeView>
+        );
+      }
+
+      const { getByRole } = render(<TestCase />);
+
+      act(() => {
+        apiRef.current?.focusNode({} as React.SyntheticEvent, '1.1');
+      });
+
+      expect(getByRole('tree')).not.toHaveFocus();
     });
   });
 
