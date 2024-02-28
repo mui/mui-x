@@ -33,6 +33,33 @@ describe('<DesktopDateTimeRangePicker />', () => {
       );
     });
 
+    it('should respect the "disablePast" prop combined with "referenceDate"', () => {
+      render(
+        <DesktopDateTimeRangePicker
+          enableAccessibleFieldDOMStructure
+          disablePast
+          open
+          referenceDate={adapterToUse.date('2018-01-11')}
+        />,
+      );
+
+      expect(screen.getByRole('gridcell', { name: '8' })).to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '10' })).not.to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '11' })).not.to.have.attribute('disabled');
+
+      expect(screen.getByRole('option', { name: '9 hours' })).not.to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: '10 hours' })).not.to.have.attribute(
+        'aria-disabled',
+      );
+
+      expect(screen.getByRole('option', { name: '15 minutes' })).not.to.have.attribute(
+        'aria-disabled',
+      );
+    });
+
     it('should respect the "disableFuture" prop', () => {
       render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure disableFuture open />);
 
@@ -47,6 +74,29 @@ describe('<DesktopDateTimeRangePicker />', () => {
       expect(screen.getByRole('option', { name: '11 hours' })).to.have.attribute(
         'aria-disabled',
         'true',
+      );
+    });
+
+    it('should respect the "disableFuture" prop combined with "referenceDate"', () => {
+      render(
+        <DesktopDateTimeRangePicker
+          enableAccessibleFieldDOMStructure
+          disableFuture
+          open
+          referenceDate={adapterToUse.date('2018-01-09')}
+        />,
+      );
+
+      expect(screen.getByRole('gridcell', { name: '9' })).not.to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '10' })).not.to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '11' })).to.have.attribute('disabled');
+      expect(screen.getByRole('gridcell', { name: '12' })).to.have.attribute('disabled');
+
+      expect(screen.getByRole('option', { name: '10 hours' })).not.to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: '11 hours' })).not.to.have.attribute(
+        'aria-disabled',
       );
     });
 
