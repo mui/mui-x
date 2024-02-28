@@ -118,7 +118,8 @@ export function findGridCells(api: GridPrivateApiPro, field: string) {
   const container = api.virtualScrollerRef!.current!;
   return Array.from(
     container.querySelectorAll(
-      `:scope > div > div > div > [data-field="${field}"][role="gridcell"]`,
+      `:scope > div > div > [data-field="${field}"][role="gridcell"],
+       :scope > div > div > div > [data-field="${field}"][role="gridcell"]`,
     ),
   );
 }
