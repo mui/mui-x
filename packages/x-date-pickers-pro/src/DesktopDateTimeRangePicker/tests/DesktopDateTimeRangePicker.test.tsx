@@ -33,6 +33,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
       );
     });
 
+    // Asserts correct behavior: https://github.com/mui/mui-x/issues/12048
     it('should respect the "disablePast" prop combined with "referenceDate"', () => {
       render(
         <DesktopDateTimeRangePicker
@@ -77,6 +78,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
       );
     });
 
+    // Asserts correct behavior: https://github.com/mui/mui-x/issues/12048
     it('should respect the "disableFuture" prop combined with "referenceDate"', () => {
       render(
         <DesktopDateTimeRangePicker
