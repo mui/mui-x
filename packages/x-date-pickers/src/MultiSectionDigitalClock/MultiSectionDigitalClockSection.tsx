@@ -189,7 +189,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         {items.map((option, index) => {
           const isItemDisabled = option.isDisabled?.(option.value);
           const isDisabled = disabled || isItemDisabled;
-          if (skipDisabled && isItemDisabled) {
+          if (skipDisabled && isDisabled) {
             return null;
           }
           const isSelected = option.isSelected(option.value);
