@@ -551,7 +551,7 @@ export const useGridCellSelection = (
       if (apiRef.current.unstable_getSelectedCellsAsArray().length <= 1) {
         return value;
       }
-      const cellSelectionModel = apiRef.current.getCellSelectionModel();
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
       const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
       const sortedSelectedRowIds = sortedRowIds.filter((id) =>
         unsortedSelectedRowIds.includes(`${id}`),
