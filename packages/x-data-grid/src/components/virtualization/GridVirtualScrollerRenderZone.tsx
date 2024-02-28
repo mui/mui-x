@@ -4,7 +4,8 @@ import { styled, SxProps, Theme } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridOffsetsSelector } from '../../hooks/features/virtualization';
+import { gridRowsMetaSelector } from '../../hooks/features/rows';
+import { gridRenderContextSelector } from '../../hooks/features/virtualization';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -39,7 +40,9 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
+  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0
 
   return (
     <VirtualScrollerRenderZoneRoot
@@ -47,7 +50,7 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
       className={clsx(classes.root, className)}
       ownerState={rootProps}
       style={{
-        transform: `translate3d(0, ${offsets.top}px, 0)`,
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
       }}
       {...other}
     />

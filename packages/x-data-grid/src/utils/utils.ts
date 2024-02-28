@@ -35,6 +35,14 @@ export function escapeRegExp(value: string): string {
 export const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
 
+
+/**
+ * Create an array containing the range [from, to[
+ */
+export function range(from: number, to: number) {
+  return Array.from({ length: to - from }).map((_, i) => from + i)
+}
+
 /**
  * Based on `fast-deep-equal`
  *
