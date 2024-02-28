@@ -212,11 +212,14 @@ export const useGridVirtualScroller = () => {
     params: {
       rows?: GridRowEntry[];
       position?: GridPinnedRowsPosition;
+      renderContext?: GridRenderContext;
     } = {},
   ) => {
     if (!params.rows && !currentPage.range) {
       return [];
     }
+
+    const currentRenderContext = params.renderContext ?? renderContext;
 
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
@@ -238,8 +241,8 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    const firstRowToRender = renderContext.firstRowIndex;
-    const lastRowToRender = renderContext.lastRowIndex;
+    const firstRowToRender = currentRenderContext.firstRowIndex;
+    const lastRowToRender = currentRenderContext.lastRowIndex;
 
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
@@ -358,7 +361,7 @@ export const useGridVirtualScroller = () => {
 
       const offsetLeft = computeOffsetLeft(
         columnPositions,
-        renderContext,
+        currentRenderContext,
         theme.direction,
         pinnedColumns.left.length,
       );
@@ -377,7 +380,7 @@ export const useGridVirtualScroller = () => {
           tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          renderContext={renderContext}
+          renderContext={currentRenderContext}
           focusedColumnIndex={hasFocus ? focusedCell.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
