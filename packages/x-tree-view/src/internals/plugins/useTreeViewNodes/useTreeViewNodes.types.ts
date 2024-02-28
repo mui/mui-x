@@ -14,6 +14,7 @@ export interface UseTreeViewNodesInstance {
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
+  moveItem: (nodeId: string, newParent: string | null, newIndex: number) => void;
 }
 
 export interface UseTreeViewNodesParameters<R extends {}> {
@@ -66,9 +67,10 @@ export interface TreeViewNodeIdAndChildren {
   children?: TreeViewNodeIdAndChildren[];
 }
 
-export interface UseTreeViewNodesState {
+export interface UseTreeViewNodesState<R extends {}> {
   nodeTree: TreeViewNodeIdAndChildren[];
   nodeMap: TreeViewNodeMap;
+  itemList: readonly R[];
 }
 
 interface UseTreeViewNodesContextValue
@@ -79,7 +81,7 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewNodesDefaultizedParameters<any>;
   instance: UseTreeViewNodesInstance;
   events: UseTreeViewNodesEventLookup;
-  state: UseTreeViewNodesState;
+  state: UseTreeViewNodesState<any>;
   contextValue: UseTreeViewNodesContextValue;
 }>;
 

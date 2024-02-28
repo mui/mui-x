@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import {
@@ -20,7 +19,7 @@ const updateState = ({
 }: Pick<
   UseTreeViewNodesDefaultizedParameters<TreeViewBaseItem>,
   'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
->): UseTreeViewNodesState => {
+>): UseTreeViewNodesState<any> => {
   const nodeMap: TreeViewNodeMap = {};
   const processItem = (
     item: TreeViewBaseItem,
@@ -83,6 +82,7 @@ const updateState = ({
   return {
     nodeMap,
     nodeTree,
+    itemList: items,
   };
 };
 
@@ -132,6 +132,36 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [state.nodeMap],
   );
 
+  const moveItem = React.useCallback(
+    (nodeId: string, newParent: string | null, newIndex: number) => {
+      const node = instance.getNode(nodeId);
+
+      setState((prevState) => {
+        if (node.parentId !== newParent) {
+          throw new Error('MUI X: For now we only support drag&drop inside the same parent');
+        }
+
+        const updatedItems = [...prevState.itemList];
+        // TODO support items with parent
+        const itemRemoved = updatedItems.splice(node.index, 1)[0];
+        updatedItems.splice(newIndex, 0, itemRemoved);
+
+        const newState = updateState({
+          items: updatedItems,
+          isItemDisabled: params.isItemDisabled,
+          getItemId: params.getItemId,
+          getItemLabel: params.getItemLabel,
+        });
+
+        return {
+          ...prevState,
+          ...newState,
+        };
+      });
+    },
+    [instance, params.getItemId, params.getItemLabel, params.isItemDisabled, setState],
+  );
+
   const getNavigableChildrenIds = (nodeId: string | null) => {
     let childrenIds = instance.getChildrenIds(nodeId);
 
@@ -167,7 +197,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getNodesToRender = useEventCallback(() => {
+  const getNodesToRender = React.useCallback(() => {
     const getPropsFromNodeId = ({
       id,
       children,
@@ -182,7 +212,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     };
 
     return state.nodeTree.map(getPropsFromNodeId);
-  });
+  }, [instance, state.nodeMap, state.nodeTree]);
 
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
@@ -190,6 +220,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
+    moveItem,
   });
 
   return {
