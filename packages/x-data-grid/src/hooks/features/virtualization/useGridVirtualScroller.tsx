@@ -217,6 +217,8 @@ export const useGridVirtualScroller = () => {
       return [];
     }
 
+    const columnPositions = gridColumnPositionsSelector(apiRef);
+
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
       (hasBottomPinnedRows && params.position === 'bottom');
@@ -237,12 +239,11 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    const firstRowToRender = renderContext.firstRowIndex;
-    const lastRowToRender = renderContext.lastRowIndex;
-
-    const columnPositions = gridColumnPositionsSelector(apiRef);
-
     const rowModels = params.rows ?? currentPage.rows;
+
+    const firstRowToRender = renderContext.firstRowIndex;
+    const lastRowToRender = Math.min(renderContext.lastRowIndex, rowModels.length);
+
     const rowIndexes = params.rows
       ? range(0, params.rows.length)
       : range(firstRowToRender, lastRowToRender)
