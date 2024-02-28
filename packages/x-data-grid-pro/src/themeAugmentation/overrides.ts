@@ -1,7 +1,7 @@
-import { GridClassKey } from '@mui/x-data-grid';
+import { DataGridClassKey } from '@mui/x-data-grid';
 
 export interface DataGridProComponentNameToClassKey {
-  MuiDataGrid: GridClassKey;
+  MuiDataGrid: DataGridClassKey;
 }
 
 declare module '@mui/material/styles' {
