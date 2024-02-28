@@ -66,8 +66,6 @@ export const useGridVirtualScroller = () => {
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
   const contentHeight = dimensions.contentSize.height;
   const columnsTotalWidth = dimensions.columnsTotalWidth;
-  const minFirstColumn = pinnedColumns.left.length;
-  const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
@@ -212,14 +210,11 @@ export const useGridVirtualScroller = () => {
     params: {
       rows?: GridRowEntry[];
       position?: GridPinnedRowsPosition;
-      renderContext?: GridRenderContext;
     } = {},
   ) => {
     if (!params.rows && !currentPage.range) {
       return [];
     }
-
-    const currentRenderContext = params.renderContext ?? renderContext;
 
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
@@ -241,8 +236,8 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    const firstRowToRender = currentRenderContext.firstRowIndex;
-    const lastRowToRender = currentRenderContext.lastRowIndex;
+    const firstRowToRender = renderContext.firstRowIndex;
+    const lastRowToRender = renderContext.lastRowIndex;
 
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
@@ -292,6 +287,9 @@ export const useGridVirtualScroller = () => {
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
       if (hasColSpan) {
+        const minFirstColumn = pinnedColumns.left.length;
+        const maxLastColumn = visibleColumns.length - pinnedColumns.right.length;
+
         apiRef.current.calculateColSpan({
           rowId: id,
           minFirstColumn,
@@ -361,7 +359,7 @@ export const useGridVirtualScroller = () => {
 
       const offsetLeft = computeOffsetLeft(
         columnPositions,
-        currentRenderContext,
+        renderContext,
         theme.direction,
         pinnedColumns.left.length,
       );
@@ -380,7 +378,7 @@ export const useGridVirtualScroller = () => {
           tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          renderContext={currentRenderContext}
+          renderContext={renderContext}
           focusedColumnIndex={hasFocus ? focusedCell.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
