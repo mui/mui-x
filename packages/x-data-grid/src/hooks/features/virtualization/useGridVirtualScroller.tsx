@@ -261,10 +261,10 @@ export const useGridVirtualScroller = () => {
     const rows: React.ReactNode[] = [];
     const rowProps = rootProps.slotProps?.row;
 
-    rowIndexes.forEach((rowIndex, i) => {
-      const { id, model } = rowModels[rowIndex];
+    rowIndexes.forEach((rowIndexInPage) => {
+      const { id, model } = rowModels[rowIndexInPage];
 
-      const rowIndexInPage = (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i;
+      const rowIndex = rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
       if (hasColSpan) {
@@ -312,14 +312,14 @@ export const useGridVirtualScroller = () => {
 
       let isFirstVisible = false;
       if (params.position === undefined) {
-        isFirstVisible = rowIndexInPage === 0;
+        isFirstVisible = rowIndex === 0;
       }
 
       let isLastVisible = false;
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
-          const isLastVisibleRowIndex = firstRowToRender + i === lastIndex;
+          const isLastVisibleRowIndex = rowIndexInPage === lastIndex;
 
           if (isLastVisibleRowIndex) {
             isLastVisible = true;
