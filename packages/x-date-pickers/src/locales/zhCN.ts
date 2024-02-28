@@ -6,7 +6,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   hours: '小时',
   minutes: '分钟',
   seconds: '秒',
-  meridiem: '子午线',
+  meridiem: '十二小时制',
 };
 
 const zhCNPickers: Partial<PickersLocaleText<any>> = {
@@ -65,7 +65,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `选择时间，已选择${utils.format(value, 'fullTime')}`
       : '选择时间',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: '清除',
 
   // Table labels
   timeTableLabel: '选择时间',
@@ -89,10 +89,10 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   hours: '时',
   minutes: '分',
   seconds: '秒',
-  // meridiem: 'Meridiem',
+  meridiem: '十二小时制',
 
   // Common
-  // empty: 'Empty',
+  empty: '空',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);
