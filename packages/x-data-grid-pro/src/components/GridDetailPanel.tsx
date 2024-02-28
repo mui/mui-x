@@ -12,12 +12,13 @@ const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
+  position: 'relative',
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-  backgroundColor: (theme.vars || theme).palette.background.default,
+  backgroundColor: 'var(--DataGrid-containerBackground)',
   overflow: 'auto',
-}));
+});
 
 interface GridDetailPanelProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {
@@ -26,13 +27,17 @@ interface GridDetailPanelProps
    */
   rowId: GridRowId;
   /**
+   * The top position.
+   */
+  top: number;
+  /**
    * The panel height.
    */
   height: number | 'auto';
 }
 
 function GridDetailPanel(props: GridDetailPanelProps) {
-  const { rowId, height, className, children } = props;
+  const { rowId, height, top, className, children } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
   const rootProps = useGridRootProps();
@@ -65,7 +70,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
       ref={ref}
       ownerState={ownerState}
       role="presentation"
-      style={{ height }}
+      style={{ top, height }}
       className={className}
     >
       {children}

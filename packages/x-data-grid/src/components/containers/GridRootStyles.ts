@@ -415,6 +415,11 @@ export const GridRootStyles = styled('div', {
       },
     },
 
+    /* Center container styles */
+    [`.${c.virtualScrollerContent}`]: {
+      position: 'relative',
+    },
+
     /* Row styles */
     [`.${c.row}`]: {
       display: 'flex',
@@ -435,6 +440,9 @@ export const GridRootStyles = styled('div', {
         },
       },
       '&.Mui-selected': selectedStyles,
+    },
+    [`.${c.virtualScrollerContent} > .${c.row}`]: {
+      position: 'absolute',
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
       '[role=row]': {

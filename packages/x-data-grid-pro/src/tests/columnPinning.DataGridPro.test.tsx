@@ -365,20 +365,20 @@ describe('<DataGridPro /> - Column pinning', () => {
       it('should change the side when called on a pinned column', () => {
         render(<TestCase />);
 
-        const renderZone = $(`.${gridClasses.virtualScrollerRenderZone}`)!;
+        const content = $(`.${gridClasses.virtualScrollerContent}`)!;
 
-        expect($(renderZone, '[data-field="currencyPair"]')!.className).not.to.include('pinned');
+        expect($(content, '[data-field="currencyPair"]')!.className).not.to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect(
-          $(renderZone, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
+          $(content, `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
         ).not.to.equal(null);
-        expect($(renderZone, '[data-field="currencyPair"]')!.className).to.include('pinned');
+        expect($(content, '[data-field="currencyPair"]')!.className).to.include('pinned');
 
         act(() => apiRef.current.pinColumn('currencyPair', GridPinnedColumnPosition.RIGHT));
-        expect($$(renderZone, `.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
+        expect($$(content, `.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
         expect(
-          $(renderZone, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`),
+          $(content, `.${gridClasses['cell--pinnedRight']}[data-field="currencyPair"]`),
         ).not.to.equal(null);
       });
 
@@ -398,8 +398,8 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).not.to.equal(0);
         act(() => apiRef.current.unpinColumn('currencyPair'));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).to.equal(0);
-        const renderZone = $(`.${gridClasses.virtualScrollerRenderZone}`)!;
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
+        const content = $(`.${gridClasses.virtualScrollerContent}`)!;
+        expect(content.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
       });
     });
 

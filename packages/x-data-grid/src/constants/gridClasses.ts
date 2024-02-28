@@ -418,10 +418,6 @@ export interface GridClasses {
    */
   'virtualScrollerContent--overflowed': string;
   /**
-   * Styles applied to the virtualization render zone.
-   */
-  virtualScrollerRenderZone: string;
-  /**
    * Styles applied to the pinned columns.
    */
   pinnedColumns: string;
@@ -762,7 +758,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScroller',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
-  'virtualScrollerRenderZone',
   'pinnedColumns',
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',

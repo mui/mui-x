@@ -447,17 +447,15 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = grid('virtualScroller')!;
-      const renderingZone = grid('virtualScrollerRenderZone')!;
+      const content = grid('virtualScrollerContent')!.querySelectorAll('[role="row"]');
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(
-        Math.floor((height - 1) / rowHeight) + rowBuffer,
-      ); // Subtracting 1 is needed because of the column header borders
+      expect(content.length).to.equal(Math.floor((height - 1) / rowHeight) + rowBuffer); // Subtracting 1 is needed because of the column header borders
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
-      const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
+      const distanceToFirstRow = (nbRows - content.length) * rowHeight;
       expect(gridOffsetTop()).to.equal(distanceToFirstRow);
       expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
     });
@@ -503,12 +501,12 @@ describe('<DataGridPro /> - Rows', () => {
         <TestCaseVirtualization rowHeight={rowHeight} rowBuffer={0} rowThreshold={rowThreshold} />,
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
-      let firstRow = renderingZone.firstChild;
+      const content = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
+      let firstRow = content.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
       virtualScroller.scrollTop = rowThreshold * rowHeight;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      firstRow = renderingZone.firstChild;
+      firstRow = content.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '3');
     });
 
@@ -519,13 +517,13 @@ describe('<DataGridPro /> - Rows', () => {
         <TestCaseVirtualization nbRows={1} columnBuffer={0} columnThreshold={columnThreshold} />,
       );
       const virtualScroller = grid('virtualScroller')!;
-      const renderingZone = grid('virtualScrollerRenderZone')!;
-      const firstRow = $(renderingZone, '[role="row"]:first-child')!;
+      const content = grid('virtualScrollerContent')!;
+      const firstRow = $(content, '[role="row"]:first-child')!;
       let firstColumn = $$(firstRow, '[role="gridcell"]')[0];
       expect(firstColumn).to.have.attr('data-colindex', '0');
       virtualScroller.scrollLeft = columnThreshold * columnWidth;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
+      firstColumn = $(content, '[role="row"] > [role="gridcell"]')!;
       expect(firstColumn).to.have.attr('data-colindex', '3');
     });
 
@@ -570,7 +568,7 @@ describe('<DataGridPro /> - Rows', () => {
         expect(lastCell).to.have.text('99');
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(grid('virtualScrollerRenderZone')!.children).to.have.length(4);
+        expect(grid('virtualScrollerContent')!.children).to.have.length(4);
       });
 
       it('should paginate small dataset in auto page-size #1492', () => {
@@ -586,7 +584,7 @@ describe('<DataGridPro /> - Rows', () => {
 
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(grid('virtualScrollerRenderZone')!.children).to.have.length(7);
+        expect(grid('virtualScrollerContent')!.children).to.have.length(7);
       });
     });
 
