@@ -95,7 +95,7 @@
     "@mui/internal-scripts": "^1.0.1",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",
-    "@types/webpack-bundle-analyzer": "^4.6.3",
+    "@types/webpack-bundle-analyzer": "^4.7.0",
     "cpy-cli": "^5.0.0",
     "gm": "^1.25.0",
     "serve": "^14.2.1"
