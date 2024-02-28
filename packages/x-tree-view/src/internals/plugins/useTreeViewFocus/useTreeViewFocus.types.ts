@@ -9,7 +9,11 @@ export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
   isTreeViewFocused: () => boolean;
   canNodeBeTabbed: (nodeId: string) => boolean;
-  focusNode: (event: React.SyntheticEvent | null, nodeId: string | null) => void;
+  focusNode: (event: React.SyntheticEvent, nodeId: string) => void;
+  focusDefaultNode: (event: React.SyntheticEvent | null) => void;
+}
+export interface UseTreeViewFocusPublicAPI {
+  focusNode: (event: React.SyntheticEvent, nodeId: string) => void;
 }
 
 export interface UseTreeViewFocusParameters {
@@ -32,6 +36,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
   defaultizedParams: UseTreeViewFocusDefaultizedParameters;
   instance: UseTreeViewFocusInstance;
+  publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
   dependantPlugins: [
     UseTreeViewIdSignature,
