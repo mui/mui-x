@@ -29,7 +29,7 @@ jobs:
 
             For support, please check out https://mui.com/x/introduction/support/. Thanks!
 
-            If you have a question on Stack Overflow, you are welcome to link to it here, it might help others.
+            If you have a question on Stack Overflow, you are welcome to link to it here, it might help others.
             If your issue is subsequently confirmed as a bug, and the report follows the issue template, it can be reopened.
           close-issue: true
           lock-issue: false

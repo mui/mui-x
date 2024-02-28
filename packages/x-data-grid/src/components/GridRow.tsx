@@ -29,7 +29,6 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { randomNumberBetween } from '../utils/utils';
 import { PinnedPosition } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 
@@ -351,8 +350,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
-  const randomNumber = randomNumberBetween(10000, 20, 80);
-
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,
@@ -393,13 +390,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     if (rowNode?.type === 'skeletonRow') {
-      const contentWidth = Math.round(randomNumber());
-
       return (
         <slots.skeletonCell
           key={column.field}
           width={width}
-          contentWidth={contentWidth}
+          height={rowHeight}
           field={column.field}
           align={column.align ?? 'left'}
         />

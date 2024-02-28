@@ -11,7 +11,7 @@
     "dateFormats": {
       "type": {
         "name": "shape",
-        "description": "{ dayOfMonth?: string, fullDate?: string, fullTime?: string, fullTime12h?: string, fullTime24h?: string, hours12h?: string, hours24h?: string, keyboardDate?: string, keyboardDateTime?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string, meridiem?: string, minutes?: string, month?: string, monthShort?: string, normalDate?: string, normalDateWithWeekday?: string, seconds?: string, shortDate?: string, weekday?: string, weekdayShort?: string, year?: string }"
+        "description": "{ dayOfMonth?: string, dayOfMonthFull?: string, fullDate?: string, fullTime?: string, fullTime12h?: string, fullTime24h?: string, hours12h?: string, hours24h?: string, keyboardDate?: string, keyboardDateTime?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string, meridiem?: string, minutes?: string, month?: string, monthShort?: string, normalDate?: string, normalDateWithWeekday?: string, seconds?: string, shortDate?: string, weekday?: string, weekdayShort?: string, year?: string }"
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },

@@ -61,7 +61,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   function ResizeObserverMock(
     callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
   ) {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     return {
       observe: (element: HTMLElement) => {
