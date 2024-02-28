@@ -121,7 +121,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
-    isTreeViewFocused,
     canNodeBeTabbed,
     focusNode,
     focusDefaultNode,
