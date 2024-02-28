@@ -199,7 +199,10 @@ export const useGridRowEditing = (
             if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
               return true;
             }
-            return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
+
+            const cellParams = apiRef.current.getCellParams(params.id, field);
+            const uncommittedRow = apiRef.current.getRowWithUpdatedValuesFromRowEditing(params.id);
+            return apiRef.current.isCellEditable({ ...cellParams, row: uncommittedRow });
           });
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {
