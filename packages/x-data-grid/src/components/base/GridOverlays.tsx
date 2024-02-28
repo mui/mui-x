@@ -15,7 +15,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridVisibleRows } from '../../hooks/utils/useGridVisibleRows';
 import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',

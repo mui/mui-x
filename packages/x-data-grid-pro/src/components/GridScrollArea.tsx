@@ -11,7 +11,7 @@ import {
   GridEventListener,
   GridScrollParams,
   getDataGridUtilityClass,
-  gridClasses,
+  dataGridClasses,
   gridDensityFactorSelector,
   useGridApiContext,
   useGridApiEventHandler,
@@ -44,8 +44,8 @@ const GridScrollAreaRawRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ScrollArea',
   overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
-    { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
+    { [`&.${dataGridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
+    { [`&.${dataGridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
     styles.scrollArea,
   ],
 })<{ ownerState: OwnerState }>(() => ({
@@ -54,10 +54,10 @@ const GridScrollAreaRawRoot = styled('div', {
   zIndex: 101,
   width: 20,
   bottom: 0,
-  [`&.${gridClasses['scrollArea--left']}`]: {
+  [`&.${dataGridClasses['scrollArea--left']}`]: {
     left: 0,
   },
-  [`&.${gridClasses['scrollArea--right']}`]: {
+  [`&.${dataGridClasses['scrollArea--right']}`]: {
     right: 0,
   },
 }));

@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
+import { dataGridClasses, getDataGridUtilityClass } from '../../constants/dataGridClasses';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -23,7 +23,7 @@ export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>)
   return (
     <Element
       {...props}
-      className={clsx(classes.root, props.className, gridClasses['container--bottom'])}
+      className={clsx(classes.root, props.className, dataGridClasses['container--bottom'])}
       role="presentation"
     />
   );

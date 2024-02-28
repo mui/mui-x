@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  gridClasses,
+  dataGridClasses,
   GridToolbarContainer,
   GridToolbarQuickFilter,
   useGridApiRef,
@@ -521,22 +521,23 @@ export default function PopularFeaturesDemo() {
         }}
         sx={{
           fontFamily: 'IBM Plex Sans',
-          [`& .${gridClasses.cell}`]: {
+          [`& .${dataGridClasses.cell}`]: {
             py: 1.5,
           },
-          [`& .${gridClasses.columnHeaderTitle}`]: {
+          [`& .${dataGridClasses.columnHeaderTitle}`]: {
             fontWeight: 'medium',
           },
-          [`& .${gridClasses.withBorderColor}`]: {
+          [`& .${dataGridClasses.withBorderColor}`]: {
             borderColor: 'divider',
           },
-          [`& .${gridClasses.detailPanel}`]: {
+          [`& .${dataGridClasses.detailPanel}`]: {
             background: 'transparent',
           },
-          [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
-            outline: 'none',
-          },
-          [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+          [`& .${dataGridClasses.cell}:focus, & .${dataGridClasses.cell}:focus-within`]:
+            {
+              outline: 'none',
+            },
+          [`& .${dataGridClasses.columnHeader}:focus, & .${dataGridClasses.columnHeader}:focus-within`]:
             {
               outline: 'none',
             },

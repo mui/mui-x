@@ -29,7 +29,7 @@ import {
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
-import { gridClasses } from '../../../constants/gridClasses';
+import { dataGridClasses } from '../../../constants/dataGridClasses';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -179,7 +179,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <React.Fragment>
         {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {isNotPinned && <SpaceFiller className={gridClasses.columnHeader} />}
+        {isNotPinned && <SpaceFiller className={dataGridClasses.columnHeader} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}

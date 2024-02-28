@@ -14,7 +14,7 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridClasses } from '../../constants/gridClasses';
+import { dataGridClasses } from '../../constants/dataGridClasses';
 
 interface GridToolbarDensitySelectorProps {
   /**
@@ -139,7 +139,7 @@ const GridToolbarDensitySelector = React.forwardRef<
       >
         <MenuList
           id={densityMenuId}
-          className={gridClasses.menuList}
+          className={dataGridClasses.menuList}
           aria-labelledby={densityButtonId}
           onKeyDown={handleListKeyDown}
           autoFocusItem={open}

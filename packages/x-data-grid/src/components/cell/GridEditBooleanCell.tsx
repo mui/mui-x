@@ -6,7 +6,7 @@ import {
   unstable_useId as useId,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, dataGridClasses } from '@mui/x-data-grid-pro';
 
 const rows = [
   {
@@ -32,8 +32,8 @@ export default function ColumnHeaderHideSeparator() {
         columns={columns}
         rows={rows}
         sx={{
-          [`& .${gridClasses.columnSeparator}`]: {
-            [`&:not(.${gridClasses['columnSeparator--resizable']})`]: {
+          [`& .${dataGridClasses.columnSeparator}`]: {
+            [`&:not(.${dataGridClasses['columnSeparator--resizable']})`]: {
               display: 'none',
             },
           },

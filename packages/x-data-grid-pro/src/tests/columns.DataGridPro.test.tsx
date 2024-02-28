@@ -6,7 +6,7 @@ import {
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  gridClasses,
+  dataGridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
   GridApi,
@@ -94,7 +94,9 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should allow to resize columns with the mouse', () => {
       render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
@@ -108,7 +110,9 @@ describe('<DataGridPro /> - Columns', () => {
         this.skip();
       }
       render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       const now = Date.now();
       fireEvent.touchStart(separator, {
         changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
@@ -126,7 +130,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnResize during resizing', () => {
       const onColumnResize = spy();
       render(<Test onColumnResize={onColumnResize} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -139,7 +145,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnWidthChange after resizing', () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -153,7 +161,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -182,7 +192,7 @@ describe('<DataGridPro /> - Columns', () => {
               field: 'brand',
               width: 100,
               renderCell: ({ id }) => (
-                <div className={gridClasses.row} data-id={id} data-testid="dummy-row">
+                <div className={dataGridClasses.row} data-id={id} data-testid="dummy-row">
                   <div data-colindex={0} style={{ width: 90 }} />
                 </div>
               ),
@@ -190,7 +200,9 @@ describe('<DataGridPro /> - Columns', () => {
           ]}
         />,
       );
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
@@ -211,14 +223,16 @@ describe('<DataGridPro /> - Columns', () => {
           }}
         />,
       );
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       const nonPinnedCell = getCell(1, 0);
       const columnHeaderCell = getColumnHeaderCell(0);
       const topPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--top']} [role="gridcell"][data-colindex="0"]`,
+        `.${dataGridClasses['pinnedRows--top']} [role="gridcell"][data-colindex="0"]`,
       );
       const bottomPinnedRowCell = document.querySelector(
-        `.${gridClasses['pinnedRows--bottom']} [role="gridcell"][data-colindex="0"]`,
+        `.${dataGridClasses['pinnedRows--bottom']} [role="gridcell"][data-colindex="0"]`,
       );
 
       fireEvent.mouseDown(separator, { clientX: 100 });
@@ -274,7 +288,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
+          `.${dataGridClasses['columnSeparator--resizable']}`,
         )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -331,7 +345,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
+          `.${dataGridClasses['columnSeparator--resizable']}`,
         )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -354,7 +368,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
+          `.${dataGridClasses['columnSeparator--resizable']}`,
         )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -394,7 +408,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
+          `.${dataGridClasses['columnSeparator--resizable']}`,
         )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -416,7 +430,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
 
         const separator = getColumnHeaderCell(0).querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
+          `.${dataGridClasses['columnSeparator--resizable']}`,
         )!;
 
         fireEvent.mouseDown(separator, { clientX: 200 });
@@ -479,7 +493,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should work through double-clicking the separator', async () => {
       render(<Test rows={rows} columns={columns} />);
       const separator = document.querySelectorAll(
-        `.${gridClasses['columnSeparator--resizable']}`,
+        `.${dataGridClasses['columnSeparator--resizable']}`,
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();

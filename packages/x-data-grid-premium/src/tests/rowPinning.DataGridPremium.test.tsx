@@ -5,7 +5,7 @@ import {
   DataGridPremium,
   DataGridPremiumProps,
   GridRowsProp,
-  gridClasses,
+  dataGridClasses,
 } from '@mui/x-data-grid-premium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -44,10 +44,10 @@ describe('<DataGridPremium /> - Row pinning', () => {
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
+    return document.querySelector<HTMLElement>(`.${dataGridClasses['pinnedRows--top']}`);
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
+    return document.querySelector<HTMLElement>(`.${dataGridClasses['pinnedRows--bottom']}`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {

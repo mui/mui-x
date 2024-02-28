@@ -3,7 +3,7 @@
   columns={columns}
   getRowHeight={() => 'auto'}
   sx={{
-    [`& .${gridClasses.cell}`]: {
+    [`& .${dataGridClasses.cell}`]: {
       py: 1,
     },
   }}

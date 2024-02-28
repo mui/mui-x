@@ -166,6 +166,7 @@ The list includes these transformers
 
 - [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
 - [`rename-cell-selection-props`](#rename-cell-selection-props)
+- [`rename-gridClasses-to-dataGridClasses`](#rename-gridClasses-to-dataGridClasses)
 
 #### `rename-components-to-slots-data-grid`
 
@@ -203,6 +204,21 @@ Rename props related to `cellSelection` feature.
 
 ```bash
 npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+#### `rename-gridClasses-to-dataGridClasses`
+
+Rename `gridClasses` import to `dataGridClasses`.
+
+```diff
+ <DataGridPremium
+-  sx={{ [`& .${gridClasses.cell}`]: { color: 'red' } }}
++  sx={{ [`& .${dataGridClasses.cell}`]: { color: 'red' } }}
+ />;
+```
+
+```bash
+npx @mui/x-codemod@next v7.0.0/data-grid/rename-gridClasses-to-dataGridClasses <path>
 ```
 
 ### Tree View codemods

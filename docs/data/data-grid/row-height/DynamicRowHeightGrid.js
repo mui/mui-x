@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, dataGridClasses } from '@mui/x-data-grid';
 import {
   randomInt,
   randomUserName,
@@ -55,7 +55,7 @@ export default function DynamicRowHeightGrid() {
         columns={columns}
         getRowHeight={() => 'auto'}
         sx={{
-          [`& .${gridClasses.cell}`]: {
+          [`& .${dataGridClasses.cell}`]: {
             py: 1,
           },
         }}

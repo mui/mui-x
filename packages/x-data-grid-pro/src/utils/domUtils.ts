@@ -1,4 +1,4 @@
-import { gridClasses } from '@mui/x-data-grid';
+import { dataGridClasses } from '@mui/x-data-grid';
 import { findParentElementFromClassName } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 
@@ -15,7 +15,7 @@ export function findGroupHeaderElementsFromField(elem: Element, field: string): 
 }
 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateApiPro) {
-  const root = findParentElementFromClassName(col, gridClasses.root);
+  const root = findParentElementFromClassName(col, dataGridClasses.root);
   if (!root) {
     throw new Error('MUI X: The root element is not found.');
   }
@@ -53,8 +53,8 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
   return cells;
 }
 
-export function findGridElement(api: GridPrivateApiPro, klass: keyof typeof gridClasses) {
-  return api.rootElementRef.current!.querySelector(`.${gridClasses[klass]}`)! as HTMLElement;
+export function findGridElement(api: GridPrivateApiPro, klass: keyof typeof dataGridClasses) {
+  return api.rootElementRef.current!.querySelector(`.${dataGridClasses[klass]}`)! as HTMLElement;
 }
 
 export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
@@ -71,7 +71,7 @@ export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLEle
       return;
     }
 
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
+    const rightPinnedCells = rowElement.querySelectorAll(`.${dataGridClasses['cell--pinnedLeft']}`);
     rightPinnedCells.forEach((cell) => {
       const currentColIndex = parseCellColIndex(cell);
       if (currentColIndex !== null && currentColIndex > colIndex) {
@@ -97,7 +97,9 @@ export function findRightPinnedCellsBeforeCol(api: GridPrivateApiPro, col: HTMLE
       return;
     }
 
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedRight']}`);
+    const rightPinnedCells = rowElement.querySelectorAll(
+      `.${dataGridClasses['cell--pinnedRight']}`,
+    );
     rightPinnedCells.forEach((cell) => {
       const currentColIndex = parseCellColIndex(cell);
       if (currentColIndex !== null && currentColIndex < colIndex) {
@@ -126,7 +128,7 @@ export function findGridCells(api: GridPrivateApiPro, field: string) {
 function queryRows(api: GridPrivateApiPro) {
   return api.virtualScrollerRef.current!.querySelectorAll(
     // Use > to ignore rows from nested data grids (e.g. in detail panel)
-    `:scope > div > div > .${gridClasses.row}`,
+    `:scope > div > div > .${dataGridClasses.row}`,
   );
 }
 

@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridOffsetsSelector } from '../../hooks/features/virtualization';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;

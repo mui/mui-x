@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGridPro,
-  gridClasses,
+  dataGridClasses,
   useGridApiRef,
   DataGridProProps,
   GridApi,
@@ -30,7 +30,7 @@ describe('<DataGridPro/> - Components', () => {
   describe('footer', () => {
     it('should hide the row count if `hideFooterRowCount` prop is set', () => {
       render(<TestCase hideFooterRowCount />);
-      expect(document.querySelector(`.${gridClasses.rowCount}`)).to.equal(null);
+      expect(document.querySelector(`.${dataGridClasses.rowCount}`)).to.equal(null);
     });
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {

@@ -6,7 +6,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApi,
-  gridClasses,
+  dataGridClasses,
   GridColDef,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,
@@ -136,7 +136,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
     fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = document.querySelector(`.${dataGridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);

@@ -3,7 +3,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
-  gridClasses,
+  dataGridClasses,
   GridColDef,
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
@@ -26,10 +26,10 @@ const GridAggregationHeaderRoot = styled('div', {
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
-  [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]: {
+  [`&.${dataGridClasses['aggregationColumnHeader--alignRight']}`]: {
     alignItems: 'flex-end',
   },
-  [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]: {
+  [`&.${dataGridClasses['aggregationColumnHeader--alignCenter']}`]: {
     alignItems: 'center',
   },
 });

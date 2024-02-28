@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   DataGridProProps,
   GridRowParams,
-  gridClasses,
+  dataGridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -131,7 +131,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
 
     await waitFor(() => {
-      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
+      expect(getRow(0).className).to.include(dataGridClasses['row--detailPanelExpanded']);
     });
 
     await waitFor(() => {
@@ -465,9 +465,9 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   it('should add the MuiDataGrid-row--detailPanelExpanded class to the expanded row', () => {
     render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
-    expect(getRow(0)).not.to.have.class(gridClasses['row--detailPanelExpanded']);
+    expect(getRow(0)).not.to.have.class(dataGridClasses['row--detailPanelExpanded']);
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    expect(getRow(0)).to.have.class(gridClasses['row--detailPanelExpanded']);
+    expect(getRow(0)).to.have.class(dataGridClasses['row--detailPanelExpanded']);
   });
 
   // See https://github.com/mui/mui-x/issues/6694

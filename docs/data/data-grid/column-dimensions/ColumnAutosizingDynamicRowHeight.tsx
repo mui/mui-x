@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import {
   DataGridPro,
   GridColDef,
-  gridClasses,
+  dataGridClasses,
   useGridApiRef,
   GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
@@ -59,7 +59,7 @@ export default function ColumnAutosizingDynamicRowHeight() {
           getRowHeight={() => 'auto'}
           autosizeOptions={autosizeOptions}
           sx={{
-            [`& .${gridClasses.cell}`]: {
+            [`& .${dataGridClasses.cell}`]: {
               py: 0.5,
             },
           }}

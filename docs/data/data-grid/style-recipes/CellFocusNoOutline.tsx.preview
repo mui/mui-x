@@ -1,9 +1,10 @@
 <DataGridPro
   sx={{
-    [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
-      outline: 'none',
-    },
-    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+    [`& .${dataGridClasses.cell}:focus, & .${dataGridClasses.cell}:focus-within`]:
+      {
+        outline: 'none',
+      },
+    [`& .${dataGridClasses.columnHeader}:focus, & .${dataGridClasses.columnHeader}:focus-within`]:
       {
         outline: 'none',
       },

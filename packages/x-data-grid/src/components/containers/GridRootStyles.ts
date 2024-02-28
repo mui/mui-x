@@ -8,7 +8,7 @@ import {
   recomposeColor,
   Theme,
 } from '@mui/material/styles';
-import { gridClasses as c } from '../../constants/gridClasses';
+import { dataGridClasses as c } from '../../constants/dataGridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type OwnerState = DataGridProcessedProps;

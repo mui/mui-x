@@ -7,7 +7,7 @@ import {
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 

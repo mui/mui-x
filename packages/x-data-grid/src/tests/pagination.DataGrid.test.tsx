@@ -5,7 +5,7 @@ import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui-inte
 import {
   DataGrid,
   DataGridProps,
-  gridClasses,
+  dataGridClasses,
   GridLogicOperator,
   GridRowsProp,
   GridApi,
@@ -251,7 +251,7 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase paginationModel={{ page: 0, pageSize: 5 }} pageSizeOptions={[5]} />,
       );
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
       virtualScroller.scrollTop = 100;
       setProps({ paginationModel: { page: 1, pageSize: 5 } });
       expect(virtualScroller.scrollTop).to.equal(0);

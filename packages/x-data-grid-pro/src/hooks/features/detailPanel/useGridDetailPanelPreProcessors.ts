@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridClasses } from '@mui/x-data-grid';
+import { dataGridClasses } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -54,7 +54,7 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      return [...classes, gridClasses['row--detailPanelExpanded']];
+      return [...classes, dataGridClasses['row--detailPanelExpanded']];
     },
     [privateApiRef, props.getDetailPanelContent],
   );

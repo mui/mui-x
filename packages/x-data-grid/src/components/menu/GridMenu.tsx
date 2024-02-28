@@ -11,7 +11,7 @@ import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
-import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, dataGridClasses } from '../../constants/dataGridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -49,7 +49,7 @@ const GridMenuRoot = styled(Popper, {
   overridesResolver: (_, styles) => styles.menu,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
-  [`& .${gridClasses.menuList}`]: {
+  [`& .${dataGridClasses.menuList}`]: {
     outline: 0,
   },
 }));

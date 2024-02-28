@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, dataGridClasses } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
-  [`& .${gridClasses.row}.even`]: {
+  [`& .${dataGridClasses.row}.even`]: {
     backgroundColor: theme.palette.grey[200],
     '&:hover': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),

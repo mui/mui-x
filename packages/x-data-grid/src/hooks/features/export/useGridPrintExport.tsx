@@ -12,7 +12,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridClasses } from '../../../constants/gridClasses';
+import { dataGridClasses } from '../../../constants/dataGridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { defaultGetRowsToExport, getColumnsToExport } from './utils';
@@ -134,32 +134,32 @@ export const useGridPrintExport = (
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
 
       // Allow to overflow to not hide the border of the last row
-      const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
+      const gridMain: HTMLElement | null = gridClone.querySelector(`.${dataGridClasses.main}`);
       gridMain!.style.overflow = 'visible';
 
       // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
       gridClone!.style.contain = 'size';
 
-      const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
+      const columnHeaders = gridClone.querySelector(`.${dataGridClasses.columnHeaders}`);
       const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
-        `.${gridClasses.columnHeadersInner}`,
+        `.${dataGridClasses.columnHeadersInner}`,
       )!;
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
-        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
+        gridRootElement!.querySelector<HTMLElement>(`.${dataGridClasses.toolbarContainer}`)
           ?.offsetHeight || 0;
       let gridFooterElementHeight =
-        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)
+        gridRootElement!.querySelector<HTMLElement>(`.${dataGridClasses.footerContainer}`)
           ?.offsetHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
-        gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
+        gridClone.querySelector(`.${dataGridClasses.toolbarContainer}`)?.remove();
         gridToolbarElementHeight = 0;
       }
 
       if (normalizeOptions.hideFooter) {
-        gridClone.querySelector(`.${gridClasses.footerContainer}`)?.remove();
+        gridClone.querySelector(`.${dataGridClasses.footerContainer}`)?.remove();
         gridFooterElementHeight = 0;
       }
 
@@ -177,7 +177,7 @@ export const useGridPrintExport = (
       // so if getRowsToExport is being used to only export a subset of rows then we need to
       // adjust the footer position to be correctly placed at the bottom of the grid
       const gridFooterElement: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.footerContainer}`,
+        `.${dataGridClasses.footerContainer}`,
       );
       gridFooterElement!.style.position = 'absolute';
       gridFooterElement!.style.width = '100%';

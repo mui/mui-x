@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent } from '@mui-internal/test-utils';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
-import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, dataGridClasses, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
@@ -87,7 +87,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0)!;
     fireEvent.dragStart(rowReorderCell);
-    expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
+    expect(rowReorderCell).not.to.have.class(dataGridClasses['row--dragging']);
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {

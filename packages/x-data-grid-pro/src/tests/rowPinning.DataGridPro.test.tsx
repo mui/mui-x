@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGridPro,
-  gridClasses,
+  dataGridClasses,
   useGridApiRef,
   GridApi,
   GridRowsProp,
@@ -136,7 +136,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
     expect(virtualScroller.scrollTop).to.equal(0);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
@@ -630,7 +630,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     render(<BaselineTestCase rowCount={10} colCount={5} rowReordering />);
 
     const cell = getCell(0, 0);
-    expect(cell.querySelector(`.${gridClasses.rowReorderCell}`)).to.equal(null);
+    expect(cell.querySelector(`.${dataGridClasses.rowReorderCell}`)).to.equal(null);
   });
 
   it('should keep pinned rows on page change', () => {

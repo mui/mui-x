@@ -19,7 +19,7 @@ import {
   GridCellCoordinates,
   gridRowsDataRowIdToIdLookupSelector,
   GridRowId,
-  gridClasses,
+  dataGridClasses,
   gridFocusCellSelector,
   GridCellParams,
   GRID_REORDER_COL_DEF,
@@ -206,7 +206,7 @@ export const useGridCellSelection = (
   const handleMouseUp = useEventCallback(() => {
     lastMouseDownCell.current = null;
     apiRef.current.rootElementRef?.current?.classList.remove(
-      gridClasses['root--disableUserSelection'],
+      dataGridClasses['root--disableUserSelection'],
     );
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -233,7 +233,7 @@ export const useGridCellSelection = (
 
       lastMouseDownCell.current = { id: params.id, field: params.field };
       apiRef.current.rootElementRef?.current?.classList.add(
-        gridClasses['root--disableUserSelection'],
+        dataGridClasses['root--disableUserSelection'],
       );
 
       const document = ownerDocument(apiRef.current.rootElementRef?.current);
@@ -483,37 +483,37 @@ export const useGridCellSelection = (
       if (rowIndex > 0) {
         const { id: previousRowId } = visibleRows.rows[rowIndex - 1];
         if (!apiRef.current.isCellSelected(previousRowId, field)) {
-          newClasses.push(gridClasses['cell--rangeTop']);
+          newClasses.push(dataGridClasses['cell--rangeTop']);
         }
       } else {
-        newClasses.push(gridClasses['cell--rangeTop']);
+        newClasses.push(dataGridClasses['cell--rangeTop']);
       }
 
       if (rowIndex + visibleRows.range.firstRowIndex < visibleRows.range.lastRowIndex) {
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.isCellSelected(nextRowId, field)) {
-          newClasses.push(gridClasses['cell--rangeBottom']);
+          newClasses.push(dataGridClasses['cell--rangeBottom']);
         }
       } else {
-        newClasses.push(gridClasses['cell--rangeBottom']);
+        newClasses.push(dataGridClasses['cell--rangeBottom']);
       }
 
       if (columnIndex > 0) {
         const { field: previousColumnField } = visibleColumns[columnIndex - 1];
         if (!apiRef.current.isCellSelected(id, previousColumnField)) {
-          newClasses.push(gridClasses['cell--rangeLeft']);
+          newClasses.push(dataGridClasses['cell--rangeLeft']);
         }
       } else {
-        newClasses.push(gridClasses['cell--rangeLeft']);
+        newClasses.push(dataGridClasses['cell--rangeLeft']);
       }
 
       if (columnIndex < visibleColumns.length - 1) {
         const { field: nextColumnField } = visibleColumns[columnIndex + 1];
         if (!apiRef.current.isCellSelected(id, nextColumnField)) {
-          newClasses.push(gridClasses['cell--rangeRight']);
+          newClasses.push(dataGridClasses['cell--rangeRight']);
         }
       } else {
-        newClasses.push(gridClasses['cell--rangeRight']);
+        newClasses.push(dataGridClasses['cell--rangeRight']);
       }
 
       return newClasses;

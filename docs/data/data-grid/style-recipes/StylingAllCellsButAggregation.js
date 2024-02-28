@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import { DataGridPremium, dataGridClasses } from '@mui/x-data-grid-premium';
 
 // eliminate rounding errors in aggregation row
 const valueFormatter = (value) => `${Math.floor(value * 1000) / 1000} °C`;
@@ -37,11 +37,11 @@ export default function StylingAllCellsButAggregation() {
       sx={{
         height: 300,
         width: '100%',
-        [`.${gridClasses.cell}.cold`]: {
+        [`.${dataGridClasses.cell}.cold`]: {
           backgroundColor: '#b9d5ff91',
           color: '#1a3e72',
         },
-        [`.${gridClasses.cell}.hot`]: {
+        [`.${dataGridClasses.cell}.hot`]: {
           backgroundColor: '#ff943975',
           color: '#1a3e72',
         },

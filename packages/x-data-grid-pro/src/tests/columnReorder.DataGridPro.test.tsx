@@ -7,7 +7,7 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, dataGridClasses, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { spy } from 'sinon';
 
@@ -177,7 +177,9 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const columnHeader = getColumnHeaderCell(0);
     const columnHeaderDraggableContainer = columnHeader.firstChild!;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild!);
-    expect(columnHeaderDraggableContainer).not.to.have.class(gridClasses['columnHeader--dragging']);
+    expect(columnHeaderDraggableContainer).not.to.have.class(
+      dataGridClasses['columnHeader--dragging'],
+    );
   });
 
   it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
@@ -265,7 +267,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       fireEvent.dragStart(dragCol);
 
       expect(dragCol).to.have.attribute('draggable', 'false');
-      expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
+      expect(dragCol).not.to.have.class(dataGridClasses['columnHeader--dragging']);
 
       fireEvent.dragEnter(targetCol);
       const dragOverEvent = createDragOverEvent(targetCol);

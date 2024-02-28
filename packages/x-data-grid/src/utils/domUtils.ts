@@ -1,4 +1,4 @@
-import { gridClasses } from '../constants/gridClasses';
+import { dataGridClasses } from '../constants/dataGridClasses';
 import { GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
@@ -19,7 +19,7 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
   );
 }
 function getGridRowElementSelector(id: GridRowId): string {
-  return `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`;
+  return `.${dataGridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`;
 }
 
 export function getGridRowElement(root: Element, id: GridRowId) {
@@ -28,7 +28,7 @@ export function getGridRowElement(root: Element, id: GridRowId) {
 
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
   const rowSelector = getGridRowElementSelector(id);
-  const cellSelector = `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(
+  const cellSelector = `.${dataGridClasses.cell}[data-field="${escapeOperandAttributeSelector(
     field,
   )}"]`;
   const selector = `${rowSelector} ${cellSelector}`;

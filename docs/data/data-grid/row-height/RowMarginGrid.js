@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, dataGridClasses } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { grey } from '@mui/material/colors';
 
@@ -23,7 +23,7 @@ export default function RowMarginGrid() {
         {...data}
         getRowSpacing={getRowSpacing}
         sx={{
-          [`& .${gridClasses.row}`]: {
+          [`& .${dataGridClasses.row}`]: {
             bgcolor: (theme) =>
               theme.palette.mode === 'light' ? grey[200] : grey[900],
           },

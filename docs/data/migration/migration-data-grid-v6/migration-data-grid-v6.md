@@ -463,6 +463,8 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### CSS classes and styling
 
+- ✅ The export `gridClasses` has been renamed to `dataGridClasses`.
+- The related types `GridClassKey` and `GridClasses` have also been renamed to `DataGridClassKey` and `DataGridClasses` respectively.
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 - The `.MuiDataGrid-cell--withRenderer` class has been removed.

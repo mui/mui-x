@@ -7,7 +7,7 @@ import {
   GridToolbar,
   DataGridProps,
   GridColDef,
-  gridClasses,
+  dataGridClasses,
   useGridApiRef,
   GridApi,
 } from '@mui/x-data-grid';
@@ -779,7 +779,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
             <DataGrid {...baselineProps} autoHeight />
           </div>,
         );
-        expect(grid('root')).to.have.class(gridClasses.autoHeight);
+        expect(grid('root')).to.have.class(dataGridClasses.autoHeight);
       });
     });
 

@@ -26,7 +26,7 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
-import { gridClasses } from '../../../constants/gridClasses';
+import { dataGridClasses } from '../../../constants/dataGridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { isMultipleRowSelectionEnabled } from './utils';
 
@@ -371,7 +371,7 @@ export const useGridRowSelection = (
       }
 
       const field = (event.target as HTMLDivElement)
-        .closest(`.${gridClasses.cell}`)
+        .closest(`.${dataGridClasses.cell}`)
         ?.getAttribute('data-field');
 
       if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {

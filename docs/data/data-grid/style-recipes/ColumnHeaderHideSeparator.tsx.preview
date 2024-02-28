@@ -2,8 +2,8 @@
   columns={columns}
   rows={rows}
   sx={{
-    [`& .${gridClasses.columnSeparator}`]: {
-      [`&:not(.${gridClasses['columnSeparator--resizable']})`]: {
+    [`& .${dataGridClasses.columnSeparator}`]: {
+      [`&:not(.${dataGridClasses['columnSeparator--resizable']})`]: {
         display: 'none',
       },
     },

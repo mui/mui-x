@@ -3,7 +3,7 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
 } from '@mui/utils';
 
-export interface GridClasses {
+export interface DataGridClasses {
   /**
    * Styles applied to the root element of the cell with type="actions".
    */
@@ -621,13 +621,13 @@ export interface GridClasses {
   pinnedRowsRenderZone: string;
 }
 
-export type GridClassKey = keyof GridClasses;
+export type DataGridClassKey = keyof DataGridClasses;
 
 export function getDataGridUtilityClass(slot: string): string {
   return generateUtilityClass('MuiDataGrid', slot);
 }
 
-export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+export const dataGridClasses = generateUtilityClasses<DataGridClassKey>('MuiDataGrid', [
   'actionsCell',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',

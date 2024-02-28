@@ -5,7 +5,7 @@ import {
 } from '@mui/utils';
 import {
   GridEventListener,
-  gridClasses,
+  dataGridClasses,
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
@@ -130,7 +130,7 @@ function flipResizeDirection(side: ResizeDirection) {
 }
 
 function getResizeDirection(separator: HTMLElement, direction: Direction) {
-  const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
+  const side = separator.classList.contains(dataGridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
   if (direction === 'rtl') {
@@ -208,7 +208,7 @@ function extractColumnWidths(
   const widthByField = {} as Record<string, number>;
 
   const root = apiRef.current.rootElementRef!.current!;
-  root.classList.add(gridClasses.autosizing);
+  root.classList.add(dataGridClasses.autosizing);
 
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
@@ -224,10 +224,12 @@ function extractColumnWidths(
     if (options.includeHeaders) {
       const header = findGridHeader(apiRef.current, column.field);
       if (header) {
-        const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
-        const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
-        const iconContainer = header.querySelector(`.${gridClasses.iconButtonContainer}`);
-        const menuContainer = header.querySelector(`.${gridClasses.menuIcon}`);
+        const title = header.querySelector(`.${dataGridClasses.columnHeaderTitle}`);
+        const content = header.querySelector(
+          `.${dataGridClasses.columnHeaderTitleContainerContent}`,
+        )!;
+        const iconContainer = header.querySelector(`.${dataGridClasses.iconButtonContainer}`);
+        const menuContainer = header.querySelector(`.${dataGridClasses.menuIcon}`);
         const element = title ?? content;
 
         const style = window.getComputedStyle(header, null);
@@ -253,7 +255,7 @@ function extractColumnWidths(
     widthByField[column.field] = clamp(maxContent, min, max);
   });
 
-  root.classList.remove(gridClasses.autosizing);
+  root.classList.remove(dataGridClasses.autosizing);
 
   return widthByField;
 }
@@ -417,7 +419,7 @@ export const useGridColumnResize = (
     );
 
     const headerFilterElement = root.querySelector(
-      `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+      `.${dataGridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
     );
     if (headerFilterElement) {
       headerFilterElementRef.current = headerFilterElement as HTMLDivElement;
@@ -526,7 +528,7 @@ export const useGridColumnResize = (
   const handleTouchStart = useEventCallback((event: any) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
-      gridClasses['columnSeparator--resizable'],
+      dataGridClasses['columnSeparator--resizable'],
     ) as HTMLElement | null;
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) {
@@ -545,7 +547,7 @@ export const useGridColumnResize = (
 
     const columnHeaderElement = findParentElementFromClassName(
       event.target,
-      gridClasses.columnHeader,
+      dataGridClasses.columnHeader,
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(columnHeaderElement);
     const colDef = apiRef.current.getColumn(field);
@@ -611,7 +613,7 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
+      if (!event.currentTarget.classList.contains(dataGridClasses['columnSeparator--resizable'])) {
         return;
       }
 

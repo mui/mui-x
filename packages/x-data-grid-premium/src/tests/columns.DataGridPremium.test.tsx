@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import { DataGridPremium, dataGridClasses } from '@mui/x-data-grid-premium';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -37,7 +37,9 @@ describe('<DataGridPremium /> - Columns', () => {
         </div>,
       );
 
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const separator = document.querySelector(
+        `.${dataGridClasses['columnSeparator--resizable']}`,
+      )!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
       fireEvent.mouseUp(separator);
@@ -45,7 +47,7 @@ describe('<DataGridPremium /> - Columns', () => {
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '150px' });
       expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
 
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
       virtualScroller.scrollTop = 500; // scroll to the bottom
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 

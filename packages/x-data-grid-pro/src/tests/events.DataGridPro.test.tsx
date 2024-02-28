@@ -10,7 +10,7 @@ import {
   GridCellParams,
   GridRowsProp,
   GridColDef,
-  gridClasses,
+  dataGridClasses,
   GridActionsCellItem,
   GridApi,
   GridEventListener,
@@ -213,7 +213,7 @@ describe('<DataGridPro /> - Events params', () => {
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
       expect(handleCellDoubleClick.callCount).to.equal(1);
-      expect(cell).not.to.have.class(gridClasses['row--editing']);
+      expect(cell).not.to.have.class(dataGridClasses['row--editing']);
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', async () => {
@@ -222,14 +222,14 @@ describe('<DataGridPro /> - Events params', () => {
       });
       render(<TestEvents onCellEditStop={handleCellEditStop} />);
       const cell = getCell(1, 1);
-      expect(cell).not.to.have.class(gridClasses['cell--editing']);
+      expect(cell).not.to.have.class(dataGridClasses['cell--editing']);
       fireEvent.doubleClick(cell);
-      expect(cell).to.have.class(gridClasses['cell--editing']);
+      expect(cell).to.have.class(dataGridClasses['cell--editing']);
 
       const input = cell.querySelector('input')!;
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(handleCellEditStop.callCount).to.equal(1);
-      expect(cell).to.have.class(gridClasses['cell--editing']);
+      expect(cell).to.have.class(dataGridClasses['cell--editing']);
     });
 
     it('should select a row by default', () => {

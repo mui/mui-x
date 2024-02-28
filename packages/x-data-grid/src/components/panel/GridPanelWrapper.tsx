@@ -6,7 +6,7 @@ import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 type OwnerState = DataGridProcessedProps;

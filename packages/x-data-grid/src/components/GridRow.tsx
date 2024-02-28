@@ -10,7 +10,7 @@ import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
+import { getDataGridUtilityClass, dataGridClasses } from '../constants/dataGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import type { GridPinnedColumns } from '../hooks/features/columns';
@@ -105,7 +105,7 @@ function EmptyCell({ width }: { width: number }) {
   return (
     <div
       role="presentation"
-      className={clsx(gridClasses.cell, gridClasses.cellEmpty)}
+      className={clsx(dataGridClasses.cell, dataGridClasses.cellEmpty)}
       style={{ '--width': `${width}px` } as React.CSSProperties}
     />
   );
@@ -236,7 +236,10 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const publishClick = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      const cell = findParentElementFromClassName(event.target as HTMLDivElement, gridClasses.cell);
+      const cell = findParentElementFromClassName(
+        event.target as HTMLDivElement,
+        dataGridClasses.cell,
+      );
       const field = cell?.getAttribute('data-field');
 
       // Check if the field is available because the cell that fills the empty
@@ -516,7 +519,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {leftCells}
       <div
         role="presentation"
-        className={gridClasses.cellOffsetLeft}
+        className={dataGridClasses.cellOffsetLeft}
         style={{ width: offsets.left }}
       />
       {cells}

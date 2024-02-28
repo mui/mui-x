@@ -8,7 +8,7 @@ import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridClasses } from '../../constants/gridClasses';
+import { dataGridClasses } from '../../constants/dataGridClasses';
 
 interface GridToolbarExportContainerProps {
   /**
@@ -87,7 +87,7 @@ const GridToolbarExportContainer = React.forwardRef<
       >
         <MenuList
           id={exportMenuId}
-          className={gridClasses.menuList}
+          className={dataGridClasses.menuList}
           aria-labelledby={exportButtonId}
           onKeyDown={handleListKeyDown}
           autoFocusItem={open}

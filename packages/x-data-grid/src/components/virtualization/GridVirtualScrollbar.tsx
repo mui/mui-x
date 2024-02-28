@@ -9,7 +9,7 @@ import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';

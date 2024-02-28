@@ -4,7 +4,7 @@ import MenuList from '@mui/material/MenuList';
 import { useTheme } from '@mui/material/styles';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { gridClasses } from '../../constants/gridClasses';
+import { dataGridClasses } from '../../constants/dataGridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -190,7 +190,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       role="menu"
       ref={rootRef}
       tabIndex={-1}
-      className={gridClasses.actionsCell}
+      className={dataGridClasses.actionsCell}
       onKeyDown={handleRootKeyDown}
       {...other}
     >
@@ -226,7 +226,7 @@ function GridActionsCell(props: GridActionsCellProps) {
         <GridMenu open={open} target={buttonRef.current} position={position} onClose={hideMenu}>
           <MenuList
             id={menuId}
-            className={gridClasses.menuList}
+            className={dataGridClasses.menuList}
             onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
             variant="menu"

@@ -20,7 +20,7 @@ import {
   DataGridProProps,
   GridApi,
   gridFocusCellSelector,
-  gridClasses,
+  dataGridClasses,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -961,7 +961,7 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCount = rows.length;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
-      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${dataGridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length}`);
     });
 
@@ -970,7 +970,7 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCount = rows.length + 10;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
-      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${dataGridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
 
@@ -981,7 +981,7 @@ describe('<DataGridPro /> - Rows', () => {
       rowCount += 1;
       setProps({ rowCount });
 
-      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${dataGridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
   });

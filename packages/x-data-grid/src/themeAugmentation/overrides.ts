@@ -1,7 +1,7 @@
-import { GridClassKey } from '../constants/gridClasses';
+import { DataGridClassKey } from '../constants/dataGridClasses';
 
 export interface DataGridComponentNameToClassKey {
-  MuiDataGrid: GridClassKey;
+  MuiDataGrid: DataGridClassKey;
 }
 
 declare module '@mui/material/styles' {

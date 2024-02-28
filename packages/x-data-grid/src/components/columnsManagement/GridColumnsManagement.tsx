@@ -13,7 +13,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 

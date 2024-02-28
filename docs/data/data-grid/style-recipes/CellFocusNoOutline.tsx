@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { DataGridPro, dataGridClasses } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -15,10 +15,11 @@ export default function CellFocusNoOutline() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         sx={{
-          [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
-            outline: 'none',
-          },
-          [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+          [`& .${dataGridClasses.cell}:focus, & .${dataGridClasses.cell}:focus-within`]:
+            {
+              outline: 'none',
+            },
+          [`& .${dataGridClasses.columnHeader}:focus, & .${dataGridClasses.columnHeader}:focus-within`]:
             {
               outline: 'none',
             },

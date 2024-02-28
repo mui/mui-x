@@ -13,7 +13,7 @@ import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';

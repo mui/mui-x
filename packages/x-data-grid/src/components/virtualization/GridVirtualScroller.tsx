@@ -4,7 +4,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDimensions, gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';

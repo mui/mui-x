@@ -6,7 +6,7 @@ import {
   DataGrid,
   DataGridProps,
   GridToolbar,
-  gridClasses,
+  dataGridClasses,
   GridColumnsManagementProps,
 } from '@mui/x-data-grid';
 import {
@@ -135,11 +135,11 @@ describe('<DataGrid /> - Toolbar', () => {
         );
       }
       const { setProps } = render(<Test />);
-      expect(grid('root')).to.have.class(gridClasses['root--densityStandard']);
+      expect(grid('root')).to.have.class(dataGridClasses['root--densityStandard']);
       setProps({ density: 'compact' });
-      expect(grid('root')).to.have.class(gridClasses['root--densityCompact']);
+      expect(grid('root')).to.have.class(dataGridClasses['root--densityCompact']);
       setProps({ density: 'comfortable' });
-      expect(grid('root')).to.have.class(gridClasses['root--densityComfortable']);
+      expect(grid('root')).to.have.class(dataGridClasses['root--densityComfortable']);
     });
   });
 

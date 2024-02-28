@@ -10,7 +10,7 @@ import {
 import type { GridApiCommunity } from '../../internals';
 import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
-import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, dataGridClasses } from '../../constants/dataGridClasses';
 import {
   GridCellEventLookup,
   GridEvents,
@@ -239,7 +239,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   }
 
   if (column.display === 'flex') {
-    classNames.push(gridClasses['cell--flex']);
+    classNames.push(dataGridClasses['cell--flex']);
   }
 
   if (getCellClassName) {
@@ -417,7 +417,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     };
 
     children = column.renderEditCell(params);
-    classNames.push(gridClasses['cell--editing']);
+    classNames.push(dataGridClasses['cell--editing']);
     classNames.push(rootClasses?.['cell--editing']);
   }
 

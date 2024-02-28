@@ -3,7 +3,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventcallback,
 } from '@mui/utils';
-import { gridClasses } from '../../../constants/gridClasses';
+import { dataGridClasses } from '../../../constants/dataGridClasses';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
@@ -331,7 +331,7 @@ export const useGridFocus = (
 
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(
     (_, event) => {
-      if (event.relatedTarget?.className.includes(gridClasses.columnHeader)) {
+      if (event.relatedTarget?.className.includes(dataGridClasses.columnHeader)) {
         return;
       }
       logger.debug(`Clearing focus`);

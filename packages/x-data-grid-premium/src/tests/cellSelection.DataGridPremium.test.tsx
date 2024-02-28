@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridApi,
   useGridApiRef,
-  gridClasses,
+  dataGridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -146,20 +146,20 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.keyDown(cell, { key: 'Shift' });
       userEvent.mousePress(getCell(2, 2), { shiftKey: true });
 
-      expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeTop']);
-      expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeLeft']);
-      expect(getCell(0, 1)).to.have.class(gridClasses['cell--rangeTop']);
-      expect(getCell(0, 2)).to.have.class(gridClasses['cell--rangeRight']);
-      expect(getCell(0, 2)).to.have.class(gridClasses['cell--rangeTop']);
+      expect(getCell(0, 0)).to.have.class(dataGridClasses['cell--rangeTop']);
+      expect(getCell(0, 0)).to.have.class(dataGridClasses['cell--rangeLeft']);
+      expect(getCell(0, 1)).to.have.class(dataGridClasses['cell--rangeTop']);
+      expect(getCell(0, 2)).to.have.class(dataGridClasses['cell--rangeRight']);
+      expect(getCell(0, 2)).to.have.class(dataGridClasses['cell--rangeTop']);
 
-      expect(getCell(1, 0)).to.have.class(gridClasses['cell--rangeLeft']);
-      expect(getCell(1, 2)).to.have.class(gridClasses['cell--rangeRight']);
+      expect(getCell(1, 0)).to.have.class(dataGridClasses['cell--rangeLeft']);
+      expect(getCell(1, 2)).to.have.class(dataGridClasses['cell--rangeRight']);
 
-      expect(getCell(2, 0)).to.have.class(gridClasses['cell--rangeBottom']);
-      expect(getCell(2, 0)).to.have.class(gridClasses['cell--rangeLeft']);
-      expect(getCell(2, 1)).to.have.class(gridClasses['cell--rangeBottom']);
-      expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeRight']);
-      expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
+      expect(getCell(2, 0)).to.have.class(dataGridClasses['cell--rangeBottom']);
+      expect(getCell(2, 0)).to.have.class(dataGridClasses['cell--rangeLeft']);
+      expect(getCell(2, 1)).to.have.class(dataGridClasses['cell--rangeBottom']);
+      expect(getCell(2, 2)).to.have.class(dataGridClasses['cell--rangeRight']);
+      expect(getCell(2, 2)).to.have.class(dataGridClasses['cell--rangeBottom']);
     });
 
     it('should keep the focus on first clicked cell', () => {
@@ -350,7 +350,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.mouseDown(cell11);
       fireEvent.click(cell11);
 
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
       const rect = virtualScroller.getBoundingClientRect();
 
       expect(virtualScroller.scrollTop).to.equal(0);
@@ -387,7 +387,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.mouseDown(cell71);
       fireEvent.click(cell71);
 
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
       const rect = virtualScroller.getBoundingClientRect();
 
       virtualScroller.scrollTop = 30;

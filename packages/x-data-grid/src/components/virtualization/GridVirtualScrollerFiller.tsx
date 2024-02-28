@@ -4,7 +4,7 @@ import { fastMemo } from '../../utils/fastMemo';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
-import { gridClasses } from '../../constants';
+import { dataGridClasses } from '../../constants';
 
 const Filler = styled('div')({
   display: 'flex',
@@ -53,17 +53,17 @@ function GridVirtualScrollerFiller() {
   }
 
   return (
-    <Filler className={gridClasses.filler} role="presentation" style={{ height }}>
+    <Filler className={dataGridClasses.filler} role="presentation" style={{ height }}>
       {leftPinnedWidth > 0 && (
         <PinnedLeft
-          className={gridClasses['filler--pinnedLeft']}
+          className={dataGridClasses['filler--pinnedLeft']}
           style={{ width: leftPinnedWidth }}
         />
       )}
       <Main />
       {rightPinnedWidth > 0 && (
         <PinnedRight
-          className={gridClasses['filler--pinnedRight']}
+          className={dataGridClasses['filler--pinnedRight']}
           style={{ width: rightPinnedWidth }}
         />
       )}

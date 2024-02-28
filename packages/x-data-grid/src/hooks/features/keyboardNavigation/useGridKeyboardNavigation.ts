@@ -10,7 +10,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
-import { gridClasses } from '../../../constants/gridClasses';
+import { dataGridClasses } from '../../../constants/dataGridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
@@ -180,7 +180,7 @@ export const useGridKeyboardNavigation = (
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
       const headerTitleNode = event.currentTarget.querySelector(
-        `.${gridClasses.columnHeaderTitleContainerContent}`,
+        `.${dataGridClasses.columnHeaderTitleContainerContent}`,
       );
       const isFromInsideContent =
         !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);

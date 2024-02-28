@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, SxProps, Theme } from '@mui/system';
-import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
+import { dataGridClasses, getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -29,19 +29,21 @@ const GridColumnHeadersInnerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'columnHeadersInner',
   overridesResolver: (props, styles) => [
-    { [`&.${gridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
+    { [`&.${dataGridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
     styles.columnHeadersInner,
   ],
 })<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
   alignItems: 'flex-start',
   flexDirection: 'column',
-  [`&.${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
-    cursor: 'move',
-  },
-  [`&.${gridClasses['columnHeadersInner--scrollable']} .${gridClasses.columnHeader}:last-child`]: {
-    borderRight: 'none',
-  },
+  [`&.${dataGridClasses.columnHeaderDropZone} .${dataGridClasses.columnHeaderDraggableContainer}`]:
+    {
+      cursor: 'move',
+    },
+  [`&.${dataGridClasses['columnHeadersInner--scrollable']} .${dataGridClasses.columnHeader}:last-child`]:
+    {
+      borderRight: 'none',
+    },
 }));
 
 interface GridColumnHeadersInnerProps extends React.HTMLAttributes<HTMLDivElement> {

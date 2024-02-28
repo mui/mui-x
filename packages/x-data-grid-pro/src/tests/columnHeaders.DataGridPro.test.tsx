@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { dataGridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Column headers', () => {
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
       const separator = columnToResizeCell.querySelector(
-        `.${gridClasses['columnSeparator--resizable']}`,
+        `.${dataGridClasses['columnSeparator--resizable']}`,
       )!;
       fireEvent.mouseDown(separator);
       clock.runToLast();
@@ -209,12 +209,12 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
-      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      expect(menuIconButton?.parentElement).to.have.class(dataGridClasses.menuOpen);
       clock.runToLast(); // Wait for the transition to run
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      expect(menuIconButton?.parentElement).to.have.class(dataGridClasses.menuOpen);
       clock.runToLast(); // Wait for the transition to run
-      expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+      expect(menuIconButton?.parentElement).not.to.have.class(dataGridClasses.menuOpen);
     });
 
     it('should restore focus to the column header when dismissing the menu by selecting any item', () => {

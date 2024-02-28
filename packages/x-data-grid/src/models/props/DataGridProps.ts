@@ -13,7 +13,7 @@ import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColDef } from '../colDef/gridColDef';
-import { GridClasses } from '../../constants/gridClasses';
+import { DataGridClasses } from '../../constants/dataGridClasses';
 import {
   GridRowHeightParams,
   GridRowHeightReturnValue,
@@ -397,7 +397,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<GridClasses>;
+  classes?: Partial<DataGridClasses>;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.

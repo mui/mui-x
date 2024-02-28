@@ -7,7 +7,7 @@ import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gri
 import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
 import type { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';

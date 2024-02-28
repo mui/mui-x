@@ -2,7 +2,7 @@
   {...data}
   getRowSpacing={getRowSpacing}
   sx={{
-    [`& .${gridClasses.row}`]: {
+    [`& .${dataGridClasses.row}`]: {
       bgcolor: (theme) =>
         theme.palette.mode === 'light' ? grey[200] : grey[900],
     },

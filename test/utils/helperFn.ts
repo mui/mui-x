@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { act, screen } from '@mui-internal/test-utils';
-import { gridClasses } from '@mui/x-data-grid';
+import { dataGridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
@@ -20,12 +20,12 @@ export function $$(a: unknown, b?: unknown): HTMLElement[] {
   return Array.from(target.querySelectorAll(selector));
 }
 
-export function grid(klass: keyof typeof gridClasses) {
-  return $(`.${gridClasses[klass]}`);
+export function grid(klass: keyof typeof dataGridClasses) {
+  return $(`.${dataGridClasses[klass]}`);
 }
 
 export function gridVar(name: string) {
-  return $(`.${gridClasses.root}`)!.style.getPropertyValue(name);
+  return $(`.${dataGridClasses.root}`)!.style.getPropertyValue(name);
 }
 
 export function gridOffsetTop() {

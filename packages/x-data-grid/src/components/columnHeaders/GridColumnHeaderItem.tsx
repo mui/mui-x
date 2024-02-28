@@ -9,7 +9,7 @@ import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';

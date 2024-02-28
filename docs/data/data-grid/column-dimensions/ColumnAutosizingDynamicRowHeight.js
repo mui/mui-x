@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, dataGridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import { randomInt, randomArrayItem } from '@mui/x-data-grid-generator';
 
 const lines = [
@@ -53,7 +53,7 @@ export default function ColumnAutosizingDynamicRowHeight() {
           getRowHeight={() => 'auto'}
           autosizeOptions={autosizeOptions}
           sx={{
-            [`& .${gridClasses.cell}`]: {
+            [`& .${dataGridClasses.cell}`]: {
               py: 0.5,
             },
           }}

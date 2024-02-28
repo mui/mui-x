@@ -13,7 +13,7 @@ import {
   FilterColumnsArgs,
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
-  gridClasses,
+  dataGridClasses,
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
@@ -919,11 +919,11 @@ describe('<DataGridPro /> - Filter', () => {
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
 
-    let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    let filterForm = document.querySelector<HTMLElement>(`.${dataGridClasses.filterForm}`);
     const oldId = filterForm!.dataset.id;
 
     rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
-    filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    filterForm = document.querySelector<HTMLElement>(`.${dataGridClasses.filterForm}`);
     const newId = filterForm!.dataset.id;
     expect(oldId).to.equal(newId);
   });

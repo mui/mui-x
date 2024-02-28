@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-data-grid';
+import { getDataGridUtilityClass, dataGridClasses, useGridSelector } from '@mui/x-data-grid';
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
@@ -28,7 +28,7 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   return (
     <div
       {...other}
-      className={clsx(classes.root, other.className, gridClasses[`pinnedRows--${position}`])}
+      className={clsx(classes.root, other.className, dataGridClasses[`pinnedRows--${position}`])}
       role="presentation"
     >
       {pinnedRows}

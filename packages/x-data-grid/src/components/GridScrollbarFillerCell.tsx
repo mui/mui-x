@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { gridClasses } from '../constants';
+import { dataGridClasses } from '../constants';
 
 const classes = {
-  root: gridClasses.scrollbarFiller,
-  header: gridClasses['scrollbarFiller--header'],
-  borderTop: gridClasses['scrollbarFiller--borderTop'],
-  pinnedRight: gridClasses['scrollbarFiller--pinnedRight'],
+  root: dataGridClasses.scrollbarFiller,
+  header: dataGridClasses['scrollbarFiller--header'],
+  borderTop: dataGridClasses['scrollbarFiller--borderTop'],
+  pinnedRight: dataGridClasses['scrollbarFiller--pinnedRight'],
 };
 
 function GridScrollbarFillerCell({

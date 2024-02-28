@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, within, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, dataGridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -324,7 +324,7 @@ describe('<DataGrid /> - Column spanning', () => {
 
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown' });
 
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
       // trigger virtualization
       virtualScroller.dispatchEvent(new Event('scroll'));
 
@@ -357,7 +357,9 @@ describe('<DataGrid /> - Column spanning', () => {
       userEvent.mousePress(getCell(0, 0));
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
-      document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
+      document
+        .querySelector(`.${dataGridClasses.virtualScroller}`)!
+        .dispatchEvent(new Event('scroll'));
 
       expect(() => getCell(0, 3)).to.not.throw();
       // should not be rendered because of first column colSpan
@@ -465,7 +467,7 @@ describe('<DataGrid /> - Column spanning', () => {
       userEvent.mousePress(getCell(0, 0));
 
       const virtualScroller = document.querySelector<HTMLElement>(
-        `.${gridClasses.virtualScroller}`,
+        `.${dataGridClasses.virtualScroller}`,
       )!;
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
@@ -759,7 +761,7 @@ describe('<DataGrid /> - Column spanning', () => {
       'last cell and column header cell should be aligned',
     );
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
     // scroll to the very end
     virtualScroller.scrollLeft = 1000;
     virtualScroller.dispatchEvent(new Event('scroll'));
@@ -822,7 +824,7 @@ describe('<DataGrid /> - Column spanning', () => {
       'last cell and column header cell should be aligned',
     );
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
     // scroll to the very end
     virtualScroller.scrollLeft = 1000;
     // hide first row to trigger row virtualization
@@ -942,7 +944,7 @@ describe('<DataGrid /> - Column spanning', () => {
       'last cell and column header cell should be aligned',
     );
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    const virtualScroller = document.querySelector(`.${dataGridClasses.virtualScroller}`)!;
     // scroll to the very end
     virtualScroller.scrollLeft = 1000;
     // hide first row to trigger row virtualization

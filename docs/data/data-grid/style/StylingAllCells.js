@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, dataGridClasses } from '@mui/x-data-grid';
 
 const columns = [
   { field: 'city' },
@@ -22,11 +22,11 @@ export default function StylingAllCells() {
       sx={{
         height: 300,
         width: '100%',
-        [`.${gridClasses.cell}.cold`]: {
+        [`.${dataGridClasses.cell}.cold`]: {
           backgroundColor: '#b9d5ff91',
           color: '#1a3e72',
         },
-        [`.${gridClasses.cell}.hot`]: {
+        [`.${dataGridClasses.cell}.hot`]: {
           backgroundColor: '#ff943975',
           color: '#1a3e72',
         },

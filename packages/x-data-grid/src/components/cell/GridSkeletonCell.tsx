@@ -8,7 +8,7 @@ import {
 import { fastMemo } from '../../utils/fastMemo';
 import { randomNumberBetween } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 const randomWidth = randomNumberBetween(10000, 20, 80);

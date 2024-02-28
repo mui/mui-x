@@ -5,7 +5,7 @@ import Badge from '@mui/material/Badge';
 import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/dataGridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
