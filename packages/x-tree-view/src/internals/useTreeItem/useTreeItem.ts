@@ -15,13 +15,16 @@ import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
 import { useTreeItemUtils } from '../useTreeItemUtils';
 
-export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemReturnValue => {
+export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
+  parameters: UseTreeItemParameters,
+): UseTreeItemReturnValue<TPlugins> => {
   const {
     runItemPlugins,
     selection: { multiSelect },
     disabledItemsFocusable,
     instance,
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+    publicAPI,
+  } = useTreeViewContext<TPlugins>();
 
   const { id, nodeId, label, children, rootRef } = parameters;
 
@@ -184,5 +187,6 @@ export const useTreeItem = (parameters: UseTreeItemParameters): UseTreeItemRetur
     getLabelProps,
     rootRef: handleRootRef,
     status,
+    publicAPI,
   };
 };

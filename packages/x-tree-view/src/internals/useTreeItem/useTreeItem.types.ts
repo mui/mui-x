@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TreeViewItemId } from '@mui/x-tree-view';
 import { MuiCancellableEventHandler } from '../models/MuiCancellableEvent';
+import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../models';
 
 export interface UseTreeItemParameters {
   /**
@@ -83,7 +84,7 @@ export interface UseTreeItemStatus {
   disabled: boolean;
 }
 
-export interface UseTreeItemReturnValue {
+export interface UseTreeItemReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps additional props for the root slot
@@ -132,4 +133,8 @@ export interface UseTreeItemReturnValue {
    * Current status of the item.
    */
   status: UseTreeItemStatus;
+  /**
+   * The object the allows Tree View manipulation.
+   */
+  publicAPI: TreeViewPublicAPI<TPlugins>;
 }

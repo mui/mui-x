@@ -160,13 +160,19 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
 
   const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
 
-  const { getRootProps, getContentProps, getLabelProps, getGroupTransitionProps, status } =
-    useTreeItem({
-      id,
-      nodeId,
-      children,
-      label,
-    });
+  const {
+    getRootProps,
+    getContentProps,
+    getIconContainerProps,
+    getLabelProps,
+    getGroupTransitionProps,
+    status,
+  } = useTreeItem({
+    id,
+    nodeId,
+    children,
+    label,
+  });
 
   const ownerState: TreeItemNextOwnerState = {
     ...props,
@@ -205,6 +211,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItemNextIconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
+    getSlotProps: getIconContainerProps,
     externalSlotProps: slotProps.iconContainer,
     ownerState: {},
     className: classes.iconContainer,

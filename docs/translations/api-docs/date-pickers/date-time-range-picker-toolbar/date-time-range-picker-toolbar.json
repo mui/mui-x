@@ -14,7 +14,8 @@
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
     },
-    "view": { "description": "Currently visible picker view." }
+    "view": { "description": "Currently visible picker view." },
+    "views": { "description": "Available views." }
   },
   "classDescriptions": {
     "endToolbar": {
