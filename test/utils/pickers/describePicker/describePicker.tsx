@@ -11,13 +11,13 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   const propsToOpen = variant === 'static' ? {} : { open: true };
 
-  it('should forward the `inputRef` prop to the text field', function test() {
+  it('should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)', function test() {
     if (fieldType === 'multi-input' || variant === 'static') {
       this.skip();
     }
 
     const inputRef = React.createRef<HTMLInputElement>();
-    render(<ElementToTest inputRef={inputRef} />);
+    render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
 
     expect(inputRef.current).to.have.tagName('input');
   });

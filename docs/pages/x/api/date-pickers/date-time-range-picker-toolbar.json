@@ -1,0 +1,64 @@
+{
+  "props": {
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      },
+      "required": true
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "name": "DateTimeRangePickerToolbar",
+  "imports": [
+    "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
+    "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "endToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
+      "description": "Styles applied to the end toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateTimeRangePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "startToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-startToolbar",
+      "description": "Styles applied to the start toolbar element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimeRangePickerToolbar",
+  "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerToolbar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

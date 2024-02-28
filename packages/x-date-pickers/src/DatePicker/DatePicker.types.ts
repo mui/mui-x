@@ -8,18 +8,23 @@ import {
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
+import { PickerValidDate } from '../models';
 
-export interface DatePickerSlots<TDate>
+export interface DatePickerSlots<TDate extends PickerValidDate>
   extends DesktopDatePickerSlots<TDate>,
     MobileDatePickerSlots<TDate> {}
 
-export interface DatePickerSlotProps<TDate>
-  extends DesktopDatePickerSlotProps<TDate>,
-    MobileDatePickerSlotProps<TDate> {}
+export interface DatePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DatePickerProps<TDate>
-  extends DesktopDatePickerProps<TDate>,
-    MobileDatePickerProps<TDate> {
+export interface DatePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -40,5 +45,5 @@ export interface DatePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotProps<TDate>;
+  slotProps?: DatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

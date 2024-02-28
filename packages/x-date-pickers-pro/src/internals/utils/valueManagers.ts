@@ -2,25 +2,26 @@ import {
   PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
-  addPositionPropertiesToSections,
-  createDateStrForInputFromSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
   areDatesEqual,
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  RangeFieldSection,
   DateRange,
   RangePosition,
 } from '../../models';
-import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
   TValue = [any, any],
-  TDate = any,
+  TDate extends PickerValidDate = any,
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
@@ -92,14 +93,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (
-    utils,
-    [start, end],
-    fallbackSections,
-    localizedDigits,
-    isRTL,
-    getSectionsFromDate,
-  ) => {
+  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -122,7 +116,8 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
+            // TODO: Check if RTL still works
+            endSeparator: `${section.endSeparator} – `,
           };
         }
 
@@ -133,18 +128,21 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       });
     };
 
-    return addPositionPropertiesToSections<RangeFieldSection>(
-      [
-        ...getSections(start, separatedFallbackSections.startDate, 'start'),
-        ...getSections(end, separatedFallbackSections.endDate, 'end'),
-      ],
-      localizedDigits,
-      isRTL,
-    );
+    return [
+      ...getSections(start, separatedFallbackSections.startDate, 'start'),
+      ...getSections(end, separatedFallbackSections.endDate, 'end'),
+    ];
   },
-  getValueStrFromSections: (sections, localizedDigits, isRTL) => {
+  getV7HiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForInputFromSections(
+    return createDateStrForV7HiddenInputFromSections([
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate,
+    ]);
+  },
+  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    return createDateStrForV6InputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
       localizedDigits,
       isRTL,

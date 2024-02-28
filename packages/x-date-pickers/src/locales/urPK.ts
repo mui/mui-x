@@ -22,9 +22,13 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
       ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
       : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'شروع',
   end: 'ختم',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'کینسل',
@@ -40,9 +44,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} منتخب کریں ${
-      time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} منتخب کریں ${time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
@@ -80,6 +82,19 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
   // fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const urPK = getPickersLocalization(urPKPickers);

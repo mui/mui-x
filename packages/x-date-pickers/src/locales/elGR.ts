@@ -15,16 +15,20 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Επόμενος μήνας',
 
   // View navigation
-  openPreviousView: 'ανοίγμα προηγούμενης προβολή',
-  openNextView: 'ανοίγμα επόμενης προβολή',
+  openPreviousView: 'Άνοίγμα προηγούμενης προβολή',
+  openNextView: 'Άνοίγμα επόμενης προβολή',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'η προβολή έτους είναι ανοιχτή, μεταβείτε στην προβολή ημερολογίου'
       : 'η προβολή ημερολογίου είναι ανοιχτή, μεταβείτε στην προβολή έτους',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Αρχή',
   end: 'Τέλος',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Άκυρο',
@@ -40,11 +44,7 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Επιλέξτε ${views[view]}. ${
-      time === null
-        ? 'Δεν έχει επιλεγεί ώρα'
-        : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Επιλέξτε ${views[view]}. ${time === null ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
@@ -82,6 +82,19 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const elGR = getPickersLocalization(elGRPickers);

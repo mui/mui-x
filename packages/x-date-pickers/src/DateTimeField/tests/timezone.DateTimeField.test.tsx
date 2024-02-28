@@ -1,43 +1,42 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { userEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   createPickerRenderer,
-  expectInputValue,
-  getTextbox,
+  expectFieldValueV7,
   describeAdapters,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<DateTimeField /> - Timezone', () => {
-  describeAdapters('Timezone prop', DateTimeField, ({ adapter, render, clickOnInput }) => {
+  describeAdapters('Timezone prop', DateTimeField, ({ adapter, renderWithProps }) => {
     if (!adapter.isTimezoneCompatible) {
       return;
     }
 
     const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
-    const fillEmptyValue = (input: HTMLInputElement, timezone: string) => {
-      clickOnInput(input, 0);
+    const fillEmptyValue = (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {
+      v7Response.selectSection('month');
 
       // Set month
-      userEvent.keyPress(input, { key: 'ArrowDown' });
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
 
       // Set day
-      userEvent.keyPress(input, { key: 'ArrowDown' });
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowDown' });
+      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowRight' });
 
       // Set year
-      userEvent.keyPress(input, { key: 'ArrowDown' });
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowDown' });
+      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowRight' });
 
       // Set hours
-      userEvent.keyPress(input, { key: 'ArrowDown' });
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowDown' });
+      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowRight' });
 
       return adapter.setHours(
         adapter.setDate(adapter.setMonth(adapter.date(undefined, timezone), 11), 31),
@@ -46,18 +45,17 @@ describe('<DateTimeField /> - Timezone', () => {
     };
 
     it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
-      if (adapter.lib !== 'dayjs') {
-        return;
-      }
-
       const onChange = spy();
-      render(<DateTimeField onChange={onChange} format={format} />);
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        onChange,
+        format,
+      });
 
-      const input = getTextbox();
-      const expectedDate = fillEmptyValue(input, 'default');
+      const expectedDate = fillEmptyValue(v7Response, 'default');
 
       // Check the rendered value (uses default timezone, e.g: UTC, see TZ env variable)
-      expectInputValue(input, '12/31/2022 23');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '12/31/2022 23');
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -72,12 +70,16 @@ describe('<DateTimeField /> - Timezone', () => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange and rendering when no value is provided', () => {
           const onChange = spy();
-          render(<DateTimeField onChange={onChange} timezone={timezone} format={format} />);
-          const input = getTextbox();
-          const expectedDate = fillEmptyValue(input, timezone);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            onChange,
+            format,
+            timezone,
+          });
+          const expectedDate = fillEmptyValue(v7Response, timezone);
 
           // Check the rendered value (uses timezone prop)
-          expectInputValue(input, '12/31/2022 23');
+          expectFieldValueV7(v7Response.getSectionsContainer(), '12/31/2022 23');
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
@@ -87,20 +89,19 @@ describe('<DateTimeField /> - Timezone', () => {
 
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          render(
-            <DateTimeField
-              value={adapter.date(undefined, timezone)}
-              onChange={onChange}
-              timezone="America/Chicago"
-              format={format}
-            />,
-          );
-          const input = getTextbox();
-          clickOnInput(input, 0);
-          userEvent.keyPress(input, { key: 'ArrowDown' });
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(undefined, timezone),
+            onChange,
+            format,
+            timezone: 'America/Chicago',
+          });
+
+          v7Response.selectSection('month');
+          fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
 
           // Check the rendered value (uses America/Chicago timezone)
-          expectInputValue(input, '05/14/2022 19');
+          expectFieldValueV7(v7Response.getSectionsContainer(), '05/14/2022 19');
 
           // Check the `onChange` value (uses timezone prop)
           const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
@@ -113,20 +114,27 @@ describe('<DateTimeField /> - Timezone', () => {
   });
 
   describe('Value timezone modification - Luxon', () => {
-    const { render, adapter } = createPickerRenderer({ clock: 'fake', adapterName: 'luxon' });
+    const { render, adapter, clock } = createPickerRenderer({
+      clock: 'fake',
+      adapterName: 'luxon',
+    });
+    const { renderWithProps } = buildFieldInteractions({
+      clock,
+      render,
+      Component: DateTimeField,
+    });
 
     it('should update the field when time zone changes (timestamp remains the same)', () => {
-      const { setProps } = render(<DateTimeField />);
-      const input = getTextbox();
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
-      setProps({ value: date });
+      v7Response.setProps({ value: date });
 
-      expectInputValue(input, '06/18/2020 02:30 PM');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '06/18/2020 02:30 PM');
 
-      setProps({ value: date.setZone('America/Los_Angeles') });
+      v7Response.setProps({ value: date.setZone('America/Los_Angeles') });
 
-      expectInputValue(input, '06/18/2020 07:30 AM');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '06/18/2020 07:30 AM');
     });
   });
 });

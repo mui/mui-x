@@ -2,19 +2,13 @@ import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  act,
-  createEvent,
-  createRenderer,
-  fireEvent,
-  screen,
-} from '@mui-internal/test-utils';
+import { act, createEvent, createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
+import { describeConformance } from 'test/utils/describeConformance';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
   instance: {
@@ -177,6 +171,53 @@ describe('<TreeItem />', () => {
         <TreeItem nodeId="1" label="1" data-testid="1">
           <TreeItem nodeId="2" label="2" data-testid="2">
             {[]}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
+  it('should treat multiple empty conditional arrays as empty', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+            {[].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
+  });
+  it('should treat one conditional empty and one conditional with results as expandable', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[]}
+            {[1].map((_, index) => (
+              <React.Fragment key={index}>a child</React.Fragment>
+            ))}
+          </TreeItem>
+        </TreeItem>
+      </SimpleTreeView>,
+    );
+
+    expect(getByTestId('2')).to.have.attribute('aria-expanded', 'true');
+  });
+  it('should handle edge case of nested array of array', () => {
+    const { getByTestId } = render(
+      <SimpleTreeView defaultExpandedNodes={['1', '2']}>
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2">
+            {[[]]}
           </TreeItem>
         </TreeItem>
       </SimpleTreeView>,

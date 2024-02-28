@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { describeConformance } from '@mui-internal/test-utils';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputDateTimeRangeField />', () => {
   const { render } = createPickerRenderer();
 
-  describeConformance(<MultiInputDateTimeRangeField />, () => ({
+  describeConformance(<MultiInputDateTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

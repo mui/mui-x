@@ -19,6 +19,10 @@ In `package.json`, change the version of the data grid package to `next`.
 ```diff
 -"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "next",
+-"@mui/x-data-grid-pro": "6.x.x",
++"@mui/x-data-grid-pro": "next",
+-"@mui/x-data-grid-premium": "6.x.x",
++"@mui/x-data-grid-premium": "next",
 ```
 
 Since v7 is a major release, it contains changes that affect the public API.
@@ -31,6 +35,22 @@ To have the option of using the latest API from `@mui/material`, the package pee
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
+## Update the license package
+
+If you're using the commercial version of the Data Grid ([Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans), you need to update the import path:
+
+```diff
+-import { LicenseInfo } from '@mui/x-license-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
+
+```diff
+-"@mui/x-license-pro": "6.x.x",
++"@mui/x-license": "next",
+```
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
@@ -41,12 +61,13 @@ You can either run it on a specific file, folder, or your entire codebase when c
 ```bash
 // Data Grid specific
 npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
+
 // Target other MUI X components as well
 npx @mui/x-codemod@next v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for the Data Grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v700) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -77,11 +98,13 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### DOM changes
 
-The layout of the grid has been substantially altered to use CSS sticky positioned elements. As a result, the following changes have been made:
+The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
+As a result, the following changes have been made:
 
 - The main element now corresponds to the virtal scroller element.
 - Headers are now contained in the virtual scroller.
 - Pinned row and column sections are now contained in the virtual scroller.
+- The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
 
 <!-- ### Renamed props
 
@@ -114,24 +137,28 @@ The layout of the grid has been substantially altered to use CSS sticky position
 
 ### Behavioral changes
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
+The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc., can now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
 
-Here's the list of affected features, colDef flags and props to disable them and the related props and API methods to control them programmatically.
+Here's the list of affected features, column definition flags and props to disable them, and the related props and API methods to control them programmatically.
 
 {{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 
-- Some selectors now require passing `instanceId` as a second argument:
-  ```diff
-  - gridColumnFieldsSelector(apiRef.current.state);
-  + gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
-  ```
-  However, it's preferable to pass the `apiRef` as the first argument instead:
-  ```js
-  gridColumnFieldsSelector(apiRef);
-  ```
-  See [Direct state access](/x/react-data-grid/state/#direct-selector-access) for more info.
+Some selectors now require passing `instanceId` as a second argument:
+
+```diff
+- gridColumnFieldsSelector(apiRef.current.state);
++ gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+```
+
+However, it's preferable to pass the `apiRef` as the first argument instead:
+
+```js
+gridColumnFieldsSelector(apiRef);
+```
+
+See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) page for more info.
 
 <!-- ### Events
 
@@ -165,6 +192,104 @@ Here's the list of affected features, colDef flags and props to disable them and
 - The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
 
 - The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
+
+- The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](/material-ui/react-popper/) component under the hood.
+
+```diff
+ <DataGrid
+  slotProps={{
+-   columnsPanel: {
++   columnsManagement: {
+      sort: 'asc',
+      autoFocusSearchField: false,
+    },
+  }}
+ />
+```
+
+- `Show all` and `Hide all` buttons in the `ColumnsPanel` have been combined into one `Show/Hide All` checkbox in the new columns management component. The related props `disableShowAllButton` and `disableHideAllButton` have been replaced with a new prop `disableShowHideToggle`.
+
+- The signature of `GridColDef['valueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueGetter: ({ value, row }) => value,
+  + valueGetter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueGetterParams` interface has been removed:
+
+  ```diff
+  - const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
+  + const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
+  ```
+
+- The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
+
+  ```diff
+  - valueFormatter: ({ value }) => value,
+  + valueFormatter: (value, row, column, apiRef) => value,
+  ```
+
+  The `GridValueFormatterParams` interface has been removed:
+
+  ```diff
+  - const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
+  + const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
+  ```
+
+- The signature of `GridColDef['valueSetter']` has been changed for performance reasons:
+
+  ```diff
+  - valueSetter: (params) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - }
+  + valueSetter: (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  +}
+  ```
+
+  The `GridValueSetterParams` interface has been removed:
+
+  ```diff
+  - const setFullName = (params: GridValueSetterParams) => {
+  -   const [firstName, lastName] = params.value!.toString().split(' ');
+  -   return { ...params.row, firstName, lastName };
+  - };
+  + const setFullName: GridValueSetter<Row> = (value, row) => {
+  +   const [firstName, lastName] = value!.toString().split(' ');
+  +   return { ...row, firstName, lastName };
+  + }
+  ```
+
+- The signature of `GridColDef['valueParser']` has been changed for performance reasons:
+
+  ```diff
+  - valueParser: (value, params: GridCellParams) => value.toLowerCase(),
+  + valueParser: (value, row, column, apiRef) => value.toLowerCase(),
+  ```
+
+- The signature of `GridColDef['colSpan']` has been changed for performance reasons:
+
+  ```diff
+  - colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
+  + colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
+  ```
+
+- The signature of `GridColDef['pastedValueParser']` has been changed for performance reasons:
+
+  ```diff
+  - pastedValueParser: (value, params) => new Date(value),
+  + pastedValueParser: (value, row, column, apiRef) => new Date(value),
+  ```
+
+- The signature of `GridColDef['groupingValueGetter']` has been changed for performance reasons:
+
+  ```diff
+  - groupingValueGetter: (params) => params.value.name,
+  + groupingValueGetter: (value: { name: string }) => value.name,
+  ```
 
 <!-- ### Rows
 
@@ -292,9 +417,9 @@ Here's the list of affected features, colDef flags and props to disable them and
   - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-<!-- ### Editing
+### Editing
 
-- -->
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 
@@ -312,7 +437,7 @@ Here's the list of affected features, colDef flags and props to disable them and
   ```
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
-  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
@@ -336,14 +461,12 @@ Here's the list of affected features, colDef flags and props to disable them and
  }
 ```
 
-### CSS classes
+### CSS classes and styling
 
-- Some CSS classes were removed or renamed
-
-  | MUI X v6 classes                            | MUI X v7 classes | Note                   |
-  | :------------------------------------------ | :--------------- | :--------------------- | --- |
-  | `.Mui-hovered`                              | `:hover`         | For rows               |
-  | `.MuiDataGrid--pinnedColumns-(left\|right)` | Removed          | Not applicable anymore | --> |
+- You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
+- The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
+- The `.MuiDataGrid-cell--withRenderer` class has been removed.
+- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
 
 ### Changes to the public API
 
@@ -359,5 +482,6 @@ Here's the list of affected features, colDef flags and props to disable them and
 - The slot `row` has had these props removed: `containerWidth`, `position`.
 - The slot `row` has typed props now.
 - The slot `headerFilterCell` has had these props removed: `filterOperators`.
+- All slots are now strongly typed, previously were `React.JSXElementConstructor<any>`.
 
 <!-- ### Rename `components` to `slots` -->

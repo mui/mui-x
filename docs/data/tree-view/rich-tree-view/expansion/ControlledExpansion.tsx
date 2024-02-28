@@ -71,7 +71,7 @@ export default function ControlledExpansion() {
           {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
       </Box>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           expandedNodes={expandedNodes}

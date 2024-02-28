@@ -25,7 +25,7 @@ export default function DisabledItemsFocusable() {
           label="Allow focusing disabled items"
         />
       </Box>
-      <Box sx={{ height: 312, flexGrow: 1, maxWidth: 400 }}>
+      <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
         <SimpleTreeView disabledItemsFocusable={disabledItemsFocusable}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />

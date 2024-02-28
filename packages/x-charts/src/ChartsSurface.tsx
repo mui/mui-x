@@ -48,6 +48,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
     viewBox,
     disableAxisListener = false,
     className,
+    title,
+    desc,
     ...other
   } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
@@ -62,8 +64,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       ref={ref}
       {...other}
     >
-      <title>{props.title}</title>
-      <desc>{props.desc}</desc>
+      <title>{title}</title>
+      <desc>{desc}</desc>
       {children}
     </ChartChartsSurfaceStyles>
   );

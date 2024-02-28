@@ -1,30 +1,35 @@
 import {
   BaseDateValidationProps,
   TimeValidationProps,
-  DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
   DateTimeValidationProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
-import { DateTimeRangeValidationError, DateRange } from '../../models';
-import { RangeFieldSection } from './fields';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DayRangeValidationProps } from './dateRange';
+import { DateTimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
-export interface UseDateTimeRangeFieldProps<TDate>
-  extends MakeOptional<
-      UseFieldInternalProps<
-        DateRange<TDate>,
-        TDate,
-        RangeFieldSection,
-        DateTimeRangeValidationError
+export interface UseDateTimeRangeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
+      Omit<
+        UseFieldInternalProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          DateTimeRangeValidationError
+        >,
+        'unstableFieldRef'
       >,
       'format'
     >,
     DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
-    DateTimeValidationProps<TDate>,
-    BaseRangeProps {
+    DateTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -32,7 +37,6 @@ export interface UseDateTimeRangeFieldProps<TDate>
   ampm?: boolean;
 }
 
-export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseDateTimeRangeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
->;
+export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
+
+export type DateTimeRangePickerViewExternal = Exclude<DateTimeRangePickerView, 'meridiem'>;

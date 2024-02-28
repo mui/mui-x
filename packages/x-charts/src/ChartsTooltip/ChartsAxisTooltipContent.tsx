@@ -5,14 +5,11 @@ import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
+import { isCartesianSeriesType } from './utils';
 
 export type ChartsAxisContentProps = {
   /**
@@ -63,19 +60,17 @@ function ChartsAxisTooltipContent(props: {
 
   const relevantSeries = React.useMemo(() => {
     const rep: any[] = [];
-    (
-      Object.keys(series).filter((seriesType) =>
-        ['bar', 'line', 'scatter'].includes(seriesType),
-      ) as CartesianChartSeriesType[]
-    ).forEach((seriesType) => {
-      series[seriesType]!.seriesOrder.forEach((seriesId) => {
-        const item = series[seriesType]!.series[seriesId];
-        const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
-        if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-          rep.push(series[seriesType]!.series[seriesId]);
-        }
+    Object.keys(series)
+      .filter(isCartesianSeriesType)
+      .forEach((seriesType) => {
+        series[seriesType]!.seriesOrder.forEach((seriesId) => {
+          const item = series[seriesType]!.series[seriesId];
+          const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
+          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+            rep.push(series[seriesType]!.series[seriesId]);
+          }
+        });
       });
-    });
     return rep;
   }, [USED_AXIS_ID, isXaxis, series]);
 
@@ -109,11 +104,13 @@ ChartsAxisTooltipContent.propTypes = {
   axisData: PropTypes.shape({
     x: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
     y: PropTypes.shape({
       index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+        .isRequired,
     }),
   }).isRequired,
   classes: PropTypes.object.isRequired,
@@ -123,11 +120,13 @@ ChartsAxisTooltipContent.propTypes = {
     axisData: PropTypes.shape({
       x: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
       y: PropTypes.shape({
         index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+          .isRequired,
       }),
     }),
     axisValue: PropTypes.any,

@@ -9,16 +9,20 @@ const enUSPickers: PickersLocaleText<any> = {
   nextMonth: 'Next month',
 
   // View navigation
-  openPreviousView: 'open previous view',
-  openNextView: 'open next view',
+  openPreviousView: 'Open previous view',
+  openNextView: 'Open next view',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'End',
+  startDate: 'Start date',
+  startTime: 'Start time',
+  endDate: 'End date',
+  endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Cancel',
@@ -75,6 +79,19 @@ const enUSPickers: PickersLocaleText<any> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Year',
+  month: 'Month',
+  day: 'Day',
+  weekDay: 'Week day',
+  hours: 'Hours',
+  minutes: 'Minutes',
+  seconds: 'Seconds',
+  meridiem: 'Meridiem',
+
+  // Common
+  empty: 'Empty',
 };
 
 export const DEFAULT_LOCALE = enUSPickers;

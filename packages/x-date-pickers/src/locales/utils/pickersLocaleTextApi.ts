@@ -1,5 +1,11 @@
 import { TimeViewWithMeridiem } from '../../internals/models';
-import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
+import {
+  DateView,
+  TimeView,
+  MuiPickersAdapter,
+  FieldSectionContentType,
+  PickerValidDate,
+} from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -24,7 +30,7 @@ export interface PickersComponentSpecificLocaleText {
   dateRangePickerToolbarTitle: string;
 }
 
-export interface PickersComponentAgnosticLocaleText<TDate> {
+export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDate> {
   // Calendar navigation
   previousMonth: string;
   nextMonth: string;
@@ -40,9 +46,13 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
 
-  // DateRange placeholders
+  // DateRange labels
   start: string;
   end: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
 
   // Action bar
   cancelButtonLabel: string;
@@ -85,20 +95,35 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   fieldMinutesPlaceholder: (params: { format: string }) => string;
   fieldSecondsPlaceholder: (params: { format: string }) => string;
   fieldMeridiemPlaceholder: (params: { format: string }) => string;
+
+  // View names - reflects available `FieldSectionType` options
+  year: string;
+  month: string;
+  day: string;
+  weekDay: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+  meridiem: string;
+
+  // Common
+  empty: string;
 }
 
-export interface PickersLocaleText<TDate>
+export interface PickersLocaleText<TDate extends PickerValidDate>
   extends PickersComponentAgnosticLocaleText<TDate>,
     PickersComponentSpecificLocaleText {}
 
-export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
+export type PickersInputLocaleText<TDate extends PickerValidDate> = Partial<
+  PickersLocaleText<TDate>
+>;
 
 /**
  * Translations that can be provided directly to the picker components.
  * It contains some generic translations like `toolbarTitle`
  * which will be dispatched to various translations keys in `PickersLocaleText`, depending on the pickers received them.
  */
-export interface PickersInputComponentLocaleText<TDate>
+export interface PickersInputComponentLocaleText<TDate extends PickerValidDate>
   extends Partial<PickersComponentAgnosticLocaleText<TDate>> {
   /**
    * Title displayed in the toolbar of this picker.
@@ -110,6 +135,6 @@ export interface PickersInputComponentLocaleText<TDate>
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;
 
 export type LocalizedComponent<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends { localeText?: PickersInputComponentLocaleText<TDate> },
 > = Omit<Props, 'localeText'> & { localeText?: PickersInputLocaleText<TDate> };

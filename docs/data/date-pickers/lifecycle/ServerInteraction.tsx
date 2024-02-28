@@ -28,8 +28,8 @@ function DisplayEvents(props: DisplayEventsProps) {
                 value === null
                   ? 'null'
                   : value.isValid()
-                  ? value.format('DD/MM/YYYY')
-                  : 'Invalid Date'
+                    ? value.format('DD/MM/YYYY')
+                    : 'Invalid Date'
               }`,
           )
           .join('\n')}
@@ -40,7 +40,7 @@ function DisplayEvents(props: DisplayEventsProps) {
 
 // debounce function
 function debounce(func: (...arg: any) => void, wait = 500) {
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
   function debounced(...args: any) {
     const later = () => {
       func(...args);

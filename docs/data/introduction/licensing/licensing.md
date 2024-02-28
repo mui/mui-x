@@ -137,11 +137,11 @@ If this isn't possible, please contact sales@mui.com to request a compatible lic
 
 ### How to install the key
 
-The license key depends on a package called `@mui/x-license-{plan}` that validates whether or not it's active.
+The license key depends on a package called `@mui/x-license` that validates whether or not it's active.
 Once you have your license key, import the `LicenseInfo` method from that package and call the `setLicenseKey()` function:
 
 ```jsx
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
@@ -164,8 +164,7 @@ When using Next.js App Router, you have multiple options to install the license 
 
 ```tsx
 'use client';
-
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
@@ -174,8 +173,7 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 ```tsx
 'use client';
-
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
@@ -206,7 +204,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
 ```tsx
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
@@ -227,7 +225,7 @@ The license key is validated on the server and client side so you must expose th
 To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
 
 ```tsx
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
 ```
@@ -256,10 +254,10 @@ This error indicates that your license key is missing. You might not be allowed 
 The component will look something like this:
 
 <div class="only-light-mode">
-  <img src="/static/x/watermark-light.png" width="1306" height="536" style="width: 653px; margin-bottom: 2rem;" alt="" loading="lazy">
+  <img src="/static/x/watermark-light.png" width="1290" height="536" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 <div class="only-dark-mode">
-  <img src="/static/x/watermark-dark.png" width="1290" height="548" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
+  <img src="/static/x/watermark-dark.png" width="1290" height="536" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 
 To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.
@@ -298,7 +296,7 @@ This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
 
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
-Please check the [license key installation](#license-key-installation).
+Please check the [license key installation](/x/introduction/licensing/#license-key).
 
 ### 6. Invalid license key (TypeError: extracting license expiry timestamp)
 

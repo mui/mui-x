@@ -87,6 +87,7 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  dayOfMonthFull: 'do',
   weekday: 'EEEE',
   weekdayShort: 'EEEEEE',
   hours24h: 'HH',
@@ -116,6 +117,12 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
 > & {
   longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'date-fns': Date;
+  }
+}
 
 /**
  * Based on `@date-io/date-fns`
@@ -243,5 +250,9 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
+  };
+
+  public getDayOfWeek = (value: Date) => {
+    return value.getDay() + 1;
   };
 }

@@ -17,12 +17,12 @@ import {
   DayValidationProps,
 } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, TimezoneProps } from '../models';
+import { DateView, PickerValidDate, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
-export interface DateCalendarSlots<TDate>
+export interface DateCalendarSlots<TDate extends PickerValidDate>
   extends PickersCalendarHeaderSlots,
     DayCalendarSlots<TDate> {
   /**
@@ -33,13 +33,13 @@ export interface DateCalendarSlots<TDate>
   calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
 }
 
-export interface DateCalendarSlotProps<TDate>
+export interface DateCalendarSlotProps<TDate extends PickerValidDate>
   extends PickersCalendarHeaderSlotProps<TDate>,
     DayCalendarSlotProps<TDate> {
   calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
 }
 
-export interface ExportedDateCalendarProps<TDate>
+export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   extends ExportedDayCalendarProps<TDate>,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
@@ -83,7 +83,7 @@ export interface ExportedDateCalendarProps<TDate>
   onMonthChange?: (month: TDate) => void;
 }
 
-export interface DateCalendarProps<TDate>
+export interface DateCalendarProps<TDate extends PickerValidDate>
   extends ExportedDateCalendarProps<TDate>,
     ExportedUseViewsOptions<DateView> {
   /**
@@ -102,6 +102,9 @@ export interface DateCalendarProps<TDate>
    */
   referenceDate?: TDate;
   className?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateCalendarClasses>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -119,7 +122,7 @@ export interface DateCalendarProps<TDate>
   slotProps?: DateCalendarSlotProps<TDate>;
 }
 
-export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
+export type DateCalendarDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
   DateCalendarProps<TDate>,
   | 'views'
   | 'openTo'

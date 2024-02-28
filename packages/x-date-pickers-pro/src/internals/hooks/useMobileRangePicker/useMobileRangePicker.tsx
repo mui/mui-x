@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -10,8 +10,9 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
   DateOrTimeViewWithMeridiem,
-  UsePickerValueFieldResponse,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
@@ -21,20 +22,31 @@ import {
 } from './useMobileRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../../models';
-import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
+import { DateRange, BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseMobileRangePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   ...pickerParams
-}: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseMobileRangePickerParams<
+  TDate,
+  TView,
+  TEnableAccessibleFieldDOMStructure,
+  TExternalProps
+>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -44,6 +56,9 @@ export const useMobileRangePicker = <
     sx,
     format,
     formatDensity,
+    enableAccessibleFieldDOMStructure,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -54,7 +69,14 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+
+  const fieldType = (slots.field as any).fieldType ?? 'multi-input';
+  const { rangePosition, onRangePositionChange } = useRangePosition(
+    props,
+    fieldType === 'single-input' ? startFieldRef : undefined,
+  );
   const labelId = useId();
   const contextLocaleText = useLocaleText();
 
@@ -76,6 +98,7 @@ export const useMobileRangePicker = <
     props,
     wrapperVariant: 'mobile',
     autoFocusView: true,
+    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -83,30 +106,26 @@ export const useMobileRangePicker = <
   });
 
   const Field = slots.field;
-  const fieldType = (Field as any).fieldType ?? 'multi-input';
 
-  const fieldProps: BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    InferError<TExternalProps>
-  > = useSlotProps<
+  const fieldProps = useSlotProps<
     typeof Field,
-    UseMobileRangePickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
+    UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    | Partial<
+        BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >
+    | Partial<
+        BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
         >
       >,
     TExternalProps
@@ -121,8 +140,11 @@ export const useMobileRangePicker = <
       sx,
       format,
       formatDensity,
+      enableAccessibleFieldDOMStructure,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
-      ...(fieldType === 'single-input' && { inputRef, name }),
+      ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
   });
@@ -132,6 +154,7 @@ export const useMobileRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'mobile',
@@ -145,14 +168,20 @@ export const useMobileRangePicker = <
     localeText,
     rangePosition,
     onRangePositionChange,
-    singleInputFieldRef,
     pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
     fieldProps,
+    startFieldRef,
+    endFieldRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
+    tabs: {
+      ...innerSlotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,

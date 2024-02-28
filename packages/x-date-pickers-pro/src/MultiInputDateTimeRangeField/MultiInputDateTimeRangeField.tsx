@@ -13,13 +13,17 @@ import {
 } from '@mui/utils';
 import {
   splitFieldInternalAndForwardedProps,
-  FieldsTextFieldProps,
   convertFieldResponseIntoMuiTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import {
+  MultiInputDateTimeRangeFieldProps,
+  MultiInputDateTimeRangeFieldSlotProps,
+} from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
 import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
-import { MultiInputRangeFieldClasses } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
   generateUtilityClasses('MuiMultiInputDateTimeRangeField', ['root', 'separator']);
@@ -27,7 +31,7 @@ export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
 export const getMultiInputDateTimeRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputDateTimeRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any>) => {
+const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any, any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -57,8 +61,12 @@ const MultiInputDateTimeRangeFieldSeparator = styled(
   },
 )({});
 
-type MultiInputDateTimeRangeFieldComponent = (<TDate>(
-  props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MultiInputDateTimeRangeFieldComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -71,8 +79,11 @@ type MultiInputDateTimeRangeFieldComponent = (<TDate>(
  *
  * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
  */
-const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<TDate>(
-  inProps: MultiInputDateTimeRangeFieldProps<TDate>,
+const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -80,20 +91,14 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
-  const { internalProps: dateTimeFieldInternalProps, forwardedProps } =
-    splitFieldInternalAndForwardedProps<
-      typeof themeProps,
-      keyof Omit<
-        UseDateTimeRangeFieldProps<any>,
-        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
-      >
-    >(themeProps, 'date-time');
+  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
+    typeof themeProps,
+    keyof Omit<UseDateTimeRangeFieldProps<any, any>, 'clearable' | 'onClear'>
+  >(themeProps, 'date-time');
 
   const {
     slots,
     slotProps,
-    disabled,
-    autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
@@ -115,14 +120,29 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: clsx(className, classes.root),
   });
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
+  const TextField =
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+  const startTextFieldProps = useSlotProps<
+    typeof TextField,
+    MultiInputDateTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    {},
+    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+      position: RangePosition;
+    }
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
-    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
-  const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
+  const endTextFieldProps = useSlotProps<
+    typeof TextField,
+    MultiInputDateTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    {},
+    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+      position: RangePosition;
+    }
+  >({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
@@ -136,8 +156,12 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: classes.separator,
   });
 
-  const fieldResponse = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
-    sharedProps: { ...dateTimeFieldInternalProps, disabled },
+  const fieldResponse = useMultiInputDateTimeRangeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof startTextFieldProps
+  >({
+    sharedProps: internalProps,
     startTextFieldProps,
     endTextFieldProps,
     unstableStartFieldRef,
@@ -166,6 +190,9 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
@@ -176,7 +203,7 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * Defines the `flex-direction` style property.
    * It is applied for all screen sizes.
@@ -212,6 +239,10 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
+  /**
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
@@ -224,29 +255,29 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime: PropTypes.any,
+  maxDateTime: PropTypes.object,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime: PropTypes.any,
+  minDateTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -284,14 +315,14 @@ MultiInputDateTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -308,10 +339,6 @@ MultiInputDateTimeRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -400,7 +427,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
 export { MultiInputDateTimeRangeField };

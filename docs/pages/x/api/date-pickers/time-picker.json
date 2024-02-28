@@ -7,7 +7,7 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "object" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
@@ -25,8 +25,8 @@
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "localeText": { "type": { "name": "object" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
@@ -75,13 +75,13 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableTime": {
@@ -122,7 +122,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "object" } },
     "view": {
       "type": {
         "name": "enum",
@@ -217,8 +217,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
-      "default": "TextField from '@mui/material'",
+      "description": "Form control with an input to render the value inside the default field.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
       "class": null
     },
     {

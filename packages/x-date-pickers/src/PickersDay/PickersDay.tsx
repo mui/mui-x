@@ -18,6 +18,7 @@ import {
   getPickersDayUtilityClass,
   pickersDayClasses,
 } from './pickersDayClasses';
+import { PickerValidDate } from '../models';
 
 export interface ExportedPickersDayProps {
   /**
@@ -38,7 +39,7 @@ export interface ExportedPickersDayProps {
   showDaysOutsideCurrentMonth?: boolean;
 }
 
-export interface PickersDayProps<TDate>
+export interface PickersDayProps<TDate extends PickerValidDate>
   extends ExportedPickersDayProps,
     Omit<
       ExtendMui<ButtonBaseProps>,
@@ -221,11 +222,11 @@ const PickersDayFiller = styled('div', {
 
 const noop = () => {};
 
-type PickersDayComponent = (<TDate>(
+type PickersDayComponent = (<TDate extends PickerValidDate>(
   props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
+const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerValidDate>(
   inProps: PickersDayProps<TDate>,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
@@ -373,7 +374,7 @@ PickersDayRaw.propTypes = {
   /**
    * The date to show.
    */
-  day: PropTypes.any.isRequired,
+  day: PropTypes.object.isRequired,
   /**
    * If `true`, renders as disabled.
    * @default false

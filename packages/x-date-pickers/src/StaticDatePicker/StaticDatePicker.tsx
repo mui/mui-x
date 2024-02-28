@@ -5,11 +5,11 @@ import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
-type StaticDatePickerComponent = (<TDate>(
+type StaticDatePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -23,7 +23,7 @@ type StaticDatePickerComponent = (<TDate>(
  *
  * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
  */
-const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
+const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate extends PickerValidDate>(
   inProps: StaticDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -91,7 +91,7 @@ StaticDatePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -124,7 +124,6 @@ StaticDatePicker.propTypes = {
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -141,11 +140,11 @@ StaticDatePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -219,7 +218,7 @@ StaticDatePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -291,7 +290,7 @@ StaticDatePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

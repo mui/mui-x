@@ -5,11 +5,35 @@ import * as prettier from 'prettier';
 import {
   getPropTypesFromFile,
   injectPropTypesInFile,
-} from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utilities';
+} from '@mui/internal-scripts/typescript-to-proptypes';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
+  const isTDate = (name: string) => {
+    if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
+      const T_DATE_PROPS = [
+        'value',
+        'defaultValue',
+        'minDate',
+        'maxDate',
+        'minDateTime',
+        'maxDateTime',
+        'minTime',
+        'maxTime',
+        'referenceDate',
+        'day',
+        'currentMonth',
+      ];
+
+      if (T_DATE_PROPS.includes(name)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   const components = getPropTypesFromFile({
     filePath: sourceFile,
     project,
@@ -47,8 +71,13 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         return false;
       }
 
+      if (isTDate(name)) {
+        return false;
+      }
+
       return undefined;
     },
+    shouldUseObjectForDate: ({ name }) => isTDate(name),
   });
 
   if (components.length === 0) {

@@ -24,6 +24,7 @@ const sparklineColumnType = {
   sortable: false,
   editable: false,
   groupable: false,
+  display: 'flex',
   renderCell: (params) => <GridSparklineCell {...params} />,
 };
 
@@ -41,14 +42,14 @@ const columns = [
     headerName: 'Monthly DLs (bar)',
     renderCell: (params) => <GridSparklineCell {...params} plotType="bar" />,
     width: 150,
-    valueGetter: (params) => params.row.monthlyDownloads,
+    valueGetter: (value, row) => row.monthlyDownloads,
   },
   {
     field: 'lastMonthDownloads',
     headerName: 'Last month DLs',
     type: 'number',
-    valueGetter: (params) =>
-      params.row.monthlyDownloads[params.row.monthlyDownloads.length - 1],
+    valueGetter: (value, row) =>
+      row.monthlyDownloads[row.monthlyDownloads.length - 1],
     width: 150,
   },
 ];

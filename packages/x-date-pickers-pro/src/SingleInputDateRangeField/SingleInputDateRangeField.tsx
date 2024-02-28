@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { refType } from '@mui/utils';
-import {
-  SingleInputDateRangeFieldProps,
-  SingleInputDateRangeFieldSlotProps,
-} from './SingleInputDateRangeField.types';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
-import { FieldType } from '../internals/models';
+import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangeFieldComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
@@ -27,8 +30,11 @@ type DateRangeFieldComponent = (<TDate>(
  *
  * - [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)
  */
-const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
-  inProps: SingleInputDateRangeFieldProps<TDate>,
+const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -40,13 +46,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? MuiTextField;
-  const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps<
-    typeof TextField,
-    SingleInputDateRangeFieldSlotProps<TDate>['textField'],
-    SingleInputDateRangeFieldProps<TDate>,
-    SingleInputDateRangeFieldProps<TDate>
-  >({
+  const TextField =
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+  const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
@@ -54,13 +57,17 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     additionalProps: {
       ref: inRef,
     },
-  });
+  }) as SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useSingleInputDateRangeField<TDate, typeof textFieldProps>(textFieldProps);
+  const fieldResponse = useSingleInputDateRangeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof textFieldProps
+  >(textFieldProps);
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -101,7 +108,7 @@ SingleInputDateRangeField.propTypes = {
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -117,6 +124,10 @@ SingleInputDateRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -188,11 +199,11 @@ SingleInputDateRangeField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Name attribute of the `input` element.
    */
@@ -235,7 +246,7 @@ SingleInputDateRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -243,11 +254,11 @@ SingleInputDateRangeField.propTypes = {
   required: PropTypes.bool,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -264,10 +275,6 @@ SingleInputDateRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
@@ -334,7 +341,7 @@ SingleInputDateRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The variant to use.
    * @default 'outlined'
