@@ -533,7 +533,22 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+    let currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+
+    if (utils.getMonth(currentMonth) !== utils.getMonth(currentMonthWithTimezone)) {
+      currentMonthWithTimezone = utils.setMonth(
+        currentMonthWithTimezone,
+        utils.getMonth(currentMonth),
+      );
+      currentMonthWithTimezone = utils.setYear(
+        currentMonthWithTimezone,
+        utils.getYear(currentMonth),
+      );
+      currentMonthWithTimezone = utils.setDate(
+        currentMonthWithTimezone,
+        utils.getDate(currentMonth),
+      );
+    }
     const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
     let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
