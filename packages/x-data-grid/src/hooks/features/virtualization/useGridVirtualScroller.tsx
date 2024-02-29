@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -396,8 +397,7 @@ export const useGridVirtualScroller = () => {
           />,
         );
       }
-    }
-
+    });
     return rows;
   };
 
