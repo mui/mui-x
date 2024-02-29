@@ -553,7 +553,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return years;
   }
 
-  public setMonthYearDate = (value: Moment, year, month, date) => {
+  public setMonthYearDate = (value: Moment, year: number, month: number, date: number) => {
     return value.year(year).month(month).date(date);
   };
 }

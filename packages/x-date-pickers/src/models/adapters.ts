@@ -623,5 +623,5 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    * @returns {TDate} A new date value with the specified year, month, and date.
    */
 
-  setMonthYearDate(value: TDate, year: number, month: number, date: number);
+  setMonthYearDate(value: TDate, year: number, month: number, date: number): TDate;
 }
