@@ -38,7 +38,6 @@ describe('<AdapterMomentJalaali />', () => {
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
-
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
@@ -79,7 +78,6 @@ describe('<AdapterMomentJalaali />', () => {
 
         it('should have correct placeholder', () => {
           render(<DateTimePicker />);
-
           expectInputPlaceholder(
             screen.getByRole('textbox'),
             localizedTexts[localeKey].placeholder,
@@ -88,10 +86,30 @@ describe('<AdapterMomentJalaali />', () => {
 
         it('should have well formatted value', () => {
           render(<DateTimePicker value={adapter.date(testDate)} />);
-
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
     });
+  });
+
+  it('should set month, year, and date correctly', () => {
+    jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
+    const localeObject = { code: 'en' };
+    const { render, adapter } = createPickerRenderer({
+      clock: 'fake',
+      adapterName: 'moment-jalaali',
+      locale: localeObject,
+    });
+    const initialDate = adapter.date('2022-01-15T09:35:00')!;
+    const expectedDate = adapter.date('1400-02-25T09:35:00')!;
+    const newDate = adapter.setMonthYearDate(initialDate, 1400, 1, 25);
+
+    expect(newDate.isSame(expectedDate, 'date')).equal(true);
+    expect(newDate.isSame(expectedDate, 'month')).equal(true);
+    expect(newDate.isSame(expectedDate, 'year')).equal(true);
+
+    render(<DateTimePicker value={newDate} />);
+
+    expectInputValue(screen.getByRole('textbox'), '1400/02/25 09:35');
   });
 });
