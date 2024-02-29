@@ -5,7 +5,7 @@ import {
   UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
-import { isAncestor } from '@mui/x-tree-view/internals/plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.utils';
+import { isAncestor } from './useTreeViewItemsReordering.utils';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -49,7 +49,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         };
       });
     },
-    [setState],
+    [instance, setState],
   );
 
   const handleDragEnd = React.useCallback(
