@@ -30,7 +30,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
-import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridColumnFieldsSelector,
   gridVisibleColumnFieldsSelector,
@@ -73,7 +73,7 @@ export const useGridRowEditing = (
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
-  const focusTimeout = React.useRef<any>(null);
+  const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>();
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
   const {
@@ -148,7 +148,6 @@ export const useGridRowEditing = (
       // focus we check if the next cell that received focus is from a different row.
       nextFocusedCell.current = null;
       focusTimeout.current = setTimeout(() => {
-        focusTimeout.current = null;
         if (nextFocusedCell.current?.id !== params.id) {
           // The row might have been deleted during the click
           if (!apiRef.current.getRow(params.id)) {
@@ -246,12 +245,11 @@ export const useGridRowEditing = (
 
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (isPasteShortcut(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete' || event.key === 'Backspace') {
-          // Delete on Windows, Backspace on macOS
+        } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridRowEditStartReasons.deleteKeyDown;
         }
 

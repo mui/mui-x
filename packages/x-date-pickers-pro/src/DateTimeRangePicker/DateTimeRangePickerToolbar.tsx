@@ -46,6 +46,9 @@ export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
 }
 
 export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateTimeRangePickerToolbarClasses>;
 }
 
@@ -108,8 +111,29 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     onChange,
     classes: inClasses,
     view,
+    isLandscape,
+    views,
+    ampm,
+    disabled,
+    readOnly,
+    hidden,
+    toolbarFormat,
+    toolbarPlaceholder,
+    titleId,
+    sx,
     ...other
   } = props;
+
+  const commonToolbarProps = {
+    isLandscape,
+    views,
+    ampm,
+    disabled,
+    readOnly,
+    hidden,
+    toolbarFormat,
+    toolbarPlaceholder,
+  };
 
   const localeText = useLocaleText<TDate>();
 
@@ -157,14 +181,19 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     [onChange, onRangePositionChange, props.value, rangePosition, utils],
   );
 
+  if (hidden) {
+    return null;
+  }
+
   return (
     <DateTimeRangePickerToolbarRoot
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
+      sx={sx}
+      {...other}
     >
       <DateTimeRangePickerToolbarStart<TDate>
-        {...other}
         value={start}
         onViewChange={handleStartRangeViewChange}
         toolbarTitle={localeText.start}
@@ -173,9 +202,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'start' ? view : undefined}
         className={classes.startToolbar}
         onChange={handleOnChange}
+        titleId={titleId ? `${titleId}-start-toolbar` : undefined}
+        {...commonToolbarProps}
       />
       <DateTimeRangePickerToolbarEnd<TDate>
-        {...other}
         value={end}
         onViewChange={handleEndRangeViewChange}
         toolbarTitle={localeText.end}
@@ -184,6 +214,8 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         view={rangePosition === 'end' ? view : undefined}
         className={classes.endToolbar}
         onChange={handleOnChange}
+        titleId={titleId ? `${titleId}-end-toolbar` : undefined}
+        {...commonToolbarProps}
       />
     </DateTimeRangePickerToolbarRoot>
   );
@@ -195,6 +227,9 @@ DateTimeRangePickerToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
@@ -214,6 +249,9 @@ DateTimeRangePickerToolbar.propTypes = {
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -235,6 +273,9 @@ DateTimeRangePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
   ).isRequired,

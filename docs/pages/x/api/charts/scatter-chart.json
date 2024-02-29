@@ -29,7 +29,10 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableVoronoi": { "type": { "name": "bool" }, "default": "false" },
-    "height": { "type": { "name": "number" }, "default": "undefined" },
+    "grid": {
+      "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
+    },
+    "height": { "type": { "name": "number" } },
     "leftAxis": {
       "type": {
         "name": "union",
@@ -79,8 +82,8 @@
       },
       "default": "null"
     },
-    "voronoiMaxRadius": { "type": { "name": "number" }, "default": "undefined" },
-    "width": { "type": { "name": "number" }, "default": "undefined" },
+    "voronoiMaxRadius": { "type": { "name": "number" } },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",

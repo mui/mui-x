@@ -15,13 +15,20 @@ export interface TimePickerSlots<TDate extends PickerValidDate>
   extends DesktopTimePickerSlots<TDate>,
     MobileTimePickerSlots<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerSlotProps<TDate extends PickerValidDate>
-  extends DesktopTimePickerSlotProps<TDate>,
-    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem> {}
+export interface TimePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure> {}
 
-export interface TimePickerProps<TDate extends PickerValidDate>
-  extends DesktopTimePickerProps<TDate>,
-    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem>, 'views'> {
+export interface TimePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    Omit<
+      MobileTimePickerProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
+      'views'
+    > {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -37,5 +44,5 @@ export interface TimePickerProps<TDate extends PickerValidDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotProps<TDate>;
+  slotProps?: TimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

@@ -87,6 +87,7 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  dayOfMonthFull: 'do',
   weekday: 'EEEE',
   weekdayShort: 'EEEEEE',
   hours24h: 'HH',
@@ -249,5 +250,9 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
+  };
+
+  public getDayOfWeek = (value: Date) => {
+    return value.getDay() + 1;
   };
 }

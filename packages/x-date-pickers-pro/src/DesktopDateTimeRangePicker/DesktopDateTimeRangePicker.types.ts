@@ -16,13 +16,24 @@ export interface DesktopDateTimeRangePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimeRangePickerSlots<TDate>,
     MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
 
-export interface DesktopDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlotProps<TDate>,
-    Omit<UseDesktopRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs' | 'toolbar'> {}
+export interface DesktopDateTimeRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDateTimeRangePickerSlotProps<TDate>,
+    Omit<
+      UseDesktopRangePickerSlotProps<
+        TDate,
+        DateTimeRangePickerView,
+        TEnableAccessibleFieldDOMStructure
+      >,
+      'tabs' | 'toolbar'
+    > {}
 
-export interface DesktopDateTimeRangePickerProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps<TDate> {
+export interface DesktopDateTimeRangePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseDateTimeRangePickerProps<TDate>,
+    DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 1
@@ -37,5 +48,5 @@ export interface DesktopDateTimeRangePickerProps<TDate extends PickerValidDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimeRangePickerSlotProps<TDate>;
+  slotProps?: DesktopDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

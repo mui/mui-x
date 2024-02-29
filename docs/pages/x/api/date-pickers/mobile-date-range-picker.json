@@ -31,7 +31,7 @@
     "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -104,7 +104,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -201,6 +201,12 @@
       "class": null
     },
     {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -229,8 +235,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as `@mui/material/TextField`.",
-      "default": "TextField from '@mui/material'",
+      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
       "class": null
     },
     {
@@ -243,12 +249,6 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
       "class": null
     },
     {

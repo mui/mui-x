@@ -57,7 +57,7 @@ export default function TrackNodeSelectionToggle() {
           ? 'No node selection recorded'
           : `Last selected node: ${lastSelectedNode}`}
       </Typography>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           onNodeSelectionToggle={handleNodeSelectionToggle}

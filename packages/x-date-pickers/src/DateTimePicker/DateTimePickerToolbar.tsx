@@ -23,22 +23,22 @@ import { pickersToolbarClasses } from '../internals';
 import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
-  ampm?: boolean;
-  ampmInClock?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
 export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   extends ExportedDateTimePickerToolbarProps,
     MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
   toolbarTitle?: React.ReactNode;
+  ampm?: boolean;
+  ampmInClock?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -408,6 +408,9 @@ DateTimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -433,6 +436,9 @@ DateTimePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,

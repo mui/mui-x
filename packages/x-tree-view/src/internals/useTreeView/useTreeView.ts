@@ -7,6 +7,7 @@ import {
   TreeViewPlugin,
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
+  TreeViewPublicAPI,
 } from '../models';
 import {
   UseTreeViewDefaultizedParameters,
@@ -17,6 +18,21 @@ import {
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
 import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+
+export function useTreeViewApiInitialization<T>(
+  inputApiRef: React.MutableRefObject<T> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      inputApiRef.current = {} as T;
+    }
+    return inputApiRef.current;
+  }
+
+  return fallbackPublicApiRef.current;
+}
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
   inParams: UseTreeViewParameters<Plugins>,
@@ -40,6 +56,9 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     {} as TreeViewInstance<Signatures>,
   );
   const instance = instanceRef.current as TreeViewInstance<Signatures>;
+
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
+
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
@@ -68,6 +87,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     const pluginResponse =
       plugin({
         instance,
+        publicAPI,
         params,
         slots: params.slots,
         slotProps: params.slotProps,

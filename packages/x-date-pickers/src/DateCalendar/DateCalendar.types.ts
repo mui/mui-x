@@ -102,6 +102,9 @@ export interface DateCalendarProps<TDate extends PickerValidDate>
    */
   referenceDate?: TDate;
   className?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateCalendarClasses>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

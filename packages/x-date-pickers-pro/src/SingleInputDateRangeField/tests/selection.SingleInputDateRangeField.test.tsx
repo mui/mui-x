@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { act, userEvent } from '@mui-internal/test-utils';
+import { act, fireEvent } from '@mui-internal/test-utils';
 import {
   adapterToUse,
   buildFieldInteractions,
   getCleanedSelectedContent,
   getTextbox,
   createPickerRenderer,
-  expectInputValue,
+  expectFieldValueV7,
+  expectFieldValueV6,
 } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
@@ -20,16 +20,27 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   });
 
   describe('Focus', () => {
-    it('should select all on mount focus (`autoFocus = true`)', () => {
-      render(<SingleInputDateRangeField autoFocus />);
-      const input = getTextbox();
+    it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {
+      // Test with v7 input
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        autoFocus: true,
+      });
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
+      expect(getCleanedSelectedContent()).to.equal('MM');
 
-      expectInputValue(input, 'MM/DD/YYYY – MM/DD/YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY – MM/DD/YYYY');
+      v7Response.unmount();
+
+      // Test with v6 input
+      renderWithProps({ autoFocus: true, enableAccessibleFieldDOMStructure: false });
+      const input = getTextbox();
+      expectFieldValueV6(input, 'MM/DD/YYYY – MM/DD/YYYY');
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
 
-    it('should select all on <Tab> focus', () => {
-      render(<SingleInputDateRangeField />);
+    it('should select all on <Tab> focus (v6 only)', () => {
+      // Test with v6 input
+      renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
@@ -38,115 +49,236 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       clock.runToLast();
       input.select();
 
-      expectInputValue(input, 'MM/DD/YYYY – MM/DD/YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY – MM/DD/YYYY');
+      expectFieldValueV6(input, 'MM/DD/YYYY – MM/DD/YYYY');
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
   });
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
-      const { input, selectSection } = renderWithProps({
+      // Test with v7 input
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
       // Start date
-      selectSection('day');
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      v7Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      selectSection('month');
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      v7Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
 
       // End date
-      selectSection('month', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('02');
+      v7Response.selectSection('month', 'last');
+      expect(getCleanedSelectedContent()).to.equal('02');
 
-      selectSection('day', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('24');
+      v7Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        value: [null, adapterToUse.date('2022-02-24')],
+      });
+
+      // Start date
+      v6Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      v6Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      // End date
+      v6Response.selectSection('month', 'last');
+      expect(getCleanedSelectedContent()).to.equal('02');
+
+      v6Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
     });
 
     it('should not change the selection when clicking on the only already selected section', () => {
-      const { input, selectSection } = renderWithProps({
+      // Test with v7 input
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         value: [null, adapterToUse.date('2022-02-24')],
       });
 
       // Start date
-      selectSection('day');
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      v7Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      selectSection('day');
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      v7Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      selectSection('day', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('24');
+      v7Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
 
-      selectSection('day', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('24');
+      v7Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        value: [null, adapterToUse.date('2022-02-24')],
+      });
+
+      // Start date
+      v6Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      v6Response.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      // End date
+      v6Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
+
+      v6Response.selectSection('day', 'last');
+      expect(getCleanedSelectedContent()).to.equal('24');
     });
   });
 
   describe('key: ArrowRight', () => {
-    it('should allows to move from left to right with ArrowRight', () => {
-      const { input, selectSection } = renderWithProps({});
+    it('should allow to move from left to right with ArrowRight', () => {
+      // Test with v7 input
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      selectSection('month');
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      v7Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
+      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
+      fireEvent.keyDown(v7Response.getActiveSection(4), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      const input = getTextbox();
+      v6Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
     it('should stay on the current section when the last section is selected', () => {
-      const { input, selectSection } = renderWithProps({});
+      // Test with v7 input
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      selectSection('year', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
-      userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
+      v7Response.selectSection('year', 'last');
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      fireEvent.keyDown(v7Response.getActiveSection(5), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      const input = getTextbox();
+      v6Response.selectSection('year', 'last');
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
   });
 
   describe('key: ArrowLeft', () => {
-    it('should allows to move from right to left with ArrowLeft', () => {
-      const { input, selectSection } = renderWithProps({});
+    it('should allow to move from right to left with ArrowLeft', () => {
+      // Test with v7 input
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      selectSection('year', 'last');
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      v7Response.selectSection('year', 'last');
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      fireEvent.keyDown(v7Response.getActiveSection(5), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      fireEvent.keyDown(v7Response.getActiveSection(4), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
 
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('YYYY');
+      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
 
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      const input = getTextbox();
+      v6Response.selectSection('year', 'last');
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
     it('should stay on the current section when the first section is selected', () => {
-      const { input, selectSection } = renderWithProps({});
+      // Test with v7 input
+      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      selectSection('month');
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      v7Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const v6Response = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      const input = getTextbox();
+      v6Response.selectSection('month');
+      expect(getCleanedSelectedContent()).to.equal('MM');
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
     });
   });
 });

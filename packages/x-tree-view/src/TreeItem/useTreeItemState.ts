@@ -15,7 +15,7 @@ export function useTreeItemState(nodeId: string) {
   const disabled = instance.isNodeDisabled(nodeId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (instance && !disabled) {
+    if (!disabled) {
       if (!focused) {
         instance.focusNode(event, nodeId);
       }
@@ -30,7 +30,7 @@ export function useTreeItemState(nodeId: string) {
   };
 
   const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (instance && !disabled) {
+    if (!disabled) {
       if (!focused) {
         instance.focusNode(event, nodeId);
       }

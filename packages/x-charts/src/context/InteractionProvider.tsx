@@ -63,6 +63,10 @@ export const InteractionContext = React.createContext<InteractionState>({
   dispatch: () => null,
 });
 
+if (process.env.NODE_ENV !== 'production') {
+  InteractionContext.displayName = 'InteractionContext';
+}
+
 const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, InteractionActions> = (
   prevState,
   action,

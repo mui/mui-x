@@ -29,6 +29,7 @@ export interface PickersInputPropsUsedByField
   id?: string;
   fullWidth?: boolean;
   readOnly?: boolean;
+  name?: string;
 
   inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   inputRef?: React.Ref<HTMLInputElement>;
