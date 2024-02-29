@@ -37,6 +37,7 @@ export enum PinnedPosition {
   NONE,
   LEFT,
   RIGHT,
+  VIRTUAL,
 }
 
 export type GridCellProps = {
@@ -494,7 +495,7 @@ GridCell.propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
-  pinnedPosition: PropTypes.oneOf([0, 1, 2]).isRequired,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   sectionIndex: PropTypes.number.isRequired,
   sectionLength: PropTypes.number.isRequired,

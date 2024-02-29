@@ -213,8 +213,11 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused node is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
         if (instance.isNodeExpanded(nodeId)) {
-          instance.focusNode(event, getNextNode(instance, nodeId));
-          event.preventDefault();
+          const nextNodeId = getNextNode(instance, nodeId);
+          if (nextNodeId) {
+            instance.focusNode(event, nextNodeId);
+            event.preventDefault();
+          }
         } else if (canToggleNodeExpansion(nodeId)) {
           instance.toggleNodeExpansion(event, nodeId);
           event.preventDefault();

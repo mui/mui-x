@@ -16,8 +16,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     return;
   }
 
-  const viewWrapperRole =
-    pickerParams.type === 'date-range' && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+  const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
   describe('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
@@ -70,7 +70,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       // Change the value
       let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         newValue = setNewValue(newValue, {
           isOpened: true,
           setEndDate: true,
@@ -128,7 +128,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       // Change the value
       let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         newValue = setNewValue(newValue, {
           isOpened: true,
           setEndDate: true,
@@ -165,7 +165,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Change the value (same value)
       setNewValue(values[0], { isOpened: true, applySameValue: true, selectSection, pressKey });
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         setNewValue(values[0], {
           isOpened: true,
           applySameValue: true,
@@ -202,7 +202,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
       expect(onChange.callCount).to.equal(initialChangeCount);
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         newValue = setNewValue(newValue, {
           isOpened: true,
           setEndDate: true,
@@ -220,8 +220,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Change the value
       let newValueBis = setNewValue(newValue, { isOpened: true, selectSection, pressKey });
-      if (pickerParams.type === 'date-range') {
-        expect(onChange.callCount).to.equal(3);
+      if (isRangeType) {
+        expect(onChange.callCount).to.equal(
+          initialChangeCount +
+            getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
+            (pickerParams.type === 'date-time-range' ? 1 : 0),
+        );
         newValueBis = setNewValue(newValueBis, {
           isOpened: true,
           setEndDate: true,
@@ -269,7 +273,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
@@ -281,7 +285,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should call onClose when clicking outside of the picker without prior change', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
-      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
+      if (pickerParams.variant === 'mobile' || isRangeType) {
         this.skip();
       }
 
@@ -310,7 +314,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
-      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
+      if (pickerParams.variant === 'mobile' || isRangeType) {
         this.skip();
       }
 

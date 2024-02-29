@@ -23,6 +23,8 @@ import {
   gridFocusCellSelector,
   GridCellParams,
   GRID_REORDER_COL_DEF,
+  useGridSelector,
+  gridSortedRowIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -61,6 +63,7 @@ export const useGridCellSelection = (
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollRAF = React.useRef<number | null>();
+  const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -547,7 +550,11 @@ export const useGridCellSelection = (
         return value;
       }
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
-      const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+      const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
+      const sortedSelectedRowIds = sortedRowIds.filter((id) =>
+        unsortedSelectedRowIds.includes(`${id}`),
+      );
+      const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
         const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
           let cellData: string;
@@ -566,7 +573,7 @@ export const useGridCellSelection = (
       }, '');
       return copyData;
     },
-    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter, sortedRowIds],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);

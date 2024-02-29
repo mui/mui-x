@@ -35,6 +35,7 @@ export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
 export interface MergePlugins<TPlugins extends readonly any[]> {
   state: MergePluginsProperty<TPlugins, 'state'>;
   instance: MergePluginsProperty<TPlugins, 'instance'>;
+  publicAPI: MergePluginsProperty<TPlugins, 'publicAPI'>;
   params: MergePluginsProperty<TPlugins, 'params'>;
   defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
   dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;

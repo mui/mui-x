@@ -28,6 +28,7 @@ describe('useLicenseVerifier', function test() {
   const { render } = createRenderer();
 
   let env: any;
+
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError

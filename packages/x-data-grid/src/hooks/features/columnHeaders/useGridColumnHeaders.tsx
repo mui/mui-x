@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -11,10 +11,10 @@ import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { gridDimensionsSelector } from '../dimensions';
 import {
-  gridOffsetsSelector,
   gridRenderContextColumnsSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '../virtualization';
+import { computeOffsetLeft } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -25,6 +25,7 @@ import { GridColumnMenuState } from '../columnMenu';
 import {
   GridPinnedColumnPosition,
   GridColumnVisibilityModel,
+  gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
@@ -104,15 +105,22 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
+  const theme = useTheme();
   const rootProps = useGridRootProps();
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
+  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
-  const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const offsetLeft = computeOffsetLeft(
+    columnPositions,
+    renderContext,
+    theme.direction,
+    pinnedColumns.left.length,
+  );
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
@@ -170,10 +178,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const isNotPinned = params?.position === undefined;
 
     const hasScrollbarFiller =
-      (visiblePinnedColumns.right.length > 0 && isPinnedRight) ||
-      (visiblePinnedColumns.right.length === 0 && isNotPinned);
+      (pinnedColumns.right.length > 0 && isPinnedRight) ||
+      (pinnedColumns.right.length === 0 && isNotPinned);
 
-    const leftOffsetWidth = offsets.left - leftOverflow;
+    const leftOffsetWidth = offsetLeft - leftOverflow;
 
     return (
       <React.Fragment>

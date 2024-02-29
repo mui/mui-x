@@ -87,6 +87,14 @@ TreeView.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      focusNode: PropTypes.func.isRequired,
+    }),
+  }),
+  /**
    * The content of the component.
    */
   children: PropTypes.node,

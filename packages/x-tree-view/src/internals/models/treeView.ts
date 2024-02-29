@@ -29,3 +29,6 @@ export interface TreeViewModel<TValue> {
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   MergePluginsProperty<TSignatures, 'instance'>;
+
+export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
+  MergePluginsProperty<TSignatures, 'publicAPI'>;

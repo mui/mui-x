@@ -13,7 +13,7 @@ const useUtilityClasses = () => {
 
 const Element = styled('div')({
   position: 'sticky',
-  zIndex: 2,
+  zIndex: 4,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
 

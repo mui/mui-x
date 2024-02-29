@@ -192,3 +192,13 @@ export const gridFilterableColumnLookupSelector = createSelectorMemoized(
       return acc;
     }, {}),
 );
+
+/**
+ * Checks if some column has a colSpan field.
+ * @category Columns
+ * @ignore - Do not document
+ */
+export const gridHasColSpanSelector = createSelectorMemoized(
+  gridColumnDefinitionsSelector,
+  (columns) => columns.some((column) => column.colSpan !== undefined),
+);

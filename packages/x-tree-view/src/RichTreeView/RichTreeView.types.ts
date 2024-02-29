@@ -7,9 +7,11 @@ import {
   DefaultTreeViewPluginParameters,
   DefaultTreeViewPluginSlotProps,
   DefaultTreeViewPluginSlots,
+  DefaultTreeViewPlugins,
 } from '../internals/plugins/defaultPlugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { TreeViewItemId } from '../models';
+import { TreeViewPublicAPI } from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
   nodeId: TreeViewItemId;
@@ -34,6 +36,10 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemSlotOwnerState>;
 }
+
+export type RichTreeViewApiRef = React.MutableRefObject<
+  TreeViewPublicAPI<DefaultTreeViewPlugins> | undefined
+>;
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   className?: string;
@@ -60,4 +66,8 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    * @default {}
    */
   slotProps?: RichTreeViewSlotProps<R, Multiple>;
+  /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef?: RichTreeViewApiRef;
 }

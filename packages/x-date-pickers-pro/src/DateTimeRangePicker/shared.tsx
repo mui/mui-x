@@ -170,8 +170,27 @@ export function useDateTimeRangePickerDefaultizedProps<
     ampm,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: applyDefaultDate(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    disableIgnoringDatePartForTimeValidation:
+      themeProps.disableIgnoringDatePartForTimeValidation ??
+      Boolean(
+        themeProps.minDateTime ||
+          themeProps.maxDateTime ||
+          // allow digital clocks to correctly check time validity: https://github.com/mui/mui-x/issues/12048
+          themeProps.disablePast ||
+          themeProps.disableFuture,
+      ),
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,

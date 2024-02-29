@@ -110,6 +110,36 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.firstCall.args[0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
     });
+
+    it(`should copy cells range selected based on their sorted order`, () => {
+      const columns = [{ field: 'brand' }];
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      render(
+        <DataGridPremium
+          columns={columns}
+          rows={rows}
+          cellSelection
+          sortModel={[{ field: 'brand', sort: 'asc' }]}
+        />,
+      );
+
+      const cell = getCell(0, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Ctrl' });
+      fireEvent.click(getCell(1, 0), { ctrlKey: true });
+
+      fireEvent.keyDown(cell, { key: 'Ctrl' });
+      fireEvent.click(getCell(2, 0), { ctrlKey: true });
+
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.lastCall.firstArg).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
+    });
   });
 
   describe('paste', () => {

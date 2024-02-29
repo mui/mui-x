@@ -349,7 +349,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
       position: 'absolute',
-      zIndex: 100,
+      zIndex: 3,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',

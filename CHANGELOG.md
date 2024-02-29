@@ -4264,7 +4264,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 #### `@mui/x-data-grid@6.9.1`
 
-- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
+- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
 - [DataGrid] Add section about enabling pagination on Pro and Premium (#8759) @joserodolfofreitas
 - [DataGrid] Don't forward `editCellState` prop to DOM element (#9501) @m4theushw
 - [DataGrid] Add experimental API for faster filtering performance (#9254) @romgrk
@@ -4722,8 +4722,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
 - [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
-- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
-- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
+- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
+- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
 - [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
 - [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
 - [l10n] Improve French (fr-FR) locale (#8825) @allereaugabriel
@@ -4773,7 +4773,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
 - [DataGrid] Remove unwarranted warning log (#8847) @romgrk
-- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
 - [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
 
 ### `@mui/x-date-pickers@6.3.1` / `@mui/x-date-pickers-pro@6.3.1`
@@ -4824,7 +4824,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add overlay classes to `gridClasses` (#8686) @lindapaiste
 - [DataGrid] Avoid passing `api` prop to div (#8679) @someden
 - [DataGrid] Fix 'ResizeObserver loop limit exceeded' error (#8744) @m4theushw
-- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
+- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
 - [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
 - [DataGridPremium] Fix infinite loop when updating grouped rows (#8693) @cherniavskii
 - [DataGridPro] Fix error after updating `columns` and `columnGroupingModel` at once (#8730) @cherniavskii
@@ -4886,7 +4886,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Add `getTogglableColumns` to `Hide all` and `Show all` actions (#8496) @MBilalShafi
-- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
+- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
 - [DataGrid] Fix print style when rendering inside Shadow DOM (#8656) @Bwatermelon
 - [DataGrid] Replace `GridAutoSizer` with `ResizeObserver` (#8091) @m4theushw
 - [DataGrid] Use stable ID for the placeholder filter item (#8603) @m4theushw

@@ -126,6 +126,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       });
     });
   });
+
   describe('MonthCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedMonth: 'Jul' },

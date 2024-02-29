@@ -7,7 +7,9 @@ import {
   SimpleTreeViewPluginParameters,
   SimpleTreeViewPluginSlotProps,
   SimpleTreeViewPluginSlots,
+  SimpleTreeViewPlugins,
 } from './SimpleTreeView.plugins';
+import { TreeViewPublicAPI } from '../internals/models';
 
 export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
   /**
@@ -20,6 +22,10 @@ export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
 export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
+
+export type SimpleTreeViewApiRef = React.MutableRefObject<
+  TreeViewPublicAPI<SimpleTreeViewPlugins> | undefined
+>;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
   extends SimpleTreeViewPluginParameters<Multiple>,
@@ -45,4 +51,8 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef?: SimpleTreeViewApiRef;
 }

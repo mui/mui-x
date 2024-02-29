@@ -6,3 +6,5 @@ export { unstable_resetCleanupTracking } from './internals/hooks/useInstanceEven
 
 export * from './models';
 export * from './icons';
+
+export * from './hooks';

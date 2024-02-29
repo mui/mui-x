@@ -1,4 +1,9 @@
-import { TreeViewAnyPluginSignature, TreeViewInstance, TreeViewUsedInstance } from '../models';
+import {
+  TreeViewAnyPluginSignature,
+  TreeViewInstance,
+  TreeViewUsedInstance,
+  TreeViewUsedPublicAPI,
+} from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewNodesSignature } from '../plugins/useTreeViewNodes';
 
@@ -70,4 +75,11 @@ export const populateInstance = <T extends TreeViewAnyPluginSignature>(
   methods: T['instance'],
 ) => {
   Object.assign(instance, methods);
+};
+
+export const populatePublicAPI = <T extends TreeViewAnyPluginSignature>(
+  publicAPI: TreeViewUsedPublicAPI<T>,
+  methods: T['publicAPI'],
+) => {
+  Object.assign(publicAPI, methods);
 };

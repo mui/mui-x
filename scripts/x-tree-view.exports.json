@@ -44,5 +44,6 @@
   { "name": "TreeViewSlotProps", "kind": "Interface" },
   { "name": "TreeViewSlots", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
-  { "name": "useTreeItemState", "kind": "Function" }
+  { "name": "useTreeItemState", "kind": "Function" },
+  { "name": "useTreeViewApiRef", "kind": "Variable" }
 ]
