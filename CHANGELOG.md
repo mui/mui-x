@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-beta.5
+
+_Feb 29, 2024_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `getSortComparator` for more advanced sorting behaviors (#12215) @cherniavskii
+- 🚀 Add `use client` directive to the Grid packages (#11803) @MBilalShafi
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-beta.5`
+
+- [DataGrid] Add `getSortComparator` for more advanced sorting behaviors (#12215) @cherniavskii
+- [DataGrid] Add `use client` directive to the Grid packages (#11803) @MBilalShafi
+- [DataGrid] Fix `disableResetButton` and `disableShowHideToggle` flags to not exclude each other (#12169) @adyry
+- [DataGrid] Fix cell range classnames (#12230) @romgrk
+- [DataGrid] Fix wrong offset for right-pinned columns when toggling dark/light modes (#12233) @cherniavskii
+- [DataGrid] Refactor: row virtualization & rendering (#12247) @romgrk
+- [DataGrid] perf: remove querySelector call (#12229) @romgrk
+- [DataGrid]  fix onColumnWidthChange called before autosize affects column width (#12140) @shaharyar-shamshi
+- [DataGrid] boolean filter "is" uses string version of true for determining truthiness (#12117) @shaharyar-shamshi
+- [DataGrid] Fix `upsertFilterItems` removing filters that are not part of the update (#11954) @gitstart
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi (#12192) @LukasTy
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.5`, plus:
+
+- [DataGridPro] Fix column resize errors on MacOS with automatic scrollbars enabled (#12217) @cherniavskii
+- [DataGridPro] Fix lazy-loading crash (#12080) @romgrk
+- [DataGridPro] Fix useGridRows not giving error on reversed data (#10821) @martijn-basesoft
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.5`, plus:
+
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12235) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-beta.5`
+
+- [pickers] Fix toolbar components props handling (#12211) @LukasTy
+- [DateTimeRangePicker] Fix validation behavior (#12243) @LukasTy
+- [I10n] Improve Chinese (zh-CN) locale (#12245) @headironc
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
+
+### Charts / `@mui/x-charts@7.0.0-beta.5`
+
+- [charts] Fix grid duplicated key (#12208) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@7.0.0-beta.5`
+
+- [TreeView] Add public API and expose focus method (#12143) @noraleonte
+
+### Docs
+
+- [docs] Fix image layout shift when loading @oliviertassinari
+- [docs] Match Material UI repo comment for redirections @oliviertassinari
+- [docs] Non breaking spaces @oliviertassinari
+- [docs] Standardize WAI-ARIA references @oliviertassinari
+
+### Core
+
+- [core] Allow local docs next.js settings (#12227) @romgrk
+- [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
+- [core] Remove window. reference for common globals @oliviertassinari
+- [core] Use runtime agnostic setTimeout type @oliviertassinari
+- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
+- [docs-infra] Fix missing non breaking spaces @oliviertassinari
+- [github] Update `no-response` workflow (#12193) @MBilalShafi
+- [infra] Fix missing permission reset @oliviertassinari
+
 ## 7.0.0-beta.4
 
 _Feb 23, 2024_
@@ -2351,6 +2430,37 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.6
+
+_Feb 29, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid (#11972) @Luzi
+- 🌍 Improve Chinese (zh-CN) locale on the Date Pickers (#12250) @headironc
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.6`
+
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+
+#### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.6`.
+
+#### `@mui/x-data-grid-premium@6.19.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
+
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (@MBilalShafi) (#12255) @github-actions[bot]
+
+### Docs
+
+- [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
+- [I10n] Improve Chinese (zh-CN) locale (@headironc) (#12250) @github-actions[bot]
 
 ## 6.19.5
 
