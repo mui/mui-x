@@ -164,6 +164,13 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   sortComparator?: GridComparatorFn<V>;
   /**
+   * Allows to use a different comparator function depending on the sort direction.
+   * Takes precedence over `sortComparator`.
+   * @param {GridSortDirection} sortDirection The direction of the sort.
+   * @returns {GridComparatorFn<V>} The comparator function to use.
+   */
+  getSortComparator?: (sortDirection: GridSortDirection) => GridComparatorFn<V> | undefined;
+  /**
    * The type of the column.
    * @default 'string'
    * @see See {@link https://mui.com/x/react-data-grid/column-definition/#column-types column types docs} for more details.
@@ -196,6 +203,12 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Class name that will be added in cells for that column.
    */
   cellClassName?: GridCellClassNamePropType<R, V>;
+  /**
+   * Display mode for the cell:
+   *  - 'text': For text-based cells (default)
+   *  - 'flex': For cells with HTMLElement children
+   */
+  display?: 'text' | 'flex';
   /**
    * Allows to override the component rendered as cell for this column.
    * @template R, V, F

@@ -34,6 +34,10 @@ export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type
 
 export const SeriesContext = React.createContext<FormattedSeries>({});
 
+if (process.env.NODE_ENV !== 'production') {
+  SeriesContext.displayName = 'SeriesContext';
+}
+
 const seriesTypeFormatter: {
   [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
 } = {

@@ -1,15 +1,13 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { screen } from '@mui-internal/test-utils/createRenderer';
 import {
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   describeJalaliAdapter,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'moment/locale/fa';
@@ -70,46 +68,36 @@ describe('<AdapterMomentJalaali />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });
 
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
+
         it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
+
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });
-  });
-
-  it('should set month, year, and date correctly', () => {
-    jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
-    const localeObject = { code: 'en' };
-    const { render, adapter } = createPickerRenderer({
-      clock: 'fake',
-      adapterName: 'moment-jalaali',
-      locale: localeObject,
-    });
-    const initialDate = adapter.date('2022-01-15T09:35:00')!;
-    const expectedDate = adapter.date('1400-02-25T09:35:00')!;
-    const newDate = adapter.setMonthYearDate(initialDate, 1400, 1, 25);
-
-    expect(newDate.isSame(expectedDate, 'date')).equal(true);
-    expect(newDate.isSame(expectedDate, 'month')).equal(true);
-    expect(newDate.isSame(expectedDate, 'year')).equal(true);
-
-    render(<DateTimePicker value={newDate} />);
-
-    expectInputValue(screen.getByRole('textbox'), '1400/02/25 09:35');
   });
 });

@@ -10,6 +10,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -37,11 +38,23 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
-const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
   inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: DefaultizedProps<
-    Omit<UseDesktopRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
+    Omit<
+      UseDesktopRangePickerProps<
+        TDate,
+        DateTimeRangePickerView,
+        TEnableAccessibleFieldDOMStructure,
+        any,
+        any
+      >,
+      'onChange'
+    >,
     'rangePosition' | 'onRangePositionChange' | 'openTo'
   >,
 ) {
@@ -89,17 +102,25 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
   );
 };
 
-type DesktopDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
   TDate extends PickerValidDate,
->(inProps: DesktopDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
-    DesktopDateTimeRangePickerProps<TDate>
+    DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
@@ -164,7 +185,12 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerView, typeof props>({
+  const { renderPicker } = useDesktopRangePicker<
+    TDate,
+    DateTimeRangePickerView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -271,6 +297,10 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
@@ -290,12 +320,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.
@@ -439,11 +464,11 @@ DesktopDateTimeRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -460,10 +485,6 @@ DesktopDateTimeRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.

@@ -41,6 +41,7 @@ Those demonstrations use the defaultized values.
 The axis type is specified by its property `scaleType` which expect one of the following values:
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
+- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
 - `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
 
@@ -51,7 +52,7 @@ Which expects an array of value coherent with the `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` it can contain `string`, or numerical values
+- For `'band'` or `'point'` it can contain `string`, or numerical values
 
 Some series types also require specific axis attributes:
 

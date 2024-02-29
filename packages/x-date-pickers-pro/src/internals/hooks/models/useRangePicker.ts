@@ -14,13 +14,13 @@ import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
+import { BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
   RangePickerFieldSlots,
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
-import { DateRange } from '../../../models';
+import { DateRange, RangeFieldSection } from '../../../models';
 
 export interface UseRangePickerSlots<
   TDate extends PickerValidDate,
@@ -31,15 +31,16 @@ export interface UseRangePickerSlots<
 export interface UseRangePickerSlotProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotProps<TDate> {
+    RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {
   tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface RangeOnlyPickerProps<TDate extends PickerValidDate>
+export interface RangeOnlyPickerProps
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<DateRange<TDate>, RangeFieldSection>,
+    UsePickerValueNonStaticProps,
     UsePickerViewsNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {}
@@ -50,7 +51,7 @@ export interface UseRangePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
   TAdditionalViewProps extends {},
-> extends RangeOnlyPickerProps<TDate>,
+> extends RangeOnlyPickerProps,
     BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, TAdditionalViewProps> {}
 
 export interface RangePickerAdditionalViewProps

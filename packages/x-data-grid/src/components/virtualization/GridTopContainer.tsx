@@ -13,7 +13,7 @@ const useUtilityClasses = () => {
 
 const Element = styled('div')({
   position: 'sticky',
-  zIndex: 2,
+  zIndex: 4,
   top: 0,
   '&::after': {
     content: '" "',

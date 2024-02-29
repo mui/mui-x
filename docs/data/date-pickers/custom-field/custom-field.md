@@ -39,7 +39,7 @@ You can pass the single input fields to the range picker to use it for keyboard 
 If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
 Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
 
-{{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
+{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
 
 You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
 
@@ -56,11 +56,44 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Commonly used custom field
+## Usage with Material UI
 
-### Using another input
+### Using Material `TextField`
 
-#### With the Joy UI input
+You can import the `TextField` component to create custom wrappers:
+
+{{"demo": "MaterialV6FieldWrapped.js"}}
+
+:::success
+This approach is only recommended if you need complex customizations on your `TextField`,
+or if you already have a wrapper also used outside the Date and Time Pickers.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
+:::
+
+### Using Material `PickersTextField`
+
+Pass the `enableAccessibleFieldDOMStructure` to any Field or Picker component to enable the accessible DOM structure:
+
+{{"demo": "MaterialV7Field.js"}}
+
+:::success
+Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+:::
+
+You can import the `PickersTextField` component to create custom wrappers:
+
+{{"demo": "MaterialV7FieldWrapped.js"}}
+
+:::success
+This approach is only recommended if you need complex customizations on your `PickersTextField`.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
+:::
+
+## Usage with Joy UI
+
+### Using Joy `Input`
 
 You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
@@ -68,25 +101,45 @@ You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components in
 A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
 :::
 
-{{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
-{{"demo": "RangePickerWithSingleInputJoyField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "RangePickerWithJoyField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-#### With the browser input
+### Using Joy `PickersTextField`
 
-You can also use any other input:
+:::warning
+This component is not available yet.
+:::
 
-{{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
+## Usage with an unstyled input
 
-{{"demo": "RangePickerWithSingleInputBrowserField.js", "defaultCodeOpen": false}}
+### Using the browser input
 
-{{"demo": "RangePickerWithBrowserField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV6SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 :::warning
 You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
+
+### Using custom `PickersTextField`
+
+:::success
+Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure).
+:::
+
+{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
+
+## Usage with another UI
 
 ### Using an `Autocomplete`
 

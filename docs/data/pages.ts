@@ -459,12 +459,17 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/heat-map', title: 'Heatmap', planned: true },
               { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
-              { pathname: '/x/react-charts/tree-map', title: 'Tree map', planned: true },
+              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              {
+                pathname: '/x/react-charts/heat-map',
+                title: 'Heatmap',
+                plan: 'pro',
+                planned: true,
+              },
               { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', title: 'Sankey', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
             ],
           },
         ],
@@ -486,6 +491,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/simple-tree-view/selection' },
           { pathname: '/x/react-tree-view/simple-tree-view/expansion' },
           { pathname: '/x/react-tree-view/simple-tree-view/customization' },
+          { pathname: '/x/react-tree-view/simple-tree-view/focus' },
         ],
       },
       {
@@ -495,6 +501,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/items' },
           { pathname: '/x/react-tree-view/rich-tree-view/selection' },
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/rich-tree-view/focus' },
         ],
       },
       {

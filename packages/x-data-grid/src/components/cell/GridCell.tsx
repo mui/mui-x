@@ -37,6 +37,7 @@ export enum PinnedPosition {
   NONE,
   LEFT,
   RIGHT,
+  VIRTUAL,
 }
 
 export type GridCellProps = {
@@ -127,7 +128,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
     ],
-    content: ['cellContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -218,10 +218,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
-  const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
-    id: rowId,
-    field,
-  }) as (string | undefined)[];
+  // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
+  const pipesClassName = useGridSelector(apiRef, () =>
+    apiRef.current
+      .unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field,
+      })
+      .filter(Boolean)
+      .join(' '),
+  );
+
+  const classNames = [pipesClassName] as (string | undefined)[];
 
   if (column.cellClassName) {
     classNames.push(
@@ -229,6 +237,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         ? column.cellClassName(cellParamsWithAPI)
         : column.cellClassName,
     );
+  }
+
+  if (column.display === 'flex') {
+    classNames.push(gridClasses['cell--flex']);
   }
 
   if (getCellClassName) {
@@ -387,13 +399,13 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   }
 
   let children: React.ReactNode;
-  if (editCellState == null && column.renderCell) {
+  let title: string | undefined;
+
+  if (editCellState === null && column.renderCell) {
     children = column.renderCell(cellParamsWithAPI);
-    classNames.push(gridClasses['cell--withRenderer']);
-    classNames.push(rootClasses?.['cell--withRenderer']);
   }
 
-  if (editCellState != null && column.renderEditCell) {
+  if (editCellState !== null && column.renderEditCell) {
     const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -412,11 +424,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   if (children === undefined) {
     const valueString = valueToRender?.toString();
-    children = (
-      <div className={classes.content} title={valueString} role="presentation">
-        {valueString}
-      </div>
-    );
+    children = valueString;
+    title = valueString;
   }
 
   if (React.isValidElement(children) && canManageOwnFocus) {
@@ -440,6 +449,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
       style={style}
+      title={title}
       tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
@@ -485,7 +495,7 @@ GridCell.propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
-  pinnedPosition: PropTypes.oneOf([0, 1, 2]).isRequired,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   sectionIndex: PropTypes.number.isRequired,
   sectionLength: PropTypes.number.isRequired,

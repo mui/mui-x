@@ -59,6 +59,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  dayOfMonthFull: 'Do',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -537,6 +538,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public getWeekNumber = (value: Moment) => {
     return value.week();
+  };
+
+  public getDayOfWeek = (value: Moment) => {
+    return value.day() + 1;
   };
 
   public getYearRange([start, end]: [Moment, Moment]) {
