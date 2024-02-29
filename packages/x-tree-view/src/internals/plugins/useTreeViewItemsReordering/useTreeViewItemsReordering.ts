@@ -5,6 +5,7 @@ import {
   UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { isAncestor } from '@mui/x-tree-view/internals/plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.utils';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -13,7 +14,9 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   setState,
 }) => {
   const isNodeDragTarget = React.useCallback(
-    (nodeId: string) => state.itemsReordering?.targetNodeId === nodeId,
+    (nodeId: string) =>
+      state.itemsReordering?.targetNodeId === nodeId &&
+      state.itemsReordering.draggedNodeId !== nodeId,
     [state.itemsReordering],
   );
 
@@ -30,7 +33,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   const handleDragOver = React.useCallback(
     (nodeId: string) => {
       setState((prevState) => {
-        if (prevState.itemsReordering == null) {
+        if (
+          prevState.itemsReordering == null ||
+          isAncestor(instance, nodeId, prevState.itemsReordering.draggedNodeId)
+        ) {
           return prevState;
         }
 

@@ -20,6 +20,8 @@ export interface TreeItemClasses {
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
+  /** Styles applied to the root element when it is the target of a drag event */
+  dragTarget: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -38,4 +40,5 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'disabled',
   'iconContainer',
   'label',
+  'dragTarget',
 ]);

@@ -29,6 +29,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     label: ['label'],
     group: ['group'],
+    dragTarget: ['dragTarget'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -38,12 +39,16 @@ const TreeItemRoot = styled('li', {
   name: 'MuiTreeItem',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeItemOwnerState }>({
+})<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
   listStyle: 'none',
   margin: 0,
   padding: 0,
   outline: 0,
-});
+  [`&.${treeItemClasses.dragTarget}`]: {
+    borderBottom: `2px solid ${theme.palette.primary.main}`,
+    marginBottom: -2,
+  },
+}));
 
 const StyledTreeItemContent = styled(TreeItemContent, {
   name: 'MuiTreeItem',
@@ -304,7 +309,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const item = (
     <TreeItemRoot
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, className, reorderResponse.isDragTarget && classes.dragTarget)}
       role="treeitem"
       aria-expanded={expandable ? expanded : undefined}
       aria-selected={ariaSelected}
@@ -339,6 +344,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
         displayIcon={displayIcon}
         ownerState={ownerState}
         {...ContentProps}
+        {...reorderResponse.contentProps}
         ref={contentRef}
       />
       {children && (

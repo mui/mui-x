@@ -9,15 +9,19 @@ export const useTreeItemReorder = (nodeId: string) => {
     ? {
         draggable: true,
         onDragStart: () => itemsReordering.handleDragStart(nodeId),
-        onDragOver: () => itemsReordering.handleDragOver(nodeId),
         onDragEnd: () => itemsReordering.handleDragEnd(nodeId),
       }
     : {};
+
+  const contentProps: React.HTMLAttributes<HTMLDivElement> = {
+    onDragOver: () => itemsReordering.handleDragOver(nodeId),
+  };
 
   const isDragTarget = itemsReordering.enabled ? instance.isNodeDragTarget(nodeId) : false;
 
   return {
     rootProps,
+    contentProps,
     isDragTarget,
   };
 };
