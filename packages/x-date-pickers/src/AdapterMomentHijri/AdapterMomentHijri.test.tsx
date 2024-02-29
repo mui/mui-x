@@ -116,7 +116,7 @@ describe('<AdapterMomentHijri />', () => {
           enableAccessibleFieldDOMStructure: true,
           value: newDate,
         });
-        expectFieldValueV7(v7Response.getSectionsContainer(), '١٤٣٩/٠٨/٢٩ ٠٩:٣٥');
+        expectFieldValueV7(v7Response.getSectionsContainer(), '١٤٣٩/٠٥/١٥ ٠٩:٣٥');
       });
     });
   });
