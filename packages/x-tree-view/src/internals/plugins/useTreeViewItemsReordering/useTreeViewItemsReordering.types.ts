@@ -8,7 +8,9 @@ export interface UseTreeViewItemsReorderingHandler {
   handleDragEnd: (nodeId: string) => void;
 }
 
-export interface UseTreeViewItemsReorderingInstance {}
+export interface UseTreeViewItemsReorderingInstance {
+  isNodeDragTarget: (nodeId: string) => boolean;
+}
 
 export interface UseTreeViewItemsReorderingParameters {
   /**
@@ -24,7 +26,10 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
 >;
 
 interface UseTreeViewItemsReorderingState {
-  draggedNodeId: string | null;
+  itemsReordering: {
+    draggedNodeId: string;
+    targetNodeId: string;
+  } | null;
 }
 
 interface UseTreeViewItemsReorderingContextValue {

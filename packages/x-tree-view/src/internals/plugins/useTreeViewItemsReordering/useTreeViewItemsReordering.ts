@@ -4,40 +4,66 @@ import {
   UseTreeViewItemsReorderingHandler,
   UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
+import { populateInstance } from '../../useTreeView/useTreeView.utils';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
   instance,
+  state,
   setState,
 }) => {
-  const targetNodeIdRef = React.useRef<string | null>(null);
+  const isNodeDragTarget = React.useCallback(
+    (nodeId: string) => state.itemsReordering?.targetNodeId === nodeId,
+    [state.itemsReordering],
+  );
 
   const handleDragStart = React.useCallback(
     (nodeId: string) => {
-      setState((prevState) => ({ ...prevState, draggedNodeId: nodeId }));
+      setState((prevState) => ({
+        ...prevState,
+        itemsReordering: { targetNodeId: nodeId, draggedNodeId: nodeId },
+      }));
     },
     [setState],
   );
 
-  const handleDragOver = React.useCallback((nodeId: string) => {
-    targetNodeIdRef.current = nodeId;
-  }, []);
+  const handleDragOver = React.useCallback(
+    (nodeId: string) => {
+      setState((prevState) => {
+        if (prevState.itemsReordering == null) {
+          return prevState;
+        }
+
+        return {
+          ...prevState,
+          itemsReordering: {
+            ...prevState.itemsReordering,
+            targetNodeId: nodeId,
+          },
+        };
+      });
+    },
+    [setState],
+  );
 
   const handleDragEnd = React.useCallback(
     (nodeId: string) => {
-      if (targetNodeIdRef.current == null) {
+      if (state.itemsReordering == null) {
         return;
       }
 
-      const targetNode = instance.getNode(targetNodeIdRef.current);
+      setState((prevState) => ({ ...prevState, itemsReordering: null }));
+      if (state.itemsReordering.draggedNodeId === state.itemsReordering.targetNodeId) {
+        return;
+      }
 
-      targetNodeIdRef.current = null;
-      setState((prevState) => ({ ...prevState, draggedNodeId: null }));
-
+      const targetNode = instance.getNode(state.itemsReordering.targetNodeId);
       instance.moveItem(nodeId, targetNode.parentId, targetNode.index);
     },
-    [setState, instance],
+    [setState, state.itemsReordering, instance],
   );
+
+  populateInstance<UseTreeViewItemsReorderingSignature>(instance, { isNodeDragTarget });
 
   const itemsReorderHandler = React.useMemo<UseTreeViewItemsReorderingHandler>(
     () => ({
@@ -46,7 +72,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       handleDragOver,
       handleDragEnd,
     }),
-    [params.itemsReordering, handleDragStart, handleDragEnd],
+    [params.itemsReordering, handleDragStart, handleDragOver, handleDragEnd],
   );
 
   return {
@@ -61,7 +87,7 @@ useTreeViewItemsReordering.getDefaultizedParams = (params) => ({
   itemsReordering: params.itemsReordering ?? false,
 });
 
-useTreeViewItemsReordering.getInitialState = () => ({ draggedNodeId: null });
+useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
 
 useTreeViewItemsReordering.params = {
   itemsReordering: true,
