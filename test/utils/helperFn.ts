@@ -28,6 +28,16 @@ export function gridVar(name: string) {
   return $(`.${gridClasses.root}`)!.style.getPropertyValue(name);
 }
 
+export function gridOffsetTop() {
+  const transform = getComputedStyle(grid('virtualScrollerRenderZone')!).transform;
+  return parseInt(
+    transform.startsWith('translate3d')
+      ? transform.split('(')[1].split(',')[1]
+      : transform.split('(')[1].split(',')[5],
+    10,
+  );
+}
+
 export function sleep(duration: number): Promise<void> {
   return new Promise<void>((resolve) => {
     setTimeout(() => {

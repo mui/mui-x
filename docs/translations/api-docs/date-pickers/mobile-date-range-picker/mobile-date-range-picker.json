@@ -116,7 +116,7 @@
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
@@ -164,7 +164,7 @@
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element. Receives the same props as <code>@mui/material/TextField</code>.",
+    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

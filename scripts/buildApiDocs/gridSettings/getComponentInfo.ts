@@ -29,12 +29,14 @@ export function getComponentInfo(filename: string): ComponentInfo {
         !!srcInfo.src.match(/@ignore - internal hook\./);
       return { ...srcInfo, shouldSkip };
     },
+    slotInterfaceName: `${name.replace('DataGrid', 'Grid')}SlotsComponent`,
     getInheritance: () => null, // TODO: Support inheritance
     getDemos: () => [
       { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
       { demoPathname: '/x/react-data-grid/#pro-plan', demoPageTitle: 'DataGridPro' },
       { demoPathname: '/x/react-data-grid/#premium-plan', demoPageTitle: 'DataGridPremium' },
     ],
+    layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
   };
 }
 
@@ -48,13 +50,13 @@ export function getComponentImports(name: string, filename: string) {
   const githubPath = toGitHubPath(filename);
 
   const rootImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/.*/,
-    (match, dash, pkg) => `@mui/${pkg}`,
+    /\/packages\/(.+?)?\/src\/.*/,
+    (match, pkg) => `@mui/${pkg}`,
   );
 
   const subdirectoryImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/([^\\/]+)\/.*/,
-    (match, dash, pkg, directory) => `@mui/${pkg}/${directory}`,
+    /\/packages\/(.+?)?\/src\/([^\\/]+)\/.*/,
+    (match, pkg, directory) => `@mui/${pkg}/${directory}`,
   );
 
   const reExportPackage = [rootImportPath];

@@ -65,19 +65,16 @@ export const GridRootStyles = styled('div', {
     },
     { [`&.${c.autosizing}`]: styles.autosizing },
     { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
+    { [`& .${c.cell}`]: styles.cell },
     { [`& .${c['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${c['cell--textCenter']}`]: styles['cell--textCenter'] },
     { [`& .${c['cell--textLeft']}`]: styles['cell--textLeft'] },
     { [`& .${c['cell--textRight']}`]: styles['cell--textRight'] },
-    // TODO v6: Remove
-    { [`& .${c['cell--withRenderer']}`]: styles['cell--withRenderer'] },
-    { [`& .${c.cell}`]: styles.cell },
     { [`& .${c['cell--rangeTop']}`]: styles['cell--rangeTop'] },
     { [`& .${c['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${c['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${c['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${c['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
-    { [`& .${c.cellContent}`]: styles.cellContent },
     { [`& .${c.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${c.cellSkeleton}`]: styles.cellSkeleton },
     { [`& .${c.checkboxInput}`]: styles.checkboxInput },
@@ -189,8 +186,6 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-width': '0px',
     '--DataGrid-hasScrollX': '0',
     '--DataGrid-hasScrollY': '0',
-    '--DataGrid-offsetTop': '0px',
-    '--DataGrid-offsetLeft': '0px',
     '--DataGrid-scrollbarSize': '10px',
     '--DataGrid-rowWidth': '0px',
     '--DataGrid-columnsTotalWidth': '0px',
@@ -233,9 +228,21 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
       },
-      [`& .${c.cell} > *`]: {
+      '@media (hover: hover)': {
+        [`& .${c.iconButtonContainer}`]: {
+          width: '0 !important',
+          visibility: 'hidden !important',
+        },
+        [`& .${c.menuIcon}`]: {
+          width: '0 !important',
+          visibility: 'hidden !important',
+        },
+      },
+      [`& .${c.cell}`]: {
         overflow: 'visible !important',
         whiteSpace: 'nowrap',
+        minWidth: 'max-content !important',
+        maxWidth: 'max-content !important',
       },
       [`& .${c.groupingCriteriaCell}`]: {
         width: 'unset',
@@ -345,7 +352,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
       position: 'absolute',
-      zIndex: 100,
+      zIndex: 3,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -443,11 +450,10 @@ export const GridRootStyles = styled('div', {
 
     /* Cell styles */
     [`& .${c.cell}`]: {
-      display: 'flex',
-      alignItems: 'center',
       height: 'var(--height)',
       minWidth: 'var(--width)',
       maxWidth: 'var(--width)',
+      lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
 
       '--width': '0px',
       '--height': '0px',
@@ -455,6 +461,9 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
 
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
@@ -463,12 +472,14 @@ export const GridRootStyles = styled('div', {
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
-    [`& .${c.row}:not(.${c['row--dynamicHeight']}) > .${c.cell}`]: {
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
+    [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
+      overflow: 'initial',
+      whiteSpace: 'initial',
+      lineHeight: 'inherit',
     },
     [`& .${c.cellEmpty}`]: {
       padding: 0,
+      height: 'unset',
     },
     [`& .${c.cell}.${c['cell--selectionMode']}`]: {
       cursor: 'default',
@@ -482,10 +493,6 @@ export const GridRootStyles = styled('div', {
         outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
-    },
-    [`& .${c.cellContent}`]: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
     },
     [`& .${c['row--editing']}`]: {
       boxShadow: t.shadows[2],
@@ -525,6 +532,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
+      display: 'flex',
       alignItems: 'stretch',
     },
     [`.${c.withBorderColor}`]: {
@@ -544,13 +552,21 @@ export const GridRootStyles = styled('div', {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
+    [`& .${c['cell--flex']}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      lineHeight: 'inherit',
+    },
     [`& .${c['cell--textLeft']}`]: {
+      textAlign: 'left',
       justifyContent: 'flex-start',
     },
     [`& .${c['cell--textRight']}`]: {
+      textAlign: 'right',
       justifyContent: 'flex-end',
     },
     [`& .${c['cell--textCenter']}`]: {
+      textAlign: 'center',
       justifyContent: 'center',
     },
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
@@ -578,7 +594,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
       display: 'inline-block',
-      width: 'var(--DataGrid-offsetLeft)',
+    },
+    [`& .${c.cellSkeleton}`]: {
+      flex: '0 0 auto',
+      height: '100%',
+      display: 'inline-flex',
+      alignItems: 'center',
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
@@ -623,6 +644,22 @@ export const GridRootStyles = styled('div', {
       flex: '0 0 28px',
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
+    },
+
+    /* ScrollbarFiller styles */
+    [`.${c.scrollbarFiller}`]: {
+      minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
+      alignSelf: 'stretch',
+      [`&.${c['scrollbarFiller--borderTop']}`]: {
+        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      },
+      [`&.${c['scrollbarFiller--pinnedRight']}`]: {
+        backgroundColor: 'var(--DataGrid-pinnedBackground)',
+      },
+      [`&.${c['scrollbarFiller--pinnedRight']}:not(.${c['scrollbarFiller--header']})`]: {
+        position: 'sticky',
+        right: 0,
+      },
     },
   };
 

@@ -36,7 +36,12 @@ function useData(length) {
       { field: 'id', headerName: 'Brand ID' },
       { field: 'brand', headerName: 'Brand name' },
       { field: 'rep', headerName: 'Representative' },
-      { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+      {
+        field: 'rating',
+        headerName: 'Rating',
+        renderCell: renderRating,
+        display: 'flex',
+      },
     ];
 
     return { rows, columns };

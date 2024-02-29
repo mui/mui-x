@@ -33,6 +33,7 @@ const stringToBoolean = (value: string) => {
 export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   ...GRID_STRING_COL_DEF,
   type: 'boolean',
+  display: 'flex',
   align: 'center',
   headerAlign: 'center',
   renderCell: renderBooleanCell,

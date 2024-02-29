@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, GridApiPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApiPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -12,11 +12,16 @@ import {
 import * as ReactDOM from 'react-dom';
 import { GridData } from 'docsx/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },
   { field: 'brand', headerName: 'Brand name' },
   { field: 'rep', headerName: 'Representative' },
-  { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex',
+  },
 ];
 
 function renderRating(params: any) {

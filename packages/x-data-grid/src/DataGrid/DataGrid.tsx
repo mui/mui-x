@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
@@ -533,12 +534,6 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowDoubleClick: PropTypes.func,
-  /**
-   * Callback fired when the row changes are committed.
-   * @param {GridRowId} id The row id.
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   */
-  onRowEditCommit: PropTypes.func,
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].

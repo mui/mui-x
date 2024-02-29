@@ -5,7 +5,6 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -53,7 +52,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
-    const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
@@ -61,10 +59,13 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     };
 
     React.useLayoutEffect(() => {
-      if (tabIndex === 0 && element) {
-        element!.tabIndex = -1;
+      if (tabIndex === 0) {
+        const element = apiRef.current.getCellElement(id, field);
+        if (element) {
+          element.tabIndex = -1;
+        }
       }
-    }, [element, tabIndex]);
+    }, [apiRef, tabIndex, id, field]);
 
     React.useEffect(() => {
       if (hasFocus) {
@@ -77,7 +78,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }, [hasFocus]);
 
     const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
-      if (isSpaceKey(event.key)) {
+      if (event.key === ' ') {
         // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
         // TODO: Remove and add a check inside useGridKeyboardNavigation
         event.stopPropagation();
