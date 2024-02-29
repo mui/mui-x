@@ -3,6 +3,7 @@ import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import {
   GridPipeProcessor,
   GridStateInitializer,
+  getTotalHeaderHeight,
   isNavigationKey,
   serializeCellValue,
   useGridRegisterPipeProcessor,
@@ -25,6 +26,7 @@ import {
   GRID_REORDER_COL_DEF,
   useGridSelector,
   gridSortedRowIdsSelector,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -56,6 +58,7 @@ export const useGridCellSelection = (
     | 'paginationMode'
     | 'ignoreValueFormatterDuringExport'
     | 'clipboardCopyCellDelimiter'
+    | 'columnHeaderHeight'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
@@ -64,6 +67,8 @@ export const useGridCellSelection = (
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollRAF = React.useRef<number | null>();
   const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -265,25 +270,17 @@ export const useGridCellSelection = (
       return;
     }
 
-    const virtualScrollerRect = apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
-
-    if (!virtualScrollerRect) {
-      return;
-    }
-
     function autoScroll() {
       if (!mousePosition.current || !apiRef.current.virtualScrollerRef?.current) {
         return;
       }
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
-      const { height, width } = virtualScrollerRect;
+      const { height, width } = dimensions.viewportInnerSize;
 
       let deltaX = 0;
       let deltaY = 0;
       let factor = 0;
-
-      const dimensions = apiRef.current.getRootDimensions();
 
       if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions.hasScrollY) {
         // When scrolling up, the multiplier increases going closer to the top edge
@@ -316,7 +313,7 @@ export const useGridCellSelection = (
     }
 
     autoScroll();
-  }, [apiRef]);
+  }, [apiRef, dimensions]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -339,9 +336,10 @@ export const useGridCellSelection = (
         return;
       }
 
-      const { height, width, x, y } = virtualScrollerRect;
+      const { x, y } = virtualScrollerRect;
+      const { height, width } = dimensions.viewportInnerSize;
       const mouseX = event.clientX - x;
-      const mouseY = event.clientY - y;
+      const mouseY = event.clientY - y - totalHeaderHeight;
       mousePosition.current = { x: mouseX, y: mouseY };
 
       const hasEnteredVerticalSensitivityArea =
@@ -361,7 +359,7 @@ export const useGridCellSelection = (
         stopAutoScroll();
       }
     },
-    [apiRef, startAutoScroll, stopAutoScroll],
+    [apiRef, startAutoScroll, stopAutoScroll, totalHeaderHeight, dimensions],
   );
 
   const handleCellClick = useEventCallback<
