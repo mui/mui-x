@@ -36,8 +36,8 @@ import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHea
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 
 export interface GridApiCommon<
-  GridState extends GridStateCommunity = any,
-  GridInitialState extends GridInitialStateCommunity = any,
+  GridState extends GridStateCommunity = GridStateCommunity,
+  GridInitialState extends GridInitialStateCommunity = GridInitialStateCommunity,
 > extends GridCoreApi,
     GridPipeProcessingApi,
     GridDensityApi,

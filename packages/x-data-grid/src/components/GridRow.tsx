@@ -45,7 +45,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   offsetTop: number | undefined;
   offsetLeft: number;
   dimensions: GridDimensions;
-  renderContext: GridRenderContext;
+  firstColumnIndex: GridRenderContext['firstColumnIndex'];
+  lastColumnIndex: GridRenderContext['lastColumnIndex'];
   visibleColumns: GridStateColDef[];
   pinnedColumns: GridPinnedColumns;
   /**
@@ -123,7 +124,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     offsetTop,
     offsetLeft,
     dimensions,
-    renderContext,
+    firstColumnIndex,
+    lastColumnIndex,
     focusedColumnIndex,
     isFirstVisible,
     isLastVisible,
@@ -155,11 +157,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&
-    focusedColumnIndex < renderContext.firstColumnIndex;
+    focusedColumnIndex < firstColumnIndex;
   const hasVirtualFocusCellRight =
     hasFocusCell &&
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
-    focusedColumnIndex >= renderContext.lastColumnIndex;
+    focusedColumnIndex >= lastColumnIndex;
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
 
@@ -481,7 +483,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+  for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
 
@@ -602,12 +604,6 @@ GridRow.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
-  renderContext: PropTypes.shape({
-    firstColumnIndex: PropTypes.number.isRequired,
-    firstRowIndex: PropTypes.number.isRequired,
-    lastColumnIndex: PropTypes.number.isRequired,
-    lastRowIndex: PropTypes.number.isRequired,
-  }).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

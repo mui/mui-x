@@ -4,6 +4,7 @@ import { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 import { buildWarning } from '../../utils/warning';
+import type { ValidatePath, DeepIdx } from '../../utils/Store';
 import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
 
 const stateNotInitializedWarning = buildWarning([
@@ -70,6 +71,19 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
         setState(newState);
       }
     });
+  });
+
+  return state;
+};
+
+export const useGridStore = <Api extends GridApiCommon, K>(
+  apiRef: React.MutableRefObject<Api>,
+  path: K extends ValidatePath<Api['state'], K> ? K : ValidatePath<Api['state'], K>
+): DeepIdx<Api['state'], K> => {
+  const [state, setState] = React.useState<T>(apiRef.current.store.getPath(path));
+
+  useOnMount(() => {
+    return apiRef.current.store.subscribeToPath(path, setState);
   });
 
   return state;

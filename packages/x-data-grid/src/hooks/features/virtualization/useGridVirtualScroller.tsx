@@ -32,7 +32,7 @@ import { useTheme, Theme } from '@mui/material/styles';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridSelector, useGridStore } from '../../utils/useGridSelector';
 import { useLazyRef } from '../../utils/useLazyRef';
 import { useForceUpdate } from '../../../utils/useForceUpdate';
 import { useIdleCallback } from '../../../utils/useIdleCallback';
@@ -59,7 +59,6 @@ import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import {
-  gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
@@ -101,10 +100,10 @@ export const useGridVirtualScroller = () => {
 
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
+  const renderContext = useGridStore(apiRef, 'virtualization.renderContext');
   const rowList = useLazyRef(RowIntervalList.create).current;
 
   const focusedCell = {
@@ -133,15 +132,19 @@ export const useGridVirtualScroller = () => {
         nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
-      apiRef.current.setState((state) => {
-        return {
-          ...state,
-          virtualization: {
-            ...state.virtualization,
-            renderContext: nextRenderContext,
-          },
-        };
-      });
+      // XXX: Fix this
+      // apiRef.current.setState((state) => {
+      //   return {
+      //     ...state,
+      //     virtualization: {
+      //       ...state.virtualization,
+      //       renderContext: nextRenderContext,
+      //     },
+      //   };
+      // });
+
+      apiRef.current.store.updatePath('virtualization.renderContext', nextRenderContext);
+      apiRef.current.state = apiRef.current.store.value;
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if the dimensions are also available.
@@ -255,7 +258,6 @@ export const useGridVirtualScroller = () => {
     }
 
     const columnPositions = gridColumnPositionsSelector(apiRef);
-    const currentRenderContext = params.renderContext ?? renderContext;
 
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
@@ -277,13 +279,13 @@ export const useGridVirtualScroller = () => {
         break;
     }
 
-    rowList.add(renderContext);
+    if (!isPinnedSection) {
+      rowList.add(renderContext);
+    }
 
     if (rowList.size() === 0) {
       return [];
     }
-
-    const firstRowToRender = params.rows ? renderContext.firstRowIndex : rowList.first()!;
 
     const rows: React.ReactNode[] = [];
     const rowProps = rootProps.slotProps?.row;
@@ -411,7 +413,8 @@ export const useGridVirtualScroller = () => {
           tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          renderContext={currentRenderContext}
+          firstColumnIndex={currentRenderContext.firstColumnIndex}
+          lastColumnIndex={currentRenderContext.lastColumnIndex}
           focusedColumnIndex={hasFocus ? focusedCell.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
@@ -543,7 +546,7 @@ function useCleanup(
 ) {
   const needsCleanup = React.useRef(false);
   const timeout = useTimeout();
-  const forceUpdate = useForceUpdate();
+  const [_, setUpdateToken] = React.useState('');
   const idleCallback = useIdleCallback();
 
   const runWhenIdle = () => {
@@ -579,7 +582,7 @@ function useCleanup(
       rowList.remove(n.start, n.end);
     });
 
-    forceUpdate();
+    setUpdateToken(String(rowList.nodes));
 
     if (
       rowList.first() !== renderContext.firstRowIndex ||

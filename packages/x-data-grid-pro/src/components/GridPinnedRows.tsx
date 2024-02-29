@@ -1,11 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-data-grid';
+import { getDataGridUtilityClass, gridClasses, useGridSelector, useGridStore } from '@mui/x-data-grid';
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
-  gridRenderContextSelector,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
 
@@ -20,7 +19,7 @@ export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinn
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+  const renderContext = useGridStore(apiRef, 'virtualization.renderContext');
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
 
