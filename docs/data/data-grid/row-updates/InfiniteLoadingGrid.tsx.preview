@@ -1,10 +1,14 @@
 <DataGridPro
-  {...data}
-  rows={data.rows.concat(loadedRows)}
-  loading={isInitialLoading || loading}
-  hideFooterPagination
+  columns={columns}
+  rows={rows}
+  loading={loading}
   onRowsScrollEnd={handleOnRowsScrollEnd}
+  scrollEndThreshold={200}
+  sortModel={sortModel}
+  onSortModelChange={handleSortModelChange}
+  sortingMode="server"
   slots={{
     loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
   }}
+  hideFooterPagination
 />

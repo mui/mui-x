@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
 import {
-  useDemoData,
   getRealGridData,
   getCommodityColumns,
   randomInt,
 } from '@mui/x-data-grid-generator';
 import LinearProgress from '@mui/material/LinearProgress';
 
-const MAX_ROW_LENGTH = 500;
+const MAX_ROW_LENGTH = 1000;
 
 function sleep(duration) {
   return new Promise((resolve) => {
@@ -18,51 +17,107 @@ function sleep(duration) {
   });
 }
 
+let allData;
+
+async function fetchRows({ fromIndex, toIndex, sortModel }) {
+  if (!allData) {
+    allData = await getRealGridData(MAX_ROW_LENGTH, getCommodityColumns());
+  }
+  await sleep(randomInt(100, 600));
+
+  fromIndex = Math.max(0, fromIndex);
+  fromIndex = Math.min(fromIndex, allData.rows.length);
+
+  toIndex = Math.max(0, toIndex);
+  toIndex = Math.min(toIndex, allData.rows.length);
+
+  let allRows = [...allData.rows];
+
+  if (sortModel && sortModel.length > 0) {
+    sortModel.forEach(({ field, sort }) => {
+      if (field && sort) {
+        allRows = allRows.sort((a, b) => {
+          return (
+            gridStringOrNumberComparator(a[field], b[field], {}, {}) *
+            (sort === 'asc' ? 1 : -1)
+          );
+        });
+      }
+    });
+  }
+
+  const rows = allRows.slice(fromIndex, toIndex);
+  return rows;
+}
+
 export default function InfiniteLoadingGrid() {
+  const [columns, setColumns] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [loadedRows, setLoadedRows] = React.useState([]);
-  const mounted = React.useRef(true);
-  const { data, loading: isInitialLoading } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 20,
-    maxColumns: 6,
-  });
+  const [rows, setRows] = React.useState([]);
+  const [sortModel, setSortModel] = React.useState([]);
+  const mounted = React.useRef(false);
 
-  const loadServerRows = async (newRowLength) => {
+  const handleSortModelChange = React.useCallback(async (newSortModel) => {
     setLoading(true);
-    const newData = await getRealGridData(newRowLength, getCommodityColumns());
-    // Simulate network throttle
-    await sleep(randomInt(100, 600));
+    setSortModel(newSortModel);
+    const newRows = await fetchRows({
+      fromIndex: 0,
+      toIndex: 20,
+      sortModel: newSortModel,
+    });
+    setLoading(false);
+    setRows(newRows);
+  }, []);
 
-    if (mounted.current) {
+  const handleOnRowsScrollEnd = React.useCallback(
+    async (params) => {
+      setLoading(true);
+      const fetchedRows = await fetchRows({
+        fromIndex: rows.length,
+        toIndex: rows.length + params.viewportPageSize * 2,
+        sortModel,
+      });
       setLoading(false);
-      setLoadedRows(loadedRows.concat(newData.rows));
-    }
-  };
-
-  const handleOnRowsScrollEnd = (params) => {
-    if (loadedRows.length <= MAX_ROW_LENGTH) {
-      loadServerRows(params.viewportPageSize);
-    }
-  };
+      setRows((prevRows) => prevRows.concat(fetchedRows));
+    },
+    [rows.length, sortModel],
+  );
 
   React.useEffect(() => {
+    mounted.current = true;
+    (async () => {
+      setLoading(true);
+      const fetchedRows = await fetchRows({
+        fromIndex: 0,
+        toIndex: 20,
+        sortModel,
+      });
+      if (mounted.current) {
+        setLoading(false);
+        setRows(fetchedRows);
+        setColumns(allData.columns);
+      }
+    })();
     return () => {
-      mounted.current = true;
+      mounted.current = false;
     };
-  }, []);
+  }, [sortModel]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        {...data}
-        rows={data.rows.concat(loadedRows)}
-        loading={isInitialLoading || loading}
-        hideFooterPagination
+        columns={columns}
+        rows={rows}
+        loading={loading}
         onRowsScrollEnd={handleOnRowsScrollEnd}
+        scrollEndThreshold={200}
+        sortModel={sortModel}
+        onSortModelChange={handleSortModelChange}
+        sortingMode="server"
         slots={{
           loadingOverlay: LinearProgress,
         }}
+        hideFooterPagination
       />
     </div>
   );
