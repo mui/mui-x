@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.6
+
+_Feb 29, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid (#11972) @Luzi
+- 🌍 Improve Chinese (zh-CN) locale on the Date Pickers (#12250) @headironc
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.6`
+
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+
+#### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.6`.
+
+#### `@mui/x-data-grid-premium@6.19.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
+
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (@MBilalShafi) (#12255) @github-actions[bot]
+
+### Docs
+
+- [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
+- [I10n] Improve Chinese (zh-CN) locale (@headironc) (#12250) @github-actions[bot]
+
 ## 6.19.5
 
 _Feb 23, 2024_
