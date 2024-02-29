@@ -27,6 +27,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     return;
   }
 
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+
   describe('Picker action bar', () => {
     describe('clear action', () => {
       it('should call onClose, onChange with empty value and onAccept with empty value', () => {
@@ -105,7 +107,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
-        if (pickerParams.type === 'date-range') {
+        if (isRangeType) {
           values[0].forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
           });
@@ -245,7 +247,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         let startOfToday: any;
         if (pickerParams.type === 'date') {
           startOfToday = adapterToUse.startOfDay(adapterToUse.date());
-        } else if (pickerParams.type === 'date-range') {
+        } else if (isRangeType) {
           startOfToday = [adapterToUse.date(), adapterToUse.date()];
         } else {
           startOfToday = adapterToUse.date();

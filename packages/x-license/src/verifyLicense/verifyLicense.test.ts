@@ -9,6 +9,7 @@ const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 describe('License: verifyLicense', () => {
   let env: any;
+
   beforeEach(() => {
     env = process.env.NODE_ENV;
     process.env.NODE_ENV = 'test';
