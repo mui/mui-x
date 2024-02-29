@@ -309,7 +309,8 @@ export const useGridVirtualScroller = () => {
 
     list.forEach((rowIndexInPage, rowRenderContext, i) => {
       const { id, model } = rowModels[rowIndexInPage];
-      const rowIndex = rowIndexOffset + rowIndexInPage;
+      const firstRowInPage = currentPage?.range?.firstRowIndex || 0;
+      const rowIndex = firstRowInPage + rowIndexOffset + rowIndexInPage;
 
       const isInViewport = params.rows
         ? true
@@ -371,30 +372,17 @@ export const useGridVirtualScroller = () => {
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
-<<<<<<< HEAD
-          const isLastVisibleRowIndex = firstRowToRender + i === lastIndex;
-=======
           const isLastVisibleRowIndex = rowIndexInPage === lastIndex;
->>>>>>> next
 
           if (isLastVisibleRowIndex) {
             isLastVisible = true;
           }
         } else {
-<<<<<<< HEAD
-          isLastVisible = i === rowModels.length - 1;
-        }
-      }
-
-      const isNotVisible = currentRenderContext === virtualContext;
-=======
           isLastVisible = rowIndexInPage === rowModels.length - 1;
         }
       }
 
-      const isVirtualRow = rowIndexInPage === virtualRowIndex;
-      const isNotVisible = isVirtualRow;
->>>>>>> next
+      const isNotVisible = currentRenderContext === virtualContext;
 
       let tabbableCell: GridRowProps['tabbableCell'] = null;
       if (cellTabIndex !== null && cellTabIndex.id === id) {
@@ -409,11 +397,6 @@ export const useGridVirtualScroller = () => {
         pinnedColumns.left.length,
       );
 
-<<<<<<< HEAD
-=======
-      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
-
->>>>>>> next
       rows.push(
         <rootProps.slots.row
           key={id}
@@ -549,7 +532,6 @@ export const useGridVirtualScroller = () => {
   };
 };
 
-<<<<<<< HEAD
 const CLEANUP_ROWS = 10;
 const CLEANUP_ITERATION_DELAY = 50;
 const CLEANUP_INTERACTION_DELAY = 1_000;
@@ -649,8 +631,6 @@ function useCleanup(
   return { schedule, busy };
 }
 
-=======
->>>>>>> next
 type ScrollPosition = { top: number; left: number };
 type RenderContextInputs = {
   enabled: boolean;
