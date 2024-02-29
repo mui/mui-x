@@ -1822,6 +1822,30 @@
       "isGlobal": false
     },
     {
+      "key": "scrollbarFiller",
+      "className": "MuiDataGridPremium-scrollbarFiller",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--borderTop",
+      "className": "MuiDataGridPremium-scrollbarFiller--borderTop",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--header",
+      "className": "MuiDataGridPremium-scrollbarFiller--header",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollbarFiller--pinnedRight",
+      "className": "MuiDataGridPremium-scrollbarFiller--pinnedRight",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "selectedRowCount",
       "className": "MuiDataGridPremium-selectedRowCount",
       "description": "Styles applied to the footer selected row count element.",

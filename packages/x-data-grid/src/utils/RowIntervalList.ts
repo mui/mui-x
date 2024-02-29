@@ -1,0 +1,483 @@
+// Forked from: https://github.com/alxhotel/nonoverlapping-interval-list
+// MIT Copyright (c) Alex
+
+import { GridRenderContext } from '../models';
+
+class Interval {
+  start: number;
+
+  end: number;
+
+  data: GridRenderContext;
+
+  constructor(start: number, end: number, data: GridRenderContext) {
+    this.start = start;
+    this.end = end;
+    this.data = data;
+  }
+
+  get size() {
+    return this.end - this.start + 1;
+  }
+
+  clone() {
+    return new Interval(this.start, this.end, this.data);
+  }
+}
+
+const equals = isColumnRangeEqual;
+
+export class RowIntervalList {
+  nodes: Interval[];
+
+  virtualRow: { index: number; data: GridRenderContext } | null;
+
+  static create() {
+    return new RowIntervalList();
+  }
+
+  constructor(renderContext?: GridRenderContext) {
+    this.nodes = [];
+    this.virtualRow = null;
+    if (renderContext) {
+      this.add(renderContext);
+    }
+  }
+
+  /**
+   * Add interval
+   * "start" and "end" are both inclusive
+   */
+  add(renderContext: GridRenderContext) {
+    if (renderContext.firstRowIndex === renderContext.lastRowIndex) {
+      return;
+    }
+
+    const start = renderContext.firstRowIndex;
+    const end = renderContext.lastRowIndex - 1;
+    const data = renderContext;
+
+    // HACK
+    const currentInsertion = new RowIntervalList();
+    currentInsertion.nodes = [new Interval(start, end, data)];
+
+    // Check if there are conflicting intervals
+    // eslint-disable-next-line
+    while (true) {
+      const conflictingIndex = this.findFirstConflictingIndex(start, end, data);
+      if (conflictingIndex === null) {
+        break;
+      }
+
+      // Get overlapping zone
+      const conflictingInterval = this.nodes[conflictingIndex];
+      const [overlappingFrom, overlappingTo] = getOverlappingZone(conflictingInterval, start, end);
+
+      const newIntervals = this.calculateInsertions(
+        conflictingIndex,
+        overlappingFrom,
+        overlappingTo,
+        data,
+      );
+      this.findAndReplace(conflictingIndex, newIntervals);
+
+      // Try end merge neighbouring intervals
+      // a [a] a => merges left and right
+      // a [a|b] a => merges left
+      // a [b|a] a => merges right
+      // a [b|a|b] a => does never merge anything
+      // NOTE: newIntervals can only be max 3 intervals and the neighbours have different data
+      // than their neighbours. So only ONE of this "tryMerge"s will actually do some merging
+      this.tryMerge(conflictingIndex);
+      if (newIntervals.length > 1) {
+        this.tryMerge(conflictingIndex + (newIntervals.length - 1));
+      }
+
+      currentInsertion.remove(overlappingFrom, overlappingTo);
+    }
+
+    // Remove overlappings start current insertion
+    const overlappingIndices = this.findOverlappingIndices(start, end);
+    for (let n = 0; n < overlappingIndices.length; n += 1) {
+      const i = overlappingIndices[n];
+
+      const interval = this.nodes[i];
+      const [overlappingFrom, overlappingTo] = getOverlappingZone(interval, start, end);
+      currentInsertion.remove(overlappingFrom, overlappingTo);
+    }
+
+    // Check if there are more insertions
+    const intervals = currentInsertion.nodes;
+    for (let i = 0; i < intervals.length; i += 1) {
+      const interval = intervals[i];
+      this.insertToList(interval.start, interval.end, data);
+    }
+  }
+
+  /**
+   * Remove interval
+   * "start" and "end" are both inclusive
+   */
+  remove(start: number, end: number) {
+    // Find overlapping intervals
+    const indices = this.findOverlappingIndices(start, end);
+
+    let indexOffset = 0;
+    for (let n = 0; n < indices.length; n += 1) {
+      const i = indices[n];
+
+      const index = i + indexOffset;
+      const interval = this.nodes[index];
+
+      // Check if whole interval is out
+      if (start <= interval.start && interval.end <= end) {
+        this.nodes.splice(index, 1);
+
+        indexOffset -= 1;
+        continue;
+      }
+
+      const [overlappingFrom, overlappingTo] = getOverlappingZone(interval, start, end);
+
+      // No need end try end merge
+      const newIntervals = calculateRemoval(interval, overlappingFrom, overlappingTo);
+      this.findAndReplace(index, newIntervals);
+
+      indexOffset += newIntervals.length - 1;
+    }
+  }
+
+  /**
+   * Remove every index outside this range.
+   * Indexes are inclusive.
+   */
+  keep(start: number, end: number) {
+    this.remove(-1, start - 1);
+    this.remove(end + 1, Number.MAX_SAFE_INTEGER);
+    return this;
+  }
+
+  /**
+   * Add a virtual row.
+   * This is used for the focused row.
+   */
+  setVirtualRow(virtualRow: { index: number; data: GridRenderContext } | null) {
+    this.virtualRow = virtualRow;
+  }
+
+  /**
+   * Iterate the indexes contained in the list
+   */
+  forEach(callback: (index: number, context: GridRenderContext, i: number) => void) {
+    let iteration = 0;
+
+    const hasVirtualRow = this.virtualRow !== null;
+    let didVirtualRow = false;
+
+    for (let i = 0; i < this.nodes.length; i += 1) {
+      const node = this.nodes[i];
+      for (let index = node.start; index <= node.end; index += 1) {
+        if (hasVirtualRow && !didVirtualRow && index >= this.virtualRow!.index) {
+          if (index !== this.virtualRow!.index) {
+            callback(this.virtualRow!.index, this.virtualRow!.data, iteration);
+            iteration += 1;
+          }
+          didVirtualRow = true;
+        }
+        callback(index, node.data, iteration);
+        iteration += 1;
+      }
+    }
+  }
+
+  /**
+   * Map over the indexes contained in the list
+   */
+  map<T>(callback: (index: number, context: GridRenderContext, i: number) => T): T[] {
+    const result = [] as T[];
+    this.forEach((index, context, i) => {
+      result.push(callback(index, context, i));
+    });
+    return result;
+  }
+
+  size() {
+    let result = 0;
+    for (let i = 0; i < this.nodes.length; i += 1) {
+      result = this.nodes[i].size;
+    }
+    return result;
+  }
+
+  first(): number | undefined {
+    return this.nodes[0]?.start;
+  }
+
+  last(): number | undefined {
+    return this.nodes[this.nodes.length - 1]?.end;
+  }
+
+  clone() {
+    const clone = new RowIntervalList();
+    clone.nodes = this.nodes.map((n) => n.clone());
+    clone.virtualRow = this.virtualRow;
+    return clone;
+  }
+
+  search(start: number) {
+    if (this.nodes.length === 0) {
+      return {
+        index: -1,
+        interval: null,
+      };
+    }
+
+    let leftIndex = 0;
+    let leftInterval = this.nodes[leftIndex];
+    let rightIndex = this.nodes.length - 1;
+    let rightInterval = this.nodes[rightIndex];
+
+    let foundIndex = -1;
+    let foundInterval = null;
+
+    if (start < leftInterval.start) {
+      // Add it end the left
+      foundIndex = leftIndex;
+    } else if (rightInterval.end < start) {
+      // Add it end the right
+      foundIndex = rightIndex + 1;
+    }
+
+    while (foundIndex === -1 && foundInterval === null) {
+      if (leftInterval.start <= start && start <= leftInterval.end) {
+        // Add it end left interval
+        foundIndex = leftIndex;
+        foundInterval = leftInterval;
+        break;
+      } else if (rightInterval.start <= start && start <= rightInterval.end) {
+        // Add it end right interval
+        foundIndex = rightIndex;
+        foundInterval = rightInterval;
+        break;
+      } else if (rightIndex - leftIndex === 1) {
+        // Add it between left and right
+        foundIndex = rightIndex;
+        break;
+      } else {
+        // Calculate new indices
+        const middleIndex = Math.floor((rightIndex + leftIndex) / 2);
+        const middleInterval = this.nodes[middleIndex];
+
+        if (middleInterval.end < start) {
+          leftIndex = middleIndex;
+          leftInterval = middleInterval;
+        } else if (start < middleInterval.start) {
+          rightIndex = middleIndex;
+          rightInterval = middleInterval;
+        } else {
+          // Add it in the middle interval
+          foundIndex = middleIndex;
+          foundInterval = middleInterval;
+          break;
+        }
+      }
+    }
+
+    return {
+      index: foundIndex,
+      interval: foundInterval,
+    };
+  }
+
+  insertToList(start: number, end: number, data: GridRenderContext) {
+    const { interval: foundInterval, index: foundIndex } = this.search(start);
+
+    if (foundIndex === -1) {
+      // Add end empty list
+      this.nodes.push(new Interval(start, end, data));
+    } else if (foundInterval !== null) {
+      // TODO: this block does not seem end get executed
+
+      // Split found interval
+      const newIntervals = this.calculateInsertions(foundIndex, start, end, data);
+      this.findAndReplace(foundIndex, newIntervals);
+
+      // Try merge
+      this.tryMerge(foundIndex);
+    } else {
+      // Add it there
+      const newInterval = new Interval(start, end, data);
+      this.nodes.splice(foundIndex, 0, newInterval);
+
+      // Try merge
+      this.tryMerge(foundIndex);
+    }
+  }
+
+  findOverlappingIndices(start: number, end: number) {
+    const res = [];
+
+    const { index: foundIndex } = this.search(start);
+    if (foundIndex === -1) {
+      return [];
+    }
+
+    for (let i = foundIndex; i < this.nodes.length; i += 1) {
+      const entry = this.nodes[i];
+
+      // Check if the next entries are out of scope
+      if (entry.start > end) {
+        break;
+      }
+
+      // Check overlapping
+      if (start <= entry.end && entry.start <= end) {
+        res.push(i);
+      }
+    }
+
+    return res;
+  }
+
+  findFirstConflictingIndex(start: number, end: number, data: GridRenderContext) {
+    const { index: foundIndex } = this.search(start);
+    if (foundIndex === -1) {
+      return null;
+    }
+
+    for (let i = foundIndex; i < this.nodes.length; i += 1) {
+      const entry = this.nodes[i];
+
+      // Check overlapping & conflict
+      if (!(entry.start > end || entry.end < start) && !equals(entry.data, data)) {
+        return i;
+      }
+    }
+
+    return null;
+  }
+
+  findFarthestInterval(renderContext: GridRenderContext) {
+    const start = renderContext.firstRowIndex;
+    const end = renderContext.lastRowIndex - 1;
+
+    let maxDistance = -1;
+    let current = null as Interval | null;
+
+    for (let i = 0; i < this.nodes.length; i += 1) {
+      const interval = this.nodes[i];
+      if (interval.data === renderContext) {
+        continue;
+      }
+
+      const intervalMaxDistance = Math.max(
+        interval.start < start ? start - interval.start : 0,
+        interval.end < start ? start - interval.end : 0,
+        interval.start > end ? interval.start - end : 0,
+        interval.end > end ? interval.end - end : 0,
+      );
+
+      if (intervalMaxDistance > maxDistance) {
+        maxDistance = intervalMaxDistance;
+        current = interval;
+      }
+    }
+
+    return current;
+  }
+
+  calculateInsertions(
+    conflictingIndex: number,
+    start: number,
+    end: number,
+    data: GridRenderContext,
+  ) {
+    const conflictingInterval = this.nodes[conflictingIndex];
+
+    const result = [];
+    if (conflictingInterval.start <= start - 1) {
+      const leftNewInterval = new Interval(
+        conflictingInterval.start,
+        start - 1,
+        conflictingInterval.data,
+      );
+      result.push(leftNewInterval);
+    }
+
+    const middleNewInterval = new Interval(start, end, data);
+    result.push(middleNewInterval);
+    if (end + 1 <= conflictingInterval.end) {
+      const rightNewInterval = new Interval(
+        end + 1,
+        conflictingInterval.end,
+        conflictingInterval.data,
+      );
+      result.push(rightNewInterval);
+    }
+
+    return result;
+  }
+
+  findAndReplace(index: number, newIntervals: Interval[]) {
+    this.nodes.splice(index, 1, ...newIntervals);
+  }
+
+  tryMerge(index: number) {
+    let interval = this.nodes[index];
+    if (!interval) {
+      return;
+    }
+
+    // Check left side
+    const leftInterval = this.nodes[index - 1];
+    if (
+      leftInterval &&
+      interval.start - leftInterval.end <= 1 &&
+      equals(interval.data, leftInterval.data)
+    ) {
+      const newInterval = new Interval(leftInterval.start, interval.end, interval.data);
+      // Remove and replace
+      this.nodes.splice(index - 1, 2, newInterval);
+
+      // Compensate for new interval and index
+      index -= 1;
+      interval = newInterval;
+    }
+
+    // Check right side
+    const rightInterval = this.nodes[index + 1];
+    if (
+      rightInterval &&
+      rightInterval.start - interval.end <= 1 &&
+      equals(interval.data, rightInterval.data)
+    ) {
+      const newInterval = new Interval(interval.start, rightInterval.end, interval.data);
+      // Remove and replace
+      this.nodes.splice(index, 2, newInterval);
+    }
+  }
+}
+
+function isColumnRangeEqual(a: GridRenderContext, b: GridRenderContext) {
+  return a.firstColumnIndex === b.firstColumnIndex && a.lastColumnIndex === b.lastColumnIndex;
+}
+
+function getOverlappingZone(interval: Interval, start: number, end: number) {
+  const overlappingFrom = Math.max(interval.start, start);
+  const overlappingTo = Math.min(interval.end, end);
+
+  return [overlappingFrom, overlappingTo];
+}
+
+function calculateRemoval(interval: Interval, start: number, end: number) {
+  const res = [];
+  if (interval.start <= start - 1) {
+    const leftNewInterval = new Interval(interval.start, start - 1, interval.data);
+    res.push(leftNewInterval);
+  }
+  if (end + 1 <= interval.end) {
+    const rightNewInterval = new Interval(end + 1, interval.end, interval.data);
+    res.push(rightNewInterval);
+  }
+  return res;
+}

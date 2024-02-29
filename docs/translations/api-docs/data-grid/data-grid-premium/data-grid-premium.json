@@ -1170,6 +1170,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
     },
+    "scrollbarFiller": { "description": "" },
+    "scrollbarFiller--borderTop": { "description": "" },
+    "scrollbarFiller--header": { "description": "" },
+    "scrollbarFiller--pinnedRight": { "description": "" },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
