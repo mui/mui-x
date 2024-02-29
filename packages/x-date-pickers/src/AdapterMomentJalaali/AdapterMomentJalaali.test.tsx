@@ -36,6 +36,7 @@ describe('<AdapterMomentJalaali />', () => {
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
@@ -98,6 +99,32 @@ describe('<AdapterMomentJalaali />', () => {
           expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
+    });
+  });
+
+  describe('Test setMonthYearDate', () => {
+    const localeObject = { code: 'en' };
+    const { render, clock, adapter } = createPickerRenderer({
+      clock: 'fake',
+      adapterName: 'moment-jalaali',
+      locale: localeObject,
+    });
+
+    const { renderWithProps } = buildFieldInteractions({
+      render,
+      clock,
+      Component: DateTimeField,
+    });
+
+    it('should set month, year, and date correctly', () => {
+      const initialDate = adapter.date('2022-01-15T09:35:00')!;
+      const newDate = adapter.setMonthYearDate(initialDate, 1400, 0, 25);
+
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: newDate,
+      });
+      expectFieldValueV7(v7Response.getSectionsContainer(), '1400/01/25 09:35');
     });
   });
 });

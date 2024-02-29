@@ -93,5 +93,31 @@ describe('<AdapterMomentHijri />', () => {
         });
       });
     });
+
+    describe('Test setMonthYearDate', () => {
+      const localeObject = { code: 'ar' };
+      const { render, clock, adapter } = createPickerRenderer({
+        clock: 'fake',
+        adapterName: 'moment-hijri',
+        locale: localeObject,
+      });
+
+      const { renderWithProps } = buildFieldInteractions({
+        render,
+        clock,
+        Component: DateTimeField,
+      });
+
+      it('should set month, year, and date correctly', () => {
+        const initialDate = adapter.date('2022-01-15T09:35:00')!;
+        const newDate = adapter.setMonthYearDate(initialDate, 1439, 4, 15);
+
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: newDate,
+        });
+        expectFieldValueV7(v7Response.getSectionsContainer(), '١٤٣٩/٠٨/٢٩ ٠٩:٣٥');
+      });
+    });
   });
 });

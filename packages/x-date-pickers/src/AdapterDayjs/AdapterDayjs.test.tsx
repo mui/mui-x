@@ -155,5 +155,31 @@ describe('<AdapterDayjs />', () => {
         });
       });
     });
+
+    describe('Test setMonthYearDate', () => {
+      const localeObject = { code: 'en' };
+      const { render, clock, adapter } = createPickerRenderer({
+        clock: 'fake',
+        adapterName: 'dayjs',
+        locale: localeObject,
+      });
+
+      const { renderWithProps } = buildFieldInteractions({
+        render,
+        clock,
+        Component: DateTimeField,
+      });
+
+      it('should set month, year, and date correctly', () => {
+        const initialDate = adapter.date('2022-01-15T09:35:00')!;
+        const newDate = adapter.setMonthYearDate(initialDate, 1400, 4, 25);
+
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: newDate,
+        });
+        expectFieldValueV7(v7Response.getSectionsContainer(), '05/25/1400 09:35 AM');
+      });
+    });
   });
 });

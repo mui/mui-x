@@ -239,7 +239,7 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return super.getYearRange([start, end]);
   };
 
-  public setMonthYearDate = (value: Moment, month: number, year: number, date: number) => {
+  public setMonthYearDate = (value: Moment, year: number, month: number, date: number) => {
     return value.clone().iYear(year).iMonth(month).iDate(date);
   };
 }
