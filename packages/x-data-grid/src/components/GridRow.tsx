@@ -316,7 +316,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
       minHeight,
-      top: offsetTop,
+      transform: offsetTop !== undefined ? `translateY(${offsetTop}px)` : undefined,
     };
 
     if (sizes?.spacingTop) {
