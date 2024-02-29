@@ -30,7 +30,12 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
   selection: {
     multiSelect: false,
   },
-  itemsReordering: false,
+  itemsReordering: {
+    enabled: false,
+    handleDragStart: () => {},
+    handleDragOver: () => {},
+    handleDragEnd: () => {},
+  },
 };
 
 describe('<TreeItem />', () => {
