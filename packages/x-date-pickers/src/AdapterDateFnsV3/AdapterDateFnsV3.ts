@@ -334,4 +334,8 @@ export class AdapterDateFns
 
     return years;
   };
+
+  public setMonthYearDate = (value: Date, month: number, year: number, date: number) => {
+    return setDate(setMonth(setYear(value, year), month), date);
+  };
 }

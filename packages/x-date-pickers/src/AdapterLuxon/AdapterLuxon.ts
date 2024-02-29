@@ -492,4 +492,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
     return years;
   };
+
+  public setMonthYearDate = (value, year, month, date) => {
+    return value.set({ year, month, day: date });
+  };
 }

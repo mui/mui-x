@@ -536,16 +536,10 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     let currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
 
     if (utils.getMonth(currentMonth) !== utils.getMonth(currentMonthWithTimezone)) {
-      currentMonthWithTimezone = utils.setMonth(
-        currentMonthWithTimezone,
-        utils.getMonth(currentMonth),
-      );
-      currentMonthWithTimezone = utils.setYear(
+      currentMonthWithTimezone = utils.setMonthYearDate(
         currentMonthWithTimezone,
         utils.getYear(currentMonth),
-      );
-      currentMonthWithTimezone = utils.setDate(
-        currentMonthWithTimezone,
+        utils.getMonth(currentMonth),
         utils.getDate(currentMonth),
       );
     }

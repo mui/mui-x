@@ -206,6 +206,7 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    * @returns {TDate} The converted date.
    */
   setTimezone(value: TDate, timezone: PickersTimezone): TDate;
+
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
    * @template TDate
@@ -611,4 +612,16 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    * @returns {TDate[]} List of all the years between the start end the end date.
    */
   getYearRange(range: [TDate, TDate]): TDate[];
+
+  /**
+   * Sets the year, month, and date of a given date value.
+   * @template TDate The type of the date value.
+   * @param {TDate} value The date value to modify.
+   * @param {number} year The year to set.
+   * @param {number} month The month to set (0-indexed).
+   * @param {number} date The date of the month to set.
+   * @returns {TDate} A new date value with the specified year, month, and date.
+   */
+
+  setMonthYearDate(value: TDate, year: number, month: number, date: number);
 }
