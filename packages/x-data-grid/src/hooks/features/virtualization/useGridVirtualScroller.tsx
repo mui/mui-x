@@ -49,7 +49,8 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { clamp } from '../../../utils/utils';
+import { useGridApiEventHandler } from '../../utils';
+import { clamp, range } from '../../../utils/utils';
 import { RowIntervalList } from '../../../utils/RowIntervalList';
 import { GridApiCommon, GridRenderContext, GridRowEntry, GridRowId, GridValidRowModel } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
@@ -253,6 +254,9 @@ export const useGridVirtualScroller = () => {
       return [];
     }
 
+    const columnPositions = gridColumnPositionsSelector(apiRef);
+    const currentRenderContext = params.renderContext ?? renderContext;
+
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
       (hasBottomPinnedRows && params.position === 'bottom');
@@ -280,8 +284,6 @@ export const useGridVirtualScroller = () => {
     }
 
     const firstRowToRender = params.rows ? renderContext.firstRowIndex : rowList.first()!;
-
-    const columnPositions = gridColumnPositionsSelector(apiRef);
 
     const rows: React.ReactNode[] = [];
     const rowProps = rootProps.slotProps?.row;
@@ -369,17 +371,30 @@ export const useGridVirtualScroller = () => {
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
+<<<<<<< HEAD
           const isLastVisibleRowIndex = firstRowToRender + i === lastIndex;
+=======
+          const isLastVisibleRowIndex = rowIndexInPage === lastIndex;
+>>>>>>> next
 
           if (isLastVisibleRowIndex) {
             isLastVisible = true;
           }
         } else {
+<<<<<<< HEAD
           isLastVisible = i === rowModels.length - 1;
         }
       }
 
       const isNotVisible = currentRenderContext === virtualContext;
+=======
+          isLastVisible = rowIndexInPage === rowModels.length - 1;
+        }
+      }
+
+      const isVirtualRow = rowIndexInPage === virtualRowIndex;
+      const isNotVisible = isVirtualRow;
+>>>>>>> next
 
       let tabbableCell: GridRowProps['tabbableCell'] = null;
       if (cellTabIndex !== null && cellTabIndex.id === id) {
@@ -394,6 +409,11 @@ export const useGridVirtualScroller = () => {
         pinnedColumns.left.length,
       );
 
+<<<<<<< HEAD
+=======
+      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
+
+>>>>>>> next
       rows.push(
         <rootProps.slots.row
           key={id}
@@ -500,6 +520,10 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
+  useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
+
   return {
     renderContext,
     setPanels,
@@ -525,6 +549,7 @@ export const useGridVirtualScroller = () => {
   };
 };
 
+<<<<<<< HEAD
 const CLEANUP_ROWS = 10;
 const CLEANUP_ITERATION_DELAY = 50;
 const CLEANUP_INTERACTION_DELAY = 1_000;
@@ -624,6 +649,8 @@ function useCleanup(
   return { schedule, busy };
 }
 
+=======
+>>>>>>> next
 type ScrollPosition = { top: number; left: number };
 type RenderContextInputs = {
   enabled: boolean;

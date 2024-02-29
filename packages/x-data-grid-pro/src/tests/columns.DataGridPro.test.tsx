@@ -504,15 +504,19 @@ describe('<DataGridPro /> - Columns', () => {
       it('.columns works', async () => {
         await autosize({ columns: [columns[0].field] }, [50, 100]);
       });
+
       it('.includeHeaders works', async () => {
         await autosize({ includeHeaders: true }, [213, 235]);
       });
+
       it('.includeOutliers works', async () => {
         await autosize({ includeOutliers: true }, [50, 144]);
       });
+
       it('.outliersFactor works', async () => {
         await autosize({ outliersFactor: 40 }, [50, 144]);
       });
+
       it('.expand works', async () => {
         await autosize({ expand: true }, [134, 148]);
       });
@@ -521,6 +525,7 @@ describe('<DataGridPro /> - Columns', () => {
 
   describe('column pipe processing', () => {
     type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
+
     it('should not loose column width when re-applying pipe processing', () => {
       let privateApi: GridPrivateApiContextRef;
       function Footer() {
