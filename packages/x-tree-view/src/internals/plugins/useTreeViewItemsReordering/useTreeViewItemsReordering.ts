@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
-import {
-  UseTreeViewItemsReorderingHandler,
-  UseTreeViewItemsReorderingSignature,
-} from './useTreeViewItemsReordering.types';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 import { isAncestor } from './useTreeViewItemsReordering.utils';
+import { compareNodePositionsInTree } from '../../utils/tree';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -13,13 +10,6 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   state,
   setState,
 }) => {
-  const isNodeDragTarget = React.useCallback(
-    (nodeId: string) =>
-      state.itemsReordering?.targetNodeId === nodeId &&
-      state.itemsReordering.draggedNodeId !== nodeId,
-    [state.itemsReordering],
-  );
-
   const handleDragStart = React.useCallback(
     (nodeId: string) => {
       setState((prevState) => ({
@@ -35,6 +25,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       setState((prevState) => {
         if (
           prevState.itemsReordering == null ||
+          prevState.itemsReordering.targetNodeId === nodeId ||
           isAncestor(instance, nodeId, prevState.itemsReordering.draggedNodeId)
         ) {
           return prevState;
@@ -69,21 +60,25 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [setState, state.itemsReordering, instance],
   );
 
-  populateInstance<UseTreeViewItemsReorderingSignature>(instance, { isNodeDragTarget });
-
-  const itemsReorderHandler = React.useMemo<UseTreeViewItemsReorderingHandler>(
-    () => ({
-      enabled: params.itemsReordering ?? false,
-      handleDragStart,
-      handleDragOver,
-      handleDragEnd,
-    }),
-    [params.itemsReordering, handleDragStart, handleDragOver, handleDragEnd],
-  );
-
   return {
     contextValue: {
-      itemsReordering: itemsReorderHandler,
+      itemsReordering: {
+        enabled: params.itemsReordering ?? false,
+        handleDragStart,
+        handleDragOver,
+        handleDragEnd,
+        currentDrag:
+          state.itemsReordering == null
+            ? null
+            : {
+                targetNodeId: state.itemsReordering.targetNodeId,
+                direction: compareNodePositionsInTree(
+                  instance,
+                  state.itemsReordering.draggedNodeId,
+                  state.itemsReordering.targetNodeId,
+                ),
+              },
+      },
     },
   };
 };

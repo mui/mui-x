@@ -1,16 +1,8 @@
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { TreeViewItemId } from '../../../models';
 
-export interface UseTreeViewItemsReorderingHandler {
-  enabled: boolean;
-  handleDragStart: (nodeId: string) => void;
-  handleDragOver: (nodeId: string) => void;
-  handleDragEnd: (nodeId: string) => void;
-}
-
-export interface UseTreeViewItemsReorderingInstance {
-  isNodeDragTarget: (nodeId: string) => boolean;
-}
+export interface UseTreeViewItemsReorderingInstance {}
 
 export interface UseTreeViewItemsReorderingParameters {
   /**
@@ -25,7 +17,7 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
   'itemsReordering'
 >;
 
-interface UseTreeViewItemsReorderingState {
+export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
     draggedNodeId: string;
     targetNodeId: string;
@@ -33,7 +25,16 @@ interface UseTreeViewItemsReorderingState {
 }
 
 interface UseTreeViewItemsReorderingContextValue {
-  itemsReordering: UseTreeViewItemsReorderingHandler;
+  itemsReordering: {
+    enabled: boolean;
+    handleDragStart: (nodeId: string) => void;
+    handleDragOver: (nodeId: string) => void;
+    handleDragEnd: (nodeId: string) => void;
+    currentDrag: {
+      targetNodeId: TreeViewItemId;
+      direction: 1 | -1 | 0;
+    } | null;
+  };
 }
 
 export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{

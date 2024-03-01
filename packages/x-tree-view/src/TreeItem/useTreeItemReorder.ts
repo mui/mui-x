@@ -3,7 +3,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals';
 
 export const useTreeItemReorder = (nodeId: string) => {
-  const { itemsReordering, instance } = useTreeViewContext<DefaultTreeViewPlugins>();
+  const { itemsReordering } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const rootProps: React.HTMLAttributes<HTMLLIElement> = itemsReordering.enabled
     ? {
@@ -17,11 +17,25 @@ export const useTreeItemReorder = (nodeId: string) => {
     onDragOver: () => itemsReordering.handleDragOver(nodeId),
   };
 
-  const isDragTarget = itemsReordering.enabled ? instance.isNodeDragTarget(nodeId) : false;
+  const dragTargetPosition = React.useMemo(() => {
+    if (
+      itemsReordering.currentDrag == null ||
+      itemsReordering.currentDrag.targetNodeId !== nodeId ||
+      itemsReordering.currentDrag.direction === 0
+    ) {
+      return null;
+    }
+
+    if (itemsReordering.currentDrag.direction === 1) {
+      return 'bottom';
+    }
+
+    return 'top';
+  }, [itemsReordering.currentDrag, nodeId]);
 
   return {
     rootProps,
     contentProps,
-    isDragTarget,
+    dragTargetPosition,
   };
 };

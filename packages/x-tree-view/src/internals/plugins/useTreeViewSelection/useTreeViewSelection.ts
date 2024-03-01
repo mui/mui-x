@@ -7,7 +7,7 @@ import {
   getLastNode,
 } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
-import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
+import { compareNodePositionsInTree } from '../../utils/tree';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -86,7 +86,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const getNodesInRange = (nodeAId: string, nodeBId: string) => {
-    const [first, last] = findOrderInTremauxTree(instance, nodeAId, nodeBId);
+    const comparison = compareNodePositionsInTree(instance, nodeAId, nodeBId);
+    const [first, last] = comparison === -1 ? [nodeBId, nodeAId] : [nodeAId, nodeBId];
+
     const nodes = [first];
 
     let current = first;

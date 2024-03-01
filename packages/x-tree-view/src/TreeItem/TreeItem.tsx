@@ -29,7 +29,8 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     label: ['label'],
     group: ['group'],
-    dragTarget: ['dragTarget'],
+    dragTargetTop: ['dragTargetTop'],
+    dragTargetBottom: ['dragTargetBottom'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -44,7 +45,11 @@ const TreeItemRoot = styled('li', {
   margin: 0,
   padding: 0,
   outline: 0,
-  [`&.${treeItemClasses.dragTarget}`]: {
+  [`&.${treeItemClasses.dragTargetTop}`]: {
+    borderTop: `2px solid ${theme.palette.primary.main}`,
+    marginTop: -2,
+  },
+  [`&.${treeItemClasses.dragTargetBottom}`]: {
     borderBottom: `2px solid ${theme.palette.primary.main}`,
     marginBottom: -2,
   },
@@ -309,7 +314,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const item = (
     <TreeItemRoot
-      className={clsx(classes.root, className, reorderResponse.isDragTarget && classes.dragTarget)}
+      className={clsx(
+        classes.root,
+        className,
+        reorderResponse.dragTargetPosition === 'top' && classes.dragTargetTop,
+        reorderResponse.dragTargetPosition === 'bottom' && classes.dragTargetBottom,
+      )}
       role="treeitem"
       aria-expanded={expandable ? expanded : undefined}
       aria-selected={ariaSelected}
