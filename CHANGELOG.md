@@ -2437,11 +2437,10 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 _Feb 29, 2024_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
 - 🐞 Bugfixes
-- 🌍 Improve Korean (ko-KR) locale on the Data Grid (#11972) @Luzi
-- 🌍 Improve Chinese (zh-CN) locale on the Date Pickers (#12250) @headironc
 
 ### Data Grid
 
@@ -2457,12 +2456,12 @@ Same changes as in `@mui/x-data-grid@6.19.6`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
 
-- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (@MBilalShafi) (#12255) @github-actions[bot]
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12255) @MBilalShafi
 
 ### Docs
 
 - [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
-- [I10n] Improve Chinese (zh-CN) locale (@headironc) (#12250) @github-actions[bot]
+- [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
 
 ## 6.19.5
 
