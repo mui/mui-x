@@ -9,8 +9,8 @@ _Feb 29, 2024_
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-- 🐞 Bugfixes
 - 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
+- 🐞 Bugfixes
 
 ### Data Grid
 
