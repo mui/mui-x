@@ -174,9 +174,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Use it to confirm or cancel the paste operation.
    * @param {object} params Params passed to the callback.
    * @param {string[][]} params.data The raw pasted data split by rows and cells.
-   * @returns {Promise<any> | void} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
    */
-  onClipboardPasteBeforeStart?: (params: { data: string[][] }) => Promise<any> | void;
+  onClipboardPasteBeforeStart?: (params: { data: string[][] }) => Promise<any>;
   /**
    * Callback fired when the clipboard paste operation starts.
    */
