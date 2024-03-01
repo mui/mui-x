@@ -2435,18 +2435,19 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 ## 6.19.6
 
-_Feb 29, 2024_
+_Mar 1, 2024_
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
 - 🐞 Bugfixes
+- 📚 Documentation improvements
 
 ### Data Grid
 
 #### `@mui/x-data-grid@6.19.6`
 
-- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft) 
 
 #### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -2458,10 +2459,20 @@ Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
 
 - [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12255) @MBilalShafi
 
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.6`
+
+- [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+
+#### `@mui/x-date-pickers-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.6`.
+
 ### Docs
 
 - [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
-- [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
 
 ## 6.19.5
 
