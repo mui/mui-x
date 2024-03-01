@@ -60,6 +60,24 @@ describe('<DateCalendar /> - Timezone', () => {
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
         });
+
+        it('on timezone change the rendered UI should be same', () => {
+          // Render the component with initial timezone prop
+          const { rerender } = render(<DateCalendar timezone="UTC" />);
+
+          const renderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          rerender(<DateCalendar timezone={timezone} />);
+
+          const reRenderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          // check the number of the button rendered equal
+          expect(reRenderButtons.length).equals(renderButtons);
+        });
       });
     });
   });
