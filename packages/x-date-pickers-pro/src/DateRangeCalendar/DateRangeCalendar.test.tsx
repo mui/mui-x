@@ -586,6 +586,48 @@ describe('<DateRangeCalendar />', () => {
         // check the number of the button rendered equal
         expect(reRenderButtons.length).equals(renderButtons.length);
       });
+
+      it('should select the range from the next month', () => {
+        const { rerender } = render(
+          <DateRangeCalendar
+            timezone="UTC"
+            defaultValue={[adapterToUse.date('2019-01-01'), null]}
+          />,
+        );
+
+        fireEvent.click(getPickerDay('10', 'January 2019'));
+        fireEvent.click(getPickerDay('19', 'Febuary 2019'));
+
+        const renderButtons = screen
+          .getAllByRole('gridcell')
+          .filter((button) => button.tagName.toLowerCase() === 'button');
+
+        const selectedStartDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'start',
+        );
+
+        const selectedEndDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'end',
+        );
+
+        rerender(
+          <DateRangeCalendar
+            timezone={timezone}
+            defaultValue={[adapterToUse.date('2019-01-01'), null]}
+          />,
+        );
+
+        const rerenderedStartDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'start',
+        );
+
+        const rerenderedEndDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'end',
+        );
+
+        expect(Math.abs(selectedStartDateButton - rerenderedStartDateButton)).lessThanOrEqual(1);
+        expect(Math.abs(selectedEndDateButton - rerenderedEndDateButton)).lessThanOrEqual(1);
+      });
     });
   });
 });
