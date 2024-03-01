@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Fix `disableResetButton` and `disableShowHideToggle` flags to not exclude each other (#12169) @adyry
 - [DataGrid] Fix cell range classnames (#12230) @romgrk
 - [DataGrid] Fix wrong offset for right-pinned columns when toggling dark/light modes (#12233) @cherniavskii
-- [DataGrid] Refactor: row virtualization & rendering (#12247) @romgrk
+- [DataGrid] Improve row virtualization and rendering performance (#12247) @romgrk
 - [DataGrid] Improve performance by removing `querySelector` call (#12229) @romgrk
 - [DataGrid] Fix `onColumnWidthChange` called before autosize affects column width (#12140) @shaharyar-shamshi
 - [DataGrid] Fix boolean "is" filter (#12117) @shaharyar-shamshi
