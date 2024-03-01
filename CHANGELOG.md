@@ -55,6 +55,8 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.5`, plus:
 
 Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 
+- [DateTimeRangePicker] Fix validation behavior (#12243) @LukasTy
+
 ### Charts / `@mui/x-charts@7.0.0-beta.5`
 
 - [charts] Fix grid duplicated key (#12208) @alexfauquette
