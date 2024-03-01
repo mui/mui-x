@@ -9,8 +9,8 @@ import {
   UseTreeViewNodesState,
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem } from '../../../models';
-import {removeItemFromTree} from "./useTreeViewNodes.utils";
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import { moveItemInTree } from './useTreeViewNodes.utils';
 
 const updateState = ({
   items,
@@ -134,35 +134,13 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   );
 
   const moveItem = React.useCallback(
-    (nodeId: string, newParent: string | null, newIndex: number) => {
-      const node = instance.getNode(nodeId);
-
-      removeItemFromTree({ instance, node, state })
-
-      setState((prevState) => {
-        if (node.parentId !== newParent) {
-          throw new Error('MUI X: For now we only support drag&drop inside the same parent');
-        }
-
-        const updatedItems = [...prevState.itemList];
-        // TODO support items with parent
-        const itemRemoved = updatedItems.splice(node.index, 1)[0];
-        updatedItems.splice(newIndex, 0, itemRemoved);
-
-        const newState = updateState({
-          items: updatedItems,
-          isItemDisabled: params.isItemDisabled,
-          getItemId: params.getItemId,
-          getItemLabel: params.getItemLabel,
-        });
-
-        return {
-          ...prevState,
-          ...newState,
-        };
-      });
+    (nodeToMoveId: TreeViewItemId, newParentId: TreeViewItemId | null, newIndex: number) => {
+      setState((prevState) => ({
+        ...prevState,
+        ...moveItemInTree({ nodeToMoveId, state: prevState, newParentId, newIndex }),
+      }));
     },
-    [instance, params.getItemId, params.getItemLabel, params.isItemDisabled, setState],
+    [setState],
   );
 
   const getNavigableChildrenIds = (nodeId: string | null) => {

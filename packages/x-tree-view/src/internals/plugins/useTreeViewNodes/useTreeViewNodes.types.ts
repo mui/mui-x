@@ -14,7 +14,7 @@ export interface UseTreeViewNodesInstance {
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
-  moveItem: (nodeId: string, newParent: string | null, newIndex: number) => void;
+  moveItem: (nodeId: TreeViewItemId, newParent: string | null, newIndex: number) => void;
 }
 
 export interface UseTreeViewNodesParameters<R extends { children?: R[] }> {

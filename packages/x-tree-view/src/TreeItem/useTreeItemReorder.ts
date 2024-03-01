@@ -10,7 +10,7 @@ export const useTreeItemReorder = (nodeId: string, rootRef: React.RefObject<HTML
         draggable: true,
         onDragStart: (event) => {
           if (event.target !== rootRef.current) {
-            return
+            return;
           }
 
           itemsReordering.handleDragStart(nodeId);
