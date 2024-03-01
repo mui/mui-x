@@ -27,7 +27,7 @@ Same changes as in `@mui/x-data-grid@6.19.6`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
 
-- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (@MBilalShafi) (#12255) @github-actions[bot]
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12255) @MBilalShafi
 
 ### Docs
 
