@@ -24,6 +24,8 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
+const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
+
 const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
@@ -562,6 +564,28 @@ describe('<DateRangeCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       userEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+    });
+  });
+
+  TIMEZONE_TO_TEST.forEach((timezone) => {
+    describe(`timezone change from utc to ${timezone}`, () => {
+      it('on timezone change the rendered UI should display the Calendar of same month', () => {
+        // Render the component with initial timezone prop
+        const { rerender } = render(<DateRangeCalendar timezone="UTC" />);
+
+        const renderButtons = screen
+          .getAllByRole('gridcell')
+          .filter((button) => button.tagName.toLowerCase() === 'button');
+
+        rerender(<DateRangeCalendar timezone={timezone} />);
+
+        const reRenderButtons = screen
+          .getAllByRole('gridcell')
+          .filter((button) => button.tagName.toLowerCase() === 'button');
+
+        // check the number of the button rendered equal
+        expect(reRenderButtons.length).equals(renderButtons.length);
+      });
     });
   });
 });
