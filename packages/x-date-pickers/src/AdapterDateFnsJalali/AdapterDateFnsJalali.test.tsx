@@ -94,11 +94,10 @@ describe('<AdapterDateFnsJalali />', () => {
   });
 
   describe('Test setMonthYearDate', () => {
-    const localeObject = { code: 'en' };
     const { render, clock, adapter } = createPickerRenderer({
       clock: 'fake',
       adapterName: 'date-fns-jalali',
-      locale: localeObject,
+      locale: enUS,
     });
 
     const { renderWithProps } = buildFieldInteractions({
