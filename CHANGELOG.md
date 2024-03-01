@@ -29,6 +29,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Fix `onColumnWidthChange` called before autosize affects column width (#12140) @shaharyar-shamshi
 - [DataGrid] Fix boolean "is" filter (#12117) @shaharyar-shamshi
 - [DataGrid] Fix `upsertFilterItems` removing filters that are not part of the update (#11954) @gitstart
+- [DataGrid] Render scrollbars only if there is scroll (#12265) @cherniavskii
 
 #### `@mui/x-data-grid-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -2448,7 +2449,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### `@mui/x-data-grid@6.19.6`
 
-- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft) 
+- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft)
 
 #### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
