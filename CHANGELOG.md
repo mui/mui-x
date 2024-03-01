@@ -10,8 +10,7 @@ _Feb 29, 2024_
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌍 Improve Korean (ko-KR) locale on the Data Grid (#11972) @Luzi
-- 🌍 Improve Chinese (zh-CN) locale on the Date Pickers (#12250) @headironc
+- 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
 
 ### Data Grid
 
