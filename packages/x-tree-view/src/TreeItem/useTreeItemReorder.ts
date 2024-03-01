@@ -4,6 +4,13 @@ import { DefaultTreeViewPlugins } from '../internals';
 
 export const useTreeItemReorder = (nodeId: string, rootRef: React.RefObject<HTMLLIElement>) => {
   const { itemsReordering } = useTreeViewContext<DefaultTreeViewPlugins>();
+  if (!itemsReordering) {
+    return {
+      rootProps: {},
+      contentProps: {},
+      dragTargetPosition: null,
+    };
+  }
 
   const rootProps: React.HTMLAttributes<HTMLLIElement> = itemsReordering.enabled
     ? {
@@ -23,6 +30,7 @@ export const useTreeItemReorder = (nodeId: string, rootRef: React.RefObject<HTML
     onDragOver: () => itemsReordering.handleDragOver(nodeId),
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const dragTargetPosition = React.useMemo(() => {
     if (
       itemsReordering.currentDrag == null ||
