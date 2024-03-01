@@ -76,7 +76,7 @@ describe('<DateCalendar /> - Timezone', () => {
             .filter((button) => button.tagName.toLowerCase() === 'button');
 
           // check the number of the button rendered equal
-          expect(reRenderButtons.length).equals(renderButtons);
+          expect(reRenderButtons.length).equals(renderButtons.length);
         });
       });
     });
