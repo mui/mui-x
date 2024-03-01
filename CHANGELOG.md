@@ -76,7 +76,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 
 - [core] Allow local docs next.js settings (#12227) @romgrk
 - [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
-- [core] Remove window. reference for common globals @oliviertassinari
+- [core] Remove `window.` reference for common globals @oliviertassinari
 - [core] Use runtime agnostic setTimeout type @oliviertassinari
 - [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
 - [docs-infra] Fix missing non breaking spaces @oliviertassinari
