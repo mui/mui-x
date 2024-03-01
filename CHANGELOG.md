@@ -28,7 +28,6 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Fix `onColumnWidthChange` called before autosize affects column width (#12140) @shaharyar-shamshi
 - [DataGrid] Fix boolean "is" filter (#12117) @shaharyar-shamshi
 - [DataGrid] Fix `upsertFilterItems` removing filters that are not part of the update (#11954) @gitstart
-- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi (#12192) @LukasTy
 
 #### `@mui/x-data-grid-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
