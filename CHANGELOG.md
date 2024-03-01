@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### `@mui/x-data-grid@6.19.6`
 
-- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft) 
 
 #### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -31,6 +31,7 @@ Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
 ### Docs
 
 - [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
 - [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
 
 ## 6.19.5
