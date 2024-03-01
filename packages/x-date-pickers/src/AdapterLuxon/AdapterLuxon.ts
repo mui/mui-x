@@ -501,6 +501,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public setMonthYearDate = (value: DateTime, year: number, month: number, date: number) => {
-    return value.set({ year, month, day: date });
+    // See https://github.com/moment/luxon/blob/master/docs/moment.md#major-functional-differences
+    // also refer getMonth() method it returns  -1 month
+    return value.set({ year, month: month + 1, day: date });
   };
 }

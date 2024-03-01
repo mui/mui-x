@@ -205,7 +205,7 @@ describe('<AdapterLuxon />', () => {
 
       it('should set month, year, and date correctly', () => {
         const initialDate = adapter.date('2022-01-15T09:35:00')!;
-        const newDate = adapter.setMonthYearDate(initialDate, 1400, 1, 25);
+        const newDate = adapter.setMonthYearDate(initialDate, 1400, 0, 25);
 
         const v7Response = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
