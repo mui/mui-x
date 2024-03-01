@@ -61,7 +61,7 @@ describe('<DateCalendar /> - Timezone', () => {
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
-        it('on timezone change the rendered UI should be same', () => {
+        it('on timezone change the rendered UI should display the Calendar of same month', () => {
           // Render the component with initial timezone prop
           const { rerender } = render(<DateCalendar timezone="UTC" />);
 
@@ -77,6 +77,33 @@ describe('<DateCalendar /> - Timezone', () => {
 
           // check the number of the button rendered equal
           expect(reRenderButtons.length).equals(renderButtons.length);
+        });
+
+        it('on timezone change the difference between the selected date change should be at max 1', () => {
+          // Render the component with initial timezone prop
+          const { rerender } = render(<DateCalendar timezone="UTC" />);
+
+          const renderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          const mid = renderButtons.length / 2;
+
+          userEvent.mousePress(renderButtons[mid]);
+
+          rerender(<DateCalendar timezone={timezone} />);
+
+          const reRenderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          const selectedButtonIndex = reRenderButtons.findIndex((button) =>
+            button.classList.contains('Mui-selected'),
+          );
+
+          const differenceOfIndex = Math.abs(mid - selectedButtonIndex);
+
+          expect(differenceOfIndex).lessThanOrEqual(1);
         });
       });
     });
