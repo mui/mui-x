@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 29, 2024_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add `getSortComparator` for more advanced sorting behaviors (#12215) @cherniavskii
 - 🚀 Add `use client` directive to the Grid packages (#11803) @MBilalShafi
