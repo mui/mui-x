@@ -32,7 +32,7 @@ Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
 ### Docs
 
 - [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
-- [I10n] Improve Chinese (zh-CN) locale (@headironc) (#12250) @github-actions[bot]
+- [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
 
 ## 6.19.5
 
