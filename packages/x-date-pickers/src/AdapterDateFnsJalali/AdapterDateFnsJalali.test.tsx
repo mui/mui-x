@@ -114,7 +114,7 @@ describe('<AdapterDateFnsJalali />', () => {
         enableAccessibleFieldDOMStructure: true,
         value: newDate,
       });
-      expectFieldValueV7(v7Response.getSectionsContainer(), '1400/01/25 09:35');
+      expectFieldValueV7(v7Response.getSectionsContainer(), '01/25/1400 09:35 AM');
     });
   });
 });
