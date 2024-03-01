@@ -45,7 +45,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const handleDragEnd = React.useCallback(
     (nodeId: string) => {
-      if (state.itemsReordering == null) {
+      if (state.itemsReordering == null || state.itemsReordering.draggedNodeId !== nodeId) {
         return;
       }
 

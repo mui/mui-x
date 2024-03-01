@@ -17,7 +17,7 @@ export interface UseTreeViewNodesInstance {
   moveItem: (nodeId: string, newParent: string | null, newIndex: number) => void;
 }
 
-export interface UseTreeViewNodesParameters<R extends {}> {
+export interface UseTreeViewNodesParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -51,7 +51,7 @@ export interface UseTreeViewNodesParameters<R extends {}> {
   getItemId?: (item: R) => TreeViewItemId;
 }
 
-export type UseTreeViewNodesDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewNodesDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewNodesParameters<R>,
   'disabledItemsFocusable'
 >;
@@ -67,7 +67,7 @@ export interface TreeViewNodeIdAndChildren {
   children?: TreeViewNodeIdAndChildren[];
 }
 
-export interface UseTreeViewNodesState<R extends {}> {
+export interface UseTreeViewNodesState<R extends { children?: R[] }> {
   nodeTree: TreeViewNodeIdAndChildren[];
   nodeMap: TreeViewNodeMap;
   itemList: readonly R[];

@@ -10,6 +10,7 @@ import {
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem } from '../../../models';
+import {removeItemFromTree} from "./useTreeViewNodes.utils";
 
 const updateState = ({
   items,
@@ -135,6 +136,8 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   const moveItem = React.useCallback(
     (nodeId: string, newParent: string | null, newIndex: number) => {
       const node = instance.getNode(nodeId);
+
+      removeItemFromTree({ instance, node, state })
 
       setState((prevState) => {
         if (node.parentId !== newParent) {

@@ -310,7 +310,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const idAttribute = instance.getTreeItemId(nodeId, id);
   const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
 
-  const reorderResponse = useTreeItemReorder(nodeId);
+  const reorderResponse = useTreeItemReorder(nodeId, handleRootRef);
 
   const item = (
     <TreeItemRoot

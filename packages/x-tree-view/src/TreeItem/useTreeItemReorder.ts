@@ -2,13 +2,19 @@ import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals';
 
-export const useTreeItemReorder = (nodeId: string) => {
+export const useTreeItemReorder = (nodeId: string, rootRef: React.RefObject<HTMLLIElement>) => {
   const { itemsReordering } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const rootProps: React.HTMLAttributes<HTMLLIElement> = itemsReordering.enabled
     ? {
         draggable: true,
-        onDragStart: () => itemsReordering.handleDragStart(nodeId),
+        onDragStart: (event) => {
+          if (event.target !== rootRef.current) {
+            return
+          }
+
+          itemsReordering.handleDragStart(nodeId);
+        },
         onDragEnd: () => itemsReordering.handleDragEnd(nodeId),
       }
     : {};
