@@ -596,7 +596,7 @@ describe('<DateRangeCalendar />', () => {
         );
 
         fireEvent.click(getPickerDay('10', 'January 2019'));
-        fireEvent.click(getPickerDay('19', 'Febuary 2019'));
+        fireEvent.click(getPickerDay('19', 'February 2019'));
 
         const renderButtons = screen
           .getAllByRole('gridcell')
