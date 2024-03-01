@@ -26,7 +26,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Refactor: row virtualization & rendering (#12247) @romgrk
 - [DataGrid] Improve performance by removing `querySelector` call (#12229) @romgrk
 - [DataGrid] Fix `onColumnWidthChange` called before autosize affects column width (#12140) @shaharyar-shamshi
-- [DataGrid] boolean filter "is" uses string version of true for determining truthiness (#12117) @shaharyar-shamshi
+- [DataGrid] Fix boolean "is" filter (#12117) @shaharyar-shamshi
 - [DataGrid] Fix `upsertFilterItems` removing filters that are not part of the update (#11954) @gitstart
 - [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi (#12192) @LukasTy
 
