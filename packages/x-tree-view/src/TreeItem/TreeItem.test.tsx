@@ -35,6 +35,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
     handleDragStart: () => {},
     handleDragOver: () => {},
     handleDragEnd: () => {},
+    currentDrag: null,
   },
 };
 
