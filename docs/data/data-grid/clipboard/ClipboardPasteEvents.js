@@ -44,7 +44,7 @@ export default function ClipboardPasteEvents() {
         initialState={initialState}
         cellSelection
         processRowUpdate={processRowUpdate}
-        onClipboardPasteBeforeStart={confirmPaste}
+        onBeforeClipboardPasteStart={confirmPaste}
         onClipboardPasteStart={() => setLoading(true)}
         onClipboardPasteEnd={() => setLoading(false)}
         ignoreValueFormatterDuringExport

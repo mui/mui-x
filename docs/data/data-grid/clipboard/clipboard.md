@@ -87,18 +87,18 @@ For convenience, you can also listen to these events using their respective prop
 - `onClipboardPasteStart`
 - `onClipboardPasteEnd`
 
-Additionally, there is the `onClipboardPasteBeforeStart` prop, which is called before the clipboard paste operation starts
+Additionally, there is the `onBeforeClipboardPasteStart` prop, which is called before the clipboard paste operation starts
 and can be used to cancel or confirm the paste operation:
 
 ```tsx
-const onClipboardPasteBeforeStart = async () => {
+const onBeforeClipboardPasteStart = async () => {
   const confirmed = window.confirm('Are you sure you want to paste?');
   if (!confirmed) {
     throw new Error('Paste operation cancelled');
   }
 };
 
-<DataGridPremium onClipboardPasteBeforeStart={onClipboardPasteBeforeStart} />;
+<DataGridPremium onBeforeClipboardPasteStart={onBeforeClipboardPasteStart} />;
 ```
 
 The demo below calls [`window.confirm()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm) before pasting. If confirmed, it displays a loading indicator during the paste operation.
