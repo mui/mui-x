@@ -71,6 +71,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 - [docs] Fix image layout shift when loading @oliviertassinari
 - [docs] Match Material UI repo comment for redirections @oliviertassinari
 - [docs] Non breaking spaces @oliviertassinari
+- [docs] Polish the Date Picker playground (#11869) @zanivan
 - [docs] Standardize WAI-ARIA references @oliviertassinari
 
 ### Core
