@@ -48,7 +48,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.5`, plus:
 #### `@mui/x-date-pickers@7.0.0-beta.5`
 
 - [pickers] Fix toolbar components props handling (#12211) @LukasTy
-- [DateTimeRangePicker] Fix validation behavior (#12243) @LukasTy
 - [l10n] Improve Chinese (zh-CN) locale (#12245) @headironc
 - [l10n] Improve Korean (ko-KR) locale (#12192) @Luzi
 
