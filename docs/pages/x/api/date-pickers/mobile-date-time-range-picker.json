@@ -270,6 +270,12 @@
       "class": null
     },
     {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -315,12 +321,6 @@
       "class": null
     },
     {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
-      "class": null
-    },
-    {
       "name": "mobilePaper",
       "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
       "default": "Paper from '@mui/material'.",
@@ -335,7 +335,10 @@
     { "name": "field", "description": "", "class": null }
   ],
   "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiMobileDateTimeRangePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateTimeRangePicker/MobileDateTimeRangePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",

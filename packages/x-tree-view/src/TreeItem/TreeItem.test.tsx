@@ -178,6 +178,7 @@ describe('<TreeItem />', () => {
 
     expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
   });
+
   it('should treat multiple empty conditional arrays as empty', () => {
     const { getByTestId } = render(
       <SimpleTreeView defaultExpandedNodes={['1']}>
@@ -196,6 +197,7 @@ describe('<TreeItem />', () => {
 
     expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
   });
+
   it('should treat one conditional empty and one conditional with results as expandable', () => {
     const { getByTestId } = render(
       <SimpleTreeView defaultExpandedNodes={['1', '2']}>
@@ -212,6 +214,7 @@ describe('<TreeItem />', () => {
 
     expect(getByTestId('2')).to.have.attribute('aria-expanded', 'true');
   });
+
   it('should handle edge case of nested array of array', () => {
     const { getByTestId } = render(
       <SimpleTreeView defaultExpandedNodes={['1', '2']}>

@@ -18,6 +18,9 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridi
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
+  /**
+   * Available views.
+   */
   views: readonly TView[];
   disabled?: boolean;
   readOnly?: boolean;
