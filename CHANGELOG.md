@@ -49,7 +49,8 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.5`, plus:
 
 - [pickers] Fix toolbar components props handling (#12211) @LukasTy
 - [DateTimeRangePicker] Fix validation behavior (#12243) @LukasTy
-- [I10n] Improve Chinese (zh-CN) locale (#12245) @headironc
+- [l10n] Improve Chinese (zh-CN) locale (#12245) @headironc
+- [l10n] Improve Korean (ko-KR) locale (#12192) @Luzi
 
 #### `@mui/x-date-pickers-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
