@@ -5,12 +5,12 @@ import {
   UseTreeViewNodesSignature,
   UseTreeViewNodesDefaultizedParameters,
   TreeViewNodeMap,
-  TreeViewNodeIdAndChildren,
   UseTreeViewNodesState,
+  TreeViewNodeTree,
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
-import { moveItemInTree } from './useTreeViewNodes.utils';
+import { moveItemInTree, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewNodes.utils';
 
 const updateState = ({
   items,
@@ -22,11 +22,9 @@ const updateState = ({
   'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
 >): UseTreeViewNodesState<any> => {
   const nodeMap: TreeViewNodeMap = {};
-  const processItem = (
-    item: TreeViewBaseItem,
-    index: number,
-    parentId: string | null,
-  ): TreeViewNodeIdAndChildren => {
+  const nodeTree: TreeViewNodeTree = { [TREE_VIEW_ROOT_PARENT_ID]: [] };
+
+  const processItem = (item: TreeViewBaseItem, index: number, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -72,13 +70,13 @@ const updateState = ({
       disabled: isItemDisabled ? isItemDisabled(item) : false,
     };
 
-    return {
-      id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
-    };
+    nodeTree[parentId ?? TREE_VIEW_ROOT_PARENT_ID].push(id);
+    nodeTree[id] = [];
+
+    item.children?.forEach((child, childIndex) => processItem(child, childIndex, id));
   };
 
-  const nodeTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  items.forEach((item, itemIndex) => processItem(item, itemIndex, null));
 
   return {
     nodeMap,
@@ -179,20 +177,19 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   ]);
 
   const getNodesToRender = React.useCallback(() => {
-    const getPropsFromNodeId = ({
-      id,
-      children,
-    }: TreeViewNodeIdAndChildren): ReturnType<typeof instance.getNodesToRender>[number] => {
+    const getPropsFromNodeId = (
+      id: TreeViewItemId,
+    ): ReturnType<typeof instance.getNodesToRender>[number] => {
       const node = state.nodeMap[id];
       return {
         label: node.label!,
         nodeId: node.id,
         id: node.idAttribute,
-        children: children?.map(getPropsFromNodeId),
+        children: state.nodeTree[id].map(getPropsFromNodeId),
       };
     };
 
-    return state.nodeTree.map(getPropsFromNodeId);
+    return state.nodeTree[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromNodeId);
   }, [instance, state.nodeMap, state.nodeTree]);
 
   populateInstance<UseTreeViewNodesSignature>(instance, {

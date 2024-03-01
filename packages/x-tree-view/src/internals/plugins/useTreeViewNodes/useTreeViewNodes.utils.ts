@@ -1,24 +1,7 @@
 import { TreeViewItemId } from '../../../models';
-import { TreeViewNode } from '../../models';
-import {
-  TreeViewNodeIdAndChildren,
-  TreeViewNodeMap,
-  UseTreeViewNodesState,
-} from './useTreeViewNodes.types';
+import { TreeViewNodeMap, UseTreeViewNodesState } from './useTreeViewNodes.types';
 
-/**
- * Determines the list of ids needed to reach an item in the tree.
- */
-const getNodePathInTree = ({ node, nodeMap }: { node: TreeViewNode; nodeMap: TreeViewNodeMap }) => {
-  const path: TreeViewItemId[] = [];
-  let currentAncestor = node;
-  while (currentAncestor.parentId != null) {
-    path.unshift(currentAncestor.parentId);
-    currentAncestor = nodeMap[currentAncestor.parentId];
-  }
-
-  return path;
-};
+export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
 
 export const moveItemInTree = <R extends { children?: R[] }>({
   nodeToMoveId,
@@ -33,9 +16,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
 }): UseTreeViewNodesState<R> => {
   const nodeToMove = state.nodeMap[nodeToMoveId];
 
-  /**
-   * 1. Update the `nodeMap`.
-   */
+  // 1. Update the `nodeMap`.
   const nodeMap: TreeViewNodeMap = {};
   /* eslint-disable no-lonely-if */
   Object.keys(state.nodeMap).forEach((nodeId) => {
@@ -52,7 +33,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
           if (node.index > nodeToMove.index) {
             indexShift -= 1;
           }
-          if (node.index > newIndex) {
+          if (node.index > newIndex || (node.index === newIndex && nodeToMove.index > newIndex)) {
             indexShift += 1;
           }
         }
@@ -76,38 +57,21 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   });
   /* eslint-enable no-lonely-if */
 
-  /**
-   * 2. Update the `nodeTree`.
-   */
-  let nodeTree: TreeViewNodeIdAndChildren[];
+  // 2. Update the `nodeTree`.
+  const nodeTree = { ...state.nodeTree };
+  const oldParentKey = nodeToMove.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+  const newParentKey = newParentId ?? TREE_VIEW_ROOT_PARENT_ID;
+
   if (nodeToMove.parentId === newParentId) {
-    nodeTree = state.nodeTree;
+    const updatedChildren = [...nodeTree[oldParentKey]];
+    updatedChildren.splice(nodeToMove.index, 1);
+    updatedChildren.splice(newIndex, 0, nodeToMoveId);
+    nodeTree[nodeToMove.parentId ?? TREE_VIEW_ROOT_PARENT_ID] = updatedChildren;
   } else {
-    const walkTree = (
-      nodeIdAndChildren: TreeViewNodeIdAndChildren[],
-      path: string[],
-    ): TreeViewNodeIdAndChildren[] => {
-      if (path.length === 0) {
-        return nodeIdAndChildren.filter((el) => el.id !== nodeToMoveId);
-      }
-
-      const [parentId, ...remainingPath] = path;
-      return nodeIdAndChildren.map((el) => {
-        if (el.id === parentId) {
-          return {
-            id: el.id,
-            children: walkTree(el.children!, remainingPath),
-          };
-        }
-
-        return el;
-      });
-    };
-
-    nodeTree = walkTree(
-      state.nodeTree,
-      getNodePathInTree({ node: nodeToMove, nodeMap: state.nodeMap }),
-    );
+    nodeTree[oldParentKey] = nodeTree[oldParentKey].filter((nodeId) => nodeId !== nodeToMoveId);
+    const updatedNewParentChildren = [...nodeTree[newParentKey]];
+    updatedNewParentChildren.splice(newIndex, 0, nodeToMoveId);
+    nodeTree[newParentKey] = updatedNewParentChildren;
   }
 
   return {
