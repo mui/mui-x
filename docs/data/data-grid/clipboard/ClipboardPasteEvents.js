@@ -2,12 +2,11 @@ import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const confirmPaste = () => {
+const confirmPaste = async () => {
   const confirmed = window.confirm('Are you sure you want to paste?');
   if (!confirmed) {
-    return Promise.reject();
+    throw new Error('The paste was cancelled');
   }
-  return undefined;
 };
 
 export default function ClipboardPasteEvents() {
