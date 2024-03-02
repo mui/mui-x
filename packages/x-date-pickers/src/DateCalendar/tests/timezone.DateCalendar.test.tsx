@@ -65,18 +65,34 @@ describe('<DateCalendar /> - Timezone', () => {
           // Render the component with initial timezone prop
           const { rerender } = render(<DateCalendar timezone="UTC" />);
 
-          const renderButtons = screen
-            .getAllByRole('gridcell')
-            .filter((button) => button.tagName.toLowerCase() === 'button');
+          // Create a map of buttons with their indices for the initial render
+          const renderButtonsMap = {};
+          Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
+            const element = screen.getByRole('gridcell', { name: key });
+            if (element.tagName.toLowerCase() === 'button') {
+              renderButtonsMap[index] = element;
+            }
+          });
 
+          // Rerender the component with a different timezone prop
           rerender(<DateCalendar timezone={timezone} />);
 
-          const reRenderButtons = screen
-            .getAllByRole('gridcell')
-            .filter((button) => button.tagName.toLowerCase() === 'button');
+          // Create a map of buttons with their indices for the rerender
+          const reRenderButtonsMap = {};
+          Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
+            const element = screen.getByRole('gridcell', { name: key });
+            if (element.tagName.toLowerCase() === 'button') {
+              reRenderButtonsMap[index] = element;
+            }
+          });
 
-          // check the number of the button rendered equal
-          expect(reRenderButtons.length).equals(renderButtons.length);
+          // Ensure the number of buttons and their innerText are consistent
+          expect(Object.keys(reRenderButtonsMap).length).equals(
+            Object.keys(renderButtonsMap).length,
+          );
+          Object.keys(renderButtonsMap).forEach((index) => {
+            expect(reRenderButtonsMap[index].innerText).equals(renderButtonsMap[index].innerText);
+          });
         });
 
         it('on timezone change the difference between the selected date change should be at max 1', () => {
