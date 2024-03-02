@@ -5,8 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
-import { styled } from '@mui/system';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -41,13 +40,6 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
-
-const InfiniteLoadingTriggerElement = styled('div')({
-  position: 'sticky',
-  left: 0,
-  width: 0,
-  height: 0,
-});
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext();
@@ -214,9 +206,6 @@ export const useGridVirtualScroller = () => {
   const handleTouchMove = useEventCallback((event: React.TouchEvent) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   });
-
-  const isInfiniteLoadingEnabled =
-    (rootProps as any).rowsLoadingMode === 'client' && !!(rootProps as any).onRowsScrollEnd;
 
   const getRows = (
     params: {
@@ -387,15 +376,8 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
-      if (isInfiniteLoadingEnabled && isLastVisible) {
-        rows.push(
-          <InfiniteLoadingTriggerElement
-            ref={(apiRef as any).current.unstable_infiniteLoadingTriggerRef}
-            // Force rerender on last row change to start observing the new trigger
-            key={`trigger-${id}`}
-            role="presentation"
-          />,
-        );
+      if (isLastVisible) {
+        rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
       }
     });
     return rows;

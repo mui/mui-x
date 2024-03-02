@@ -8,10 +8,18 @@ import {
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { styled } from '@mui/system';
+import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/models/api/gridInfiniteLoaderApi';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridInfiniteLoaderApi } from './gridInfniteLoaderInterface';
+
+const InfiniteLoadingTriggerElement = styled('div')({
+  position: 'sticky',
+  left: 0,
+  width: 0,
+  height: 0,
+});
 
 /**
  * @requires useGridColumns (state)
@@ -47,9 +55,9 @@ export const useGridInfiniteLoader = (
       if (observer.current) {
         if (triggerElement.current) {
           observer.current?.unobserve(triggerElement.current);
+          // do not observe this node anymore
+          triggerElement.current = null;
         }
-        // do not observe this node anymore
-        triggerElement.current = null;
       }
     }
   });
@@ -87,8 +95,8 @@ export const useGridInfiniteLoader = (
     dimensions.scrollbarSize,
   ]);
 
-  const triggerRef = React.useCallback<GridInfiniteLoaderApi['unstable_infiniteLoadingTriggerRef']>(
-    (node) => {
+  const triggerRef = React.useCallback(
+    (node: HTMLElement | null) => {
       // Prevent the infite loading working in combination with lazy loading
       if (!isEnabled) {
         return;
@@ -108,10 +116,29 @@ export const useGridInfiniteLoader = (
     [isEnabled],
   );
 
-  const infiteLoaderApi: GridInfiniteLoaderApi = {
-    unstable_infiniteLoadingTriggerRef: triggerRef,
+  const getInfiniteLoadingTriggerElement = React.useCallback<
+    NonNullable<GridInfiniteLoaderPrivateApi['getInfiniteLoadingTriggerElement']>
+  >(
+    ({ lastRowId }) => {
+      if (!isEnabled) {
+        return null;
+      }
+      return (
+        <InfiniteLoadingTriggerElement
+          ref={triggerRef}
+          // Force rerender on last row change to start observing the new trigger
+          key={`trigger-${lastRowId}`}
+          role="presentation"
+        />
+      );
+    },
+    [isEnabled, triggerRef],
+  );
+
+  const infiteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
+    getInfiniteLoadingTriggerElement,
   };
 
-  useGridApiMethod(apiRef, infiteLoaderApi, 'public');
+  useGridApiMethod(apiRef, infiteLoaderPrivateApi, 'private');
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };
