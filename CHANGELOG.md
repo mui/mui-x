@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### `@mui/x-data-grid@6.19.6`
 
-- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft) 
+- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft)
 
 #### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
