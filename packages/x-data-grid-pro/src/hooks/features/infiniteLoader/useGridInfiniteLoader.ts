@@ -7,7 +7,7 @@ import {
   gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
-import { unstable_useEventCallback } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -32,7 +32,7 @@ export const useGridInfiniteLoader = (
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
-  const handleLoadMoreRows = unstable_useEventCallback(([entry]: IntersectionObserverEntry[]) => {
+  const handleLoadMoreRows = useEventCallback(([entry]: IntersectionObserverEntry[]) => {
     const currentRatio = entry.intersectionRatio;
     const isIntersecting = entry.isIntersecting;
 
