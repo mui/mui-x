@@ -67,12 +67,11 @@ describe('<DateCalendar /> - Timezone', () => {
 
           // Create a map of buttons with their indices for the initial render
           const renderButtonsMap = {};
-          Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
-            const element = screen.getByRole('gridcell', { name: key });
-            if (element.tagName.toLowerCase() === 'button') {
-              // Extract the number from the inner text
-              if (element && element.textContent) {
-                const number = parseInt(element.textContent.trim(), 10);
+          screen.getAllByRole('gridcell').forEach((element, index) => {
+            if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+              const numberMatch = element.textContent.trim().match(/\d+/);
+              if (numberMatch) {
+                const number = parseInt(numberMatch[0], 10);
                 renderButtonsMap[index] = number;
               }
             }
@@ -83,12 +82,12 @@ describe('<DateCalendar /> - Timezone', () => {
 
           // Create a map of buttons with their indices for the rerender
           const reRenderButtonsMap = {};
-          Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
-            const element = screen.getByRole('gridcell', { name: key });
-            if (element.tagName.toLowerCase() === 'button') {
-              // Extract the number from the inner text
-              if (element && element.textContent) {
-                const number = parseInt(element.textContent.trim(), 10);
+
+          screen.getAllByRole('gridcell').forEach((element, index) => {
+            if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+              const numberMatch = element.textContent.trim().match(/\d+/);
+              if (numberMatch) {
+                const number = parseInt(numberMatch[0], 10);
                 reRenderButtonsMap[index] = number;
               }
             }
