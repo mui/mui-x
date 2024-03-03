@@ -47,7 +47,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.18.x',
+    title: 'MUI X v6.18.0',
     description: 'New stable components, polished features, better performance, and more.',
     date: new Date(2023, 10, 13),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
@@ -147,7 +147,7 @@ const entries = [
     ],
   },
   {
-    title: 'Date Pickers v5.0.0',
+    title: 'MUI X Date Pickers v5.0.0',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
     date: new Date(2022, 8, 22),
@@ -168,7 +168,7 @@ const entries = [
     ],
   },
   {
-    title: 'Data Grid v5.15',
+    title: 'MUI X Data Grid v5.15.0',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
     date: new Date(2022, 7, 12),
