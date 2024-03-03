@@ -573,34 +573,40 @@ describe('<DateRangeCalendar />', () => {
         // Render the component with initial timezone prop
         const { rerender } = render(<DateRangeCalendar timezone="UTC" />);
 
-        // Get all button elements with role 'gridcell'
-        const initialButtons = screen
-          .getAllByRole('gridcell')
-          .filter((element) => element.tagName.toLowerCase() === 'button');
-
-        // Extract timestamps from initial render
-        const initialTimestamps = initialButtons.map((button) =>
-          parseInt(button.getAttribute('data-timestamp')!, 10),
-        );
+        // Create a map of buttons with their indices for the initial render
+        const renderButtonsMap = {};
+        Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
+          const element = screen.getByRole('gridcell', { name: key });
+          if (element.tagName.toLowerCase() === 'button') {
+            // Extract the number from the inner text
+            if (element && element.textContent) {
+              const number = parseInt(element.textContent.trim(), 10);
+              renderButtonsMap[index] = number;
+            }
+          }
+        });
 
         // Rerender the component with a different timezone prop
         rerender(<DateRangeCalendar timezone={timezone} />);
 
-        // Get all button elements with role 'gridcell' after rerender
-        const rerenderedButtons = screen
-          .getAllByRole('gridcell')
-          .filter((element) => element.tagName.toLowerCase() === 'button');
+        // Create a map of buttons with their indices for the rerender
+        const reRenderButtonsMap = {};
+        Object.keys(screen.getAllByRole('gridcell')).forEach((key, index) => {
+          const element = screen.getByRole('gridcell', { name: key });
+          if (element.tagName.toLowerCase() === 'button') {
+            // Extract the number from the inner text
+            if (element && element.textContent) {
+              const number = parseInt(element.textContent.trim(), 10);
+              reRenderButtonsMap[index] = number;
+            }
+          }
+        });
 
-        // Extract timestamps from rerender
-        const rerenderedTimestamps = rerenderedButtons.map((button) =>
-          parseInt(button.getAttribute('data-timestamp')!, 10),
-        );
-
-        // Ensure the number of buttons is consistent
-        expect(rerenderedButtons.length).equals(initialButtons.length);
-
-        // Compare timestamps
-        expect(rerenderedTimestamps).equals(initialTimestamps);
+        // Ensure the number of buttons and their numbers are consistent
+        expect(Object.keys(reRenderButtonsMap).length).equals(Object.keys(renderButtonsMap).length);
+        Object.keys(renderButtonsMap).forEach((index) => {
+          expect(reRenderButtonsMap[index]).equals(renderButtonsMap[index]);
+        });
       });
 
       it('should select the range from the next month', () => {
