@@ -117,6 +117,11 @@ const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObjec
   }),
 );
 
+const PivotSectionTitle = styled('div')(({ theme }) => ({
+  ...theme.typography.caption,
+  textTransform: 'uppercase',
+}));
+
 const Placeholder = styled('div')({
   height: 50,
   width: '100%',
@@ -281,7 +286,7 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section="rows"
       >
-        <div>Rows</div>
+        <PivotSectionTitle>Rows</PivotSectionTitle>
         {pivotModel.rows.length === 0 && <Placeholder />}
         {pivotModel.rows.length > 0 &&
           pivotModel.rows.map((field) => {
@@ -299,7 +304,7 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section="columns"
       >
-        <div>Columns</div>
+        <PivotSectionTitle>Columns</PivotSectionTitle>
         {pivotModel.columns.length === 0 && <Placeholder />}
         {pivotModel.columns.length > 0 &&
           pivotModel.columns.map(({ field, sort }) => {
@@ -317,7 +322,7 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section="values"
       >
-        <div>Values</div>
+        <PivotSectionTitle>Values</PivotSectionTitle>
         {pivotModel.values.length === 0 && <Placeholder />}
         {pivotModel.values.length > 0 &&
           pivotModel.values.map(({ field, aggFunc }) => {
@@ -334,7 +339,7 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section={null}
       >
-        <div>Available fields</div>
+        <PivotSectionTitle>Available fields</PivotSectionTitle>
         {availableFields.map((field) => {
           return (
             <GridFieldItem key={field} field={field} modelKey={null}>
