@@ -1,6 +1,8 @@
 {
   "props": {
-    "apiRef": { "type": { "name": "shape", "description": "{ current?: { focusNode: func } }" } },
+    "apiRef": {
+      "type": { "name": "shape", "description": "{ current?: { focusNode: func, getItem: func } }" }
+    },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedNodes": {

@@ -8,14 +8,18 @@ interface TreeViewNodeProps {
   children?: TreeViewNodeProps[];
 }
 
-export interface UseTreeViewNodesInstance {
+export interface UseTreeViewNodesInstance<R extends {}> {
   getNode: (nodeId: string) => TreeViewNode;
+  getItem: (nodeId: string) => R;
   getNodesToRender: () => TreeViewNodeProps[];
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
   moveItem: (nodeId: TreeViewItemId, newParent: string | null, newIndex: number) => void;
 }
+
+export interface UseTreeViewNodesPublicAPI<R extends {}>
+  extends Pick<UseTreeViewNodesInstance<R>, 'getItem'> {}
 
 export interface UseTreeViewNodesParameters<R extends { children?: R[] }> {
   /**
@@ -67,10 +71,12 @@ export interface TreeViewNodeIdAndChildren {
   children?: TreeViewNodeIdAndChildren[];
 }
 
-export interface UseTreeViewNodesState<R extends { children?: R[] }> {
-  nodeTree: TreeViewNodeTree;
-  nodeMap: TreeViewNodeMap;
-  itemList: readonly R[];
+export interface UseTreeViewNodesState<R extends {}> {
+  nodes: {
+    nodeTree: TreeViewNodeTree;
+    nodeMap: TreeViewNodeMap;
+    itemMap: TreeViewItemMap<R>;
+  };
 }
 
 interface UseTreeViewNodesContextValue
@@ -79,7 +85,8 @@ interface UseTreeViewNodesContextValue
 export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
   params: UseTreeViewNodesParameters<any>;
   defaultizedParams: UseTreeViewNodesDefaultizedParameters<any>;
-  instance: UseTreeViewNodesInstance;
+  instance: UseTreeViewNodesInstance<any>;
+  publicAPI: UseTreeViewNodesPublicAPI<any>;
   events: UseTreeViewNodesEventLookup;
   state: UseTreeViewNodesState<any>;
   contextValue: UseTreeViewNodesContextValue;
@@ -88,3 +95,5 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
 export type TreeViewNodeMap = { [nodeId: string]: TreeViewNode };
 
 export type TreeViewNodeTree = { [nodeId: string]: TreeViewItemId[] };
+
+export type TreeViewItemMap<R extends {}> = { [nodeId: string]: R };

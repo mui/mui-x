@@ -70,7 +70,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     const node = instance.getNode(nodeId);
     const nodeElement = document.getElementById(instance.getTreeItemId(nodeId, node.idAttribute));
     if (nodeElement) {
-      nodeElement.focus({ preventScroll: true });
+      nodeElement.focus();
     }
 
     setFocusedNodeId(nodeId);

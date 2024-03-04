@@ -21,7 +21,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
-import { grey } from '@mui/material/colors';
 import pick from 'lodash/pick';
 import {
   useCustomizationPlayground,
@@ -35,8 +34,9 @@ import {
 
 const PlaygroundWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
+  border: '1px solid',
+  borderColor: alpha(theme.palette.grey[500], 0.2),
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${grey[200]}`,
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   justifyContent: 'space-between',
@@ -54,7 +54,8 @@ const PlaygroundDemoArea = styled('div')(({ theme }) => ({
 const PlaygroundConfigArea = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: alpha(theme.palette.primary.light, 0.05),
-  border: `1px solid ${grey[200]}`,
+  border: '1px solid',
+  borderColor: alpha(theme.palette.grey[500], 0.2),
   borderRadius: '4px',
   [theme.breakpoints.down('lg')]: {
     display: 'flex',
@@ -74,45 +75,62 @@ const ConfigSectionWrapper = styled('div')(({ theme }) => ({
 }));
 
 const ConfigLabel = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacing(4),
   marginBottom: theme.spacing(1),
   fontWeight: theme.typography.fontWeightBold,
-  fontSize: theme.typography.pxToRem(12),
-  textTransform: 'uppercase',
+  fontSize: theme.typography.pxToRem(14),
   letterSpacing: '.08rem',
+  '&:first-of-type': {
+    marginTop: theme.spacing(1),
+  },
+  '&:last-of-type': {
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const ConfigItemLabel = styled(Typography)(({ theme }) => ({
   ...theme.typography.caption,
   letterSpacing: '.08rem',
-  textTransform: 'uppercase',
   color: theme.palette.text.secondary,
-  fontSize: theme.typography.pxToRem(11),
+  fontSize: theme.typography.pxToRem(12),
   fontweight: 600,
 }));
 
 const SlotItemsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
   flexWrap: 'wrap',
 }));
 
 const SlotItem = styled(Button)(({ theme }) => ({
   borderWidth: 1,
-  borderRadius: theme.spacing(2),
+  borderRadius: '99px',
   textTransform: 'none',
   padding: theme.spacing(0.1, 1),
 }));
 
 const TabsWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'end',
   justifyContent: 'space-between',
-  marginBottom: theme.spacing(1),
-  gap: theme.spacing(1),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    gap: theme.spacing(4),
+  },
+}));
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  mt: 1,
+  mb: '-16px',
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: '60%',
+    width: '100%',
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -124,13 +142,18 @@ type TabsProps = {
 
 function StylingApproachTabs({ value, onChange, options }: TabsProps) {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={onChange} aria-label="Customization option">
+    <div>
+      <StyledTabs
+        value={value}
+        onChange={onChange}
+        aria-label="Customization option"
+        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+      >
         {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
           <Tab value={option} key={option} label={options[option]} />
         ))}
-      </Tabs>
-    </Box>
+      </StyledTabs>
+    </div>
   );
 }
 
@@ -154,7 +177,7 @@ function StylingRecommendation({
 
   if (isMobile) {
     return (
-      <Alert severity={type} sx={{ width: '100%', p: 0.5 }}>
+      <Alert severity={type} sx={{ p: 1 }}>
         {displayedMessage}
       </Alert>
     );
@@ -163,7 +186,7 @@ function StylingRecommendation({
 
   return (
     <Tooltip title={displayedMessage}>
-      <Chip color={type} label={labels[type]} />
+      <Chip size="small" color={type} label={labels[type]} />
     </Tooltip>
   );
 }
@@ -268,6 +291,7 @@ function NumericTokensSlider({
             max={20}
             marks
             step={1}
+            valueLabelDisplay="auto"
           />
         </React.Fragment>
       ))}
@@ -308,25 +332,6 @@ const CustomizationPlayground = function CustomizationPlayground({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {selectedDemo && customizationOptions && selectedCustomizationOption && (
-        <BrandingProvider>
-          <TabsWrapper>
-            <StylingApproachTabs
-              onChange={(_e, newValue) => {
-                setSelectedCustomizationOption(newValue);
-              }}
-              value={selectedCustomizationOption}
-              options={customizationOptions}
-            />
-            {selectedExample && (
-              <StylingRecommendation
-                type={selectedExample.type}
-                message={selectedExample?.comments}
-              />
-            )}
-          </TabsWrapper>{' '}
-        </BrandingProvider>
-      )}
       <PlaygroundWrapper>
         <PlaygroundDemoArea>
           <StyledChild sx={{ width: 'fit-content', minHeight: '390px' }}>
@@ -400,7 +405,25 @@ const CustomizationPlayground = function CustomizationPlayground({
           </BrandingProvider>
         )}
       </PlaygroundWrapper>
-
+      {selectedDemo && customizationOptions && selectedCustomizationOption && (
+        <BrandingProvider>
+          <TabsWrapper>
+            <StylingApproachTabs
+              onChange={(_e, newValue) => {
+                setSelectedCustomizationOption(newValue);
+              }}
+              value={selectedCustomizationOption}
+              options={customizationOptions}
+            />
+            {selectedExample && (
+              <StylingRecommendation
+                type={selectedExample.type}
+                message={selectedExample?.comments}
+              />
+            )}
+          </TabsWrapper>
+        </BrandingProvider>
+      )}
       {shouldBeInteractive && (
         <HighlightedCode code={codeExample} language="js" sx={{ overflowX: 'hidden' }} />
       )}

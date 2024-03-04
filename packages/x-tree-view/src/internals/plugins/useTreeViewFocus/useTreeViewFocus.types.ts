@@ -12,9 +12,8 @@ export interface UseTreeViewFocusInstance {
   focusDefaultNode: (event: React.SyntheticEvent | null) => void;
   removeFocusedNode: () => void;
 }
-export interface UseTreeViewFocusPublicAPI {
-  focusNode: (event: React.SyntheticEvent, nodeId: string) => void;
-}
+
+export interface UseTreeViewFocusPublicAPI extends Pick<UseTreeViewFocusInstance, 'focusNode'> {}
 
 export interface UseTreeViewFocusParameters {
   /**
