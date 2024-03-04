@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
@@ -13,19 +13,19 @@ const GridPivotPanelContainerStyled = styled('div')({
   position: 'relative',
 });
 
-const ResizeHandle = styled('div')({
+const ResizeHandle = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: 0,
   left: 0,
   height: '100%',
   width: 6,
   cursor: 'ew-resize',
-  borderLeft: '1px solid #eee',
+  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
   transition: 'border-left 0.2s',
   '&:hover': {
-    borderLeft: '2px solid #aaa',
+    borderLeft: `1px solid ${theme.palette.action.active}`,
   },
-});
+}));
 
 const useResize = <TElement extends HTMLElement>(options: {
   getInitialWidth: (handleElement: TElement) => number;
@@ -105,32 +105,33 @@ export function GridPivotPanelContainer({ children }: { children: React.ReactNod
   );
 }
 
-const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>({
-  padding: '8px 12px',
-  minHeight: 50,
+const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>(
+  ({ theme }) => ({
+    padding: '8px 12px',
+    minHeight: 50,
 
-  '&[data-drag-over="true"]': {
-    backgroundColor: '#f2f2f2',
-  },
-});
+    '&[data-drag-over="true"]': {
+      backgroundColor: theme.palette.action.selected,
+    },
+  }),
+);
 
 const Placeholder = styled('div')({
   height: 50,
   width: '100%',
-  backgroundColor: '#f2f2f2',
   border: '1px dashed #bbb',
   borderRadius: 8,
 });
 
-const GridFieldItemContainer = styled('div')({
+const GridFieldItemContainer = styled('div')(({ theme }) => ({
   width: '100%',
   padding: '4px',
   display: 'flex',
   alignItems: 'center',
   '&:hover': {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: theme.palette.action.hover,
   },
-});
+}));
 
 const DragHandle = styled('div')({
   display: 'flex',
