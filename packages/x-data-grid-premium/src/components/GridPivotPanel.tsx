@@ -4,6 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import { GridColDef } from '@mui/x-data-grid';
+import DragHandleIcon from '@mui/icons-material/DragIndicator';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 const GridPivotPanelContainerStyled = styled('div')({
@@ -119,9 +120,17 @@ const Placeholder = styled('div')({
 const GridFieldItemContainer = styled('div')({
   width: '100%',
   padding: '4px',
+  display: 'flex',
+  alignItems: 'center',
   '&:hover': {
     backgroundColor: '#f2f2f2',
   },
+});
+
+const DragHandle = styled('div')({
+  display: 'flex',
+  cursor: 'pointer',
+  marginRight: 4,
 });
 
 interface FieldTransferObject {
@@ -139,16 +148,25 @@ function GridFieldItem({
   field: FieldTransferObject['field'];
   modelKey: FieldTransferObject['modelKey'];
 }) {
+  const handleDragStart = React.useCallback(
+    (event: React.DragEvent) => {
+      const data: FieldTransferObject = { field, modelKey };
+      event.dataTransfer.setData('text/plain', JSON.stringify(data));
+      event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.setDragImage(
+        event.target.parentElement!,
+        event.nativeEvent.offsetX,
+        event.nativeEvent.offsetY,
+      );
+    },
+    [field, modelKey],
+  );
+
   return (
-    <GridFieldItemContainer
-      draggable="true"
-      onDragStart={(event) => {
-        const data: FieldTransferObject = { field, modelKey };
-        event.dataTransfer.setData('text/plain', JSON.stringify(data));
-        event.dataTransfer.dropEffect = 'move';
-      }}
-      {...props}
-    >
+    <GridFieldItemContainer {...props}>
+      <DragHandle draggable="true" onDragStart={handleDragStart}>
+        <DragHandleIcon fontSize="small" />
+      </DragHandle>
       {children}
     </GridFieldItemContainer>
   );
