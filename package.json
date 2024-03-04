@@ -107,7 +107,7 @@
     "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "autoprefixer": "^10.4.17",
+    "autoprefixer": "^10.4.18",
     "axe-core": "4.8.4",
     "babel-loader": "^9.1.3",
     "babel-plugin-istanbul": "^6.1.1",
