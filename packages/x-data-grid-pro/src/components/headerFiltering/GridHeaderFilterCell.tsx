@@ -146,7 +146,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         elementToFocus?.focus();
         apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
       }
-    }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
+    }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen, headerFilterComponent]);
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
