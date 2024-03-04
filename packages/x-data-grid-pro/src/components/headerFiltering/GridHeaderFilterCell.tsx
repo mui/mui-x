@@ -139,7 +139,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     React.useLayoutEffect(() => {
       if (hasFocus && !isMenuOpen) {
         let focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-        if (isEditing && InputComponent) {
+        if (isEditing && InputComponent && headerFilterComponent === undefined) {
           focusableElement = inputRef.current;
         }
         const elementToFocus = focusableElement || cellRef.current;
