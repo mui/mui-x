@@ -155,6 +155,16 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
+    /**
+     * The placement of ticks regarding the band interval.
+     * @default 'extremities'
+     */
+    tickPlacement?: 'start' | 'end' | 'middle' | 'extremities';
+    /**
+     * The placement of ticks label. Van be the middle of the band, or the tick position.
+     * @default 'middle'
+     */
+    tickLabelPlacement?: 'middle' | 'tick';
   };
   point: {
     scaleType: 'point';

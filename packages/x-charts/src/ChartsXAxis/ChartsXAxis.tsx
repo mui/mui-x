@@ -124,6 +124,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     slotProps,
     tickInterval,
     tickLabelInterval,
+    tickPlacement,
+    tickLabelPlacement,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -156,7 +158,14 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
-  const xTicks = useTicks({ scale: xScale, tickNumber, valueFormatter, tickInterval });
+  const xTicks = useTicks({
+    scale: xScale,
+    tickNumber,
+    valueFormatter,
+    tickInterval,
+    tickPlacement,
+    tickLabelPlacement,
+  });
 
   const xTicksWithDimension = addLabelDimension(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,

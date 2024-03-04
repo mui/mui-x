@@ -66,6 +66,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     valueFormatter,
     slots,
     slotProps,
+    tickPlacement,
+    tickLabelPlacement,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -75,7 +77,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
+  const yTicks = useTicks({
+    scale: yScale,
+    tickNumber,
+    valueFormatter,
+    tickPlacement,
+    tickLabelPlacement,
+  });
 
   const positionSign = position === 'right' ? 1 : -1;
 
