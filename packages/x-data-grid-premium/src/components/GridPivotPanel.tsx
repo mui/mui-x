@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import { GridColDef } from '@mui/x-data-grid';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
 import { useLazyRef } from '@mui/x-data-grid/hooks/utils/useLazyRef';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 const GridPivotPanelContainerStyled = styled('div')({
@@ -285,6 +286,7 @@ function GridPivotPanelContent({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="rows"
+        ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Rows</PivotSectionTitle>
         {pivotModel.rows.length === 0 && <Placeholder />}
@@ -303,6 +305,7 @@ function GridPivotPanelContent({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="columns"
+        ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Columns</PivotSectionTitle>
         {pivotModel.columns.length === 0 && <Placeholder />}
@@ -321,6 +324,7 @@ function GridPivotPanelContent({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="values"
+        ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Values</PivotSectionTitle>
         {pivotModel.values.length === 0 && <Placeholder />}
@@ -338,6 +342,7 @@ function GridPivotPanelContent({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section={null}
+        ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Available fields</PivotSectionTitle>
         {availableFields.map((field) => {
