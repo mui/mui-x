@@ -1,7 +1,7 @@
-import { TreeItemProviderProps } from './TreeItemProvider.types';
+import { TreeItemNextProviderProps } from './TreeItemNextProvider.types';
 import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
 
-export function TreeItemProvider(props: TreeItemProviderProps) {
+export function TreeItemNextProvider(props: TreeItemNextProviderProps) {
   const { children, nodeId } = props;
   const { wrapItem } = useTreeViewContext<[]>();
 

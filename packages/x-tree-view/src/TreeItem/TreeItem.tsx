@@ -14,7 +14,7 @@ import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
-import { TreeItemProvider } from '../internals/TreeItemProvider';
+import { TreeItemNextProvider } from '../internals/TreeItemNextProvider';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -288,7 +288,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
   return (
-    <TreeItemProvider nodeId={nodeId}>
+    <TreeItemNextProvider nodeId={nodeId}>
       <TreeItemRoot
         className={clsx(classes.root, className)}
         role="treeitem"
@@ -338,7 +338,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           </TreeItemGroup>
         )}
       </TreeItemRoot>
-    </TreeItemProvider>
+    </TreeItemNextProvider>
   );
 });
 

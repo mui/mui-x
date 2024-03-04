@@ -2,9 +2,9 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from '../../TreeItem';
-import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
+import { TreeItemNextIconSlotProps, TreeItemNextIconSlots } from '../TreeItemNextIcon';
 
-export interface TreeItemNextSlots extends TreeItemIconSlots {
+export interface TreeItemNextSlots extends TreeItemNextIconSlots {
   /**
    * The component that renders the root.
    * @default TreeItemNextRoot
@@ -33,7 +33,7 @@ export interface TreeItemNextSlots extends TreeItemIconSlots {
   label?: React.ElementType;
 }
 
-export interface TreeItemNextSlotProps extends TreeItemIconSlotProps {
+export interface TreeItemNextSlotProps extends TreeItemNextIconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentProps<'div', {}, {}>;

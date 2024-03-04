@@ -8,8 +8,8 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types';
 import { useTreeItem, UseTreeItemContentSlotOwnProps } from '../useTreeItem';
 import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
-import { TreeItemIcon } from '../TreeItemIcon';
-import { TreeItemProvider } from '../TreeItemProvider';
+import { TreeItemNextIcon } from '../TreeItemNextIcon';
+import { TreeItemNextProvider } from '../TreeItemNextProvider';
 
 export const TreeItemNextRoot = styled('li', {
   name: 'MuiTreeItemNext',
@@ -236,16 +236,16 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
   });
 
   return (
-    <TreeItemProvider nodeId={nodeId}>
+    <TreeItemNextProvider nodeId={nodeId}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            <TreeItemNextIcon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Label {...labelProps} />
         </Content>
         {children && <TreeItemNextTransitionGroup as={GroupTransition} {...groupTransitionProps} />}
       </Root>
-    </TreeItemProvider>
+    </TreeItemNextProvider>
   );
 });

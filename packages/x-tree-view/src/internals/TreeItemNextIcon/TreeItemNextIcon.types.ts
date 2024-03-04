@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { UseTreeItemStatus } from '../useTreeItem';
 
-export interface TreeItemIconSlots {
+export interface TreeItemNextIconSlots {
   /**
    * The icon used to collapse the node.
    */
@@ -21,24 +21,24 @@ export interface TreeItemIconSlots {
   icon?: React.ElementType;
 }
 
-export interface TreeItemIconSlotProps {
+export interface TreeItemNextIconSlotProps {
   collapseIcon?: SlotComponentProps<'svg', {}, {}>;
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
   endIcon?: SlotComponentProps<'svg', {}, {}>;
   icon?: SlotComponentProps<'svg', {}, {}>;
 }
 
-export interface TreeItemIconProps {
+export interface TreeItemNextIconProps {
   status: UseTreeItemStatus;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: TreeItemIconSlots;
+  slots?: TreeItemNextIconSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TreeItemIconSlotProps;
+  slotProps?: TreeItemNextIconSlotProps;
   fallbackIcon?: React.ReactNode;
 }

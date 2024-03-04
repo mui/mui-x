@@ -20,8 +20,8 @@ import {
   TreeItemNextTransitionGroup,
 } from '@mui/x-tree-view/internals/TreeItemNext';
 import { useTreeItem } from '@mui/x-tree-view/internals/useTreeItem';
-import { TreeItemProvider } from '@mui/x-tree-view/internals/TreeItemProvider';
-import { TreeItemIcon } from '@mui/x-tree-view/internals/TreeItemIcon';
+import { TreeItemNextProvider } from 'packages/x-tree-view/src/internals/TreeItemNextProvider';
+import { TreeItemNextIcon } from 'packages/x-tree-view/src/internals/TreeItemNextIcon';
 import clsx from 'clsx';
 
 const CustomTreeItemRoot = styled(TreeItemNextRoot)(({ theme }) => ({
@@ -93,7 +93,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItemProvider nodeId={nodeId}>
+    <TreeItemNextProvider nodeId={nodeId}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -105,7 +105,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           })}
         >
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} />
+            <TreeItemNextIcon status={status} />
           </CustomTreeItemIconContainer>
           <Box
             sx={{
@@ -132,7 +132,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           <CustomTreeItemTransitionGroup {...getGroupTransitionProps()} />
         )}
       </CustomTreeItemRoot>
-    </TreeItemProvider>
+    </TreeItemNextProvider>
   );
 });
 

@@ -14,8 +14,8 @@ import {
   TreeItemNextLabel,
   TreeItemNextRoot,
 } from '@mui/x-tree-view/internals/TreeItemNext';
-import { TreeItemIcon } from '@mui/x-tree-view/internals/TreeItemIcon';
-import { TreeItemProvider } from '@mui/x-tree-view/internals/TreeItemProvider';
+import { TreeItemNextIcon } from 'packages/x-tree-view/src/internals/TreeItemNextIcon';
+import { TreeItemNextProvider } from 'packages/x-tree-view/src/internals/TreeItemNextProvider';
 
 const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
@@ -37,11 +37,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   } = useTreeItem({ id, nodeId, children, label, rootRef: ref });
 
   return (
-    <TreeItemProvider nodeId={nodeId}>
+    <TreeItemNextProvider nodeId={nodeId}>
       <TreeItemNextRoot {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()}>
           <TreeItemNextIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} />
+            <TreeItemNextIcon status={status} />
           </TreeItemNextIconContainer>
           <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Avatar
@@ -59,7 +59,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         </CustomTreeItemContent>
         {children && <TreeItemNextTransitionGroup {...getGroupTransitionProps()} />}
       </TreeItemNextRoot>
-    </TreeItemProvider>
+    </TreeItemNextProvider>
   );
 });
 
