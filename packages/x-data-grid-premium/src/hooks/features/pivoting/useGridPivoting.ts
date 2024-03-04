@@ -101,11 +101,17 @@ const getPivotedData = ({
       return attributes;
     }
 
-    if (initialColumn.valueFormatter) {
+    if (initialColumn?.valueFormatter) {
       attributes.valueFormatter = initialColumn.valueFormatter;
     }
 
-    // TODO: copy other column attributes?
+    if (initialColumn?.valueGetter) {
+      attributes.valueGetter = initialColumn.valueGetter;
+    }
+
+    if (initialColumn?.headerName) {
+      attributes.headerName = initialColumn.headerName;
+    }
 
     return attributes;
   };
@@ -202,7 +208,6 @@ const getPivotedData = ({
             initialColumnsLookup[pivotValue.field] =
               columns.find((column) => column.field === pivotValue.field) || null;
           }
-          const initialColumn = initialColumnsLookup[pivotValue.field];
           const valueField = pivotValue.field;
           const mapValueKey = `${columnGroup.groupId}-${valueField}`;
           const column: GridColDef = {
@@ -212,13 +217,6 @@ const getPivotedData = ({
             availableAggregationFunctions: [pivotValue.aggFunc],
             ...getAttributesFromInitialColumn(pivotValue.field),
           };
-          if (initialColumn?.valueFormatter) {
-            column.valueFormatter = initialColumn.valueFormatter;
-          }
-          if (initialColumn?.valueGetter) {
-            column.valueGetter = initialColumn.valueGetter;
-          }
-          // TODO: copy other column attributes?
           pivotColumns.push(column);
           aggregationModel[mapValueKey] = pivotValue.aggFunc;
           if (columnGroup) {

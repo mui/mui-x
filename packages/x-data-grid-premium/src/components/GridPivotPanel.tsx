@@ -5,6 +5,7 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import { GridColDef } from '@mui/x-data-grid';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
+import { useLazyRef } from '@mui/x-data-grid/hooks/utils/useLazyRef';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 const GridPivotPanelContainerStyled = styled('div')({
@@ -189,6 +190,24 @@ function GridPivotPanelContent({
 }) {
   const [fields] = React.useState(() => columns.map((col) => col.field));
 
+  const initialColumnsLookup = useLazyRef(() => {
+    return columns.reduce(
+      (acc, column) => {
+        acc[column.field] = column;
+        return acc;
+      },
+      {} as Record<string, GridColDef>,
+    );
+  }).current;
+
+  const getColumnName = React.useCallback(
+    (field: string) => {
+      const column = initialColumnsLookup[field];
+      return column?.headerName || field;
+    },
+    [initialColumnsLookup],
+  );
+
   const availableFields = React.useMemo(() => {
     return fields.filter((field) => {
       if (pivotModel.rows.includes(field)) {
@@ -268,7 +287,7 @@ function GridPivotPanelContent({
           pivotModel.rows.map((field) => {
             return (
               <GridFieldItem key={field} field={field} modelKey="rows" data-field={field}>
-                {field}
+                {getColumnName(field)}
               </GridFieldItem>
             );
           })}
@@ -286,7 +305,7 @@ function GridPivotPanelContent({
           pivotModel.columns.map(({ field, sort }) => {
             return (
               <GridFieldItem key={field} field={field} modelKey="columns">
-                {field} {sort}
+                {getColumnName(field)} {sort}
               </GridFieldItem>
             );
           })}
@@ -304,7 +323,7 @@ function GridPivotPanelContent({
           pivotModel.values.map(({ field, aggFunc }) => {
             return (
               <GridFieldItem key={field} field={field} modelKey="values">
-                {field} {aggFunc}
+                {getColumnName(field)} {aggFunc}
               </GridFieldItem>
             );
           })}
@@ -319,7 +338,7 @@ function GridPivotPanelContent({
         {availableFields.map((field) => {
           return (
             <GridFieldItem key={field} field={field} modelKey={null}>
-              {field}
+              {getColumnName(field)}
             </GridFieldItem>
           );
         })}

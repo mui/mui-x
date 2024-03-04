@@ -14,7 +14,10 @@ export default function GridPivotingMovies() {
   const data = React.useMemo(() => {
     return {
       ...movieData,
-      columns: [...movieData.columns, { field: 'imdbRating', type: 'number' }],
+      columns: [
+        ...movieData.columns,
+        { field: 'imdbRating', headerName: 'Rating', type: 'number' },
+      ],
     };
   }, [movieData]);
   const [pivotModel, setPivotModel] = React.useState({

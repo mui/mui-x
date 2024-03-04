@@ -18,7 +18,7 @@ export default function GridPivotingMovies() {
       ...movieData,
       columns: [
         ...movieData.columns,
-        { field: 'imdbRating', type: 'number' },
+        { field: 'imdbRating', headerName: 'Rating', type: 'number' },
       ] as GridColDef[],
     };
   }, [movieData]);
