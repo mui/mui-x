@@ -144,7 +144,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
         .filter((node) => node.parentId === nodeId)
         .sort((a, b) => a.index - b.index)
         .map((child) => child.id),
-    [state.nodeMap],
+    [state.nodes.nodeMap],
   );
 
   const getNavigableChildrenIds = (nodeId: string | null) => {
