@@ -9,7 +9,9 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+  });
 
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
