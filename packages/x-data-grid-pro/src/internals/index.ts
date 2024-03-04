@@ -19,6 +19,7 @@ export {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+export { useGridServerSideTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridServerSideTreeDataPreProcessors';
 export {
   useGridDetailPanel,
   detailPanelStateInitializer,

@@ -60,6 +60,7 @@ import {
 } from '../hooks/features/columnResize/useGridColumnResize';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
+import { useGridServerSideTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridServerSideTreeDataPreProcessors';
 import {
   useGridColumnPinning,
   columnPinningStateInitializer,
@@ -79,6 +80,7 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+import { useGridDataSource } from '../hooks/features/serverSideData/useGridDataSource';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -92,6 +94,7 @@ export const useDataGridProComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridServerSideTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -159,6 +162,7 @@ export const useDataGridProComponent = (
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
+  useGridDataSource(apiRef, props);
 
   return apiRef;
 };

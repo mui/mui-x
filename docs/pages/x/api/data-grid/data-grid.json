@@ -4,10 +4,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -315,6 +311,10 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onRowCountChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(count: number) => void", "describedArgs": ["count"] }
+    },
     "onRowDoubleClick": {
       "type": { "name": "func" },
       "signature": {
@@ -384,6 +384,7 @@
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
     "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
+    "rows": { "type": { "name": "array" }, "default": "[]" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {

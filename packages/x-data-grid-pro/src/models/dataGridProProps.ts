@@ -25,6 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import type { GridDataSource, GridDataSourceCache } from './gridDataSource';
 import type { GridAutosizeOptions } from '../hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
@@ -154,11 +155,33 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   headerFilters: boolean;
 }
 
+interface DataGridProDataSourceProps {
+  unstable_dataSource?: GridDataSource;
+  unstable_dataSourceCache?: GridDataSourceCache;
+  getGroupKey?: (row: GridValidRowModel) => string;
+  hasChildren?: (row: GridValidRowModel) => boolean;
+  getChildrenCount?: (row: GridValidRowModel) => number;
+}
+
+interface DataGridProRegularProps<R extends GridValidRowModel> {
+  /**
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
+   * Note that all paths must contain at least one element.
+   * @template R
+   * @param {R} row The row from which we want the path.
+   * @returns {string[]} The path to the row.
+   */
+  getTreeDataPath?: (row: R) => string[];
+}
+
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
-    DataGridPropsWithoutDefaultValue<R>,
-    'initialState' | 'componentsProps' | 'slotProps'
-  > {
+      DataGridPropsWithoutDefaultValue<R>,
+      'initialState' | 'componentsProps' | 'slotProps'
+    >,
+    DataGridProRegularProps<R>,
+    DataGridProDataSourceProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -178,15 +201,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalProFeatures>;
-  /**
-   * Determines the path of a row in the tree data.
-   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
-   * @template R
-   * @param {R} row The row from which we want the path.
-   * @returns {string[]} The path to the row.
-   */
-  getTreeDataPath?: (row: R) => string[];
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].

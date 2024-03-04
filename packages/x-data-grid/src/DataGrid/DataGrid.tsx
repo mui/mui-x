@@ -527,6 +527,11 @@ DataGridRaw.propTypes = {
    */
   onRowClick: PropTypes.func,
   /**
+   * Callback fired when the row count has changed.
+   * @param {number} count Updated row count.
+   */
+  onRowCountChange: PropTypes.func,
+  /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -635,8 +640,9 @@ DataGridRaw.propTypes = {
   rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array,
   /**
    * If `false`, the row selection mode is disabled.
    * @default true

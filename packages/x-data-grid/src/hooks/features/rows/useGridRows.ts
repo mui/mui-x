@@ -44,8 +44,10 @@ import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
+  // @ts-expect-error To read prop which belongs to the `DataGridPro` component
+  const isDataSourceAvailable = props.unstable_dataSource != null;
   apiRef.current.caches.rows = createRowsInternalCache({
-    rows: props.rows,
+    rows: isDataSourceAvailable ? [] : props.rows,
     getRowId: props.getRowId,
     loading: props.loading,
     rowCount: props.rowCount,
@@ -56,7 +58,7 @@ export const rowsStateInitializer: GridStateInitializer<
     rows: getRowsStateFromCache({
       apiRef,
       rowCountProp: props.rowCount,
-      loadingProp: props.loading,
+      loadingProp: isDataSourceAvailable ? true : props.loading,
       previousTree: null,
       previousTreeDepths: null,
     }),
@@ -236,6 +238,22 @@ export const useGridRows = (
       throttledRowsChange({ cache, throttle: true });
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
+  );
+
+  const setLoading = React.useCallback<GridRowApi['setLoading']>(
+    (loading) => {
+      if (loading === props.loading) {
+        return;
+      }
+      logger.debug(`Setting loading to ${loading}`);
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: { ...state.rows, loading },
+      }));
+      apiRef.current.caches.rows.loadingPropBeforePartialUpdates = loading;
+      apiRef.current.forceUpdate();
+    },
+    [props.loading, apiRef, logger],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
@@ -462,6 +480,7 @@ export const useGridRows = (
 
   const rowApi: GridRowApi = {
     getRow,
+    setLoading,
     getRowId,
     getRowModels,
     getRowsCount,
@@ -501,7 +520,7 @@ export const useGridRows = (
       // We must use the new `props.rows` on the new grouping
       // This occurs because this event is triggered before the `useEffect` on the rows when both the grouping pre-processing and the rows changes on the same render
       cache = createRowsInternalCache({
-        rows: props.rows,
+        rows: props.rows || [],
         getRowId: props.getRowId,
         loading: props.loading,
         rowCount: props.rowCount,
@@ -624,10 +643,10 @@ export const useGridRows = (
       return;
     }
 
-    logger.debug(`Updating all rows, new length ${props.rows.length}`);
+    logger.debug(`Updating all rows, new length ${props.rows?.length}`);
     throttledRowsChange({
       cache: createRowsInternalCache({
-        rows: props.rows,
+        rows: props.rows || [],
         getRowId: props.getRowId,
         loading: props.loading,
         rowCount: props.rowCount,

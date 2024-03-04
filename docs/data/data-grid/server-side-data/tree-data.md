@@ -2,14 +2,12 @@
 title: React Server-side tree data
 ---
 
-# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Tree data lazy-loading with server side data source.</p>
 
-:::warning
-This feature isn't implemented yet. It's coming.
+To use the server-side tree data, pass the `unstable_dataSource` prop as explained in the overview section, in addition to that passing of some additional props is required for the server-side tree data to work properly.
 
-👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
+Following is a demo of the server-side tree data working with server side data source. It supports server side filtering, sorting and pagination. It also uses the `unstable_dataSourceCache` prop to pass a cache object based on the `QueryClient` exposed by `@tanstack/query-core`.
 
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with the [currently proposed workaround](https://mui.com/x/react-data-grid/tree-data/#children-lazy-loading).
-:::
+{{"demo": "ServerSideTreeData.js", "bg": "inline"}}

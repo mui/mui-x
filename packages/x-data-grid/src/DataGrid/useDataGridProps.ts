@@ -77,6 +77,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
   rowPositionsDebounceMs: 166,
+  rows: [],
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;

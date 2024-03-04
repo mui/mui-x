@@ -37,7 +37,10 @@ export interface UseDemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-async function extrapolateSeed(rowLength: number, data: GridDemoData): Promise<GridDemoData> {
+export async function extrapolateSeed(
+  rowLength: number,
+  data: GridDemoData,
+): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();

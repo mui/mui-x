@@ -1,0 +1,13 @@
+<DataGridPro
+  {...props}
+  unstable_dataSource={dataSource}
+  unstable_dataSourceCache={cache}
+  treeData
+  apiRef={apiRef}
+  pagination
+  pageSizeOptions={pageSizeOptions}
+  initialState={initialState}
+  slots={{ toolbar: GridToolbar }}
+  slotProps={{ toolbar: { showQuickFilter: true } }}
+  filterDebounceMs={1000}
+/>

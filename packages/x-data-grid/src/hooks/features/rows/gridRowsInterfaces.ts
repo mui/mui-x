@@ -50,7 +50,7 @@ export interface GridRowsState {
   treeDepths: GridTreeDepths;
   dataRowIds: GridRowId[];
   /**
-   * Matches the value of the `loading` prop.
+   * Depicts if the rows are loading.
    */
   loading?: boolean;
   /**

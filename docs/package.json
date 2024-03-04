@@ -33,6 +33,7 @@
     "@mui/styles": "^5.15.9",
     "@mui/utils": "^5.15.9",
     "@react-spring/web": "^9.7.3",
+    "@tanstack/query-core": "^5.24.8",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.202",
     "@types/moment-hijri": "^2.1.4",

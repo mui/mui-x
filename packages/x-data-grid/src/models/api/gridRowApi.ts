@@ -49,6 +49,11 @@ export interface GridRowApi {
    */
   getAllRowIds: () => GridRowId[];
   /**
+   * Sets the internal loading state.
+   * @param {boolean} loading The new rows.
+   */
+  setLoading: (loading: boolean) => void;
+  /**
    * Sets a new set of rows.
    * @param {GridRowModel[]} rows The new rows.
    */

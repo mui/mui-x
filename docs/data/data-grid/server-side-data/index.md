@@ -131,6 +131,8 @@ const customDataSource: DataSource = {
 />
 ```
 
+{{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+
 Not only the code has been reduced significantly, it has removed the hassle of managing controlled states and data fetching logic too.
 
 On top of that, the data source will also handle a lot of other aspects like caching and deduping of requests.

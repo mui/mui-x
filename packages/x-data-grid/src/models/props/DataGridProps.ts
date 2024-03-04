@@ -105,7 +105,12 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
  */
-export interface DataGridPropsWithDefaultValues {
+export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
+  /**
+   * Set of rows of type [[GridRowsProp]].
+   * @default []
+   */
+  rows: GridRowsProp<R>;
   /**
    * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
@@ -592,6 +597,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
   /**
+   * Callback fired when the row count has changed.
+   * @param {number} count Updated row count.
+   */
+  onRowCountChange?: (count: number) => void;
+  /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
@@ -713,10 +723,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce?: string;
-  /**
-   * Set of rows of type [[GridRowsProp]].
-   */
-  rows: GridRowsProp<R>;
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
