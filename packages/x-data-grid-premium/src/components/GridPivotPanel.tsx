@@ -107,6 +107,11 @@ export function GridPivotPanelContainer({ children }: { children: React.ReactNod
 
 const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>({
   padding: '8px 12px',
+  minHeight: 50,
+
+  '&[data-drag-over="true"]': {
+    backgroundColor: '#f2f2f2',
+  },
 });
 
 const Placeholder = styled('div')({
@@ -209,6 +214,7 @@ function GridPivotPanelContent({
     if (originSection === targetSection) {
       return;
     }
+    event.currentTarget.removeAttribute('data-drag-over');
     onPivotModelChange((prev) => {
       const newModel = { ...prev };
       if (targetSection) {
@@ -233,14 +239,28 @@ function GridPivotPanelContent({
     });
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-  };
+    if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
+      event.currentTarget.setAttribute('data-drag-over', 'true');
+    }
+  }, []);
+
+  const handleDragLeave = React.useCallback((event: React.DragEvent) => {
+    if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
+      event.currentTarget.removeAttribute('data-drag-over');
+    }
+  }, []);
 
   return (
     <div>
-      <PivotSectionContainer onDrop={handleDrop} onDragOver={handleDragOver} data-section="rows">
+      <PivotSectionContainer
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        data-section="rows"
+      >
         <div>Rows</div>
         {pivotModel.rows.length === 0 && <Placeholder />}
         {pivotModel.rows.length > 0 &&
@@ -253,7 +273,12 @@ function GridPivotPanelContent({
           })}
       </PivotSectionContainer>
       <Divider />
-      <PivotSectionContainer onDrop={handleDrop} onDragOver={handleDragOver} data-section="columns">
+      <PivotSectionContainer
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        data-section="columns"
+      >
         <div>Columns</div>
         {pivotModel.columns.length === 0 && <Placeholder />}
         {pivotModel.columns.length > 0 &&
@@ -266,7 +291,12 @@ function GridPivotPanelContent({
           })}
       </PivotSectionContainer>
       <Divider />
-      <PivotSectionContainer onDrop={handleDrop} onDragOver={handleDragOver} data-section="values">
+      <PivotSectionContainer
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        data-section="values"
+      >
         <div>Values</div>
         {pivotModel.values.length === 0 && <Placeholder />}
         {pivotModel.values.length > 0 &&
@@ -278,7 +308,13 @@ function GridPivotPanelContent({
             );
           })}
       </PivotSectionContainer>
-      <PivotSectionContainer onDrop={handleDrop} onDragOver={handleDragOver} data-section={null}>
+      <PivotSectionContainer
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        data-section={null}
+      >
+        <div>Available fields</div>
         {availableFields.map((field) => {
           return (
             <GridFieldItem key={field} field={field} modelKey={null}>
