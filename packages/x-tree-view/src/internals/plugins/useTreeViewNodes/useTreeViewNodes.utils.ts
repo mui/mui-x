@@ -5,22 +5,22 @@ export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
 
 export const moveItemInTree = <R extends { children?: R[] }>({
   nodeToMoveId,
-  state,
+  prevState,
   newParentId,
   newIndex,
 }: {
   nodeToMoveId: TreeViewItemId;
-  state: UseTreeViewNodesState<R>;
+  prevState: UseTreeViewNodesState<R>['nodes'];
   newParentId: TreeViewItemId | null;
   newIndex: number;
-}): UseTreeViewNodesState<R> => {
-  const nodeToMove = state.nodeMap[nodeToMoveId];
+}): UseTreeViewNodesState<R>['nodes'] => {
+  const nodeToMove = prevState.nodeMap[nodeToMoveId];
 
   // 1. Update the `nodeMap`.
   const nodeMap: TreeViewNodeMap = {};
   /* eslint-disable no-lonely-if */
-  Object.keys(state.nodeMap).forEach((nodeId) => {
-    const node = state.nodeMap[nodeId];
+  Object.keys(prevState.nodeMap).forEach((nodeId) => {
+    const node = prevState.nodeMap[nodeId];
 
     if (node.id === nodeToMoveId) {
       nodeMap[node.id] = { ...node, parentId: newParentId, index: newIndex };
@@ -58,7 +58,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   /* eslint-enable no-lonely-if */
 
   // 2. Update the `nodeTree`.
-  const nodeTree = { ...state.nodeTree };
+  const nodeTree = { ...prevState.nodeTree };
   const oldParentKey = nodeToMove.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
   const newParentKey = newParentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
@@ -75,7 +75,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   }
 
   return {
-    ...state,
+    ...prevState,
     nodeTree,
     nodeMap,
   };
