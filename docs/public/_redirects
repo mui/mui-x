@@ -21,7 +21,8 @@
 /r/x-premium-svg-link https://mui.com/x/introduction/licensing/#premium-plan 302
 
 # Legacy redirection
-
+# Added in chronological order (the last line is the most recent one)
+# To be removed 3+ years after being introduced
 # 2021
 /fr/* /:splat 200
 /de/* /:splat 200
@@ -57,5 +58,6 @@
 /x/api/date-pickers/next-date-picker/ /x/api/date-pickers/date-picker/ 301
 /x/react-date-pickers/calendar/ /x/react-date-pickers/date-calendar/ 301
 /x/react-date-pickers/legacy-date-time-picker/ /x/react-date-pickers/date-time-picker/ 301
+# 2024
 
 # Proxies
