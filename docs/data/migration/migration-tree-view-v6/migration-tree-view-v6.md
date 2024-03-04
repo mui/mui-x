@@ -332,6 +332,12 @@ you can use the new `onNodeSelectionToggle` prop which is called whenever a node
 ### Focus the Tree Item instead of the Tree View
 
 The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+This change will allow new features that require the focus to be on the Tree Item,
+like the drag and drop reordering of items.
+It also solves several issues with focus management,
+like the inability to scroll to the focused item when a lot of items are rendered.
+
 This will mostly impact how you write tests to interact with the Tree View:
 
 For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
