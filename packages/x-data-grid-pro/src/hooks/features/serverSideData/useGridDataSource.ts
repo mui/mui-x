@@ -250,12 +250,7 @@ export const useGridDataSource = (
   /*
    * EFFECTS
    */
-  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    } else {
-      fetchTopLevelRows();
-    }
+    fetchTopLevelRows();
   }, [props.unstable_dataSource, privateApiRef, fetchTopLevelRows]);
 };

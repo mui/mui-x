@@ -18,7 +18,7 @@ function ServerSideDataGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        columns={columns!}
+        columns={columns}
         unstable_dataSource={dataSource}
         pagination
         initialState={initialStateWithPagination}
