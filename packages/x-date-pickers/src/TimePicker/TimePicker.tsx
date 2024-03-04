@@ -9,8 +9,12 @@ import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 import { PickerValidDate } from '../models';
 
-type TimePickerComponent = (<TDate extends PickerValidDate>(
-  props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -23,8 +27,11 @@ type TimePickerComponent = (<TDate extends PickerValidDate>(
  *
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
-const TimePicker = React.forwardRef(function TimePicker<TDate extends PickerValidDate>(
-  inProps: TimePickerProps<TDate>,
+const TimePicker = React.forwardRef(function TimePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
@@ -105,6 +112,10 @@ TimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -221,11 +232,11 @@ TimePicker.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -242,10 +253,6 @@ TimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific time.

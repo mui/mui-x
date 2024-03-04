@@ -1114,6 +1114,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--flex",
+      "className": "MuiDataGridPremium-cell--flex",
+      "description": "Styles applied to the cell element in flex display mode.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--pinnedLeft",
       "className": "MuiDataGridPremium-cell--pinnedLeft",
       "description": "Styles applied to the cell element if it is pinned to the left.",
@@ -1180,12 +1186,6 @@
       "isGlobal": false
     },
     {
-      "key": "cell--withRenderer",
-      "className": "MuiDataGridPremium-cell--withRenderer",
-      "description": "Styles applied to the cell element if the cell has a custom renderer.",
-      "isGlobal": false
-    },
-    {
       "key": "cell--withRightBorder",
       "className": "MuiDataGridPremium-cell--withRightBorder",
       "description": "Styles applied the cell if `showColumnVerticalBorder={true}`.",
@@ -1195,12 +1195,6 @@
       "key": "cellCheckbox",
       "className": "MuiDataGridPremium-cellCheckbox",
       "description": "Styles applied to the cell checkbox element.",
-      "isGlobal": false
-    },
-    {
-      "key": "cellContent",
-      "className": "MuiDataGridPremium-cellContent",
-      "description": "Styles applied to the element that wraps the cell content.",
       "isGlobal": false
     },
     {

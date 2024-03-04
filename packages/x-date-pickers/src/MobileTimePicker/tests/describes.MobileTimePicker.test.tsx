@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { screen, userEvent, fireTouchChangedEvent } from '@mui-internal/test-utils';
+import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
+  expectFieldValueV7,
   openPicker,
   getClockTouchEvent,
-  getTextbox,
   describeValidation,
   describeValue,
   describePicker,
   formatFullTimeValue,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -33,7 +32,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker />, () => ({
+  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
@@ -62,15 +61,16 @@ describe('<MobileTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? formatFullTimeValue(adapterToUse, expectedValue)
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = formatFullTimeValue(adapterToUse, expectedValue);
+      } else {
+        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
@@ -101,7 +101,8 @@ describe('<MobileTimePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process

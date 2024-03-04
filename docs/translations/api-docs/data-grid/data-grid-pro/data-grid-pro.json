@@ -624,6 +624,10 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
+    "cell--flex": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cell element in flex display mode"
+    },
     "cell--pinnedLeft": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -677,21 +681,12 @@
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
     },
-    "cell--withRenderer": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the cell element",
-      "conditions": "the cell has a custom renderer"
-    },
     "cell--withRightBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
     },
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
-    },
-    "cellContent": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the element that wraps the cell content"
     },
     "cellEmpty": {
       "description": "Styles applied to {{nodeName}}.",

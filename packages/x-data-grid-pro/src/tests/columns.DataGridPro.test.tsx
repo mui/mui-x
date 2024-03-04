@@ -150,6 +150,29 @@ describe('<DataGridPro /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
     });
 
+    it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
+      const onColumnWidthChange = spy();
+      render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
+      fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
+      expect(onColumnWidthChange.callCount).to.equal(0);
+      fireEvent.mouseUp(separator);
+      clock.tick(0);
+      expect(onColumnWidthChange.callCount).to.equal(1);
+      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      fireEvent.doubleClick(separator);
+      await microtasks();
+      expect(onColumnWidthChange.callCount).to.be.at.least(2);
+      const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
+      const isWidth116Present = widthArgs.some((width) => width === 116);
+      expect(isWidth116Present).to.equal(true);
+      const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
+      const isColDefWidth116Present = colDefWidthArgs.some((width) => width === 116);
+      expect(isColDefWidth116Present).to.equal(true);
+    });
+
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
       render(
         <Test
@@ -481,15 +504,19 @@ describe('<DataGridPro /> - Columns', () => {
       it('.columns works', async () => {
         await autosize({ columns: [columns[0].field] }, [50, 100]);
       });
+
       it('.includeHeaders works', async () => {
         await autosize({ includeHeaders: true }, [213, 235]);
       });
+
       it('.includeOutliers works', async () => {
         await autosize({ includeOutliers: true }, [50, 144]);
       });
+
       it('.outliersFactor works', async () => {
         await autosize({ outliersFactor: 40 }, [50, 144]);
       });
+
       it('.expand works', async () => {
         await autosize({ expand: true }, [134, 148]);
       });
@@ -498,6 +525,7 @@ describe('<DataGridPro /> - Columns', () => {
 
   describe('column pipe processing', () => {
     type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
+
     it('should not loose column width when re-applying pipe processing', () => {
       let privateApi: GridPrivateApiContextRef;
       function Footer() {

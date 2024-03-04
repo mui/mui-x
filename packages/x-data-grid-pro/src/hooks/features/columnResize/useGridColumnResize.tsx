@@ -214,10 +214,7 @@ function extractColumnWidths(
     const cells = findGridCells(apiRef.current, column.field);
 
     const widths = cells.map((cell) => {
-      const style = window.getComputedStyle(cell, null);
-      const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-      const contentWidth = cell.firstElementChild?.getBoundingClientRect().width ?? 0;
-      return paddingWidth + contentWidth;
+      return cell.getBoundingClientRect().width ?? 0;
     });
 
     const filteredWidths = options.includeOutliers
@@ -284,6 +281,7 @@ export const useGridColumnResize = (
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
+  const previousMouseClickEvent = React.useRef<MouseEvent>();
   const columnHeaderElementRef = React.useRef<HTMLDivElement>();
   const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const groupHeaderElementsRef = React.useRef<Element[]>([]);
@@ -358,7 +356,7 @@ export const useGridColumnResize = (
     const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
-      updateProperty(fillerLeftRef.current!, 'width', widthDiff);
+      updateProperty(fillerLeftRef.current, 'width', widthDiff);
 
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
@@ -366,7 +364,7 @@ export const useGridColumnResize = (
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
-      updateProperty(fillerRightRef.current!, 'width', widthDiff);
+      updateProperty(fillerRightRef.current, 'width', widthDiff);
 
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
@@ -377,6 +375,24 @@ export const useGridColumnResize = (
   const finishResize = (nativeEvent: MouseEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
+
+    // Prevent double-clicks from being interpreted as two separate clicks
+    if (previousMouseClickEvent.current) {
+      const prevEvent = previousMouseClickEvent.current;
+      const prevTimeStamp = prevEvent.timeStamp;
+      const prevClientX = prevEvent.clientX;
+      const prevClientY = prevEvent.clientY;
+
+      // Check if the current event is part of a double-click
+      if (
+        nativeEvent.timeStamp - prevTimeStamp < 300 &&
+        nativeEvent.clientX === prevClientX &&
+        nativeEvent.clientY === prevClientY
+      ) {
+        previousMouseClickEvent.current = undefined;
+        return;
+      }
+    }
 
     if (colDefRef.current) {
       apiRef.current.setColumnWidth(colDefRef.current.field, colDefRef.current.width!);
@@ -610,6 +626,8 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
+      previousMouseClickEvent.current = event.nativeEvent;
+
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
 
@@ -702,6 +720,17 @@ export const useGridColumnResize = (
         }
 
         apiRef.current.updateColumns(newColumns);
+
+        newColumns.forEach((newColumn, index) => {
+          if (newColumn.width !== columns[index].width) {
+            const width = newColumn.width;
+            apiRef.current.publishEvent('columnWidthChange', {
+              element: apiRef.current.getColumnHeaderElement(newColumn.field),
+              colDef: newColumn,
+              width,
+            });
+          }
+        });
       } finally {
         apiRef.current.unstable_setColumnVirtualization(true);
         isAutosizingRef.current = false;
@@ -749,6 +778,13 @@ export const useGridColumnResize = (
   useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
-function updateProperty(element: HTMLElement, property: 'right' | 'left' | 'width', delta: number) {
+function updateProperty(
+  element: HTMLElement | undefined,
+  property: 'right' | 'left' | 'width',
+  delta: number,
+) {
+  if (!element) {
+    return;
+  }
   element.style[property] = `${parseInt(element.style[property], 10) + delta}px`;
 }
