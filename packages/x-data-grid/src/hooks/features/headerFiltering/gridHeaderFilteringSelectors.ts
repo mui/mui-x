@@ -4,6 +4,11 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 export const gridHeaderFilteringStateSelector = (state: GridStateCommunity) =>
   state.headerFiltering;
 
+export const gridHeaderFilteringEnabledSelector = createSelector(
+  gridHeaderFilteringStateSelector,
+  (headerFilteringState) => headerFilteringState.enabled,
+);
+
 export const gridHeaderFilteringEditFieldSelector = createSelector(
   gridHeaderFilteringStateSelector,
   (headerFilteringState) => headerFilteringState.editing,
