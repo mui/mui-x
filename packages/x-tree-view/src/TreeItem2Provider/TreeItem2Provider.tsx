@@ -1,5 +1,5 @@
-import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
 import PropTypes from 'prop-types';
+import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
