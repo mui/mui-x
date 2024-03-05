@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
