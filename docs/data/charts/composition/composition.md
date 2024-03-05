@@ -96,7 +96,7 @@ By modifying the series `type` property, you can switch between rendering a line
 ## Subcomponents
 
 :::info
-With SVG, the CSS `z-index` does not exist.
+The CSS `z-index` property does not exist on SVG elements.
 Elements rendered after overlap on top of elements rendered before.
 The order of elements in composition is the only way to define how they overlap.
 :::
