@@ -13,5 +13,14 @@ const className = simpleTreeViewClasses.root;
   defaultSelectedNodes={null}
   onSelectedNodesChange={selectionCallback}
 >
-  <TreeItem nodeId="1" label="Item 1" slots={{ groupTransition: Fade }} />
+  <TreeItem
+    nodeId="1"
+    label="Item 1"
+    slots={{
+      groupTransition: Fade,
+    }}
+    slotProps={{
+      groupTransition: { timeout: 600 },
+    }}
+  />
 </SimpleTreeView>;
