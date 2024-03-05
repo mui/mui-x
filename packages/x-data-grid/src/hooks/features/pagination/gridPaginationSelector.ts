@@ -42,15 +42,22 @@ export const gridPageSizeSelector = createSelector(
   (paginationModel) => paginationModel.pageSize,
 );
 
+
+const gridRowCountSelector = (state: GridStateCommunity) => state.props.rowCount;
+
 /**
  * Get the amount of pages needed to display all the rows if the pagination is enabled
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPaginationModelSelector,
+  gridPageSizeSelector,
   gridFilteredTopLevelRowCountSelector,
-  (paginationModel, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
+  gridRowCountSelector,
+  (pageSize, visibleTopLevelRowCount, rowCount) =>
+    getPageCount(
+      rowCount ?? visibleTopLevelRowCount,
+      pageSize
+    )
 );
 
 /**

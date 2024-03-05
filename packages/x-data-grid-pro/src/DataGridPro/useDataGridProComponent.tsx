@@ -28,6 +28,7 @@ import {
   sortingStateInitializer,
   useGridScroll,
   useGridEvents,
+  propsStateInitializer,
   dimensionsStateInitializer,
   useGridDimensions,
   useGridStatePersistence,
@@ -103,6 +104,7 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);

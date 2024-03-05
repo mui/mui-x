@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRefs } from './useGridRefs';
+import { useGridProps } from './useGridProps';
 import { useGridTheme } from './useGridTheme';
 import { useGridLoggerFactory } from './useGridLoggerFactory';
 import { useGridApiInitialization } from './useGridApiInitialization';
@@ -23,6 +24,7 @@ export const useGridInitialization = <
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);
 
   useGridRefs(privateApiRef);
+  useGridProps(privateApiRef, props);
   useGridTheme(privateApiRef);
   useGridLoggerFactory(privateApiRef, props);
   useGridStateInitialization(privateApiRef, props);
