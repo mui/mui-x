@@ -5,7 +5,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
   DataGridPro,
-  GridHeaderFilterCellProps,
+  RenderHeaderFilterProps,
   gridFilterModelSelector,
   useGridSelector,
   useGridApiContext,
@@ -14,7 +14,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const getDefaultFilter = (field: string) => ({ field, operator: 'is' });
 
-function AdminFilter(props: GridHeaderFilterCellProps) {
+function AdminFilter(props: RenderHeaderFilterProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
