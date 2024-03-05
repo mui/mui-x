@@ -552,7 +552,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
   /**
-   * Fired when the density is updated.
+   * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
    */
   onDensityChange?: (density: GridDensity) => void;
