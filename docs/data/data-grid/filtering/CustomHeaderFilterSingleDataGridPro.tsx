@@ -76,7 +76,7 @@ export default function CustomHeaderFilterSingleDataGridPro() {
           return {
             ...colDef,
             width: 200,
-            renderHeaderFilter: (params: GridHeaderFilterCellProps) => (
+            renderHeaderFilter: (params: RenderHeaderFilterProps) => (
               <AdminFilter {...params} />
             ),
           };
