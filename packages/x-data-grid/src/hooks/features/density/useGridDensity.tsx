@@ -27,7 +27,7 @@ export const densityStateInitializer: GridStateInitializer<
 
 export const useGridDensity = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'density'>,
+  props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 
@@ -42,6 +42,10 @@ export const useGridDensity = (
           return state;
         }
 
+        if (props.onDensityChange) {
+          props.onDensityChange(newDensity);
+        }
+
         return {
           ...state,
           density: newDensityState,
@@ -49,7 +53,7 @@ export const useGridDensity = (
       });
       apiRef.current.forceUpdate();
     },
-    [logger, apiRef],
+    [logger, apiRef, props],
   );
 
   React.useEffect(() => {

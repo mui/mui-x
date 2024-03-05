@@ -552,6 +552,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
   /**
+   * Fired when the density is updated.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange?: (density: GridDensity) => void;
+  /**
    * Callback fired when a row is clicked.
    * Not called if the target clicked is an interactive element added by the built-in columns.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -659,6 +664,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridCallbackDetails} details Additional details for this callback.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowSelectionModelChange?: (
