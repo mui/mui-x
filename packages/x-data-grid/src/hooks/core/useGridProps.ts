@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type { DataGridProps, DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProps } from '../../models/props/DataGridProps';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import type { GridStateInitializer } from '../utils/useGridInitializeState';
 
-export const propsStateInitializer: GridStateInitializer<DataGridProcessedProps> = (
+export const propsStateInitializer: GridStateInitializer<Pick<DataGridProps, 'rowCount'>> = (
   state,
   props,
 ) => {
