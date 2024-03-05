@@ -1,5 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
+import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import { useSlotProps } from '@mui/base/utils';
@@ -263,3 +266,52 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     </TreeItem2Provider>
   );
 });
+
+TreeItem2.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * If `true`, the node is disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
+   * The id attribute of the node. If not provided, it will be generated.
+   */
+  id: PropTypes.string,
+  /**
+   * The label of the node.
+   */
+  label: PropTypes.node,
+  /**
+   * The id of the node.
+   * Must be unique.
+   */
+  nodeId: PropTypes.string.isRequired,
+  /**
+   * This prop isn't supported.
+   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   */
+  onFocus: unsupportedProp,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;

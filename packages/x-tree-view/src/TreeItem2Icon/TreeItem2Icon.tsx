@@ -1,11 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { TreeItem2IconProps } from './TreeItem2Icon.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
-export function TreeItem2Icon(props: TreeItem2IconProps) {
+function TreeItem2Icon(props: TreeItem2IconProps) {
   const { slots, slotProps, status } = props;
 
   const context = useTreeViewContext<[UseTreeViewIconsSignature]>();
@@ -51,3 +52,30 @@ export function TreeItem2Icon(props: TreeItem2IconProps) {
 
   return <Icon {...iconProps} />;
 }
+
+TreeItem2Icon.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  fallbackIcon: PropTypes.node,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  status: PropTypes.shape({
+    disabled: PropTypes.bool.isRequired,
+    expandable: PropTypes.bool.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    focused: PropTypes.bool.isRequired,
+    selected: PropTypes.bool.isRequired,
+  }).isRequired,
+} as any;
+
+export { TreeItem2Icon };
