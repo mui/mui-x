@@ -41,7 +41,7 @@
     },
     {
       "name": "groupTransition",
-      "description": "The component that renders the children of the item.",
+      "description": "The component that animates to appearance / disappearance of the item's children.",
       "default": "TreeItem2Group",
       "class": "MuiTreeItem-groupTransition"
     }

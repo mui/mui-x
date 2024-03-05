@@ -56,7 +56,7 @@
     "collapseIcon": "The icon used to collapse the node.",
     "endIcon": "The icon displayed next to an end node.",
     "expandIcon": "The icon used to expand the node.",
-    "groupTransition": "The component that renders the children of the item.",
+    "groupTransition": "The component that animates to appearance / disappearance of the item&#39;s children.",
     "icon": "The icon to display next to the tree node&#39;s label."
   }
 }

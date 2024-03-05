@@ -26,7 +26,7 @@ export interface TreeItemSlots {
    */
   icon?: React.ElementType;
   /**
-   * The component that renders the children of the item.
+   * The component that animates to appearance / disappearance of the item's children.
    * @default TreeItem2Group
    */
   groupTransition?: React.ElementType;
