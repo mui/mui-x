@@ -269,7 +269,7 @@ you need to use the new `groupTransition` slot on this component:
 -    TransitionComponent={Fade}
 +    slots={{ groupTransition: Fade }}
 -    TransitionProps={{ timeout: 600 }}
-+    slotProps={{ groupTranition: { timeout: 600 } }}
++    slotProps={{ groupTransition: { timeout: 600 } }}
    />
  </SimpleTreeView>
 ```
