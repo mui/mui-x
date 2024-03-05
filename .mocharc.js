@@ -7,6 +7,8 @@ module.exports = {
     // Mocha seems to ignore .next anyway (maybe because dotfiles?).
     // We're leaving this to make sure.
     'docs/.next/**',
+    // x-charts requires 'tsx/cjs' which conflict with the babel deat-fns override for picker tests
+    'packages/x-charts/**',
   ],
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
@@ -21,8 +23,5 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  spec: [
-    'packages/{,!(x-charts)/**}/*.test.{js,ts,tsx}', // x-charts requires 'tsx/cjs' which conflict with the babel deat-fns override for picker tests
-    'docs/src/modules/**/*.test.{js,ts,tsx}',
-  ],
+  spec: ['packages/**/*.test.{js,ts,tsx}', 'docs/src/modules/**/*.test.{js,ts,tsx}'],
 };
