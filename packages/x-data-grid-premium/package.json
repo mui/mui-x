@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "7.0.0-beta.4",
+  "version": "7.0.0-beta.5",
   "description": "The Premium plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -42,7 +42,7 @@
     "directory": "packages/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.9",
+    "@babel/runtime": "^7.24.0",
     "@mui/system": "^5.15.11",
     "@mui/utils": "^5.15.11",
     "@mui/x-data-grid": "7.0.0-beta.4",

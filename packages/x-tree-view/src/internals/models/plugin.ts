@@ -8,6 +8,7 @@ import type { TreeItemProps } from '../../TreeItem';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
+  publicAPI: TreeViewUsedPublicAPI<TSignature>;
   params: TreeViewUsedDefaultizedParams<TSignature>;
   state: TreeViewUsedState<TSignature>;
   slots: TSignature['slots'];
@@ -36,6 +37,7 @@ export type TreeViewPluginSignature<
     params?: {};
     defaultizedParams?: {};
     instance?: {};
+    publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
     contextValue?: {};
@@ -48,6 +50,7 @@ export type TreeViewPluginSignature<
   params: T extends { params: {} } ? T['params'] : {};
   defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
   instance: T extends { instance: {} } ? T['instance'] : {};
+  publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
   events: T extends { events: {} } ? T['events'] : {};
   state: T extends { state: {} } ? T['state'] : {};
   contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
@@ -74,6 +77,7 @@ export type TreeViewAnyPluginSignature = {
   slots: any;
   slotProps: any;
   models: any;
+  publicAPI: any;
 };
 
 type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
@@ -93,6 +97,15 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
     MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'instance'> & {
       /**
        * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
+       */
+      $$signature: TSignature;
+    };
+
+export type TreeViewUsedPublicAPI<TSignature extends TreeViewAnyPluginSignature> =
+  TSignature['publicAPI'] &
+    MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'publicAPI'> & {
+      /**
+       * Private property only defined in TypeScript to be able to access the plugin signature from the publicAPI object.
        */
       $$signature: TSignature;
     };
