@@ -7,7 +7,7 @@ module.exports = {
     // Mocha seems to ignore .next anyway (maybe because dotfiles?).
     // We're leaving this to make sure.
     'docs/.next/**',
-    // x-charts requires 'tsx/cjs' which conflict with the babel deat-fns override for picker tests
+    // x-charts requires 'tsx/cjs' which conflict with the babel date-fns override for picker tests
     'packages/x-charts/**',
   ],
   recursive: true,
