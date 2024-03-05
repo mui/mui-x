@@ -3,6 +3,7 @@ import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridA
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRefs } from './useGridRefs';
 import { useGridIsRtl } from './useGridIsRtl';
+import { useGridProps } from './useGridProps';
 import { useGridLoggerFactory } from './useGridLoggerFactory';
 import { useGridApiInitialization } from './useGridApiInitialization';
 import { useGridLocaleText } from './useGridLocaleText';
@@ -24,6 +25,7 @@ export const useGridInitialization = <
 
   useGridRefs(privateApiRef);
   useGridIsRtl(privateApiRef);
+  useGridProps(privateApiRef, props);
   useGridLoggerFactory(privateApiRef, props);
   useGridStateInitialization(privateApiRef);
   useGridPipeProcessing(privateApiRef);

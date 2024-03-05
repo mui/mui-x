@@ -19,6 +19,7 @@ import type {
   GridTabIndexState,
   GridVirtualizationState,
 } from '../hooks';
+import type { DataGridProps } from './props/DataGridProps';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
@@ -28,10 +29,17 @@ import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 
 /**
+ * Some props are passed on the state to enable grid selectors to select
+ * and react to them.
+ */
+type GridStateProps = Pick<DataGridProps, 'isRowSelectable'>;
+
+/**
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
   isRtl: boolean;
+  props: GridStateProps;
   dimensions: GridDimensionsState;
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;

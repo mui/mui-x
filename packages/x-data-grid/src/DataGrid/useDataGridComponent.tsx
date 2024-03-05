@@ -1,5 +1,6 @@
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
@@ -76,6 +77,7 @@ export const useDataGridComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);

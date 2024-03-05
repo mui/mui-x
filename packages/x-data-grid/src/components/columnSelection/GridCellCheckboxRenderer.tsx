@@ -4,12 +4,13 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -57,6 +58,8 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
       apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
+
+    useGridSelector(apiRef, (state) => state.props.isRowSelectable);
 
     React.useLayoutEffect(() => {
       if (tabIndex === 0) {
