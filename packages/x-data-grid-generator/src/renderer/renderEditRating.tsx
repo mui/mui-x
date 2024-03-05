@@ -10,7 +10,6 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
 
   const handleChange = async (event: any) => {
     await apiRef.current.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
-    apiRef.current.stopCellEditMode({ id, field });
   };
 
   const handleRef = (element: HTMLElement | undefined) => {
