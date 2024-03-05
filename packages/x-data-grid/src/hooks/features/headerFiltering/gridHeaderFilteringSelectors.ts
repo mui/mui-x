@@ -6,7 +6,8 @@ export const gridHeaderFilteringStateSelector = (state: GridStateCommunity) =>
 
 export const gridHeaderFilteringEnabledSelector = createSelector(
   gridHeaderFilteringStateSelector,
-  (headerFilteringState) => headerFilteringState.enabled,
+  // No initialization in MIT, so we need to default to false to be used by `getTotalHeaderHeight`
+  (headerFilteringState) => headerFilteringState?.enabled ?? false,
 );
 
 export const gridHeaderFilteringEditFieldSelector = createSelector(
