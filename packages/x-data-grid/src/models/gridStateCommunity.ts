@@ -37,7 +37,7 @@ type GridStateProps = Pick<DataGridProps, 'rowCount'>;
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
-  props: GridStateProps,
+  props: GridStateProps;
   theme: Theme;
   dimensions: GridDimensionsState;
   rows: GridRowsState;

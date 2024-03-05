@@ -42,7 +42,6 @@ export const gridPageSizeSelector = createSelector(
   (paginationModel) => paginationModel.pageSize,
 );
 
-
 const gridRowCountSelector = (state: GridStateCommunity) => state.props.rowCount;
 
 /**
@@ -54,10 +53,7 @@ export const gridPageCountSelector = createSelector(
   gridFilteredTopLevelRowCountSelector,
   gridRowCountSelector,
   (pageSize, visibleTopLevelRowCount, rowCount) =>
-    getPageCount(
-      rowCount ?? visibleTopLevelRowCount,
-      pageSize
-    )
+    getPageCount(rowCount ?? visibleTopLevelRowCount, pageSize),
 );
 
 /**
