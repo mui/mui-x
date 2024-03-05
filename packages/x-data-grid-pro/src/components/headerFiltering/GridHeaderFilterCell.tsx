@@ -30,6 +30,10 @@ import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
+export interface RenderHeaderFilterProps extends GridHeaderFilterCellProps {
+  inputRef: React.RefObject<unknown>;
+}
+
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
   height: number;
@@ -133,20 +137,20 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     let headerFilterComponent: React.ReactNode;
     if (colDef.renderHeaderFilter) {
-      headerFilterComponent = colDef.renderHeaderFilter(props);
+      headerFilterComponent = colDef.renderHeaderFilter({...props, inputRef});
     }
 
     React.useLayoutEffect(() => {
       if (hasFocus && !isMenuOpen) {
         let focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-        if (isEditing && InputComponent && headerFilterComponent === undefined) {
+        if (isEditing && InputComponent) {
           focusableElement = inputRef.current;
         }
         const elementToFocus = focusableElement || cellRef.current;
         elementToFocus?.focus();
         apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
       }
-    }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen, headerFilterComponent]);
+    }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
