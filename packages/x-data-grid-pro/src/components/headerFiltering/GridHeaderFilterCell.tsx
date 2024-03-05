@@ -137,7 +137,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     let headerFilterComponent: React.ReactNode;
     if (colDef.renderHeaderFilter) {
-      headerFilterComponent = colDef.renderHeaderFilter({...props, inputRef});
+      headerFilterComponent = colDef.renderHeaderFilter({ ...props, inputRef });
     }
 
     React.useLayoutEffect(() => {
