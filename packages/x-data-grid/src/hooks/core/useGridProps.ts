@@ -3,10 +3,9 @@ import type { DataGridProps } from '../../models/props/DataGridProps';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import type { GridStateInitializer } from '../utils/useGridInitializeState';
 
-export const propsStateInitializer: GridStateInitializer<Pick<DataGridProps, 'rowCount'>> = (
-  state,
-  props,
-) => {
+type Props = Pick<DataGridProps, 'rowCount'>;
+
+export const propsStateInitializer: GridStateInitializer<Props> = (state, props) => {
   return {
     ...state,
     props: {
@@ -17,7 +16,7 @@ export const propsStateInitializer: GridStateInitializer<Pick<DataGridProps, 'ro
 
 export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: React.MutableRefObject<PrivateApi>,
-  props: DataGridProps,
+  props: Props,
 ) => {
   React.useEffect(() => {
     apiRef.current.setState((state) => ({
