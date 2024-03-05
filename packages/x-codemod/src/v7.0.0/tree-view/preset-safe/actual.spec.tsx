@@ -13,5 +13,5 @@ const className = treeViewClasses.root;
   defaultSelected={null}
   onNodeSelect={selectionCallback}
 >
-  <TreeItem nodeId="1" label="Item 1" />
+  <TreeItem nodeId="1" label="Item 1" TransitionComponent={{ Fade }} />
 </TreeView>;
