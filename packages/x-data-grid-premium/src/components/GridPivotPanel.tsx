@@ -130,11 +130,27 @@ const Placeholder = styled('div')({
   borderRadius: 8,
 });
 
-const GridFieldItemContainer = styled('div')(({ theme }) => ({
+const GridFieldItemContainer = styled('div')<{ dropPosition: DropPosition }>(({ theme }) => ({
   width: '100%',
   padding: '4px',
   display: 'flex',
   alignItems: 'center',
+
+  borderWidth: 0,
+  borderTopWidth: 1,
+  borderBottomWidth: 1,
+  borderStyle: 'solid',
+  borderColor: 'transparent',
+  transition: 'border-color 0.3s',
+  marginBottom: -1, // collapse horizontal borders
+  variants: [
+    { props: { dropPosition: 'top' }, style: { borderTopColor: theme.palette.primary.main } },
+    {
+      props: { dropPosition: 'bottom' },
+      style: { borderBottomColor: theme.palette.primary.main },
+    },
+  ],
+
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
@@ -151,23 +167,37 @@ interface FieldTransferObject {
   modelKey: 'columns' | 'rows' | 'values' | null;
 }
 
+type DropPosition = 'top' | 'bottom' | null;
+
+type UpdatePivotModel = (params: {
+  field: string;
+  targetSection: FieldTransferObject['modelKey'];
+  originSection: FieldTransferObject['modelKey'];
+  targetField?: string;
+  targetFieldPosition?: DropPosition;
+}) => void;
+
 function GridFieldItem({
   children,
   field,
   modelKey,
+  updatePivotModel,
   ...props
 }: {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   modelKey: FieldTransferObject['modelKey'];
+  updatePivotModel: UpdatePivotModel;
 }) {
+  const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
+
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
       const data: FieldTransferObject = { field, modelKey };
       event.dataTransfer.setData('text/plain', JSON.stringify(data));
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.setDragImage(
-        event.target.parentElement!,
+        (event.target as HTMLElement).parentElement!,
         event.nativeEvent.offsetX,
         event.nativeEvent.offsetY,
       );
@@ -175,8 +205,62 @@ function GridFieldItem({
     [field, modelKey],
   );
 
+  const getDropPosition = React.useCallback((event: React.DragEvent): DropPosition => {
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const y = event.clientY - rect.top;
+    if (y < rect.height / 2) {
+      return 'top';
+    }
+    return 'bottom';
+  }, []);
+
+  const handleDragOver = React.useCallback(
+    (event: React.DragEvent) => {
+      if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
+        setDropPosition(getDropPosition(event));
+      }
+    },
+    [getDropPosition],
+  );
+
+  const handleDragLeave = React.useCallback((event: React.DragEvent) => {
+    if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
+      setDropPosition(null);
+    }
+  }, []);
+
+  const handleDrop = React.useCallback(
+    (event: React.DragEvent) => {
+      setDropPosition(null);
+      if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
+        event.preventDefault();
+
+        const position = getDropPosition(event);
+
+        const { field: droppedField, modelKey: originSection } = JSON.parse(
+          event.dataTransfer.getData('text/plain'),
+        ) as FieldTransferObject;
+
+        updatePivotModel({
+          field: droppedField,
+          targetField: field,
+          targetFieldPosition: position,
+          originSection,
+          targetSection: modelKey,
+        });
+      }
+    },
+    [field, updatePivotModel, modelKey, getDropPosition],
+  );
+
   return (
-    <GridFieldItemContainer {...props}>
+    <GridFieldItemContainer
+      {...props}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      dropPosition={dropPosition}
+    >
       <DragHandle draggable="true" onDragStart={handleDragStart}>
         <DragHandleIcon fontSize="small" />
       </DragHandle>
@@ -229,8 +313,72 @@ function GridPivotPanelContent({
     });
   }, [pivotModel.columns, pivotModel.rows, pivotModel.values, fields]);
 
+  const updatePivotModel = React.useCallback<UpdatePivotModel>(
+    ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
+      if (field === targetField) {
+        return;
+      }
+
+      onPivotModelChange((prev) => {
+        const newModel = { ...prev };
+        if (targetSection) {
+          const newItem = targetSection === 'rows' ? field : { field };
+          if (targetSection === 'values') {
+            newItem.aggFunc = 'sum';
+          }
+          if (targetSection === 'columns') {
+            newItem.sort = 'asc';
+          }
+          const newSectionArray = [...prev[targetSection]];
+          let toIndex = newSectionArray.length;
+          if (targetField) {
+            const fromIndex = newSectionArray.findIndex((item) => {
+              if (typeof item === 'string') {
+                return item === field;
+              }
+              return item.field === field;
+            });
+            if (fromIndex > -1) {
+              newSectionArray.splice(fromIndex, 1);
+            }
+            toIndex = newSectionArray.findIndex((item) => {
+              if (typeof item === 'string') {
+                return item === targetField;
+              }
+              return item.field === targetField;
+            });
+            if (targetFieldPosition === 'bottom') {
+              toIndex += 1;
+            }
+          }
+
+          newSectionArray.splice(toIndex, 0, newItem);
+          newModel[targetSection] = newSectionArray;
+        }
+        if (targetSection !== originSection && originSection) {
+          newModel[originSection] = prev[originSection].filter((f) => {
+            if (typeof f === 'string') {
+              return f !== field;
+            }
+            return f.field !== field;
+          });
+        }
+        return newModel;
+      });
+    },
+    [onPivotModelChange],
+  );
+
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.removeAttribute('data-drag-over');
+
+    // The drop event was already handled by a child
+    if (event.defaultPrevented) {
+      return;
+    }
+
     event.preventDefault();
+
     const { field, modelKey: originSection } = JSON.parse(
       event.dataTransfer.getData('text/plain'),
     ) as FieldTransferObject;
@@ -240,34 +388,15 @@ function GridPivotPanelContent({
     if (originSection === targetSection) {
       return;
     }
-    event.currentTarget.removeAttribute('data-drag-over');
-    onPivotModelChange((prev) => {
-      const newModel = { ...prev };
-      if (targetSection) {
-        const newItem = targetSection === 'rows' ? field : { field };
-        if (targetSection === 'values') {
-          newItem.aggFunc = 'sum';
-        }
-        if (targetSection === 'columns') {
-          newItem.sort = 'asc';
-        }
-        newModel[targetSection] = [...prev[targetSection], newItem];
-      }
-      if (originSection) {
-        newModel[originSection] = prev[originSection].filter((f) => {
-          if (typeof f === 'string') {
-            return f !== field;
-          }
-          return f.field !== field;
-        });
-      }
-      return newModel;
-    });
+    updatePivotModel({ field, targetSection, originSection });
   };
 
-  const handleDragOver = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = React.useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const handleDragEnter = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
       event.currentTarget.setAttribute('data-drag-over', 'true');
     }
@@ -283,6 +412,7 @@ function GridPivotPanelContent({
     <div>
       <PivotSectionContainer
         onDrop={handleDrop}
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="rows"
@@ -293,7 +423,13 @@ function GridPivotPanelContent({
         {pivotModel.rows.length > 0 &&
           pivotModel.rows.map((field) => {
             return (
-              <GridFieldItem key={field} field={field} modelKey="rows" data-field={field}>
+              <GridFieldItem
+                key={field}
+                field={field}
+                modelKey="rows"
+                data-field={field}
+                updatePivotModel={updatePivotModel}
+              >
                 {getColumnName(field)}
               </GridFieldItem>
             );
@@ -302,6 +438,7 @@ function GridPivotPanelContent({
       <Divider />
       <PivotSectionContainer
         onDrop={handleDrop}
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="columns"
@@ -312,7 +449,12 @@ function GridPivotPanelContent({
         {pivotModel.columns.length > 0 &&
           pivotModel.columns.map(({ field, sort }) => {
             return (
-              <GridFieldItem key={field} field={field} modelKey="columns">
+              <GridFieldItem
+                key={field}
+                field={field}
+                modelKey="columns"
+                updatePivotModel={updatePivotModel}
+              >
                 {getColumnName(field)} {sort}
               </GridFieldItem>
             );
@@ -321,6 +463,7 @@ function GridPivotPanelContent({
       <Divider />
       <PivotSectionContainer
         onDrop={handleDrop}
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section="values"
@@ -331,14 +474,21 @@ function GridPivotPanelContent({
         {pivotModel.values.length > 0 &&
           pivotModel.values.map(({ field, aggFunc }) => {
             return (
-              <GridFieldItem key={field} field={field} modelKey="values">
+              <GridFieldItem
+                key={field}
+                field={field}
+                modelKey="values"
+                updatePivotModel={updatePivotModel}
+              >
                 {getColumnName(field)} {aggFunc}
               </GridFieldItem>
             );
           })}
       </PivotSectionContainer>
+      <Divider />
       <PivotSectionContainer
         onDrop={handleDrop}
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         data-section={null}
@@ -347,7 +497,12 @@ function GridPivotPanelContent({
         <PivotSectionTitle>Available fields</PivotSectionTitle>
         {availableFields.map((field) => {
           return (
-            <GridFieldItem key={field} field={field} modelKey={null}>
+            <GridFieldItem
+              key={field}
+              field={field}
+              modelKey={null}
+              updatePivotModel={updatePivotModel}
+            >
               {getColumnName(field)}
             </GridFieldItem>
           );
