@@ -262,16 +262,16 @@ If you were passing a `TransitionComponent` or `TransitionProps` to your Tree It
 you need to use the new `groupTransition` slot on this component:
 
 ```diff
-  <SimpleTreeView>
-    <TreeItem
-      nodeId="1"
-      label="Node 1"
--     TransitionComponent={Fade}
-+     slots={{ groupTransition: Fade }}
--     TransitionProps={{ timeout: 600 }}
-+     slotProps={{ groupTranition: { timeout: 600 } }}
-    />
-  </SimpleTreeView>
+ <SimpleTreeView>
+   <TreeItem
+     nodeId="1"
+     label="Node 1"
+-    TransitionComponent={Fade}
++    slots={{ groupTransition: Fade }}
+-    TransitionProps={{ timeout: 600 }}
++    slotProps={{ groupTranition: { timeout: 600 } }}
+   />
+ </SimpleTreeView>
 ```
 
 ### Rename the `group` class of the `TreeItem` component
