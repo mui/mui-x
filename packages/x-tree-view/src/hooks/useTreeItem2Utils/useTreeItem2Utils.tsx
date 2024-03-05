@@ -1,31 +1,31 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../plugins';
-import type { UseTreeItemStatus } from '../useTreeItem';
+import { useTreeViewContext } from '../../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultTreeViewPlugins } from '../../internals/plugins';
+import type { UseTreeItem2Status } from '../../useTreeItem2';
 
-interface UseTreeItemInteractions {
+interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
 }
 
-interface UseTreeItemUtilsReturnValue {
-  interactions: UseTreeItemInteractions;
-  status: UseTreeItemStatus;
+interface UseTreeItem2UtilsReturnValue {
+  interactions: UseTreeItem2Interactions;
+  status: UseTreeItem2Status;
 }
 
-export const useTreeItemUtils = ({
+export const useTreeItem2Utils = ({
   nodeId,
   children,
 }: {
   nodeId: string;
   children: React.ReactNode;
-}): UseTreeItemUtilsReturnValue => {
+}): UseTreeItem2UtilsReturnValue => {
   const {
     instance,
     selection: { multiSelect },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const status: UseTreeItemStatus = {
+  const status: UseTreeItem2Status = {
     expandable: Boolean(Array.isArray(children) ? children.length : children),
     expanded: instance.isNodeExpanded(nodeId),
     focused: instance.isNodeFocused(nodeId),
@@ -72,7 +72,7 @@ export const useTreeItemUtils = ({
     }
   };
 
-  const interactions: UseTreeItemInteractions = { handleExpansion, handleSelection };
+  const interactions: UseTreeItem2Interactions = { handleExpansion, handleSelection };
 
   return { interactions, status };
 };

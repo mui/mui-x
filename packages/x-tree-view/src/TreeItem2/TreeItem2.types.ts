@@ -1,39 +1,39 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
-import { TreeItemClasses } from '../../TreeItem';
-import { TreeItemNextIconSlotProps, TreeItemNextIconSlots } from '../TreeItemNextIcon';
+import { UseTreeItem2Parameters, UseTreeItem2Status } from '../useTreeItem2';
+import { TreeItemClasses } from '../TreeItem';
+import { TreeItem2IconSlotProps, TreeItem2IconSlots } from '../TreeItem2Icon';
 
-export interface TreeItemNextSlots extends TreeItemNextIconSlots {
+export interface TreeItem2Slots extends TreeItem2IconSlots {
   /**
    * The component that renders the root.
-   * @default TreeItemNextRoot
+   * @default TreeItem2Root
    */
   root?: React.ElementType;
   /**
    * The component that renders the content of the item.
    * (e.g.: everything related to this item, not to its children).
-   * @default TreeItemNextContent
+   * @default TreeItem2Content
    */
   content?: React.ElementType;
   /**
    * The component that renders the children of the item.
-   * @default TreeItemNextGroup
+   * @default TreeItem2Group
    */
   groupTransition?: React.ElementType;
   /**
    * The component that renders the icon
-   * @default TreeItemNextIconContainer
+   * @default TreeItem2IconContainer
    */
   iconContainer?: React.ElementType;
   /**
    * The component that renders the item label
-   * @default TreeItemNextLabel
+   * @default TreeItem2Label
    */
   label?: React.ElementType;
 }
 
-export interface TreeItemNextSlotProps extends TreeItemNextIconSlotProps {
+export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentProps<'div', {}, {}>;
@@ -41,7 +41,9 @@ export interface TreeItemNextSlotProps extends TreeItemNextIconSlotProps {
   label?: SlotComponentProps<'div', {}, {}>;
 }
 
-export interface TreeItemNextProps extends Omit<UseTreeItemParameters, 'rootRef'> {
+export interface TreeItem2Props
+  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -51,14 +53,17 @@ export interface TreeItemNextProps extends Omit<UseTreeItemParameters, 'rootRef'
    * Overridable component slots.
    * @default {}
    */
-  slots?: TreeItemNextSlots;
+  slots?: TreeItem2Slots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TreeItemNextSlotProps;
+  slotProps?: TreeItem2SlotProps;
+  /**
+   * This prop isn't supported.
+   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   */
+  onFocus?: null;
 }
 
-export interface TreeItemNextOwnerState
-  extends Omit<TreeItemNextProps, 'disabled'>,
-    UseTreeItemStatus {}
+export interface TreeItem2OwnerState extends Omit<TreeItem2Props, 'disabled'>, UseTreeItem2Status {}

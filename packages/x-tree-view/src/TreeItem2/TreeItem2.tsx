@@ -5,14 +5,17 @@ import Collapse from '@mui/material/Collapse';
 import { useSlotProps } from '@mui/base/utils';
 import { shouldForwardProp } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import { TreeItemNextProps, TreeItemNextOwnerState } from './TreeItemNext.types';
-import { useTreeItem, UseTreeItemContentSlotOwnProps } from '../useTreeItem';
-import { getTreeItemUtilityClass, treeItemClasses } from '../../TreeItem';
-import { TreeItemNextIcon } from '../TreeItemNextIcon';
-import { TreeItemNextProvider } from '../TreeItemNextProvider';
+import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
+import {
+  unstable_useTreeItem2 as useTreeItem2,
+  UseTreeItem2ContentSlotOwnProps,
+} from '../useTreeItem2';
+import { getTreeItemUtilityClass, treeItemClasses } from '../TreeItem';
+import { TreeItem2Icon } from '../TreeItem2Icon';
+import { TreeItem2Provider } from '../TreeItem2Provider';
 
-export const TreeItemNextRoot = styled('li', {
-  name: 'MuiTreeItemNext',
+export const TreeItem2Root = styled('li', {
+  name: 'MuiTreeItem2',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })({
@@ -22,8 +25,8 @@ export const TreeItemNextRoot = styled('li', {
   outline: 0,
 });
 
-export const TreeItemNextContent = styled('div', {
-  name: 'MuiTreeItemNext',
+export const TreeItem2Content = styled('div', {
+  name: 'MuiTreeItem2',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
@@ -51,18 +54,18 @@ export const TreeItemNextContent = styled('div', {
   },
   variants: [
     {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
+      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.disabled,
       style: {
         opacity: (theme.vars || theme).palette.action.disabledOpacity,
         backgroundColor: 'transparent',
       },
     },
     {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.focused,
+      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.focused,
       style: { backgroundColor: (theme.vars || theme).palette.action.focus },
     },
     {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
+      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.selected,
       style: {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
@@ -84,7 +87,7 @@ export const TreeItemNextContent = styled('div', {
       },
     },
     {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected && status.focused,
+      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.selected && status.focused,
       style: {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
@@ -97,8 +100,8 @@ export const TreeItemNextContent = styled('div', {
   ],
 }));
 
-export const TreeItemNextLabel = styled('div', {
-  name: 'MuiTreeItemNext',
+export const TreeItem2Label = styled('div', {
+  name: 'MuiTreeItem2',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
@@ -110,8 +113,8 @@ export const TreeItemNextLabel = styled('div', {
   ...theme.typography.body1,
 }));
 
-export const TreeItemNextIconContainer = styled('div', {
-  name: 'MuiTreeItemNext',
+export const TreeItem2IconContainer = styled('div', {
+  name: 'MuiTreeItem2',
   slot: 'IconContainer',
   overridesResolver: (props, styles) => styles.iconContainer,
 })({
@@ -124,8 +127,8 @@ export const TreeItemNextIconContainer = styled('div', {
   },
 });
 
-export const TreeItemNextTransitionGroup = styled(Collapse, {
-  name: 'MuiTreeItemNextTransitionGroup',
+export const TreeItem2TransitionGroup = styled(Collapse, {
+  name: 'MuiTreeItem2TransitionGroup',
   slot: 'TransitionGroup',
   overridesResolver: (props, styles) => styles.transitionGroup,
 })({
@@ -134,7 +137,7 @@ export const TreeItemNextTransitionGroup = styled(Collapse, {
   paddingLeft: 12,
 });
 
-const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
+const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -152,13 +155,23 @@ const useUtilityClasses = (ownerState: TreeItemNextOwnerState) => {
   return composeClasses(slots, getTreeItemUtilityClass, classes);
 };
 
-export const TreeItemNext = React.forwardRef(function TreeItemNext(
-  inProps: TreeItemNextProps,
+/**
+ *
+ * Demos:
+ *
+ * - [Tree View](https://mui.com/x/react-tree-view/)
+ *
+ * API:
+ *
+ * - [TreeItem2 API](https://mui.com/x/api/tree-view/tree-item-2/)
+ */
+export const TreeItem2 = React.forwardRef(function TreeItem2(
+  inProps: TreeItem2Props,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItemNext' });
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const { id, nodeId, label, children, slots = {}, slotProps = {}, ...other } = props;
+  const { id, nodeId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
     getRootProps,
@@ -167,21 +180,22 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem({
+  } = useTreeItem2({
     id,
     nodeId,
     children,
     label,
+    disabled,
   });
 
-  const ownerState: TreeItemNextOwnerState = {
+  const ownerState: TreeItem2OwnerState = {
     ...props,
     ...status,
   };
 
   const classes = useUtilityClasses(ownerState);
 
-  const Root: React.ElementType = slots.root ?? TreeItemNextRoot;
+  const Root: React.ElementType = slots.root ?? TreeItem2Root;
   const rootProps = useSlotProps({
     elementType: Root,
     getSlotProps: getRootProps,
@@ -194,7 +208,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     className: classes.root,
   });
 
-  const Content: React.ElementType = slots.content ?? TreeItemNextContent;
+  const Content: React.ElementType = slots.content ?? TreeItem2Content;
   const contentProps = useSlotProps({
     elementType: Content,
     getSlotProps: getContentProps,
@@ -208,7 +222,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     }),
   });
 
-  const IconContainer: React.ElementType = slots.iconContainer ?? TreeItemNextIconContainer;
+  const IconContainer: React.ElementType = slots.iconContainer ?? TreeItem2IconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
     getSlotProps: getIconContainerProps,
@@ -217,7 +231,7 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
     className: classes.iconContainer,
   });
 
-  const Label: React.ElementType = slots.label ?? TreeItemNextLabel;
+  const Label: React.ElementType = slots.label ?? TreeItem2Label;
   const labelProps = useSlotProps({
     elementType: Label,
     getSlotProps: getLabelProps,
@@ -236,16 +250,16 @@ export const TreeItemNext = React.forwardRef(function TreeItemNext(
   });
 
   return (
-    <TreeItemNextProvider nodeId={nodeId}>
+    <TreeItem2Provider nodeId={nodeId}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
-            <TreeItemNextIcon status={status} slots={slots} slotProps={slotProps} />
+            <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Label {...labelProps} />
         </Content>
-        {children && <TreeItemNextTransitionGroup as={GroupTransition} {...groupTransitionProps} />}
+        {children && <TreeItem2TransitionGroup as={GroupTransition} {...groupTransitionProps} />}
       </Root>
-    </TreeItemNextProvider>
+    </TreeItem2Provider>
   );
 });

@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  TreeItemNext,
-  TreeItemNextLabel,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view';
 
 function CustomLabel(props) {
@@ -48,9 +45,9 @@ function CustomLabel(props) {
   }
 
   return (
-    <TreeItemNextLabel {...other} onDoubleClick={handleLabelDoubleClick}>
+    <TreeItem2Label {...other} onDoubleClick={handleLabelDoubleClick}>
       {children}
-    </TreeItemNextLabel>
+    </TreeItem2Label>
   );
 }
 
@@ -64,7 +61,7 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
   };
 
   return (
-    <TreeItemNext
+    <TreeItem2
       ref={ref}
       {...props}
       slots={{

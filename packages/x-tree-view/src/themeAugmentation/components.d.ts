@@ -21,10 +21,10 @@ export interface TreeViewComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItem'];
     variants?: ComponentsVariants<Theme>['MuiTreeItem'];
   };
-  MuiTreeItemNext?: {
-    defaultProps?: ComponentsProps['MuiTreeItemNext'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItemNext'];
-    variants?: ComponentsVariants<Theme>['MuiTreeItemNext'];
+  MuiTreeItem2?: {
+    defaultProps?: ComponentsProps['MuiTreeItem2'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItem2'];
+    variants?: ComponentsVariants<Theme>['MuiTreeItem2'];
   };
 }
 

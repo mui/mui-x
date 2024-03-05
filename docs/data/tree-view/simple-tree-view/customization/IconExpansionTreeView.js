@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItemUtils } from 'packages/x-tree-view/src/internals/useTreeItemUtils';
+import { useTreeItem2Utils } from 'packages/x-tree-view/src/hooks/useTreeItem2Utils';
 
-import { TreeItemNext } from '@mui/x-tree-view/internals/TreeItemNext';
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
-  const { interactions } = useTreeItemUtils({
+  const { interactions } = useTreeItem2Utils({
     nodeId: props.nodeId,
     children: props.children,
   });
@@ -21,7 +21,7 @@ const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
   };
 
   return (
-    <TreeItemNext
+    <TreeItem2
       {...props}
       ref={ref}
       slotProps={{

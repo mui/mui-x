@@ -1,23 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItemUtils } from 'packages/x-tree-view/src/internals/useTreeItemUtils';
-import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/internals/useTreeItem';
-import {
-  TreeItemNext,
-  TreeItemNextProps,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+import { useTreeItem2Utils } from 'packages/x-tree-view/src/hooks/useTreeItem2Utils';
+import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 const CustomTreeItem = React.forwardRef(function MyTreeItem(
-  props: TreeItemNextProps,
+  props: TreeItem2Props,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { interactions } = useTreeItemUtils({
+  const { interactions } = useTreeItem2Utils({
     nodeId: props.nodeId,
     children: props.children,
   });
 
-  const handleContentClick: UseTreeItemContentSlotOwnProps['onClick'] = (event) => {
+  const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (event) => {
     event.defaultMuiPrevented = true;
     interactions.handleSelection(event);
   };
@@ -27,7 +24,7 @@ const CustomTreeItem = React.forwardRef(function MyTreeItem(
   };
 
   return (
-    <TreeItemNext
+    <TreeItem2
       {...props}
       ref={ref}
       slotProps={{

@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  TreeItemNext,
-  TreeItemNextProps,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 const CustomTreeItem = React.forwardRef(
-  (props: TreeItemNextProps, ref: React.Ref<HTMLLIElement>) => {
+  (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => {
     return (
-      <TreeItemNext
+      <TreeItem2
         ref={ref}
         {...props}
         slotProps={{

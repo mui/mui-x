@@ -82,10 +82,10 @@ createTheme({
         },
       },
     },
-    MuiTreeItemNext: {
+    MuiTreeItem2: {
       defaultProps: {
         nodeId: '1',
-        // @ts-expect-error invalid MuiTreeItemNext prop
+        // @ts-expect-error invalid MuiTreeItem2 prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -95,7 +95,7 @@ createTheme({
             backgroundColor: 'green',
           },
         },
-        // @ts-expect-error invalid MuiTreeItemNext class key
+        // @ts-expect-error invalid MuiTreeItem2 class key
         main: {
           backgroundColor: 'blue',
         },

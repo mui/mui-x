@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  TreeItemNext,
-  TreeItemNextLabel,
-  TreeItemNextProps,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+  TreeItem2,
+  TreeItem2Label,
+  TreeItem2Props,
+} from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
 
 interface CustomLabelProps {
@@ -55,9 +55,9 @@ function CustomLabel(props: CustomLabelProps) {
   }
 
   return (
-    <TreeItemNextLabel {...other} onDoubleClick={handleLabelDoubleClick}>
+    <TreeItem2Label {...other} onDoubleClick={handleLabelDoubleClick}>
       {children}
-    </TreeItemNextLabel>
+    </TreeItem2Label>
   );
 }
 
@@ -66,7 +66,7 @@ const TreeItemContext = React.createContext<{
 }>({ onLabelValueChange: () => {} });
 
 const CustomTreeItem = React.forwardRef(
-  (props: TreeItemNextProps, ref: React.Ref<HTMLLIElement>) => {
+  (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => {
     const { onLabelValueChange } = React.useContext(TreeItemContext);
 
     const handleLabelValueChange = (newLabel: string) => {
@@ -74,7 +74,7 @@ const CustomTreeItem = React.forwardRef(
     };
 
     return (
-      <TreeItemNext
+      <TreeItem2
         ref={ref}
         {...props}
         slots={{

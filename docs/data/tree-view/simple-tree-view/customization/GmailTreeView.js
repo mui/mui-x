@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useTheme, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -14,21 +15,20 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
-  TreeItemNextContent,
-  TreeItemNextIconContainer,
-  TreeItemNextRoot,
-  TreeItemNextTransitionGroup,
-} from '@mui/x-tree-view/internals/TreeItemNext';
-import { useTreeItem } from '@mui/x-tree-view/internals/useTreeItem';
-import { TreeItemNextProvider } from 'packages/x-tree-view/src/internals/TreeItemNextProvider';
-import { TreeItemNextIcon } from 'packages/x-tree-view/src/internals/TreeItemNextIcon';
-import clsx from 'clsx';
+  TreeItem2Content,
+  TreeItem2IconContainer,
+  TreeItem2Root,
+  TreeItem2TransitionGroup,
+} from '@mui/x-tree-view/TreeItem2';
+import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 
-const CustomTreeItemRoot = styled(TreeItemNextRoot)(({ theme }) => ({
+const CustomTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   marginBottom: theme.spacing(0.3),
   color: theme.palette.text.secondary,
   borderRadius: theme.spacing(2),
@@ -46,13 +46,11 @@ const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
   },
 }));
 
-const CustomTreeItemIconContainer = styled(TreeItemNextIconContainer)(
-  ({ theme }) => ({
-    marginRight: theme.spacing(1),
-  }),
-);
+const CustomTreeItemIconContainer = styled(TreeItem2IconContainer)(({ theme }) => ({
+  marginRight: theme.spacing(1),
+}));
 
-const CustomTreeItemTransitionGroup = styled(TreeItemNextTransitionGroup)(
+const CustomTreeItemTransitionGroup = styled(TreeItem2TransitionGroup)(
   ({ theme }) => ({
     marginLeft: 0,
     [`& .content`]: {
@@ -67,6 +65,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     id,
     nodeId,
     label,
+    disabled,
     children,
     bgColor,
     color,
@@ -84,7 +83,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem({ id, nodeId, children, label, rootRef: ref });
+  } = useTreeItem2({ id, nodeId, children, label, disabled, rootRef: ref });
 
   const style = {
     '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,
@@ -93,7 +92,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItemNextProvider nodeId={nodeId}>
+    <TreeItem2Provider nodeId={nodeId}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -105,7 +104,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           })}
         >
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
-            <TreeItemNextIcon status={status} />
+            <TreeItem2Icon status={status} />
           </CustomTreeItemIconContainer>
           <Box
             sx={{
@@ -132,7 +131,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           <CustomTreeItemTransitionGroup {...getGroupTransitionProps()} />
         )}
       </CustomTreeItemRoot>
-    </TreeItemNextProvider>
+    </TreeItem2Provider>
   );
 });
 

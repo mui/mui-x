@@ -2,17 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import {
-  TreeItemNext,
-  TreeItemNextLabel,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 
 function CustomLabel(props) {
   const { tooltip, ...other } = props;
 
   return (
     <Tooltip title={tooltip}>
-      <TreeItemNextLabel {...other} />
+      <TreeItem2Label {...other} />
     </Tooltip>
   );
 }
@@ -21,7 +18,7 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
   const { labelTooltip, ...other } = props;
 
   return (
-    <TreeItemNext
+    <TreeItem2
       {...other}
       ref={ref}
       slots={{ label: CustomLabel }}

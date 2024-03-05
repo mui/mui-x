@@ -2,22 +2,22 @@ import * as React from 'react';
 import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import {
-  UseTreeItemParameters,
-  UseTreeItemReturnValue,
-  UseTreeItemRootSlotProps,
-  UseTreeItemContentSlotProps,
-  UseTreeItemGroupTransitionSlotProps,
-  UseTreeItemLabelSlotProps,
+  UseTreeItem2Parameters,
+  UseTreeItem2ReturnValue,
+  UseTreeItem2RootSlotProps,
+  UseTreeItem2ContentSlotProps,
+  UseTreeItem2GroupTransitionSlotProps,
+  UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
-} from './useTreeItem.types';
-import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../plugins/defaultPlugins';
-import { MuiCancellableEvent } from '../models/MuiCancellableEvent';
-import { useTreeItemUtils } from '../useTreeItemUtils';
+} from './useTreeItem2.types';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
+import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
+import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 
-export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
-  parameters: UseTreeItemParameters,
-): UseTreeItemReturnValue<TPlugins> => {
+export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
+  parameters: UseTreeItem2Parameters,
+): UseTreeItem2ReturnValue<TPlugins> => {
   const {
     runItemPlugins,
     selection: { multiSelect },
@@ -29,7 +29,7 @@ export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTre
   const { id, nodeId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItemUtils({ nodeId, children });
+  const { interactions, status } = useTreeItem2Utils({ nodeId, children });
   const idAttribute = instance.getTreeItemId(nodeId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
 
@@ -80,7 +80,7 @@ export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTre
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemRootSlotProps<ExternalProps> => {
+  ): UseTreeItem2RootSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
@@ -115,7 +115,7 @@ export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTre
 
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemContentSlotProps<ExternalProps> => {
+  ): UseTreeItem2ContentSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
@@ -133,7 +133,7 @@ export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTre
 
   const getLabelProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemLabelSlotProps<ExternalProps> => {
+  ): UseTreeItem2LabelSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
@@ -162,7 +162,7 @@ export const useTreeItem = <TPlugins extends DefaultTreeViewPlugins = DefaultTre
 
   const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
-  ): UseTreeItemGroupTransitionSlotProps<ExternalProps> => {
+  ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = {
       ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),

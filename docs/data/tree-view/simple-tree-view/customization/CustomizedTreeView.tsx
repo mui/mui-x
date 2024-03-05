@@ -8,10 +8,7 @@ import FolderRounded from '@mui/icons-material/FolderRounded';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import {
-  TreeItemNext,
-  TreeItemNextProps,
-} from '@mui/x-tree-view/internals/TreeItemNext';
+import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { animated, useSpring } from '@react-spring/web';
@@ -40,7 +37,7 @@ declare module 'react' {
   }
 }
 
-type StyledTreeItemProps = Omit<TreeItemNextProps, 'label'> & {
+type StyledTreeItemProps = Omit<TreeItem2Props, 'label'> & {
   labelIcon: React.ElementType;
   labelText: string;
 };
@@ -52,7 +49,7 @@ const StyledTreeItemLabel = styled(Typography)({
   flexGrow: 1,
 }) as unknown as typeof Typography;
 
-const StyledTreeItemRoot = styled(TreeItemNext)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
   color:
     theme.palette.mode === 'light'
       ? theme.palette.grey[800]
@@ -111,7 +108,7 @@ const StyledTreeItemRoot = styled(TreeItemNext)(({ theme }) => ({
       fontWeight: 500,
     },
   },
-})) as unknown as typeof TreeItemNext;
+})) as unknown as typeof TreeItem2;
 
 const AnimatedCollapse = animated(Collapse);
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { TreeViewItemId } from '@mui/x-tree-view';
-import { MuiCancellableEventHandler } from '../models/MuiCancellableEvent';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../models';
+import { TreeViewItemId } from '../models';
+import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
 
-export interface UseTreeItemParameters {
+export interface UseTreeItem2Parameters {
   /**
    * The id attribute of the node. If not provided, it will be generated.
    */
@@ -29,7 +29,7 @@ export interface UseTreeItemParameters {
   children?: React.ReactNode;
 }
 
-export interface UseTreeItemRootSlotOwnProps {
+export interface UseTreeItem2RootSlotOwnProps {
   role: 'treeitem';
   tabIndex: -1;
   id: string;
@@ -40,32 +40,32 @@ export interface UseTreeItemRootSlotOwnProps {
   ref: React.RefCallback<HTMLLIElement>;
 }
 
-export type UseTreeItemRootSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemRootSlotOwnProps;
+export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2RootSlotOwnProps;
 
-export interface UseTreeItemContentSlotOwnProps {
+export interface UseTreeItem2ContentSlotOwnProps {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
-  status: UseTreeItemStatus;
+  status: UseTreeItem2Status;
 }
 
-export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemContentSlotOwnProps;
+export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2ContentSlotOwnProps;
 
-export interface UseTreeItemIconContainerSlotOwnProps {}
+export interface UseTreeItem2IconContainerSlotOwnProps {}
 
 export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemIconContainerSlotOwnProps;
+  UseTreeItem2IconContainerSlotOwnProps;
 
-export interface UseTreeItemLabelSlotOwnProps {
+export interface UseTreeItem2LabelSlotOwnProps {
   children: React.ReactNode;
 }
 
-export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemLabelSlotOwnProps;
+export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2LabelSlotOwnProps;
 
-export interface UseTreeItemGroupTransitionSlotOwnProps {
+export interface UseTreeItem2GroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
   component: 'ul';
@@ -73,10 +73,10 @@ export interface UseTreeItemGroupTransitionSlotOwnProps {
   children: React.ReactNode;
 }
 
-export type UseTreeItemGroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
-  UseTreeItemGroupTransitionSlotOwnProps;
+export type UseTreeItem2GroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2GroupTransitionSlotOwnProps;
 
-export interface UseTreeItemStatus {
+export interface UseTreeItem2Status {
   expandable: boolean;
   expanded: boolean;
   focused: boolean;
@@ -84,31 +84,31 @@ export interface UseTreeItemStatus {
   disabled: boolean;
 }
 
-export interface UseTreeItemReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps additional props for the root slot
-   * @returns {UseTreeItemRootSlotProps<ExternalProps>} props that should be spread on the root slot
+   * @returns {UseTreeItem2RootSlotProps<ExternalProps>} props that should be spread on the root slot
    */
   getRootProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
-  ) => UseTreeItemRootSlotProps<ExternalProps>;
+  ) => UseTreeItem2RootSlotProps<ExternalProps>;
   /**
    * Resolver for the content slot's props.
    * @param {ExternalProps} externalProps additional props for the content slot
-   * @returns {UseTreeItemContentSlotProps<ExternalProps>} props that should be spread on the content slot
+   * @returns {UseTreeItem2ContentSlotProps<ExternalProps>} props that should be spread on the content slot
    */
   getContentProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
-  ) => UseTreeItemContentSlotProps<ExternalProps>;
+  ) => UseTreeItem2ContentSlotProps<ExternalProps>;
   /**
    * Resolver for the label slot's props.
    * @param {ExternalProps} externalProps additional props for the label slot
-   * @returns {UseTreeItemLabelSlotProps<ExternalProps>} props that should be spread on the label slot
+   * @returns {UseTreeItem2LabelSlotProps<ExternalProps>} props that should be spread on the label slot
    */
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
-  ) => UseTreeItemLabelSlotProps<ExternalProps>;
+  ) => UseTreeItem2LabelSlotProps<ExternalProps>;
   /**
    * Resolver for the iconContainer slot's props.
    * @param {ExternalProps} externalProps additional props for the iconContainer slot
@@ -120,11 +120,11 @@ export interface UseTreeItemReturnValue<TPlugins extends readonly TreeViewAnyPlu
   /**
    * Resolver for the GroupTransition slot's props.
    * @param {ExternalProps} externalProps additional props for the GroupTransition slot
-   * @returns {UseTreeItemGroupTransitionSlotProps<ExternalProps>} props that should be spread on the GroupTransition slot
+   * @returns {UseTreeItem2GroupTransitionSlotProps<ExternalProps>} props that should be spread on the GroupTransition slot
    */
   getGroupTransitionProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
-  ) => UseTreeItemGroupTransitionSlotProps<ExternalProps>;
+  ) => UseTreeItem2GroupTransitionSlotProps<ExternalProps>;
   /**
    * A ref to the component's root DOM element.
    */
@@ -132,7 +132,7 @@ export interface UseTreeItemReturnValue<TPlugins extends readonly TreeViewAnyPlu
   /**
    * Current status of the item.
    */
-  status: UseTreeItemStatus;
+  status: UseTreeItem2Status;
   /**
    * The object the allows Tree View manipulation.
    */

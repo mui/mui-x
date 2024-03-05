@@ -3,23 +3,23 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItem } from '@mui/x-tree-view/internals/useTreeItem';
+import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import {
-  TreeItemNextContent,
-  TreeItemNextIconContainer,
-  TreeItemNextTransitionGroup,
-  TreeItemNextLabel,
-  TreeItemNextRoot,
-} from '@mui/x-tree-view/internals/TreeItemNext';
-import { TreeItemNextIcon } from 'packages/x-tree-view/src/internals/TreeItemNextIcon';
-import { TreeItemNextProvider } from 'packages/x-tree-view/src/internals/TreeItemNextProvider';
+  TreeItem2Content,
+  TreeItem2IconContainer,
+  TreeItem2TransitionGroup,
+  TreeItem2Label,
+  TreeItem2Root,
+} from '@mui/x-tree-view/TreeItem2';
+import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
+import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 
-const CustomTreeItemContent = styled(TreeItemNextContent)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { id, nodeId, label, children, ...other } = props;
+  const { id, nodeId, label, disabled, children, ...other } = props;
 
   const {
     getRootProps,
@@ -28,15 +28,15 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem({ id, nodeId, children, label, rootRef: ref });
+  } = useTreeItem2({ id, nodeId, children, label, disabled, rootRef: ref });
 
   return (
-    <TreeItemNextProvider nodeId={nodeId}>
-      <TreeItemNextRoot {...getRootProps(other)}>
+    <TreeItem2Provider nodeId={nodeId}>
+      <TreeItem2Root {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()}>
-          <TreeItemNextIconContainer {...getIconContainerProps()}>
-            <TreeItemNextIcon status={status} />
-          </TreeItemNextIconContainer>
+          <TreeItem2IconContainer {...getIconContainerProps()}>
+            <TreeItem2Icon status={status} />
+          </TreeItem2IconContainer>
           <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Avatar
               sx={(theme) => ({
@@ -48,12 +48,12 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             >
               {label[0]}
             </Avatar>
-            <TreeItemNextLabel {...getLabelProps()} />
+            <TreeItem2Label {...getLabelProps()} />
           </Box>
         </CustomTreeItemContent>
-        {children && <TreeItemNextTransitionGroup {...getGroupTransitionProps()} />}
-      </TreeItemNextRoot>
-    </TreeItemNextProvider>
+        {children && <TreeItem2TransitionGroup {...getGroupTransitionProps()} />}
+      </TreeItem2Root>
+    </TreeItem2Provider>
   );
 });
 

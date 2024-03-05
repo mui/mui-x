@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
-import { TreeItemNextIconProps } from './TreeItemNextIcon.types';
-import { useTreeViewContext } from '../TreeViewProvider/useTreeViewContext';
-import { UseTreeViewIconsSignature } from '../plugins/useTreeViewIcons';
-import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../../icons';
+import { TreeItem2IconProps } from './TreeItem2Icon.types';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
-export function TreeItemNextIcon(props: TreeItemNextIconProps) {
+export function TreeItem2Icon(props: TreeItem2IconProps) {
   const { slots, slotProps, status } = props;
 
   const context = useTreeViewContext<[UseTreeViewIconsSignature]>();
