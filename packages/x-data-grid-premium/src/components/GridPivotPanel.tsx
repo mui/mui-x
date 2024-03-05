@@ -17,6 +17,7 @@ const GridPivotPanelContainerStyled = styled('div')({
 
 const ResizeHandle = styled('div')(({ theme }) => ({
   position: 'absolute',
+  zIndex: 2,
   top: 0,
   left: 0,
   height: '100%',
@@ -109,7 +110,7 @@ export function GridPivotPanelContainer({ children }: { children: React.ReactNod
 
 const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>(
   ({ theme }) => ({
-    padding: '8px 12px',
+    padding: '8px 0',
     minHeight: 50,
 
     '&[data-drag-over="true"]': {
@@ -120,14 +121,19 @@ const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObjec
 
 const PivotSectionTitle = styled('div')(({ theme }) => ({
   ...theme.typography.caption,
+  padding: '0 8px',
   textTransform: 'uppercase',
 }));
 
-const Placeholder = styled('div')({
-  height: 50,
-  width: '100%',
-  border: '1px dashed #bbb',
-  borderRadius: 8,
+const Placeholder = styled('div')(({ theme }) => {
+  const horizontalMargin = 8;
+  return {
+    height: 40,
+    border: `1px dashed ${theme.palette.grey[400]}`,
+    borderRadius: 8,
+    margin: `8px ${horizontalMargin}px 0`,
+    width: `calc(100% - ${horizontalMargin * 2}px)`,
+  };
 });
 
 const GridFieldItemContainer = styled('div')<{ dropPosition: DropPosition }>(({ theme }) => ({
@@ -525,8 +531,13 @@ export function GridPivotPanel({
     <React.Fragment>
       <FormControlLabel
         control={
-          <Switch checked={pivotMode} onChange={(e) => onPivotModeChange(e.target.checked)} />
+          <Switch
+            checked={pivotMode}
+            onChange={(e) => onPivotModeChange(e.target.checked)}
+            size="small"
+          />
         }
+        sx={{ marginLeft: 0, py: 1 }}
         label="Pivot"
       />
       <Divider />
