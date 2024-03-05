@@ -39,7 +39,7 @@ export const useGridHeaderFiltering = (
         return {
           ...state,
           headerFiltering: {
-            enabled: isHeaderFilteringEnabled,
+            enabled: isHeaderFilteringEnabled ?? false,
             editing: headerFilterState.editing ?? null,
             menuOpen: headerFilterState.menuOpen ?? null,
           },
@@ -120,4 +120,16 @@ export const useGridHeaderFiltering = (
 
   useGridApiMethod(apiRef, headerFilterApi, 'public');
   useGridApiMethod(apiRef, headerFilterPrivateApi, 'private');
+
+  /*
+  * EFFECTS
+  */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else {
+      apiRef.current.setHeaderFilterState({ enabled: isHeaderFilteringEnabled });
+    }
+  }, [apiRef, isHeaderFilteringEnabled]);
 };
