@@ -8,8 +8,14 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
 
   const apiRef = useGridApiContext();
 
+  const changedThroughKeyboard = React.useRef(false);
+
   const handleChange = async (event: any) => {
     await apiRef.current.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
+    if (!changedThroughKeyboard.current) {
+      apiRef.current.stopCellEditMode({ id, field });
+    }
+    changedThroughKeyboard.current = false;
   };
 
   const handleRef = (element: HTMLElement | undefined) => {
@@ -19,6 +25,14 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
       } else {
         element.querySelector<HTMLElement>('input[value=""]')!.focus();
       }
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key.startsWith('Arrow')) {
+      changedThroughKeyboard.current = true;
+    } else {
+      changedThroughKeyboard.current = false;
     }
   };
 
@@ -39,6 +53,7 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
         precision={1}
         onChange={handleChange}
         sx={{ mr: 1 }}
+        onKeyDown={handleKeyDown}
       />
       {Number(value)}
     </Box>
