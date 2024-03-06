@@ -37,6 +37,8 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 
+const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
+
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
@@ -71,10 +73,11 @@ export const useGridVirtualScroller = () => {
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
+  const previousScroll = React.useRef(EMPTY_SCROLL_POSITION);
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const scrollPosition = React.useRef({ top: 0, left: 0 }).current;
+  const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const focusedCell = {
@@ -119,6 +122,7 @@ export const useGridVirtualScroller = () => {
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
+      previousScroll.current = scrollPosition.current
       previousContext.current = rawRenderContext;
       prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
@@ -126,34 +130,20 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = () => {
-    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
-
     // Since previous render, we have scrolled...
-    const topRowsScrolled = Math.abs(
-      rawRenderContext.firstRowIndex - previousContext.current.firstRowIndex,
-    );
-    const bottomRowsScrolled = Math.abs(
-      rawRenderContext.lastRowIndex - previousContext.current.lastRowIndex,
-    );
-
-    const topColumnsScrolled = Math.abs(
-      rawRenderContext.firstColumnIndex - previousContext.current.firstColumnIndex,
-    );
-    const bottomColumnsScrolled = Math.abs(
-      rawRenderContext.lastColumnIndex - previousContext.current.lastColumnIndex,
-    );
+    const rowScroll = Math.abs(scrollPosition.current.top - previousScroll.current.top);
+    const columnScroll = Math.abs(scrollPosition.current.left - previousScroll.current.left);
 
     const shouldUpdate =
-      topRowsScrolled >= rootProps.rowThreshold ||
-      bottomRowsScrolled >= rootProps.rowThreshold ||
-      topColumnsScrolled >= rootProps.columnThreshold ||
-      bottomColumnsScrolled >= rootProps.columnThreshold ||
-      prevTotalWidth.current !== dimensions.columnsTotalWidth;
+      rowScroll >= rootProps.rowThreshold ||
+      columnScroll >= rootProps.columnThreshold;
 
     if (!shouldUpdate) {
       return previousContext.current;
     }
+
+    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -165,15 +155,14 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
     updateRenderContext(nextRenderContext, rawRenderContext);
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
 
-    scrollPosition.top = scrollTop;
-    scrollPosition.left = scrollLeft;
+    scrollPosition.current = { top: scrollTop, left: scrollLeft };
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
     if (scrollTop < 0) {
@@ -441,12 +430,12 @@ export const useGridVirtualScroller = () => {
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
 
-    const [initialRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition);
+    const [initialRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
     updateRenderContext(initialRenderContext, rawRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollPosition.top,
-      left: scrollPosition.left,
+      top: scrollPosition.current.top,
+      left: scrollPosition.current.left,
       renderContext: initialRenderContext,
     });
   });
@@ -491,8 +480,8 @@ type RenderContextInputs = {
   enabledForColumns: boolean;
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
-  rowBuffer: number;
-  columnBuffer: number;
+  rowBufferPx: number;
+  columnBufferPx: number;
   leftPinnedWidth: number;
   columnsTotalWidth: number;
   viewportInnerWidth: number;
@@ -518,8 +507,8 @@ function inputsSelector(
     enabledForColumns,
     apiRef,
     autoHeight: rootProps.autoHeight,
-    rowBuffer: rootProps.rowBuffer,
-    columnBuffer: rootProps.columnBuffer,
+    rowBufferPx: rootProps.rowBufferPx,
+    columnBufferPx: rootProps.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
@@ -569,7 +558,8 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
         lastIndex: lastRowIndex,
         minFirstIndex: 0,
         maxLastIndex: inputs.rows.length,
-        buffer: inputs.rowBuffer,
+        bufferPx: inputs.rowBufferPx,
+        positions: inputs.rowsMeta.positions,
       });
 
       for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
@@ -599,9 +589,11 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
 
   const actualRenderContext = deriveRenderContext(
     inputs.apiRef,
-    inputs.rowBuffer,
-    inputs.columnBuffer,
+    inputs.rowBufferPx,
+    inputs.columnBufferPx,
     inputs.rows,
+    inputs.rowsMeta.positions,
+    inputs.columnPositions,
     inputs.pinnedColumns,
     inputs.visibleColumns,
     renderContext,
@@ -651,9 +643,11 @@ function getNearestIndexToRender(inputs: RenderContextInputs, offset: number) {
  */
 function deriveRenderContext(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  rowBuffer: number,
-  columnBuffer: number,
+  rowBufferPx: number,
+  columnBufferPx: number,
   rows: ReturnType<typeof useGridVisibleRows>['rows'],
+  rowPositions: number[],
+  columnPositions: number[],
   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>,
   nextRenderContext: GridRenderContext,
@@ -663,7 +657,8 @@ function deriveRenderContext(
     lastIndex: nextRenderContext.lastRowIndex,
     minFirstIndex: 0,
     maxLastIndex: rows.length,
-    buffer: rowBuffer,
+    bufferPx: rowBufferPx,
+    positions: rowPositions,
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
@@ -671,7 +666,8 @@ function deriveRenderContext(
     lastIndex: nextRenderContext.lastColumnIndex,
     minFirstIndex: pinnedColumns.left.length,
     maxLastIndex: visibleColumns.length - pinnedColumns.right.length,
-    buffer: columnBuffer,
+    bufferPx: columnBufferPx,
+    positions: columnPositions,
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
@@ -682,12 +678,14 @@ function deriveRenderContext(
     visibleRows: rows,
   });
 
-  return {
+  let r = {
     firstRowIndex: firstRowToRender,
     lastRowIndex: lastRowToRender,
     firstColumnIndex: firstColumnToRender,
     lastColumnIndex: lastColumnToRender,
   };
+  console.log(r)
+  return r
 }
 
 type SearchOptions = {
@@ -753,19 +751,31 @@ function exponentialSearch(offset: number, positions: number[], index: number): 
 function getIndexesToRender({
   firstIndex,
   lastIndex,
-  buffer,
+  bufferPx,
   minFirstIndex,
   maxLastIndex,
+  positions,
 }: {
   firstIndex: number;
   lastIndex: number;
-  buffer: number;
+  bufferPx: number;
   minFirstIndex: number;
   maxLastIndex: number;
+  positions: number[];
 }) {
+  const firstPosition = positions[firstIndex] - bufferPx;
+  const lastPosition  = positions[lastIndex] + bufferPx;
+
+  const firstIndexPadded = binarySearch(firstPosition, positions, {
+    atStart: true,
+    lastPosition: positions[positions.length - 1] * 2, // Value doesn't matter much here, only need to be vastly superior
+  });
+
+  const lastIndexPadded = binarySearch(lastPosition, positions);
+
   return [
-    clamp(firstIndex - buffer, minFirstIndex, maxLastIndex),
-    clamp(lastIndex + buffer, minFirstIndex, maxLastIndex),
+    clamp(firstIndexPadded, minFirstIndex, maxLastIndex),
+    clamp(lastIndexPadded, minFirstIndex, maxLastIndex),
   ];
 }
 

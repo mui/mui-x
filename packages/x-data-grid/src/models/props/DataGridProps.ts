@@ -128,15 +128,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   checkboxSelectionVisibleOnly: boolean;
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region to render before/after the viewport
+   * @default 100
    */
-  columnBuffer: number;
+  columnBufferPx: number;
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * Row region to render before/after the viewport
+   * @default 100
    */
-  rowBuffer: number;
+  rowBufferPx: number;
   /**
    * If `false`, the row selection mode is disabled.
    * @default true

@@ -94,7 +94,6 @@ export const useGridLazyLoader = (
     | 'rowsLoadingMode'
     | 'pagination'
     | 'paginationMode'
-    | 'rowBuffer'
     | 'experimentalFeatures'
   >,
 ): void => {

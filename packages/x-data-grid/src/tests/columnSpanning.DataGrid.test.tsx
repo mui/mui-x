@@ -348,7 +348,7 @@ describe('<DataGrid /> - Column spanning', () => {
               { field: 'col3', width: 100 },
             ]}
             rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3' }]}
-            columnBuffer={1}
+            columnBufferPx={1}
             columnThreshold={1}
           />
         </div>,
@@ -456,7 +456,7 @@ describe('<DataGrid /> - Column spanning', () => {
               { field: 'col4', width: 100 },
             ]}
             rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3', col4: '0-4' }]}
-            columnBuffer={1}
+            columnBufferPx={1}
             columnThreshold={1}
           />
         </div>,
