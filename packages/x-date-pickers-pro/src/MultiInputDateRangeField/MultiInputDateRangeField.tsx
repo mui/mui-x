@@ -44,9 +44,23 @@ const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any, any>) 
 };
 
 const MultiInputDateRangeFieldRoot = styled(
-  React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
-  )),
+  React.forwardRef(
+    (
+      {
+        enableAccessibleFieldDOMStructure,
+        ...other
+      }: StackProps & { enableAccessibleFieldDOMStructure: boolean | undefined },
+      ref: React.Ref<HTMLDivElement>,
+    ) => (
+      <Stack
+        ref={ref}
+        spacing={2}
+        direction="row"
+        alignItems={enableAccessibleFieldDOMStructure ? 'center' : 'baseline'}
+        {...other}
+      />
+    ),
+  ),
   {
     name: 'MuiMultiInputDateRangeField',
     slot: 'Root',
@@ -117,6 +131,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     externalForwardedProps: otherForwardedProps,
     additionalProps: {
       ref,
+      enableAccessibleFieldDOMStructure: internalProps.enableAccessibleFieldDOMStructure,
     },
     ownerState,
     className: clsx(className, classes.root),
