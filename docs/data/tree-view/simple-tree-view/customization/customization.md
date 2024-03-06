@@ -36,6 +36,13 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 ### Custom label
 
+:::warning
+This example is built using the new `TreeItem2` component
+which adds several slots to modify the content of the Tree Item or change its behavior.
+
+You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
+:::
+
 Use the `label` slot to customize the Tree Item label or to replace it with an entirely custom component.
 
 The `slotProps` prop allows you to pass props to the default label component.
@@ -65,6 +72,13 @@ Target the `treeItemClasses.groupTransition` class to add connection borders bet
 
 ### Limit expansion to icon container
 
+:::warning
+This example is built using the new `TreeItem2` component
+which adds several slots to modify the content of the Tree Item or change its behavior.
+
+You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
+:::
+
 The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
@@ -76,6 +90,13 @@ The demo below shows many of the previous customization examples brought togethe
 {{"demo": "CustomizedTreeView.js"}}
 
 ### Gmail clone
+
+:::warning
+This example is built using the new `TreeItem2` component
+which adds several slots to modify the content of the Tree Item or change its behavior.
+
+You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
+:::
 
 Google's Gmail side nav is potentially one of the web's most famous tree view components.
 The demo below shows how to replicate it.

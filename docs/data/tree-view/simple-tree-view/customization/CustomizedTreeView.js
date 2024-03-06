@@ -7,8 +7,7 @@ import Label from '@mui/icons-material/Label';
 import FolderRounded from '@mui/icons-material/FolderRounded';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import Collapse from '@mui/material/Collapse';
 
 import { animated, useSpring } from '@react-spring/web';
@@ -37,7 +36,7 @@ const StyledTreeItemLabel = styled(Typography)({
   flexGrow: 1,
 });
 
-const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
   color:
     theme.palette.mode === 'light'
       ? theme.palette.grey[800]
