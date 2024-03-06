@@ -49,7 +49,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
   );
 
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
-    function getCellParams(id, field) {
+    (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id);
       const rowNode = apiRef.current.getRowNode(id);
