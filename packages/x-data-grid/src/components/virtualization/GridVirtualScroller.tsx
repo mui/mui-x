@@ -92,7 +92,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           </RenderZone>
         </Content>
 
-        {rows.length && <SpaceFiller />}
+        {rows.length > 0 && <SpaceFiller />}
 
         <BottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
