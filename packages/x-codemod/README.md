@@ -293,8 +293,8 @@ Rename the selection props
 -  onNodeSelect={handleSelectionChange}
 +  onSelectedNodesChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
 -  defaultSelected={defaultSelectedItems}
 +  defaultSelectedItems={defaultSelectedItems}

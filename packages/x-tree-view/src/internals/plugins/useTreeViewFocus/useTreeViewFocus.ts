@@ -54,10 +54,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const focusDefaultNode = useEventCallback((event: React.SyntheticEvent) => {
     let nodeToFocusId: string | null | undefined;
-    if (Array.isArray(models.selectedNodes.value)) {
-      nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
-    } else if (models.selectedNodes.value != null && isNodeVisible(models.selectedNodes.value)) {
-      nodeToFocusId = models.selectedNodes.value;
+    if (Array.isArray(models.selectedItems.value)) {
+      nodeToFocusId = models.selectedItems.value.find(isNodeVisible);
+    } else if (models.selectedItems.value != null && isNodeVisible(models.selectedItems.value)) {
+      nodeToFocusId = models.selectedItems.value;
     }
 
     if (nodeToFocusId == null) {

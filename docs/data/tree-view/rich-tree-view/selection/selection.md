@@ -25,7 +25,7 @@ Use the `disableSelection` prop if you don't want your items to be selectable:
 
 ## Controlled selection
 
-Use the `selectedNodes` prop to control the selected items.
+Use the `selectedItems` prop to control the selected items.
 
 You can use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
 
@@ -33,7 +33,7 @@ You can use the `onSelectedNodesChange` prop to listen to changes in the selecte
 
 :::info
 
-- The selection is **controlled** when its parent manages it by providing a `selectedNodes` prop.
+- The selection is **controlled** when its parent manages it by providing a `selectedItems` prop.
 - The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelectedItems` prop.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).

@@ -27,7 +27,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         const addedNodes = (newSelectedNodes as string[]).filter(
           (nodeId) => !instance.isNodeSelected(nodeId),
         );
-        const removedNodes = (models.selectedNodes.value as string[]).filter(
+        const removedNodes = (models.selectedItems.value as string[]).filter(
           (nodeId) => !(newSelectedNodes as string[]).includes(nodeId),
         );
 
@@ -38,9 +38,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         removedNodes.forEach((nodeId) => {
           params.onNodeSelectionToggle!(event, nodeId, false);
         });
-      } else if (newSelectedNodes !== models.selectedNodes.value) {
-        if (models.selectedNodes.value != null) {
-          params.onNodeSelectionToggle(event, models.selectedNodes.value as string, false);
+      } else if (newSelectedNodes !== models.selectedItems.value) {
+        if (models.selectedItems.value != null) {
+          params.onNodeSelectionToggle(event, models.selectedItems.value as string, false);
         }
         if (newSelectedNodes != null) {
           params.onNodeSelectionToggle(event, newSelectedNodes as string, true);
@@ -52,13 +52,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       params.onSelectedNodesChange(event, newSelectedNodes);
     }
 
-    models.selectedNodes.setControlledValue(newSelectedNodes);
+    models.selectedItems.setControlledValue(newSelectedNodes);
   };
 
   const isNodeSelected = (nodeId: string) =>
-    Array.isArray(models.selectedNodes.value)
-      ? models.selectedNodes.value.indexOf(nodeId) !== -1
-      : models.selectedNodes.value === nodeId;
+    Array.isArray(models.selectedItems.value)
+      ? models.selectedItems.value.indexOf(nodeId) !== -1
+      : models.selectedItems.value === nodeId;
 
   const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
     if (params.disableSelection) {
@@ -66,12 +66,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     }
 
     if (multiple) {
-      if (Array.isArray(models.selectedNodes.value)) {
+      if (Array.isArray(models.selectedItems.value)) {
         let newSelected: string[];
-        if (models.selectedNodes.value.indexOf(nodeId) !== -1) {
-          newSelected = models.selectedNodes.value.filter((id) => id !== nodeId);
+        if (models.selectedItems.value.indexOf(nodeId) !== -1) {
+          newSelected = models.selectedItems.value.filter((id) => id !== nodeId);
         } else {
-          newSelected = [nodeId].concat(models.selectedNodes.value);
+          newSelected = [nodeId].concat(models.selectedItems.value);
         }
 
         setSelectedNodes(event, newSelected);
@@ -100,7 +100,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const handleRangeArrowSelect = (event: React.SyntheticEvent, nodes: TreeViewItemRange) => {
-    let base = (models.selectedNodes.value as string[]).slice();
+    let base = (models.selectedItems.value as string[]).slice();
     const { start, next, current } = nodes;
 
     if (!next || !current) {
@@ -132,7 +132,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     event: React.SyntheticEvent,
     nodes: { start: string; end: string },
   ) => {
-    let base = (models.selectedNodes.value as string[]).slice();
+    let base = (models.selectedItems.value as string[]).slice();
     const { start, end } = nodes;
     // If last selection was a range selection ignore nodes that were selected.
     if (lastSelectionWasRange.current) {
@@ -208,7 +208,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 };
 
 useTreeViewSelection.models = {
-  selectedNodes: {
+  selectedItems: {
     getDefaultValue: (params) => params.defaultSelectedItems,
   },
 };
@@ -227,7 +227,7 @@ useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
   defaultSelectedItems: true,
-  selectedNodes: true,
+  selectedItems: true,
   onSelectedNodesChange: true,
   onNodeSelectionToggle: true,
 };

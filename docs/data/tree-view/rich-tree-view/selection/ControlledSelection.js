@@ -46,14 +46,14 @@ const getAllItemNodeIds = () => {
 };
 
 export default function ControlledSelection() {
-  const [selectedNodes, setSelectedNodes] = React.useState([]);
+  const [selectedItems, setSelectedItems] = React.useState([]);
 
   const handleSelectedNodesChange = (event, ids) => {
-    setSelectedNodes(ids);
+    setSelectedItems(ids);
   };
 
   const handleSelectClick = () => {
-    setSelectedNodes((oldSelected) =>
+    setSelectedItems((oldSelected) =>
       oldSelected.length === 0 ? getAllItemNodeIds() : [],
     );
   };
@@ -62,13 +62,13 @@ export default function ControlledSelection() {
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
         <Button onClick={handleSelectClick}>
-          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
+          {selectedItems.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          selectedNodes={selectedNodes}
+          selectedItems={selectedItems}
           onSelectedNodesChange={handleSelectedNodesChange}
           multiSelect
         />

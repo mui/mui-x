@@ -417,7 +417,7 @@ describe('<TreeItem />', () => {
 
       it('should focus the selected node if a node is selected before the tree receives focus', () => {
         const { getByTestId, getByRole } = render(
-          <SimpleTreeView selectedNodes="2" id="tree">
+          <SimpleTreeView selectedItems="2" id="tree">
             <TreeItem nodeId="1" label="one" data-testid="one" />
             <TreeItem nodeId="2" label="two" data-testid="two" />
             <TreeItem nodeId="3" label="three" />

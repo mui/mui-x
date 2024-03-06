@@ -1,1 +1,1 @@
-<TreeView selectedNodes={[]} defaultSelectedItems={[]} onSelectedNodesChange={callback}></TreeView>;
+<TreeView selectedItems={[]} defaultSelectedItems={[]} onSelectedNodesChange={callback}></TreeView>;

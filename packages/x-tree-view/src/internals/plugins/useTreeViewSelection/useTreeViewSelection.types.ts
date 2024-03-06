@@ -31,7 +31,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedNodes?: TreeViewSelectionValue<Multiple>;
+  selectedItems?: TreeViewSelectionValue<Multiple>;
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -74,7 +74,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewSelectionDefaultizedParameters<any>;
   instance: UseTreeViewSelectionInstance;
   contextValue: UseTreeViewSelectionContextValue;
-  modelNames: 'selectedNodes';
+  modelNames: 'selectedItems';
   dependantPlugins: [
     UseTreeViewNodesSignature,
     UseTreeViewExpansionSignature,

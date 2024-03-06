@@ -36,17 +36,17 @@ describe('<SimpleTreeView />', () => {
       );
     });
 
-    it('should warn when switching from controlled to uncontrolled of the selectedNodes prop', () => {
+    it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
       const { setProps } = render(
-        <SimpleTreeView selectedNodes={null}>
+        <SimpleTreeView selectedItems={null}>
           <TreeItem nodeId="1" label="one" />
         </SimpleTreeView>,
       );
 
       expect(() => {
-        setProps({ selectedNodes: undefined });
+        setProps({ selectedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled selectedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
       );
     });
 
@@ -233,14 +233,14 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
   });
 
-  it('should be able to be controlled with the selectedNodes prop and singleSelect', () => {
+  it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState(null);
       const onSelectedNodesChange = (event, nodes) => {
         setSelectedState(nodes);
       };
       return (
-        <SimpleTreeView selectedNodes={selectedState} onSelectedNodesChange={onSelectedNodesChange}>
+        <SimpleTreeView selectedItems={selectedState} onSelectedNodesChange={onSelectedNodesChange}>
           <TreeItem nodeId="1" label="one" data-testid="one" />
           <TreeItem nodeId="2" label="two" data-testid="two" />
         </SimpleTreeView>
@@ -263,7 +263,7 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
   });
 
-  it('should be able to be controlled with the selectedNodes prop and multiSelect', () => {
+  it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState([]);
       const onSelectedNodesChange = (event, nodes) => {
@@ -271,7 +271,7 @@ describe('<SimpleTreeView />', () => {
       };
       return (
         <SimpleTreeView
-          selectedNodes={selectedState}
+          selectedItems={selectedState}
           onSelectedNodesChange={onSelectedNodesChange}
           multiSelect
         >
@@ -447,7 +447,7 @@ describe('<SimpleTreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes={'2'} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedItems={'2'} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -464,7 +464,7 @@ describe('<SimpleTreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedItems={['2']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -481,7 +481,7 @@ describe('<SimpleTreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1', '2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedItems={['1.1', '2']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -500,7 +500,7 @@ describe('<SimpleTreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes="1.1" onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedItems="1.1" onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -519,7 +519,7 @@ describe('<SimpleTreeView />', () => {
       const onNodeFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedItems={['1.1']} onNodeFocus={onNodeFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>

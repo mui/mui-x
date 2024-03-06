@@ -332,7 +332,7 @@ The selection props have been renamed to better describe their behaviors:
 | Old name          | New name                |
 | :---------------- | :---------------------- |
 | `onNodeSelect`    | `onSelectedNodesChange` |
-| `selected`        | `selectedNodes`         |
+| `selected`        | `selectedItems`         |
 | `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
@@ -340,8 +340,8 @@ The selection props have been renamed to better describe their behaviors:
 -  onNodeSelect={handleSelectionChange}
 +  onSelectedNodesChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
 -  defaultSelected={defaultSelectedItems}
 +  defaultSelectedItems={defaultSelectedItems}

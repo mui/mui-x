@@ -75,7 +75,7 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "selectedNodes": { "type": { "name": "any" } },
+    "selectedItems": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

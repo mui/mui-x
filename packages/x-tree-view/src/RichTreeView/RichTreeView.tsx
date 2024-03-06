@@ -261,7 +261,7 @@ RichTreeView.propTypes = {
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedNodes: PropTypes.any,
+  selectedItems: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}
