@@ -16,6 +16,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
+import { shouldShowCellLeftBorder, shouldShowCellRightBorder } from '../../utils/cellBorderUtils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -33,10 +34,13 @@ interface GridColumnHeaderItemProps {
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
   pinnedPosition?: GridPinnedColumnPosition;
   style?: React.CSSProperties;
+  indexInSection: number;
+  sectionLength: number;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
+  showLeftBorder: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -47,6 +51,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isDragging,
     sortDirection,
     showRightBorder,
+    showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
   } = ownerState;
@@ -69,6 +74,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnNumeric && 'columnHeader--numeric',
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
@@ -95,6 +101,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     disableReorder,
     separatorSide,
     style,
+    pinnedPosition,
+    indexInSection,
+    sectionLength,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -114,10 +123,23 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
+  const showLeftBorder = shouldShowCellLeftBorder({
+    indexInSection,
+    pinnedPosition,
+  });
+
+  const showRightBorder = shouldShowCellRightBorder({
+    indexInSection,
+    sectionLength,
+    pinnedPosition,
+    showCellVerticalBorderRootProp: rootProps.showCellVerticalBorder,
+  });
+
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder: rootProps.showColumnVerticalBorder,
+    showRightBorder,
+    showLeftBorder,
   };
 
   const classes = useUtilityClasses(ownerState);

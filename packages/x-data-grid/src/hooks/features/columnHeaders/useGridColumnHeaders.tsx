@@ -249,6 +249,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           style={style}
+          indexInSection={i}
+          sectionLength={renderedColumns.length}
           {...other}
         />,
       );

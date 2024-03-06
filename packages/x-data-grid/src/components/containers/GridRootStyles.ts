@@ -540,17 +540,13 @@ export const GridRootStyles = styled('div', {
     [`.${c.withBorderColor}`]: {
       borderColor,
     },
-    [`& .${c['cell--withLeftBorder']}`]: {
+    [`& .${c['cell--withLeftBorder']}, & .${c['columnHeader--withLeftBorder']}`]: {
       borderLeftColor: 'var(--DataGrid-rowBorderColor)',
       borderLeftWidth: '1px',
       borderLeftStyle: 'solid',
     },
-    [`& .${c['cell--withRightBorder']}`]: {
+    [`& .${c['cell--withRightBorder']}, & .${c['columnHeader--withRightBorder']}`]: {
       borderRightColor: 'var(--DataGrid-rowBorderColor)',
-      borderRightWidth: '1px',
-      borderRightStyle: 'solid',
-    },
-    [`& .${c['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },

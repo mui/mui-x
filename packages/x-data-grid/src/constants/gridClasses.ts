@@ -589,6 +589,7 @@ export interface GridClasses {
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
+  'columnHeader--withLeftBorder': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */
@@ -776,6 +777,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--withRightBorder',
   'cell--withLeftBorder',
   'columnHeader--withRightBorder',
+  'columnHeader--withLeftBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',
