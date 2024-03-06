@@ -26,7 +26,7 @@ Use the `disableSelection` prop if you don't want your items to be selectable:
 ## Controlled selection
 
 Use the `selectedItems` prop to control selected Tree View items.
-You can also use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
+You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 

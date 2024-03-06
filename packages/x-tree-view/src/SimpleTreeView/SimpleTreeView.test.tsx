@@ -236,11 +236,11 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState(null);
-      const onSelectedNodesChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
-        <SimpleTreeView selectedItems={selectedState} onSelectedNodesChange={onSelectedNodesChange}>
+        <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
           <TreeItem nodeId="1" label="one" data-testid="one" />
           <TreeItem nodeId="2" label="two" data-testid="two" />
         </SimpleTreeView>
@@ -266,13 +266,13 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState([]);
-      const onSelectedNodesChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
         <SimpleTreeView
           selectedItems={selectedState}
-          onSelectedNodesChange={onSelectedNodesChange}
+          onSelectedItemsChange={onSelectedItemsChange}
           multiSelect
         >
           <TreeItem nodeId="1" label="one" data-testid="one" />

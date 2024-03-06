@@ -20,15 +20,15 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const setSelectedNodes = (
     event: React.SyntheticEvent,
-    newSelectedNodes: typeof params.defaultSelectedItems,
+    newSelectedItems: typeof params.defaultSelectedItems,
   ) => {
     if (params.onNodeSelectionToggle) {
       if (params.multiSelect) {
-        const addedNodes = (newSelectedNodes as string[]).filter(
+        const addedNodes = (newSelectedItems as string[]).filter(
           (nodeId) => !instance.isNodeSelected(nodeId),
         );
         const removedNodes = (models.selectedItems.value as string[]).filter(
-          (nodeId) => !(newSelectedNodes as string[]).includes(nodeId),
+          (nodeId) => !(newSelectedItems as string[]).includes(nodeId),
         );
 
         addedNodes.forEach((nodeId) => {
@@ -38,21 +38,21 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         removedNodes.forEach((nodeId) => {
           params.onNodeSelectionToggle!(event, nodeId, false);
         });
-      } else if (newSelectedNodes !== models.selectedItems.value) {
+      } else if (newSelectedItems !== models.selectedItems.value) {
         if (models.selectedItems.value != null) {
           params.onNodeSelectionToggle(event, models.selectedItems.value as string, false);
         }
-        if (newSelectedNodes != null) {
-          params.onNodeSelectionToggle(event, newSelectedNodes as string, true);
+        if (newSelectedItems != null) {
+          params.onNodeSelectionToggle(event, newSelectedItems as string, true);
         }
       }
     }
 
-    if (params.onSelectedNodesChange) {
-      params.onSelectedNodesChange(event, newSelectedNodes);
+    if (params.onSelectedItemsChange) {
+      params.onSelectedItemsChange(event, newSelectedItems);
     }
 
-    models.selectedItems.setControlledValue(newSelectedNodes);
+    models.selectedItems.setControlledValue(newSelectedItems);
   };
 
   const isNodeSelected = (nodeId: string) =>
@@ -228,6 +228,6 @@ useTreeViewSelection.params = {
   multiSelect: true,
   defaultSelectedItems: true,
   selectedItems: true,
-  onSelectedNodesChange: true,
+  onSelectedItemsChange: true,
   onNodeSelectionToggle: true,
 };

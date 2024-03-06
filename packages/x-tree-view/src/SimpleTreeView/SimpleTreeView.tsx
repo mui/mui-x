@@ -194,10 +194,10 @@ SimpleTreeView.propTypes = {
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onSelectedNodesChange: PropTypes.func,
+  onSelectedItemsChange: PropTypes.func,
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

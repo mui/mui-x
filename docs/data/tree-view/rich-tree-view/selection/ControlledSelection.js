@@ -48,7 +48,7 @@ const getAllItemNodeIds = () => {
 export default function ControlledSelection() {
   const [selectedItems, setSelectedItems] = React.useState([]);
 
-  const handleSelectedNodesChange = (event, ids) => {
+  const handleSelectedItemsChange = (event, ids) => {
     setSelectedItems(ids);
   };
 
@@ -69,7 +69,7 @@ export default function ControlledSelection() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           selectedItems={selectedItems}
-          onSelectedNodesChange={handleSelectedNodesChange}
+          onSelectedItemsChange={handleSelectedItemsChange}
           multiSelect
         />
       </Box>

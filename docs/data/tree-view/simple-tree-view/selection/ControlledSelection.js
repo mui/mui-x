@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 export default function ControlledSelection() {
   const [selectedItems, setSelectedItems] = React.useState([]);
 
-  const handleSelectedNodesChange = (event, ids) => {
+  const handleSelectedItemsChange = (event, ids) => {
     setSelectedItems(ids);
   };
 
@@ -41,7 +41,7 @@ export default function ControlledSelection() {
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <SimpleTreeView
           selectedItems={selectedItems}
-          onSelectedNodesChange={handleSelectedNodesChange}
+          onSelectedItemsChange={handleSelectedItemsChange}
           multiSelect
         >
           <TreeItem nodeId="grid" label="Data Grid">

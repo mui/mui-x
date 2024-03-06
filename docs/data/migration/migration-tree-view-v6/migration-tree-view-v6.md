@@ -331,14 +331,14 @@ The selection props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeSelect`    | `onSelectedNodesChange` |
+| `onNodeSelect`    | `onSelectedItemsChange` |
 | `selected`        | `selectedItems`         |
 | `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
 -  selected={selectedItems}
 +  selectedItems={selectedItems}

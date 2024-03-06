@@ -13,7 +13,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     props: {
       selected: 'selectedItems',
       defaultSelected: 'defaultSelectedItems',
-      onNodeSelect: 'onSelectedNodesChange',
+      onNodeSelect: 'onSelectedItemsChange',
     },
     j,
   }).toSource(printOptions);

@@ -27,7 +27,7 @@ Use the `disableSelection` prop if you don't want your items to be selectable:
 
 Use the `selectedItems` prop to control the selected items.
 
-You can use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
+You can use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 

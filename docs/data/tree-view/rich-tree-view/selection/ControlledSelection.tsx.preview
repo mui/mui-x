@@ -7,7 +7,7 @@
   <RichTreeView
     items={MUI_X_PRODUCTS}
     selectedItems={selectedItems}
-    onSelectedNodesChange={handleSelectedNodesChange}
+    onSelectedItemsChange={handleSelectedItemsChange}
     multiSelect
   />
 </Box>

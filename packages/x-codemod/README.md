@@ -291,7 +291,7 @@ Rename the selection props
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
 -  selected={selectedItems}
 +  selectedItems={selectedItems}

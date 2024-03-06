@@ -68,11 +68,11 @@
         "describedArgs": ["event", "nodeId", "isSelected"]
       }
     },
-    "onSelectedNodesChange": {
+    "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
-        "describedArgs": ["event", "nodeIds"]
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "describedArgs": ["event", "itemIds"]
       }
     },
     "selectedItems": { "type": { "name": "any" } },

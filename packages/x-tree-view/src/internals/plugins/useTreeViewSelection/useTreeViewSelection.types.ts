@@ -40,12 +40,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onSelectedNodesChange?: (
+  onSelectedItemsChange?: (
     event: React.SyntheticEvent,
-    nodeIds: TreeViewSelectionValue<Multiple>,
+    itemIds: TreeViewSelectionValue<Multiple>,
   ) => void;
   /**
    * Callback fired when a tree item is selected or deselected.
