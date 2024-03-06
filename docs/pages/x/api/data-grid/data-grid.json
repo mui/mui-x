@@ -1094,6 +1094,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--withLeftBorder",
+      "className": "MuiDataGrid-columnHeader--withLeftBorder",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--withRightBorder",
       "className": "MuiDataGrid-columnHeader--withRightBorder",
       "description": "Styles applied the column header if `showColumnVerticalBorder={true}`.",
