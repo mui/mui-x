@@ -13,7 +13,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import { GridPinnedColumnPosition, GridPinnedColumns } from '../hooks/features/columns';
+import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
@@ -29,7 +29,7 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { PinnedPosition } from './cell/GridCell';
+import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 
@@ -371,12 +371,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const pinnedOffset = getPinnedCellOffset({
-      pinnedPosition: {
-        [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,
-        [PinnedPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
-        [PinnedPosition.NONE]: undefined,
-        [PinnedPosition.VIRTUAL]: undefined,
-      }[pinnedPosition],
+      pinnedPosition: gridPinnedColumnPositionLookup[pinnedPosition],
       column,
       columnIndex: indexRelativeToAllColumns,
       columnPositions,
