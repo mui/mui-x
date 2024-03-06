@@ -24,6 +24,7 @@ import {
   FocusElement,
   GridCellParams,
 } from '../../models/params/gridCellParams';
+import type { GridDimensions } from '../../hooks/features/dimensions';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
@@ -56,7 +57,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
-  gridHasScrollX: boolean;
+  dimensions: GridDimensions;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -157,6 +158,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
+    dimensions,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -176,7 +178,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const cellParamsWithAPI = useGridSelector(
     apiRef,
-    () => {
+    function cellParamsWithAPI() {
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
@@ -199,11 +201,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     objectShallowCompare,
   );
 
-  const isSelected = useGridSelector(apiRef, () =>
-    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+  const isSelected = useGridSelector(apiRef, function isCellSelected() {
+    return apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
       id: rowId,
       field,
-    }),
+    })
+  }
   );
 
   const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
@@ -219,14 +222,15 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const { classes: rootClasses, getCellClassName } = rootProps;
 
   // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
-  const pipesClassName = useGridSelector(apiRef, () =>
-    apiRef.current
+  const pipesClassName = useGridSelector(apiRef, function pipesClassName() {
+    return apiRef.current
       .unstable_applyPipeProcessors('cellClassName', [], {
         id: rowId,
         field,
       })
       .filter(Boolean)
-      .join(' '),
+      .join(' ')
+  }
   );
 
   const classNames = [pipesClassName] as (string | undefined)[];
@@ -326,11 +330,18 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         border: 0,
       };
     }
-    const cellStyle = {
-      '--width': `${width}px`,
-      '--height': typeof height === 'number' ? `${height}px` : height,
-      ...styleProp,
-    } as React.CSSProperties;
+
+    const cellStyle: React.CSSProperties =
+      height !== dimensions.rowHeight ?
+        {
+          '--width': `${width}px`,
+          '--height': typeof height === 'number' ? `${height}px` : height,
+          ...styleProp,
+        } :
+        {
+          '--width': `${width}px`,
+          ...styleProp,
+        };
 
     if (pinnedPosition === PinnedPosition.LEFT) {
       cellStyle.left = pinnedOffset;

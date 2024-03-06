@@ -427,12 +427,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         disableDragEvents={disableDragEvents}
         editCellState={editCellState}
         isNotVisible={cellIsNotVisible}
-        {...slotProps?.cell}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
-        gridHasScrollX={dimensions.hasScrollX}
+        dimensions={dimensions}
+        {...slotProps?.cell}
       />
     );
   };
