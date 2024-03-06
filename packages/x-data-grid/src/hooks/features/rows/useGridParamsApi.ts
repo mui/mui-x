@@ -58,7 +58,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
-      const rawValue = row[colDef.field];
+      const rawValue = row[field];
       const value = colDef.valueGetter
         ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
         : rawValue;
