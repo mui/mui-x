@@ -13,7 +13,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import type { GridPinnedColumns } from '../hooks/features/columns';
+import { GridPinnedColumnPosition, GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
@@ -31,6 +31,7 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/column
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 import { PinnedPosition } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
+import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -368,25 +369,19 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
-    let pinnedOffset: number;
-    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
-    // eslint-disable-next-line default-case
-    switch (pinnedPosition) {
-      case PinnedPosition.LEFT:
-        pinnedOffset = columnPositions[indexRelativeToAllColumns];
-        break;
-      case PinnedPosition.RIGHT:
-        pinnedOffset =
-          dimensions.columnsTotalWidth -
-          columnPositions[indexRelativeToAllColumns] -
-          column.computedWidth +
-          scrollbarWidth;
-        break;
-      case PinnedPosition.NONE:
-      case PinnedPosition.VIRTUAL:
-        pinnedOffset = 0;
-        break;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    const pinnedOffset = getPinnedCellOffset({
+      pinnedPosition: {
+        [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,
+        [PinnedPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
+        [PinnedPosition.NONE]: undefined,
+        [PinnedPosition.VIRTUAL]: undefined,
+      }[pinnedPosition],
+      column,
+      columnIndex: indexRelativeToAllColumns,
+      columnPositions,
+      dimensions,
+    });
 
     if (rowNode?.type === 'skeletonRow') {
       return (

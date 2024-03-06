@@ -31,6 +31,7 @@ import {
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { gridClasses } from '../../../constants/gridClasses';
+import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -211,6 +212,25 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           : -1;
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;
       const open = columnMenuState.open && columnMenuState.field === colDef.field;
+      const pinnedPosition = params?.position;
+
+      let style;
+      if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+        const pinnedOffset = getPinnedCellOffset({
+          pinnedPosition,
+          columnIndex,
+          columnPositions,
+          column: colDef,
+          dimensions,
+        });
+        if (pinnedPosition === 'left') {
+          style = { left: pinnedOffset };
+        }
+
+        if (pinnedPosition === 'right') {
+          style = { right: pinnedOffset };
+        }
+      }
 
       columns.push(
         <GridColumnHeaderItem
@@ -227,20 +247,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           isResizing={resizeCol === colDef.field}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
+          pinnedPosition={pinnedPosition}
+          style={style}
           {...other}
         />,
       );
     }
 
-    return (
-      <GridColumnHeaderRow
-        role="row"
-        aria-rowindex={headerGroupingMaxDepth + 1}
-        ownerState={rootProps}
-      >
-        {getFillers(params, columns, 0)}
-      </GridColumnHeaderRow>
-    );
+    return getFillers(params, columns, 0);
   };
 
   const getColumnGroupHeaders = (params?: GetHeadersParams) => {

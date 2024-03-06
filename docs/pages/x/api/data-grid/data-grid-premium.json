@@ -1282,6 +1282,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--pinnedLeft",
+      "className": "MuiDataGridPremium-columnHeader--pinnedLeft",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--pinnedRight",
+      "className": "MuiDataGridPremium-columnHeader--pinnedRight",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--showColumnBorder",
       "className": "MuiDataGridPremium-columnHeader--showColumnBorder",
       "description": "Styles applied to the column group header cell when show column border.",

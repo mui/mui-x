@@ -12,7 +12,9 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridBaseColumnHeaders,
-  GridColumnHeadersInner,
+  GridColumnHeaderRow,
+  // TODO: delete this component
+  // GridColumnHeadersInner,
   GridPinnedColumnFields,
   UseGridColumnHeadersProps,
 } from '@mui/x-data-grid/internals';
@@ -130,7 +132,8 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     );
 
     const {
-      isDragging,
+      // TODO: use it
+      // isDragging,
       renderContext,
       getInnerProps,
       getColumnHeaders,
@@ -202,15 +205,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
             })}
-            {getColumnHeaders(
-              {
-                position: GridPinnedColumnPosition.LEFT,
-                renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
-                maxLastColumn: leftRenderContext.lastColumnIndex,
-              },
-              { disableReorder: true },
-            )}
+
             {getColumnFilters({
               position: GridPinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
@@ -221,23 +216,52 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
         )}
 
         <GridScrollArea scrollDirection="left" />
-        <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
-          {getColumnGroupHeaders({
-            renderContext,
-            minFirstColumn: visiblePinnedColumns.left.length,
-            maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
-          })}
+        {/* <GridColumnHeadersInner isDragging={isDragging} {...innerProps}> */}
+        {getColumnGroupHeaders({
+          renderContext,
+          minFirstColumn: visiblePinnedColumns.left.length,
+          maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
+        })}
+        <GridColumnHeaderRow
+          role="row"
+          aria-rowindex={headerGroupingMaxDepth + 1}
+          ownerState={rootProps}
+        >
+          {leftRenderContext &&
+            getColumnHeaders(
+              {
+                position: GridPinnedColumnPosition.LEFT,
+                renderContext: leftRenderContext,
+                minFirstColumn: leftRenderContext.firstColumnIndex,
+                maxLastColumn: leftRenderContext.lastColumnIndex,
+              },
+              { disableReorder: true },
+            )}
           {getColumnHeaders({
             renderContext,
             minFirstColumn: visiblePinnedColumns.left.length,
             maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
           })}
-          {getColumnFilters({
-            renderContext,
-            minFirstColumn: visiblePinnedColumns.left.length,
-            maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
-          })}
-        </GridColumnHeadersInner>
+          {rightRenderContext &&
+            getColumnHeaders(
+              {
+                position: GridPinnedColumnPosition.RIGHT,
+                renderContext: rightRenderContext,
+                minFirstColumn: rightRenderContext.firstColumnIndex,
+                maxLastColumn: rightRenderContext.lastColumnIndex,
+              },
+              {
+                disableReorder: true,
+                separatorSide: GridColumnHeaderSeparatorSides.Left,
+              },
+            )}
+        </GridColumnHeaderRow>
+        {getColumnFilters({
+          renderContext,
+          minFirstColumn: visiblePinnedColumns.left.length,
+          maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
+        })}
+        {/* </GridColumnHeadersInner> */}
         <GridScrollArea scrollDirection="right" />
         <Filler />
         {rightRenderContext && (
@@ -256,15 +280,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             })}
-            {getColumnHeaders(
-              {
-                position: GridPinnedColumnPosition.RIGHT,
-                renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
-                maxLastColumn: rightRenderContext.lastColumnIndex,
-              },
-              { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
-            )}
+
             {getColumnFilters({
               position: GridPinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,

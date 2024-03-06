@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import { GridPinnedColumnPosition } from '@mui/x-data-grid-pro';
 import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -30,6 +31,8 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
   disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
+  pinnedPosition?: GridPinnedColumnPosition;
+  style?: React.CSSProperties;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -38,8 +41,15 @@ type OwnerState = GridColumnHeaderItemProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
-    ownerState;
+  const {
+    colDef,
+    classes,
+    isDragging,
+    sortDirection,
+    showRightBorder,
+    filterItemsCounter,
+    pinnedPosition,
+  } = ownerState;
 
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
@@ -59,6 +69,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnNumeric && 'columnHeader--numeric',
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
+      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
+      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -82,6 +94,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     disableReorder,
     separatorSide,
+    style,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -264,6 +277,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       columnMenu={columnMenu}
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
+      style={style}
       {...mouseEventsHandlers}
     />
   );
@@ -283,9 +297,11 @@ GridColumnHeaderItem.propTypes = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  pinnedPosition: PropTypes.oneOf(['left', 'right']),
   separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
+  style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 } as any;
 

@@ -346,6 +346,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: (t.vars || t).palette.action.hover,
     },
+    [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
+      position: 'sticky',
+      zIndex: 3,
+      background: 'var(--DataGrid-pinnedBackground)',
+    },
     [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
       position: 'absolute',

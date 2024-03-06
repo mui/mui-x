@@ -39,6 +39,7 @@ interface GridGenericColumnHeaderItemProps
   label: string;
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
+  style?: React.CSSProperties;
 }
 
 const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
@@ -68,6 +69,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     resizable,
     draggableContainerProps,
     columnHeaderSeparatorProps,
+    style,
     ...other
   } = props;
 
@@ -104,6 +106,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       ref={handleRef}
       className={clsx(classes.root, headerClassName)}
       style={{
+        ...style,
         height,
         width,
         minWidth: width,

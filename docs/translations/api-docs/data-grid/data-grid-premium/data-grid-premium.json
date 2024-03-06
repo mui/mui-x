@@ -810,6 +810,8 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
+    "columnHeader--pinnedLeft": { "description": "" },
+    "columnHeader--pinnedRight": { "description": "" },
     "columnHeader--showColumnBorder": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the column group header cell",

@@ -153,6 +153,8 @@ export interface GridClasses {
    * Styles applied to the column header if the column has a filter applied to it.
    */
   'columnHeader--filtered': string;
+  'columnHeader--pinnedLeft': string;
+  'columnHeader--pinnedRight': string;
   /**
    * Styles applied to the column header element.
    */
@@ -665,6 +667,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--sortable',
   'columnHeader--sorted',
   'columnHeader--filtered',
+  'columnHeader--pinnedLeft',
+  'columnHeader--pinnedRight',
   'columnHeader',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
