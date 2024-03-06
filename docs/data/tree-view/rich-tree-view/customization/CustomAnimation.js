@@ -55,7 +55,7 @@ export default function CustomAnimation() {
       aria-label="customized"
       defaultExpandedNodes={['1']}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
-      slotProps={{ item: { TransitionComponent } }}
+      slotProps={{ item: { slots: { groupTransition: TransitionComponent } } }}
       items={ITEMS}
     />
   );
