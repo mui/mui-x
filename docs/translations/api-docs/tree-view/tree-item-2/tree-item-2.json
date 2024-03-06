@@ -29,11 +29,6 @@
       "nodeName": "the content element",
       "conditions": "focused"
     },
-    "group": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the transition component",
-      "deprecationInfo": "Use <code>treeItemClasses.groupTransition</code> instead."
-    },
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",

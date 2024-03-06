@@ -79,13 +79,6 @@
       "isGlobal": true
     },
     {
-      "key": "group",
-      "className": "MuiTreeItem2-group",
-      "description": "Styles applied to the transition component.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
       "key": "selected",
       "className": "Mui-selected",
       "description": "State class applied to the content element when selected.",
