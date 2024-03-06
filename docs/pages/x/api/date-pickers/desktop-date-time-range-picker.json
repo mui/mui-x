@@ -345,7 +345,10 @@
     { "name": "field", "description": "", "class": null }
   ],
   "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiDesktopDateTimeRangePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateTimeRangePicker/DesktopDateTimeRangePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",

@@ -95,8 +95,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </BottomContainer>
       </Scroller>
-      <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
-      <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
+      {dimensions.hasScrollX && (
+        <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      )}
       {props.children}
     </Container>
   );
