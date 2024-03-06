@@ -150,6 +150,46 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
+  // See https://github.com/mui/mui-x/issues/12271
+  it('should not keep the sort item with `item.sort = null`', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const onSortModelChange = spy();
+    function TestCase() {
+      apiRef = useGridApiRef();
+      const cols = [{ field: 'id' }];
+      const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={cols}
+            rows={rows}
+            onSortModelChange={onSortModelChange}
+          />
+        </div>
+      );
+    }
+
+    render(<TestCase />);
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    const header = getColumnHeaderCell(0);
+
+    // Trigger a `asc` sort
+    fireEvent.click(header);
+    expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
+    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([{ field: 'id', sort: 'asc' }]);
+
+    // Clear the sort using `apiRef`
+    act(() => apiRef.current.sortColumn('id', null));
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    expect(onSortModelChange.callCount).to.equal(2);
+
+    // Confirm that the sort item is cleared and not passed to `onSortModelChange`
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+  });
+
   it('should always set correct `aria-sort` attribute', () => {
     const cols = [{ field: 'id' }];
     const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
