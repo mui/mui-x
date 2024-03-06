@@ -70,7 +70,7 @@ const updateNodesState = ({
       label,
       index,
       parentId,
-      idAttribute: id,
+      idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
     };
