@@ -18,7 +18,7 @@ type GroupCache = {
   appliers: {
     [applierId: string]: () => void;
   };
-}
+};
 
 /**
  * Implement the Pipeline Pattern
@@ -86,7 +86,9 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
 
       return () => {
         cache.current[group]!.processors.delete(id);
-        cache.current[group]!.processorsAsArray = Array.from(cache.current[group]!.processors.values());
+        cache.current[group]!.processorsAsArray = Array.from(
+          cache.current[group]!.processors.values(),
+        );
       };
     },
     [runAppliers],
@@ -106,8 +108,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     cache.current[group]!.appliers[id] = applier;
 
     return () => {
-      const { [id]: removedGroupApplier, ...otherAppliers } =
-        cache.current[group]!.appliers;
+      const { [id]: removedGroupApplier, ...otherAppliers } = cache.current[group]!.appliers;
       cache.current[group]!.appliers = otherAppliers;
     };
   }, []);
@@ -131,7 +132,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
 
     const processors = cache.current[group]!.processorsAsArray;
     let result = value;
-    for (let i = 0; i < processors.length; i++) {
+    for (let i = 0; i < processors.length; i += 1) {
       result = processors[i](result, context);
     }
     return result;

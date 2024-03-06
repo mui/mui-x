@@ -178,7 +178,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const cellParamsWithAPI = useGridSelector(
     apiRef,
-    function cellParamsWithAPI() {
+    () => {
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
@@ -201,12 +201,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     objectShallowCompare,
   );
 
-  const isSelected = useGridSelector(apiRef, function isCellSelected() {
-    return apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+  const isSelected = useGridSelector(apiRef, () =>
+    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
       id: rowId,
       field,
-    })
-  }
+    }),
   );
 
   const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
@@ -222,15 +221,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const { classes: rootClasses, getCellClassName } = rootProps;
 
   // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
-  const pipesClassName = useGridSelector(apiRef, function pipesClassName() {
-    return apiRef.current
+  const pipesClassName = useGridSelector(apiRef, () =>
+    apiRef.current
       .unstable_applyPipeProcessors('cellClassName', [], {
         id: rowId,
         field,
       })
       .filter(Boolean)
-      .join(' ')
-  }
+      .join(' '),
   );
 
   const classNames = [pipesClassName] as (string | undefined)[];
@@ -332,16 +330,16 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     const cellStyle: React.CSSProperties =
-      height !== dimensions.rowHeight ?
-        {
-          '--width': `${width}px`,
-          '--height': typeof height === 'number' ? `${height}px` : height,
-          ...styleProp,
-        } :
-        {
-          '--width': `${width}px`,
-          ...styleProp,
-        };
+      height !== dimensions.rowHeight
+        ? {
+            '--width': `${width}px`,
+            '--height': typeof height === 'number' ? `${height}px` : height,
+            ...styleProp,
+          }
+        : {
+            '--width': `${width}px`,
+            ...styleProp,
+          };
 
     if (pinnedPosition === PinnedPosition.LEFT) {
       cellStyle.left = pinnedOffset;
@@ -352,7 +350,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition, dimensions.rowHeight]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
