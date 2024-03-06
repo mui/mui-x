@@ -6,6 +6,7 @@ import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
+import { SlotComponentPropsFromProps } from '../internals/models';
 
 export interface TreeItemSlots {
   /**
@@ -24,6 +25,11 @@ export interface TreeItemSlots {
    * The icon to display next to the tree node's label.
    */
   icon?: React.ElementType;
+  /**
+   * The component that animates to appearance / disappearance of the item's children.
+   * @default TreeItem2Group
+   */
+  groupTransition?: React.ElementType;
 }
 
 export interface TreeItemSlotProps {
@@ -31,6 +37,7 @@ export interface TreeItemSlotProps {
   expandIcon?: SlotComponentProps<'svg', {}, {}>;
   endIcon?: SlotComponentProps<'svg', {}, {}>;
   icon?: SlotComponentProps<'svg', {}, {}>;
+  groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
 }
 
 export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
@@ -80,17 +87,6 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The id of the node.
    */
   nodeId: TreeViewItemId;
-  /**
-   * The component used for the transition.
-   * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
-   * @default Collapse
-   */
-  TransitionComponent?: React.JSXElementConstructor<TransitionProps>;
-  /**
-   * Props applied to the transition element.
-   * By default, the element is based on this [`Transition`](https://reactcommunity.org/react-transition-group/transition/) component.
-   */
-  TransitionProps?: TransitionProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

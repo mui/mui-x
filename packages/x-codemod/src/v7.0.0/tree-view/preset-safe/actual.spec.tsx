@@ -5,6 +5,7 @@ import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 
 const className = treeViewClasses.root;
 
+// prettier-ignore
 <TreeView
   expanded={[]}
   defaultExpanded={[]}
@@ -13,5 +14,10 @@ const className = treeViewClasses.root;
   defaultSelected={null}
   onNodeSelect={selectionCallback}
 >
-  <TreeItem nodeId="1" label="Item 1" />
+  <TreeItem
+    nodeId="1"
+    label="Item 1"
+    TransitionComponent={Fade}
+    TransitionProps={{ timeout: 600 }}
+  />
 </TreeView>;

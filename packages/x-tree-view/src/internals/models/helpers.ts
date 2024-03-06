@@ -8,6 +8,12 @@ export type DefaultizedProps<
   Required<Pick<P, RequiredProps>> &
   AdditionalProps;
 
+export type SlotComponentPropsFromProps<
+  TProps extends {},
+  TOverrides extends {},
+  TOwnerState extends {},
+> = (Partial<TProps> & TOverrides) | ((ownerState: TOwnerState) => Partial<TProps> & TOverrides);
+
 type IsAny<T> = 0 extends 1 & T ? true : false;
 
 export type OptionalIfEmpty<A extends string, B> = keyof B extends never

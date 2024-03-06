@@ -221,6 +221,7 @@ The list includes these transformers
 - [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
+- [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -297,6 +298,20 @@ Rename the selection props
 
 -  defaultSelected={defaultSelectedNodes}
 +  defaultSelectedNodes={defaultSelectedNodes}
+ />
+```
+
+#### `replace-transition-props-by-slot`
+
+Replace the `TransitionComponent` and `TransitionProps` components with the `groupTransition` slot:
+
+```diff
+ <TreeItem
+-  TransitionComponent={Fade}
++  slots={{ groupTransition: Fade }}
+
+-  TransitionProps={{ timeout: 600 }}
++  slotProps={{ groupTransition: { timeout: 600 } }}
  />
 ```
 

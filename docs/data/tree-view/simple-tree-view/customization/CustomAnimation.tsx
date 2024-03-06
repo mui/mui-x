@@ -22,7 +22,11 @@ function TransitionComponent(props: TransitionProps) {
 
 const CustomTreeItem = React.forwardRef(
   (props: TreeItemProps, ref: React.Ref<HTMLLIElement>) => (
-    <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+    <TreeItem
+      {...props}
+      slots={{ groupTransition: TransitionComponent, ...props.slots }}
+      ref={ref}
+    />
   ),
 );
 

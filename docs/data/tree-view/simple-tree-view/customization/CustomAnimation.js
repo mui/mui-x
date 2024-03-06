@@ -21,7 +21,11 @@ function TransitionComponent(props) {
 }
 
 const CustomTreeItem = React.forwardRef((props, ref) => (
-  <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+  <TreeItem
+    {...props}
+    slots={{ groupTransition: TransitionComponent, ...props.slots }}
+    ref={ref}
+  />
 ));
 
 export default function CustomAnimation() {

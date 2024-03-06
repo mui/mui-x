@@ -85,7 +85,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 #### Define `expandIcon`
 
 The icon used to expand the children of a node (rendered when this node is collapsed)
-is now defined as a slot both on the Tree View and the Tree Item components.
+is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -116,7 +116,7 @@ you need to use the new `expandIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your Tree Item component,
+If you were passing another icon to your `TreeItem` component,
 you need to use the new `expandIcon` slot on this component:
 
 ```diff
@@ -133,7 +133,7 @@ you need to use the new `expandIcon` slot on this component:
 #### Define `collapseIcon`
 
 The icon used to collapse the children of a node (rendered when this node is expanded)
-is now defined as a slot both on the Tree View and the Tree Item components.
+is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -164,7 +164,7 @@ you need to use the new `collapseIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your Tree Item component,
+If you were passing another icon to your `TreeItem` component,
 you need to use the new `collapseIcon` slot on this component:
 
 ```diff
@@ -198,7 +198,7 @@ by passing the same icon to both the `collapseIcon` and the `expandIcon` slots o
 #### Define `endIcon`
 
 The icon rendered next to an item without children
-is now defined as a slot both on the Tree View and the Tree Item components.
+is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were passing an icon to your Tree View component,
 you need to use the new `endIcon` slot on this component:
@@ -216,7 +216,7 @@ you need to use the new `endIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing an icon to your Tree Item component,
+If you were passing an icon to your `TreeItem` component,
 you need to use the new `endIcon` slot on this component:
 
 ```diff
@@ -233,9 +233,9 @@ you need to use the new `endIcon` slot on this component:
 #### Define `icon`
 
 The icon rendered next to an item
-is now defined as a slot on the Tree Item component.
+is now defined as a slot on the `TreeItem` component.
 
-If you were passing an icon to your Tree Item component,
+If you were passing an icon to your `TreeItem` component,
 you need to use the new `icon` slot on this component:
 
 ```diff
@@ -252,6 +252,40 @@ you need to use the new `icon` slot on this component:
 :::warning
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
+
+### ✅ Use slots to define the group transition
+
+The component used to animate the item children
+is now defined as a slot on the `TreeItem` component.
+
+If you were passing a `TransitionComponent` or `TransitionProps` to your `TreeItem` component,
+you need to use the new `groupTransition` slot on this component:
+
+```diff
+ <SimpleTreeView>
+   <TreeItem
+     nodeId="1"
+     label="Node 1"
+-    TransitionComponent={Fade}
++    slots={{ groupTransition: Fade }}
+-    TransitionProps={{ timeout: 600 }}
++    slotProps={{ groupTransition: { timeout: 600 } }}
+   />
+ </SimpleTreeView>
+```
+
+### Rename the `group` class of the `TreeItem` component
+
+The `group` class of the `TreeItem` component has been renamed to `groupTransition` to match with its new slot name.
+
+```diff
+ const StyledTreeItem = styled(TreeItem)({
+-  [`& .${treeItemClasses.group}`]: {
++  [`& .${treeItemClasses.groupTransition}`]: {
+    marginLeft: 20,
+  },
+ });
+```
 
 ### ✅ Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
@@ -332,6 +366,12 @@ you can use the new `onNodeSelectionToggle` prop which is called whenever a node
 ### Focus the Tree Item instead of the Tree View
 
 The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+This change will allow new features that require the focus to be on the Tree Item,
+like the drag and drop reordering of items.
+It also solves several issues with focus management,
+like the inability to scroll to the focused item when a lot of items are rendered.
+
 This will mostly impact how you write tests to interact with the Tree View:
 
 For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
