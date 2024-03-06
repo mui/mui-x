@@ -16,7 +16,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { shouldShowCellLeftBorder, shouldShowCellRightBorder } from '../../utils/cellBorderUtils';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -123,12 +123,12 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
-  const showLeftBorder = shouldShowCellLeftBorder({
+  const showLeftBorder = shouldCellShowLeftBorder({
     indexInSection,
     pinnedPosition,
   });
 
-  const showRightBorder = shouldShowCellRightBorder({
+  const showRightBorder = shouldCellShowRightBorder({
     indexInSection,
     sectionLength,
     pinnedPosition,

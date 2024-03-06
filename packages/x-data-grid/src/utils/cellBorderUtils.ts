@@ -1,6 +1,6 @@
 import { GridPinnedColumnPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 
-export const shouldShowCellRightBorder = ({
+export const shouldCellShowRightBorder = ({
   pinnedPosition,
   indexInSection,
   sectionLength,
@@ -20,7 +20,7 @@ export const shouldShowCellRightBorder = ({
   );
 };
 
-export const shouldShowCellLeftBorder = ({
+export const shouldCellShowLeftBorder = ({
   pinnedPosition,
   indexInSection,
 }: {
