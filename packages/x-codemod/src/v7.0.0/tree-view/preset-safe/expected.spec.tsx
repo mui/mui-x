@@ -5,6 +5,7 @@ import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
 const className = simpleTreeViewClasses.root;
 
+// prettier-ignore
 <SimpleTreeView
   expandedNodes={[]}
   defaultExpandedNodes={[]}
@@ -21,6 +22,5 @@ const className = simpleTreeViewClasses.root;
     }}
     slotProps={{
       groupTransition: { timeout: 600 },
-    }}
-  />
+    }} />
 </SimpleTreeView>;

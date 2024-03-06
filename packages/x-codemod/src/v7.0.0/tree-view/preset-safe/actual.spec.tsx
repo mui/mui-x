@@ -5,6 +5,7 @@ import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 
 const className = treeViewClasses.root;
 
+// prettier-ignore
 <TreeView
   expanded={[]}
   defaultExpanded={[]}
