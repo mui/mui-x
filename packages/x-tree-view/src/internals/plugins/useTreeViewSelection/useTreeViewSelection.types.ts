@@ -50,12 +50,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} itemId The nodeId of the modified item.
    * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelectionToggle?: (
+  onItemSelectionToggle?: (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isSelected: boolean,
   ) => void;
 }

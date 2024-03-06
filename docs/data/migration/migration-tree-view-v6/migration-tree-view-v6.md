@@ -349,14 +349,14 @@ The selection props have been renamed to better describe their behaviors:
 ```
 
 :::info
-If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific node,
-you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
+If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific item,
+you can use the new `onItemSelectionToggle` prop which is called whenever an item is selected or deselected with its id and selection status.
 
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeSelectionToggle={(event, nodeId, isSelected) =>
-    console.log(nodeId, isSelected)
+  onItemSelectionToggle={(event, itemId, isSelected) =>
+    console.log(itemId, isSelected)
   }
 />
 ```

@@ -47,6 +47,13 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
+    "onItemSelectionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "describedArgs": ["event", "itemId", "isSelected"]
+      }
+    },
     "onNodeExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
@@ -59,13 +66,6 @@
       "signature": {
         "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
         "describedArgs": ["event", "nodeId", "value"]
-      }
-    },
-    "onNodeSelectionToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isSelected: array) => void",
-        "describedArgs": ["event", "nodeId", "isSelected"]
       }
     },
     "onSelectedItemsChange": {

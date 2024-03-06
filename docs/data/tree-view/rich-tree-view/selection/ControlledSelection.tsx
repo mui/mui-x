@@ -34,14 +34,14 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemNodeIds = () => {
+const getAllItemItemIds = () => {
   const ids: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
+  const registerItemId = (item: TreeViewBaseItem) => {
     ids.push(item.id);
-    item.children?.forEach(registerNodeId);
+    item.children?.forEach(registerItemId);
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
   return ids;
 };
@@ -55,7 +55,7 @@ export default function ControlledSelection() {
 
   const handleSelectClick = () => {
     setSelectedItems((oldSelected) =>
-      oldSelected.length === 0 ? getAllItemNodeIds() : [],
+      oldSelected.length === 0 ? getAllItemItemIds() : [],
     );
   };
 

@@ -18,32 +18,32 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
 
-  const setSelectedNodes = (
+  const setSelectedItems = (
     event: React.SyntheticEvent,
     newSelectedItems: typeof params.defaultSelectedItems,
   ) => {
-    if (params.onNodeSelectionToggle) {
+    if (params.onItemSelectionToggle) {
       if (params.multiSelect) {
-        const addedNodes = (newSelectedItems as string[]).filter(
-          (nodeId) => !instance.isNodeSelected(nodeId),
+        const addedItems = (newSelectedItems as string[]).filter(
+          (itemId) => !instance.isNodeSelected(itemId),
         );
-        const removedNodes = (models.selectedItems.value as string[]).filter(
-          (nodeId) => !(newSelectedItems as string[]).includes(nodeId),
+        const removedItems = (models.selectedItems.value as string[]).filter(
+          (itemId) => !(newSelectedItems as string[]).includes(itemId),
         );
 
-        addedNodes.forEach((nodeId) => {
-          params.onNodeSelectionToggle!(event, nodeId, true);
+        addedItems.forEach((itemId) => {
+          params.onItemSelectionToggle!(event, itemId, true);
         });
 
-        removedNodes.forEach((nodeId) => {
-          params.onNodeSelectionToggle!(event, nodeId, false);
+        removedItems.forEach((itemId) => {
+          params.onItemSelectionToggle!(event, itemId, false);
         });
       } else if (newSelectedItems !== models.selectedItems.value) {
         if (models.selectedItems.value != null) {
-          params.onNodeSelectionToggle(event, models.selectedItems.value as string, false);
+          params.onItemSelectionToggle(event, models.selectedItems.value as string, false);
         }
         if (newSelectedItems != null) {
-          params.onNodeSelectionToggle(event, newSelectedItems as string, true);
+          params.onItemSelectionToggle(event, newSelectedItems as string, true);
         }
       }
     }
@@ -74,11 +74,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
           newSelected = [nodeId].concat(models.selectedItems.value);
         }
 
-        setSelectedNodes(event, newSelected);
+        setSelectedItems(event, newSelected);
       }
     } else {
       const newSelected = params.multiSelect ? [nodeId] : nodeId;
-      setSelectedNodes(event, newSelected);
+      setSelectedItems(event, newSelected);
     }
     lastSelectedNode.current = nodeId;
     lastSelectionWasRange.current = false;
@@ -125,7 +125,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       base.push(next);
       currentRangeSelection.current.push(current, next);
     }
-    setSelectedNodes(event, base);
+    setSelectedItems(event, base);
   };
 
   const handleRangeSelect = (
@@ -144,7 +144,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-    setSelectedNodes(event, newSelected);
+    setSelectedItems(event, newSelected);
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
@@ -229,5 +229,5 @@ useTreeViewSelection.params = {
   defaultSelectedItems: true,
   selectedItems: true,
   onSelectedItemsChange: true,
-  onNodeSelectionToggle: true,
+  onItemSelectionToggle: true,
 };

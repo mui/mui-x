@@ -171,6 +171,13 @@ SimpleTreeView.propTypes = {
    */
   onExpandedNodesChange: PropTypes.func,
   /**
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} itemId The nodeId of the modified item.
+   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   */
+  onItemSelectionToggle: PropTypes.func,
+  /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {array} nodeId The nodeId of the modified node.
@@ -184,13 +191,6 @@ SimpleTreeView.propTypes = {
    * @param {string} value of the focused node.
    */
   onNodeFocus: PropTypes.func,
-  /**
-   * Callback fired when a tree item is selected or deselected.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
-   */
-  onNodeSelectionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
