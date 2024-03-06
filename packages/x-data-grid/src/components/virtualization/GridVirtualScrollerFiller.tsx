@@ -31,6 +31,7 @@ const PinnedRight = styled(Pinned)({
 
 const Main = styled('div')({
   flexGrow: 1,
+  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
 });
 
 function GridVirtualScrollerFiller() {
