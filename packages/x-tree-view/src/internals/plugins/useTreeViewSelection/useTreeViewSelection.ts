@@ -20,7 +20,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const setSelectedNodes = (
     event: React.SyntheticEvent,
-    newSelectedNodes: typeof params.defaultSelectedNodes,
+    newSelectedNodes: typeof params.defaultSelectedItems,
   ) => {
     if (params.onNodeSelectionToggle) {
       if (params.multiSelect) {
@@ -209,7 +209,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
 useTreeViewSelection.models = {
   selectedNodes: {
-    getDefaultValue: (params) => params.defaultSelectedNodes,
+    getDefaultValue: (params) => params.defaultSelectedItems,
   },
 };
 
@@ -219,14 +219,14 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
-  defaultSelectedNodes:
-    params.defaultSelectedNodes ?? (params.multiSelect ? DEFAULT_SELECTED_NODES : null),
+  defaultSelectedItems:
+    params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_NODES : null),
 });
 
 useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
-  defaultSelectedNodes: true,
+  defaultSelectedItems: true,
   selectedNodes: true,
   onSelectedNodesChange: true,
   onNodeSelectionToggle: true,

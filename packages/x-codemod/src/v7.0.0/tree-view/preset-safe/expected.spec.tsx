@@ -11,7 +11,7 @@ const className = simpleTreeViewClasses.root;
   defaultExpandedNodes={[]}
   onExpandedNodesChange={expansionCallback}
   selectedNodes={null}
-  defaultSelectedNodes={null}
+  defaultSelectedItems={null}
   onSelectedNodesChange={selectionCallback}
 >
   <TreeItem

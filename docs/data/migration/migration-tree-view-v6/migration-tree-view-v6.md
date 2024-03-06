@@ -333,7 +333,7 @@ The selection props have been renamed to better describe their behaviors:
 | :---------------- | :---------------------- |
 | `onNodeSelect`    | `onSelectedNodesChange` |
 | `selected`        | `selectedNodes`         |
-| `defaultSelected` | `defaultSelectedNodes`  |
+| `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
  <TreeView
@@ -343,8 +343,8 @@ The selection props have been renamed to better describe their behaviors:
 -  selected={selectedNodes}
 +  selectedNodes={selectedNodes}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 

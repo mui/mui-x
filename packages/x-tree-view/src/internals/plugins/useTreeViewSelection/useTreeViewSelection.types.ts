@@ -26,7 +26,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedNodes?: TreeViewSelectionValue<Multiple>;
+  defaultSelectedItems?: TreeViewSelectionValue<Multiple>;
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
@@ -62,7 +62,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelectedNodes' | 'multiSelect'
+  'disableSelection' | 'defaultSelectedItems' | 'multiSelect'
 >;
 
 interface UseTreeViewSelectionContextValue {

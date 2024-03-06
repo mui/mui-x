@@ -171,7 +171,7 @@ RichTreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedNodes: PropTypes.any,
+  defaultSelectedItems: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false

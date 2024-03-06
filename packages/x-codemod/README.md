@@ -296,8 +296,8 @@ Rename the selection props
 -  selected={selectedNodes}
 +  selectedNodes={selectedNodes}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 
