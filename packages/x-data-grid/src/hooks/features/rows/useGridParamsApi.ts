@@ -59,7 +59,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       }
 
       const rawValue = row[field];
-      const value = colDef.valueGetter
+      const value = colDef?.valueGetter
         ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
         : rawValue;
       const cellFocus = gridFocusCellSelector(apiRef);

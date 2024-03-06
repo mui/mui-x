@@ -325,7 +325,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       ]);
     });
 
-    it.only('should support rowGroupingColumnMode switch', () => {
+    it('should support rowGroupingColumnMode switch', () => {
       const { setProps } = render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
