@@ -657,8 +657,6 @@ export const GridRootStyles = styled('div', {
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: 'var(--DataGrid-pinnedBackground)',
-      },
-      [`&.${c['scrollbarFiller--pinnedRight']}:not(.${c['scrollbarFiller--header']})`]: {
         position: 'sticky',
         right: 0,
       },
