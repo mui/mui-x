@@ -139,7 +139,6 @@ export * from '../utils/createControllablePromise';
 export {
   createSelector,
   createSelectorMemoized,
-  unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
 export {
   findParentElementFromClassName,
