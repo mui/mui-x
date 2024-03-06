@@ -43,6 +43,51 @@ export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactN
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
+enum ScrollDirection {
+  NONE,
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+}
+
+function directionForDelta(dx: number, dy: number) {
+  if (dx === 0 && dy === 0) {
+    return ScrollDirection.NONE
+  }
+  if (Math.abs(dy) >= Math.abs(dx)) {
+    if (dy > 0) {
+      return ScrollDirection.DOWN
+    } else {
+      return ScrollDirection.UP
+    }
+  } else {
+    if (dx > 0) {
+      return ScrollDirection.RIGHT
+    } else {
+      return ScrollDirection.LEFT
+    }
+  }
+}
+
+function bufferForScrollCache(scrollCache: ScrollCache) {
+  const direction = scrollCache.direction
+  return {
+    rowBefore: direction === ScrollDirection.LEFT ? scrollCache.expectedScroll.left : 0,
+    rowAfter: direction === ScrollDirection.RIGHT ? scrollCache.expectedScroll.left : 0,
+    columnBefore: direction === ScrollDirection.UP ? scrollCache.expectedScroll.top : 0,
+    columnAfter: direction === ScrollDirection.DOWN ? scrollCache.expectedScroll.top : 0,
+  }
+}
+
+const EMPTY_SCROLL_CACHE = {
+  direction: ScrollDirection.NONE,
+  lastTimestamp: -1,
+  lastPosition: { top: 0, left: 0 },
+  expectedScroll: { top: 0, left: 0 },
+}
+type ScrollCache = typeof EMPTY_SCROLL_CACHE
+
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -79,6 +124,8 @@ export const useGridVirtualScroller = () => {
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
+
+  const scrollCache = React.useRef({ ...EMPTY_SCROLL_CACHE }).current;
 
   const focusedCell = {
     rowIndex: React.useMemo(
@@ -130,12 +177,28 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = () => {
+
+    // TODO: use better math to predict future position
+    const now = performance.now()
+    const isScrolling = scrollCache.lastTimestamp !== -1 && now - scrollCache.lastTimestamp < 500
+    // const dt = isScrolling ? now - scrollCache.lastTimestamp : Infinity;
+    const dy = isScrolling ? scrollPosition.current.top  - scrollCache.lastPosition.top : 0;
+    const dx = isScrolling ? scrollPosition.current.left - scrollCache.lastPosition.left : 0;
+
+    // XXX: remove
+    // console.log('scroll', scrollPosition.current.top, { dt, dy, dx })
+
+    scrollCache.lastTimestamp = now
+    scrollCache.lastPosition = scrollPosition.current
+    scrollCache.expectedScroll = { top: dy, left: dx }
+    scrollCache.direction = directionForDelta(dx, dy)
+
     // Since previous render, we have scrolled...
-    const rowScroll = Math.abs(scrollPosition.current.top - previousScroll.current.top);
-    const columnScroll = Math.abs(scrollPosition.current.left - previousScroll.current.left);
+    const rowScroll    = Math.abs(scrollPosition.current.top  - previousScroll.current.top)  + scrollCache.expectedScroll.top;
+    const columnScroll = Math.abs(scrollPosition.current.left - previousScroll.current.left) + scrollCache.expectedScroll.left;
 
     const shouldUpdate =
-      rowScroll >= rootProps.rowThreshold ||
+      rowScroll    >= rootProps.rowThreshold ||
       columnScroll >= rootProps.columnThreshold;
 
     if (!shouldUpdate) {
@@ -143,7 +206,7 @@ export const useGridVirtualScroller = () => {
     }
 
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -155,7 +218,7 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
+    const [nextRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     updateRenderContext(nextRenderContext, rawRenderContext);
   };
 
@@ -430,7 +493,7 @@ export const useGridVirtualScroller = () => {
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
 
-    const [initialRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current);
+    const [initialRenderContext, rawRenderContext] = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     updateRenderContext(initialRenderContext, rawRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
@@ -522,7 +585,7 @@ function inputsSelector(
   };
 }
 
-function computeRenderContext(inputs: RenderContextInputs, scrollPosition: ScrollPosition) {
+function computeRenderContext(inputs: RenderContextInputs, scrollPosition: ScrollPosition, scrollCache: ScrollCache) {
   let renderContext: GridRenderContext;
 
   if (!inputs.enabled) {
@@ -558,7 +621,8 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
         lastIndex: lastRowIndex,
         minFirstIndex: 0,
         maxLastIndex: inputs.rows.length,
-        bufferPx: inputs.rowBufferPx,
+        bufferBefore: inputs.rowBufferPx,
+        bufferAfter: inputs.rowBufferPx,
         positions: inputs.rowsMeta.positions,
       });
 
@@ -597,6 +661,7 @@ function computeRenderContext(inputs: RenderContextInputs, scrollPosition: Scrol
     inputs.pinnedColumns,
     inputs.visibleColumns,
     renderContext,
+    scrollCache,
   );
 
   return [actualRenderContext, renderContext];
@@ -651,13 +716,17 @@ function deriveRenderContext(
   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>,
   nextRenderContext: GridRenderContext,
+  scrollCache: ScrollCache,
 ) {
+  const buffer = bufferForScrollCache(scrollCache)
+
   const [firstRowToRender, lastRowToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstRowIndex,
     lastIndex: nextRenderContext.lastRowIndex,
     minFirstIndex: 0,
     maxLastIndex: rows.length,
-    bufferPx: rowBufferPx,
+    bufferBefore: rowBufferPx + buffer.rowBefore,
+    bufferAfter: rowBufferPx + buffer.rowAfter,
     positions: rowPositions,
   });
 
@@ -666,7 +735,8 @@ function deriveRenderContext(
     lastIndex: nextRenderContext.lastColumnIndex,
     minFirstIndex: pinnedColumns.left.length,
     maxLastIndex: visibleColumns.length - pinnedColumns.right.length,
-    bufferPx: columnBufferPx,
+    bufferBefore: columnBufferPx + buffer.columnBefore,
+    bufferAfter: columnBufferPx + buffer.columnAfter,
     positions: columnPositions,
   });
 
@@ -678,14 +748,12 @@ function deriveRenderContext(
     visibleRows: rows,
   });
 
-  let r = {
+  return {
     firstRowIndex: firstRowToRender,
     lastRowIndex: lastRowToRender,
     firstColumnIndex: firstColumnToRender,
     lastColumnIndex: lastColumnToRender,
   };
-  console.log(r)
-  return r
 }
 
 type SearchOptions = {
@@ -751,20 +819,22 @@ function exponentialSearch(offset: number, positions: number[], index: number): 
 function getIndexesToRender({
   firstIndex,
   lastIndex,
-  bufferPx,
+  bufferBefore,
+  bufferAfter,
   minFirstIndex,
   maxLastIndex,
   positions,
 }: {
   firstIndex: number;
   lastIndex: number;
-  bufferPx: number;
+  bufferBefore: number;
+  bufferAfter: number;
   minFirstIndex: number;
   maxLastIndex: number;
   positions: number[];
 }) {
-  const firstPosition = positions[firstIndex] - bufferPx;
-  const lastPosition  = positions[lastIndex] + bufferPx;
+  const firstPosition = positions[firstIndex] - bufferBefore;
+  const lastPosition  = positions[lastIndex] + bufferAfter;
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
