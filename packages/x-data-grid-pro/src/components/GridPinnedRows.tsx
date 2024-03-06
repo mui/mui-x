@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { GridRowEntry, getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-data-grid';
+import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-data-grid';
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
@@ -17,23 +17,12 @@ const useUtilityClasses = () => {
 };
 
 export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProps) {
-  const apiRef = useGridPrivateApiContext();
-  const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rows = pinnedRowsData[position];
-
-  if (rows.length === 0) {
-    return null;
-  }
-
-  return (
-    <GridPinnedRowsImpl position={position} virtualScroller={virtualScroller} rows={rows} />
-  );
-}
-
-function GridPinnedRowsImpl({ position, virtualScroller, rows }: GridPinnedRowsProps & { rows: GridRowEntry[] }) {
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
+
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+  const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
+  const rows = pinnedRowsData[position];
 
   const pinnedRows = virtualScroller.getRows({
     position,
@@ -48,6 +37,10 @@ function GridPinnedRowsImpl({ position, virtualScroller, rows }: GridPinnedRowsP
       [rows, renderContext.firstColumnIndex, renderContext.lastColumnIndex],
     ),
   });
+
+  if (rows.length === 0) {
+    return null;
+  }
 
   return (
     <div
