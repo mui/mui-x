@@ -61,6 +61,9 @@ export const useGridInfiniteLoader = (
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
+  const marginBottom =
+    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+
   React.useEffect(() => {
     if (!isEnabled) {
       return;
@@ -69,8 +72,6 @@ export const useGridInfiniteLoader = (
       return;
     }
     observer.current?.disconnect();
-    const marginBottom =
-      props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
@@ -80,14 +81,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [
-    virtualScroller,
-    props.scrollEndThreshold,
-    handleLoadMoreRows,
-    isEnabled,
-    dimensions.hasScrollX,
-    dimensions.scrollbarSize,
-  ]);
+  }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
 
   const triggerRef = React.useCallback(
     (node: HTMLElement | null) => {
