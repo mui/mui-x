@@ -325,7 +325,7 @@ ChartsXAxis.propTypes = {
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
-   * The placement of ticks label. Van be the middle of the band, or the tick position.
+   * The placement of ticks label. Can be the middle of the band, or the tick position.
    * Only used if scale is 'band'.
    * @default 'middle'
    */
