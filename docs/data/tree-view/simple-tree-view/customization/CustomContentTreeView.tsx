@@ -10,7 +10,7 @@ import {
 import {
   TreeItem2Content,
   TreeItem2IconContainer,
-  TreeItem2TransitionGroup,
+  TreeItem2GroupTransition,
   TreeItem2Label,
   TreeItem2Root,
 } from '@mui/x-tree-view/TreeItem2';
@@ -61,7 +61,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <TreeItem2Label {...getLabelProps()} />
           </Box>
         </CustomTreeItemContent>
-        {children && <TreeItem2TransitionGroup {...getGroupTransitionProps()} />}
+        {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
     </TreeItem2Provider>
   );

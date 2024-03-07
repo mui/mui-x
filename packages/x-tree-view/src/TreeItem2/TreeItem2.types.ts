@@ -18,16 +18,16 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
   content?: React.ElementType;
   /**
    * The component that renders the children of the item.
-   * @default TreeItem2Group
+   * @default TreeItem2GroupTransition
    */
   groupTransition?: React.ElementType;
   /**
-   * The component that renders the icon
+   * The component that renders the icon.
    * @default TreeItem2IconContainer
    */
   iconContainer?: React.ElementType;
   /**
-   * The component that renders the item label
+   * The component that renders the item label.
    * @default TreeItem2Label
    */
   label?: React.ElementType;

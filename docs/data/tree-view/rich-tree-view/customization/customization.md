@@ -15,9 +15,9 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ### Custom label
 
-Use the `label` slot to customize the Tree Item label or to replace it with an entirely custom component.
+Use the `label` slot to customize the Tree Item label or to replace it with a custom component.
 
-The `slotProps` prop allows you to pass props to the default label component:
+The `slotProps` prop allows you to pass props to the label component:
 
 :::warning
 TODO

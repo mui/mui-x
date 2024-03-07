@@ -172,7 +172,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
-      role: 'GroupTransition',
+      role: 'group',
       in: status.expanded,
       children,
       ...externalProps,

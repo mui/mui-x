@@ -129,10 +129,10 @@ export const TreeItem2IconContainer = styled('div', {
   },
 });
 
-export const TreeItem2TransitionGroup = styled(Collapse, {
-  name: 'MuiTreeItem2TransitionGroup',
-  slot: 'TransitionGroup',
-  overridesResolver: (props, styles) => styles.transitionGroup,
+export const TreeItem2GroupTransition = styled(Collapse, {
+  name: 'MuiTreeItem2GroupTransition',
+  slot: 'GroupTransition',
+  overridesResolver: (props, styles) => styles.groupTransition,
 })({
   margin: 0,
   padding: 0,
@@ -260,7 +260,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
           </IconContainer>
           <Label {...labelProps} />
         </Content>
-        {children && <TreeItem2TransitionGroup as={GroupTransition} {...groupTransitionProps} />}
+        {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>
     </TreeItem2Provider>
   );

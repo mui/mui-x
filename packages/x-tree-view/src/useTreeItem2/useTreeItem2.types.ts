@@ -69,7 +69,7 @@ export interface UseTreeItem2GroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
   component: 'ul';
-  role: 'GroupTransition';
+  role: 'group';
   children: React.ReactNode;
 }
 
@@ -87,40 +87,40 @@ export interface UseTreeItem2Status {
 export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   /**
    * Resolver for the root slot's props.
-   * @param {ExternalProps} externalProps additional props for the root slot
-   * @returns {UseTreeItem2RootSlotProps<ExternalProps>} props that should be spread on the root slot
+   * @param {ExternalProps} externalProps Additional props for the root slot
+   * @returns {UseTreeItem2RootSlotProps<ExternalProps>} Props that should be spread on the root slot
    */
   getRootProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2RootSlotProps<ExternalProps>;
   /**
    * Resolver for the content slot's props.
-   * @param {ExternalProps} externalProps additional props for the content slot
-   * @returns {UseTreeItem2ContentSlotProps<ExternalProps>} props that should be spread on the content slot
+   * @param {ExternalProps} externalProps Additional props for the content slot
+   * @returns {UseTreeItem2ContentSlotProps<ExternalProps>} Props that should be spread on the content slot
    */
   getContentProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2ContentSlotProps<ExternalProps>;
   /**
    * Resolver for the label slot's props.
-   * @param {ExternalProps} externalProps additional props for the label slot
-   * @returns {UseTreeItem2LabelSlotProps<ExternalProps>} props that should be spread on the label slot
+   * @param {ExternalProps} externalProps Additional props for the label slot
+   * @returns {UseTreeItem2LabelSlotProps<ExternalProps>} Props that should be spread on the label slot
    */
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2LabelSlotProps<ExternalProps>;
   /**
    * Resolver for the iconContainer slot's props.
-   * @param {ExternalProps} externalProps additional props for the iconContainer slot
-   * @returns {UseTreeItemIconContainerSlotProps<ExternalProps>} props that should be spread on the iconContainer slot
+   * @param {ExternalProps} externalProps Additional props for the iconContainer slot
+   * @returns {UseTreeItemIconContainerSlotProps<ExternalProps>} Props that should be spread on the iconContainer slot
    */
   getIconContainerProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItemIconContainerSlotProps<ExternalProps>;
   /**
    * Resolver for the GroupTransition slot's props.
-   * @param {ExternalProps} externalProps additional props for the GroupTransition slot
-   * @returns {UseTreeItem2GroupTransitionSlotProps<ExternalProps>} props that should be spread on the GroupTransition slot
+   * @param {ExternalProps} externalProps Additional props for the GroupTransition slot
+   * @returns {UseTreeItem2GroupTransitionSlotProps<ExternalProps>} Props that should be spread on the GroupTransition slot
    */
   getGroupTransitionProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,

@@ -37,7 +37,7 @@
   { "name": "TreeItem2Root", "kind": "Variable" },
   { "name": "TreeItem2SlotProps", "kind": "Interface" },
   { "name": "TreeItem2Slots", "kind": "Interface" },
-  { "name": "TreeItem2TransitionGroup", "kind": "Variable" },
+  { "name": "TreeItem2GroupTransition", "kind": "Variable" },
   { "name": "treeItemClasses", "kind": "Variable" },
   { "name": "TreeItemClasses", "kind": "Interface" },
   { "name": "TreeItemClassKey", "kind": "TypeAlias" },

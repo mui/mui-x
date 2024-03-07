@@ -7,7 +7,7 @@ import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeI
 import {
   TreeItem2Content,
   TreeItem2IconContainer,
-  TreeItem2TransitionGroup,
+  TreeItem2GroupTransition,
   TreeItem2Label,
   TreeItem2Root,
 } from '@mui/x-tree-view/TreeItem2';
@@ -51,7 +51,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             <TreeItem2Label {...getLabelProps()} />
           </Box>
         </CustomTreeItemContent>
-        {children && <TreeItem2TransitionGroup {...getGroupTransitionProps()} />}
+        {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
     </TreeItem2Provider>
   );

@@ -43,10 +43,10 @@ which adds several slots to modify the content of the Tree Item or change its be
 You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
 :::
 
-Use the `label` slot to customize the Tree Item label or to replace it with an entirely custom component.
+Use the `label` slot to customize the Tree Item label or to replace it with a custom component.
 
-The `slotProps` prop allows you to pass props to the default label component.
-The demo below show how to pass an `id` attribute to the Tree Item label:
+The `slotProps` prop allows you to pass props to the label component.
+The demo below shows how to pass an `id` attribute to the Tree Item label:
 
 {{"demo": "LabelSlotProps.js", "defaultCodeOpen": false }}
 

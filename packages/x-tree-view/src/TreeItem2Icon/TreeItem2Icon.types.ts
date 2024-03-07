@@ -40,5 +40,4 @@ export interface TreeItem2IconProps {
    * @default {}
    */
   slotProps?: TreeItem2IconSlotProps;
-  fallbackIcon?: React.ReactNode;
 }
