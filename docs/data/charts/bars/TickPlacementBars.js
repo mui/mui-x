@@ -8,7 +8,7 @@ import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
-function TickParamsSeletor({
+function TickParamsSelector({
   tickPlacement,
   tickLabelPlacement,
   setTickPlacement,
@@ -166,7 +166,7 @@ export default function TickPlacementBars() {
 
   return (
     <div style={{ width: '100%' }}>
-      <TickParamsSeletor
+      <TickParamsSelector
         tickPlacement={tickPlacement}
         tickLabelPlacement={tickLabelPlacement}
         setTickPlacement={setTickPlacement}

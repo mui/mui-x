@@ -8,7 +8,7 @@ import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
-type TickParamsSeletorProps = {
+type TickParamsSelectorProps = {
   tickPlacement: 'end' | 'start' | 'middle' | 'extremities';
   tickLabelPlacement: 'tick' | 'middle';
   setTickPlacement: React.Dispatch<
@@ -17,12 +17,12 @@ type TickParamsSeletorProps = {
   setTickLabelPlacement: React.Dispatch<React.SetStateAction<'tick' | 'middle'>>;
 };
 
-function TickParamsSeletor({
+function TickParamsSelector({
   tickPlacement,
   tickLabelPlacement,
   setTickPlacement,
   setTickLabelPlacement,
-}: TickParamsSeletorProps) {
+}: TickParamsSelectorProps) {
   return (
     <Stack direction="column" justifyContent="space-between" sx={{ width: '100%' }}>
       <FormControl>
@@ -185,7 +185,7 @@ export default function TickPlacementBars() {
 
   return (
     <div style={{ width: '100%' }}>
-      <TickParamsSeletor
+      <TickParamsSelector
         tickPlacement={tickPlacement}
         tickLabelPlacement={tickLabelPlacement}
         setTickPlacement={setTickPlacement}
