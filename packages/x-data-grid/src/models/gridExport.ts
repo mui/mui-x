@@ -95,6 +95,12 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
+  /**
+   * @ignore
+   * If `false`, the quotes will not be appended to the cell value.
+   * @default true
+   */
+  shouldAppendQuotes?: boolean;
 }
 
 /**

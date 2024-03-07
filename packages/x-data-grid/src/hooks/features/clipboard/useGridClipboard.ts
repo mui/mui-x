@@ -97,6 +97,7 @@ export const useGridClipboard = (
           includeHeaders: false,
           // TODO: make it configurable
           delimiter: clipboardCopyCellDelimiter,
+          shouldAppendQuotes: false,
         });
       } else {
         const focusedCell = gridFocusCellSelector(apiRef);

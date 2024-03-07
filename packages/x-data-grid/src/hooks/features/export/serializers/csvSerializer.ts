@@ -26,10 +26,10 @@ export const serializeCellValue = (
   options: {
     delimiterCharacter: string;
     ignoreValueFormatter: boolean;
-    shouldAppendQuotes?: boolean;
+    shouldAppendQuotes: boolean;
   },
 ) => {
-  const { delimiterCharacter, ignoreValueFormatter, shouldAppendQuotes = true } = options;
+  const { delimiterCharacter, ignoreValueFormatter, shouldAppendQuotes } = options;
   let value: any;
   if (ignoreValueFormatter) {
     const columnType = cellParams.colDef.type;
@@ -57,6 +57,7 @@ const objectFormattedValueWarning = buildWarning([
 type CSVRowOptions = {
   delimiterCharacter: string;
   sanitizeCellValue?: (value: any, delimiterCharacter: string, shouldAppendQuotes: boolean) => any;
+  shouldAppendQuotes: boolean;
 };
 class CSVRow {
   options: CSVRowOptions;
@@ -79,7 +80,7 @@ class CSVRow {
       this.rowString += this.options.sanitizeCellValue(
         value,
         this.options.delimiterCharacter,
-        true,
+        this.options.shouldAppendQuotes,
       );
     } else {
       this.rowString += value;
@@ -98,14 +99,16 @@ const serializeRow = ({
   getCellParams,
   delimiterCharacter,
   ignoreValueFormatter,
+  shouldAppendQuotes,
 }: {
   id: GridRowId;
   columns: GridStateColDef[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
   ignoreValueFormatter: boolean;
+  shouldAppendQuotes: boolean;
 }) => {
-  const row = new CSVRow({ delimiterCharacter });
+  const row = new CSVRow({ delimiterCharacter, shouldAppendQuotes });
 
   columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
@@ -114,7 +117,13 @@ const serializeRow = ({
         objectFormattedValueWarning();
       }
     }
-    row.addValue(serializeCellValue(cellParams, { delimiterCharacter, ignoreValueFormatter }));
+    row.addValue(
+      serializeCellValue(cellParams, {
+        delimiterCharacter,
+        ignoreValueFormatter,
+        shouldAppendQuotes,
+      }),
+    );
   });
 
   return row.getRowString();
@@ -128,6 +137,7 @@ interface BuildCSVOptions {
   includeColumnGroupsHeaders: NonNullable<GridCsvExportOptions['includeColumnGroupsHeaders']>;
   ignoreValueFormatter: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
+  shouldAppendQuotes: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
@@ -139,6 +149,7 @@ export function buildCSV(options: BuildCSVOptions): string {
     includeColumnGroupsHeaders,
     ignoreValueFormatter,
     apiRef,
+    shouldAppendQuotes,
   } = options;
 
   const CSVBody = rowIds
@@ -150,6 +161,7 @@ export function buildCSV(options: BuildCSVOptions): string {
           getCellParams: apiRef.current.getCellParams,
           delimiterCharacter,
           ignoreValueFormatter,
+          shouldAppendQuotes,
         })}\r\n`,
       '',
     )
@@ -179,7 +191,11 @@ export function buildCSV(options: BuildCSVOptions): string {
     }, {});
 
     for (let i = 0; i < maxColumnGroupsDepth; i += 1) {
-      const headerGroupRow = new CSVRow({ delimiterCharacter, sanitizeCellValue });
+      const headerGroupRow = new CSVRow({
+        delimiterCharacter,
+        sanitizeCellValue,
+        shouldAppendQuotes,
+      });
       headerRows.push(headerGroupRow);
       filteredColumns.forEach((column) => {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
@@ -189,7 +205,7 @@ export function buildCSV(options: BuildCSVOptions): string {
     }
   }
 
-  const mainHeaderRow = new CSVRow({ delimiterCharacter, sanitizeCellValue });
+  const mainHeaderRow = new CSVRow({ delimiterCharacter, sanitizeCellValue, shouldAppendQuotes });
   filteredColumns.forEach((column) => {
     mainHeaderRow.addValue(column.headerName || column.field);
   });
