@@ -293,14 +293,14 @@ The expansion props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeToggle`    | `onExpandedNodesChange` |
+| `onNodeToggle`    | `onExpandedItemsChange` |
 | `expanded`        | `expandedNodes`         |
 | `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
 -  expanded={expandedNodes}
 +  expandedNodes={expandedNodes}

@@ -15,11 +15,11 @@
     "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
-    "onExpandedNodesChange": {
+    "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
-        "describedArgs": ["event", "nodeIds"]
+        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "describedArgs": ["event", "itemIds"]
       }
     },
     "onItemSelectionToggle": {

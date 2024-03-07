@@ -51,11 +51,11 @@ const getAllItemWithChildrenNodeIds = () => {
 export default function ControlledExpansion() {
   const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
 
-  const handleExpandedNodesChange = (
+  const handleExpandedItemsChange = (
     event: React.SyntheticEvent,
-    nodeIds: string[],
+    itemIds: string[],
   ) => {
-    setExpandedNodes(nodeIds);
+    setExpandedNodes(itemIds);
   };
 
   const handleExpandClick = () => {
@@ -75,7 +75,7 @@ export default function ControlledExpansion() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           expandedNodes={expandedNodes}
-          onExpandedNodesChange={handleExpandedNodesChange}
+          onExpandedItemsChange={handleExpandedItemsChange}
         />
       </Box>
     </Box>

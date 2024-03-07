@@ -7,11 +7,11 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 export default function ControlledExpansion() {
   const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
 
-  const handleExpandedNodesChange = (
+  const handleExpandedItemsChange = (
     event: React.SyntheticEvent,
-    nodeIds: string[],
+    itemIds: string[],
   ) => {
-    setExpandedNodes(nodeIds);
+    setExpandedNodes(itemIds);
   };
 
   const handleExpandClick = () => {
@@ -44,7 +44,7 @@ export default function ControlledExpansion() {
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <SimpleTreeView
           expandedNodes={expandedNodes}
-          onExpandedNodesChange={handleExpandedNodesChange}
+          onExpandedItemsChange={handleExpandedItemsChange}
         >
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />

@@ -274,7 +274,7 @@ Rename the expansion props
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
 -  expanded={expandedNodes}
 +  expandedNodes={expandedNodes}

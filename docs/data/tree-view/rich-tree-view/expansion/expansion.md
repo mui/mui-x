@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 Use the `expandedNodes` prop to control the expanded items.
 
-You can use the `onExpandedNodesChange` prop to listen to changes in the expanded items and update the prop accordingly.
+You can use the `onExpandedItemsChange` prop to listen to changes in the expanded items and update the prop accordingly.
 
 {{"demo": "ControlledExpansion.js"}}
 

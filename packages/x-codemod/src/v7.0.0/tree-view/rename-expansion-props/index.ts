@@ -13,7 +13,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     props: {
       expanded: 'expandedNodes',
       defaultExpanded: 'defaultExpandedItems',
-      onNodeToggle: 'onExpandedNodesChange',
+      onNodeToggle: 'onExpandedItemsChange',
     },
     j,
   }).toSource(printOptions);

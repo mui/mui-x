@@ -9,7 +9,7 @@ const className = simpleTreeViewClasses.root;
 <SimpleTreeView
   expandedNodes={[]}
   defaultExpandedItems={[]}
-  onExpandedNodesChange={expansionCallback}
+  onExpandedItemsChange={expansionCallback}
   selectedItems={null}
   defaultSelectedItems={null}
   onSelectedItemsChange={selectionCallback}

@@ -201,11 +201,11 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the expandedNodes prop', () => {
     function MyComponent() {
       const [expandedState, setExpandedState] = React.useState([]);
-      const onExpandedNodesChange = (event, nodes) => {
-        setExpandedState(nodes);
+      const onExpandedItemsChange = (event, items) => {
+        setExpandedState(items);
       };
       return (
-        <SimpleTreeView expandedNodes={expandedState} onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView expandedNodes={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem nodeId="1" label="one" data-testid="one">
             <TreeItem nodeId="2" label="two" />
           </TreeItem>
@@ -406,12 +406,12 @@ describe('<SimpleTreeView />', () => {
     });
   });
 
-  describe('onNodeToggle', () => {
-    it('should be called when a parent node label is clicked', () => {
-      const onExpandedNodesChange = spy();
+  describe('onExpandedItemsChange', () => {
+    it('should be called when a parent item label is clicked', () => {
+      const onExpandedItemsChange = spy();
 
       const { getByText } = render(
-        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -420,15 +420,15 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByText('outer'));
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
     });
 
-    it('should be called when a parent node icon is clicked', () => {
-      const onExpandedNodesChange = spy();
+    it('should be called when a parent item icon is clicked', () => {
+      const onExpandedItemsChange = spy();
 
       const { getByTestId } = render(
-        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -437,8 +437,8 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByTestId('icon'));
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
     });
   });
 

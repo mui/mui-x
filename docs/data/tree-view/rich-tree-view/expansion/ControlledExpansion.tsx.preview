@@ -7,6 +7,6 @@
   <RichTreeView
     items={MUI_X_PRODUCTS}
     expandedNodes={expandedNodes}
-    onExpandedNodesChange={handleExpandedNodesChange}
+    onExpandedItemsChange={handleExpandedItemsChange}
   />
 </Box>

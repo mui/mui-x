@@ -25,11 +25,11 @@
     "multiSelect": {
       "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
-    "onExpandedNodesChange": {
+    "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
+        "itemIds": "The ids of the expanded items."
       }
     },
     "onItemSelectionToggle": {

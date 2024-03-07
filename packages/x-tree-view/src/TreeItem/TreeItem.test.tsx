@@ -1052,11 +1052,11 @@ describe('<TreeItem />', () => {
       });
 
       describe('asterisk key interaction', () => {
-        it('expands all siblings that are at the same level as the current node', () => {
-          const onExpandedNodesChange = spy();
+        it('expands all siblings that are at the same level as the current item', () => {
+          const onExpandedItemsChange = spy();
 
           const { getByRole, getByTestId } = render(
-            <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
+            <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
               <TreeItem nodeId="one" label="one" data-testid="one">
                 <TreeItem nodeId="two" label="two" data-testid="two" />
               </TreeItem>
@@ -1082,7 +1082,7 @@ describe('<TreeItem />', () => {
 
           fireEvent.keyDown(getByRole('tree'), { key: '*' });
 
-          expect(onExpandedNodesChange.args[0][1]).to.have.length(3);
+          expect(onExpandedItemsChange.args[0][1]).to.have.length(3);
 
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
           expect(getByTestId('three')).to.have.attribute('aria-expanded', 'true');
