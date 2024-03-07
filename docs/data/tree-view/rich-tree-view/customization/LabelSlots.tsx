@@ -6,6 +6,10 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import {
+  UseTreeItem2ContentSlotOwnProps,
+  useTreeItem2Utils,
+} from '@mui/x-tree-view';
 
 interface CustomLabelProps {
   children: string;
@@ -20,8 +24,7 @@ function CustomLabel(props: CustomLabelProps) {
   const [value, setValue] = React.useState('');
   const editingLabelRef = React.useRef<HTMLInputElement>(null);
 
-  const handleLabelDoubleClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleLabelDoubleClick = () => {
     setIsEditing(true);
     setValue(children);
   };
@@ -35,6 +38,9 @@ function CustomLabel(props: CustomLabelProps) {
       event.stopPropagation();
       setIsEditing(false);
       onChange(value);
+    } else if (event.key === 'Escape') {
+      event.stopPropagation();
+      setIsEditing(false);
     }
   };
 
@@ -68,10 +74,26 @@ const TreeItemContext = React.createContext<{
 
 const CustomTreeItem = React.forwardRef(
   (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => {
+    const { interactions } = useTreeItem2Utils({
+      nodeId: props.nodeId,
+      children: props.children,
+    });
+
     const { onLabelValueChange } = React.useContext(TreeItemContext);
 
     const handleLabelValueChange = (newLabel: string) => {
       onLabelValueChange(props.nodeId, newLabel);
+    };
+
+    const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (
+      event,
+    ) => {
+      event.defaultMuiPrevented = true;
+      interactions.handleSelection(event);
+    };
+
+    const handleIconContainerClick = (event: React.MouseEvent) => {
+      interactions.handleExpansion(event);
     };
 
     return (
@@ -82,6 +104,8 @@ const CustomTreeItem = React.forwardRef(
           label: CustomLabel,
         }}
         slotProps={{
+          content: { onClick: handleContentClick },
+          iconContainer: { onClick: handleIconContainerClick },
           label: {
             onChange: handleLabelValueChange,
           } as any,

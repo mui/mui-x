@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
-import { RichTreeView } from '@mui/x-tree-view';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+
+import { useTreeItem2Utils } from '@mui/x-tree-view';
 
 function CustomLabel(props) {
   const { children, onChange, ...other } = props;
@@ -9,8 +11,7 @@ function CustomLabel(props) {
   const [value, setValue] = React.useState('');
   const editingLabelRef = React.useRef(null);
 
-  const handleLabelDoubleClick = (event) => {
-    event.stopPropagation();
+  const handleLabelDoubleClick = () => {
     setIsEditing(true);
     setValue(children);
   };
@@ -24,6 +25,9 @@ function CustomLabel(props) {
       event.stopPropagation();
       setIsEditing(false);
       onChange(value);
+    } else if (event.key === 'Escape') {
+      event.stopPropagation();
+      setIsEditing(false);
     }
   };
 
@@ -54,10 +58,24 @@ function CustomLabel(props) {
 const TreeItemContext = React.createContext({ onLabelValueChange: () => {} });
 
 const CustomTreeItem = React.forwardRef((props, ref) => {
+  const { interactions } = useTreeItem2Utils({
+    nodeId: props.nodeId,
+    children: props.children,
+  });
+
   const { onLabelValueChange } = React.useContext(TreeItemContext);
 
   const handleLabelValueChange = (newLabel) => {
     onLabelValueChange(props.nodeId, newLabel);
+  };
+
+  const handleContentClick = (event) => {
+    event.defaultMuiPrevented = true;
+    interactions.handleSelection(event);
+  };
+
+  const handleIconContainerClick = (event) => {
+    interactions.handleExpansion(event);
   };
 
   return (
@@ -68,6 +86,8 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
         label: CustomLabel,
       }}
       slotProps={{
+        content: { onClick: handleContentClick },
+        iconContainer: { onClick: handleIconContainerClick },
         label: {
           onChange: handleLabelValueChange,
         },
