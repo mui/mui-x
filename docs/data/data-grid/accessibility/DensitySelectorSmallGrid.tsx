@@ -26,6 +26,9 @@ export default function DensitySelectorSmallGrid() {
       <DataGrid
         {...data}
         density="compact"
+        onDensityChange={(newDensity) => {
+          console.info(`Density updated to: ${newDensity}`);
+        }}
         slots={{
           toolbar: CustomToolbar,
         }}

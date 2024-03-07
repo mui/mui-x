@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
 import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
 import { expect } from 'chai';
@@ -140,6 +141,28 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(grid('root')).to.have.class(gridClasses['root--densityCompact']);
       setProps({ density: 'comfortable' });
       expect(grid('root')).to.have.class(gridClasses['root--densityComfortable']);
+    });
+
+    it('should call `onDensityChange` prop when density gets updated', () => {
+      const onDensityChange = spy();
+      function Test() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              onDensityChange={onDensityChange}
+            />
+          </div>
+        );
+      }
+      const { getByText } = render(<Test />);
+      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('Comfortable'));
+      expect(onDensityChange.callCount).to.equal(1);
+      expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
     });
   });
 

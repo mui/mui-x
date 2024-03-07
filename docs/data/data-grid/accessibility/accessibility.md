@@ -33,11 +33,12 @@ To hide the density selector, add the `disableDensitySelector` prop to the Data 
 
 ### Density prop
 
-Set the vertical density of the Data Grid using the `density` prop.
-This prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
+Set the vertical density of the Data Grid using the `density` prop. In order to listen to the updates to the density, pass the `onDensityChange` callback.
+
+The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the default density set to `compact`:
+The following demo shows a Data Grid with the default density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
 
 {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
 
