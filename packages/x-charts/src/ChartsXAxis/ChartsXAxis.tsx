@@ -352,7 +352,7 @@ ChartsXAxis.propTypes = {
    */
   tickNumber: PropTypes.number,
   /**
-   * The placement of ticks regarding the band interval.
+   * The placement of ticks in regard to the band interval.
    * Only used if scale is 'band'.
    * @default 'extremities'
    */
