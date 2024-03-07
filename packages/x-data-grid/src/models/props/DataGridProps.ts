@@ -756,3 +756,19 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onClipboardCopy?: GridEventListener<'clipboardCopy'>;
 }
+
+export interface DataGridProSharedProps {
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  headerFilters: boolean;
+}
+
+export interface DataGridPremiumSharedProps {
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: boolean;
+}

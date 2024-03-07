@@ -6,7 +6,10 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import {
+  DataGridProSharedProps,
+  DataGridProcessedProps,
+} from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
@@ -80,6 +83,8 @@ const getRightColumnIndex = ({
   return null;
 };
 
+type DataGridProcessedPropsWithShared = DataGridProcessedProps & DataGridProSharedProps;
+
 /**
  * @requires useGridSorting (method) - can be after
  * @requires useGridFilter (state) - can be after
@@ -92,8 +97,13 @@ const getRightColumnIndex = ({
 export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
-    'pagination' | 'paginationMode' | 'getRowId' | 'experimentalFeatures' | 'signature'
+    DataGridProcessedPropsWithShared,
+    | 'pagination'
+    | 'paginationMode'
+    | 'getRowId'
+    | 'experimentalFeatures'
+    | 'signature'
+    | 'headerFilters'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -105,9 +115,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, initialCurrentPageRows],
   );
 
-  const headerFilteringEnabled =
-    // @ts-expect-error // TODO move relevant code to the `DataGridPro`
-    props.signature !== 'DataGrid' && props.headerFilters;
+  const headerFilteringEnabled = props.signature !== 'DataGrid' && props.headerFilters;
 
   /**
    * @param {number} colIndex Index of the column to focus

@@ -15,6 +15,7 @@ import {
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   GridPinnedColumnFields,
+  DataGridProSharedProps,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -49,7 +50,8 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue> &
       DataGridProPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridProPropsWithoutDefaultValue<R>,
+      DataGridProPropsWithoutDefaultValue<R> &
+      DataGridProSharedProps,
     DataGridProForcedPropsKey
   > {}
 
@@ -64,7 +66,8 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
+    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'>,
+    DataGridProSharedProps {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -147,11 +150,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
-  /**
-   * If `true`, enables the data grid filtering on header feature.
-   * @default false
-   */
-  headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>

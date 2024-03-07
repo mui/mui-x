@@ -7,7 +7,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import type { GridApiCommunity } from '../../internals';
+import type { DataGridPremiumSharedProps, GridApiCommunity } from '../../internals';
 import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
@@ -70,6 +70,9 @@ export type GridCellProps = {
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
   api: GridApiCommunity;
 };
+
+type RootPropsWithSharedProps = DataGridProcessedProps & DataGridPremiumSharedProps;
+
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
   field: '__unset__',
@@ -170,7 +173,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const rootProps = useGridRootProps() as RootPropsWithSharedProps;
 
   const field = column.field;
 
@@ -251,7 +254,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const isSectionLastCell = sectionIndex === sectionLength - 1;
