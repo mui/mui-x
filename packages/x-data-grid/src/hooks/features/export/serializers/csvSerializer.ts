@@ -9,7 +9,7 @@ function sanitizeCellValue(value: any, delimiterCharacter: string) {
   if (typeof value === 'string') {
     // Make sure value containing delimiter or line break won't be split into multiple rows
     if ([delimiterCharacter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
-      return `"${value.replace(/"/g, '""')}"`;
+      return `${value.replace(/"/g, '""')}`;
     }
 
     return value;
