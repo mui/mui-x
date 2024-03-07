@@ -52,13 +52,9 @@ export const useGridInfiniteLoader = (
         visibleRowsCount: currentPage.rows.length,
       };
       apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
-      if (observer.current) {
-        if (triggerElement.current) {
-          observer.current?.unobserve(triggerElement.current);
-          // do not observe this node anymore
-          triggerElement.current = null;
-        }
-      }
+      observer.current?.disconnect();
+      // do not observe this node anymore
+      triggerElement.current = null;
     }
   });
 
@@ -72,9 +68,7 @@ export const useGridInfiniteLoader = (
     if (!virtualScroller) {
       return;
     }
-    if (triggerElement.current) {
-      observer.current?.unobserve(triggerElement.current);
-    }
+    observer.current?.disconnect();
     const marginBottom =
       props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
@@ -103,9 +97,7 @@ export const useGridInfiniteLoader = (
       }
 
       if (triggerElement.current !== node) {
-        if (triggerElement.current) {
-          observer.current?.unobserve(triggerElement.current);
-        }
+        observer.current?.disconnect();
 
         triggerElement.current = node;
         if (triggerElement.current) {
