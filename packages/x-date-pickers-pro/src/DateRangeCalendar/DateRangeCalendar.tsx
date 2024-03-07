@@ -359,7 +359,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     elementType: CalendarHeader,
     externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
-      changeMonth,
       calendars,
       views: ['day'],
       view: 'day',

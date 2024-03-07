@@ -11,18 +11,13 @@ export interface PickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
    */
   calendars: 1 | 2 | 3;
   /**
-   * Index of the month used for this header.
-   */
-  monthIndex: number;
-  /**
    * Month used for this header.
    */
   month: TDate;
   /**
-   * Callback to call to change the current month.
-   * @param {TDate} newMonth The value to set to "currentMonth".
+   * Index of the month used for this header.
    */
-  changeMonth: (newMonth: TDate) => void;
+  monthIndex: number;
 }
 
 export interface ExportedPickersRangeCalendarHeaderProps<TDate extends PickerValidDate>

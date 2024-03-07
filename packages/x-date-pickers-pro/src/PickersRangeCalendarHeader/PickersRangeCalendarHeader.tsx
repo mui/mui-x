@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -16,17 +16,7 @@ type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
   props: PickersRangeCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const PickersRangeCalendarHeaderContentSingleCalendar = styled(PickersCalendarHeader, {
-  name: 'PickersRangeCalendarHeader',
-  slot: 'ContentSingleCalendar',
-  overridesResolver: (_, styles) => styles.contentSingleCalendar,
-})({}) as typeof PickersCalendarHeader;
-
-const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
-  name: 'PickersRangeCalendarHeader',
-  slot: 'ContentMultipleCalendars',
-  overridesResolver: (_, styles) => styles.contentMultipleCalendars,
-})({
+const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher)({
   padding: '12px 16px 4px 16px',
   display: 'flex',
   alignItems: 'center',
@@ -35,17 +25,17 @@ const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSw
 
 const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader<
   TDate extends PickerValidDate,
->(inProps: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useThemeProps({ props: inProps, name: 'MuiPickersRangeCalendarHeader' });
+>(props: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
-  const { calendars, changeMonth, month, monthIndex, ...other } = props;
+  const { calendars, month, monthIndex, ...other } = props;
   const {
     format,
     slots,
     slotProps,
     currentMonth,
+    onMonthChange,
     disableFuture,
     disablePast,
     minDate,
@@ -66,12 +56,12 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   });
 
   if (calendars === 1) {
-    return <PickersRangeCalendarHeaderContentSingleCalendar {...other} ref={ref} />;
+    return <PickersCalendarHeader {...other} ref={ref} />;
   }
 
-  const selectPreviousMonth = () => changeMonth(utils.addMonths(currentMonth, -1));
+  const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
 
-  const selectNextMonth = () => changeMonth(utils.addMonths(currentMonth, 1));
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(currentMonth, -1), 'right');
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
