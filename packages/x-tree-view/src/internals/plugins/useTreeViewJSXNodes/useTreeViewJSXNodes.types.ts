@@ -3,7 +3,8 @@ import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewNodesInstance {
-  insertJSXNode: (node: TreeViewNode) => void;
+  insertJSXNode: (node: Omit<TreeViewNode, 'index'>) => void;
+  setJSXNodeIndex: (itemId: string, index: number) => void;
   removeJSXNode: (nodeId: string) => void;
   mapFirstCharFromJSX: (nodeId: string, firstChar: string) => () => void;
 }

@@ -15,8 +15,9 @@ import {
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
   setState,
+  state,
 }) => {
-  const insertJSXNode = useEventCallback((node: TreeViewNode) => {
+  const insertJSXNode = useEventCallback((node: Omit<TreeViewNode, 'index'>) => {
     setState((prevState) => {
       if (prevState.nodes.nodeMap[node.id] != null) {
         throw new Error(
@@ -32,13 +33,28 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
         ...prevState,
         nodes: {
           ...prevState.nodes,
-          nodeMap: { ...prevState.nodes.nodeMap, [node.id]: node },
+          nodeMap: { ...prevState.nodes.nodeMap, [node.id]: { ...node, index: -1 } },
           // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
           itemMap: { ...prevState.nodes.itemMap, [node.id]: { id: node.id, label: node.label } },
         },
       };
     });
   });
+
+  const setJSXNodeIndex = useEventCallback((itemId: string, index: number) => {
+    setState((prevState) => ({
+      ...prevState,
+      nodes: {
+        ...prevState.nodes,
+        nodeMap: {
+          ...prevState.nodes.nodeMap,
+          [itemId]: { ...prevState.nodes.nodeMap[itemId], index },
+        },
+      },
+    }));
+  });
+
+  console.log(state.nodes.nodeMap);
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
@@ -76,6 +92,7 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   populateInstance<UseTreeViewJSXNodesSignature>(instance, {
     insertJSXNode,
     removeJSXNode,
+    setJSXNodeIndex,
     mapFirstCharFromJSX,
   });
 };
@@ -106,25 +123,19 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
     [nodeId, treeItemElement],
   );
 
-  const { index, parentId } = useDescendant(descendant);
+  const parentId = useDescendant(descendant);
 
   React.useEffect(() => {
-    // On the first render a node's index will be -1. We want to wait for the real index.
-    if (index !== -1) {
-      instance.insertJSXNode({
-        id: nodeId,
-        idAttribute: id,
-        index,
-        parentId,
-        expandable,
-        disabled,
-      });
+    instance.insertJSXNode({
+      id: nodeId,
+      idAttribute: id,
+      parentId,
+      expandable,
+      disabled,
+    });
 
-      return () => instance.removeJSXNode(nodeId);
-    }
-
-    return undefined;
-  }, [instance, parentId, index, nodeId, expandable, disabled, id]);
+    return () => instance.removeJSXNode(nodeId);
+  }, [instance, parentId, nodeId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
