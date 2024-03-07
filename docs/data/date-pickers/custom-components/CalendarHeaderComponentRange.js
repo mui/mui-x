@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -32,7 +33,7 @@ function CustomCalendarHeader(props) {
       >
         <ChevronLeft />
       </IconButton>
-      <span>{month.format('MMMM YYYY')}</span>
+      <Typography>{month.format('MMMM YYYY')}</Typography>
       <IconButton
         onClick={selectNextMonth}
         sx={{ visibility: monthIndex === calendars - 1 ? undefined : 'hidden' }}

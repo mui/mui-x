@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -29,7 +30,7 @@ function CustomCalendarHeader(props: PickersCalendarHeaderProps<Dayjs>) {
       <IconButton onClick={selectPreviousMonth}>
         <ChevronLeft />
       </IconButton>
-      <span>{currentMonth.format('MMMM YYYY')}</span>
+      <Typography>{currentMonth.format('MMMM YYYY')}</Typography>
       <IconButton onClick={selectNextMonth}>
         <ChevronRight />
       </IconButton>
