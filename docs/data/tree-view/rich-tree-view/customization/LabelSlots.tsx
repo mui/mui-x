@@ -4,7 +4,8 @@ import {
   TreeItem2Label,
   TreeItem2Props,
 } from '@mui/x-tree-view/TreeItem2';
-import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 interface CustomLabelProps {
   children: string;

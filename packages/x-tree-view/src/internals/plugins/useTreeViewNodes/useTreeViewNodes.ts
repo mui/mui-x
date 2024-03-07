@@ -99,6 +99,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   state,
   setState,
 }) => {
+  console.log(state);
   const getNode = React.useCallback(
     (nodeId: string) => state.nodes.nodeMap[nodeId],
     [state.nodes.nodeMap],
@@ -169,7 +170,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
         }
       });
 
-      return { ...prevState, ...newState };
+      return { ...prevState, nodes: newState };
     });
   }, [
     instance,
