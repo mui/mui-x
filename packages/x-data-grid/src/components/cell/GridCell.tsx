@@ -24,7 +24,6 @@ import {
   FocusElement,
   GridCellParams,
 } from '../../models/params/gridCellParams';
-import type { GridDimensions } from '../../hooks/features/dimensions';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
@@ -56,7 +55,6 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
-  dimensions: GridDimensions;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -156,7 +154,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
-    dimensions,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -477,41 +474,6 @@ GridCell.propTypes = {
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
-  dimensions: PropTypes.shape({
-    bottomContainerHeight: PropTypes.number.isRequired,
-    columnsTotalWidth: PropTypes.number.isRequired,
-    contentSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    hasScrollX: PropTypes.bool.isRequired,
-    hasScrollY: PropTypes.bool.isRequired,
-    headerHeight: PropTypes.number.isRequired,
-    headersTotalHeight: PropTypes.number.isRequired,
-    isReady: PropTypes.bool.isRequired,
-    leftPinnedWidth: PropTypes.number.isRequired,
-    minimumSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rightPinnedWidth: PropTypes.number.isRequired,
-    root: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    rowWidth: PropTypes.number.isRequired,
-    scrollbarSize: PropTypes.number.isRequired,
-    topContainerHeight: PropTypes.number.isRequired,
-    viewportInnerSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    viewportOuterSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
   disableDragEvents: PropTypes.bool,
   editCellState: PropTypes.shape({
     changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
