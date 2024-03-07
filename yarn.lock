@@ -5048,11 +5048,6 @@ cheerio@^1.0.0-rc.3:
     parse5 "^7.0.0"
     parse5-htmlparser2-tree-adapter "^7.0.0"
 
-cheminfo-types@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/cheminfo-types/-/cheminfo-types-1.7.2.tgz#15e77fa571abf80b47c9f002ad926d400369d16b"
-  integrity sha512-Zz7HPnh6wB2beEK7nfsXlNSK1Tpl4O0DpYUod8L6gI/5+INpn/d5UgJLI+3ck6CYY5Qsq34ylyKhERmZ5Wks2A==
-
 chokidar@3.5.3, chokidar@^3.4.0, chokidar@^3.5.1:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
@@ -8557,11 +8552,6 @@ is-alphanumerical@^1.0.0:
     is-alphabetical "^1.0.0"
     is-decimal "^1.0.0"
 
-is-any-array@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/is-any-array/-/is-any-array-2.0.1.tgz#9233242a9c098220290aa2ec28f82ca7fa79899e"
-  integrity sha512-UtilS7hLRu++wb/WBAw9bNuP1Eg04Ivn1vERJck8zJthEvXCBEBpGR/33u/xLKWEQf95803oalHrVDptcAvFdQ==
-
 is-arguments@^1.0.4, is-arguments@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.1.1.tgz#15b3f88fda01f2a97fec84ca761a560f123efa9b"
@@ -10644,22 +10634,6 @@ mkdirp@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
-
-ml-regression-base@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ml-regression-base/-/ml-regression-base-3.0.0.tgz#96e48c0fb474e01c3bb019970e7efc8b9f317650"
-  integrity sha512-qkQWvNk8VU1LIytjid/+YHOSx8GnEU9dCUPsAQ8AzCh4saijrsni/XA6x7r+N1UrHMDHeSEUBtRZTsl2syyu/A==
-  dependencies:
-    cheminfo-types "^1.7.2"
-    is-any-array "^2.0.1"
-
-ml-regression-simple-linear@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ml-regression-simple-linear/-/ml-regression-simple-linear-3.0.0.tgz#cf5cf6c0c07938d2d02e64cd3eccca45fd7657dd"
-  integrity sha512-WHtHq8CE6PIPWS3a6JA/Ql39ppHTOAAZ0l/UoxQ7p7cMh2taOebsicnBxlqRjibUl+RGUr+6tZlBp1ppiTwMdQ==
-  dependencies:
-    cheminfo-types "^1.7.2"
-    ml-regression-base "^3.0.0"
 
 mocha@^10.3.0:
   version "10.3.0"

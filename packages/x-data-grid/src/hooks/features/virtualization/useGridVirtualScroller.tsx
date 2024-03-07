@@ -5,7 +5,6 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
-import { SimpleLinearRegression } from 'ml-regression-simple-linear';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -52,40 +51,11 @@ enum ScrollDirection {
   RIGHT,
 }
 
-function directionForDelta(dx: number, dy: number) {
-  if (dx === 0 && dy === 0) {
-    return ScrollDirection.NONE
-  }
-  if (Math.abs(dy) >= Math.abs(dx)) {
-    if (dy > 0) {
-      return ScrollDirection.DOWN
-    } else {
-      return ScrollDirection.UP
-    }
-  } else {
-    if (dx > 0) {
-      return ScrollDirection.RIGHT
-    } else {
-      return ScrollDirection.LEFT
-    }
-  }
-}
-
-function bufferForScrollCache(scrollCache: ScrollCache) {
-  const direction = scrollCache.direction
-  return {
-    rowBefore: direction === ScrollDirection.LEFT ? scrollCache.expectedScroll.left : 0,
-    rowAfter: direction === ScrollDirection.RIGHT ? scrollCache.expectedScroll.left : 0,
-    columnBefore: direction === ScrollDirection.UP ? scrollCache.expectedScroll.top : 0,
-    columnAfter: direction === ScrollDirection.DOWN ? scrollCache.expectedScroll.top : 0,
-  }
-}
-
 const EMPTY_SCROLL_CACHE = {
   direction: ScrollDirection.NONE,
   lastTimestamp: -1,
   lastPosition: { top: 0, left: 0 },
-  expectedScroll: { top: 0, left: 0 },
+  buffer: { top: 0, left: 0 },
   events: [] as ({ top: number, left: number, timestamp: number } & Record<any, any>)[]
 }
 type ScrollCache = typeof EMPTY_SCROLL_CACHE
@@ -179,46 +149,29 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = () => {
-
-    // TODO: use better math to predict future position
     const timestamp = performance.now()
-    const isScrolling = scrollCache.lastTimestamp !== -1 && timestamp - scrollCache.lastTimestamp < 500
     const dt = timestamp - scrollCache.lastTimestamp
-
-    // XXX: remove
-    // console.log('scroll', scrollPosition.current.top, { dt, dy, dx })
+    const isScrolling = scrollCache.lastTimestamp !== -1 && dt < 500
 
     scrollCache.lastTimestamp = timestamp
     scrollCache.lastPosition = scrollPosition.current
-    if (isScrolling) {
-      scrollCache.events.push({ ...scrollPosition.current, timestamp })
-    } else {
-      scrollCache.events = [{ ...scrollPosition.current, timestamp }]
-    }
 
     if (isScrolling) {
-      const y = scrollPosition.current.top;
-      const x = scrollPosition.current.left;
-      const dy = Math.round(new SimpleLinearRegression(
-        scrollCache.events.slice(-4).map(e => e.timestamp),
-        scrollCache.events.slice(-4).map(e => e.top),
-      ).predict(timestamp + dt)) - y
-      const dx = Math.round(new SimpleLinearRegression(
-        scrollCache.events.slice(-4).map(e => e.timestamp),
-        scrollCache.events.slice(-4).map(e => e.left),
-      ).predict(timestamp + dt)) - x
-      scrollCache.expectedScroll = { top: dy, left: dx }
+      const dy = scrollPosition.current.top - previousScroll.current.top;
+      const dx = scrollPosition.current.left - previousScroll.current.left;
+      scrollCache.buffer = {
+        top: dimensions.rowHeight * 10,
+        left: 50 * 3,
+      }
       scrollCache.direction = directionForDelta(dx, dy)
     } else {
-      scrollCache.expectedScroll = { top: 0, left: 0 }
+      scrollCache.buffer = { top: 0, left: 0 }
       scrollCache.direction = ScrollDirection.NONE
     }
-    // console.log(scrollCache.expectedScroll)
-
 
     // Since previous render, we have scrolled...
-    const rowScroll    = Math.abs(scrollPosition.current.top  - previousScroll.current.top)  + scrollCache.expectedScroll.top;
-    const columnScroll = Math.abs(scrollPosition.current.left - previousScroll.current.left) + scrollCache.expectedScroll.left;
+    const rowScroll    = Math.abs(scrollPosition.current.top  - previousScroll.current.top)  + scrollCache.buffer.top;
+    const columnScroll = Math.abs(scrollPosition.current.left - previousScroll.current.left) + scrollCache.buffer.left;
 
     const shouldUpdate =
       rowScroll    >= rootProps.rowThreshold ||
@@ -897,3 +850,33 @@ export function computeOffsetLeft(
 
   return left;
 }
+
+function directionForDelta(dx: number, dy: number) {
+  if (dx === 0 && dy === 0) {
+    return ScrollDirection.NONE
+  }
+  if (Math.abs(dy) >= Math.abs(dx)) {
+    if (dy > 0) {
+      return ScrollDirection.DOWN
+    } else {
+      return ScrollDirection.UP
+    }
+  } else {
+    if (dx > 0) {
+      return ScrollDirection.RIGHT
+    } else {
+      return ScrollDirection.LEFT
+    }
+  }
+}
+
+function bufferForScrollCache(scrollCache: ScrollCache) {
+  const direction = scrollCache.direction
+  return {
+    columnBefore: direction === ScrollDirection.LEFT ? scrollCache.buffer.left : 0,
+    columnAfter: direction === ScrollDirection.RIGHT ? scrollCache.buffer.left : 0,
+    rowBefore: direction === ScrollDirection.UP ? scrollCache.buffer.top : 0,
+    rowAfter: direction === ScrollDirection.DOWN ? scrollCache.buffer.top : 0,
+  }
+}
+
