@@ -69,6 +69,7 @@ If you're using [composition](/x/react-charts/composition/), you should set the 
 ### Tick placement
 
 When using a `"band"` scale, the axis has some additional customization properties about the tick position.
+
 - `tickPlacement` for the position of ticks
 - `tickLabelPlacement` for the position of the label associated to the tick
 
