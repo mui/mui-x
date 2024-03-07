@@ -41,8 +41,8 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 :::info
-Note that for infinite loading to work properly, sorting and filtering should be done on the server side.
-Otherwise, the sorting and filtering will be applied to loaded rows only.
+For sorting and filtering to work properly with the infinite loading, they should be applied on the server side.
+Otherwise, the sorting and filtering will only be applied to the subset of rows that have been loaded.
 :::
 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
