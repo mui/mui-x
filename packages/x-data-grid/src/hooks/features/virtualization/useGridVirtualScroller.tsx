@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
+import { SimpleLinearRegression } from 'ml-regression-simple-linear';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -85,6 +86,7 @@ const EMPTY_SCROLL_CACHE = {
   lastTimestamp: -1,
   lastPosition: { top: 0, left: 0 },
   expectedScroll: { top: 0, left: 0 },
+  events: [] as ({ top: number, left: number, timestamp: number } & Record<any, any>)[]
 }
 type ScrollCache = typeof EMPTY_SCROLL_CACHE
 
@@ -179,19 +181,40 @@ export const useGridVirtualScroller = () => {
   const triggerUpdateRenderContext = () => {
 
     // TODO: use better math to predict future position
-    const now = performance.now()
-    const isScrolling = scrollCache.lastTimestamp !== -1 && now - scrollCache.lastTimestamp < 500
-    // const dt = isScrolling ? now - scrollCache.lastTimestamp : Infinity;
-    const dy = isScrolling ? scrollPosition.current.top  - scrollCache.lastPosition.top : 0;
-    const dx = isScrolling ? scrollPosition.current.left - scrollCache.lastPosition.left : 0;
+    const timestamp = performance.now()
+    const isScrolling = scrollCache.lastTimestamp !== -1 && timestamp - scrollCache.lastTimestamp < 500
+    const dt = timestamp - scrollCache.lastTimestamp
 
     // XXX: remove
     // console.log('scroll', scrollPosition.current.top, { dt, dy, dx })
 
-    scrollCache.lastTimestamp = now
+    scrollCache.lastTimestamp = timestamp
     scrollCache.lastPosition = scrollPosition.current
-    scrollCache.expectedScroll = { top: dy, left: dx }
-    scrollCache.direction = directionForDelta(dx, dy)
+    if (isScrolling) {
+      scrollCache.events.push({ ...scrollPosition.current, timestamp })
+    } else {
+      scrollCache.events = [{ ...scrollPosition.current, timestamp }]
+    }
+
+    if (isScrolling) {
+      const y = scrollPosition.current.top;
+      const x = scrollPosition.current.left;
+      const dy = Math.round(new SimpleLinearRegression(
+        scrollCache.events.slice(-4).map(e => e.timestamp),
+        scrollCache.events.slice(-4).map(e => e.top),
+      ).predict(timestamp + dt)) - y
+      const dx = Math.round(new SimpleLinearRegression(
+        scrollCache.events.slice(-4).map(e => e.timestamp),
+        scrollCache.events.slice(-4).map(e => e.left),
+      ).predict(timestamp + dt)) - x
+      scrollCache.expectedScroll = { top: dy, left: dx }
+      scrollCache.direction = directionForDelta(dx, dy)
+    } else {
+      scrollCache.expectedScroll = { top: 0, left: 0 }
+      scrollCache.direction = ScrollDirection.NONE
+    }
+    // console.log(scrollCache.expectedScroll)
+
 
     // Since previous render, we have scrolled...
     const rowScroll    = Math.abs(scrollPosition.current.top  - previousScroll.current.top)  + scrollCache.expectedScroll.top;
