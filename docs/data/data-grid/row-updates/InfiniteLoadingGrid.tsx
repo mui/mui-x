@@ -5,7 +5,6 @@ import {
   GridSlots,
   GridSortModel,
   gridStringOrNumberComparator,
-  GridColDef,
   GridFilterModel,
   getGridStringOperators,
   GridFilterOperator,
