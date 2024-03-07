@@ -40,6 +40,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item selection change
 
-Use the `onItemSelectionToggle` prop if you want to react to a item selection change:
+Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}

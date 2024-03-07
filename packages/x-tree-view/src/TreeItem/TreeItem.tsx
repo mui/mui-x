@@ -290,7 +290,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, nodeId);
     }
   }
 

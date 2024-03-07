@@ -29,6 +29,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item expansion change
 
-Use the `onItemExpansionToggle` prop if you want to react to a item expansion change:
+Use the `onItemExpansionToggle` prop if you want to react to an item expansion change:
 
 {{"demo": "TrackItemExpansionToggle.js"}}

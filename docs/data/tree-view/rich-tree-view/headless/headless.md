@@ -116,7 +116,7 @@ const useCustomPlugin = ({ models }) => {
     // Collapse all the items
     models.expandedItems.setValue([]);
 
-    // Check if a item is expanded
+    // Check if an item is expanded
     const isExpanded = instance.isNodeExpanded('some-item-id');
   };
 };

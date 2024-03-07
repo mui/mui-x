@@ -28,6 +28,6 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item expansion change
 
-Use the `onItemExpansionToggle` prop to trigger an action upon a item being expanded.
+Use the `onItemExpansionToggle` prop to trigger an action upon an item being expanded.
 
 {{"demo": "TrackItemExpansionToggle.js"}}

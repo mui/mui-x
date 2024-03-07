@@ -7,12 +7,12 @@ import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
-  focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
+  focusItem: (event: React.SyntheticEvent, itemId: string | null) => void;
   focusDefaultNode: (event: React.SyntheticEvent) => void;
   focusRoot: () => void;
 }
 
-export interface UseTreeViewFocusPublicAPI extends Pick<UseTreeViewFocusInstance, 'focusNode'> {}
+export interface UseTreeViewFocusPublicAPI extends Pick<UseTreeViewFocusInstance, 'focusItem'> {}
 
 export interface UseTreeViewFocusParameters {
   /**

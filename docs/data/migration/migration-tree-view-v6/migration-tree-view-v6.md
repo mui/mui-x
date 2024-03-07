@@ -84,7 +84,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 
 #### Define `expandIcon`
 
-The icon used to expand the children of a item (rendered when this item is collapsed)
+The icon used to expand the children of an item (rendered when this item is collapsed)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
@@ -132,7 +132,7 @@ you need to use the new `expandIcon` slot on this component:
 
 #### Define `collapseIcon`
 
-The icon used to collapse the children of a item (rendered when this item is expanded)
+The icon used to collapse the children of an item (rendered when this item is expanded)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
@@ -312,7 +312,7 @@ The expansion props have been renamed to better describe their behaviors:
 
 :::info
 If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific item,
-you can use the new `onItemExpansionToggle` prop which is called whenever a item is expanded or collapsed with its id and expansion status
+you can use the new `onItemExpansionToggle` prop which is called whenever an item is expanded or collapsed with its id and expansion status
 
 ```tsx
 // It is also available on the deprecated `TreeView` component

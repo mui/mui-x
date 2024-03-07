@@ -553,7 +553,7 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<TestCase />);
 
       act(() => {
-        apiRef.current?.focusNode({} as React.SyntheticEvent, '2');
+        apiRef.current?.focusItem({} as React.SyntheticEvent, '2');
       });
 
       expect(getByRole('tree')).toHaveFocus();
@@ -579,7 +579,7 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<TestCase />);
 
       act(() => {
-        apiRef.current?.focusNode({} as React.SyntheticEvent, '1.1');
+        apiRef.current?.focusItem({} as React.SyntheticEvent, '1.1');
       });
 
       expect(getByRole('tree')).not.toHaveFocus();

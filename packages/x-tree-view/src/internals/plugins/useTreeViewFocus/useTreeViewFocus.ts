@@ -39,7 +39,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
   };
 
-  const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
+  const focusItem = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     // if we receive a nodeId, and it is visible, the focus will be set to it
     if (nodeId && isNodeVisible(nodeId)) {
       if (!isTreeViewFocused()) {
@@ -76,13 +76,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,
-    focusNode,
+    focusItem,
     focusRoot,
     focusDefaultNode,
   });
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
-    focusNode,
+    focusItem,
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
