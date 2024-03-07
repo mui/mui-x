@@ -2,18 +2,17 @@ import {
   GridPinnedColumnPosition,
   gridColumnPositionsSelector,
 } from '../../hooks/features/columns';
-import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridDimensions } from '../../hooks/features/dimensions';
 
 export const getPinnedCellOffset = ({
   pinnedPosition,
-  column,
+  computedWidth,
   columnIndex,
   columnPositions,
   dimensions,
 }: {
   pinnedPosition: GridPinnedColumnPosition | undefined;
-  column: GridStateColDef;
+  computedWidth: number;
   columnIndex: number;
   columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
   dimensions: GridDimensions;
@@ -31,7 +30,7 @@ export const getPinnedCellOffset = ({
       pinnedOffset =
         dimensions.columnsTotalWidth -
         columnPositions[columnIndex] -
-        column.computedWidth +
+        computedWidth +
         scrollbarWidth;
       break;
     default:

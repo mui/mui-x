@@ -12,6 +12,7 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -24,6 +25,8 @@ interface GridColumnGroupHeaderProps {
   height: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
+  pinnedPosition?: GridPinnedColumnPosition;
+  style?: React.CSSProperties;
 }
 
 type OwnerState = {
@@ -32,10 +35,12 @@ type OwnerState = {
   isDragging: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
+  pinnedPosition?: GridPinnedColumnPosition;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, headerAlign, isDragging, showColumnBorder, groupId } = ownerState;
+  const { classes, headerAlign, isDragging, showColumnBorder, groupId, pinnedPosition } =
+    ownerState;
 
   const slots = {
     root: [
@@ -48,6 +53,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showColumnBorder && 'columnHeader--withRightBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
+      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
+      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
@@ -69,6 +76,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     hasFocus,
     tabIndex,
     isLastColumn,
+    style,
   } = props;
 
   const rootProps = useGridRootProps();
@@ -178,6 +186,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=
       data-fields={`|-${fields.join('-|-')}-|`}
+      style={style}
       {...mouseEventsHandlers}
     />
   );
