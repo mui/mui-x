@@ -35,18 +35,18 @@
     {
       "name": "groupTransition",
       "description": "The component that renders the children of the item.",
-      "default": "TreeItem2Group",
+      "default": "TreeItem2GroupTransition",
       "class": "MuiTreeItem2-groupTransition"
     },
     {
       "name": "iconContainer",
-      "description": "The component that renders the icon",
+      "description": "The component that renders the icon.",
       "default": "TreeItem2IconContainer",
       "class": "MuiTreeItem2-iconContainer"
     },
     {
       "name": "label",
-      "description": "The component that renders the item label",
+      "description": "The component that renders the item label.",
       "default": "TreeItem2Label",
       "class": "MuiTreeItem2-label"
     },

@@ -58,7 +58,6 @@ TreeItem2Icon.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  fallbackIcon: PropTypes.node,
   /**
    * The props used for each component slot.
    * @default {}
