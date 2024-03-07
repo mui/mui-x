@@ -5,27 +5,22 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 /** Credit: https://github.com/reach/reach-ui/blob/86a046f54d53b6420e392b3fa56dd991d9d4e458/packages/descendants/README.md
  *  Modified slightly to suit our purposes.
  */
-
-function binaryFindElement(array: TreeItemDescendant[], element: HTMLLIElement) {
+function binaryFindPosition(otherDescendants: TreeItemDescendant[], element: HTMLLIElement) {
   let start = 0;
-  let end = array.length - 1;
+  let end = otherDescendants.length;
 
-  while (start <= end) {
+  while (start < end - 1) {
     const middle = Math.floor((start + end) / 2);
 
-    if (array[middle].element === element) {
-      return middle;
-    }
-
     // eslint-disable-next-line no-bitwise
-    if (array[middle].element.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING) {
-      end = middle - 1;
+    if (otherDescendants[middle].element.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING) {
+      end = middle;
     } else {
-      start = middle + 1;
+      start = middle;
     }
   }
 
-  return start;
+  return end;
 }
 
 const DescendantContext = React.createContext<DescendantContextValue>({});
@@ -97,18 +92,16 @@ export function useDescendant(descendant: TreeItemDescendant) {
   // Prevent any flashing
   useEnhancedEffect(() => {
     if (descendant.element) {
-      registerDescendant({
-        ...descendant,
-        index,
-      });
+      registerDescendant(descendant);
+
       return () => {
-        unregisterDescendant(descendant.element!);
+        unregisterDescendant(descendant.element);
       };
     }
     forceUpdate({});
 
     return undefined;
-  }, [registerDescendant, unregisterDescendant, index, someDescendantsHaveChanged, descendant]);
+  }, [registerDescendant, unregisterDescendant, someDescendantsHaveChanged, descendant]);
 
   return { parentId, index };
 }
@@ -121,61 +114,33 @@ interface DescendantProviderProps {
 export function DescendantProvider(props: DescendantProviderProps) {
   const { children, id } = props;
 
+  const descendantElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map())
+
   const [items, set] = React.useState<(TreeItemDescendant & { index: number })[]>([]);
 
-  const registerDescendant = React.useCallback(({ element, ...other }: TreeItemDescendant) => {
-    set((oldItems) => {
-      if (oldItems.length === 0) {
-        // If there are no items, register at index 0 and bail.
-        return [
-          {
-            ...other,
-            element,
-            index: 0,
-          },
-        ];
-      }
-
-      const index = binaryFindElement(oldItems, element);
-      let newItems: typeof oldItems;
-
-      if (oldItems[index] && oldItems[index].element === element) {
-        // If the element is already registered, just use the same array
-        newItems = oldItems;
-      } else {
-        // When registering a descendant, we need to make sure we insert in
-        // into the array in the same order that it appears in the DOM. So as
-        // new descendants are added or maybe some are removed, we always know
-        // that the array is up-to-date and correct.
-        //
-        // So here we look at our registered descendants and see if the new
-        // element we are adding appears earlier than an existing descendant's
-        // DOM node via `node.compareDocumentPosition`. If it does, we insert
-        // the new element at this index. Because `registerDescendant` will be
-        // called in an effect every time the descendants state value changes,
-        // we should be sure that this index is accurate when descendent
-        // elements come or go from our component.
-
-        const newItem = {
-          ...other,
-          element,
-          index,
-        };
-
-        // If an index is not found we will push the element to the end.
-        newItems = oldItems.slice();
-        newItems.splice(index, 0, newItem);
-      }
-      newItems.forEach((item, position) => {
-        item.index = position;
-      });
-      return newItems;
-    });
-  }, []);
+  const registerDescendant = React.useCallback((descendant: TreeItemDescendant) => {
+    descendantElementRef.current.set(descendant.id, descendant.element)
+  }, [])
 
   const unregisterDescendant = React.useCallback((element: HTMLLIElement) => {
     set((oldItems) => oldItems.filter((item) => element !== item.element));
   }, []);
+
+  React.useEffect(() => {
+    const orderedDescendants: TreeItemDescendant[] = []
+    descendantElementRef.current.forEach((descendantElement, descendantId) => {
+      if (orderedDescendants.length === 0) {
+        orderedDescendants.push({ id: descendantId, element: descendantElement });
+      } else {
+        const newPosition = binaryFindPosition(orderedDescendants, descendantElement);
+        orderedDescendants.splice(newPosition, 0, { id: descendantId, element: descendantElement });
+      }
+    })
+
+    orderedDescendants.forEach((descendant, index) => {
+
+    })
+  })
 
   const value = React.useMemo(
     () => ({
@@ -201,7 +166,7 @@ export interface TreeItemDescendant {
 }
 
 interface DescendantContextValue {
-  registerDescendant?: (params: TreeItemDescendant & { index: number }) => void;
+  registerDescendant?: (params: TreeItemDescendant) => void;
   unregisterDescendant?: (params: HTMLLIElement) => void;
   descendants?: TreeItemDescendant[];
   parentId?: string | null;
