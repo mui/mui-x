@@ -272,7 +272,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         return null;
       }
 
-      const { firstColumnToRender, lastColumnToRender } = columnsToRender;
+      const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
 
       const rowStructure = columnGroupsHeaderStructure[depth];
 
@@ -362,6 +362,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
         columnIndex += columnFields.length;
 
+        let indexInSection = index;
+        if (pinnedPosition === 'left') {
+          // Group headers can expand to multiple columns, we need to adjust the index
+          indexInSection = columnIndex - 1;
+        }
+
         return (
           <GridColumnGroupHeader
             key={index}
@@ -377,6 +383,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             tabIndex={tabIndex}
             pinnedPosition={params.position}
             style={style}
+            indexInSection={indexInSection}
+            sectionLength={renderedColumns.length}
           />
         );
       });
