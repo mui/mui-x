@@ -29,22 +29,22 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   );
 
   const toggleNodeExpansion = useEventCallback(
-    (event: React.SyntheticEvent, nodeId: string | null) => {
-      if (nodeId == null) {
+    (event: React.SyntheticEvent, itemId: string | null) => {
+      if (itemId == null) {
         return;
       }
 
-      const isExpandedBefore = models.expandedNodes.value.indexOf(nodeId!) !== -1;
+      const isExpandedBefore = models.expandedNodes.value.indexOf(itemId!) !== -1;
 
       let newExpanded: string[];
       if (isExpandedBefore) {
-        newExpanded = models.expandedNodes.value.filter((id) => id !== nodeId);
+        newExpanded = models.expandedNodes.value.filter((id) => id !== itemId);
       } else {
-        newExpanded = [nodeId].concat(models.expandedNodes.value);
+        newExpanded = [itemId].concat(models.expandedNodes.value);
       }
 
       if (params.onNodeExpansionToggle) {
-        params.onNodeExpansionToggle(event, nodeId, !isExpandedBefore);
+        params.onNodeExpansionToggle(event, itemId, !isExpandedBefore);
       }
 
       setExpandedNodes(event, newExpanded);
@@ -82,7 +82,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
 useTreeViewExpansion.models = {
   expandedNodes: {
-    getDefaultValue: (params) => params.defaultExpandedNodes,
+    getDefaultValue: (params) => params.defaultExpandedItems,
   },
 };
 
@@ -90,12 +90,12 @@ const DEFAULT_EXPANDED_NODES: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpandedNodes: params.defaultExpandedNodes ?? DEFAULT_EXPANDED_NODES,
+  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_NODES,
 });
 
 useTreeViewExpansion.params = {
   expandedNodes: true,
-  defaultExpandedNodes: true,
+  defaultExpandedItems: true,
   onExpandedNodesChange: true,
   onNodeExpansionToggle: true,
 };

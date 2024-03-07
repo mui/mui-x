@@ -105,11 +105,11 @@ TreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
    * Selected node ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

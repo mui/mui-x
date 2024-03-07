@@ -4,7 +4,7 @@
       "type": { "name": "shape", "description": "{ current?: { focusNode: func, getItem: func } }" }
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultExpandedNodes": {
+    "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },

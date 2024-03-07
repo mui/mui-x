@@ -295,7 +295,7 @@ The expansion props have been renamed to better describe their behaviors:
 | :---------------- | :---------------------- |
 | `onNodeToggle`    | `onExpandedNodesChange` |
 | `expanded`        | `expandedNodes`         |
-| `defaultExpanded` | `defaultExpandedNodes`  |
+| `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
  <TreeView
@@ -305,8 +305,8 @@ The expansion props have been renamed to better describe their behaviors:
 -  expanded={expandedNodes}
 +  expandedNodes={expandedNodes}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 

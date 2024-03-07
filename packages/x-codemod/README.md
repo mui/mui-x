@@ -279,8 +279,8 @@ Rename the expansion props
 -  expanded={expandedNodes}
 +  expandedNodes={expandedNodes}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 

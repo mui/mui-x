@@ -16,11 +16,11 @@ export interface UseTreeViewExpansionParameters {
    */
   expandedNodes?: string[];
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes?: string[];
+  defaultExpandedItems?: string[];
   /**
    * Callback fired when tree items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
@@ -42,7 +42,7 @@ export interface UseTreeViewExpansionParameters {
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   UseTreeViewExpansionParameters,
-  'defaultExpandedNodes'
+  'defaultExpandedItems'
 >;
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{

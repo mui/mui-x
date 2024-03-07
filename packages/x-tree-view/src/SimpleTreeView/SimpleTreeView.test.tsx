@@ -63,7 +63,7 @@ describe('<SimpleTreeView />', () => {
 
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
-        <SimpleTreeView multiSelect defaultExpandedNodes={['1', '1.1', '2']}>
+        <SimpleTreeView multiSelect defaultExpandedItems={['1', '1.1', '2']}>
           <TreeItem nodeId="1" label="Item 1">
             <TreeItem nodeId="1.1" label="Item 1.1">
               <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />

@@ -33,7 +33,7 @@ export default function CustomStyling() {
   return (
     <SimpleTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1']}
+      defaultExpandedItems={['1']}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <StyledTreeItem nodeId="1" label="Main">

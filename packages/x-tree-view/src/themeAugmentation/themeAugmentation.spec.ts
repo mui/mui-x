@@ -8,7 +8,7 @@ createTheme({
   components: {
     MuiSimpleTreeView: {
       defaultProps: {
-        defaultExpandedNodes: ['root'],
+        defaultExpandedItems: ['root'],
         // @ts-expect-error invalid MuiSimpleTreeView prop
         someRandomProp: true,
       },
@@ -27,7 +27,7 @@ createTheme({
     },
     MuiRichTreeView: {
       defaultProps: {
-        defaultExpandedNodes: ['root'],
+        defaultExpandedItems: ['root'],
         // @ts-expect-error invalid MuiRichTreeView prop
         someRandomProp: true,
       },
@@ -46,7 +46,7 @@ createTheme({
     },
     MuiTreeView: {
       defaultProps: {
-        defaultExpandedNodes: ['root'],
+        defaultExpandedItems: ['root'],
         // @ts-expect-error invalid MuiTreeView prop
         someRandomProp: true,
       },

@@ -1,6 +1,1 @@
-<TreeView
-  expandedNodes={[]}
-  defaultExpandedNodes={[]}
-  onExpandedNodesChange={callback}
->
-</TreeView>
+<TreeView expandedNodes={[]} defaultExpandedItems={[]} onExpandedNodesChange={callback}></TreeView>;
