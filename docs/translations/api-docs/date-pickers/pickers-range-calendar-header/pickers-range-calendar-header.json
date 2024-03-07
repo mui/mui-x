@@ -2,10 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "calendars": { "description": "The number of calendars rendered." },
-    "changeMonth": {
-      "description": "Callback to call to change the current month.",
-      "typeDescriptions": { "newMonth": "The value to set to &quot;currentMonth&quot;." }
-    },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "format": { "description": "Format used to display the date." },
     "month": { "description": "Month used for this header." },

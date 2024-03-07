@@ -4,11 +4,6 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "required": true
     },
-    "changeMonth": {
-      "type": { "name": "func" },
-      "required": true,
-      "signature": { "type": "function(newMonth: TDate) => void", "describedArgs": ["newMonth"] }
-    },
     "month": { "type": { "name": "object" }, "required": true },
     "monthIndex": { "type": { "name": "number" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },

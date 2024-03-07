@@ -92,11 +92,6 @@ PickersRangeCalendarHeader.propTypes = {
    */
   calendars: PropTypes.oneOf([1, 2, 3]).isRequired,
   /**
-   * Callback to call to change the current month.
-   * @param {TDate} newMonth The value to set to "currentMonth".
-   */
-  changeMonth: PropTypes.func.isRequired,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
