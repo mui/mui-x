@@ -11,7 +11,7 @@
     "defaultSelectedItems": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
-    "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "`(item) => item.id`",

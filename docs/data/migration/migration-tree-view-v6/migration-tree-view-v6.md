@@ -294,7 +294,7 @@ The expansion props have been renamed to better describe their behaviors:
 | Old name          | New name                |
 | :---------------- | :---------------------- |
 | `onNodeToggle`    | `onExpandedItemsChange` |
-| `expanded`        | `expandedNodes`         |
+| `expanded`        | `expandedItems`         |
 | `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
@@ -302,8 +302,8 @@ The expansion props have been renamed to better describe their behaviors:
 -  onNodeToggle={handleExpansionChange}
 +  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
 -  defaultExpanded={defaultExpandedItems}
 +  defaultExpandedItems={defaultExpandedItems}

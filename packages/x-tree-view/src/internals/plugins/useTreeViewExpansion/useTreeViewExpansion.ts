@@ -9,18 +9,18 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   params,
   models,
 }) => {
-  const setExpandedNodes = (event: React.SyntheticEvent, value: string[]) => {
+  const setExpandedItems = (event: React.SyntheticEvent, value: string[]) => {
     params.onExpandedItemsChange?.(event, value);
-    models.expandedNodes.setControlledValue(value);
+    models.expandedItems.setControlledValue(value);
   };
 
   const isNodeExpanded = React.useCallback(
     (nodeId: string) => {
-      return Array.isArray(models.expandedNodes.value)
-        ? models.expandedNodes.value.indexOf(nodeId) !== -1
+      return Array.isArray(models.expandedItems.value)
+        ? models.expandedItems.value.indexOf(nodeId) !== -1
         : false;
     },
-    [models.expandedNodes.value],
+    [models.expandedItems.value],
   );
 
   const isNodeExpandable = React.useCallback(
@@ -34,20 +34,20 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         return;
       }
 
-      const isExpandedBefore = models.expandedNodes.value.indexOf(itemId!) !== -1;
+      const isExpandedBefore = models.expandedItems.value.indexOf(itemId!) !== -1;
 
       let newExpanded: string[];
       if (isExpandedBefore) {
-        newExpanded = models.expandedNodes.value.filter((id) => id !== itemId);
+        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
       } else {
-        newExpanded = [itemId].concat(models.expandedNodes.value);
+        newExpanded = [itemId].concat(models.expandedItems.value);
       }
 
       if (params.onNodeExpansionToggle) {
         params.onNodeExpansionToggle(event, itemId, !isExpandedBefore);
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     },
   );
 
@@ -59,7 +59,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
     );
 
-    const newExpanded = models.expandedNodes.value.concat(diff);
+    const newExpanded = models.expandedItems.value.concat(diff);
 
     if (diff.length > 0) {
       if (params.onNodeExpansionToggle) {
@@ -68,7 +68,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         });
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     }
   };
 
@@ -81,7 +81,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 };
 
 useTreeViewExpansion.models = {
-  expandedNodes: {
+  expandedItems: {
     getDefaultValue: (params) => params.defaultExpandedItems,
   },
 };
@@ -94,7 +94,7 @@ useTreeViewExpansion.getDefaultizedParams = (params) => ({
 });
 
 useTreeViewExpansion.params = {
-  expandedNodes: true,
+  expandedItems: true,
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
   onNodeExpansionToggle: true,

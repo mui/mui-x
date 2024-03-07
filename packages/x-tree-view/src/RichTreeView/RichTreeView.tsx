@@ -183,10 +183,10 @@ RichTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
    * Used to determine the string label for a given item.
    *

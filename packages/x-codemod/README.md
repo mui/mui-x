@@ -276,8 +276,8 @@ Rename the expansion props
 -  onNodeToggle={handleExpansionChange}
 +  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
 -  defaultExpanded={defaultExpandedItems}
 +  defaultExpandedItems={defaultExpandedItems}

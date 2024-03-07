@@ -7,7 +7,7 @@ const className = simpleTreeViewClasses.root;
 
 // prettier-ignore
 <SimpleTreeView
-  expandedNodes={[]}
+  expandedItems={[]}
   defaultExpandedItems={[]}
   onExpandedItemsChange={expansionCallback}
   selectedItems={null}

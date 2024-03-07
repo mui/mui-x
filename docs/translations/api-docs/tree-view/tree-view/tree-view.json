@@ -16,8 +16,8 @@
       "description": "If <code>true</code>, will allow focus on disabled items."
     },
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
-    "expandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    "expandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."

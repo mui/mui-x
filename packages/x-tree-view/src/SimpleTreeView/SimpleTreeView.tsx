@@ -150,10 +150,10 @@ SimpleTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

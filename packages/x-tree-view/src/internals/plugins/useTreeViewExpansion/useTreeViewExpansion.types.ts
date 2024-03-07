@@ -11,10 +11,10 @@ export interface UseTreeViewExpansionInstance {
 
 export interface UseTreeViewExpansionParameters {
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes?: string[];
+  expandedItems?: string[];
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
@@ -49,6 +49,6 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
-  modelNames: 'expandedNodes';
+  modelNames: 'expandedItems';
   dependantPlugins: [UseTreeViewNodesSignature];
 }>;

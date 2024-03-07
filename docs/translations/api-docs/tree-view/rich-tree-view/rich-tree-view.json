@@ -15,8 +15,8 @@
       "description": "If <code>true</code>, will allow focus on disabled items."
     },
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
-    "expandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    "expandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
     "getItemId": {
       "description": "Used to determine the string label for a given item.",
