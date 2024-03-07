@@ -259,26 +259,21 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     return getFillers(params, columns, 0);
   };
 
-  const getColumnGroupHeaders = (params?: GetHeadersParams) => {
+  const getColumnGroupHeaders = () => {
     if (headerGroupingMaxDepth === 0) {
       return null;
     }
 
-    const columnsToRender = getColumnsToRender(params);
-    if (columnsToRender.renderedColumns.length === 0) {
-      return null;
-    }
+    const headerRows: React.JSX.Element[] = [];
 
-    const { firstColumnToRender, lastColumnToRender } = columnsToRender;
+    const getHeadersToRender = ({ depth, params }: { depth: number; params: GetHeadersParams }) => {
+      const columnsToRender = getColumnsToRender(params);
+      if (columnsToRender.renderedColumns.length === 0) {
+        return null;
+      }
 
-    const columns: React.JSX.Element[] = [];
+      const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
-    const headerToRender: {
-      leftOverflow: number;
-      elements: HeaderInfo[];
-    }[] = [];
-
-    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
       const rowStructure = columnGroupsHeaderStructure[depth];
 
       const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
@@ -322,7 +317,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       }, 0);
 
       let columnIndex = firstColumnToRender;
-      const elements = visibleColumnGroupHeader.map(({ groupId, columnFields }) => {
+      const children = visibleColumnGroupHeader.map(({ groupId, columnFields }, index) => {
         const hasFocus =
           columnGroupHeaderFocus !== null &&
           columnGroupHeaderFocus.depth === depth &&
@@ -347,45 +342,78 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         };
 
         columnIndex += columnFields.length;
-        return headerInfo;
+        return (
+          <GridColumnGroupHeader
+            key={index}
+            groupId={groupId}
+            width={headerInfo.width}
+            fields={headerInfo.fields}
+            colIndex={headerInfo.colIndex}
+            depth={depth}
+            isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
+            maxDepth={headerGroupingMaxDepth}
+            height={dimensions.headerHeight}
+            hasFocus={hasFocus}
+            tabIndex={tabIndex}
+          />
+        );
       });
 
-      headerToRender.push({ leftOverflow, elements });
-    }
+      return getFillers(params, children, leftOverflow);
+    };
 
-    headerToRender.forEach((depthInfo, depthIndex) => {
-      const children = depthInfo.elements.map(
-        ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
-          return (
-            <GridColumnGroupHeader
-              key={groupIndex}
-              groupId={groupId}
-              width={width}
-              fields={fields}
-              colIndex={colIndex}
-              depth={depthIndex}
-              isLastColumn={colIndex === visibleColumns.length - fields.length}
-              maxDepth={headerToRender.length}
-              height={dimensions.headerHeight}
-              hasFocus={hasFocus}
-              tabIndex={tabIndex}
-            />
-          );
-        },
-      );
+    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
+      const leftRenderContext =
+        renderContext && pinnedColumns.left.length
+          ? {
+              ...renderContext,
+              firstColumnIndex: 0,
+              lastColumnIndex: pinnedColumns.left.length,
+            }
+          : null;
 
-      columns.push(
+      const rightRenderContext =
+        renderContext && pinnedColumns.right.length
+          ? {
+              ...renderContext,
+              firstColumnIndex: visibleColumns.length - pinnedColumns.right.length,
+              lastColumnIndex: visibleColumns.length,
+            }
+          : null;
+
+      headerRows.push(
         <GridColumnHeaderRow
-          key={depthIndex}
+          key={depth}
           role="row"
-          aria-rowindex={depthIndex + 1}
+          aria-rowindex={depth + 1}
           ownerState={rootProps}
         >
-          {getFillers(params, children, depthInfo.leftOverflow)}
+          {leftRenderContext &&
+            getHeadersToRender({
+              depth,
+              params: {
+                position: GridPinnedColumnPosition.LEFT,
+                renderContext: leftRenderContext,
+                minFirstColumn: leftRenderContext.firstColumnIndex,
+                maxLastColumn: leftRenderContext.lastColumnIndex,
+              },
+            })}
+          {getHeadersToRender({ depth, params: { renderContext } })}
+          {rightRenderContext &&
+            getHeadersToRender({
+              depth,
+              params: {
+                position: GridPinnedColumnPosition.RIGHT,
+                renderContext: rightRenderContext,
+                minFirstColumn: rightRenderContext.firstColumnIndex,
+                maxLastColumn: rightRenderContext.lastColumnIndex,
+              },
+            })}
         </GridColumnHeaderRow>,
       );
-    });
-    return columns;
+    }
+
+    return headerRows;
   };
 
   return {

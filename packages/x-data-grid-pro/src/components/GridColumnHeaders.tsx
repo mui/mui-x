@@ -199,13 +199,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
             }}
             {...pinnedColumnHeadersProps}
           >
-            {getColumnGroupHeaders({
-              position: GridPinnedColumnPosition.LEFT,
-              renderContext: leftRenderContext,
-              minFirstColumn: leftRenderContext.firstColumnIndex,
-              maxLastColumn: leftRenderContext.lastColumnIndex,
-            })}
-
             {getColumnFilters({
               position: GridPinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
@@ -216,12 +209,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
         )}
 
         <GridScrollArea scrollDirection="left" />
-        {/* <GridColumnHeadersInner isDragging={isDragging} {...innerProps}> */}
-        {getColumnGroupHeaders({
-          renderContext,
-          minFirstColumn: visiblePinnedColumns.left.length,
-          maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
-        })}
+        {getColumnGroupHeaders()}
         <GridColumnHeaderRow
           role="row"
           aria-rowindex={headerGroupingMaxDepth + 1}
@@ -274,13 +262,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
             className={classes.rightPinnedColumns}
             {...pinnedColumnHeadersProps}
           >
-            {getColumnGroupHeaders({
-              position: GridPinnedColumnPosition.RIGHT,
-              renderContext: rightRenderContext,
-              minFirstColumn: rightRenderContext.firstColumnIndex,
-              maxLastColumn: rightRenderContext.lastColumnIndex,
-            })}
-
             {getColumnFilters({
               position: GridPinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,
