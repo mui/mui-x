@@ -255,6 +255,13 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onDensityChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(density: GridDensity) => void",
+        "describedArgs": ["density"]
+      }
+    },
     "onFilterModelChange": {
       "type": { "name": "func" },
       "signature": {
