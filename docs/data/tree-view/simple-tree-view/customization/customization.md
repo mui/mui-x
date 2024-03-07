@@ -45,7 +45,7 @@ The demo below shows how to add an avatar and custom typography elements.
 
 ### Connection border
 
-Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+Target the `treeItemClasses.groupTransition` class to add connection borders between the Tree View items.
 
 {{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
 

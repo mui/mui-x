@@ -23,9 +23,7 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    },
-    "TransitionComponent": { "type": { "name": "elementType" }, "default": "Collapse" },
-    "TransitionProps": { "type": { "name": "object" } }
+    }
   },
   "name": "TreeItem",
   "imports": [
@@ -40,6 +38,12 @@
       "name": "icon",
       "description": "The icon to display next to the tree node's label.",
       "class": null
+    },
+    {
+      "name": "groupTransition",
+      "description": "The component that animates to appearance / disappearance of the item's children.",
+      "default": "TreeItem2Group",
+      "class": "MuiTreeItem-groupTransition"
     }
   ],
   "classes": [
@@ -66,12 +70,6 @@
       "className": "Mui-focused",
       "description": "State class applied to the content element when focused.",
       "isGlobal": true
-    },
-    {
-      "key": "group",
-      "className": "MuiTreeItem-group",
-      "description": "Styles applied to the transition component.",
-      "isGlobal": false
     },
     {
       "key": "iconContainer",
