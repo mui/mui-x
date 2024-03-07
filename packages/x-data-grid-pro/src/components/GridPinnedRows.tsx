@@ -24,23 +24,25 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
 
-  const pinnedRows = virtualScroller.getRows({
-    position,
-    rows,
-    renderContext: React.useMemo(
-      () => ({
-        firstRowIndex: 0,
-        lastRowIndex: rows.length,
-        firstColumnIndex: renderContext.firstColumnIndex,
-        lastColumnIndex: renderContext.lastColumnIndex,
-      }),
-      [rows, renderContext.firstColumnIndex, renderContext.lastColumnIndex],
-    ),
-  });
+  const pinnedRenderContext = React.useMemo(
+    () => ({
+      firstRowIndex: 0,
+      lastRowIndex: rows.length,
+      firstColumnIndex: renderContext.firstColumnIndex,
+      lastColumnIndex: renderContext.lastColumnIndex,
+    }),
+    [rows, renderContext.firstColumnIndex, renderContext.lastColumnIndex],
+  );
 
   if (rows.length === 0) {
     return null;
   }
+
+  const pinnedRows = virtualScroller.getRows({
+    position,
+    rows,
+    renderContext: pinnedRenderContext,
+  });
 
   return (
     <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="presentation">

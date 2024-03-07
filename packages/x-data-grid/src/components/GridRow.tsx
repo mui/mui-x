@@ -314,6 +314,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
       minHeight,
+      '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
     if (sizes?.spacingTop) {
@@ -420,7 +421,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         column={column}
         width={width}
         rowId={rowId}
-        height={rowHeight}
         align={column.align || 'left'}
         colIndex={indexRelativeToAllColumns}
         colSpan={colSpan}
