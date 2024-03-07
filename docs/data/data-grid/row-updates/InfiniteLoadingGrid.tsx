@@ -6,6 +6,9 @@ import {
   GridSortModel,
   gridStringOrNumberComparator,
   GridColDef,
+  GridFilterModel,
+  getGridStringOperators,
+  GridFilterOperator,
 } from '@mui/x-data-grid-pro';
 import {
   getRealGridData,
@@ -27,17 +30,40 @@ function sleep(duration: number) {
 
 let allData: GridDemoData | undefined;
 
+const filterOperators = getGridStringOperators();
+const filterOperatorsLookup = filterOperators.reduce<
+  Record<string, GridFilterOperator>
+>((acc, operator) => {
+  acc[operator.value] = operator;
+  return acc;
+}, {});
+
 async function fetchRows({
   fromIndex,
   toIndex,
   sortModel,
+  filterModel,
 }: {
   fromIndex: number;
   toIndex: number;
   sortModel: GridSortModel;
+  filterModel: GridFilterModel;
 }) {
   if (!allData) {
-    allData = await getRealGridData(MAX_ROW_LENGTH, getCommodityColumns());
+    const columns = [
+      'id',
+      'desk',
+      'commodity',
+      'traderName',
+      'traderEmail',
+      'brokerId',
+      'brokerName',
+      'counterPartyName',
+    ];
+    allData = await getRealGridData(
+      MAX_ROW_LENGTH,
+      getCommodityColumns().filter((column) => columns.includes(column.field)),
+    );
   }
   await sleep(randomInt(100, 600));
 
@@ -62,6 +88,30 @@ async function fetchRows({
     });
   }
 
+  if (filterModel && filterModel.items.length > 0) {
+    const method = filterModel.logicOperator === 'or' ? 'some' : 'every';
+
+    allRows = allRows.filter((row) => {
+      return filterModel.items[method]((item) => {
+        const filter = filterOperatorsLookup[item.operator];
+        if (!filter) {
+          return true;
+        }
+        if (!filter.requiresFilterValue !== false && !item.value) {
+          return true;
+        }
+        const colDef = {} as any;
+        const apiRef = {} as any;
+        return filter.getApplyFilterFn(item, colDef)?.(
+          row[item.field],
+          row,
+          colDef,
+          apiRef,
+        );
+      });
+    });
+  }
+
   const rows = allRows.slice(fromIndex, toIndex);
   return rows;
 }
@@ -71,22 +121,9 @@ export default function InfiniteLoadingGrid() {
   const [loading, setLoading] = React.useState(false);
   const [rows, setRows] = React.useState<any[]>([]);
   const [sortModel, setSortModel] = React.useState<GridSortModel>([]);
-  const mounted = React.useRef<boolean>(false);
-
-  const handleSortModelChange = React.useCallback(
-    async (newSortModel: GridSortModel) => {
-      setLoading(true);
-      setSortModel(newSortModel);
-      const newRows = await fetchRows({
-        fromIndex: 0,
-        toIndex: 20,
-        sortModel: newSortModel,
-      });
-      setLoading(false);
-      setRows(newRows);
-    },
-    [],
-  );
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [],
+  });
 
   const handleOnRowsScrollEnd = React.useCallback<
     NonNullable<DataGridProProps['onRowsScrollEnd']>
@@ -97,32 +134,35 @@ export default function InfiniteLoadingGrid() {
         fromIndex: rows.length,
         toIndex: rows.length + params.viewportPageSize * 2,
         sortModel,
+        filterModel,
       });
       setLoading(false);
       setRows((prevRows) => prevRows.concat(fetchedRows));
     },
-    [rows.length, sortModel],
+    [rows.length, sortModel, filterModel],
   );
 
   React.useEffect(() => {
-    mounted.current = true;
+    let mounted = true;
     (async () => {
       setLoading(true);
       const fetchedRows = await fetchRows({
         fromIndex: 0,
         toIndex: 20,
         sortModel,
+        filterModel,
       });
-      if (mounted.current) {
+      if (mounted) {
         setLoading(false);
         setRows(fetchedRows);
         setColumns(allData!.columns);
       }
     })();
+
     return () => {
-      mounted.current = false;
+      mounted = false;
     };
-  }, [sortModel]);
+  }, [sortModel, filterModel]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -132,9 +172,15 @@ export default function InfiniteLoadingGrid() {
         loading={loading}
         onRowsScrollEnd={handleOnRowsScrollEnd}
         scrollEndThreshold={200}
-        sortModel={sortModel}
-        onSortModelChange={handleSortModelChange}
         sortingMode="server"
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
+        filterMode="server"
+        filterModel={filterModel}
+        onFilterModelChange={setFilterModel}
+        initialState={{
+          columns: { columnVisibilityModel: { id: false } },
+        }}
         slots={{
           loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
         }}
