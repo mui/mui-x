@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
@@ -26,7 +27,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     label: ['label'],
-    group: ['group'],
+    groupTransition: ['groupTransition'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -129,8 +130,8 @@ const StyledTreeItemContent = styled(TreeItemContent, {
 
 const TreeItemGroup = styled(Collapse, {
   name: 'MuiTreeItem',
-  slot: 'Group',
-  overridesResolver: (props, styles) => styles.group,
+  slot: 'GroupTransition',
+  overridesResolver: (props, styles) => styles.groupTransition,
 })({
   margin: 0,
   padding: 0,
@@ -175,8 +176,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     label,
     onClick,
     onMouseDown,
-    TransitionComponent = Collapse,
-    TransitionProps,
     ...other
   } = props;
 
@@ -185,6 +184,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
     endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
     icon: inSlots?.icon,
+    groupTransition: inSlots?.groupTransition,
   };
 
   const isExpandable = (reactChildren: React.ReactNode) => {
@@ -208,6 +208,20 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const classes = useUtilityClasses(ownerState);
+
+  const GroupTransition: React.ElementType | undefined = slots.groupTransition ?? undefined;
+  const groupTransitionProps: TransitionProps = useSlotProps({
+    elementType: GroupTransition,
+    ownerState: {},
+    externalSlotProps: inSlotProps?.groupTransition,
+    additionalProps: {
+      unmountOnExit: true,
+      in: expanded,
+      component: 'ul',
+      role: 'group',
+    },
+    className: classes.groupTransition,
+  });
 
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
@@ -318,15 +332,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
         {...ContentProps}
       />
       {children && (
-        <TreeItemGroup
-          as={TransitionComponent}
-          unmountOnExit
-          className={classes.group}
-          in={expanded}
-          component="ul"
-          role="group"
-          {...TransitionProps}
-        >
+        <TreeItemGroup as={GroupTransition} {...groupTransitionProps}>
           {children}
         </TreeItemGroup>
       )}
@@ -395,15 +401,4 @@ TreeItem.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The component used for the transition.
-   * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
-   * @default Collapse
-   */
-  TransitionComponent: PropTypes.elementType,
-  /**
-   * Props applied to the transition element.
-   * By default, the element is based on this [`Transition`](https://reactcommunity.org/react-transition-group/transition/) component.
-   */
-  TransitionProps: PropTypes.object,
 } as any;

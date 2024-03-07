@@ -155,7 +155,7 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
-  };
+  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;

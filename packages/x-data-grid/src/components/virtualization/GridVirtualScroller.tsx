@@ -70,7 +70,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getRenderZoneProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
+    getRows,
   } = virtualScroller;
+
+  const rows = getRows();
 
   return (
     <Container className={classes.root} {...getContainerProps()}>
@@ -84,19 +87,21 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
-            {virtualScroller.getRows()}
+            {rows}
             {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>
         </Content>
 
-        <SpaceFiller />
+        {rows.length > 0 && <SpaceFiller />}
 
         <BottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </BottomContainer>
       </Scroller>
-      <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
-      <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
+      {dimensions.hasScrollX && (
+        <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+      )}
       {props.children}
     </Container>
   );

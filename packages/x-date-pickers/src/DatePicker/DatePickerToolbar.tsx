@@ -77,6 +77,8 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     toolbarPlaceholder = '––',
     views,
     className,
+    onViewChange,
+    view,
     ...other
   } = props;
   const utils = useUtils<TDate>();
@@ -164,5 +166,8 @@ DatePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;

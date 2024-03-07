@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui-internal/test-utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridSortModel,
+  useGridApiRef,
+  GridApi,
+  GridColDef,
+  gridStringOrNumberComparator,
+} from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { GridInitialState } from '@mui/x-data-grid-pro';
@@ -140,6 +148,46 @@ describe('<DataGrid /> - Sorting', () => {
     // Check the behavior is idempotent
     act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+  });
+
+  // See https://github.com/mui/mui-x/issues/12271
+  it('should not keep the sort item with `item.sort = null`', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const onSortModelChange = spy();
+    function TestCase() {
+      apiRef = useGridApiRef();
+      const cols = [{ field: 'id' }];
+      const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={cols}
+            rows={rows}
+            onSortModelChange={onSortModelChange}
+          />
+        </div>
+      );
+    }
+
+    render(<TestCase />);
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    const header = getColumnHeaderCell(0);
+
+    // Trigger a `asc` sort
+    fireEvent.click(header);
+    expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
+    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([{ field: 'id', sort: 'asc' }]);
+
+    // Clear the sort using `apiRef`
+    act(() => apiRef.current.sortColumn('id', null));
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    expect(onSortModelChange.callCount).to.equal(2);
+
+    // Confirm that the sort item is cleared and not passed to `onSortModelChange`
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 
   it('should always set correct `aria-sort` attribute', () => {
@@ -702,6 +750,52 @@ describe('<DataGrid /> - Sorting', () => {
     await waitFor(() => {
       expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
       expect(onSortModelChange.callCount).to.equal(0);
+    });
+  });
+
+  describe('getSortComparator', () => {
+    it('should allow to define sort comparators depending on the sort direction', async () => {
+      const cols: GridColDef[] = [
+        {
+          field: 'value',
+          getSortComparator: (sortDirection) => {
+            const modifier = sortDirection === 'desc' ? -1 : 1;
+            return (value1, value2, cellParams1, cellParams2) => {
+              if (value1 === null) {
+                return 1;
+              }
+              if (value2 === null) {
+                return -1;
+              }
+              return (
+                modifier * gridStringOrNumberComparator(value1, value2, cellParams1, cellParams2)
+              );
+            };
+          },
+        },
+      ];
+      const rows = [
+        { id: 1, value: 'a' },
+        { id: 2, value: null },
+        { id: 3, value: 'b' },
+        { id: 4, value: null },
+      ];
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
+        </div>,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['a', '', 'b', '']);
+
+      const header = getColumnHeaderCell(0);
+      fireEvent.click(header);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
+      });
+
+      fireEvent.click(header);
+      expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
     });
   });
 });

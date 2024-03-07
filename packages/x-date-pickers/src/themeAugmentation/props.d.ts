@@ -19,22 +19,21 @@ import { PickersToolbarButtonProps } from '../internals/components/PickersToolba
 import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
 import { DateOrTimeView, PickerValidDate } from '../models';
 
-import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
+import { DatePickerProps } from '../DatePicker';
+import { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
 import { MobileDatePickerProps } from '../MobileDatePicker';
 import { StaticDatePickerProps } from '../StaticDatePicker';
 
-import {
-  DateTimePickerProps,
-  DateTimePickerTabsProps,
-  DateTimePickerToolbarProps,
-} from '../DateTimePicker';
+import { DateTimePickerProps, DateTimePickerTabsProps } from '../DateTimePicker';
+import { ExportedDateTimePickerToolbarProps } from '../DateTimePicker/DateTimePickerToolbar';
 import { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
 import { MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { DateTimeFieldProps } from '../DateTimeField';
 
-import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
+import { TimePickerProps } from '../TimePicker';
+import { ExportedTimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
@@ -60,10 +59,10 @@ export interface PickersComponentsPropsList {
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps<PickerValidDate>;
   MuiDateField: DateFieldProps<PickerValidDate, any>;
-  MuiDatePickerToolbar: DatePickerToolbarProps<PickerValidDate>;
+  MuiDatePickerToolbar: ExportedDatePickerToolbarProps;
   MuiDateTimeField: DateTimeFieldProps<PickerValidDate, any>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
-  MuiDateTimePickerToolbar: DateTimePickerToolbarProps<PickerValidDate>;
+  MuiDateTimePickerToolbar: ExportedDateTimePickerToolbarProps;
   MuiDayCalendar: DayCalendarProps<PickerValidDate>;
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
   MuiDigitalClock: ExportedDigitalClockProps<PickerValidDate>;
@@ -85,7 +84,7 @@ export interface PickersComponentsPropsList {
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps<PickerValidDate>;
   MuiTimeField: TimeFieldProps<PickerValidDate, any>;
-  MuiTimePickerToolbar: TimePickerToolbarProps<PickerValidDate>;
+  MuiTimePickerToolbar: ExportedTimePickerToolbarProps;
   MuiYearCalendar: YearCalendarProps<PickerValidDate>;
 
   // Date Pickers

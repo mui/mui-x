@@ -66,6 +66,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     valueFormatter,
     slots,
     slotProps,
+    tickPlacement,
+    tickLabelPlacement,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -79,6 +81,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     scale: yScale,
     tickNumber,
     valueFormatter,
+    tickPlacement,
+    tickLabelPlacement,
   });
 
   const positionSign = position === 'right' ? 1 : -1;
@@ -254,6 +258,12 @@ ChartsYAxis.propTypes = {
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
+   * The placement of ticks label. Can be the middle of the band, or the tick position.
+   * Only used if scale is 'band'.
+   * @default 'middle'
+   */
+  tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+  /**
    * The style applied to ticks text.
    */
   tickLabelStyle: PropTypes.object,
@@ -274,6 +284,12 @@ ChartsYAxis.propTypes = {
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,
+  /**
+   * The placement of ticks in regard to the band interval.
+   * Only used if scale is 'band'.
+   * @default 'extremities'
+   */
+  tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
   /**
    * The size of the ticks.
    * @default 6

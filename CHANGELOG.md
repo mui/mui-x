@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-beta.5
+
+_Mar 1, 2024_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `getSortComparator` for more advanced sorting behaviors (#12215) @cherniavskii
+- 🚀 Add `use client` directive to the Grid packages (#11803) @MBilalShafi
+- 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.0-beta.5`
+
+- [DataGrid] Add `getSortComparator` for more advanced sorting behaviors (#12215) @cherniavskii
+- [DataGrid] Add `use client` directive to the Grid packages (#11803) @MBilalShafi
+- [DataGrid] Fix `disableResetButton` and `disableShowHideToggle` flags to not exclude each other (#12169) @adyry
+- [DataGrid] Fix cell range classnames (#12230) @romgrk
+- [DataGrid] Fix wrong offset for right-pinned columns when toggling dark/light modes (#12233) @cherniavskii
+- [DataGrid] Improve row virtualization and rendering performance (#12247) @romgrk
+- [DataGrid] Improve performance by removing `querySelector` call (#12229) @romgrk
+- [DataGrid] Fix `onColumnWidthChange` called before autosize affects column width (#12140) @shaharyar-shamshi
+- [DataGrid] Fix boolean "is" filter (#12117) @shaharyar-shamshi
+- [DataGrid] Fix `upsertFilterItems` removing filters that are not part of the update (#11954) @gitstart
+- [DataGrid] Render scrollbars only if there is scroll (#12265) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.5`, plus:
+
+- [DataGridPro] Fix column resize errors on MacOS with automatic scrollbars enabled (#12217) @cherniavskii
+- [DataGridPro] Fix lazy-loading crash (#12080) @romgrk
+- [DataGridPro] Fix useGridRows not giving error on reversed data (#10821) @martijn-basesoft
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.5`, plus:
+
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12235) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@7.0.0-beta.5`
+
+- [pickers] Fix toolbar components props handling (#12211) @LukasTy
+- [l10n] Improve Chinese (zh-CN) locale (#12245) @headironc
+- [l10n] Improve Korean (ko-KR) locale (#12192) @Luzi
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
+
+- [DateTimeRangePicker] Fix validation behavior (#12243) @LukasTy
+
+### Charts / `@mui/x-charts@7.0.0-beta.5`
+
+- [charts] Fix grid duplicated key (#12208) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@7.0.0-beta.5`
+
+- [TreeView] Add public API and expose focus method (#12143) @noraleonte
+
+### Docs
+
+- [docs] Fix image layout shift when loading @oliviertassinari
+- [docs] Match Material UI repo comment for redirections @oliviertassinari
+- [docs] Non breaking spaces @oliviertassinari
+- [docs] Polish the Date Picker playground (#11869) @zanivan
+- [docs] Standardize WAI-ARIA references @oliviertassinari
+
+### Core
+
+- [core] Allow local docs next.js settings (#12227) @romgrk
+- [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
+- [core] Remove `window.` reference for common globals @oliviertassinari
+- [core] Use runtime agnostic setTimeout type @oliviertassinari
+- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
+- [docs-infra] Fix missing non breaking spaces @oliviertassinari
+- [github] Update `no-response` workflow (#12193) @MBilalShafi
+- [infra] Fix missing permission reset @oliviertassinari
+
 ## 7.0.0-beta.4
 
 _Feb 23, 2024_
@@ -2352,6 +2435,47 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
 
+## 6.19.6
+
+_Mar 1, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Korean (ko-KR) and Chinese (zh-CN) locales on the Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.6`
+
+- [DataGrid] Fix error when existing rows are passed to `replaceRows` (@martijn-basesoft)
+
+#### `@mui/x-data-grid-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.6`.
+
+#### `@mui/x-data-grid-premium@6.19.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.6`, plus:
+
+- [DataGridPremium] Make clipboard copy respect the sorting during cell selection (#12255) @MBilalShafi
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.6`
+
+- [l10n] Improve Chinese (zh-CN) locale (#12250) @headironc
+- [l10n] Improve Korean (ko-KR) locale (#12186) @Luzi
+
+#### `@mui/x-date-pickers-pro@6.19.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.6`.
+
+### Docs
+
+- [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
+
 ## 6.19.5
 
 _Feb 23, 2024_
@@ -4264,7 +4388,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 #### `@mui/x-data-grid@6.9.1`
 
-- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
+- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
 - [DataGrid] Add section about enabling pagination on Pro and Premium (#8759) @joserodolfofreitas
 - [DataGrid] Don't forward `editCellState` prop to DOM element (#9501) @m4theushw
 - [DataGrid] Add experimental API for faster filtering performance (#9254) @romgrk
@@ -4722,8 +4846,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
 - [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
-- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
-- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
+- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
+- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
 - [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
 - [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
 - [l10n] Improve French (fr-FR) locale (#8825) @allereaugabriel
@@ -4773,7 +4897,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
 - [DataGrid] Remove unwarranted warning log (#8847) @romgrk
-- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
 - [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
 
 ### `@mui/x-date-pickers@6.3.1` / `@mui/x-date-pickers-pro@6.3.1`
@@ -4824,7 +4948,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Add overlay classes to `gridClasses` (#8686) @lindapaiste
 - [DataGrid] Avoid passing `api` prop to div (#8679) @someden
 - [DataGrid] Fix 'ResizeObserver loop limit exceeded' error (#8744) @m4theushw
-- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
+- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
 - [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
 - [DataGridPremium] Fix infinite loop when updating grouped rows (#8693) @cherniavskii
 - [DataGridPro] Fix error after updating `columns` and `columnGroupingModel` at once (#8730) @cherniavskii
@@ -4886,7 +5010,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Add `getTogglableColumns` to `Hide all` and `Show all` actions (#8496) @MBilalShafi
-- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
+- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
 - [DataGrid] Fix print style when rendering inside Shadow DOM (#8656) @Bwatermelon
 - [DataGrid] Replace `GridAutoSizer` with `ResizeObserver` (#8091) @m4theushw
 - [DataGrid] Use stable ID for the placeholder filter item (#8603) @m4theushw
