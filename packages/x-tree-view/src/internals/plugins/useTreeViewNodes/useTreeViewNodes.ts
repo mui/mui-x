@@ -169,7 +169,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
         }
       });
 
-      return { ...prevState, ...newState };
+      return { ...prevState, nodes: newState };
     });
   }, [
     instance,
