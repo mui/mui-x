@@ -55,7 +55,6 @@ export type GridCellProps = {
   colIndex: number;
   column: GridColDef;
   rowId: GridRowId;
-  height: number | 'auto';
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
@@ -65,7 +64,6 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
-  gridHasScrollX: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -154,7 +152,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     align,
     children: childrenProp,
     colIndex,
-    height,
     width,
     className,
     style: styleProp,
@@ -338,11 +335,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         border: 0,
       };
     }
-    const cellStyle = {
+
+    const cellStyle: React.CSSProperties = {
       '--width': `${width}px`,
-      '--height': typeof height === 'number' ? `${height}px` : height,
       ...styleProp,
-    } as React.CSSProperties;
+    };
 
     if (pinnedPosition === PinnedPosition.LEFT) {
       cellStyle.left = pinnedOffset;
@@ -353,7 +350,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -496,8 +493,6 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
-  gridHasScrollX: PropTypes.bool.isRequired,
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
