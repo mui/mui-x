@@ -105,6 +105,7 @@ export const useGridClipboard = (
           textToCopy = serializeCellValue(cellParams, {
             delimiterCharacter: clipboardCopyCellDelimiter,
             ignoreValueFormatter,
+            shouldAppendQuotes: false,
           });
         }
       }
