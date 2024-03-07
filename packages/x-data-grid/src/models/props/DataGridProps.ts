@@ -665,7 +665,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowSelectionModelChange?: (
     rowSelectionModel: GridRowSelectionModel,
