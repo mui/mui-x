@@ -30,6 +30,20 @@ function sleep(duration: number) {
 
 let allData: GridDemoData | undefined;
 
+const columnFields = [
+  'id',
+  'desk',
+  'commodity',
+  'traderName',
+  'traderEmail',
+  'brokerId',
+  'brokerName',
+  'counterPartyName',
+];
+const columns = getCommodityColumns().filter((column) =>
+  columnFields.includes(column.field),
+);
+
 const filterOperators = getGridStringOperators();
 const filterOperatorsLookup = filterOperators.reduce<
   Record<string, GridFilterOperator>
@@ -50,20 +64,7 @@ async function fetchRows({
   filterModel: GridFilterModel;
 }) {
   if (!allData) {
-    const columns = [
-      'id',
-      'desk',
-      'commodity',
-      'traderName',
-      'traderEmail',
-      'brokerId',
-      'brokerName',
-      'counterPartyName',
-    ];
-    allData = await getRealGridData(
-      MAX_ROW_LENGTH,
-      getCommodityColumns().filter((column) => columns.includes(column.field)),
-    );
+    allData = await getRealGridData(MAX_ROW_LENGTH, columns);
   }
   await sleep(randomInt(100, 600));
 
@@ -117,7 +118,6 @@ async function fetchRows({
 }
 
 export default function InfiniteLoadingGrid() {
-  const [columns, setColumns] = React.useState<GridColDef[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [rows, setRows] = React.useState<any[]>([]);
   const [sortModel, setSortModel] = React.useState<GridSortModel>([]);
@@ -155,7 +155,6 @@ export default function InfiniteLoadingGrid() {
       if (mounted) {
         setLoading(false);
         setRows(fetchedRows);
-        setColumns(allData!.columns);
       }
     })();
 
