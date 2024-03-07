@@ -148,19 +148,19 @@ TreeView.propTypes = {
    */
   onExpandedItemsChange: PropTypes.func,
   /**
+   * Callback fired when a tree item is expanded or collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   */
+  onItemExpansionToggle: PropTypes.func,
+  /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {array} itemId The nodeId of the modified item.
    * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
-  /**
-   * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
-   */
-  onNodeExpansionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.

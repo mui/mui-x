@@ -43,8 +43,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         newExpanded = [itemId].concat(models.expandedItems.value);
       }
 
-      if (params.onNodeExpansionToggle) {
-        params.onNodeExpansionToggle(event, itemId, !isExpandedBefore);
+      if (params.onItemExpansionToggle) {
+        params.onItemExpansionToggle(event, itemId, !isExpandedBefore);
       }
 
       setExpandedItems(event, newExpanded);
@@ -62,9 +62,9 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     const newExpanded = models.expandedItems.value.concat(diff);
 
     if (diff.length > 0) {
-      if (params.onNodeExpansionToggle) {
+      if (params.onItemExpansionToggle) {
         diff.forEach((newlyExpandedNodeId) => {
-          params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
+          params.onItemExpansionToggle!(event, newlyExpandedNodeId, true);
         });
       }
 
@@ -97,5 +97,5 @@ useTreeViewExpansion.params = {
   expandedItems: true,
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
-  onNodeExpansionToggle: true,
+  onItemExpansionToggle: true,
 };

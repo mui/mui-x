@@ -30,12 +30,12 @@ export interface UseTreeViewExpansionParameters {
   /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
-  onNodeExpansionToggle?: (
+  onItemExpansionToggle?: (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isExpanded: boolean,
   ) => void;
 }

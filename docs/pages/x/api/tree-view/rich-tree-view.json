@@ -47,18 +47,18 @@
         "describedArgs": ["event", "itemIds"]
       }
     },
+    "onItemExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "itemId", "isExpanded"]
+      }
+    },
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
-      }
-    },
-    "onNodeExpansionToggle": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
-        "describedArgs": ["event", "nodeId", "isExpanded"]
       }
     },
     "onNodeFocus": {
