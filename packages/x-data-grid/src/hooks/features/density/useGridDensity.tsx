@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { GridDensity } from '../../../models/gridDensity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -31,30 +32,27 @@ export const useGridDensity = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 
-  const setDensity = React.useCallback<GridDensityApi['setDensity']>(
-    (newDensity): void => {
-      logger.debug(`Set grid density to ${newDensity}`);
-      apiRef.current.setState((state) => {
-        const currentDensityState = gridDensitySelector(state);
-        const newDensityState = { value: newDensity, factor: DENSITY_FACTORS[newDensity] };
+  const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
+    logger.debug(`Set grid density to ${newDensity}`);
+    apiRef.current.setState((state) => {
+      const currentDensityState = gridDensitySelector(state);
+      const newDensityState = { value: newDensity, factor: DENSITY_FACTORS[newDensity] };
 
-        if (isDeepEqual(currentDensityState, newDensityState)) {
-          return state;
-        }
+      if (isDeepEqual(currentDensityState, newDensityState)) {
+        return state;
+      }
 
-        if (props.onDensityChange) {
-          props.onDensityChange(newDensity);
-        }
+      if (props.onDensityChange) {
+        props.onDensityChange(newDensity);
+      }
 
-        return {
-          ...state,
-          density: newDensityState,
-        };
-      });
-      apiRef.current.forceUpdate();
-    },
-    [logger, apiRef, props],
-  );
+      return {
+        ...state,
+        density: newDensityState,
+      };
+    });
+    apiRef.current.forceUpdate();
+  });
 
   React.useEffect(() => {
     apiRef.current.setDensity(props.density);
