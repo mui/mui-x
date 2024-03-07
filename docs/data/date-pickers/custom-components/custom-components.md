@@ -226,7 +226,9 @@ It allows the user to navigate through months and to switch to the month and yea
 
 ### Component props
 
-WIP
+You can pass props to the calendar header as shown below:
+
+{{"demo": "CalendarHeaderComponentProps.js", "defaultCodeOpen": false}}
 
 ### Component
 

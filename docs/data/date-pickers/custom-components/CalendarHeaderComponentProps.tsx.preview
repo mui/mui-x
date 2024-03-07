@@ -1,0 +1,1 @@
+<DateCalendar slotProps={{ calendarHeader: { sx: { border: '1px red solid' } }}} />
