@@ -313,6 +313,7 @@ export const useGridPrintExport = (
             ...state.pagination,
             paginationModel: getDerivedPaginationModel(
               state.pagination,
+              // Using signature `DataGridPro` to allow more than 100 rows in the print export
               'DataGridPro',
               paginationModel,
             ),
