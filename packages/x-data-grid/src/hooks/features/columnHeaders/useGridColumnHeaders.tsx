@@ -319,138 +319,144 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const getColumnGroupHeaders = () => {
+  const getColumnGroupHeaders = ({
+    depth,
+    params,
+  }: {
+    depth: number;
+    params: GetHeadersParams;
+  }) => {
+    const columnsToRender = getColumnsToRender(params);
+    if (columnsToRender.renderedColumns.length === 0) {
+      return null;
+    }
+
+    const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
+
+    const rowStructure = columnGroupsHeaderStructure[depth];
+
+    const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
+    const firstGroupToRender =
+      apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
+
+    const firstGroupIndex = rowStructure.findIndex(
+      ({ groupId, columnFields }) =>
+        groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
+    );
+
+    const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
+    const lastGroupToRender =
+      apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
+    const lastGroupIndex = rowStructure.findIndex(
+      ({ groupId, columnFields }) =>
+        groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
+    );
+
+    const visibleColumnGroupHeader = rowStructure
+      .slice(firstGroupIndex, lastGroupIndex + 1)
+      .map((groupStructure) => {
+        return {
+          ...groupStructure,
+          columnFields: groupStructure.columnFields.filter(
+            (field) => columnVisibility[field] !== false,
+          ),
+        };
+      })
+      .filter((groupStructure) => groupStructure.columnFields.length > 0);
+
+    const firstVisibleColumnIndex =
+      visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
+    const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
+      0,
+      firstVisibleColumnIndex,
+    );
+    const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
+      const column = apiRef.current.getColumn(field);
+      return acc + (column.computedWidth ?? 0);
+    }, 0);
+
+    let columnIndex = firstColumnToRender;
+    const children = visibleColumnGroupHeader.map(({ groupId, columnFields }, index) => {
+      const hasFocus =
+        columnGroupHeaderFocus !== null &&
+        columnGroupHeaderFocus.depth === depth &&
+        columnFields.includes(columnGroupHeaderFocus.field);
+      const tabIndex: 0 | -1 =
+        columnGroupHeaderTabIndexState !== null &&
+        columnGroupHeaderTabIndexState.depth === depth &&
+        columnFields.includes(columnGroupHeaderTabIndexState.field)
+          ? 0
+          : -1;
+
+      const headerInfo: HeaderInfo = {
+        groupId,
+        width: columnFields.reduce(
+          (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
+          0,
+        ),
+        fields: columnFields,
+        colIndex: columnIndex,
+        hasFocus,
+        tabIndex,
+      };
+
+      let style;
+      const pinnedPosition = params.position;
+      if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+        const pinnedOffset = getPinnedCellOffset({
+          pinnedPosition,
+          columnIndex,
+          columnPositions,
+          computedWidth: headerInfo.width,
+          dimensions,
+        });
+        if (pinnedPosition === 'left') {
+          style = { left: pinnedOffset };
+        }
+
+        if (pinnedPosition === 'right') {
+          style = { right: pinnedOffset };
+        }
+      }
+
+      columnIndex += columnFields.length;
+
+      let indexInSection = index;
+      if (pinnedPosition === 'left') {
+        // Group headers can expand to multiple columns, we need to adjust the index
+        indexInSection = columnIndex - 1;
+      }
+
+      return (
+        <GridColumnGroupHeader
+          key={index}
+          groupId={groupId}
+          width={headerInfo.width}
+          fields={headerInfo.fields}
+          colIndex={headerInfo.colIndex}
+          depth={depth}
+          isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
+          maxDepth={headerGroupingMaxDepth}
+          height={dimensions.headerHeight}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          pinnedPosition={params.position}
+          style={style}
+          indexInSection={indexInSection}
+          sectionLength={renderedColumns.length}
+        />
+      );
+    });
+
+    return getFillers(params, children, leftOverflow);
+  };
+
+  const getColumnGroupHeadersRows = () => {
     if (headerGroupingMaxDepth === 0) {
       return null;
     }
 
     const headerRows: React.JSX.Element[] = [];
-
-    const getHeadersToRender = ({ depth, params }: { depth: number; params: GetHeadersParams }) => {
-      const columnsToRender = getColumnsToRender(params);
-      if (columnsToRender.renderedColumns.length === 0) {
-        return null;
-      }
-
-      const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
-
-      const rowStructure = columnGroupsHeaderStructure[depth];
-
-      const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
-      const firstGroupToRender =
-        apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
-
-      const firstGroupIndex = rowStructure.findIndex(
-        ({ groupId, columnFields }) =>
-          groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
-      );
-
-      const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
-      const lastGroupToRender =
-        apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
-      const lastGroupIndex = rowStructure.findIndex(
-        ({ groupId, columnFields }) =>
-          groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
-      );
-
-      const visibleColumnGroupHeader = rowStructure
-        .slice(firstGroupIndex, lastGroupIndex + 1)
-        .map((groupStructure) => {
-          return {
-            ...groupStructure,
-            columnFields: groupStructure.columnFields.filter(
-              (field) => columnVisibility[field] !== false,
-            ),
-          };
-        })
-        .filter((groupStructure) => groupStructure.columnFields.length > 0);
-
-      const firstVisibleColumnIndex =
-        visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
-      const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
-        0,
-        firstVisibleColumnIndex,
-      );
-      const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
-        const column = apiRef.current.getColumn(field);
-        return acc + (column.computedWidth ?? 0);
-      }, 0);
-
-      let columnIndex = firstColumnToRender;
-      const children = visibleColumnGroupHeader.map(({ groupId, columnFields }, index) => {
-        const hasFocus =
-          columnGroupHeaderFocus !== null &&
-          columnGroupHeaderFocus.depth === depth &&
-          columnFields.includes(columnGroupHeaderFocus.field);
-        const tabIndex: 0 | -1 =
-          columnGroupHeaderTabIndexState !== null &&
-          columnGroupHeaderTabIndexState.depth === depth &&
-          columnFields.includes(columnGroupHeaderTabIndexState.field)
-            ? 0
-            : -1;
-
-        const headerInfo: HeaderInfo = {
-          groupId,
-          width: columnFields.reduce(
-            (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
-            0,
-          ),
-          fields: columnFields,
-          colIndex: columnIndex,
-          hasFocus,
-          tabIndex,
-        };
-
-        let style;
-        const pinnedPosition = params.position;
-        if (pinnedPosition === 'left' || pinnedPosition === 'right') {
-          const pinnedOffset = getPinnedCellOffset({
-            pinnedPosition,
-            columnIndex,
-            columnPositions,
-            computedWidth: headerInfo.width,
-            dimensions,
-          });
-          if (pinnedPosition === 'left') {
-            style = { left: pinnedOffset };
-          }
-
-          if (pinnedPosition === 'right') {
-            style = { right: pinnedOffset };
-          }
-        }
-
-        columnIndex += columnFields.length;
-
-        let indexInSection = index;
-        if (pinnedPosition === 'left') {
-          // Group headers can expand to multiple columns, we need to adjust the index
-          indexInSection = columnIndex - 1;
-        }
-
-        return (
-          <GridColumnGroupHeader
-            key={index}
-            groupId={groupId}
-            width={headerInfo.width}
-            fields={headerInfo.fields}
-            colIndex={headerInfo.colIndex}
-            depth={depth}
-            isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
-            maxDepth={headerGroupingMaxDepth}
-            height={dimensions.headerHeight}
-            hasFocus={hasFocus}
-            tabIndex={tabIndex}
-            pinnedPosition={params.position}
-            style={style}
-            indexInSection={indexInSection}
-            sectionLength={renderedColumns.length}
-          />
-        );
-      });
-
-      return getFillers(params, children, leftOverflow);
-    };
 
     for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
       headerRows.push(
@@ -461,7 +467,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ownerState={rootProps}
         >
           {leftRenderContext &&
-            getHeadersToRender({
+            getColumnGroupHeaders({
               depth,
               params: {
                 position: GridPinnedColumnPosition.LEFT,
@@ -470,9 +476,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                 maxLastColumn: leftRenderContext.lastColumnIndex,
               },
             })}
-          {getHeadersToRender({ depth, params: { renderContext } })}
+          {getColumnGroupHeaders({ depth, params: { renderContext } })}
           {rightRenderContext &&
-            getHeadersToRender({
+            getColumnGroupHeaders({
               depth,
               params: {
                 position: GridPinnedColumnPosition.RIGHT,
@@ -493,7 +499,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     getFillers,
     getColumnHeadersRow,
     getColumnsToRender,
-    getColumnGroupHeaders,
+    getColumnGroupHeadersRows,
     isDragging: !!dragCol,
     getInnerProps: () => ({
       ref: handleInnerRef,

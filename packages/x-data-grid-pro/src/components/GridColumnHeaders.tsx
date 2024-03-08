@@ -5,14 +5,12 @@ import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  GridColumnHeaderSeparatorSides,
   GridPinnedColumnPosition,
   useGridSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
 import {
   GridBaseColumnHeaders,
-  GridColumnHeaderRow,
   // TODO: delete this component
   // GridColumnHeadersInner,
   GridPinnedColumnFields,
@@ -138,7 +136,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       getInnerProps,
       getColumnHeadersRow,
       getColumnFilters,
-      getColumnGroupHeaders,
+      getColumnGroupHeadersRows,
     } = useGridColumnHeaders({
       innerRef,
       visibleColumns,
@@ -209,7 +207,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
         )}
 
         <GridScrollArea scrollDirection="left" />
-        {getColumnGroupHeaders()}
+        {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
         {getColumnFilters({
           renderContext,

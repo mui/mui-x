@@ -8,7 +8,6 @@ import {
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 // import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -37,7 +36,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const { isDragging, getInnerProps, getColumnHeadersRow, getColumnGroupHeaders } =
+    const { isDragging, getInnerProps, getColumnHeadersRow, getColumnGroupHeadersRows } =
       useGridColumnHeaders({
         innerRef,
         visibleColumns,
@@ -57,7 +56,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
     return (
       <GridBaseColumnHeaders ref={ref} {...other}>
         {/* <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}> */}
-        {getColumnGroupHeaders()}
+        {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
         {/* </GridColumnHeadersInner> */}
       </GridBaseColumnHeaders>
