@@ -111,7 +111,7 @@ TreeView.propTypes = {
    */
   defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Selected node ids. (Uncontrolled)
+   * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
@@ -157,8 +157,8 @@ TreeView.propTypes = {
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} itemId The nodeId of the modified item.
-   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
@@ -176,7 +176,7 @@ TreeView.propTypes = {
    */
   onSelectedItemsChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selectedItems: PropTypes.any,

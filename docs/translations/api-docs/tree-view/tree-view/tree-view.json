@@ -10,7 +10,7 @@
       "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
     },
     "defaultSelectedItems": {
-      "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+      "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
       "description": "If <code>true</code>, will allow focus on disabled items."
@@ -44,8 +44,8 @@
       "description": "Callback fired when a tree item is selected or deselected.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "itemId": "The nodeId of the modified item.",
-        "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
+        "itemId": "The itemId of the modified item.",
+        "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
     },
     "onNodeFocus": {
@@ -64,7 +64,7 @@
       }
     },
     "selectedItems": {
-      "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+      "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },

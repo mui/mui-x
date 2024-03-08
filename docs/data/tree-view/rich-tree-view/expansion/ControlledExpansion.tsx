@@ -34,18 +34,18 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemWithChildrenNodeIds = () => {
-  const nodeIds: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
+const getAllItemsWithChildrenItemIds = () => {
+  const itemIds: TreeViewItemId[] = [];
+  const registerItemId = (item: TreeViewBaseItem) => {
     if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
+      itemIds.push(item.id);
+      item.children.forEach(registerItemId);
     }
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
-  return nodeIds;
+  return itemIds;
 };
 
 export default function ControlledExpansion() {
@@ -60,7 +60,7 @@ export default function ControlledExpansion() {
 
   const handleExpandClick = () => {
     setExpandedItems((oldExpanded) =>
-      oldExpanded.length === 0 ? getAllItemWithChildrenNodeIds() : [],
+      oldExpanded.length === 0 ? getAllItemsWithChildrenItemIds() : [],
     );
   };
 
