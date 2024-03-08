@@ -4,7 +4,6 @@ import type { MergePluginsProperty } from './helpers';
 export interface TreeViewNode {
   id: string;
   idAttribute: string | undefined;
-  index: number;
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;

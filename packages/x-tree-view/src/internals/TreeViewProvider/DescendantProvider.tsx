@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useTreeViewContext } from './useTreeViewContext';
 import type { UseTreeViewJSXNodesSignature } from '../plugins/useTreeViewJSXNodes';
+import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewNodes/useTreeViewNodes.types';
 
 /** Credit: https://github.com/reach/reach-ui/blob/86a046f54d53b6420e392b3fa56dd991d9d4e458/packages/descendants/README.md
  *  Modified slightly to suit our purposes.
@@ -14,8 +15,8 @@ function binaryFindPosition(otherDescendants: TreeItemDescendant[], element: HTM
   while (start < end - 1) {
     const middle = Math.floor((start + end) / 2);
 
-    // eslint-disable-next-line no-bitwise
     if (
+      // eslint-disable-next-line no-bitwise
       otherDescendants[middle].element.compareDocumentPosition(element) &
       Node.DOCUMENT_POSITION_PRECEDING
     ) {
@@ -92,16 +93,12 @@ export function DescendantProvider(props: DescendantProviderProps) {
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
   const descendantElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map());
-  const descendantIndexRef = React.useRef<{ [id: string]: number }>({});
-
-  const [items, set] = React.useState<(TreeItemDescendant & { index: number })[]>([]);
-
   const registerDescendant = React.useCallback((descendant: TreeItemDescendant) => {
     descendantElementRef.current.set(descendant.id, descendant.element);
   }, []);
 
   const unregisterDescendant = React.useCallback((element: HTMLLIElement) => {
-    set((oldItems) => oldItems.filter((item) => element !== item.element));
+    descendantElementRef.current.delete(element.id);
   }, []);
 
   React.useEffect(() => {
@@ -115,12 +112,18 @@ export function DescendantProvider(props: DescendantProviderProps) {
       }
     });
 
-    orderedDescendants.forEach((descendant, index) => {
-      if (index !== descendantIndexRef.current[descendant.id]) {
-        descendantIndexRef.current[descendant.id] = index;
-        instance.setJSXNodeIndex(descendant.id, index);
-      }
-    });
+    const previousIndexes = instance.getJSXItemsChildrenIndexes(id ?? null);
+    const hasChanges =
+      Object.keys(previousIndexes).length !== orderedDescendants.length ||
+      orderedDescendants.some((descendant, index) => index !== previousIndexes[descendant.id]);
+    if (hasChanges) {
+      const newIndexes: TreeViewItemChildrenIndexes = {};
+      orderedDescendants.forEach((descendant, index) => {
+        newIndexes[descendant.id] = index;
+      });
+
+      instance.setJSXItemsChildrenIndexes(id ?? null, newIndexes);
+    }
   });
 
   const value = React.useMemo(
@@ -129,7 +132,7 @@ export function DescendantProvider(props: DescendantProviderProps) {
       unregisterDescendant,
       parentId: id,
     }),
-    [items, registerDescendant, unregisterDescendant, id],
+    [registerDescendant, unregisterDescendant, id],
   );
 
   return <DescendantContext.Provider value={value}>{children}</DescendantContext.Provider>;

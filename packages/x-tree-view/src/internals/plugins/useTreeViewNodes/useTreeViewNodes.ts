@@ -9,21 +9,29 @@ import {
   TreeViewNodeIdAndChildren,
   UseTreeViewNodesState,
   TreeViewItemMap,
+  TreeViewItemChildrenIndexes,
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem } from '../../../models';
+import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewNodes.utils';
+
+interface UpdateNodesStateParameters
+  extends Pick<
+    UseTreeViewNodesDefaultizedParameters<TreeViewBaseItem>,
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+  > {}
 
 const updateNodesState = ({
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: Pick<
-  UseTreeViewNodesDefaultizedParameters<TreeViewBaseItem>,
-  'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
->): UseTreeViewNodesState<any>['nodes'] => {
+}: UpdateNodesStateParameters): UseTreeViewNodesState<any>['nodes'] => {
   const nodeMap: TreeViewNodeMap = {};
   const itemMap: TreeViewItemMap<any> = {};
+  const itemIndexes: { [parentId: string]: TreeViewItemChildrenIndexes } = {
+    [TREE_VIEW_ROOT_PARENT_ID]: {},
+  };
 
   const processItem = (
     item: TreeViewBaseItem,
@@ -68,7 +76,6 @@ const updateNodesState = ({
     nodeMap[id] = {
       id,
       label,
-      index,
       parentId,
       idAttribute: undefined,
       expandable: !!item.children?.length,
@@ -76,6 +83,8 @@ const updateNodesState = ({
     };
 
     itemMap[id] = item;
+    itemIndexes[id] = {};
+    itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID][id] = index;
 
     return {
       id,
@@ -89,6 +98,7 @@ const updateNodesState = ({
     nodeMap,
     nodeTree,
     itemMap,
+    itemIndexes,
   };
 };
 
@@ -139,10 +149,9 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   );
 
   const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.values(state.nodes.nodeMap)
-      .filter((node) => node.parentId === nodeId)
-      .sort((a, b) => a.index - b.index)
-      .map((child) => child.id),
+    Object.entries(state.nodes.itemIndexes[nodeId ?? TREE_VIEW_ROOT_PARENT_ID])
+      .sort((a, b) => a[1] - b[1])
+      .map(([id]) => id),
   );
 
   const getNavigableChildrenIds = (nodeId: string | null) => {

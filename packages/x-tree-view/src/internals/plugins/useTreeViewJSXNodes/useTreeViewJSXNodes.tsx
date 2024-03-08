@@ -11,13 +11,14 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
+import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewNodes/useTreeViewNodes.utils';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
   setState,
   state,
 }) => {
-  const insertJSXNode = useEventCallback((node: Omit<TreeViewNode, 'index'>) => {
+  const insertJSXNode = useEventCallback((node: TreeViewNode) => {
     setState((prevState) => {
       if (prevState.nodes.nodeMap[node.id] != null) {
         throw new Error(
@@ -41,20 +42,23 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
     });
   });
 
-  const setJSXNodeIndex = useEventCallback((itemId: string, index: number) => {
-    setState((prevState) => ({
-      ...prevState,
-      nodes: {
-        ...prevState.nodes,
-        nodeMap: {
-          ...prevState.nodes.nodeMap,
-          [itemId]: { ...prevState.nodes.nodeMap[itemId], index },
+  const setJSXItemsChildrenIndexes = useEventCallback(
+    (parentId: string | null, indexes: { [id: string]: number }) => {
+      setState((prevState) => ({
+        ...prevState,
+        nodes: {
+          ...prevState.nodes,
+          itemIndexes: {
+            ...prevState.nodes.itemIndexes,
+            [parentId ?? TREE_VIEW_ROOT_PARENT_ID]: indexes,
+          },
         },
-      },
-    }));
-  });
+      }));
+    },
+  );
 
-  console.log(state.nodes.nodeMap);
+  const getJSXItemsChildrenIndexes = (parentId: string | null) =>
+    state.nodes.itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID];
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
@@ -92,7 +96,8 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   populateInstance<UseTreeViewJSXNodesSignature>(instance, {
     insertJSXNode,
     removeJSXNode,
-    setJSXNodeIndex,
+    setJSXItemsChildrenIndexes,
+    getJSXItemsChildrenIndexes,
     mapFirstCharFromJSX,
   });
 };
