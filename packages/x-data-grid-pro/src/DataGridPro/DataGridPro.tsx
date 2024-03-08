@@ -672,6 +672,11 @@ DataGridProRaw.propTypes = {
    */
   onRowClick: PropTypes.func,
   /**
+   * Callback fired when the row count has changed.
+   * @param {number} count Updated row count.
+   */
+  onRowCountChange: PropTypes.func,
+  /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.

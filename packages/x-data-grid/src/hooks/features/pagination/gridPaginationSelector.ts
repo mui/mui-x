@@ -25,6 +25,15 @@ export const gridPaginationModelSelector = createSelector(
 );
 
 /**
+ * Get the row count
+ * @category Pagination
+ */
+export const gridPaginationRowCountSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.rowCount,
+);
+
+/**
  * Get the index of the page to render if the pagination is enabled
  * @category Pagination
  */
@@ -47,10 +56,9 @@ export const gridPageSizeSelector = createSelector(
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPaginationModelSelector,
-  gridFilteredTopLevelRowCountSelector,
-  (paginationModel, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
+  gridPageSizeSelector,
+  gridPaginationRowCountSelector,
+  (pageSize, rowCount) => getPageCount(rowCount, pageSize),
 );
 
 /**

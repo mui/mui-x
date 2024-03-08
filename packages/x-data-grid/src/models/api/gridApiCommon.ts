@@ -28,13 +28,15 @@ import type {
   GridDimensionsApi,
   GridDimensionsPrivateApi,
 } from '../../hooks/features/dimensions/gridDimensionsApi';
-import type { GridPaginationApi } from '../../hooks/features/pagination';
+import type {
+  GridPaginationModelApi,
+  GridPaginationRowCountApi,
+} from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
-import type { GridInfiniteLoaderPrivateApi } from './gridInfiniteLoaderApi';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -50,7 +52,8 @@ export interface GridApiCommon<
     GridColumnApi,
     GridRowSelectionApi,
     GridSortApi,
-    GridPaginationApi,
+    GridPaginationModelApi,
+    GridPaginationRowCountApi,
     GridCsvExportApi,
     GridFocusApi,
     GridFilterApi,
@@ -81,8 +84,7 @@ export interface GridPrivateOnlyApiCommon<
     GridLoggerApi,
     GridFocusPrivateApi,
     GridHeaderFilteringPrivateApi,
-    GridVirtualizationPrivateApi,
-    GridInfiniteLoaderPrivateApi {}
+    GridVirtualizationPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
