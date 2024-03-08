@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### `@mui/x-data-grid@7.0.0-beta.6`
 
 - [DataGrid] Fix crashing of demos on rating change (#12315) @sai6855
-- [DataGrid] Fix double border under header (#12349) @joespeargresham
+- [DataGrid] Fix double border below header (#12349) @joespeargresham
 - [DataGrid] Fix empty sort being saved in the `sortModel` (#12325) @MBilalShafi
 - [DataGrid] Remove unnecessary `stopCellMode` event in `renderEditRating` component (#12335) @sai6855
 - [DataGrid] Small performance optimizations (#12346) @romgrk
