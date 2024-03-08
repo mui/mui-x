@@ -15,44 +15,44 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   const isNodeExpanded = React.useCallback(
-    (nodeId: string) => {
+    (itemId: string) => {
       return Array.isArray(models.expandedNodes.value)
-        ? models.expandedNodes.value.indexOf(nodeId) !== -1
+        ? models.expandedNodes.value.indexOf(itemId) !== -1
         : false;
     },
     [models.expandedNodes.value],
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
+    (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
   const toggleNodeExpansion = useEventCallback(
-    (event: React.SyntheticEvent, nodeId: string | null) => {
-      if (nodeId == null) {
+    (event: React.SyntheticEvent, itemId: string | null) => {
+      if (itemId == null) {
         return;
       }
 
-      const isExpandedBefore = models.expandedNodes.value.indexOf(nodeId!) !== -1;
+      const isExpandedBefore = models.expandedNodes.value.indexOf(itemId!) !== -1;
 
       let newExpanded: string[];
       if (isExpandedBefore) {
-        newExpanded = models.expandedNodes.value.filter((id) => id !== nodeId);
+        newExpanded = models.expandedNodes.value.filter((id) => id !== itemId);
       } else {
-        newExpanded = [nodeId].concat(models.expandedNodes.value);
+        newExpanded = [itemId].concat(models.expandedNodes.value);
       }
 
       if (params.onNodeExpansionToggle) {
-        params.onNodeExpansionToggle(event, nodeId, !isExpandedBefore);
+        params.onNodeExpansionToggle(event, itemId, !isExpandedBefore);
       }
 
       setExpandedNodes(event, newExpanded);
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
+    const node = instance.getNode(itemId);
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
@@ -63,8 +63,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
     if (diff.length > 0) {
       if (params.onNodeExpansionToggle) {
-        diff.forEach((newlyExpandedNodeId) => {
-          params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
+        diff.forEach((newlyExpandedItemId) => {
+          params.onNodeExpansionToggle!(event, newlyExpandedItemId, true);
         });
       }
 

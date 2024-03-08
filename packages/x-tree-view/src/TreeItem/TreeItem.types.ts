@@ -84,9 +84,9 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   label?: React.ReactNode;
   /**
-   * The id of the node.
+   * The id of the item.
    */
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

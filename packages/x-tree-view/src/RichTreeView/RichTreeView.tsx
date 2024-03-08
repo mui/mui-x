@@ -44,16 +44,16 @@ function WrappedTreeItem<R extends {}>({
   slotProps,
   label,
   id,
-  nodeId,
+  itemId,
   children,
 }: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'nodeId' | 'children'> & { label: string }) {
+  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
-    additionalProps: { nodeId, id, label },
-    ownerState: { nodeId, label },
+    additionalProps: { itemId, id, label },
+    ownerState: { itemId, label },
   });
 
   return <Item {...itemProps}>{children}</Item>;
@@ -116,7 +116,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   const renderNode = ({
     label,
-    nodeId,
+    itemId,
     id,
     children,
   }: ReturnType<typeof instance.getNodesToRender>[number]) => {
@@ -124,10 +124,10 @@ const RichTreeView = React.forwardRef(function RichTreeView<
       <WrappedTreeItem
         slots={slots}
         slotProps={slotProps}
-        key={nodeId}
+        key={itemId}
         label={label}
         id={id}
-        nodeId={nodeId}
+        itemId={itemId}
       >
         {children?.map(renderNode)}
       </WrappedTreeItem>

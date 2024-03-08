@@ -25,18 +25,18 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     if (params.onNodeSelectionToggle) {
       if (params.multiSelect) {
         const addedNodes = (newSelectedNodes as string[]).filter(
-          (nodeId) => !instance.isNodeSelected(nodeId),
+          (itemId) => !instance.isNodeSelected(itemId),
         );
         const removedNodes = (models.selectedNodes.value as string[]).filter(
-          (nodeId) => !(newSelectedNodes as string[]).includes(nodeId),
+          (itemId) => !(newSelectedNodes as string[]).includes(itemId),
         );
 
-        addedNodes.forEach((nodeId) => {
-          params.onNodeSelectionToggle!(event, nodeId, true);
+        addedNodes.forEach((itemId) => {
+          params.onNodeSelectionToggle!(event, itemId, true);
         });
 
-        removedNodes.forEach((nodeId) => {
-          params.onNodeSelectionToggle!(event, nodeId, false);
+        removedNodes.forEach((itemId) => {
+          params.onNodeSelectionToggle!(event, itemId, false);
         });
       } else if (newSelectedNodes !== models.selectedNodes.value) {
         if (models.selectedNodes.value != null) {
@@ -55,12 +55,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     models.selectedNodes.setControlledValue(newSelectedNodes);
   };
 
-  const isNodeSelected = (nodeId: string) =>
+  const isNodeSelected = (itemId: string) =>
     Array.isArray(models.selectedNodes.value)
-      ? models.selectedNodes.value.indexOf(nodeId) !== -1
-      : models.selectedNodes.value === nodeId;
+      ? models.selectedNodes.value.indexOf(itemId) !== -1
+      : models.selectedNodes.value === itemId;
 
-  const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
+  const selectNode = (event: React.SyntheticEvent, itemId: string, multiple = false) => {
     if (params.disableSelection) {
       return;
     }
@@ -68,19 +68,19 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     if (multiple) {
       if (Array.isArray(models.selectedNodes.value)) {
         let newSelected: string[];
-        if (models.selectedNodes.value.indexOf(nodeId) !== -1) {
-          newSelected = models.selectedNodes.value.filter((id) => id !== nodeId);
+        if (models.selectedNodes.value.indexOf(itemId) !== -1) {
+          newSelected = models.selectedNodes.value.filter((id) => id !== itemId);
         } else {
-          newSelected = [nodeId].concat(models.selectedNodes.value);
+          newSelected = [itemId].concat(models.selectedNodes.value);
         }
 
         setSelectedNodes(event, newSelected);
       }
     } else {
-      const newSelected = params.multiSelect ? [nodeId] : nodeId;
+      const newSelected = params.multiSelect ? [itemId] : itemId;
       setSelectedNodes(event, newSelected);
     }
-    lastSelectedNode.current = nodeId;
+    lastSelectedNode.current = itemId;
     lastSelectionWasRange.current = false;
     currentRangeSelection.current = [];
   };
@@ -161,12 +161,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     lastSelectionWasRange.current = true;
   };
 
-  const rangeSelectToFirst = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+  const rangeSelectToFirst = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
     if (!lastSelectedNode.current) {
-      lastSelectedNode.current = nodeId;
+      lastSelectedNode.current = itemId;
     }
 
-    const start = lastSelectionWasRange.current ? lastSelectedNode.current : nodeId;
+    const start = lastSelectionWasRange.current ? lastSelectedNode.current : itemId;
 
     instance.selectRange(event, {
       start,
@@ -174,12 +174,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     });
   };
 
-  const rangeSelectToLast = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+  const rangeSelectToLast = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
     if (!lastSelectedNode.current) {
-      lastSelectedNode.current = nodeId;
+      lastSelectedNode.current = itemId;
     }
 
-    const start = lastSelectionWasRange.current ? lastSelectedNode.current : nodeId;
+    const start = lastSelectionWasRange.current ? lastSelectedNode.current : itemId;
 
     instance.selectRange(event, {
       start,

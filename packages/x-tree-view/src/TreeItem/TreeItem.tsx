@@ -171,7 +171,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    nodeId,
+    itemId,
     id,
     label,
     onClick,
@@ -194,10 +194,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isNodeExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
-  const disabled = instance.isNodeDisabled(nodeId);
+  const expanded = instance.isNodeExpanded(itemId);
+  const focused = instance.isNodeFocused(itemId);
+  const selected = instance.isNodeSelected(itemId);
+  const disabled = instance.isNodeDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -290,11 +290,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, nodeId);
+      instance.focusNode(event, itemId);
     }
   }
 
-  const idAttribute = instance.getTreeItemId(nodeId, id);
+  const idAttribute = instance.getTreeItemId(itemId, id);
 
   const item = (
     <TreeItemRoot
@@ -322,7 +322,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           label: classes.label,
         }}
         label={label}
-        nodeId={nodeId}
+        itemId={itemId}
         onClick={onClick}
         onMouseDown={onMouseDown}
         icon={icon}
@@ -371,13 +371,13 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * The id of the item.
+   */
+  itemId: PropTypes.string.isRequired,
+  /**
    * The tree node label.
    */
   label: PropTypes.node,
-  /**
-   * The id of the node.
-   */
-  nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
    * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.

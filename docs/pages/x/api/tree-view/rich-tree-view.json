@@ -43,36 +43,36 @@
     "onExpandedNodesChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
-        "describedArgs": ["event", "nodeIds"]
+        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "describedArgs": ["event", "itemIds"]
       }
     },
     "onNodeExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
-        "describedArgs": ["event", "nodeId", "isExpanded"]
+        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onNodeFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: string, value: string) => void",
-        "describedArgs": ["event", "nodeId", "value"]
+        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
+        "describedArgs": ["event", "itemId", "value"]
       }
     },
     "onNodeSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isSelected: array) => void",
-        "describedArgs": ["event", "nodeId", "isSelected"]
+        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
     "onSelectedNodesChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
-        "describedArgs": ["event", "nodeIds"]
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "describedArgs": ["event", "itemIds"]
       }
     },
     "selectedNodes": { "type": { "name": "any" } },

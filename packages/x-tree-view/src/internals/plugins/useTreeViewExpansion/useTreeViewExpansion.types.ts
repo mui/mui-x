@@ -3,10 +3,10 @@ import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewExpansionInstance {
-  isNodeExpanded: (nodeId: string) => boolean;
-  isNodeExpandable: (nodeId: string) => boolean;
+  isNodeExpanded: (itemId: string) => boolean;
+  isNodeExpandable: (itemId: string) => boolean;
   toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
-  expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
+  expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
 }
 
 export interface UseTreeViewExpansionParameters {
@@ -24,18 +24,18 @@ export interface UseTreeViewExpansionParameters {
   /**
    * Callback fired when tree items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {array} itemIds The ids of the expanded nodes.
    */
-  onExpandedNodesChange?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+  onExpandedNodesChange?: (event: React.SyntheticEvent, itemIds: string[]) => void;
   /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} itemId The itemId of the modified node.
    * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
    */
   onNodeExpansionToggle?: (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isExpanded: boolean,
   ) => void;
 }

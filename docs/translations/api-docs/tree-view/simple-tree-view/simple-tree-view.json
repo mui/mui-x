@@ -29,14 +29,14 @@
       "description": "Callback fired when tree items are expanded/collapsed.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
+        "itemIds": "The ids of the expanded nodes."
       }
     },
     "onNodeExpansionToggle": {
       "description": "Callback fired when a tree item is expanded or collapsed.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
+        "itemId": "The itemId of the modified node.",
         "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
@@ -44,7 +44,7 @@
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
-        "nodeId": "The id of the node focused.",
+        "itemId": "The id of the node focused.",
         "value": "of the focused node."
       }
     },
@@ -52,7 +52,7 @@
       "description": "Callback fired when a tree item is selected or deselected.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
+        "itemId": "The itemId of the modified node.",
         "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
       }
     },
@@ -60,7 +60,7 @@
       "description": "Callback fired when tree items are selected/deselected.",
       "typeDescriptions": {
         "event": "The event source of the callback",
-        "nodeIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+        "itemIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },
     "selectedNodes": {

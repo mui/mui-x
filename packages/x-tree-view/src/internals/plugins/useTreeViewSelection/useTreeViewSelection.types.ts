@@ -4,11 +4,11 @@ import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
-  isNodeSelected: (nodeId: string) => boolean;
-  selectNode: (event: React.SyntheticEvent, nodeId: string, multiple?: boolean) => void;
+  isNodeSelected: (itemId: string) => boolean;
+  selectNode: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
   selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
-  rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
-  rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
+  rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
+  rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
 }
 
 type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
@@ -40,22 +40,22 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {string[] | string} itemIds The ids of the selected nodes.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedNodesChange?: (
     event: React.SyntheticEvent,
-    nodeIds: TreeViewSelectionValue<Multiple>,
+    itemIds: TreeViewSelectionValue<Multiple>,
   ) => void;
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
+   * @param {array} itemId The itemId of the modified node.
    * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
    */
   onNodeSelectionToggle?: (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isSelected: boolean,
   ) => void;
 }

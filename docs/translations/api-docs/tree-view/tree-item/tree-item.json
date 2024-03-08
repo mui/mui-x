@@ -9,8 +9,8 @@
     },
     "ContentProps": { "description": "Props applied to ContentComponent." },
     "disabled": { "description": "If <code>true</code>, the node is disabled." },
+    "itemId": { "description": "The id of the item." },
     "label": { "description": "The tree node label." },
-    "nodeId": { "description": "The id of the node." },
     "onFocus": {
       "description": "This prop isn&#39;t supported. Use the <code>onNodeFocus</code> callback on the tree if you need to monitor a node&#39;s focus."
     },
