@@ -171,19 +171,23 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should not allow to drop a column on top of a pinned column', () => {
-    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    expect(
-      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
-    ).to.deep.equal('1M');
+    const onPinnedColumnsChange = spy();
+    render(
+      <TestCase
+        nbCols={3}
+        initialState={{ pinnedColumns: { right: ['price1M'] } }}
+        onPinnedColumnsChange={onPinnedColumnsChange}
+      />,
+    );
+
     const dragCol = getColumnHeaderCell(1).firstChild!;
     const targetCell = getCell(0, 2)!;
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(
-      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
-    ).to.deep.equal('1M');
+
+    expect(onPinnedColumnsChange.callCount).to.equal(0);
   });
 
   it('should filter out invalid columns when blocking a column from being dropped', () => {
