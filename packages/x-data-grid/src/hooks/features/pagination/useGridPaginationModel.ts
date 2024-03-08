@@ -12,7 +12,7 @@ import {
   useGridApiEventHandler,
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { gridPaginationModelSelector } from './gridPaginationSelector';
+import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
   getPageCount,
   defaultPageSize,
@@ -231,8 +231,23 @@ export const useGridPaginationModel = (
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);
 
+  const handleRowCountChange = React.useCallback(
+    (newRowCount: GridPaginationState['rowCount']) => {
+      if (newRowCount == null) {
+        return;
+      }
+      const paginationModel = gridPaginationModelSelector(apiRef);
+      const pageCount = gridPageCountSelector(apiRef);
+      if (paginationModel.page > pageCount - 1) {
+        apiRef.current.setPage(pageCount - 1);
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
 
   /**
    * EFFECTS
