@@ -78,10 +78,6 @@ export interface GridCorePrivateApi<
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The React ref of the grid column headers container element.
-   */
-  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
-  /**
    * The React ref of the grid header filter row element.
    */
   headerFiltersElementRef?: React.RefObject<HTMLDivElement>;

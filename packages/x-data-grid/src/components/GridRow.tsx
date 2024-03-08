@@ -370,7 +370,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const pinnedOffset = getPinnedCellOffset({
       pinnedPosition: gridPinnedColumnPositionLookup[pinnedPosition],
       computedWidth: column.computedWidth,

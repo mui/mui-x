@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -77,6 +78,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
   return (
     <Container className={classes.root} {...getContainerProps()}>
+      <GridScrollArea scrollDirection="left" />
+      <GridScrollArea scrollDirection="right" />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
           <GridHeaders />

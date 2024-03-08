@@ -755,7 +755,7 @@ export const useGridColumnResize = (
 
   useGridNativeEventListener(
     apiRef,
-    () => apiRef.current.columnHeadersElementRef?.current,
+    () => apiRef.current.columnHeadersContainerElementRef?.current,
     'touchstart',
     handleTouchStart,
     { passive: doesSupportTouchActionNone() },

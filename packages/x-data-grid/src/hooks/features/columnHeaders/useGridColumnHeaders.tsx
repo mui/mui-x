@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled, useTheme } from '@mui/material/styles';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
@@ -45,7 +44,6 @@ interface HeaderInfo {
 }
 
 export interface UseGridColumnHeadersProps {
-  innerRef?: React.Ref<HTMLDivElement>;
   visibleColumns: GridStateColDef[];
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
@@ -88,7 +86,6 @@ export const GridColumnHeaderRow = styled('div', {
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
-    innerRef: innerRefProp,
     visibleColumns,
     sortColumnLookup,
     filterColumnLookup,
@@ -111,8 +108,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
 
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -502,7 +497,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     getColumnGroupHeadersRows,
     isDragging: !!dragCol,
     getInnerProps: () => ({
-      ref: handleInnerRef,
       role: 'rowgroup',
     }),
   };

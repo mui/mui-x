@@ -1,25 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { refType } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
-// import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<UseGridColumnHeadersProps, 'innerRef'> {
+    UseGridColumnHeadersProps {
   ref?: React.Ref<HTMLDivElement>;
-  innerRef?: React.Ref<HTMLDivElement>;
 }
 
 const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
-      innerRef,
       className,
       visibleColumns,
       sortColumnLookup,
@@ -38,7 +34,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
 
     const { isDragging, getInnerProps, getColumnHeadersRow, getColumnGroupHeadersRows } =
       useGridColumnHeaders({
-        innerRef,
         visibleColumns,
         sortColumnLookup,
         filterColumnLookup,
@@ -54,11 +49,9 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       });
 
     return (
-      <GridBaseColumnHeaders ref={ref} {...other}>
-        {/* <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}> */}
+      <GridBaseColumnHeaders ref={ref} {...other} {...getInnerProps()}>
         {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
-        {/* </GridColumnHeadersInner> */}
       </GridBaseColumnHeaders>
     );
   },
@@ -99,7 +92,6 @@ GridColumnHeaders.propTypes = {
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
-  innerRef: refType,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

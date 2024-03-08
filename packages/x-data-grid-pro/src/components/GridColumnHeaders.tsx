@@ -20,7 +20,6 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-import { GridScrollArea } from './GridScrollArea';
 
 type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumnFields['left'];
@@ -97,16 +96,13 @@ GridColumnHeadersPinnedColumnHeaders.propTypes = {
 
 interface DataGridProColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<UseGridColumnHeadersProps, 'innerRef'> {
-  innerRef?: React.Ref<HTMLDivElement>;
-}
+    UseGridColumnHeadersProps {}
 
 const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
       style,
       className,
-      innerRef,
       visibleColumns,
       sortColumnLookup,
       filterColumnLookup,
@@ -138,7 +134,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       getColumnFilters,
       getColumnGroupHeadersRows,
     } = useGridColumnHeaders({
-      innerRef,
       visibleColumns,
       sortColumnLookup,
       filterColumnLookup,
@@ -206,7 +201,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           </GridColumnHeadersPinnedColumnHeaders>
         )}
 
-        <GridScrollArea scrollDirection="left" />
         {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
         {getColumnFilters({
@@ -215,7 +209,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
         })}
         {/* </GridColumnHeadersInner> */}
-        <GridScrollArea scrollDirection="right" />
         <Filler />
         {rightRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
@@ -275,7 +268,6 @@ GridColumnHeaders.propTypes = {
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
-  innerRef: refType,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
