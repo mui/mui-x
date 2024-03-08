@@ -7,7 +7,10 @@ import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { gridPaginationModelSelector, gridPaginationRowCountSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import {
+  gridPaginationModelSelector,
+  gridPaginationRowCountSelector,
+} from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
