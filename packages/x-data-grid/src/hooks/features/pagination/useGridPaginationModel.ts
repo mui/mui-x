@@ -239,7 +239,7 @@ export const useGridPaginationModel = (
       const paginationModel = gridPaginationModelSelector(apiRef);
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
-        apiRef.current.setPage(pageCount - 1);
+        apiRef.current.setPage(Math.max(0, pageCount - 1));
       }
     },
     [apiRef],
