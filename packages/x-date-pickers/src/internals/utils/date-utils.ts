@@ -42,10 +42,7 @@ export const findClosestEnabledDate = <TDate extends PickerValidDate>({
   utils,
   timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = date
-    ? mergeDateAndTime(utils, utils.date(undefined, timezone), date)
-    : utils.startOfDay(utils.date(undefined, timezone));
-
+  const today = mergeDateAndTime(utils, utils.date(undefined, timezone), date);
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
   }
