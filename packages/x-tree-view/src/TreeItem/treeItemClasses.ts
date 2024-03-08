@@ -5,7 +5,7 @@ export interface TreeItemClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the transition component. */
-  group: string;
+  groupTransition: string;
   /** Styles applied to the content element. */
   content: string;
   /** State class applied to the content element when expanded. */
@@ -30,7 +30,7 @@ export function getTreeItemUtilityClass(slot: string): string {
 
 export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeItem', [
   'root',
-  'group',
+  'groupTransition',
   'content',
   'expanded',
   'selected',

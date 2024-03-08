@@ -1,0 +1,5 @@
+<RichTreeView
+  aria-label="icon expansion"
+  items={ITEMS}
+  slotProps={{ item: { ContentComponent: CustomContent } }}
+/>
