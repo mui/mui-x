@@ -246,7 +246,7 @@ Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
-### Date Pickers
+### Date and Time Pickers
 
 #### \`@mui/x-date-pickers@__VERSION__\`
 
@@ -263,7 +263,9 @@ ${logChangelogSection(pickersProCommits)}
 
 ${logChangelogSection(chartsCommits)}
 
-### Tree View / \`@mui/x-tree-view@__VERSION__\`
+### Tree View
+
+#### \`@mui/x-tree-view@__VERSION__\`
 
 ${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
