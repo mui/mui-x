@@ -41,3 +41,8 @@ export interface GridPaginationRowCountApi {
    */
   setRowCount: (rowCount: number) => void;
 }
+
+/**
+ * The pagination API interface that is available in the grid `apiRef`.
+ */
+export interface GridPaginationApi extends GridPaginationModelApi, GridPaginationRowCountApi {}

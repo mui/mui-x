@@ -130,13 +130,13 @@ export const useGridPaginationModel = (
     [apiRef, logger, props.signature],
   );
 
-  const pageApi: GridPaginationModelApi = {
+  const paginationModelApi: GridPaginationModelApi = {
     setPage,
     setPageSize,
     setPaginationModel,
   };
 
-  useGridApiMethod(apiRef, pageApi, 'public');
+  useGridApiMethod(apiRef, paginationModelApi, 'public');
 
   /**
    * PRE-PROCESSING
