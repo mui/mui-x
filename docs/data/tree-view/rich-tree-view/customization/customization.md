@@ -1,15 +1,15 @@
 ---
 productId: x-tree-view
-title: Simple Tree View - Customization
-components: SimpleTreeView, TreeItem
+title: Rich Tree View - Customization
+components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Simple Tree View - Customization
+# Rich Tree View - Customization
 
-<p class="description">Learn how to customize the simple version of the Tree View component.</p>
+<p class="description">Learn how to customize the rich version of the Tree View component.</p>
 
 ## Basics
 
@@ -43,30 +43,8 @@ The demo below shows how to add an avatar and custom typography elements.
 
 ## Common examples
 
-### Connection border
-
-Target the `treeItemClasses.groupTransition` class to add connection borders between the Tree View items.
-
-{{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
-
 ### Limit expansion to icon container
 
 The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
-### File explorer
-
-The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
-
-{{"demo": "CustomizedTreeView.js"}}
-
-### Gmail clone
-
-Google's Gmail side nav is potentially one of the web's most famous tree view components.
-The demo below shows how to replicate it.
-
-The Gmail sidebar is one of the most well known examples of a tree view.
-The demo below shows how to recreate it with the Tree View component:
-
-{{"demo": "GmailTreeView.js"}}
