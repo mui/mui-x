@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { refType, unstable_composeClasses as composeClasses } from '@mui/utils';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,

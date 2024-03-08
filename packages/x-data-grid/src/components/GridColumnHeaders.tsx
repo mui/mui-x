@@ -32,21 +32,26 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const { isDragging, getInnerProps, getColumnHeadersRow, getColumnGroupHeadersRows } =
-      useGridColumnHeaders({
-        visibleColumns,
-        sortColumnLookup,
-        filterColumnLookup,
-        columnHeaderTabIndexState,
-        columnGroupHeaderTabIndexState,
-        columnHeaderFocus,
-        columnGroupHeaderFocus,
-        headerGroupingMaxDepth,
-        columnMenuState,
-        columnVisibility,
-        columnGroupsHeaderStructure,
-        hasOtherElementInTabSequence,
-      });
+    const {
+      // TODO: use it
+      // isDragging,
+      getInnerProps,
+      getColumnHeadersRow,
+      getColumnGroupHeadersRows,
+    } = useGridColumnHeaders({
+      visibleColumns,
+      sortColumnLookup,
+      filterColumnLookup,
+      columnHeaderTabIndexState,
+      columnGroupHeaderTabIndexState,
+      columnHeaderFocus,
+      columnGroupHeaderFocus,
+      headerGroupingMaxDepth,
+      columnMenuState,
+      columnVisibility,
+      columnGroupsHeaderStructure,
+      hasOtherElementInTabSequence,
+    });
 
     return (
       <GridBaseColumnHeaders ref={ref} {...other} {...getInnerProps()}>

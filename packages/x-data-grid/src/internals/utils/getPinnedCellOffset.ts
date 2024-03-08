@@ -20,8 +20,6 @@ export const getPinnedCellOffset = ({
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
 
   let pinnedOffset: number;
-  // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
-  // eslint-disable-next-line default-case
   switch (pinnedPosition) {
     case GridPinnedColumnPosition.LEFT:
       pinnedOffset = columnPositions[columnIndex];
