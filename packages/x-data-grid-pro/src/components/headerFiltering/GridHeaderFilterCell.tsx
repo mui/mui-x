@@ -16,6 +16,7 @@ import {
   useGridSelector,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
+  GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
   fastMemo,
@@ -42,12 +43,14 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
+  pinnedPosition?: GridPinnedColumnPosition;
+  style?: React.CSSProperties;
 }
 
 type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, showColumnVerticalBorder } = ownerState;
+  const { colDef, classes, showColumnVerticalBorder, pinnedPosition } = ownerState;
 
   const slots = {
     root: [
@@ -57,6 +60,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
       'withBorderColor',
       showColumnVerticalBorder && 'columnHeader--withRightBorder',
+      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
+      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
   };
 
@@ -80,6 +85,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       headerFilterMenuRef,
       InputComponentProps,
       showClearIcon = true,
+      pinnedPosition,
+      style: styleProp,
       ...other
     } = props;
 
@@ -244,6 +251,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const ownerState = {
       ...rootProps,
+      pinnedPosition,
       colDef,
     };
 
@@ -270,6 +278,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
           width,
           minWidth: width,
           maxWidth: width,
+          ...styleProp,
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
@@ -359,8 +368,10 @@ GridHeaderFilterCell.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  pinnedPosition: PropTypes.oneOf(['left', 'right']),
   showClearIcon: PropTypes.bool,
   sortIndex: PropTypes.number,
+  style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   width: PropTypes.number.isRequired,
 } as any;

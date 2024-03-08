@@ -1436,24 +1436,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumnHeaders",
-      "className": "MuiDataGrid-pinnedColumnHeaders",
-      "description": "Styles applied to the pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--left",
-      "className": "MuiDataGrid-pinnedColumnHeaders--left",
-      "description": "Styles applied to the left pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--right",
-      "className": "MuiDataGrid-pinnedColumnHeaders--right",
-      "description": "Styles applied to the right pinned column headers.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedColumns",
       "className": "MuiDataGrid-pinnedColumns",
       "description": "Styles applied to the pinned columns.",

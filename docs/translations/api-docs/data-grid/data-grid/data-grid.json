@@ -856,18 +856,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumnHeaders": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned column headers"
-    },
-    "pinnedColumnHeaders--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned column headers"
-    },
-    "pinnedColumnHeaders--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned column headers"
-    },
     "pinnedColumns": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"

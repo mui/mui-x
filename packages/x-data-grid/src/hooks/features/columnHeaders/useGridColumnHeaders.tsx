@@ -212,6 +212,36 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
+  const getCellOffsetStyle = ({
+    pinnedPosition,
+    columnIndex,
+    computedWidth,
+  }: {
+    pinnedPosition?: GridPinnedColumnPosition;
+    columnIndex: number;
+    computedWidth: number;
+  }) => {
+    let style: React.CSSProperties | undefined;
+    if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+      const pinnedOffset = getPinnedCellOffset({
+        pinnedPosition,
+        columnIndex,
+        columnPositions,
+        computedWidth,
+        dimensions,
+      });
+      if (pinnedPosition === 'left') {
+        style = { left: pinnedOffset };
+      }
+
+      if (pinnedPosition === 'right') {
+        style = { right: pinnedOffset };
+      }
+    }
+
+    return style;
+  };
+
   const getColumnHeaders = (params?: GetHeadersParams, other = {}) => {
     const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
 
@@ -230,23 +260,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const open = columnMenuState.open && columnMenuState.field === colDef.field;
       const pinnedPosition = params?.position;
 
-      let style;
-      if (pinnedPosition === 'left' || pinnedPosition === 'right') {
-        const pinnedOffset = getPinnedCellOffset({
-          pinnedPosition,
-          columnIndex,
-          columnPositions,
-          computedWidth: colDef.computedWidth,
-          dimensions,
-        });
-        if (pinnedPosition === 'left') {
-          style = { left: pinnedOffset };
-        }
-
-        if (pinnedPosition === 'right') {
-          style = { right: pinnedOffset };
-        }
-      }
+      const style = getCellOffsetStyle({
+        pinnedPosition,
+        columnIndex,
+        computedWidth: colDef.computedWidth,
+      });
 
       columns.push(
         <GridColumnHeaderItem
@@ -395,24 +413,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         tabIndex,
       };
 
-      let style;
       const pinnedPosition = params.position;
-      if (pinnedPosition === 'left' || pinnedPosition === 'right') {
-        const pinnedOffset = getPinnedCellOffset({
-          pinnedPosition,
-          columnIndex,
-          columnPositions,
-          computedWidth: headerInfo.width,
-          dimensions,
-        });
-        if (pinnedPosition === 'left') {
-          style = { left: pinnedOffset };
-        }
-
-        if (pinnedPosition === 'right') {
-          style = { right: pinnedOffset };
-        }
-      }
+      const style = getCellOffsetStyle({
+        pinnedPosition,
+        columnIndex,
+        computedWidth: headerInfo.width,
+      });
 
       columnIndex += columnFields.length;
 
@@ -435,7 +441,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           height={dimensions.headerHeight}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
-          pinnedPosition={params.position}
+          pinnedPosition={pinnedPosition}
           style={style}
           indexInSection={indexInSection}
           sectionLength={renderedColumns.length}
@@ -491,6 +497,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   return {
     renderContext,
+    leftRenderContext,
+    rightRenderContext,
+    pinnedColumns,
+    visibleColumns,
+    getCellOffsetStyle,
     getFillers,
     getColumnHeadersRow,
     getColumnsToRender,

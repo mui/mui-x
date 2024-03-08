@@ -445,9 +445,6 @@ export const GridRootStyles = styled('div', {
       '[role=row]': {
         background: 'var(--DataGrid-containerBackground)',
       },
-      [`.${c.pinnedColumnHeaders} [role=row]`]: {
-        background: 'var(--DataGrid-pinnedBackground)',
-      },
     },
 
     /* Cell styles */
