@@ -32,7 +32,9 @@ Same changes as in `@mui/x-data-grid@7.0.0-beta.6`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 
-### Charts / `@mui/x-charts@7.0.0-beta.6`
+### Charts
+
+#### `@mui/x-charts@7.0.0-beta.6`
 
 - [charts] Add context to axis value formatter (#12172) @alexfauquette
 - [charts] Customize tick position for band scale (#12316) @alexfauquette
