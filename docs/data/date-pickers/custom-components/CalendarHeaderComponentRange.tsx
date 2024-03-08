@@ -31,6 +31,7 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
       <IconButton
         onClick={selectPreviousMonth}
         sx={{ visibility: monthIndex === 0 ? undefined : 'hidden' }}
+        title={`Previous ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronLeft />
       </IconButton>
@@ -38,6 +39,7 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
       <IconButton
         onClick={selectNextMonth}
         sx={{ visibility: monthIndex === calendars - 1 ? undefined : 'hidden' }}
+        title={`Next ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronRight />
       </IconButton>
