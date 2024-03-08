@@ -112,7 +112,7 @@ export default function FormatterDemoNoSnap() {
           dataKey: 'month',
           valueFormatter: (month, context) =>
             context.location === 'tick'
-              ? `${month.slice(0, 3)}. \n2023`
+              ? `${month.slice(0, 3)} \n2023`
               : `${month} 2023`,
         },
       ]}

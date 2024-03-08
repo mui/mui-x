@@ -61,7 +61,7 @@ Some series types also require specific axis attributes:
 
 ### Axis formatter
 
-Axis data can be displayed in the axes ticks, and the in the tooltip.
+Axis data can be displayed in the axes ticks and the tooltip.
 To modify how data is displayed use the `valueFormatter` property.
 
 The second argument of `valueFormatter` provides some rendering context for advanced use cases.
