@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import {
-  GridColumnHeaderRow,
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
-import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
+// import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export interface GridColumnHeadersProps
@@ -38,9 +37,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const rootProps = useGridRootProps();
-
-    const { isDragging, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
+    const { isDragging, getInnerProps, getColumnHeadersRow, getColumnGroupHeaders } =
       useGridColumnHeaders({
         innerRef,
         visibleColumns,
@@ -61,13 +58,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       <GridBaseColumnHeaders ref={ref} {...other}>
         {/* <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}> */}
         {getColumnGroupHeaders()}
-        <GridColumnHeaderRow
-          role="row"
-          aria-rowindex={headerGroupingMaxDepth + 1}
-          ownerState={rootProps}
-        >
-          {getColumnHeaders()}
-        </GridColumnHeaderRow>
+        {getColumnHeadersRow()}
         {/* </GridColumnHeadersInner> */}
       </GridBaseColumnHeaders>
     );

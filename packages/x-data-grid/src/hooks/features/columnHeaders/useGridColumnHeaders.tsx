@@ -32,6 +32,7 @@ import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfa
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { gridClasses } from '../../../constants/gridClasses';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
+import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -145,6 +146,26 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [],
   );
 
+  const leftRenderContext = React.useMemo(() => {
+    return renderContext && pinnedColumns.left.length
+      ? {
+          ...renderContext,
+          firstColumnIndex: 0,
+          lastColumnIndex: pinnedColumns.left.length,
+        }
+      : null;
+  }, [renderContext, pinnedColumns.left.length]);
+
+  const rightRenderContext = React.useMemo(() => {
+    return renderContext && pinnedColumns.right.length
+      ? {
+          ...renderContext,
+          firstColumnIndex: visibleColumns.length - pinnedColumns.right.length,
+          lastColumnIndex: visibleColumns.length,
+        }
+      : null;
+  }, [renderContext, pinnedColumns.right.length, visibleColumns.length]);
+
   useGridApiEventHandler(apiRef, 'columnResizeStart', handleColumnResizeStart);
   useGridApiEventHandler(apiRef, 'columnResizeStop', handleColumnResizeStop);
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
@@ -257,6 +278,45 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return getFillers(params, columns, 0);
+  };
+
+  const getColumnHeadersRow = () => {
+    return (
+      <GridColumnHeaderRow
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+        ownerState={rootProps}
+      >
+        {leftRenderContext &&
+          getColumnHeaders(
+            {
+              position: GridPinnedColumnPosition.LEFT,
+              renderContext: leftRenderContext,
+              minFirstColumn: leftRenderContext.firstColumnIndex,
+              maxLastColumn: leftRenderContext.lastColumnIndex,
+            },
+            { disableReorder: true },
+          )}
+        {getColumnHeaders({
+          renderContext,
+          minFirstColumn: pinnedColumns.left.length,
+          maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
+        })}
+        {rightRenderContext &&
+          getColumnHeaders(
+            {
+              position: GridPinnedColumnPosition.RIGHT,
+              renderContext: rightRenderContext,
+              minFirstColumn: rightRenderContext.firstColumnIndex,
+              maxLastColumn: rightRenderContext.lastColumnIndex,
+            },
+            {
+              disableReorder: true,
+              separatorSide: GridColumnHeaderSeparatorSides.Left,
+            },
+          )}
+      </GridColumnHeaderRow>
+    );
   };
 
   const getColumnGroupHeaders = () => {
@@ -393,24 +453,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     };
 
     for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
-      const leftRenderContext =
-        renderContext && pinnedColumns.left.length
-          ? {
-              ...renderContext,
-              firstColumnIndex: 0,
-              lastColumnIndex: pinnedColumns.left.length,
-            }
-          : null;
-
-      const rightRenderContext =
-        renderContext && pinnedColumns.right.length
-          ? {
-              ...renderContext,
-              firstColumnIndex: visibleColumns.length - pinnedColumns.right.length,
-              lastColumnIndex: visibleColumns.length,
-            }
-          : null;
-
       headerRows.push(
         <GridColumnHeaderRow
           key={depth}
@@ -449,7 +491,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   return {
     renderContext,
     getFillers,
-    getColumnHeaders,
+    getColumnHeadersRow,
     getColumnsToRender,
     getColumnGroupHeaders,
     isDragging: !!dragCol,

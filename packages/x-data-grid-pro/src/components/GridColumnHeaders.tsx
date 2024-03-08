@@ -136,7 +136,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       // isDragging,
       renderContext,
       getInnerProps,
-      getColumnHeaders,
+      getColumnHeadersRow,
       getColumnFilters,
       getColumnGroupHeaders,
     } = useGridColumnHeaders({
@@ -210,40 +210,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
 
         <GridScrollArea scrollDirection="left" />
         {getColumnGroupHeaders()}
-        <GridColumnHeaderRow
-          role="row"
-          aria-rowindex={headerGroupingMaxDepth + 1}
-          ownerState={rootProps}
-        >
-          {leftRenderContext &&
-            getColumnHeaders(
-              {
-                position: GridPinnedColumnPosition.LEFT,
-                renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
-                maxLastColumn: leftRenderContext.lastColumnIndex,
-              },
-              { disableReorder: true },
-            )}
-          {getColumnHeaders({
-            renderContext,
-            minFirstColumn: visiblePinnedColumns.left.length,
-            maxLastColumn: visibleColumns.length - visiblePinnedColumns.right.length,
-          })}
-          {rightRenderContext &&
-            getColumnHeaders(
-              {
-                position: GridPinnedColumnPosition.RIGHT,
-                renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
-                maxLastColumn: rightRenderContext.lastColumnIndex,
-              },
-              {
-                disableReorder: true,
-                separatorSide: GridColumnHeaderSeparatorSides.Left,
-              },
-            )}
-        </GridColumnHeaderRow>
+        {getColumnHeadersRow()}
         {getColumnFilters({
           renderContext,
           minFirstColumn: visiblePinnedColumns.left.length,
