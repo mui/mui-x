@@ -58,7 +58,7 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   );
 
   const getJSXItemsChildrenIndexes = (parentId: string | null) =>
-    state.nodes.itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID];
+    state.nodes.itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID] ?? {};
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
