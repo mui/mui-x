@@ -259,7 +259,9 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}
 
-### Charts / \`@mui/x-charts@__VERSION__\`
+### Charts
+ 
+#### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 
