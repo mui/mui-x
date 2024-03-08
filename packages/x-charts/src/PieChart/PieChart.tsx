@@ -29,6 +29,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
+import { useIsRTL } from '../internals/useIsRTL';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,
@@ -97,6 +98,7 @@ export interface PieChartProps
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
+const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
 
 /**
  * Demos:
@@ -121,7 +123,7 @@ function PieChart(props: PieChartProps) {
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    legend = { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } },
+    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -131,8 +133,15 @@ function PieChart(props: PieChartProps) {
     slotProps,
     onItemClick,
   } = props;
+  const isRTL = useIsRTL();
 
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = { ...(isRTL ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const legend: ChartsLegendProps = {
+    direction: 'column',
+    position: { vertical: 'middle', horizontal: isRTL ? 'left' : 'right' },
+    ...legendProps,
+  };
+
   return (
     <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'pie', ...s }))}
@@ -219,10 +228,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -275,10 +286,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -341,10 +354,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -413,10 +428,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -464,10 +481,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
@@ -505,10 +524,12 @@ PieChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),

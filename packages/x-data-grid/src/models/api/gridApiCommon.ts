@@ -34,6 +34,7 @@ import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
+import type { GridInfiniteLoaderPrivateApi } from './gridInfiniteLoaderApi';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -80,7 +81,8 @@ export interface GridPrivateOnlyApiCommon<
     GridLoggerApi,
     GridFocusPrivateApi,
     GridHeaderFilteringPrivateApi,
-    GridVirtualizationPrivateApi {}
+    GridVirtualizationPrivateApi,
+    GridInfiniteLoaderPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

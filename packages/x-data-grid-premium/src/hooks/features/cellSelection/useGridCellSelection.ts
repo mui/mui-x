@@ -473,11 +473,11 @@ export const useGridCellSelection = (
 
   const addClassesToCells = React.useCallback<GridPipeProcessor<'cellClassName'>>(
     (classes, { id, field }) => {
-      const newClasses = [...classes];
-
       if (!visibleRows.range || !apiRef.current.isCellSelected(id, field)) {
         return classes;
       }
+
+      const newClasses = [...classes];
 
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
       const columnIndex = apiRef.current.getColumnIndex(field);

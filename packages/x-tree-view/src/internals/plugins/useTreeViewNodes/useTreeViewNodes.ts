@@ -67,7 +67,7 @@ const updateNodesState = ({
       label,
       index,
       parentId,
-      idAttribute: id,
+      idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
     };
@@ -177,7 +177,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
         }
       });
 
-      return { ...prevState, ...newState };
+      return { ...prevState, nodes: newState };
     });
   }, [
     instance,

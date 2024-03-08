@@ -136,11 +136,7 @@ export type {
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export {
-  createSelector,
-  createSelectorMemoized,
-  unstable_resetCreateSelectorCache,
-} from '../utils/createSelector';
+export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,

@@ -51,7 +51,6 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
-      const value = apiRef.current.getCellValue(id, field);
       const row = apiRef.current.getRow(id);
       const rowNode = apiRef.current.getRowNode(id);
 
@@ -59,6 +58,10 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
+      const rawValue = row[field];
+      const value = colDef?.valueGetter
+        ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
+        : rawValue;
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
@@ -89,22 +92,16 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
 
-      if (!colDef || !colDef.valueGetter) {
-        const rowModel = apiRef.current.getRow(id);
-
-        if (!rowModel) {
-          throw new MissingRowIdError(`No row with id #${id} found`);
-        }
-
-        return rowModel[field];
-      }
-
       const row = apiRef.current.getRow(id);
       if (!row) {
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
-      const value = row[colDef.field];
-      return colDef.valueGetter(value as never, row, colDef, apiRef);
+
+      if (!colDef || !colDef.valueGetter) {
+        return row[field];
+      }
+
+      return colDef.valueGetter(row[colDef.field] as never, row, colDef, apiRef);
     },
     [apiRef],
   );

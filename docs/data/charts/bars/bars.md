@@ -59,10 +59,23 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ## Layout
 
+### Bar direction
+
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
 If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+### Tick placement
+
+When using a `"band"` scale, the axis has some additional customization properties about the tick position.
+
+- `tickPlacement` for the position of ticks
+- `tickLabelPlacement` for the position of the label associated with the tick
+
+You can test all configuration options in the following demo:
+
+{{"demo": "TickPlacementBars.js"}}
 
 ### Grid
 

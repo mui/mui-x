@@ -5,7 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -376,8 +376,10 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
+      if (isLastVisible) {
+        rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
+      }
     });
-
     return rows;
   };
 
