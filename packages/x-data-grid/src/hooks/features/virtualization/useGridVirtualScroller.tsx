@@ -42,7 +42,9 @@ export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactN
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
-interface PrivateApiWithInfiniteLoader extends GridPrivateApiCommunity, GridInfiniteLoaderPrivateApi {}
+interface PrivateApiWithInfiniteLoader
+  extends GridPrivateApiCommunity,
+    GridInfiniteLoaderPrivateApi {}
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;

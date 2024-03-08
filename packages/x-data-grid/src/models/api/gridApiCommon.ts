@@ -50,7 +50,6 @@ export interface GridApiCommon<
     GridRowSelectionApi,
     GridSortApi,
     GridPaginationApi,
-    GridPaginationRowCountApi,
     GridCsvExportApi,
     GridFocusApi,
     GridFilterApi,
