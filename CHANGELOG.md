@@ -82,6 +82,10 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 - [docs] Add a note about `z-index` usage in SVG (#12337) @alexfauquette
 - [docs] `RichTreeView` customization docs (#12231) @noraleonte
 
+### Core
+
+- [test] Add `Charts` test (#11551) @alexfauquette
+
 ## 7.0.0-beta.5
 
 _Mar 1, 2024_
