@@ -347,10 +347,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     timezone,
   });
 
-  // When disabled, limit the view to the selected date
-  const minDateWithDisabled = (disabled && value[0]) || minDate;
-  const maxDateWithDisabled = (disabled && value[1]) || maxDate;
-
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
   const calendarHeaderProps: Omit<
     PickersRangeCalendarHeaderProps<TDate>,
@@ -364,8 +360,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       view: 'day',
       currentMonth: calendarState.currentMonth,
       onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
-      minDate: minDateWithDisabled,
-      maxDate: maxDateWithDisabled,
+      minDate,
+      maxDate,
       disabled,
       disablePast,
       disableFuture,
