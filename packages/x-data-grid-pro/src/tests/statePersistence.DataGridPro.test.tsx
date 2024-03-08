@@ -80,7 +80,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
 };
 
-describe.only('<DataGridPro /> - State persistence', () => {
+describe('<DataGridPro /> - State persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
