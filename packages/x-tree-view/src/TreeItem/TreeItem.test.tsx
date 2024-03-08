@@ -19,6 +19,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins>
     isNodeDisabled: () => false,
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => {},
+    getJSXItemsChildrenIndexes: () => {},
+    setJSXItemsChildrenIndexes: () => {},
   } as any,
   runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
   disabledItemsFocusable: false,
