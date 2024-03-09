@@ -29,7 +29,6 @@ import {
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
-import { gridClasses } from '../../../constants/gridClasses';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 
@@ -64,14 +63,6 @@ export interface GetHeadersParams {
   minFirstColumn?: number;
   maxLastColumn?: number;
 }
-
-const SpaceFiller = styled('div')({
-  /* GridRootStyles conflict */
-  '&&&': {
-    padding: 0,
-    width: 'calc(var(--DataGrid-width) - var(--DataGrid-columnsTotalWidth))',
-  },
-});
 
 type OwnerState = DataGridProcessedProps;
 
@@ -204,7 +195,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <React.Fragment>
         {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {isNotPinned && <SpaceFiller className={gridClasses.columnHeader} />}
+        {isNotPinned && <div role="presentation" style={{ flex: '1' }} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
