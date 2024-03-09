@@ -140,12 +140,6 @@ export const useGridPrintExport = (
       // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
       gridClone!.style.contain = 'size';
 
-      const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
-      const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
-        `.${gridClasses.columnHeadersInner}`,
-      )!;
-      columnHeadersInner.style.width = '100%';
-
       let gridToolbarElementHeight =
         gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
           ?.offsetHeight || 0;
