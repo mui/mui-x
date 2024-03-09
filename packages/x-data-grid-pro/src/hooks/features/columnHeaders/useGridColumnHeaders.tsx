@@ -93,10 +93,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
 
   const getColumnFilters = (params?: GetHeadersParams) => {
-    if (disableHeaderFiltering) {
-      return null;
-    }
-
     const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
 
     const filters: React.JSX.Element[] = [];
@@ -149,6 +145,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   const getColumnFiltersRow = () => {
+    if (disableHeaderFiltering) {
+      return null;
+    }
+
     return (
       <GridColumnHeaderRow
         ref={headerFiltersRef}
