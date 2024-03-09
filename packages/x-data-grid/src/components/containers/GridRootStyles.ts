@@ -348,7 +348,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
-      zIndex: 3,
+      zIndex: 4, // Should be above the column separator
       background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.columnSeparator}`]: {
