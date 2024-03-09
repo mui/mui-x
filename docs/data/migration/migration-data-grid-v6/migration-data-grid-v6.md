@@ -106,9 +106,10 @@ As a result, the following changes have been made:
 - Pinned row and column sections are now contained in the virtual scroller.
 - The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
 
-<!-- ### Renamed props
+## Renamed props
 
-- -->
+- The props `rowBuffer`, `columnBuffer`, `rowThreshold` and `columnThreshold` were renamed to `rowBufferPx`, `columnBufferPx`, `rowThresholdPx` and `columnThresholdPx`.
+  Their value is now a pixel value rather than a number of items. Their default value is now `150`.
 
 ### Removed props
 
