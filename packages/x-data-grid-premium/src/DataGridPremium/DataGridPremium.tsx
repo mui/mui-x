@@ -171,10 +171,10 @@ DataGridPremiumRaw.propTypes = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region to render before/after the viewport
+   * @default 100
    */
-  columnBuffer: PropTypes.number,
+  columnBufferPx: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -187,9 +187,9 @@ DataGridPremiumRaw.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
+   * @default 150
    */
-  columnThreshold: PropTypes.number,
+  columnThresholdPx: PropTypes.number,
   /**
    * Set the column visibility model of the Data Grid.
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
@@ -872,10 +872,10 @@ DataGridPremiumRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * Row region to render before/after the viewport
+   * @default 100
    */
-  rowBuffer: PropTypes.number,
+  rowBufferPx: PropTypes.number,
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -943,7 +943,7 @@ DataGridPremiumRaw.propTypes = {
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
+   * @default 150
    */
   rowThresholdPx: PropTypes.number,
   /**

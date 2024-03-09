@@ -25,9 +25,9 @@
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
-    "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnBufferPx": { "type": { "name": "number" }, "default": "100" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnThreshold": { "type": { "name": "number" }, "default": "3" },
+    "columnThresholdPx": { "type": { "name": "number" }, "default": "150" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -488,7 +488,7 @@
         "returned": "Promise<R> | R"
       }
     },
-    "rowBuffer": { "type": { "name": "number" }, "default": "3" },
+    "rowBufferPx": { "type": { "name": "number" }, "default": "100" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
@@ -508,7 +508,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
-    "rowThreshold": { "type": { "name": "number" }, "default": "3" },
+    "rowThresholdPx": { "type": { "name": "number" }, "default": "150" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
