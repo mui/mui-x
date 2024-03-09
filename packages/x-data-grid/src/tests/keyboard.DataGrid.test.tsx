@@ -50,7 +50,7 @@ describe('<DataGrid /> - Keyboard', () => {
           columns={transformColSizes(data.columns)}
           initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
           pageSizeOptions={[PAGE_SIZE]}
-          rowBuffer={PAGE_SIZE}
+          rowBufferPx={PAGE_SIZE * ROW_HEIGHT}
           rowHeight={ROW_HEIGHT}
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
@@ -478,7 +478,7 @@ describe('<DataGrid /> - Keyboard', () => {
             columns={transformColSizes(data.columns)}
             paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
             pageSizeOptions={[PAGE_SIZE]}
-            rowBuffer={PAGE_SIZE}
+            rowBufferPx={PAGE_SIZE * ROW_HEIGHT}
             rowHeight={ROW_HEIGHT}
             columnHeaderHeight={HEADER_HEIGHT}
             hideFooter

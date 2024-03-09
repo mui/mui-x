@@ -144,14 +144,14 @@ export interface DataGridPropsWithDefaultValues {
   rowSelection: boolean;
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
+   * @default 150
    */
-  rowThreshold: number;
+  rowThresholdPx: number;
   /**
    * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
+   * @default 150
    */
-  columnThreshold: number;
+  columnThresholdPx: number;
   /**
    * Set the density of the Data Grid.
    * @default "standard"

@@ -945,7 +945,7 @@ DataGridPremiumRaw.propTypes = {
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
-  rowThreshold: PropTypes.number,
+  rowThresholdPx: PropTypes.number,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */

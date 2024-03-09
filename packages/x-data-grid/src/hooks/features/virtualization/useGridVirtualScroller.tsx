@@ -176,7 +176,7 @@ export const useGridVirtualScroller = () => {
       Math.abs(scrollPosition.current.left - previousScroll.current.left) + scrollCache.buffer.left;
 
     const shouldUpdate =
-      rowScroll >= rootProps.rowThreshold || columnScroll >= rootProps.columnThreshold;
+      rowScroll >= rootProps.rowThresholdPx || columnScroll >= rootProps.columnThresholdPx;
 
     if (!shouldUpdate) {
       return previousContext.current;
@@ -538,6 +538,8 @@ type RenderContextInputs = {
   columnsTotalWidth: number;
   viewportInnerWidth: number;
   viewportInnerHeight: number;
+  lastRowHeight: number;
+  lastColumnWidth: number;
   rowsMeta: ReturnType<typeof gridRowsMetaSelector>;
   columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
   rows: ReturnType<typeof useGridVisibleRows>['rows'];
@@ -554,6 +556,9 @@ function inputsSelector(
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   const currentPage = getVisibleRows(apiRef, rootProps);
+  const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
+  const lastColumn = visibleColumns.at(-1);
   return {
     enabled,
     enabledForColumns,
@@ -565,12 +570,14 @@ function inputsSelector(
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
+    lastRowHeight: lastRowId ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
+    lastColumnWidth: lastColumn?.computedWidth ?? 0,
     rowsMeta: gridRowsMetaSelector(apiRef.current.state),
     columnPositions: gridColumnPositionsSelector(apiRef),
     rows: currentPage.rows,
     range: currentPage.range,
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-    visibleColumns: gridVisibleColumnDefinitionsSelector(apiRef),
+    visibleColumns,
   };
 }
 
@@ -617,6 +624,7 @@ function computeRenderContext(
         bufferBefore: inputs.rowBufferPx,
         bufferAfter: inputs.rowBufferPx,
         positions: inputs.rowsMeta.positions,
+        lastSize: inputs.lastRowHeight,
       });
 
       for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
@@ -644,18 +652,7 @@ function computeRenderContext(
     };
   }
 
-  const actualRenderContext = deriveRenderContext(
-    inputs.apiRef,
-    inputs.rowBufferPx,
-    inputs.columnBufferPx,
-    inputs.rows,
-    inputs.rowsMeta.positions,
-    inputs.columnPositions,
-    inputs.pinnedColumns,
-    inputs.visibleColumns,
-    renderContext,
-    scrollCache,
-  );
+  const actualRenderContext = deriveRenderContext(inputs, renderContext, scrollCache);
 
   return [actualRenderContext, renderContext];
 }
@@ -700,14 +697,7 @@ function getNearestIndexToRender(inputs: RenderContextInputs, offset: number) {
  * spanning.
  */
 function deriveRenderContext(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  rowBufferPx: number,
-  columnBufferPx: number,
-  rows: ReturnType<typeof useGridVisibleRows>['rows'],
-  rowPositions: number[],
-  columnPositions: number[],
-  pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
-  visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>,
+  inputs: RenderContextInputs,
   nextRenderContext: GridRenderContext,
   scrollCache: ScrollCache,
 ) {
@@ -717,28 +707,30 @@ function deriveRenderContext(
     firstIndex: nextRenderContext.firstRowIndex,
     lastIndex: nextRenderContext.lastRowIndex,
     minFirstIndex: 0,
-    maxLastIndex: rows.length,
-    bufferBefore: rowBufferPx + buffer.rowBefore,
-    bufferAfter: rowBufferPx + buffer.rowAfter,
-    positions: rowPositions,
+    maxLastIndex: inputs.rows.length,
+    bufferBefore: inputs.rowBufferPx + buffer.rowBefore,
+    bufferAfter: inputs.rowBufferPx + buffer.rowAfter,
+    positions: inputs.rowsMeta.positions,
+    lastSize: inputs.lastRowHeight,
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstColumnIndex,
     lastIndex: nextRenderContext.lastColumnIndex,
-    minFirstIndex: pinnedColumns.left.length,
-    maxLastIndex: visibleColumns.length - pinnedColumns.right.length,
-    bufferBefore: columnBufferPx + buffer.columnBefore,
-    bufferAfter: columnBufferPx + buffer.columnAfter,
-    positions: columnPositions,
+    minFirstIndex: inputs.pinnedColumns.left.length,
+    maxLastIndex: inputs.visibleColumns.length - inputs.pinnedColumns.right.length,
+    bufferBefore: inputs.columnBufferPx + buffer.columnBefore,
+    bufferAfter: inputs.columnBufferPx + buffer.columnAfter,
+    positions: inputs.columnPositions,
+    lastSize: inputs.lastColumnWidth,
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
     firstColumnToRender: initialFirstColumnToRender,
-    apiRef,
+    apiRef: inputs.apiRef,
     firstRowToRender,
     lastRowToRender,
-    visibleRows: rows,
+    visibleRows: inputs.rows,
   });
 
   return {
@@ -817,6 +809,7 @@ function getIndexesToRender({
   minFirstIndex,
   maxLastIndex,
   positions,
+  lastSize,
 }: {
   firstIndex: number;
   lastIndex: number;
@@ -825,13 +818,14 @@ function getIndexesToRender({
   minFirstIndex: number;
   maxLastIndex: number;
   positions: number[];
+  lastSize: number;
 }) {
   const firstPosition = positions[firstIndex] - bufferBefore;
   const lastPosition = positions[lastIndex] + bufferAfter;
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
-    lastPosition: positions[positions.length - 1] * 2, // Value doesn't matter much here, only need to be vastly superior
+    lastPosition: positions[positions.length - 1] + lastSize,
   });
 
   const lastIndexPadded = binarySearch(lastPosition, positions);
