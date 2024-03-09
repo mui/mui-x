@@ -56,7 +56,6 @@ const EMPTY_SCROLL_CACHE = {
   lastTimestamp: -1,
   lastPosition: { top: 0, left: 0 },
   buffer: { top: 0, left: 0 },
-  events: [] as ({ top: number; left: number; timestamp: number } & Record<any, any>)[],
 };
 type ScrollCache = typeof EMPTY_SCROLL_CACHE;
 
