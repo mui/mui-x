@@ -60,7 +60,7 @@ const EMPTY_SCROLL_CACHE = {
 };
 type ScrollCache = typeof EMPTY_SCROLL_CACHE;
 
-const createScrollCache = () => ({ ...EMPTY_SCROLL_CACHE })
+const createScrollCache = () => ({ ...EMPTY_SCROLL_CACHE });
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext();
