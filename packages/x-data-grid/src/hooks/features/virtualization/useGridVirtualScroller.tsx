@@ -4,6 +4,7 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { useTheme, Theme } from '@mui/material/styles';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -59,6 +60,8 @@ const EMPTY_SCROLL_CACHE = {
 };
 type ScrollCache = typeof EMPTY_SCROLL_CACHE;
 
+const createScrollCache = () => ({ ...EMPTY_SCROLL_CACHE })
+
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -96,7 +99,7 @@ export const useGridVirtualScroller = () => {
   const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
-  const scrollCache = React.useRef({ ...EMPTY_SCROLL_CACHE }).current;
+  const scrollCache = useLazyRef(createScrollCache).current;
 
   const focusedCell = {
     rowIndex: React.useMemo(
