@@ -389,6 +389,7 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
+  indexInSection: PropTypes.number.isRequired,
   InputComponentProps: PropTypes.object,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
@@ -397,6 +398,7 @@ GridHeaderFilterCell.propTypes = {
     value: PropTypes.any,
   }).isRequired,
   pinnedPosition: PropTypes.oneOf(['left', 'right']),
+  sectionLength: PropTypes.number.isRequired,
   showClearIcon: PropTypes.bool,
   sortIndex: PropTypes.number,
   style: PropTypes.object,
