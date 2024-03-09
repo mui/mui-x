@@ -26,6 +26,10 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
+import {
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
+} from '@mui/x-data-grid/utils/cellBorderUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -45,12 +49,19 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   InputComponentProps: GridFilterOperator['InputComponentProps'];
   pinnedPosition?: GridPinnedColumnPosition;
   style?: React.CSSProperties;
+  indexInSection: number;
+  sectionLength: number;
 }
 
-type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;
+type OwnerState = DataGridProProcessedProps & {
+  colDef: GridColDef;
+  pinnedPosition?: GridPinnedColumnPosition;
+  showRightBorder: boolean;
+  showLeftBorder: boolean;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, showColumnVerticalBorder, pinnedPosition } = ownerState;
+  const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
 
   const slots = {
     root: [
@@ -59,7 +70,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
       'withBorderColor',
-      showColumnVerticalBorder && 'columnHeader--withRightBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
@@ -87,6 +99,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       showClearIcon = true,
       pinnedPosition,
       style: styleProp,
+      indexInSection,
+      sectionLength,
       ...other
     } = props;
 
@@ -249,10 +263,24 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       [onMouseDown, onKeyDown, publish],
     );
 
-    const ownerState = {
+    const showLeftBorder = shouldCellShowLeftBorder({
+      indexInSection,
+      pinnedPosition,
+    });
+
+    const showRightBorder = shouldCellShowRightBorder({
+      indexInSection,
+      sectionLength,
+      pinnedPosition,
+      showCellVerticalBorderRootProp: rootProps.showCellVerticalBorder,
+    });
+
+    const ownerState: OwnerState = {
       ...rootProps,
       pinnedPosition,
       colDef,
+      showLeftBorder,
+      showRightBorder,
     };
 
     const classes = useUtilityClasses(ownerState as OwnerState);
