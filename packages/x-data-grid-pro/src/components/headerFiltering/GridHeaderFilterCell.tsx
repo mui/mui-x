@@ -30,7 +30,7 @@ import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
-export interface RenderHeaderFilterProps extends GridHeaderFilterCellProps {
+export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
   inputRef: React.RefObject<unknown>;
 }
 
