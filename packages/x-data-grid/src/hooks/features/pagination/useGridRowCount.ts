@@ -49,7 +49,6 @@ export const useGridRowCount = (
           rowCount: newRowCount,
         },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, rowCount],
   );

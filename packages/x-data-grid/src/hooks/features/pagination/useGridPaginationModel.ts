@@ -125,7 +125,6 @@ export const useGridPaginationModel = (
           ),
         },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, props.signature],
   );
@@ -213,8 +212,6 @@ export const useGridPaginationModel = (
         rowIndex: paginationModel.page * paginationModel.pageSize,
       });
     }
-
-    apiRef.current.forceUpdate();
   };
 
   const handleUpdateAutoPageSize = React.useCallback(() => {
@@ -266,7 +263,5 @@ export const useGridPaginationModel = (
     }));
   }, [apiRef, props.paginationModel, props.paginationMode, props.signature]);
 
-  React.useEffect(() => {
-    handleUpdateAutoPageSize();
-  }, [handleUpdateAutoPageSize]);
+  React.useEffect(handleUpdateAutoPageSize, [handleUpdateAutoPageSize]);
 };
