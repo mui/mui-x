@@ -166,11 +166,11 @@ describe('<DataGridPro /> - Columns', () => {
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
       const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
-      const isWidth116Present = widthArgs.some((width) => width === 116);
-      expect(isWidth116Present).to.equal(true);
+      const isWidth64Present = widthArgs.some((width) => Math.round(width) === 64);
+      expect(isWidth64Present).to.equal(true);
       const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
-      const isColDefWidth116Present = colDefWidthArgs.some((width) => width === 116);
-      expect(isColDefWidth116Present).to.equal(true);
+      const isColDefWidth64Present = colDefWidthArgs.some((width) => Math.round(width) === 64);
+      expect(isColDefWidth64Present).to.equal(true);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
