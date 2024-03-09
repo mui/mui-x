@@ -159,7 +159,7 @@ export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiPro, col: HTM
 
 export function findGridHeader(api: GridPrivateApiPro, field: string) {
   const headers = api.columnHeadersContainerElementRef!.current!;
-  return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
+  return headers.querySelector(`:scope > div > [data-field="${field}"][role="columnheader"]`);
 }
 
 export function findGridCells(api: GridPrivateApiPro, field: string) {
