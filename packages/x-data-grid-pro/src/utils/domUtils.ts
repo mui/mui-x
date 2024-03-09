@@ -71,8 +71,8 @@ export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLEle
       return;
     }
 
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
-    rightPinnedCells.forEach((cell) => {
+    const leftPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
+    leftPinnedCells.forEach((cell) => {
       const currentColIndex = parseCellColIndex(cell);
       if (currentColIndex !== null && currentColIndex > colIndex) {
         cells.push(cell as HTMLElement);
@@ -107,6 +107,54 @@ export function findRightPinnedCellsBeforeCol(api: GridPrivateApiPro, col: HTMLE
   });
 
   return cells;
+}
+
+export function findLeftPinnedHeadersAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
+  if (!api.columnHeadersContainerElementRef?.current) {
+    return [];
+  }
+
+  const colIndex = parseCellColIndex(col);
+  if (colIndex === null) {
+    return [];
+  }
+
+  const leftPinnedHeaders = api.columnHeadersContainerElementRef.current.querySelectorAll(
+    `.${gridClasses['columnHeader--pinnedLeft']}`,
+  );
+
+  const elements: HTMLElement[] = [];
+  leftPinnedHeaders.forEach((element) => {
+    const currentColIndex = parseCellColIndex(element);
+    if (currentColIndex !== null && currentColIndex > colIndex) {
+      elements.push(element as HTMLElement);
+    }
+  });
+  return elements;
+}
+
+export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiPro, col: HTMLElement) {
+  if (!api.columnHeadersContainerElementRef?.current) {
+    return [];
+  }
+
+  const colIndex = parseCellColIndex(col);
+  if (colIndex === null) {
+    return [];
+  }
+
+  const rightPinnedHeaders = api.columnHeadersContainerElementRef.current.querySelectorAll(
+    `.${gridClasses['columnHeader--pinnedRight']}`,
+  );
+
+  const elements: HTMLElement[] = [];
+  rightPinnedHeaders.forEach((element) => {
+    const currentColIndex = parseCellColIndex(element);
+    if (currentColIndex !== null && currentColIndex < colIndex) {
+      elements.push(element as HTMLElement);
+    }
+  });
+  return elements;
 }
 
 export function findGridHeader(api: GridPrivateApiPro, field: string) {

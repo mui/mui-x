@@ -40,6 +40,8 @@ import {
   findGroupHeaderElementsFromField,
   findGridHeader,
   findGridCells,
+  findLeftPinnedHeadersAfterCol,
+  findRightPinnedHeadersBeforeCol,
 } from '../../../utils/domUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -288,6 +290,8 @@ export const useGridColumnResize = (
   const cellElementsRef = React.useRef<Element[]>([]);
   const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
   const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
+  const leftPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
+  const rightPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
   const fillerLeftRef = React.useRef<HTMLElement>();
   const fillerRightRef = React.useRef<HTMLElement>();
 
@@ -361,6 +365,9 @@ export const useGridColumnResize = (
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
+      leftPinnedHeadersAfterRef.current.forEach((header) => {
+        updateProperty(header, 'left', widthDiff);
+      });
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
@@ -368,6 +375,9 @@ export const useGridColumnResize = (
 
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
+      });
+      rightPinnedHeadersAfterRef.current.forEach((header) => {
+        updateProperty(header, 'right', widthDiff);
       });
     }
   };
@@ -446,6 +456,15 @@ export const useGridColumnResize = (
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
         : findRightPinnedCellsBeforeCol(apiRef.current, columnHeaderElementRef.current);
+
+    leftPinnedHeadersAfterRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.LEFT
+        ? []
+        : findLeftPinnedHeadersAfterCol(apiRef.current, columnHeaderElementRef.current);
+    rightPinnedHeadersAfterRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.RIGHT
+        ? []
+        : findRightPinnedHeadersBeforeCol(apiRef.current, columnHeaderElementRef.current);
 
     resizeDirection.current = getResizeDirection(separator, theme.direction);
 
