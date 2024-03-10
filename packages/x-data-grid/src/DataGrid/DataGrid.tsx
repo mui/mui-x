@@ -606,6 +606,14 @@ DataGridRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
+   * Server-side pagination could either be based on a page number or a cursor.
+   * Set it to 'index' if the pagination is based on a page number.
+   * Set it to 'cursor' if the pagination is based on a cursor.
+   * Only applicable when `paginationMode` is set to 'server'.
+   * @default "index"
+   */
+  paginationType: PropTypes.oneOf(['cursor', 'index']),
+  /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
    * @param {R} newRow Row object with the new values.

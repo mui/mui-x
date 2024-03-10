@@ -1,7 +1,6 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
-  gridFilteredTopLevelRowCountSelector,
   gridExpandedSortedRowEntriesSelector,
   gridExpandedSortedRowIdsSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
@@ -56,10 +55,9 @@ export const gridPageSizeSelector = createSelector(
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPaginationModelSelector,
-  gridFilteredTopLevelRowCountSelector,
-  (paginationModel, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
+  gridPageSizeSelector,
+  gridPaginationRowCountSelector,
+  (pageSize, rowCount) => getPageCount(rowCount, pageSize),
 );
 
 /**

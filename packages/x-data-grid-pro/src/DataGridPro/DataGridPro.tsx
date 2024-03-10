@@ -771,6 +771,14 @@ DataGridProRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
+   * Server-side pagination could either be based on a page number or a cursor.
+   * Set it to 'index' if the pagination is based on a page number.
+   * Set it to 'cursor' if the pagination is based on a cursor.
+   * Only applicable when `paginationMode` is set to 'server'.
+   * @default "index"
+   */
+  paginationType: PropTypes.oneOf(['cursor', 'index']),
+  /**
    * The column fields to display pinned to left or right.
    */
   pinnedColumns: PropTypes.object,

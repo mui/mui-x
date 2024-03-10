@@ -51,7 +51,6 @@ export const useGridRowCount = (
           rowCount: newRowCount,
         },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, rowCount],
   );
@@ -126,6 +125,8 @@ export const useGridRowCount = (
   React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(visibleTopLevelRowCount);
+    } else if (props.rowCount != null) {
+      apiRef.current.setRowCount(props.rowCount);
     }
-  }, [apiRef, visibleTopLevelRowCount, props.paginationMode]);
+  }, [apiRef, visibleTopLevelRowCount, props.paginationMode, props.rowCount]);
 };

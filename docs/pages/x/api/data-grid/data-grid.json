@@ -371,6 +371,10 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
+    "paginationType": {
+      "type": { "name": "enum", "description": "'cursor'<br>&#124;&nbsp;'index'" },
+      "default": "\"index\""
+    },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {

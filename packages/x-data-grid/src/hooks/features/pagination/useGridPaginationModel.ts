@@ -12,7 +12,7 @@ import {
   useGridApiEventHandler,
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { gridPaginationModelSelector } from './gridPaginationSelector';
+import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
   getPageCount,
   defaultPageSize,
@@ -125,18 +125,17 @@ export const useGridPaginationModel = (
           ),
         },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, props.signature],
   );
 
-  const pageApi: GridPaginationModelApi = {
+  const paginationModelApi: GridPaginationModelApi = {
     setPage,
     setPageSize,
     setPaginationModel,
   };
 
-  useGridApiMethod(apiRef, pageApi, 'public');
+  useGridApiMethod(apiRef, paginationModelApi, 'public');
 
   /**
    * PRE-PROCESSING
@@ -213,8 +212,6 @@ export const useGridPaginationModel = (
         rowIndex: paginationModel.page * paginationModel.pageSize,
       });
     }
-
-    apiRef.current.forceUpdate();
   };
 
   const handleUpdateAutoPageSize = React.useCallback(() => {
@@ -231,8 +228,23 @@ export const useGridPaginationModel = (
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);
 
+  const handleRowCountChange = React.useCallback(
+    (newRowCount: GridPaginationState['rowCount']) => {
+      if (newRowCount == null) {
+        return;
+      }
+      const paginationModel = gridPaginationModelSelector(apiRef);
+      const pageCount = gridPageCountSelector(apiRef);
+      if (paginationModel.page > pageCount - 1) {
+        apiRef.current.setPage(Math.max(0, pageCount - 1));
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
 
   /**
    * EFFECTS
@@ -251,7 +263,5 @@ export const useGridPaginationModel = (
     }));
   }, [apiRef, props.paginationModel, props.paginationMode, props.signature]);
 
-  React.useEffect(() => {
-    handleUpdateAutoPageSize();
-  }, [handleUpdateAutoPageSize]);
+  React.useEffect(handleUpdateAutoPageSize, [handleUpdateAutoPageSize]);
 };
