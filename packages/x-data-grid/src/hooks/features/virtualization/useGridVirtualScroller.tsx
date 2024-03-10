@@ -6,7 +6,7 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useTheme, Theme } from '@mui/material/styles';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -31,6 +31,7 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
+import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
@@ -38,9 +39,9 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 
-const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
-
-export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
+interface PrivateApiWithInfiniteLoader
+  extends GridPrivateApiCommunity,
+    GridInfiniteLoaderPrivateApi {}
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
@@ -51,6 +52,10 @@ enum ScrollDirection {
   LEFT,
   RIGHT,
 }
+
+const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
+
+export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 const EMPTY_SCROLL_CACHE = {
   direction: ScrollDirection.NONE,
@@ -63,7 +68,7 @@ type ScrollCache = typeof EMPTY_SCROLL_CACHE;
 const createScrollCache = () => ({ ...EMPTY_SCROLL_CACHE });
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
@@ -415,8 +420,10 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
+      if (isLastVisible) {
+        rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
+      }
     });
-
     return rows;
   };
 

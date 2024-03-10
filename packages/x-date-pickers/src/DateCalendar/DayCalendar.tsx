@@ -491,13 +491,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   });
 
   const currentMonthNumber = utils.getMonth(currentMonth);
+  const currentYearNumber = utils.getYear(currentMonth);
   const validSelectedDays = React.useMemo(
     () => selectedDays.filter((day): day is TDate => !!day).map((day) => utils.startOfDay(day)),
     [utils, selectedDays],
   );
 
   // need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
-  const transitionKey = currentMonthNumber;
+  const transitionKey = `${currentYearNumber}-${currentMonthNumber}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
   const startOfCurrentWeek = utils.startOfWeek(now);
