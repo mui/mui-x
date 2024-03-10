@@ -77,7 +77,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
-  const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
     forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },

@@ -420,7 +420,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           onClick: getInputContainerClickHandler(index),
         } as React.HTMLAttributes<HTMLSpanElement>,
         content: {
-          tabIndex: isContainerEditable ? undefined : 0,
+          tabIndex: isContainerEditable || index > 0 ? -1 : 0,
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           id: `${id}-${section.type}`,
@@ -522,7 +522,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       enableAccessibleFieldDOMStructure: true,
       elements,
       // TODO v7: Try to set to undefined when there is a section selected.
-      tabIndex: 0,
+      tabIndex: parsedSelectedSections === 0 ? -1 : 0,
       contentEditable: isContainerEditable,
       value: valueStr,
       onChange: handleValueStrChange,

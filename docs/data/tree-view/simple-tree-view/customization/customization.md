@@ -22,7 +22,7 @@ The demo below shows how to add icons using both an existing icon library, such 
 
 ### Custom toggle animations
 
-Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
+Use the `groupTransition` slot on the `TreeItem` to pass a component that handles your animation.
 
 The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
@@ -45,7 +45,7 @@ The demo below shows how to add an avatar and custom typography elements.
 
 ### Connection border
 
-Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+Target the `treeItemClasses.groupTransition` class to add connection borders between the Tree View items.
 
 {{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
 
