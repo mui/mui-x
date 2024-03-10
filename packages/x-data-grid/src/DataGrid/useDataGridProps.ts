@@ -62,6 +62,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
   paginationMode: 'client',
+  paginationType: 'index',
   rowHeight: 52,
   pageSizeOptions: [25, 50, 100],
   rowSpacingType: 'margin',

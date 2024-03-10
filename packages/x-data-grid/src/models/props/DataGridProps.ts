@@ -30,7 +30,7 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
-import { GridPaginationModel } from '../gridPaginationProps';
+import { GridPaginationModel, GridPaginationType } from '../gridPaginationProps';
 
 export interface GridExperimentalFeatures {
   /**
@@ -295,6 +295,14 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default "client"
    */
   paginationMode: GridFeatureMode;
+  /**
+   * Server-side pagination could either be based on a page number or a cursor.
+   * Set it to 'index' if the pagination is based on a page number.
+   * Set it to 'cursor' if the pagination is based on a cursor.
+   * Only applicable when `paginationMode` is set to 'server'.
+   * @default "index"
+   */
+  paginationType: GridPaginationType;
   /**
    * Sets the height in pixel of a row in the Data Grid.
    * @default 52
