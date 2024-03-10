@@ -5,6 +5,7 @@ import {
   GridRowProApi,
 } from '@mui/x-data-grid';
 import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
+import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/models/api/gridInfiniteLoaderApi';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
@@ -32,4 +33,5 @@ export interface GridApiPro
 export interface GridPrivateApiPro
   extends GridApiPro,
     GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
-    GridDetailPanelPrivateApi {}
+    GridDetailPanelPrivateApi,
+    GridInfiniteLoaderPrivateApi {}

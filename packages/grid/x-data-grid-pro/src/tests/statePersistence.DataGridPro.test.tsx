@@ -59,11 +59,12 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   filter: {
     filterModel: {
-      items: [{ field: 'id', operator: '<', value: '5' }],
+      items: [{ field: 'id', operator: '>=', value: '0' }],
     },
   },
   pagination: {
     paginationModel: { page: 1, pageSize: 2 },
+    rowCount: 6,
   },
   pinnedColumns: {
     left: ['id'],
@@ -125,6 +126,7 @@ describe('<DataGridPro /> - State persistence', () => {
         },
         pagination: {
           paginationModel: { page: 0, pageSize: 100 },
+          rowCount: 6,
         },
         pinnedColumns: {},
         preferencePanel: {
@@ -160,6 +162,7 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
+          rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
@@ -184,6 +187,7 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
+          rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
@@ -215,7 +219,7 @@ describe('<DataGridPro /> - State persistence', () => {
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
-          items: [{ field: 'id', operator: '<', value: '5' }],
+          items: [{ field: 'id', operator: '>=', value: '0' }],
         });
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
@@ -232,7 +236,7 @@ describe('<DataGridPro /> - State persistence', () => {
       act(() => apiRef.current.restoreState(FULL_INITIAL_STATE));
 
       // Pinning, pagination, sorting and filtering
-      expect(getColumnValues(0)).to.deep.equal(['2', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['3', '2']);
 
       // Preference panel
       expect(screen.getByRole('button', { name: /Add Filter/i })).to.not.equal(null);
