@@ -134,7 +134,7 @@ DataGridProRaw.propTypes = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
-   * Column region to render before/after the viewport
+   * Column region in pixels to render before/after the viewport
    * @default 100
    */
   columnBufferPx: PropTypes.number,
@@ -149,7 +149,7 @@ DataGridProRaw.propTypes = {
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
+   * Number of pixels from the `columnBuffer` that can be visible before a new slice is rendered.
    * @default 150
    */
   columnThresholdPx: PropTypes.number,
@@ -787,7 +787,7 @@ DataGridProRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * Row region to render before/after the viewport
+   * Row region in pixels to render before/after the viewport
    * @default 100
    */
   rowBufferPx: PropTypes.number,
@@ -847,7 +847,7 @@ DataGridProRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
+   * Number of pixels from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 150
    */
   rowThresholdPx: PropTypes.number,

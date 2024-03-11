@@ -29,7 +29,9 @@
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard."
     },
-    "columnBufferPx": { "description": "Column region to render before/after the viewport" },
+    "columnBufferPx": {
+      "description": "Column region in pixels to render before/after the viewport"
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -37,7 +39,7 @@
       "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
     },
     "columnThresholdPx": {
-      "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
+      "description": "Number of pixels from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
     },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
@@ -518,7 +520,7 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "rowBufferPx": { "description": "Row region to render before/after the viewport" },
+    "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
       "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."
     },
@@ -538,7 +540,7 @@
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
     },
     "rowThresholdPx": {
-      "description": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
+      "description": "Number of pixels from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."

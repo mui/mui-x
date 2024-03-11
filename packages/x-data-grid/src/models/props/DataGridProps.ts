@@ -128,12 +128,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   checkboxSelectionVisibleOnly: boolean;
   /**
-   * Column region to render before/after the viewport
+   * Column region in pixels to render before/after the viewport
    * @default 100
    */
   columnBufferPx: number;
   /**
-   * Row region to render before/after the viewport
+   * Row region in pixels to render before/after the viewport
    * @default 100
    */
   rowBufferPx: number;
@@ -143,12 +143,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSelection: boolean;
   /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
+   * Number of pixels from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 150
    */
   rowThresholdPx: number;
   /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
+   * Number of pixels from the `columnBuffer` that can be visible before a new slice is rendered.
    * @default 150
    */
   columnThresholdPx: number;

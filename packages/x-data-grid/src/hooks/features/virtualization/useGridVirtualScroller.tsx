@@ -4,7 +4,7 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import useLazyRef from '@mui/utils/useLazyRef';
+import useTimeout from '@mui/utils/useTimeout';
 import { useTheme, Theme } from '@mui/material/styles';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -45,6 +45,7 @@ interface PrivateApiWithInfiniteLoader
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
+type ScrollPosition = { top: number; left: number };
 enum ScrollDirection {
   NONE,
   UP,
@@ -59,13 +60,9 @@ export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactN
 
 const EMPTY_SCROLL_CACHE = {
   direction: ScrollDirection.NONE,
-  lastTimestamp: -1,
-  lastPosition: { top: 0, left: 0 },
-  buffer: { top: 0, left: 0 },
+  buffer: { vertical: 0, horizontal: 0 },
 };
 type ScrollCache = typeof EMPTY_SCROLL_CACHE;
-
-const createScrollCache = () => ({ ...EMPTY_SCROLL_CACHE });
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
@@ -97,14 +94,29 @@ export const useGridVirtualScroller = () => {
 
   useResizeObserver(mainRef, () => apiRef.current.resize());
 
-  const previousScroll = React.useRef(EMPTY_SCROLL_POSITION);
+  /*
+   * Scroll context logic
+   * ====================
+   * We only render the cells contained in the `renderContext`. However, when the user starts scrolling the grid
+   * in a direction, we want to render as many cells as possible in that direction, as to avoid presenting white
+   * areas if the user scrolls too fast/far and the viewport ends up in a region we haven't rendered yet. To render
+   * more cells, we store some offsets to add to the viewport in `scrollCache.buffer`. Those offsets make the render
+   * context wider in the direction the user is going, but also makes the buffer around the viewport `0` for the
+   * dimension (horizontal or vertical) in which the user is not scrolling. So if the normal viewport is 8 columns
+   * wide, with a 1 column buffer (10 columns total), then we want it to be exactly 8 columns wide during vertical
+   * scroll.
+   * However, we don't want the rows in the old context to re-render from e.g. 10 columns to 8 columns, because that's
+   * work that's not necessary. Thus we store the context at the start of the scroll in `frozenContext`, and the rows
+   * that are part of this old context will keep their same render context as to avoid re-rendering.
+   */
+  const currentScroll = React.useRef(EMPTY_SCROLL_POSITION);
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
+  const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
-  const prevTotalWidth = React.useRef(columnsTotalWidth);
-
-  const scrollCache = useLazyRef(createScrollCache).current;
+  const scrollTimeout = useTimeout();
+  const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
+  const scrollCache = React.useRef(EMPTY_SCROLL_CACHE);
 
   const focusedCell = {
     rowIndex: React.useMemo(
@@ -148,58 +160,102 @@ export const useGridVirtualScroller = () => {
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
-      previousScroll.current = scrollPosition.current;
+      previousContextScrollPosition.current = currentScroll.current;
       previousContext.current = rawRenderContext;
-      prevTotalWidth.current = dimensions.columnsTotalWidth;
     },
-    [apiRef, dimensions.isReady, dimensions.columnsTotalWidth],
+    [apiRef, dimensions.isReady],
   );
 
   const triggerUpdateRenderContext = () => {
-    const timestamp = performance.now();
-    const dt = timestamp - scrollCache.lastTimestamp;
-    const isScrolling = scrollCache.lastTimestamp !== -1 && dt < 500;
+    const newScroll = {
+      top: scrollerRef.current!.scrollTop,
+      left: scrollerRef.current!.scrollLeft,
+    };
 
-    scrollCache.lastTimestamp = timestamp;
-    scrollCache.lastPosition = scrollPosition.current;
+    const dx = newScroll.left - currentScroll.current.left;
+    const dy = newScroll.top - currentScroll.current.top;
 
+    const isScrolling = dx !== 0 || dy !== 0;
+
+    currentScroll.current = newScroll;
+
+    let direction: ScrollCache['direction'];
     if (isScrolling) {
-      const dy = scrollPosition.current.top - previousScroll.current.top;
-      const dx = scrollPosition.current.left - previousScroll.current.left;
-      scrollCache.buffer = {
-        top: dimensions.rowHeight * 10,
-        left: 50 * 3,
-      };
-      scrollCache.direction = directionForDelta(dx, dy);
+      direction = directionForDelta(dx, dy);
     } else {
-      scrollCache.buffer = { top: 0, left: 0 };
-      scrollCache.direction = ScrollDirection.NONE;
+      direction = ScrollDirection.NONE;
     }
 
     // Since previous render, we have scrolled...
-    const rowScroll =
-      Math.abs(scrollPosition.current.top - previousScroll.current.top) + scrollCache.buffer.top;
-    const columnScroll =
-      Math.abs(scrollPosition.current.left - previousScroll.current.left) + scrollCache.buffer.left;
+    const rowScroll = Math.abs(
+      currentScroll.current.top - previousContextScrollPosition.current.top,
+    );
+    const columnScroll = Math.abs(
+      currentScroll.current.left - previousContextScrollPosition.current.left,
+    );
 
-    const shouldUpdate =
+    const didCrossThreshold =
       rowScroll >= rootProps.rowThresholdPx || columnScroll >= rootProps.columnThresholdPx;
+    const didChangeDirection = scrollCache.current.direction !== direction;
+    const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
       return previousContext.current;
     }
 
+    // Render a new context
+
+    if (didChangeDirection) {
+      switch (direction) {
+        case ScrollDirection.NONE:
+        case ScrollDirection.LEFT:
+        case ScrollDirection.RIGHT:
+          frozenContext.current = undefined;
+          break;
+        default:
+          frozenContext.current = renderContext;
+          break;
+      }
+    }
+
+    let buffer: ScrollCache['buffer'];
+    /* eslint-disable */
+    switch (direction) {
+      case ScrollDirection.NONE:
+        buffer = { vertical: 0, horizontal: 0 };
+        break;
+      case ScrollDirection.LEFT:
+      case ScrollDirection.RIGHT:
+        buffer = {
+          vertical: -rootProps.rowBufferPx,
+          horizontal: 50 * 3,
+        };
+        break;
+      case ScrollDirection.UP:
+      case ScrollDirection.DOWN:
+        buffer = {
+          vertical: dimensions.rowHeight * 15,
+          horizontal: -rootProps.columnBufferPx,
+        };
+        break;
+    }
+    /* eslint-enable */
+
+    scrollCache.current = { buffer, direction };
+
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
     const [nextRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      scrollPosition.current,
-      scrollCache,
+      currentScroll.current,
+      scrollCache.current,
     );
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
       updateRenderContext(nextRenderContext, rawRenderContext);
     });
+
+    scrollTimeout.start(1000, triggerUpdateRenderContext);
 
     return nextRenderContext;
   };
@@ -208,16 +264,14 @@ export const useGridVirtualScroller = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
     const [nextRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      scrollPosition.current,
-      scrollCache,
+      currentScroll.current,
+      scrollCache.current,
     );
     updateRenderContext(nextRenderContext, rawRenderContext);
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
-
-    scrollPosition.current = { top: scrollTop, left: scrollLeft };
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
     if (scrollTop < 0) {
@@ -262,8 +316,7 @@ export const useGridVirtualScroller = () => {
       return [];
     }
 
-    const columnPositions = gridColumnPositionsSelector(apiRef);
-    const currentRenderContext = params.renderContext ?? renderContext;
+    const baseRenderContext = params.renderContext ?? renderContext;
 
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
@@ -287,8 +340,8 @@ export const useGridVirtualScroller = () => {
 
     const rowModels = params.rows ?? currentPage.rows;
 
-    const firstRowToRender = currentRenderContext.firstRowIndex;
-    const lastRowToRender = Math.min(currentRenderContext.lastRowIndex, rowModels.length);
+    const firstRowToRender = baseRenderContext.firstRowIndex;
+    const lastRowToRender = Math.min(baseRenderContext.lastRowIndex, rowModels.length);
 
     const rowIndexes = params.rows
       ? range(0, params.rows.length)
@@ -308,6 +361,7 @@ export const useGridVirtualScroller = () => {
 
     const rows: React.ReactNode[] = [];
     const rowProps = rootProps.slotProps?.row;
+    const columnPositions = gridColumnPositionsSelector(apiRef);
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
@@ -382,6 +436,16 @@ export const useGridVirtualScroller = () => {
       if (cellTabIndex !== null && cellTabIndex.id === id) {
         const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
         tabbableCell = cellParams.cellMode === 'view' ? cellTabIndex.field : null;
+      }
+
+      let currentRenderContext = baseRenderContext;
+      if (
+        !isPinnedSection &&
+        frozenContext.current &&
+        rowIndexInPage >= frozenContext.current.firstRowIndex &&
+        rowIndexInPage < frozenContext.current.lastRowIndex
+      ) {
+        currentRenderContext = frozenContext.current;
       }
 
       const offsetLeft = computeOffsetLeft(
@@ -489,14 +553,14 @@ export const useGridVirtualScroller = () => {
 
     const [initialRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      scrollPosition.current,
-      scrollCache,
+      currentScroll.current,
+      scrollCache.current,
     );
     updateRenderContext(initialRenderContext, rawRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollPosition.current.top,
-      left: scrollPosition.current.left,
+      top: currentScroll.current.top,
+      left: currentScroll.current.left,
       renderContext: initialRenderContext,
     });
   });
@@ -535,7 +599,6 @@ export const useGridVirtualScroller = () => {
   };
 };
 
-type ScrollPosition = { top: number; left: number };
 type RenderContextInputs = {
   enabled: boolean;
   enabledForColumns: boolean;
@@ -894,10 +957,21 @@ function directionForDelta(dx: number, dy: number) {
 
 function bufferForScrollCache(scrollCache: ScrollCache) {
   const direction = scrollCache.direction;
-  return {
-    columnBefore: direction === ScrollDirection.LEFT ? scrollCache.buffer.left : 0,
-    columnAfter: direction === ScrollDirection.RIGHT ? scrollCache.buffer.left : 0,
-    rowBefore: direction === ScrollDirection.UP ? scrollCache.buffer.top : 0,
-    rowAfter: direction === ScrollDirection.DOWN ? scrollCache.buffer.top : 0,
+  const isVertical = direction === ScrollDirection.UP || direction === ScrollDirection.DOWN;
+  const isHorizontal = direction === ScrollDirection.LEFT || direction === ScrollDirection.RIGHT;
+  const buffer = {
+    columnBefore: direction === ScrollDirection.LEFT ? scrollCache.buffer.horizontal : 0,
+    columnAfter: direction === ScrollDirection.RIGHT ? scrollCache.buffer.horizontal : 0,
+    rowBefore: direction === ScrollDirection.UP ? scrollCache.buffer.vertical : 0,
+    rowAfter: direction === ScrollDirection.DOWN ? scrollCache.buffer.vertical : 0,
   };
+  if (isVertical) {
+    buffer.columnAfter = scrollCache.buffer.horizontal;
+    buffer.columnBefore = scrollCache.buffer.horizontal;
+  }
+  if (isHorizontal) {
+    buffer.rowAfter = scrollCache.buffer.vertical;
+    buffer.rowBefore = scrollCache.buffer.vertical;
+  }
+  return buffer;
 }
