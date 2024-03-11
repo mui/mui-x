@@ -57,8 +57,17 @@ export function findGridElement(api: GridPrivateApiPro, klass: keyof typeof grid
   return api.rootElementRef.current!.querySelector(`.${gridClasses[klass]}`)! as HTMLElement;
 }
 
-export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
-  const colIndex = parseCellColIndex(col);
+const findPinnedCells = ({
+  api,
+  colIndex,
+  position,
+  filterFn,
+}: {
+  api: GridPrivateApiPro;
+  colIndex: number | null;
+  position: 'left' | 'right';
+  filterFn: (colIndex: number) => boolean;
+}) => {
   if (colIndex === null) {
     return [];
   }
@@ -71,42 +80,39 @@ export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLEle
       return;
     }
 
-    const leftPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
-    leftPinnedCells.forEach((cell) => {
-      const currentColIndex = parseCellColIndex(cell);
-      if (currentColIndex !== null && currentColIndex > colIndex) {
-        cells.push(cell as HTMLElement);
-      }
-    });
+    rowElement
+      .querySelectorAll(
+        `.${gridClasses[position === 'left' ? 'cell--pinnedLeft' : 'cell--pinnedRight']}`,
+      )
+      .forEach((cell) => {
+        const currentColIndex = parseCellColIndex(cell);
+        if (currentColIndex !== null && filterFn(currentColIndex)) {
+          cells.push(cell as HTMLElement);
+        }
+      });
   });
 
   return cells;
+};
+
+export function findLeftPinnedCellsAfterCol(api: GridPrivateApiPro, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  return findPinnedCells({
+    api,
+    colIndex,
+    position: 'left',
+    filterFn: (index) => index > colIndex!,
+  });
 }
 
 export function findRightPinnedCellsBeforeCol(api: GridPrivateApiPro, col: HTMLElement) {
   const colIndex = parseCellColIndex(col);
-  if (colIndex === null) {
-    return [];
-  }
-
-  const cells: HTMLElement[] = [];
-
-  queryRows(api).forEach((rowElement) => {
-    const rowId = rowElement.getAttribute('data-id');
-    if (!rowId) {
-      return;
-    }
-
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedRight']}`);
-    rightPinnedCells.forEach((cell) => {
-      const currentColIndex = parseCellColIndex(cell);
-      if (currentColIndex !== null && currentColIndex < colIndex) {
-        cells.push(cell as HTMLElement);
-      }
-    });
+  return findPinnedCells({
+    api,
+    colIndex,
+    position: 'right',
+    filterFn: (index) => index < colIndex!,
   });
-
-  return cells;
 }
 
 const findPinnedHeaders = ({
