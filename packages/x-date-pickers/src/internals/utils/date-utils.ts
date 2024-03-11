@@ -36,7 +36,7 @@ export const findClosestEnabledDate = <TDate>({
   utils,
   timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = mergeDateAndTime(utils, utils.date(undefined, timezone), date);
+  const today = mergeDateAndTime(utils, utils.dateWithTimezone(undefined, timezone), date);
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
   }
