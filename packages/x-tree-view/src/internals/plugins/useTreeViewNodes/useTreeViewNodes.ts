@@ -70,7 +70,7 @@ const updateNodesState = ({
       label,
       index,
       parentId,
-      idAttribute: id,
+      idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
     };
@@ -171,7 +171,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
         }
       });
 
-      return { ...prevState, ...newState };
+      return { ...prevState, nodes: newState };
     });
   }, [
     instance,
@@ -182,7 +182,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getNodesToRender = useEventCallback(() => {
+  const getNodesToRender = () => {
     const getPropsFromNodeId = ({
       id,
       children,
@@ -197,7 +197,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     };
 
     return state.nodes.nodeTree.map(getPropsFromNodeId);
-  });
+  };
 
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,

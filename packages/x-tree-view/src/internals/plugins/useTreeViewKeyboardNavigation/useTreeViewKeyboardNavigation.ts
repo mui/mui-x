@@ -108,8 +108,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const canToggleNodeSelection = (nodeId: string) =>
     !params.disableSelection && !instance.isNodeDisabled(nodeId);
 
-  const canToggleNodeExpansion = (nodeId: string) =>
-    !instance.isNodeDisabled(nodeId) && instance.isNodeExpandable(nodeId);
+  const canToggleNodeExpansion = (nodeId: string) => {
+    return !instance.isNodeDisabled(nodeId) && instance.isNodeExpandable(nodeId);
+  };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const handleItemKeyDown = (

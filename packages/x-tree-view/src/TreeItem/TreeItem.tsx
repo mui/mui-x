@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
@@ -15,6 +16,7 @@ import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
+import { TreeItem2Provider } from '../TreeItem2Provider';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -161,9 +163,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
-
-  const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
   const {
     children,
@@ -183,11 +183,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const handleContentRef = React.useRef<HTMLDivElement>(null);
-  const contentRef = useForkRef(ContentProps?.ref, handleContentRef);
-
-  const handleRootRef = React.useRef<HTMLLIElement>(null);
-  const rootRef = useForkRef(ref, handleRootRef);
+  const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
+  const handleRootRef = useForkRef(inRef, rootRef);
+  const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
@@ -312,53 +310,53 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const idAttribute = instance.getTreeItemId(nodeId, id);
   const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
 
-  const item = (
-    <TreeItemRoot
-      className={clsx(classes.root, className)}
-      role="treeitem"
-      aria-expanded={expandable ? expanded : undefined}
-      aria-selected={ariaSelected}
-      aria-disabled={disabled || undefined}
-      id={idAttribute}
-      {...other}
-      ownerState={ownerState}
-      tabIndex={tabIndex}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      ref={rootRef}
-    >
-      <StyledTreeItemContent
-        as={ContentComponent}
-        classes={{
-          root: classes.content,
-          expanded: classes.expanded,
-          selected: classes.selected,
-          focused: classes.focused,
-          disabled: classes.disabled,
-          iconContainer: classes.iconContainer,
-          label: classes.label,
-        }}
-        label={label}
-        nodeId={nodeId}
-        onClick={onClick}
-        onMouseDown={onMouseDown}
-        icon={icon}
-        expansionIcon={expansionIcon}
-        displayIcon={displayIcon}
+  return (
+    <TreeItem2Provider nodeId={nodeId}>
+      <TreeItemRoot
+        className={clsx(classes.root, className)}
+        role="treeitem"
+        aria-expanded={expandable ? expanded : undefined}
+        aria-selected={ariaSelected}
+        aria-disabled={disabled || undefined}
+        id={idAttribute}
+        tabIndex={tabIndex}
+        {...other}
         ownerState={ownerState}
-        {...ContentProps}
-        ref={contentRef}
-      />
-      {children && (
-        <TreeItemGroup as={GroupTransition} {...groupTransitionProps}>
-          {children}
-        </TreeItemGroup>
-      )}
-    </TreeItemRoot>
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        ref={handleRootRef}
+      >
+        <StyledTreeItemContent
+          as={ContentComponent}
+          classes={{
+            root: classes.content,
+            expanded: classes.expanded,
+            selected: classes.selected,
+            focused: classes.focused,
+            disabled: classes.disabled,
+            iconContainer: classes.iconContainer,
+            label: classes.label,
+          }}
+          label={label}
+          nodeId={nodeId}
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          icon={icon}
+          expansionIcon={expansionIcon}
+          displayIcon={displayIcon}
+          ownerState={ownerState}
+          {...ContentProps}
+          ref={handleContentRef}
+        />
+        {children && (
+          <TreeItemGroup as={GroupTransition} {...groupTransitionProps}>
+            {children}
+          </TreeItemGroup>
+        )}
+      </TreeItemRoot>
+    </TreeItem2Provider>
   );
-
-  return wrapItem(item);
 });
 
 TreeItem.propTypes = {

@@ -38,7 +38,7 @@ function PlanIcon(props: { plan?: string }) {
     <a
       href={planProps.href}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener"
       aria-label={planProps.title}
       title={planProps.title}
     >
