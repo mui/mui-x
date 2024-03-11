@@ -387,16 +387,16 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('four')).toHaveVirtualFocus();
   });
 
-  describe('onNodeFocus', () => {
+  describe('onItemFocus', () => {
     it('should be called when node is focused', () => {
       const focusSpy = spy();
       const { getByRole } = render(
-        <SimpleTreeView onNodeFocus={focusSpy}>
+        <SimpleTreeView onItemFocus={focusSpy}>
           <TreeItem nodeId="1" label="one" />
         </SimpleTreeView>,
       );
 
-      // First node receives focus when tree focused
+      // First item receives focus when tree focused
       act(() => {
         getByRole('tree').focus();
       });
@@ -444,10 +444,10 @@ describe('<SimpleTreeView />', () => {
 
   describe('useTreeViewFocus', () => {
     it('should focus the selected item when the tree is focused', () => {
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes={'2'} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedNodes={'2'} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -457,14 +457,14 @@ describe('<SimpleTreeView />', () => {
         getByRole('tree').focus();
       });
 
-      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+      expect(onItemFocus.lastCall.lastArg).to.equal('2');
     });
 
     it('should focus the selected item when the tree is focused (multi select)', () => {
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['2']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -474,14 +474,14 @@ describe('<SimpleTreeView />', () => {
         getByRole('tree').focus();
       });
 
-      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+      expect(onItemFocus.lastCall.lastArg).to.equal('2');
     });
 
     it('should focus the first visible selected item when the tree is focused (multi select)', () => {
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1', '2']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['1.1', '2']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -493,14 +493,14 @@ describe('<SimpleTreeView />', () => {
         getByRole('tree').focus();
       });
 
-      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+      expect(onItemFocus.lastCall.lastArg).to.equal('2');
     });
 
     it('should focus the first item if the selected item is not visible', () => {
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes="1.1" onNodeFocus={onNodeFocus}>
+        <SimpleTreeView selectedNodes="1.1" onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -512,14 +512,14 @@ describe('<SimpleTreeView />', () => {
         getByRole('tree').focus();
       });
 
-      expect(onNodeFocus.lastCall.lastArg).to.equal('1');
+      expect(onItemFocus.lastCall.lastArg).to.equal('1');
     });
 
     it('should focus the first item if no selected item is visible (multi select)', () => {
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1']} onNodeFocus={onNodeFocus}>
+        <SimpleTreeView multiSelect selectedNodes={['1.1']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -531,17 +531,17 @@ describe('<SimpleTreeView />', () => {
         getByRole('tree').focus();
       });
 
-      expect(onNodeFocus.lastCall.lastArg).to.equal('1');
+      expect(onItemFocus.lastCall.lastArg).to.equal('1');
     });
 
     it('should focus specific node using `apiRef`', () => {
       let apiRef: SimpleTreeViewApiRef;
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       function TestCase() {
         apiRef = useTreeViewApiRef();
         return (
-          <SimpleTreeView apiRef={apiRef} onNodeFocus={onNodeFocus}>
+          <SimpleTreeView apiRef={apiRef} onItemFocus={onItemFocus}>
             <TreeItem nodeId="1" label="1">
               <TreeItem nodeId="1.1" label="1.1" />
             </TreeItem>
@@ -557,17 +557,17 @@ describe('<SimpleTreeView />', () => {
       });
 
       expect(getByRole('tree')).toHaveFocus();
-      expect(onNodeFocus.lastCall.lastArg).to.equal('2');
+      expect(onItemFocus.lastCall.lastArg).to.equal('2');
     });
 
     it('should not focus node if parent is collapsed', () => {
       let apiRef: SimpleTreeViewApiRef;
-      const onNodeFocus = spy();
+      const onItemFocus = spy();
 
       function TestCase() {
         apiRef = useTreeViewApiRef();
         return (
-          <SimpleTreeView apiRef={apiRef} onNodeFocus={onNodeFocus}>
+          <SimpleTreeView apiRef={apiRef} onItemFocus={onItemFocus}>
             <TreeItem nodeId="1" label="1">
               <TreeItem nodeId="1.1" label="1.1" />
             </TreeItem>

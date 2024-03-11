@@ -21,7 +21,7 @@ export interface UseTreeViewFocusParameters {
    * @param {string} nodeId The id of the node focused.
    * @param {string} value of the focused node.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onItemFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
