@@ -452,9 +452,6 @@ export const GridRootStyles = styled('div', {
       maxWidth: 'var(--width)',
       lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
 
-      '--width': '0px',
-      '--height': '0px',
-
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
 

@@ -3,19 +3,17 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 const CustomTreeItem = React.forwardRef(
-  (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => {
-    return (
-      <TreeItem2
-        ref={ref}
-        {...props}
-        slotProps={{
-          label: {
-            id: `${props.nodeId}-label`,
-          },
-        }}
-      />
-    );
-  },
+  (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => (
+    <TreeItem2
+      ref={ref}
+      {...props}
+      slotProps={{
+        label: {
+          id: `${props.nodeId}-label`,
+        },
+      }}
+    />
+  ),
 );
 
 export default function LabelSlotProps() {

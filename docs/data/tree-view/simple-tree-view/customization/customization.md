@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Learn how to customize the simple version of the Tree View component.</p>
+<p class="description">Learn how to customize the Simple Tree View component.</p>
 
 ## Basics
 
@@ -22,7 +22,7 @@ The demo below shows how to add icons using both an existing icon library, such 
 
 ### Custom toggle animations
 
-Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
+Use the `groupTransition` slot on the `TreeItem` to pass a component that handles your animation.
 
 The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
@@ -57,7 +57,7 @@ The demo below shows how to add a tooltip on the Tree Item label:
 
 ### Headless API
 
-Use the `useTreeItem` hook to create your own component.
+Use the `useTreeItem2` hook to create your own component.
 The demo below shows how to add an avatar and custom typography elements.
 
 {{"demo": "CustomContentTreeView.js", "defaultCodeOpen": false}}

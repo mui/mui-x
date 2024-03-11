@@ -5,10 +5,6 @@ import { buildWarning } from './warning';
 
 type CacheKey = { id: number };
 
-interface CacheContainer {
-  cache: WeakMap<CacheKey, Map<any[], any>>;
-}
-
 export interface OutputSelector<State, Result> {
   (apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
@@ -40,7 +36,7 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
   ...items: SelectorArgs<Selectors, Result>
 ) => OutputSelector<StateFromSelectorList<Selectors>, Result>;
 
-const cacheContainer: CacheContainer = { cache: new WeakMap() };
+const cache = new WeakMap<CacheKey, Map<any[], any>>();
 
 const missingInstanceIdWarning = buildWarning([
   'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
@@ -135,8 +131,7 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (...selectorArgs: any[]) => {
-    const [stateOrApiRef, instanceId] = selectorArgs;
+  const selector = (stateOrApiRef: any, instanceId?: any) => {
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
       ? stateOrApiRef.current.instanceId
@@ -149,22 +144,24 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
       }
     }
 
-    const { cache } = cacheContainer;
+    const cacheArgsInit = cache.get(cacheKey);
+    const cacheArgs = cacheArgsInit ?? new Map();
+    const cacheFn = cacheArgs?.get(args);
 
-    if (cache.get(cacheKey) && cache.get(cacheKey)?.get(args)) {
+    if (cacheArgs && cacheFn) {
       // We pass the cache key because the called selector might have as
       // dependency another selector created with this `createSelector`.
-      return cache.get(cacheKey)?.get(args)(state, cacheKey);
+      return cacheFn(state, cacheKey);
     }
 
-    const newSelector = reselectCreateSelector(...args);
+    const fn = reselectCreateSelector(...args);
 
-    if (!cache.get(cacheKey)) {
-      cache.set(cacheKey, new Map());
+    if (!cacheArgsInit) {
+      cache.set(cacheKey, cacheArgs);
     }
-    cache.get(cacheKey)?.set(args, newSelector);
+    cacheArgs.set(args, fn);
 
-    return newSelector(state, cacheKey);
+    return fn(state, cacheKey);
   };
 
   // We use this property to detect if the selector was created with createSelector
@@ -172,9 +169,4 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
   selector.acceptsApiRef = true;
 
   return selector;
-};
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const unstable_resetCreateSelectorCache = () => {
-  cacheContainer.cache = new WeakMap();
 };

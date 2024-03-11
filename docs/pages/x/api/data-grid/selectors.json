@@ -319,6 +319,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridPaginationRowCountSelector",
+    "returnType": "number",
+    "category": "Pagination",
+    "description": "Get the row count",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridPaginationRowRangeSelector",
     "returnType": "{ firstRowIndex: number; lastRowIndex: number } | null",
     "category": "Pagination",

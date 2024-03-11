@@ -23,7 +23,7 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
 
 interface CustomTreeItemProps
   extends Omit<UseTreeItem2Parameters, 'rootRef'>,
-    React.HTMLAttributes<HTMLLIElement> {}
+    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
