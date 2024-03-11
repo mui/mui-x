@@ -311,15 +311,6 @@ export const GridRootStyles = styled('div', {
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
-    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']} .${c.columnHeaderTitleContainer}`]:
-      {
-        borderBottom: `none`,
-      },
-    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']}`]: {
-      borderBottomWidth: '1px',
-      borderBottomStyle: 'solid',
-      boxSizing: 'border-box',
-    },
     [`& .${c.sortIcon}, & .${c.filterIcon}`]: {
       fontSize: 'inherit',
     },

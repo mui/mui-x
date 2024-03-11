@@ -196,10 +196,6 @@ export interface GridClasses {
    */
   'columnHeader--emptyGroup': string;
   /**
-   * Styles applied to the column group header cell when show column border.
-   */
-  'columnHeader--showColumnBorder': string;
-  /**
    * Styles applied to the column headers.
    */
   columnHeaders: string;
@@ -648,7 +644,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnGroupHeader',
   'columnHeader--filledGroup',
   'columnHeader--emptyGroup',
-  'columnHeader--showColumnBorder',
   'columnHeaders',
   'columnSeparator--resizable',
   'columnSeparator--resizing',

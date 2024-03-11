@@ -624,11 +624,6 @@
     },
     "columnHeader--pinnedLeft": { "description": "" },
     "columnHeader--pinnedRight": { "description": "" },
-    "columnHeader--showColumnBorder": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the column group header cell",
-      "conditions": "show column border"
-    },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",

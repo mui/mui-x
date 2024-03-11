@@ -1219,12 +1219,6 @@
       "isGlobal": false
     },
     {
-      "key": "columnHeader--showColumnBorder",
-      "className": "MuiDataGridPro-columnHeader--showColumnBorder",
-      "description": "Styles applied to the column group header cell when show column border.",
-      "isGlobal": false
-    },
-    {
       "key": "columnHeader--sortable",
       "className": "MuiDataGridPro-columnHeader--sortable",
       "description": "Styles applied to the column header if the column is sortable.",
