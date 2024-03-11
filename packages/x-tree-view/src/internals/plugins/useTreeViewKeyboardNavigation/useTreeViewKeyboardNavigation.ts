@@ -113,8 +113,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const canToggleItemSelection = (itemId: string) =>
     !params.disableSelection && !instance.isNodeDisabled(itemId);
 
-  const canToggleItemExpansion = (itemId: string) =>
-    !instance.isNodeDisabled(itemId) && instance.isNodeExpandable(itemId);
+  const canToggleItemExpansion = (itemId: string) => {
+    return !instance.isNodeDisabled(itemId) && instance.isNodeExpandable(itemId);
+  };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const createHandleKeyDown =
@@ -126,7 +127,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         return;
       }
 
-      // If the tree is empty there will be no focused node
+      // If the tree is empty, there will be no focused node
       if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
         return;
       }

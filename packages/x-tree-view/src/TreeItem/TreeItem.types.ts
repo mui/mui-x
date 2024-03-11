@@ -68,7 +68,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   /**
    * Props applied to ContentComponent.
    */
-  ContentProps?: React.HTMLAttributes<HTMLElement>;
+  ContentProps?: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> };
   /**
    * If `true`, the node is disabled.
    * @default false

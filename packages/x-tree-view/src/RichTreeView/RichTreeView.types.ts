@@ -10,6 +10,7 @@ import {
   DefaultTreeViewPlugins,
 } from '../internals/plugins/defaultPlugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
+import { TreeItem2Props } from '../TreeItem2';
 import { TreeViewItemId } from '../models';
 import { TreeViewPublicAPI } from '../internals/models';
 
@@ -28,7 +29,7 @@ export interface RichTreeViewSlots extends DefaultTreeViewPluginSlots {
    * Custom component for the item.
    * @default TreeItem.
    */
-  item?: React.JSXElementConstructor<TreeItemProps>;
+  item?: React.JSXElementConstructor<TreeItemProps> | React.JSXElementConstructor<TreeItem2Props>;
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
