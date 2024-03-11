@@ -8,6 +8,7 @@ import {
   MergePluginsProperty,
   TreeViewInstance,
   TreeViewPublicAPI,
+  TreeRootWrapper,
 } from '../models';
 
 export type UseTreeViewParameters<
@@ -52,6 +53,7 @@ export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPlu
     otherHandlers?: TOther,
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
+  wrapRoot: TreeRootWrapper;
   contextValue: TreeViewContextValue<TPlugins>;
   instance: TreeViewInstance<TPlugins>;
 }
