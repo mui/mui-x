@@ -2,7 +2,7 @@ import { DateView, FieldValueType, MuiPickersAdapter, PickersTimezone } from '..
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
-export const mergeDateAndTime = <TDate extends PickerValidDate>(
+export const mergeDateAndTime = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   dateParam: TDate,
   timeParam: TDate,
