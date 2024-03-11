@@ -8,7 +8,6 @@ import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
-import useForkRef from '@mui/utils/useForkRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
