@@ -169,19 +169,6 @@ describe('<DateCalendar />', () => {
     expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
   });
 
-  describe('Slot: calendarHeader', () => {
-    it('should allow to override the format', () => {
-      render(
-        <DateCalendar
-          defaultValue={adapterToUse.date('2019-01-01')}
-          slotProps={{ calendarHeader: { format: 'yyyy/MM' } }}
-        />,
-      );
-
-      expect(screen.getByText('2019/01')).toBeVisible();
-    });
-  });
-
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);

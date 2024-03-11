@@ -15,7 +15,7 @@ export const mergeDateAndTime = <TDate extends PickerValidDate>(
   return mergedDate;
 };
 
-interface FindClosestDateParams<TDate extends PickerValidDate> {
+interface FindClosestDateParams<TDate> {
   date: TDate;
   disableFuture?: boolean;
   disablePast?: boolean;
@@ -123,7 +123,7 @@ export const getMonthsInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TD
   return months;
 };
 
-export const getTodayDate = <TDate extends PickerValidDate>(
+export const getTodayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   valueType?: FieldValueType,
