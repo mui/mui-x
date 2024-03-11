@@ -28,6 +28,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
   wrapItem: ({ children }) => children,
+  wrapRoot: ({ children }) => children,
   disabledItemsFocusable: false,
   icons: {
     slots: {},

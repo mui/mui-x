@@ -63,7 +63,6 @@ const itemsPropWarning = buildWarning([
 const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  console.log('RENDER');
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
   const ownerState = props as SimpleTreeViewProps<any>;
 
