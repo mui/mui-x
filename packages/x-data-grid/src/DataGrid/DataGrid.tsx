@@ -102,6 +102,21 @@ DataGridRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
+  /**
    * Controls the modes of the cells.
    */
   cellModesModel: PropTypes.object,
@@ -150,6 +165,11 @@ DataGridRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -159,6 +179,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   disableColumnMenu: PropTypes.bool,
+  /**
+   * If `true`, resizing columns is disabled.
+   * @default false
+   */
+  disableColumnResize: PropTypes.bool,
   /**
    * If `true`, hiding/showing columns is disabled.
    * @default false
@@ -462,11 +487,25 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
+   * Callback fired while a column is being resized.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnResize: PropTypes.func,
+  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
+  /**
+   * Callback fired when the width of a column is changed.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnWidthChange: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].

@@ -5,10 +5,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { useGridApiRef } from '@mui/x-data-grid';
 import {
   DataGridPro,
-  GridApiPro,
+  useGridApiRef,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from '@mui/x-data-grid-pro';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
@@ -52,7 +51,7 @@ function useData(length: number) {
 }
 
 export default function ColumnAutosizing() {
-  const apiRef = useGridApiRef<GridApiPro>();
+  const apiRef = useGridApiRef();
   const data = useData(100);
 
   const [includeHeaders, setIncludeHeaders] = React.useState(

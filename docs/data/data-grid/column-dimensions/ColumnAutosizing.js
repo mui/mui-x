@@ -5,8 +5,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, DEFAULT_GRID_AUTOSIZE_OPTIONS } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiRef,
+  DEFAULT_GRID_AUTOSIZE_OPTIONS,
+} from '@mui/x-data-grid-pro';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
 
 function renderRating(params) {
