@@ -23,6 +23,9 @@ export interface ChartsLegendSlotProps {
 }
 
 export type ChartsLegendProps = {
+  /**
+   * The position of the legend.
+   */
   position?: AnchorPosition;
   /**
    * Override or extend the styles applied to the component.
