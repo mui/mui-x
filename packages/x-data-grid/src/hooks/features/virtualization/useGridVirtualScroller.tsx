@@ -109,7 +109,7 @@ export const useGridVirtualScroller = () => {
    * work that's not necessary. Thus we store the context at the start of the scroll in `frozenContext`, and the rows
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
-  const currentScroll = React.useRef(EMPTY_SCROLL_POSITION);
+  const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
@@ -160,7 +160,7 @@ export const useGridVirtualScroller = () => {
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
-      previousContextScrollPosition.current = currentScroll.current;
+      previousContextScrollPosition.current = scrollPosition.current;
       previousContext.current = rawRenderContext;
     },
     [apiRef, dimensions.isReady],
@@ -172,12 +172,12 @@ export const useGridVirtualScroller = () => {
       left: scrollerRef.current!.scrollLeft,
     };
 
-    const dx = newScroll.left - currentScroll.current.left;
-    const dy = newScroll.top - currentScroll.current.top;
+    const dx = newScroll.left - scrollPosition.current.left;
+    const dy = newScroll.top - scrollPosition.current.top;
 
     const isScrolling = dx !== 0 || dy !== 0;
 
-    currentScroll.current = newScroll;
+    scrollPosition.current = newScroll;
 
     let direction: ScrollCache['direction'];
     if (isScrolling) {
@@ -188,10 +188,10 @@ export const useGridVirtualScroller = () => {
 
     // Since previous render, we have scrolled...
     const rowScroll = Math.abs(
-      currentScroll.current.top - previousContextScrollPosition.current.top,
+      scrollPosition.current.top - previousContextScrollPosition.current.top,
     );
     const columnScroll = Math.abs(
-      currentScroll.current.left - previousContextScrollPosition.current.left,
+      scrollPosition.current.left - previousContextScrollPosition.current.left,
     );
 
     const didCrossThreshold =
@@ -246,7 +246,7 @@ export const useGridVirtualScroller = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
     const [nextRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      currentScroll.current,
+      scrollPosition.current,
       scrollCache.current,
     );
 
@@ -264,7 +264,7 @@ export const useGridVirtualScroller = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
     const [nextRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      currentScroll.current,
+      scrollPosition.current,
       scrollCache.current,
     );
     updateRenderContext(nextRenderContext, rawRenderContext);
@@ -553,14 +553,14 @@ export const useGridVirtualScroller = () => {
 
     const [initialRenderContext, rawRenderContext] = computeRenderContext(
       inputs,
-      currentScroll.current,
+      scrollPosition.current,
       scrollCache.current,
     );
     updateRenderContext(initialRenderContext, rawRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
-      top: currentScroll.current.top,
-      left: currentScroll.current.left,
+      top: scrollPosition.current.top,
+      left: scrollPosition.current.left,
       renderContext: initialRenderContext,
     });
   });
