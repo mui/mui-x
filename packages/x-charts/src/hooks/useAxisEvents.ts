@@ -82,9 +82,10 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         return null;
       }
       if (reverse) {
+      const reverseIndex = axisData!.length - 1 - dataIndex
         return {
-          index: axisData!.length - 1 - dataIndex,
-          value: axisData![axisData!.length - 1 - dataIndex],
+          index: reverseIndex,
+          value: axisData![reverseIndex],
         };
       }
       return {
