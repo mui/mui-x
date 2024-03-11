@@ -181,10 +181,6 @@ export interface GridClasses {
    */
   rowReorderCellPlaceholder: string;
   /**
-   * Styles applied to the column headers wrapper if a column is being dragged.
-   */
-  columnHeaderDropZone: string;
-  /**
    * Styles applied to the column header's title element;
    */
   columnHeaderTitle: string;
@@ -212,14 +208,6 @@ export interface GridClasses {
    * Styles applied to the column headers.
    */
   columnHeaders: string;
-  /**
-   * Styles applied to the column headers's inner element.
-   */
-  columnHeadersInner: string;
-  /**
-   * Styles applied to the column headers's inner element if there is a horizontal scrollbar.
-   */
-  'columnHeadersInner--scrollable': string;
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
@@ -667,7 +655,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
-  'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',
@@ -676,8 +663,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--emptyGroup',
   'columnHeader--showColumnBorder',
   'columnHeaders',
-  'columnHeadersInner',
-  'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator--sideLeft',

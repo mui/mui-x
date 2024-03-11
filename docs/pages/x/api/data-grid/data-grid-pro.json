@@ -1261,24 +1261,6 @@
       "isGlobal": false
     },
     {
-      "key": "columnHeaderDropZone",
-      "className": "MuiDataGridPro-columnHeaderDropZone",
-      "description": "Styles applied to the column headers wrapper if a column is being dragged.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner",
-      "className": "MuiDataGridPro-columnHeadersInner",
-      "description": "Styles applied to the column headers's inner element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner--scrollable",
-      "className": "MuiDataGridPro-columnHeadersInner--scrollable",
-      "description": "Styles applied to the column headers's inner element if there is a horizontal scrollbar.",
-      "isGlobal": false
-    },
-    {
       "key": "columnHeaderTitle",
       "className": "MuiDataGridPro-columnHeaderTitle",
       "description": "Styles applied to the column header's title element;",
