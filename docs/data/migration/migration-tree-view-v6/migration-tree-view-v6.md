@@ -47,7 +47,7 @@ You can start replacing it with the new `SimpleTreeView` component which has exa
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -122,7 +122,7 @@ you need to use the new `expandIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Node 1"
 -     expandIcon={<MyCustomExpandIcon />}
 +     slots={{ expandIcon: MyCustomExpandIcon }}
@@ -170,7 +170,7 @@ you need to use the new `collapseIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Node 1"
 -     collapseIcon={<MyCustomCollapseIcon />}
 +     slots={{ collapseIcon: MyCustomCollapseIcon }}
@@ -222,7 +222,7 @@ you need to use the new `endIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Node 1"
 -     endIcon={<MyCustomEndIcon />}
 +     slots={{ endIcon: MyCustomEndIcon }}
@@ -241,7 +241,7 @@ you need to use the new `icon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Node 1"
 -     icon={<MyCustomIcon />}
 +     slots={{ icon: MyCustomIcon }}
@@ -264,7 +264,7 @@ you need to use the new `groupTransition` slot on this component:
 ```diff
  <SimpleTreeView>
    <TreeItem
-     nodeId="1"
+     itemId="1"
      label="Node 1"
 -    TransitionComponent={Fade}
 +    slots={{ groupTransition: Fade }}
@@ -317,8 +317,8 @@ you can use the new `onNodeExpansionToggle` prop which is called whenever a node
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
-    console.log(nodeId, isExpanded)
+  onNodeExpansionToggle={(event, itemId, isExpanded) =>
+    console.log(itemId, isExpanded)
   }
 />
 ```
@@ -355,8 +355,8 @@ you can use the new `onNodeSelectionToggle` prop which is called whenever a node
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeSelectionToggle={(event, nodeId, isSelected) =>
-    console.log(nodeId, isSelected)
+  onNodeSelectionToggle={(event, itemId, isSelected) =>
+    console.log(itemId, isSelected)
   }
 />
 ```
@@ -373,8 +373,8 @@ This will help create a new headless version of the `TreeItem` component based o
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });

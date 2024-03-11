@@ -222,6 +222,7 @@ The list includes these transformers
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -237,7 +238,7 @@ Renames the `TreeView` component to `SimpleTreeView`
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -252,8 +253,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -312,6 +313,17 @@ Replace the `TransitionComponent` and `TransitionProps` components with the `gro
 
 -  TransitionProps={{ timeout: 600 }}
 +  slotProps={{ groupTransition: { timeout: 600 } }}
+ />
+```
+
+#### `rename-nodeid`
+
+Rename nodeId to itemId
+
+```diff
+ <TreeItem
+-  nodeId='unique-id'
++  itemId='unique-id'
  />
 ```
 

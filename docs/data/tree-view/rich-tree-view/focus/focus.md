@@ -14,7 +14,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ## Focus a specific node
 
 You can use the the `apiRef.focusNode` method to focus a specific node.
-This methods receives two parameters: `event` and `nodeId`.
+This methods receives two parameters: `event` and `itemId`.
 
 :::success
 To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:

@@ -219,7 +219,7 @@ const useCustomPlugin = ({ params }) => {
   };
 };
 
-function useTreeItem(nodeId: string) {
+function useTreeItem(itemId: string) {
   const {
     customPlugin,
     // ...other elements returned by the context
@@ -237,7 +237,7 @@ function TreeItemContent() {
   const {
     customPlugin,
     // ...other elements returned by `useTreeItem`
-  } = useTreeItem(props.nodeId);
+  } = useTreeItem(props.itemId);
 
   // Do something with customPlugin.enabled
 }
