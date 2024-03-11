@@ -114,7 +114,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const handleItemKeyDown = (
-    event: React.KeyboardEvent<HTMLLIElement> & MuiCancellableEvent,
+    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
     nodeId: string,
   ) => {
     if (event.defaultMuiPrevented) {
