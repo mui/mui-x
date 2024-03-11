@@ -219,7 +219,7 @@ export const useGridPaginationModel = (
       return;
     }
 
-    const dimensions = apiRef.current.getRootDimensions();
+    const dimensions = apiRef.current.getRootDimensions() || { viewportInnerSize: { height: 0 } };
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
       dimensions.viewportInnerSize.height / rowHeight,
