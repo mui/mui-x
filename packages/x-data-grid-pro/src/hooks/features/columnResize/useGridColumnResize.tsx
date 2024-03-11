@@ -32,7 +32,6 @@ import {
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
-  findGridElement,
   findLeftPinnedCellsAfterCol,
   findRightPinnedCellsBeforeCol,
   getFieldFromHeaderElem,
@@ -292,8 +291,6 @@ export const useGridColumnResize = (
   const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
   const leftPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
   const rightPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
-  const fillerLeftRef = React.useRef<HTMLElement>();
-  const fillerRightRef = React.useRef<HTMLElement>();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -360,8 +357,6 @@ export const useGridColumnResize = (
     const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
-      updateProperty(fillerLeftRef.current, 'width', widthDiff);
-
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
@@ -371,8 +366,6 @@ export const useGridColumnResize = (
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
-      updateProperty(fillerRightRef.current, 'width', widthDiff);
-
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
       });
@@ -442,9 +435,6 @@ export const useGridColumnResize = (
       columnHeaderElementRef.current,
       apiRef.current,
     );
-
-    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
-    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
 
     const pinnedPosition = apiRef.current.isColumnPinned(colDef.field);
 
