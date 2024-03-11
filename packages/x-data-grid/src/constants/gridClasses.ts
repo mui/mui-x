@@ -160,10 +160,6 @@ export interface GridClasses {
    */
   columnHeader: string;
   /**
-   * Styles applied to the column group header element.
-   */
-  columnGroupHeader: string;
-  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -641,7 +637,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',
-  'columnGroupHeader',
   'columnHeader--filledGroup',
   'columnHeader--emptyGroup',
   'columnHeaders',

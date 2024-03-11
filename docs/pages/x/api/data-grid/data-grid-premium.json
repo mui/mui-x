@@ -1220,12 +1220,6 @@
       "isGlobal": false
     },
     {
-      "key": "columnGroupHeader",
-      "className": "MuiDataGridPremium-columnGroupHeader",
-      "description": "Styles applied to the column group header element.",
-      "isGlobal": false
-    },
-    {
       "key": "columnHeader",
       "className": "MuiDataGridPremium-columnHeader",
       "description": "Styles applied to the column header element.",

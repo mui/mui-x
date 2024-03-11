@@ -704,10 +704,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
-    "columnGroupHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column group header element"
-    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
