@@ -12,7 +12,7 @@ productId: x-tree-view
 
 TBD
 
-## Start using the alpha release
+## Start using the beta release
 
 In `package.json`, change the version of the tree view package to `next`.
 
@@ -386,4 +386,15 @@ This will help create a new headless version of the `TreeItem` component based o
      </SimpleTreeView>
    )
  }
+```
+
+### ✅ Rename `nodeId` to `itemId`
+
+The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-    <TreeItem label='Item 1' nodeId='one'>
++    <TreeItem label='Item 1' itemId='one'>
+ </TreeView>
 ```
