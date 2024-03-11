@@ -33,27 +33,21 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       ...other
     } = props;
 
-    const {
-      // TODO: use it
-      // isDragging,
-      getInnerProps,
-      getColumnHeadersRow,
-      getColumnFiltersRow,
-      getColumnGroupHeadersRows,
-    } = useGridColumnHeaders({
-      visibleColumns,
-      sortColumnLookup,
-      filterColumnLookup,
-      columnHeaderTabIndexState,
-      hasOtherElementInTabSequence,
-      columnGroupHeaderTabIndexState,
-      columnHeaderFocus,
-      columnGroupHeaderFocus,
-      headerGroupingMaxDepth,
-      columnMenuState,
-      columnVisibility,
-      columnGroupsHeaderStructure,
-    });
+    const { getInnerProps, getColumnHeadersRow, getColumnFiltersRow, getColumnGroupHeadersRows } =
+      useGridColumnHeaders({
+        visibleColumns,
+        sortColumnLookup,
+        filterColumnLookup,
+        columnHeaderTabIndexState,
+        hasOtherElementInTabSequence,
+        columnGroupHeaderTabIndexState,
+        columnHeaderFocus,
+        columnGroupHeaderFocus,
+        headerGroupingMaxDepth,
+        columnMenuState,
+        columnVisibility,
+        columnGroupsHeaderStructure,
+      });
 
     return (
       <GridBaseColumnHeaders ref={ref} className={className} {...other} {...getInnerProps()}>

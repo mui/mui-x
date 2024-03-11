@@ -32,13 +32,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const {
-      // TODO: use it
-      // isDragging,
-      getInnerProps,
-      getColumnHeadersRow,
-      getColumnGroupHeadersRows,
-    } = useGridColumnHeaders({
+    const { getInnerProps, getColumnHeadersRow, getColumnGroupHeadersRows } = useGridColumnHeaders({
       visibleColumns,
       sortColumnLookup,
       filterColumnLookup,
