@@ -34,7 +34,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       if (usedXAxis === null) {
         return null;
       }
-      const { scale, data: axisData } = axisConfig;
+      const { scale, data: axisData, reverse } = axisConfig;
 
       if (!isBandScale(scale)) {
         const value = scale.invert(mouseValue);
@@ -80,6 +80,12 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
       if (dataIndex < 0 || dataIndex >= axisData!.length) {
         return null;
+      }
+      if (reverse) {
+        return {
+          index: axisData!.length - 1 - dataIndex,
+          value: axisData![axisData!.length - 1 - dataIndex],
+        };
       }
       return {
         index: dataIndex,
