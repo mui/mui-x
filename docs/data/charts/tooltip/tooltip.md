@@ -85,7 +85,7 @@ It will remove the header showing the x-axis value from the tooltip.
 
 To modify the tooltip content, use `slots.itemContent` or `slots.axisContent`.
 The first one is rendered when tooltip trigger is set to `"item"`.
-The second one when  trigger is set to `"axis"`.
+The second one when trigger is set to `"axis"`.
 
 ```jsx
 // With single component
@@ -98,7 +98,7 @@ The second one when  trigger is set to `"axis"`.
 // With composition
 <ChartContainer>
   // ...
-  <Tooltip 
+  <Tooltip
     trigger='item'
     slots={{
       itemContent: CustomItemTooltip
