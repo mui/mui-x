@@ -36,7 +36,7 @@ declare module 'react' {
   }
 }
 
-type StyledTreeItemProps = TreeItemProps & {
+type StyledTreeItemProps = Omit<TreeItemProps, 'label'> & {
   labelIcon: React.ElementType;
   labelText: string;
 };
@@ -130,6 +130,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
 
   return (
     <StyledTreeItemRoot
+      slots={{
+        groupTransition: TransitionComponent,
+      }}
       label={
         <Box
           sx={{
@@ -147,7 +150,6 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(
         </Box>
       }
       {...other}
-      slots={{ groupTransition: TransitionComponent }}
       ref={ref}
     />
   );

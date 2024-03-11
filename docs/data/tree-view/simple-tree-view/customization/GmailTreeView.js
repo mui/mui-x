@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useTheme, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -13,85 +14,124 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import {
+  TreeItem2Content,
+  TreeItem2IconContainer,
+  TreeItem2Root,
+  TreeItem2GroupTransition,
+} from '@mui/x-tree-view/TreeItem2';
+import { unstable_useTreeItem2 as useTreeItem } from '@mui/x-tree-view/useTreeItem2';
+import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+const CustomTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
   color: theme.palette.text.secondary,
-  [`& .${treeItemClasses.content}`]: {
-    marginBottom: theme.spacing(0.3),
-    color: theme.palette.text.secondary,
-    borderRadius: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    fontWeight: theme.typography.fontWeightMedium,
-    '&.Mui-expanded': {
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
-      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
-      color: 'var(--tree-view-color)',
-    },
-    [`& .${treeItemClasses.label}`]: {
-      fontWeight: 'inherit',
-      color: 'inherit',
-    },
-    [`& .${treeItemClasses.iconContainer}`]: {
-      marginRight: theme.spacing(1),
-    },
+}));
+
+const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+  marginBottom: theme.spacing(0.3),
+  color: theme.palette.text.secondary,
+  borderRadius: theme.spacing(2),
+  paddingRight: theme.spacing(1),
+  fontWeight: theme.typography.fontWeightMedium,
+  '&.expanded': {
+    fontWeight: theme.typography.fontWeightRegular,
   },
-  [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: 0,
-    [`& .${treeItemClasses.content}`]: {
-      paddingLeft: theme.spacing(2),
-    },
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&.focused, &.selected, &.selected.focused': {
+    backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
+    color: 'var(--tree-view-color)',
   },
 }));
 
-const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
+const CustomTreeItemIconContainer = styled(TreeItem2IconContainer)(({ theme }) => ({
+  marginRight: theme.spacing(1),
+}));
+
+const CustomTreeItemGroupTransition = styled(TreeItem2GroupTransition)(
+  ({ theme }) => ({
+    marginLeft: 0,
+    [`& .content`]: {
+      paddingLeft: theme.spacing(2),
+    },
+  }),
+);
+
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const theme = useTheme();
   const {
+    id,
+    nodeId,
+    label,
+    disabled,
+    children,
     bgColor,
     color,
     labelIcon: LabelIcon,
     labelInfo,
-    labelText,
     colorForDarkMode,
     bgColorForDarkMode,
     ...other
   } = props;
 
-  const styleProps = {
+  const {
+    getRootProps,
+    getContentProps,
+    getIconContainerProps,
+    getLabelProps,
+    getGroupTransitionProps,
+    status,
+  } = useTreeItem({ id, nodeId, children, label, disabled, rootRef: ref });
+
+  const style = {
     '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,
     '--tree-view-bg-color':
       theme.palette.mode !== 'dark' ? bgColor : bgColorForDarkMode,
   };
 
   return (
-    <StyledTreeItemRoot
-      label={
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            p: 0.5,
-            pr: 0,
-          }}
+    <TreeItem2Provider nodeId={nodeId}>
+      <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
+        <CustomTreeItemContent
+          {...getContentProps({
+            className: clsx('content', {
+              expanded: status.expanded,
+              selected: status.selected,
+              focused: status.focused,
+            }),
+          })}
         >
-          <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />
-          <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
-            {labelText}
-          </Typography>
-          <Typography variant="caption" color="inherit">
-            {labelInfo}
-          </Typography>
-        </Box>
-      }
-      style={styleProps}
-      {...other}
-      ref={ref}
-    />
+          <CustomTreeItemIconContainer {...getIconContainerProps()}>
+            <TreeItem2Icon status={status} />
+          </CustomTreeItemIconContainer>
+          <Box
+            sx={{
+              display: 'flex',
+              flexGrow: 1,
+              alignItems: 'center',
+              p: 0.5,
+              pr: 0,
+            }}
+          >
+            <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />
+            <Typography
+              {...getLabelProps({
+                variant: 'body2',
+                sx: { display: 'flex', fontWeight: 'inherit', flexGrow: 1 },
+              })}
+            />
+            <Typography variant="caption" color="inherit">
+              {labelInfo}
+            </Typography>
+          </Box>
+        </CustomTreeItemContent>
+        {children && (
+          <CustomTreeItemGroupTransition {...getGroupTransitionProps()} />
+        )}
+      </CustomTreeItemRoot>
+    </TreeItem2Provider>
   );
 });
 
@@ -112,12 +152,12 @@ export default function GmailTreeView() {
       }}
       sx={{ flexGrow: 1, maxWidth: 400 }}
     >
-      <StyledTreeItem nodeId="1" labelText="All Mail" labelIcon={MailIcon} />
-      <StyledTreeItem nodeId="2" labelText="Trash" labelIcon={DeleteIcon} />
-      <StyledTreeItem nodeId="3" labelText="Categories" labelIcon={Label}>
-        <StyledTreeItem
+      <CustomTreeItem nodeId="1" label="All Mail" labelIcon={MailIcon} />
+      <CustomTreeItem nodeId="2" label="Trash" labelIcon={DeleteIcon} />
+      <CustomTreeItem nodeId="3" label="Categories" labelIcon={Label}>
+        <CustomTreeItem
           nodeId="5"
-          labelText="Social"
+          label="Social"
           labelIcon={SupervisorAccountIcon}
           labelInfo="90"
           color="#1a73e8"
@@ -125,9 +165,9 @@ export default function GmailTreeView() {
           colorForDarkMode="#B8E7FB"
           bgColorForDarkMode={alpha('#00b4ff', 0.2)}
         />
-        <StyledTreeItem
+        <CustomTreeItem
           nodeId="6"
-          labelText="Updates"
+          label="Updates"
           labelIcon={InfoIcon}
           labelInfo="2,294"
           color="#e3742f"
@@ -135,9 +175,9 @@ export default function GmailTreeView() {
           colorForDarkMode="#FFE2B7"
           bgColorForDarkMode={alpha('#ff8f00', 0.2)}
         />
-        <StyledTreeItem
+        <CustomTreeItem
           nodeId="7"
-          labelText="Forums"
+          label="Forums"
           labelIcon={ForumIcon}
           labelInfo="3,566"
           color="#a250f5"
@@ -145,9 +185,9 @@ export default function GmailTreeView() {
           colorForDarkMode="#D9B8FB"
           bgColorForDarkMode={alpha('#9035ff', 0.15)}
         />
-        <StyledTreeItem
+        <CustomTreeItem
           nodeId="8"
-          labelText="Promotions"
+          label="Promotions"
           labelIcon={LocalOfferIcon}
           labelInfo="733"
           color="#3c8039"
@@ -155,8 +195,8 @@ export default function GmailTreeView() {
           colorForDarkMode="#CCE8CD"
           bgColorForDarkMode={alpha('#64ff6a', 0.2)}
         />
-      </StyledTreeItem>
-      <StyledTreeItem nodeId="4" labelText="History" labelIcon={Label} />
+      </CustomTreeItem>
+      <CustomTreeItem nodeId="4" label="History" labelIcon={Label} />
     </SimpleTreeView>
   );
 }

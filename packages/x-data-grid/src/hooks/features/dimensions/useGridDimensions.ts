@@ -316,6 +316,7 @@ export function useGridDimensions(
     set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+    set('--height', `${dimensions.rowHeight}px`);
   }, [root, dimensions]);
 
   const isFirstSizing = React.useRef(true);

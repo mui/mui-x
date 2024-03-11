@@ -5,7 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -30,6 +30,7 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
+import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
@@ -41,8 +42,12 @@ export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactN
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
+interface PrivateApiWithInfiniteLoader
+  extends GridPrivateApiCommunity,
+    GridInfiniteLoaderPrivateApi {}
+
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
@@ -376,8 +381,10 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
+      if (isLastVisible) {
+        rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
+      }
     });
-
     return rows;
   };
 

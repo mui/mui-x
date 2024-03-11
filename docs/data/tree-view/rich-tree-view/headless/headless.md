@@ -206,8 +206,8 @@ const useCustomPlugin = ({ params }) => {
 You can use the `contextValue` property in the returned object to pass elements to the Tree Item:
 
 :::warning
-The context is private for now and cannot be accessed outside of our own plugins.
-You need to modify the `useTreeItem` hook to return the new value returned by your plugin.
+The context is private for now and cannot be accessed outside the provided plugins.
+You need to modify the `useTreeItemState` hook to return the new value returned by your plugin.
 :::
 
 ```tsx
@@ -219,25 +219,25 @@ const useCustomPlugin = ({ params }) => {
   };
 };
 
-function useTreeItem(nodeId: string) {
+function useTreeItemState(nodeId: string) {
   const {
     customPlugin,
     // ...other elements returned by the context
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  // ...rest of the `useTreeItem` hook content
+  // ...rest of the `useTreeItemState` hook content
 
   return {
     customPlugin,
-    // ...other elements returned by `useTreeItem`
+    // ...other elements returned by `useTreeItemState`
   };
 }
 
 function TreeItemContent() {
   const {
     customPlugin,
-    // ...other elements returned by `useTreeItem`
-  } = useTreeItem(props.nodeId);
+    // ...other elements returned by `useTreeItemState`
+  } = useTreeItemState(props.nodeId);
 
   // Do something with customPlugin.enabled
 }
