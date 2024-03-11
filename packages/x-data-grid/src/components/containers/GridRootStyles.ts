@@ -566,9 +566,6 @@ export const GridRootStyles = styled('div', {
       zIndex: 3,
       background: 'var(--DataGrid-pinnedBackground)',
     },
-    [`& .${c['cell--filler']}`]: {
-      flex: 1,
-    },
     [`& .${c.virtualScrollerContent} .${c.row}`]: {
       '&:hover': {
         [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
@@ -653,6 +650,10 @@ export const GridRootStyles = styled('div', {
         position: 'sticky',
         right: 0,
       },
+    },
+
+    [`& .${c.filler}`]: {
+      flex: 1,
     },
   };
 
