@@ -141,7 +141,7 @@ describe('<DateCalendar />', () => {
     );
     userEvent.mousePress(screen.getByRole('radio', { name: '2020' }));
 
-    // Finish the transition to the month view
+    // Finish the transition to the day view
     clock.runToLast();
 
     userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
