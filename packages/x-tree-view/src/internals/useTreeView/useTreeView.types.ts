@@ -8,7 +8,6 @@ import {
   MergePluginsProperty,
   TreeViewInstance,
   TreeViewPublicAPI,
-  TreeRootWrapper,
 } from '../models';
 
 export type UseTreeViewParameters<
