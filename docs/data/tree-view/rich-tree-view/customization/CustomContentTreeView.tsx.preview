@@ -3,5 +3,5 @@
   sx={{ position: 'relative' }}
   defaultExpandedNodes={['3']}
   items={ITEMS}
-  slotProps={{ item: { ContentComponent: CustomContent } }}
+  slots={{ item: CustomTreeItem }}
 />
