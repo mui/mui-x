@@ -1,7 +1,22 @@
-export type DescribeTreeViewTestRunner = (params: DescribeTreeViewTestRunnerParams) => void;
+import { TreeViewAnyPluginSignature, TreeViewUsedParams } from '@mui/x-tree-view/internals/models';
 
-export type DescribeTreeViewNodesRenderer = <R extends {}>(params: { items: R[] }) => void;
+export type DescribeTreeViewTestRunner<TPlugin extends TreeViewAnyPluginSignature> = (
+  params: DescribeTreeViewTestRunnerParams<TPlugin>,
+) => void;
 
-interface DescribeTreeViewTestRunnerParams {
-  renderNodes: DescribeTreeViewNodesRenderer;
+export interface DescribeTreeViewTestRunnerReturnValue<TPlugin extends TreeViewAnyPluginSignature> {
+  setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
+  getItemRoot: (id: string) => HTMLElement;
+}
+
+export type DescribeTreeViewItemsRenderer<TPlugin extends TreeViewAnyPluginSignature> = <
+  R extends {},
+>(
+  params: {
+    items: R[];
+  } & TreeViewUsedParams<TPlugin>,
+) => DescribeTreeViewTestRunnerReturnValue<TPlugin>;
+
+interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSignature> {
+  renderItems: DescribeTreeViewItemsRenderer<TPlugin>;
 }

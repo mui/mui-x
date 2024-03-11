@@ -22,20 +22,6 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the expandedNodes prop', () => {
-      const { setProps } = render(
-        <SimpleTreeView expandedNodes={[]}>
-          <TreeItem nodeId="1" label="one" />
-        </SimpleTreeView>,
-      );
-
-      expect(() => {
-        setProps({ expandedNodes: undefined });
-      }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
-      );
-    });
-
     it('should warn when switching from controlled to uncontrolled of the selectedNodes prop', () => {
       const { setProps } = render(
         <SimpleTreeView selectedNodes={null}>

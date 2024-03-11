@@ -2,21 +2,58 @@ import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { createRenderer } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewAnyPluginSignature } from '@mui/x-tree-view/internals/models';
 import {
   DescribeTreeViewTestRunner,
-  DescribeTreeViewNodesRenderer,
+  DescribeTreeViewItemsRenderer,
 } from './describeTreeView.types';
 
-const innerDescribeTreeView = (message: string, testRunner: DescribeTreeViewTestRunner): void => {
+const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
+  message: string,
+  testRunner: DescribeTreeViewTestRunner<TPlugin>,
+): void => {
   const { render } = createRenderer();
 
-  describe(message, () => {
-    const renderNodes: DescribeTreeViewNodesRenderer = ({ items }) => {
-      render(<RichTreeView items={items} />);
-    };
+  const renderNodes: DescribeTreeViewItemsRenderer<TPlugin> = ({ items, ...other }) => {
+    const { getByTestId, setProps } = render(
+      <RichTreeView
+        {...other}
+        items={items}
+        slotProps={{
+          item: (ownerState) =>
+            ({
+              'data-testid': ownerState.nodeId,
+            }) as any,
+        }}
+        getItemLabel={(item) => (item as any).label ?? (item as any).id}
+      />,
+    );
 
-    testRunner({ renderNodes });
+    const getItemRoot = (id: string) => getByTestId(id);
+
+    return {
+      getItemRoot,
+      setProps,
+    };
+  };
+
+  describe(message, () => {
+    testRunner({ renderItems: renderNodes });
   });
 };
 
-export const describeTreeView = createDescribe('describeTreeView', innerDescribeTreeView);
+type Params<TPlugin extends TreeViewAnyPluginSignature> = [
+  string,
+  DescribeTreeViewTestRunner<TPlugin>,
+];
+
+type DescribeTreeView = {
+  <P extends TreeViewAnyPluginSignature>(...args: Params<P>): void;
+  skip: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
+  only: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
+};
+
+export const describeTreeView = createDescribe(
+  'describeTreeView',
+  innerDescribeTreeView,
+) as DescribeTreeView;
