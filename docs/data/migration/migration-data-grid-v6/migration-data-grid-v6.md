@@ -135,6 +135,11 @@ As a result, the following changes have been made:
   };
   ```
 
+- Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
+  - [`columnGrouping`](/x/react-data-grid/column-groups/)
+  - [`clipboardPaste`](/x/react-data-grid/clipboard/)
+  - [`lazyLoading`](/x/react-data-grid/row-updates/#lazy-loading)
+
 ### Behavioral changes
 
 The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc., can now be controlled programmatically using `initialState`, respective controlled models, or the [API object](/x/react-data-grid/api-object/).
