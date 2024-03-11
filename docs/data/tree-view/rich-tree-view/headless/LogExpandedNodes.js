@@ -59,7 +59,7 @@ function TreeView(inProps) {
 
   const renderNode = ({ children: itemChildren, ...itemProps }) => {
     return (
-      <TreeItem key={itemProps.nodeId} {...itemProps}>
+      <TreeItem key={itemProps.itemId} {...itemProps}>
         {itemChildren?.map(renderNode)}
       </TreeItem>
     );

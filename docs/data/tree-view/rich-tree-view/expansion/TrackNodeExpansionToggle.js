@@ -38,8 +38,8 @@ const MUI_X_PRODUCTS = [
 export default function TrackNodeExpansionToggle() {
   const [action, setAction] = React.useState(null);
 
-  const handleNodeExpansionToggle = (event, nodeId, isExpanded) => {
-    setAction({ nodeId, isExpanded });
+  const handleNodeExpansionToggle = (event, itemId, isExpanded) => {
+    setAction({ itemId, isExpanded });
   };
 
   return (
@@ -48,7 +48,7 @@ export default function TrackNodeExpansionToggle() {
         <Typography>No action recorded</Typography>
       ) : (
         <Typography>
-          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
 

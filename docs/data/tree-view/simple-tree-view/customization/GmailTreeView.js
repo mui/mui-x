@@ -112,11 +112,11 @@ export default function GmailTreeView() {
       }}
       sx={{ flexGrow: 1, maxWidth: 400 }}
     >
-      <StyledTreeItem nodeId="1" labelText="All Mail" labelIcon={MailIcon} />
-      <StyledTreeItem nodeId="2" labelText="Trash" labelIcon={DeleteIcon} />
-      <StyledTreeItem nodeId="3" labelText="Categories" labelIcon={Label}>
+      <StyledTreeItem itemId="1" labelText="All Mail" labelIcon={MailIcon} />
+      <StyledTreeItem itemId="2" labelText="Trash" labelIcon={DeleteIcon} />
+      <StyledTreeItem itemId="3" labelText="Categories" labelIcon={Label}>
         <StyledTreeItem
-          nodeId="5"
+          itemId="5"
           labelText="Social"
           labelIcon={SupervisorAccountIcon}
           labelInfo="90"
@@ -126,7 +126,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#00b4ff', 0.2)}
         />
         <StyledTreeItem
-          nodeId="6"
+          itemId="6"
           labelText="Updates"
           labelIcon={InfoIcon}
           labelInfo="2,294"
@@ -136,7 +136,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#ff8f00', 0.2)}
         />
         <StyledTreeItem
-          nodeId="7"
+          itemId="7"
           labelText="Forums"
           labelIcon={ForumIcon}
           labelInfo="3,566"
@@ -146,7 +146,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#9035ff', 0.15)}
         />
         <StyledTreeItem
-          nodeId="8"
+          itemId="8"
           labelText="Promotions"
           labelIcon={LocalOfferIcon}
           labelInfo="733"
@@ -156,7 +156,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#64ff6a', 0.2)}
         />
       </StyledTreeItem>
-      <StyledTreeItem nodeId="4" labelText="History" labelIcon={Label} />
+      <StyledTreeItem itemId="4" labelText="History" labelIcon={Label} />
     </SimpleTreeView>
   );
 }

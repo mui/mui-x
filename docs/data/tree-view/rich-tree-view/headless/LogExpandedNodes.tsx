@@ -111,7 +111,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     ...itemProps
   }: ReturnType<typeof instance.getNodesToRender>[number]) => {
     return (
-      <TreeItem key={itemProps.nodeId} {...itemProps}>
+      <TreeItem key={itemProps.itemId} {...itemProps}>
         {itemChildren?.map(renderNode)}
       </TreeItem>
     );

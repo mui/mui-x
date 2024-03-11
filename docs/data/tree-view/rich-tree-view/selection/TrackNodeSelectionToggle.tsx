@@ -42,11 +42,11 @@ export default function TrackNodeSelectionToggle() {
 
   const handleNodeSelectionToggle = (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isSelected: boolean,
   ) => {
     if (isSelected) {
-      setLastSelectedNode(nodeId);
+      setLastSelectedNode(itemId);
     }
   };
 

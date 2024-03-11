@@ -24,7 +24,7 @@ const CustomContent = React.forwardRef(function CustomContent(
     className,
     classes,
     label,
-    nodeId,
+    itemId,
     icon: iconProp,
     expansionIcon,
     displayIcon,
@@ -38,7 +38,7 @@ const CustomContent = React.forwardRef(function CustomContent(
     handleExpansion,
     handleSelection,
     preventSelection,
-  } = useTreeItemState(nodeId);
+  } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 
@@ -98,13 +98,13 @@ export default function CustomContentTreeView() {
         sx={{ position: 'relative' }}
         defaultExpandedNodes={['3']}
       >
-        <CustomTreeItem nodeId="1" label="Amelia Hart">
-          <CustomTreeItem nodeId="2" label="Jane Fisher" />
+        <CustomTreeItem itemId="1" label="Amelia Hart">
+          <CustomTreeItem itemId="2" label="Jane Fisher" />
         </CustomTreeItem>
-        <CustomTreeItem nodeId="3" label="Bailey Monroe">
-          <CustomTreeItem nodeId="4" label="Freddie Reed" />
-          <CustomTreeItem nodeId="5" label="Georgia Johnson">
-            <CustomTreeItem nodeId="6" label="Samantha Malone" />
+        <CustomTreeItem itemId="3" label="Bailey Monroe">
+          <CustomTreeItem itemId="4" label="Freddie Reed" />
+          <CustomTreeItem itemId="5" label="Georgia Johnson">
+            <CustomTreeItem itemId="6" label="Samantha Malone" />
           </CustomTreeItem>
         </CustomTreeItem>
       </SimpleTreeView>

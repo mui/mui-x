@@ -7,16 +7,16 @@ import Typography from '@mui/material/Typography';
 
 export default function TrackNodeExpansionToggle() {
   const [action, setAction] = React.useState<{
-    nodeId: string;
+    itemId: string;
     isExpanded: boolean;
   } | null>(null);
 
   const handleNodeExpansionToggle = (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isExpanded: boolean,
   ) => {
-    setAction({ nodeId, isExpanded });
+    setAction({ itemId, isExpanded });
   };
 
   return (
@@ -25,25 +25,25 @@ export default function TrackNodeExpansionToggle() {
         <Typography>No action recorded</Typography>
       ) : (
         <Typography>
-          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <SimpleTreeView onNodeExpansionToggle={handleNodeExpansionToggle}>
-          <TreeItem nodeId="grid" label="Data Grid">
-            <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
-            <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
-            <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
+          <TreeItem itemId="grid" label="Data Grid">
+            <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+            <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+            <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
           </TreeItem>
-          <TreeItem nodeId="pickers" label="Date and Time Pickers">
-            <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
-            <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
+          <TreeItem itemId="pickers" label="Date and Time Pickers">
+            <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+            <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
           </TreeItem>
-          <TreeItem nodeId="charts" label="Charts">
-            <TreeItem nodeId="charts-community" label="@mui/x-charts" />
+          <TreeItem itemId="charts" label="Charts">
+            <TreeItem itemId="charts-community" label="@mui/x-charts" />
           </TreeItem>
-          <TreeItem nodeId="tree-view" label="Tree View">
-            <TreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
+          <TreeItem itemId="tree-view" label="Tree View">
+            <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
           </TreeItem>
         </SimpleTreeView>
       </Box>

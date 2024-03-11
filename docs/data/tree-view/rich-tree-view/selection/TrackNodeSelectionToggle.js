@@ -38,9 +38,9 @@ const MUI_X_PRODUCTS = [
 export default function TrackNodeSelectionToggle() {
   const [lastSelectedNode, setLastSelectedNode] = React.useState(null);
 
-  const handleNodeSelectionToggle = (event, nodeId, isSelected) => {
+  const handleNodeSelectionToggle = (event, itemId, isSelected) => {
     if (isSelected) {
-      setLastSelectedNode(nodeId);
+      setLastSelectedNode(itemId);
     }
   };
 
