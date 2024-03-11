@@ -2,6 +2,19 @@ import { DateView, FieldValueType, MuiPickersAdapter, PickersTimezone } from '..
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
+export const mergeDateAndTime = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateParam: TDate,
+  timeParam: TDate,
+) => {
+  let mergedDate = dateParam;
+  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
+  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
+  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+
+  return mergedDate;
+};
+
 interface FindClosestDateParams<TDate> {
   date: TDate;
   disableFuture?: boolean;
@@ -23,8 +36,7 @@ export const findClosestEnabledDate = <TDate>({
   utils,
   timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = utils.startOfDay(utils.dateWithTimezone(undefined, timezone));
-
+  const today = mergeDateAndTime(utils, utils.dateWithTimezone(undefined, timezone), date);
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
   }
@@ -109,19 +121,6 @@ export const getMonthsInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TD
   }
 
   return months;
-};
-
-export const mergeDateAndTime = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateParam: TDate,
-  timeParam: TDate,
-) => {
-  let mergedDate = dateParam;
-  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
-  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
-  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
-
-  return mergedDate;
 };
 
 export const getTodayDate = <TDate>(
