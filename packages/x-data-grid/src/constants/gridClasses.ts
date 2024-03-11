@@ -89,6 +89,11 @@ export interface GridClasses {
    */
   'cell--pinnedRight': string;
   /**
+   * Styles applied to the cell filler element placed between non-pinned cells the right-pinned cells.
+   * @ignore - do not document.
+   */
+  'cell--filler': string;
+  /**
    * Styles applied to the cell element if it is in a cell selection range.
    */
   'cell--selectionMode': string;
@@ -640,6 +645,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--rangeRight',
   'cell--pinnedLeft',
   'cell--pinnedRight',
+  'cell--filler',
   'cell--selectionMode',
   'cell',
   'cellCheckbox',

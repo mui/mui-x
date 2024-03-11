@@ -31,6 +31,7 @@ import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfa
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import { gridClasses } from '../../../constants/gridClasses';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -195,7 +196,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <React.Fragment>
         {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {isNotPinned && <div role="presentation" style={{ flex: '1' }} />}
+        {isNotPinned && <div role="presentation" className={gridClasses['cell--filler']} />}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
