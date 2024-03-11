@@ -4,23 +4,28 @@ import PropTypes from 'prop-types';
 import { spy } from 'sinon';
 import { act, createEvent, createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { SimpleTreeViewPlugins } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
-import { DefaultTreeViewPlugins } from '@mui/x-tree-view/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
-const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<DefaultTreeViewPlugins> = {
+const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> = {
   instance: {
     isNodeExpandable: () => false,
     isNodeExpanded: () => false,
     isNodeFocused: () => false,
     isNodeSelected: () => false,
-    isNodeDisabled: () => false,
+    isNodeDisabled: (nodeId: string | null): nodeId is string => !!nodeId,
     getTreeItemId: () => '',
-    mapFirstCharFromJSX: () => {},
+    mapFirstCharFromJSX: () => () => {},
   } as any,
-  runItemPlugins: ({ props, ref }) => ({ props, ref, wrapItem: (children) => children }),
+  publicAPI: {
+    focusNode: () => {},
+    getItem: () => ({}),
+  },
+  runItemPlugins: () => ({ rootRef: null, contentRef: null }),
+  wrapItem: ({ children }) => children,
   disabledItemsFocusable: false,
   icons: {
     slots: {},

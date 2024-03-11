@@ -448,6 +448,10 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onRowCountChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(count: number) => void", "describedArgs": ["count"] }
+    },
     "onRowDoubleClick": {
       "type": { "name": "func" },
       "signature": {

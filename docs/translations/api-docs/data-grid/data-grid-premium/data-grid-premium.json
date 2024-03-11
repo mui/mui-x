@@ -482,6 +482,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onRowCountChange": {
+      "description": "Callback fired when the row count has changed.",
+      "typeDescriptions": { "count": "Updated row count." }
+    },
     "onRowDoubleClick": {
       "description": "Callback fired when a double click event comes from a row container element.",
       "typeDescriptions": {

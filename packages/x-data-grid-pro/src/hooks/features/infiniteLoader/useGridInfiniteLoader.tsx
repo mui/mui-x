@@ -121,10 +121,10 @@ export const useGridInfiniteLoader = (
     [isEnabled, triggerRef],
   );
 
-  const infiteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
+  const infiniteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
     getInfiniteLoadingTriggerElement,
   };
 
-  useGridApiMethod(apiRef, infiteLoaderPrivateApi, 'private');
+  useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };
