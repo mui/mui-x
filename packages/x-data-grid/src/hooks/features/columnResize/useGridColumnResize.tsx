@@ -353,7 +353,11 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
-    const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
+    const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
+      'isColumnPinned',
+      false,
+      colDefRef.current!.field,
+    );
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
       updateProperty(fillerLeftRef.current, 'width', widthDiff);
@@ -436,7 +440,11 @@ export const useGridColumnResize = (
     fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
     fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
 
-    const pinnedPosition = apiRef.current.isColumnPinned(colDef.field);
+    const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
+      'isColumnPinned',
+      false,
+      colDefRef.current!.field,
+    );
 
     leftPinnedCellsAfterRef.current =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
