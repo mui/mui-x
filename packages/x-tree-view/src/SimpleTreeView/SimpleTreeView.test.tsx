@@ -388,7 +388,7 @@ describe('<SimpleTreeView />', () => {
   });
 
   describe('onItemFocus', () => {
-    it('should be called when node is focused', () => {
+    it('should be called when item is focused', () => {
       const focusSpy = spy();
       const { getByRole } = render(
         <SimpleTreeView onItemFocus={focusSpy}>
