@@ -456,7 +456,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor((height) / rowHeight) + n);
+      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + n);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(gridOffsetTop()).to.equal(distanceToFirstRow);

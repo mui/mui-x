@@ -239,11 +239,7 @@ export const useGridVirtualScroller = () => {
     );
 
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const nextRenderContext = computeRenderContext(
-      inputs,
-      scrollPosition.current,
-      scrollCache,
-    );
+    const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -257,11 +253,7 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const nextRenderContext = computeRenderContext(
-      inputs,
-      scrollPosition.current,
-      scrollCache,
-    );
+    const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     updateRenderContext(nextRenderContext);
   };
 
@@ -546,11 +538,7 @@ export const useGridVirtualScroller = () => {
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
 
-    const initialRenderContext = computeRenderContext(
-      inputs,
-      scrollPosition.current,
-      scrollCache,
-    );
+    const initialRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     updateRenderContext(initialRenderContext);
 
     apiRef.current.publishEvent('scrollPositionChange', {
@@ -671,7 +659,8 @@ function computeRenderContext(
     const firstRowIndex = Math.min(
       getNearestIndexToRender(inputs, top, {
         atStart: true,
-        lastPosition: inputs.rowsMeta.positions[inputs.rowsMeta.positions.length - 1] + inputs.lastRowHeight,
+        lastPosition:
+          inputs.rowsMeta.positions[inputs.rowsMeta.positions.length - 1] + inputs.lastRowHeight,
       }),
       inputs.rowsMeta.positions.length - 1,
     );
@@ -727,7 +716,11 @@ function computeRenderContext(
   return actualRenderContext;
 }
 
-function getNearestIndexToRender(inputs: RenderContextInputs, offset: number, options?: SearchOptions) {
+function getNearestIndexToRender(
+  inputs: RenderContextInputs,
+  offset: number,
+  options?: SearchOptions,
+) {
   const lastMeasuredIndexRelativeToAllRows = inputs.apiRef.current.getLastMeasuredRowIndex();
   let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
   if (inputs.range?.lastRowIndex && !allRowsMeasured) {
@@ -853,7 +846,12 @@ function binarySearch(
     : binarySearch(offset, positions, options, pivot + 1, sliceEnd);
 }
 
-function exponentialSearch(offset: number, positions: number[], index: number, options: SearchOptions | undefined = undefined): number {
+function exponentialSearch(
+  offset: number,
+  positions: number[],
+  index: number,
+  options: SearchOptions | undefined = undefined,
+): number {
   let interval = 1;
 
   while (index < positions.length && Math.abs(positions[index]) < offset) {
