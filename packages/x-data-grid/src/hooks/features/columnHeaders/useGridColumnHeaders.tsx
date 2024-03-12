@@ -4,7 +4,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
-import { GridRenderContext } from '../../../models/params/gridScrollParams';
+import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
@@ -60,7 +60,7 @@ export interface UseGridColumnHeadersProps {
 
 export interface GetHeadersParams {
   position?: GridPinnedColumnPosition;
-  renderContext?: GridRenderContext;
+  renderContext?: GridColumnsRenderContext;
   minFirstColumn?: number;
   maxLastColumn?: number;
 }
@@ -134,24 +134,22 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
 
   const leftRenderContext = React.useMemo(() => {
-    return renderContext && pinnedColumns.left.length
+    return pinnedColumns.left.length
       ? {
-          ...renderContext,
           firstColumnIndex: 0,
           lastColumnIndex: pinnedColumns.left.length,
         }
       : null;
-  }, [renderContext, pinnedColumns.left.length]);
+  }, [pinnedColumns.left.length]);
 
   const rightRenderContext = React.useMemo(() => {
-    return renderContext && pinnedColumns.right.length
+    return pinnedColumns.right.length
       ? {
-          ...renderContext,
           firstColumnIndex: visibleColumns.length - pinnedColumns.right.length,
           lastColumnIndex: visibleColumns.length,
         }
       : null;
-  }, [renderContext, pinnedColumns.right.length, visibleColumns.length]);
+  }, [pinnedColumns.right.length, visibleColumns.length]);
 
   useGridApiEventHandler(apiRef, 'columnResizeStart', handleColumnResizeStart);
   useGridApiEventHandler(apiRef, 'columnResizeStop', handleColumnResizeStop);
