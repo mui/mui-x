@@ -198,8 +198,8 @@ useTreeViewJSXNodes.wrapItem = ({ children, nodeId }) => (
   <DescendantProvider id={nodeId}>{children}</DescendantProvider>
 );
 
-useTreeViewJSXNodes.wrapRoot = ({ children }) => (
-  <DescendantProvider>{children}</DescendantProvider>
+useTreeViewJSXNodes.wrapRoot = ({ children, rootRef }) => (
+  <DescendantProvider rootRef={rootRef}>{children}</DescendantProvider>
 );
 
 useTreeViewJSXNodes.params = {};

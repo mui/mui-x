@@ -33,13 +33,15 @@ if (process.env.NODE_ENV !== 'production') {
 
 interface DescendantProviderProps {
   id?: string;
+  rootRef?: React.RefObject<HTMLElement>;
   children: React.ReactNode;
 }
 
 export function DescendantProvider(props: DescendantProviderProps) {
-  const { children, id = null } = props;
+  const { children, rootRef, id = null } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
+  const descendantContext = React.useContext(DescendantContext);
 
   const descendantElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map());
   const registerDescendant = React.useCallback((descendant: TreeItemDescendant) => {
@@ -50,7 +52,32 @@ export function DescendantProvider(props: DescendantProviderProps) {
     descendantElementRef.current.delete(itemId);
   }, []);
 
+  const getDescendant = React.useCallback((itemId: string) => {
+    return descendantElementRef.current.get(itemId);
+  }, []);
+
+  const cachedDescendantIds = React.useRef('');
   React.useEffect(() => {
+    let element: HTMLElement | null | undefined;
+    if (rootRef) {
+      element = rootRef.current;
+    } else if (id && descendantContext) {
+      element = descendantContext.getDescendant(id);
+    }
+
+    // Weak but quick way to check if the descendants have changed and avoid the expensive DOM operations.
+    // This is not sufficient to get the new order because this includes grand-children.
+    if (element) {
+      const newDescendantIds = Array.from(element.querySelectorAll('[role="treeitem"]'))
+        .map((child) => child.id)
+        .join('\n');
+      if (newDescendantIds === cachedDescendantIds.current) {
+        return;
+      }
+
+      cachedDescendantIds.current = newDescendantIds;
+    }
+
     const orderedDescendants: TreeItemDescendant[] = [];
     descendantElementRef.current.forEach((descendantElement, descendantId) => {
       if (orderedDescendants.length === 0) {
@@ -79,6 +106,7 @@ export function DescendantProvider(props: DescendantProviderProps) {
     () => ({
       registerDescendant,
       unregisterDescendant,
+      getDescendant,
       parentId: id,
     }),
     [registerDescendant, unregisterDescendant, id],
@@ -100,5 +128,6 @@ export interface TreeItemDescendant {
 interface DescendantContextValue {
   registerDescendant: (descendant: TreeItemDescendant) => void;
   unregisterDescendant: (itemId: string) => void;
+  getDescendant: (itemId: string) => HTMLLIElement | undefined;
   parentId: string | null;
 }

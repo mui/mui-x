@@ -16,6 +16,7 @@ export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSign
     wrapItem: TreeItemWrapper;
     wrapRoot: TreeRootWrapper;
     runItemPlugins: <TProps extends {}>(props: TProps) => Required<TreeViewItemPluginResponse>;
+    rootRef: React.RefObject<HTMLUListElement>;
   };
 
 export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {

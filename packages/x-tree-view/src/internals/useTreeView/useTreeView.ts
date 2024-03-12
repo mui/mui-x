@@ -157,7 +157,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   contextValue.wrapRoot = ({ children }) => {
     let finalChildren: React.ReactNode = children;
     rootWrappers.forEach((rootWrapper) => {
-      finalChildren = rootWrapper({ children: finalChildren });
+      finalChildren = rootWrapper({ children: finalChildren, rootRef: innerRootRef });
     });
 
     return finalChildren;

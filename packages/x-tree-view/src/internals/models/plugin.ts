@@ -148,7 +148,10 @@ export type TreeItemWrapper = (params: {
   children: React.ReactNode;
 }) => React.ReactNode;
 
-export type TreeRootWrapper = (params: { children: React.ReactNode }) => React.ReactNode;
+export type TreeRootWrapper = (params: {
+  children: React.ReactNode;
+  rootRef: React.RefObject<HTMLUListElement>;
+}) => React.ReactNode;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): void | TreeViewResponse<TSignature>;

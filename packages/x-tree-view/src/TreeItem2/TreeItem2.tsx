@@ -182,6 +182,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getLabelProps,
     getGroupTransitionProps,
     status,
+    rootRef,
   } = useTreeItem2({
     id,
     nodeId,
