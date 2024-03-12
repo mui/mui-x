@@ -21,7 +21,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     mapFirstCharFromJSX: () => () => {},
   } as any,
   publicAPI: {
-    focusNode: () => {},
+    focusItem: () => {},
     getItem: () => ({}),
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
