@@ -18,10 +18,10 @@ export interface UseTreeViewFocusParameters {
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * @param {string} itemId The id of the focused item.
+   * @param {string} value of the focused item.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onItemFocus?: (event: React.SyntheticEvent, itemId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;

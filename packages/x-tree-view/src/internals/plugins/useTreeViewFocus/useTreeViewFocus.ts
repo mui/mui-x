@@ -46,8 +46,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
         instance.focusRoot();
       }
       setFocusedNodeId(nodeId);
-      if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeId);
+      if (params.onItemFocus) {
+        params.onItemFocus(event, nodeId);
       }
     }
   });
@@ -65,8 +65,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
 
     setFocusedNodeId(nodeToFocusId);
-    if (params.onNodeFocus) {
-      params.onNodeFocus(event, nodeToFocusId);
+    if (params.onItemFocus) {
+      params.onItemFocus(event, nodeToFocusId);
     }
   });
 
@@ -129,5 +129,5 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
 
 useTreeViewFocus.params = {
-  onNodeFocus: true,
+  onItemFocus: true,
 };

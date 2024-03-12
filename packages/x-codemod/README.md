@@ -222,6 +222,7 @@ The list includes these transformers
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-focus-callback`](#rename-focus-callback)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -312,6 +313,17 @@ Replace the `TransitionComponent` and `TransitionProps` components with the `gro
 
 -  TransitionProps={{ timeout: 600 }}
 +  slotProps={{ groupTransition: { timeout: 600 } }}
+ />
+```
+
+#### `rename-focus-callback`
+
+Replace the `onNodeFocus` callback with `onItemFocus`:
+
+```diff
+ <TreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
  />
 ```
 
