@@ -7,12 +7,6 @@ import { act, fireEvent } from '@mui-internal/test-utils';
 describeTreeView<UseTreeViewExpansionSignature>(
   'useTreeViewExpansion plugin',
   ({ renderItems }) => {
-    it('test', () => {
-      renderItems({
-        items: [{ id: '1', label: '1' }],
-      });
-    });
-
     describe('Controlled / uncontrolled', () => {
       it('should use the default state when defined', () => {
         const { getItemRoot } = renderItems({
