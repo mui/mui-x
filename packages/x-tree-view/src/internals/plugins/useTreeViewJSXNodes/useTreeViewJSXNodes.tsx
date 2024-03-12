@@ -67,16 +67,24 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
+      const parentId = prevState.nodes.nodeMap[nodeId].parentId ?? TREE_VIEW_ROOT_PARENT_ID;
       const newNodeMap = { ...prevState.nodes.nodeMap };
       const newItemMap = { ...prevState.nodes.itemMap };
+      const newItemIndexes = {
+        ...prevState.nodes.itemIndexes,
+        [parentId]: { ...prevState.nodes.itemIndexes[parentId] },
+      };
       delete newNodeMap[nodeId];
       delete newItemMap[nodeId];
+      delete newItemIndexes[parentId][nodeId];
+
       return {
         ...prevState,
         nodes: {
           ...prevState.nodes,
           nodeMap: newNodeMap,
           itemMap: newItemMap,
+          itemIndexes: newItemIndexes,
         },
       };
     });
@@ -114,7 +122,6 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 }) => {
   const { children, disabled = false, label, nodeId, id } = props;
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
-  const [, forceUpdate] = React.useState<{}>();
 
   const descendantContext = React.useContext(DescendantContext);
   if (descendantContext == null) {
@@ -137,33 +144,25 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   const expandable = isExpandable(children);
 
-  const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
+  const pluginRootRef = React.useRef<HTMLLIElement>(null);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
 
-  const handleRootRef = useForkRef(setTreeItemElement, rootRef);
+  const handleRootRef = useForkRef(pluginRootRef, rootRef);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
-
-  const descendant = React.useMemo<TreeItemDescendant>(
-    () => ({
-      element: treeItemElement!,
-      id: nodeId,
-    }),
-    [nodeId, treeItemElement],
-  );
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    if (descendant.element) {
-      registerDescendant(descendant);
+    const descendant: TreeItemDescendant = {
+      element: pluginRootRef.current!,
+      id: nodeId,
+    };
 
-      return () => {
-        unregisterDescendant(descendant.element);
-      };
-    }
-    forceUpdate({});
+    registerDescendant(descendant);
 
-    return undefined;
-  }, [registerDescendant, unregisterDescendant, descendant]);
+    return () => {
+      unregisterDescendant(nodeId);
+    };
+  }, [registerDescendant, unregisterDescendant, nodeId]);
 
   React.useEffect(() => {
     instance.insertJSXNode({

@@ -49,8 +49,8 @@ export function DescendantProvider(props: DescendantProviderProps) {
     descendantElementRef.current.set(descendant.id, descendant.element);
   }, []);
 
-  const unregisterDescendant = React.useCallback((element: HTMLLIElement) => {
-    descendantElementRef.current.delete(element.id);
+  const unregisterDescendant = React.useCallback((itemId: string) => {
+    descendantElementRef.current.delete(itemId);
   }, []);
 
   React.useEffect(() => {
@@ -101,7 +101,7 @@ export interface TreeItemDescendant {
 }
 
 interface DescendantContextValue {
-  registerDescendant: (params: TreeItemDescendant) => void;
-  unregisterDescendant: (params: HTMLLIElement) => void;
+  registerDescendant: (descendant: TreeItemDescendant) => void;
+  unregisterDescendant: (itemId: string) => void;
   parentId: string | null;
 }
