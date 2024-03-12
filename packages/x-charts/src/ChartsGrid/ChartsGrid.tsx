@@ -86,7 +86,7 @@ function ChartsGrid(props: ChartsGridProps) {
       {vertical &&
         xTicks.map(({ formattedValue, offset }) => (
           <line
-            key={formattedValue}
+            key={`vertical-${formattedValue}`}
             y1={yScale.range()[0]}
             y2={yScale.range()[1]}
             x1={offset}
@@ -97,7 +97,7 @@ function ChartsGrid(props: ChartsGridProps) {
       {horizontal &&
         yTicks.map(({ formattedValue, offset }) => (
           <line
-            key={formattedValue}
+            key={`horizontal-${formattedValue}`}
             y1={offset}
             y2={offset}
             x1={xScale.range()[0]}

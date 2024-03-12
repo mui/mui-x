@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
@@ -13,6 +15,7 @@ import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
+import { TreeItem2Provider } from '../TreeItem2Provider';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -26,7 +29,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     label: ['label'],
-    group: ['group'],
+    groupTransition: ['groupTransition'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -129,8 +132,8 @@ const StyledTreeItemContent = styled(TreeItemContent, {
 
 const TreeItemGroup = styled(Collapse, {
   name: 'MuiTreeItem',
-  slot: 'Group',
-  overridesResolver: (props, styles) => styles.group,
+  slot: 'GroupTransition',
+  overridesResolver: (props, styles) => styles.groupTransition,
 })({
   margin: 0,
   padding: 0,
@@ -159,9 +162,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const inPropsWithTheme = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
-
-  const { props, ref, wrapItem } = runItemPlugins({ props: inPropsWithTheme, ref: inRef });
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
   const {
     children,
@@ -175,16 +176,19 @@ export const TreeItem = React.forwardRef(function TreeItem(
     label,
     onClick,
     onMouseDown,
-    TransitionComponent = Collapse,
-    TransitionProps,
     ...other
   } = props;
+
+  const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
+  const handleRootRef = useForkRef(inRef, rootRef);
+  const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
     collapseIcon: inSlots?.collapseIcon ?? contextIcons.slots.collapseIcon ?? TreeViewCollapseIcon,
     endIcon: inSlots?.endIcon ?? contextIcons.slots.endIcon,
     icon: inSlots?.icon,
+    groupTransition: inSlots?.groupTransition,
   };
 
   const isExpandable = (reactChildren: React.ReactNode) => {
@@ -208,6 +212,20 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const classes = useUtilityClasses(ownerState);
+
+  const GroupTransition: React.ElementType | undefined = slots.groupTransition ?? undefined;
+  const groupTransitionProps: TransitionProps = useSlotProps({
+    elementType: GroupTransition,
+    ownerState: {},
+    externalSlotProps: inSlotProps?.groupTransition,
+    additionalProps: {
+      unmountOnExit: true,
+      in: expanded,
+      component: 'ul',
+      role: 'group',
+    },
+    className: classes.groupTransition,
+  });
 
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
@@ -282,58 +300,51 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const idAttribute = instance.getTreeItemId(nodeId, id);
 
-  const item = (
-    <TreeItemRoot
-      className={clsx(classes.root, className)}
-      role="treeitem"
-      aria-expanded={expandable ? expanded : undefined}
-      aria-selected={ariaSelected}
-      aria-disabled={disabled || undefined}
-      id={idAttribute}
-      tabIndex={-1}
-      {...other}
-      ownerState={ownerState}
-      onFocus={handleFocus}
-      ref={ref}
-    >
-      <StyledTreeItemContent
-        as={ContentComponent}
-        classes={{
-          root: classes.content,
-          expanded: classes.expanded,
-          selected: classes.selected,
-          focused: classes.focused,
-          disabled: classes.disabled,
-          iconContainer: classes.iconContainer,
-          label: classes.label,
-        }}
-        label={label}
-        nodeId={nodeId}
-        onClick={onClick}
-        onMouseDown={onMouseDown}
-        icon={icon}
-        expansionIcon={expansionIcon}
-        displayIcon={displayIcon}
+  return (
+    <TreeItem2Provider nodeId={nodeId}>
+      <TreeItemRoot
+        className={clsx(classes.root, className)}
+        role="treeitem"
+        aria-expanded={expandable ? expanded : undefined}
+        aria-selected={ariaSelected}
+        aria-disabled={disabled || undefined}
+        id={idAttribute}
+        tabIndex={-1}
+        {...other}
         ownerState={ownerState}
-        {...ContentProps}
-      />
-      {children && (
-        <TreeItemGroup
-          as={TransitionComponent}
-          unmountOnExit
-          className={classes.group}
-          in={expanded}
-          component="ul"
-          role="group"
-          {...TransitionProps}
-        >
-          {children}
-        </TreeItemGroup>
-      )}
-    </TreeItemRoot>
+        onFocus={handleFocus}
+        ref={handleRootRef}
+      >
+        <StyledTreeItemContent
+          as={ContentComponent}
+          classes={{
+            root: classes.content,
+            expanded: classes.expanded,
+            selected: classes.selected,
+            focused: classes.focused,
+            disabled: classes.disabled,
+            iconContainer: classes.iconContainer,
+            label: classes.label,
+          }}
+          label={label}
+          nodeId={nodeId}
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          icon={icon}
+          expansionIcon={expansionIcon}
+          displayIcon={displayIcon}
+          ownerState={ownerState}
+          {...ContentProps}
+          ref={handleContentRef}
+        />
+        {children && (
+          <TreeItemGroup as={GroupTransition} {...groupTransitionProps}>
+            {children}
+          </TreeItemGroup>
+        )}
+      </TreeItemRoot>
+    </TreeItem2Provider>
   );
-
-  return wrapItem(item);
 });
 
 TreeItem.propTypes = {
@@ -395,15 +406,4 @@ TreeItem.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The component used for the transition.
-   * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
-   * @default Collapse
-   */
-  TransitionComponent: PropTypes.elementType,
-  /**
-   * Props applied to the transition element.
-   * By default, the element is based on this [`Transition`](https://reactcommunity.org/react-transition-group/transition/) component.
-   */
-  TransitionProps: PropTypes.object,
 } as any;

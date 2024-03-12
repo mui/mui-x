@@ -95,6 +95,12 @@ By modifying the series `type` property, you can switch between rendering a line
 
 ## Subcomponents
 
+:::info
+The CSS `z-index` property does not exist on SVG elements.
+Elements rendered after overlap on top of elements rendered before.
+The order of elements in composition is the only way to define how they overlap.
+:::
+
 ### Plotting
 
 To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.

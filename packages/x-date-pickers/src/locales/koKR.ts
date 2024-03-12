@@ -67,7 +67,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: '지우기',
 
   // Table labels
   timeTableLabel: '선택한 시간',
@@ -82,6 +82,19 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const koKR = getPickersLocalization(koKRPickers);

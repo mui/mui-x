@@ -611,7 +611,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
     }),
     meridiem: () => ({
       minimum: 0,
-      maximum: 0,
+      maximum: 1,
     }),
     empty: () => ({
       minimum: 0,
@@ -819,4 +819,75 @@ export const parseSelectedSections = (
   }
 
   return selectedSections;
+};
+
+export const getSectionValueText = <TDate extends PickerValidDate>(
+  section: FieldSection,
+  utils: MuiPickersAdapter<TDate>,
+): string | undefined => {
+  if (!section.value) {
+    return undefined;
+  }
+  switch (section.type) {
+    case 'month': {
+      if (section.contentType === 'digit') {
+        return utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
+      }
+      const parsedDate = utils.parse(section.value, section.format);
+      return parsedDate ? utils.format(parsedDate, 'month') : undefined;
+    }
+    case 'day':
+      return section.contentType === 'digit'
+        ? utils.format(
+            utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
+            'dayOfMonthFull',
+          )
+        : section.value;
+    case 'weekDay':
+      // TODO: improve by providing the label of the week day
+      return undefined;
+    default:
+      return undefined;
+  }
+};
+
+export const getSectionValueNow = <TDate extends PickerValidDate>(
+  section: FieldSection,
+  utils: MuiPickersAdapter<TDate>,
+): number | undefined => {
+  if (!section.value) {
+    return undefined;
+  }
+  switch (section.type) {
+    case 'weekDay': {
+      if (section.contentType === 'letter') {
+        // TODO: improve by resolving the week day number from a letter week day
+        return undefined;
+      }
+      return Number(section.value);
+    }
+    case 'meridiem': {
+      const parsedDate = utils.parse(
+        `01:00 ${section.value}`,
+        `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
+      );
+      if (parsedDate) {
+        return utils.getHours(parsedDate) >= 12 ? 1 : 0;
+      }
+      return undefined;
+    }
+    case 'day':
+      return section.contentType === 'digit-with-letter'
+        ? parseInt(section.value, 10)
+        : Number(section.value);
+    case 'month': {
+      if (section.contentType === 'digit') {
+        return Number(section.value);
+      }
+      const parsedDate = utils.parse(section.value, section.format);
+      return parsedDate ? utils.getMonth(parsedDate) + 1 : undefined;
+    }
+    default:
+      return section.contentType !== 'letter' ? Number(section.value) : undefined;
+  }
 };

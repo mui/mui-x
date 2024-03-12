@@ -540,9 +540,9 @@ async function initializeEnvironment(
           const input = page.getByRole('textbox', { includeHidden: true });
 
           await page.locator(`.${pickersSectionListClasses.root}`).click();
-          await page.getByRole(`spinbutton`, { name: 'MM' }).fill('04');
-          await page.getByRole(`spinbutton`, { name: 'DD' }).fill('11');
-          await page.getByRole(`spinbutton`, { name: 'YYYY' }).fill('2022');
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
 
@@ -569,8 +569,12 @@ async function initializeEnvironment(
         });
 
         it('should allow pasting a section', async () => {
-          // Only firefox is capable of reliably running this test in CI and headless browsers
-          if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
+          if (
+            // Only firefox is capable of reliably running this test in CI and headless browsers
+            (browserType.name() !== 'firefox' && process.env.CIRCLECI) ||
+            // chromium seems to fail when running this test locally in headless mode
+            (browserType.name() === 'chromium' && !process.env.CIRCLECI)
+          ) {
             return;
           }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
@@ -580,9 +584,9 @@ async function initializeEnvironment(
           const isMac = platform() === 'darwin';
           const modifier = isMac ? 'Meta' : 'Control';
 
-          const monthSection = page.getByRole(`spinbutton`, { name: 'MM' });
-          const daySection = page.getByRole(`spinbutton`, { name: 'DD' });
-          const yearSection = page.getByRole(`spinbutton`, { name: 'YYYY' });
+          const monthSection = page.getByRole(`spinbutton`, { name: 'Month' });
+          const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
+          const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
 
           await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
