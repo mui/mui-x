@@ -44,23 +44,9 @@ const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any, any>) 
 };
 
 const MultiInputDateRangeFieldRoot = styled(
-  React.forwardRef(
-    (
-      {
-        enableAccessibleFieldDOMStructure,
-        ...other
-      }: StackProps & { enableAccessibleFieldDOMStructure: boolean | undefined },
-      ref: React.Ref<HTMLDivElement>,
-    ) => (
-      <Stack
-        ref={ref}
-        spacing={2}
-        direction="row"
-        alignItems={enableAccessibleFieldDOMStructure ? 'center' : 'baseline'}
-        {...other}
-      />
-    ),
-  ),
+  React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
+    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
+  )),
   {
     name: 'MuiMultiInputDateRangeField',
     slot: 'Root',
@@ -75,7 +61,9 @@ const MultiInputDateRangeFieldSeparator = styled(
     slot: 'Separator',
     overridesResolver: (props, styles) => styles.separator,
   },
-)({});
+)({
+  lineHeight: '1.4375em', // 23px
+});
 
 type MultiInputDateRangeFieldComponent = (<
   TDate extends PickerValidDate,
@@ -131,7 +119,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     externalForwardedProps: otherForwardedProps,
     additionalProps: {
       ref,
-      enableAccessibleFieldDOMStructure: internalProps.enableAccessibleFieldDOMStructure,
     },
     ownerState,
     className: clsx(className, classes.root),
