@@ -137,7 +137,7 @@ As a result, the following changes have been made:
 
 - Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
   - [`columnGrouping`](/x/react-data-grid/column-groups/)
-  - [`clipboardPaste`](/x/react-data-grid/clipboard/)
+  - [`clipboardPaste`](/x/react-data-grid/clipboard/#clipboard-paste)
   - [`lazyLoading`](/x/react-data-grid/row-updates/#lazy-loading)
 
 ### Behavioral changes
@@ -191,8 +191,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
 
 - The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
-
-- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
 
 - The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
 
@@ -306,7 +304,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Clipboard
 
-- Clipboard paste is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
 
 ### Print export
