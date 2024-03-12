@@ -6,6 +6,7 @@ import {
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
+  findGridElement,
   findLeftPinnedCellsAfterCol,
   findRightPinnedCellsBeforeCol,
   getFieldFromHeaderElem,
@@ -289,8 +290,10 @@ export const useGridColumnResize = (
   const cellElementsRef = React.useRef<Element[]>([]);
   const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
   const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
+  const fillerLeftRef = React.useRef<HTMLElement>();
+  const fillerRightRef = React.useRef<HTMLElement>();
   const leftPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
-  const rightPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
+  const rightPinnedHeadersBeforeRef = React.useRef<HTMLElement[]>([]);
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -361,6 +364,8 @@ export const useGridColumnResize = (
     );
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+      updateProperty(fillerLeftRef.current, 'width', widthDiff);
+
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
@@ -370,10 +375,12 @@ export const useGridColumnResize = (
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
+      updateProperty(fillerRightRef.current, 'width', widthDiff);
+
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
       });
-      rightPinnedHeadersAfterRef.current.forEach((header) => {
+      rightPinnedHeadersBeforeRef.current.forEach((header) => {
         updateProperty(header, 'right', widthDiff);
       });
     }
@@ -440,6 +447,9 @@ export const useGridColumnResize = (
       apiRef.current,
     );
 
+    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
+    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
+
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
@@ -459,7 +469,7 @@ export const useGridColumnResize = (
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
         : findLeftPinnedHeadersAfterCol(apiRef.current, columnHeaderElementRef.current);
-    rightPinnedHeadersAfterRef.current =
+    rightPinnedHeadersBeforeRef.current =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
         : findRightPinnedHeadersBeforeCol(apiRef.current, columnHeaderElementRef.current);
