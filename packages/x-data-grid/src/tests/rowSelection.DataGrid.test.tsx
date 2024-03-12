@@ -182,6 +182,7 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelection = true (multi selection)', () => {
+    clock.withFakeTimers();
     it('should allow to toggle prop.checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
@@ -377,9 +378,10 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: '1' },
+        target: { value: 1 },
       });
-      fireEvent.click(selectAllCheckbox); // Unselect all 
+      clock.tick(500);
+      fireEvent.click(selectAllCheckbox); // Unselect all
       expect(getSelectedRowIds()).to.deep.equal([]);
       fireEvent.click(selectAllCheckbox); // Select all filtered rows
       expect(getSelectedRowIds()).to.deep.equal([1]);
