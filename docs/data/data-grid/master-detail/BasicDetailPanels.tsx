@@ -177,7 +177,6 @@ export default function BasicDetailPanels() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThresholdPx={0}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

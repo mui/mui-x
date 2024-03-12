@@ -757,7 +757,6 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
             columnBufferPx={0}
-            columnThresholdPx={0}
             width={100}
           />,
         );
@@ -772,7 +771,6 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
-            rowThresholdPx={0}
             columnHeaderHeight={columnHeaderHeight}
             height={columnHeaderHeight + 52 + border * 2}
           />,
@@ -808,7 +806,6 @@ describe('<DataGrid /> - Rows', () => {
             density="comfortable"
             rows={baselineProps.rows.slice(0, 2)}
             rowBufferPx={0}
-            rowThresholdPx={0}
             columnHeaderHeight={columnHeaderHeight}
           />,
         );
@@ -836,7 +833,6 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
-            rowThresholdPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
@@ -864,7 +860,6 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
-            rowThresholdPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
@@ -893,7 +888,6 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
-            rowThresholdPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}

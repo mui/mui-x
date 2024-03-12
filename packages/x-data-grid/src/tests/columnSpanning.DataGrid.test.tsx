@@ -313,7 +313,6 @@ describe('<DataGrid /> - Column spanning', () => {
             ]}
             rows={rows}
             rowBufferPx={rowHeight}
-            rowThresholdPx={rowHeight}
             rowHeight={rowHeight}
           />
         </div>,
@@ -349,7 +348,6 @@ describe('<DataGrid /> - Column spanning', () => {
             ]}
             rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3' }]}
             columnBufferPx={100}
-            columnThresholdPx={100}
           />
         </div>,
       );
@@ -457,7 +455,6 @@ describe('<DataGrid /> - Column spanning', () => {
             ]}
             rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3', col4: '0-4' }]}
             columnBufferPx={100}
-            columnThresholdPx={100}
           />
         </div>,
       );
@@ -744,7 +741,6 @@ describe('<DataGrid /> - Column spanning', () => {
             { id: 1, col0: '1-0', col1: '1-1', col2: '1-2', col3: '1-3', col4: '1-4', col5: '1-5' },
           ]}
           columnBufferPx={100}
-          columnThresholdPx={100}
         />
       </div>,
     );
@@ -804,9 +800,7 @@ describe('<DataGrid /> - Column spanning', () => {
             { id: 6, col0: '6-0', col1: '6-1', col2: '6-2', col3: '6-3', col4: '6-4', col5: '6-5' },
           ]}
           columnBufferPx={100}
-          columnThresholdPx={100}
           rowBufferPx={50}
-          rowThresholdPx={50}
           rowHeight={rowHeight}
         />
       </div>,
@@ -828,6 +822,7 @@ describe('<DataGrid /> - Column spanning', () => {
     // hide first row to trigger row virtualization
     virtualScroller.scrollTop = rowHeight + 10;
     virtualScroller.dispatchEvent(new Event('scroll'));
+    clock.runToLast();
 
     expect(getCell(2, 5).offsetLeft).to.equal(
       getCell(1, 5).offsetLeft,
@@ -919,9 +914,7 @@ describe('<DataGrid /> - Column spanning', () => {
               },
             ]}
             columnBufferPx={100}
-            columnThresholdPx={100}
             rowBufferPx={50}
-            rowThresholdPx={50}
             rowHeight={rowHeight}
           />
         </div>

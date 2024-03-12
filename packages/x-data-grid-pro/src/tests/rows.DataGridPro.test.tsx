@@ -452,9 +452,11 @@ describe('<DataGridPro /> - Rows', () => {
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
+      clock.runToLast();
+
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor((height - 1) / rowHeight) + n); // Subtracting 1 is needed because of the column header borders
+      expect(renderingZone.children.length).to.equal(Math.floor((height) / rowHeight) + n);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(gridOffsetTop()).to.equal(distanceToFirstRow);
@@ -489,41 +491,31 @@ describe('<DataGridPro /> - Rows', () => {
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       virtualScroller.scrollLeft = 301;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      clock.runToLast();
       expect($$(firstRow, '[role="gridcell"]')).to.have.length(
         n + 1 + Math.floor(width / columnWidth) + n,
       );
     });
 
-    it('should render new rows when scrolling past the rowThresholdPx value', () => {
+    it('should render new rows when scrolling past the threshold value', () => {
       const rowHeight = 50;
-      const rowThresholdPx = 3 * rowHeight;
-      render(
-        <TestCaseVirtualization
-          rowHeight={rowHeight}
-          rowBufferPx={0}
-          rowThresholdPx={rowThresholdPx}
-        />,
-      );
+      const rowThresholdPx = 1 * rowHeight;
+      render(<TestCaseVirtualization rowHeight={rowHeight} rowBufferPx={0} />);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
       let firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
       virtualScroller.scrollTop = rowThresholdPx;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      clock.runToLast();
       firstRow = renderingZone.firstChild;
-      expect(firstRow).to.have.attr('data-rowindex', '3');
+      expect(firstRow).to.have.attr('data-rowindex', '1');
     });
 
-    it('should render new columns when scrolling past the columnThresholdPx value', () => {
+    it('should render new columns when scrolling past the threshold value', () => {
       const columnWidth = 100;
-      const columnThresholdPx = 3 * columnWidth;
-      render(
-        <TestCaseVirtualization
-          nbRows={1}
-          columnBufferPx={0}
-          columnThresholdPx={columnThresholdPx}
-        />,
-      );
+      const columnThresholdPx = 1 * columnWidth;
+      render(<TestCaseVirtualization nbRows={1} columnBufferPx={0} />);
       const virtualScroller = grid('virtualScroller')!;
       const renderingZone = grid('virtualScrollerRenderZone')!;
       const firstRow = $(renderingZone, '[role="row"]:first-child')!;
@@ -531,8 +523,9 @@ describe('<DataGridPro /> - Rows', () => {
       expect(firstColumn).to.have.attr('data-colindex', '0');
       virtualScroller.scrollLeft = columnThresholdPx;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      clock.runToLast();
       firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
-      expect(firstColumn).to.have.attr('data-colindex', '3');
+      expect(firstColumn).to.have.attr('data-colindex', '1');
     });
 
     describe('Pagination', () => {

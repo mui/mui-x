@@ -60,7 +60,6 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelContent={() => <div />}
         rowHeight={rowHeight}
         rowBufferPx={0}
-        rowThresholdPx={0}
         initialState={{
           detailPanel: {
             expandedRowIds: [0, 1],

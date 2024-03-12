@@ -139,7 +139,6 @@ export default function FormDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThresholdPx={0}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

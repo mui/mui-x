@@ -13,7 +13,7 @@ export default function KeyboardNavigationFocus() {
         initial focus
       </button>
       <div style={{ width: 300, height: 200 }}>
-        <DataGridPro {...baselineProps} rowBufferPx={52} rowThresholdPx={52} />
+        <DataGridPro {...baselineProps} rowBufferPx={52} />
       </div>
     </React.Fragment>
   );

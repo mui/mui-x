@@ -34,7 +34,6 @@ export default function CustomizeDetailPanelToggle() {
       <DataGridPro
         rows={rows}
         columns={columns}
-        rowThresholdPx={0}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
       />

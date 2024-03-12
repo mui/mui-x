@@ -108,7 +108,7 @@ As a result, the following changes have been made:
 
 ## Renamed props
 
-- The props `rowBuffer`, `columnBuffer`, `rowThreshold` and `columnThreshold` were renamed to `rowBufferPx`, `columnBufferPx`, `rowThresholdPx` and `columnThresholdPx`.
+- The props `rowBuffer` and `columnBuffer` were renamed to `rowBufferPx` and `columnBufferPx`.
   Their value is now a pixel value rather than a number of items. Their default value is now `150`.
 
 ### Removed props
@@ -135,6 +135,8 @@ As a result, the following changes have been made:
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
+- The props `rowThreshold` and `columnThreshold` have been removed.
 
 ### Behavioral changes
 
