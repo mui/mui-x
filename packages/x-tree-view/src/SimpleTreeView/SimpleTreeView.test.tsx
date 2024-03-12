@@ -184,41 +184,6 @@ describe('<SimpleTreeView />', () => {
     expect(handleBlur.callCount).to.equal(1);
   });
 
-  it('should be able to be controlled with the expandedNodes prop', () => {
-    function MyComponent() {
-      const [expandedState, setExpandedState] = React.useState([]);
-      const onExpandedNodesChange = (event, nodes) => {
-        setExpandedState(nodes);
-      };
-      return (
-        <SimpleTreeView expandedNodes={expandedState} onExpandedNodesChange={onExpandedNodesChange}>
-          <TreeItem nodeId="1" label="one" data-testid="one">
-            <TreeItem nodeId="2" label="two" />
-          </TreeItem>
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByRole, getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-
-    fireEvent.click(getByText('one'));
-    act(() => {
-      getByRole('tree').focus();
-    });
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-
-    fireEvent.keyDown(getByRole('tree'), { key: '*' });
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
-  });
-
   it('should be able to be controlled with the selectedNodes prop and singleSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState(null);

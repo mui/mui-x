@@ -6,7 +6,9 @@ export type DescribeTreeViewTestRunner<TPlugin extends TreeViewAnyPluginSignatur
 
 export interface DescribeTreeViewTestRunnerReturnValue<TPlugin extends TreeViewAnyPluginSignature> {
   setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
+  getRoot: () => HTMLElement;
   getItemRoot: (id: string) => HTMLElement;
+  getItemContent: (id: string) => HTMLElement;
 }
 
 export type DescribeTreeViewItemsRenderer<TPlugin extends TreeViewAnyPluginSignature> = <

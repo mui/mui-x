@@ -2,6 +2,7 @@ import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { createRenderer } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewAnyPluginSignature } from '@mui/x-tree-view/internals/models';
 import {
   DescribeTreeViewTestRunner,
@@ -15,7 +16,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
   const { render } = createRenderer();
 
   const renderNodes: DescribeTreeViewItemsRenderer<TPlugin> = ({ items, ...other }) => {
-    const { getByTestId, setProps } = render(
+    const { getByTestId, getByRole, setProps } = render(
       <RichTreeView
         {...other}
         items={items}
@@ -29,10 +30,17 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       />,
     );
 
+    const getRoot = () => getByRole('tree');
+
     const getItemRoot = (id: string) => getByTestId(id);
 
+    const getItemContent = (id: string) =>
+      getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
+
     return {
+      getRoot,
       getItemRoot,
+      getItemContent,
       setProps,
     };
   };
