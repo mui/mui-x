@@ -47,15 +47,6 @@ Otherwise, the sorting and filtering will only be applied to the subset of rows 
 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-:::warning
-This feature is experimental and must be explicitly activated using the `lazyLoading` experimental feature flag:
-
-```tsx
-<DataGridPro experimentalFeatures={{ lazyLoading: true }} {...otherProps} />
-```
-
-:::
-
 Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
 It loads new rows in chunks, as the user scrolls through the data grid and reveals empty rows.
 
