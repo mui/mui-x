@@ -3,10 +3,10 @@ import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
-  const { children, nodeId, rootRef } = props;
+  const { children, nodeId } = props;
   const { wrapItem } = useTreeViewContext<[]>();
 
-  return wrapItem({ children, nodeId, rootRef });
+  return wrapItem({ children, nodeId });
 }
 
 TreeItem2Provider.propTypes = {
