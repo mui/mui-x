@@ -96,6 +96,15 @@ Since v7 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v6 to v7.
 
+### Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
 ### DOM changes
 
 The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
