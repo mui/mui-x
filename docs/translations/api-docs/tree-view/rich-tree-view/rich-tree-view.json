@@ -50,7 +50,7 @@
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
-        "nodeId": "The id of the focused item.",
+        "itemId": "The id of the focused item.",
         "value": "of the focused item."
       }
     },
