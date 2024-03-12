@@ -34,17 +34,17 @@ const MUI_X_PRODUCTS = [
 ];
 
 const getAllItemsWithChildrenItemIds = () => {
-  const nodeIds = [];
-  const registerNodeId = (item) => {
+  const itemIds = [];
+  const registerItemId = (item) => {
     if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
+      itemIds.push(item.id);
+      item.children.forEach(registerItemId);
     }
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
-  return nodeIds;
+  return itemIds;
 };
 
 export default function ControlledExpansion() {
