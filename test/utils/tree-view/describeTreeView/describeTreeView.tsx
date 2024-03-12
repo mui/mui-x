@@ -2,11 +2,14 @@ import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { createRenderer } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewAnyPluginSignature } from '@mui/x-tree-view/internals/models';
+import { MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
   DescribeTreeViewItemsRenderer,
+  DescribeTreeViewTestRunnerReturnValue,
 } from './describeTreeView.types';
 
 const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
@@ -15,24 +18,12 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 ): void => {
   const { render } = createRenderer();
 
-  const renderNodes: DescribeTreeViewItemsRenderer<TPlugin> = ({ items, ...other }) => {
-    const { getByTestId, getByRole, setProps } = render(
-      <RichTreeView
-        {...other}
-        items={items}
-        slotProps={{
-          item: (ownerState) =>
-            ({
-              'data-testid': ownerState.nodeId,
-            }) as any,
-        }}
-        getItemLabel={(item) => (item as any).label ?? (item as any).id}
-      />,
-    );
+  const getUtils = (
+    result: MuiRenderResult,
+  ): Omit<DescribeTreeViewTestRunnerReturnValue<TPlugin>, 'setProps'> => {
+    const getRoot = () => result.getByRole('tree');
 
-    const getRoot = () => getByRole('tree');
-
-    const getItemRoot = (id: string) => getByTestId(id);
+    const getItemRoot = (id: string) => result.getByTestId(id);
 
     const getItemContent = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
@@ -41,12 +32,64 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       getRoot,
       getItemRoot,
       getItemContent,
-      setProps,
     };
   };
 
   describe(message, () => {
-    testRunner({ renderItems: renderNodes });
+    describe('RichTreeView', () => {
+      const renderItemsInRichTreeView: DescribeTreeViewItemsRenderer<TPlugin> = ({
+        items,
+        ...other
+      }) => {
+        const result = render(
+          <RichTreeView
+            {...other}
+            items={items}
+            slotProps={{
+              item: (ownerState) =>
+                ({
+                  'data-testid': ownerState.nodeId,
+                }) as any,
+            }}
+            getItemLabel={(item) => (item as any).label ?? (item as any).id}
+          />,
+        );
+
+        return {
+          setProps: result.setProps,
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ renderItems: renderItemsInRichTreeView });
+    });
+
+    describe('SimpleTreeView', () => {
+      const renderItemsInSimpleTreeView: DescribeTreeViewItemsRenderer<TPlugin> = ({
+        items,
+        ...other
+      }) => {
+        const renderItem = (item: any) => (
+          <TreeItem
+            nodeId={item.id}
+            label={item.label ?? item.id}
+            data-testid={item.id}
+            key={item.id}
+          >
+            {item.children?.map(renderItem)}
+          </TreeItem>
+        );
+
+        const result = render(<SimpleTreeView {...other}>{items.map(renderItem)}</SimpleTreeView>);
+
+        return {
+          setProps: result.setProps,
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ renderItems: renderItemsInSimpleTreeView });
+    });
   });
 };
 
