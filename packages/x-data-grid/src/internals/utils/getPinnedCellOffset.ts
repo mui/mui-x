@@ -4,19 +4,13 @@ import {
 } from '../../hooks/features/columns';
 import type { GridDimensions } from '../../hooks/features/dimensions';
 
-export const getPinnedCellOffset = ({
-  pinnedPosition,
-  computedWidth,
-  columnIndex,
-  columnPositions,
-  dimensions,
-}: {
-  pinnedPosition: GridPinnedColumnPosition | undefined;
-  computedWidth: number;
-  columnIndex: number;
-  columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
-  dimensions: GridDimensions;
-}) => {
+export const getPinnedCellOffset = (
+  pinnedPosition: GridPinnedColumnPosition | undefined,
+  computedWidth: number,
+  columnIndex: number,
+  columnPositions: ReturnType<typeof gridColumnPositionsSelector>,
+  dimensions: GridDimensions,
+) => {
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
 
   let pinnedOffset: number;

@@ -370,13 +370,13 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
-    const pinnedOffset = getPinnedCellOffset({
-      pinnedPosition: gridPinnedColumnPositionLookup[pinnedPosition],
-      computedWidth: column.computedWidth,
-      columnIndex: indexRelativeToAllColumns,
+    const pinnedOffset = getPinnedCellOffset(
+      gridPinnedColumnPositionLookup[pinnedPosition],
+      column.computedWidth,
+      indexRelativeToAllColumns,
       columnPositions,
       dimensions,
-    });
+    );
 
     if (rowNode?.type === 'skeletonRow') {
       return (

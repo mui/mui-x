@@ -213,13 +213,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   }) => {
     let style: React.CSSProperties | undefined;
     if (pinnedPosition === 'left' || pinnedPosition === 'right') {
-      const pinnedOffset = getPinnedCellOffset({
+      const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
+        computedWidth,
         columnIndex,
         columnPositions,
-        computedWidth,
         dimensions,
-      });
+      );
       if (pinnedPosition === 'left') {
         style = { left: pinnedOffset };
       }
