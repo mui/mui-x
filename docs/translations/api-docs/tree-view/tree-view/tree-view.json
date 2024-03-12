@@ -32,20 +32,20 @@
         "nodeIds": "The ids of the expanded nodes."
       }
     },
+    "onItemFocus": {
+      "description": "Callback fired when tree items are focused.",
+      "typeDescriptions": {
+        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
+        "itemId": "The id of the focused item.",
+        "value": "of the focused item."
+      }
+    },
     "onNodeExpansionToggle": {
       "description": "Callback fired when a tree item is expanded or collapsed.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
         "nodeId": "The nodeId of the modified node.",
         "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
-      }
-    },
-    "onNodeFocus": {
-      "description": "Callback fired when tree items are focused.",
-      "typeDescriptions": {
-        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
-        "nodeId": "The id of the node focused.",
-        "value": "of the focused node."
       }
     },
     "onNodeSelectionToggle": {

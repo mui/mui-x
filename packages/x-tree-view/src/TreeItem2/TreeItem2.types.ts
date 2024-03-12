@@ -61,7 +61,7 @@ export interface TreeItem2Props
   slotProps?: TreeItem2SlotProps;
   /**
    * This prop isn't supported.
-   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a node's focus.
    */
   onFocus?: null;
 }

@@ -230,19 +230,19 @@ RichTreeView.propTypes = {
    */
   onExpandedNodesChange: PropTypes.func,
   /**
+   * Callback fired when tree items are focused.
+   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
+   * @param {string} itemId The id of the focused item.
+   * @param {string} value of the focused item.
+   */
+  onItemFocus: PropTypes.func,
+  /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {array} nodeId The nodeId of the modified node.
    * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
    */
   onNodeExpansionToggle: PropTypes.func,
-  /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
-   */
-  onNodeFocus: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.

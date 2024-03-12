@@ -396,3 +396,14 @@ This will help create a new headless version of the `TreeItem` component based o
    )
  }
 ```
+
+### ✅ Rename `onNodeFocus`
+
+The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
+
+```diff
+ <SimpleTreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
+```
