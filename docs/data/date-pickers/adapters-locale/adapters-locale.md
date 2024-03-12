@@ -291,7 +291,7 @@ dayjs.updateLocale('en', {
 
 ### With `date-fns`
 
-For `date-fns`, override the `options.weekStartsOn` of the used `locale`:
+For `date-fns`, override the `options.weekStartsOn` of the used locale:
 
 ```ts
 import { Locale } from 'date-fns';
