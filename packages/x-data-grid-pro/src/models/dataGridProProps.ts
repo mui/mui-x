@@ -26,12 +26,7 @@ import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Enables the data grid to lazy load rows while scrolling.
-   */
-  lazyLoading: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
