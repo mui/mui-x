@@ -4,12 +4,13 @@ import { createRenderer } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewAnyPluginSignature } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
-  DescribeTreeViewItemsRenderer,
-  DescribeTreeViewTestRunnerReturnValue,
+  DescribeTreeViewRenderer,
+  DescribeTreeViewRendererReturnValue,
 } from './describeTreeView.types';
 
 const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
@@ -20,7 +21,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
   const getUtils = (
     result: MuiRenderResult,
-  ): Omit<DescribeTreeViewTestRunnerReturnValue<TPlugin>, 'setProps'> => {
+  ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getItemRoot = (id: string) => result.getByTestId(id);
@@ -36,11 +37,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
   };
 
   describe(message, () => {
-    describe('RichTreeView', () => {
-      const renderItemsInRichTreeView: DescribeTreeViewItemsRenderer<TPlugin> = ({
-        items,
-        ...other
-      }) => {
+    describe('RichTreeView + TreeItem', () => {
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
         const result = render(
           <RichTreeView
             {...other}
@@ -61,14 +59,37 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ renderItems: renderItemsInRichTreeView });
+      testRunner({ render: renderRichTreeView });
     });
 
-    describe('SimpleTreeView', () => {
-      const renderItemsInSimpleTreeView: DescribeTreeViewItemsRenderer<TPlugin> = ({
-        items,
-        ...other
-      }) => {
+    describe('RichTreeView + TreeItem2', () => {
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
+        const result = render(
+          <RichTreeView
+            {...other}
+            items={items}
+            slots={{ item: TreeItem2 }}
+            slotProps={{
+              item: (ownerState) =>
+                ({
+                  'data-testid': ownerState.nodeId,
+                }) as any,
+            }}
+            getItemLabel={(item) => (item as any).label ?? (item as any).id}
+          />,
+        );
+
+        return {
+          setProps: result.setProps,
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ render: renderRichTreeView });
+    });
+
+    describe('SimpleTreeView + TreeItem', () => {
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
         const renderItem = (item: any) => (
           <TreeItem
             nodeId={item.id}
@@ -88,7 +109,31 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ renderItems: renderItemsInSimpleTreeView });
+      testRunner({ render: renderSimpleTreeView });
+    });
+
+    describe('SimpleTreeView + TreeItem2', () => {
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
+        const renderItem = (item: any) => (
+          <TreeItem2
+            nodeId={item.id}
+            label={item.label ?? item.id}
+            data-testid={item.id}
+            key={item.id}
+          >
+            {item.children?.map(renderItem)}
+          </TreeItem2>
+        );
+
+        const result = render(<SimpleTreeView {...other}>{items.map(renderItem)}</SimpleTreeView>);
+
+        return {
+          setProps: result.setProps,
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ render: renderSimpleTreeView });
     });
   });
 };
@@ -104,6 +149,37 @@ type DescribeTreeView = {
   only: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
 };
 
+/**
+ * Describe tests for the Tree View that will be executed with the following setups:
+ * - RichTreeView + TreeItem
+ * - RichTreeView + TreeItem2
+ * - SimpleTreeView + TreeItem
+ * - SimpleTreeView + TreeItem2
+ *
+ * Is used as follows:
+ *
+ * ```
+ * describeTreeView('Title of the suite', ({ render }) => {
+ *   it('should do something', () => {
+ *     const { getItemRoot } = render({
+ *       items: [{ id: '1', children: [{ id: '1.1' }] }],
+ *       defaultExpandedNodes: ['1'],
+ *     });
+ *   });
+ * });
+ * ```
+ *
+ * Several things to note:
+ * - The `render` function takes an array of items, even for `SimpleTreeView`
+ * - Except for `items`, all the other properties passed to `render` will be forwarded to the Tree View as props
+ * - If an item has no label, its `id` will be used as the label
+ *
+ * The `render` function returns an object with the following properties:
+ * - `getRoot`: Returns the `root slot of the Tree View
+ * - `getItemRoot`: Returns the `root` slot of the item with the given id (useful to simulate focus)
+ * - `getItemContent`: Returns the `content` slot of the item with the given id (useful to simulate clicks)
+ * - `setProps`: Updates the props of the Tree View
+ */
 export const describeTreeView = createDescribe(
   'describeTreeView',
   innerDescribeTreeView,

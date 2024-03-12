@@ -4,21 +4,19 @@ export type DescribeTreeViewTestRunner<TPlugin extends TreeViewAnyPluginSignatur
   params: DescribeTreeViewTestRunnerParams<TPlugin>,
 ) => void;
 
-export interface DescribeTreeViewTestRunnerReturnValue<TPlugin extends TreeViewAnyPluginSignature> {
+export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAnyPluginSignature> {
   setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
   getRoot: () => HTMLElement;
   getItemRoot: (id: string) => HTMLElement;
   getItemContent: (id: string) => HTMLElement;
 }
 
-export type DescribeTreeViewItemsRenderer<TPlugin extends TreeViewAnyPluginSignature> = <
-  R extends {},
->(
+export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature> = <R extends {}>(
   params: {
     items: R[];
   } & TreeViewUsedParams<TPlugin>,
-) => DescribeTreeViewTestRunnerReturnValue<TPlugin>;
+) => DescribeTreeViewRendererReturnValue<TPlugin>;
 
 interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSignature> {
-  renderItems: DescribeTreeViewItemsRenderer<TPlugin>;
+  render: DescribeTreeViewRenderer<TPlugin>;
 }
