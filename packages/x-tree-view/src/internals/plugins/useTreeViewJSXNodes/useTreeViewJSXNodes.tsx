@@ -1,15 +1,16 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXNodesSignature } from './useTreeViewJSXNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
 import {
+  DescendantContext,
   DescendantProvider,
   TreeItemDescendant,
-  useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewNodes/useTreeViewNodes.utils';
 import type { TreeItemProps } from '../../../TreeItem';
@@ -112,8 +113,20 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   contentRef,
 }) => {
   const { children, disabled = false, label, nodeId, id } = props;
-
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
+  const [, forceUpdate] = React.useState<{}>();
+
+  const descendantContext = React.useContext(DescendantContext);
+  if (descendantContext == null) {
+    throw new Error(
+      [
+        'MUI X: Could not find the Descendant context.',
+        'It looks like you rendered your component outside of a SimpleTreeView parent component.',
+        'This can also happen if you are bundling multiple versions of the Tree View.',
+      ].join('\n'),
+    );
+  }
+  const { registerDescendant, unregisterDescendant, parentId } = descendantContext;
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
@@ -138,7 +151,19 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
     [nodeId, treeItemElement],
   );
 
-  const parentId = useDescendant(descendant);
+  // Prevent any flashing
+  useEnhancedEffect(() => {
+    if (descendant.element) {
+      registerDescendant(descendant);
+
+      return () => {
+        unregisterDescendant(descendant.element);
+      };
+    }
+    forceUpdate({});
+
+    return undefined;
+  }, [registerDescendant, unregisterDescendant, descendant]);
 
   React.useEffect(() => {
     instance.insertJSXNode({

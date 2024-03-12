@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useTreeViewContext } from './useTreeViewContext';
 import type { UseTreeViewJSXNodesSignature } from '../plugins/useTreeViewJSXNodes';
 import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewNodes/useTreeViewNodes.types';
@@ -29,57 +28,10 @@ function binaryFindPosition(otherDescendants: TreeItemDescendant[], element: HTM
   return end;
 }
 
-const DescendantContext = React.createContext<DescendantContextValue>({});
+export const DescendantContext = React.createContext<DescendantContextValue | null>(null);
 
 if (process.env.NODE_ENV !== 'production') {
   DescendantContext.displayName = 'DescendantContext';
-}
-
-const noop = () => {};
-
-/**
- * This hook registers our descendant by passing it into an array. We can then
- * search that array by to find its index when registering it in the component.
- * We use this for focus management, keyboard navigation, and typeahead
- * functionality for some components.
- *
- * The hook accepts the element node
- *
- * Our main goals with this are:
- *   1) maximum composability,
- *   2) minimal API friction
- *   3) SSR compatibility*
- *   4) concurrent safe
- *   5) index always up-to-date with the tree despite changes
- *   6) works with memoization of any component in the tree (hopefully)
- *
- * * As for SSR, the good news is that we don't actually need the index on the
- * server for most use-cases, as we are only using it to determine the order of
- * composed descendants for keyboard navigation.
- */
-export function useDescendant(descendant: TreeItemDescendant) {
-  const [, forceUpdate] = React.useState<{}>();
-  const {
-    registerDescendant = noop,
-    unregisterDescendant = noop,
-    parentId = null,
-  } = React.useContext(DescendantContext);
-
-  // Prevent any flashing
-  useEnhancedEffect(() => {
-    if (descendant.element) {
-      registerDescendant(descendant);
-
-      return () => {
-        unregisterDescendant(descendant.element);
-      };
-    }
-    forceUpdate({});
-
-    return undefined;
-  }, [registerDescendant, unregisterDescendant, descendant]);
-
-  return parentId;
 }
 
 interface DescendantProviderProps {
@@ -88,7 +40,7 @@ interface DescendantProviderProps {
 }
 
 export function DescendantProvider(props: DescendantProviderProps) {
-  const { children, id } = props;
+  const { children, id = null } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
@@ -149,7 +101,7 @@ export interface TreeItemDescendant {
 }
 
 interface DescendantContextValue {
-  registerDescendant?: (params: TreeItemDescendant) => void;
-  unregisterDescendant?: (params: HTMLLIElement) => void;
-  parentId?: string | null;
+  registerDescendant: (params: TreeItemDescendant) => void;
+  unregisterDescendant: (params: HTMLLIElement) => void;
+  parentId: string | null;
 }
