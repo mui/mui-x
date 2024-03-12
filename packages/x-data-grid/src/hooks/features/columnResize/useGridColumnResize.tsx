@@ -3,32 +3,6 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import {
-  GridEventListener,
-  gridClasses,
-  CursorCoordinates,
-  GridColumnHeaderSeparatorSides,
-  GridColumnResizeParams,
-  GridPinnedColumnPosition,
-  useGridApiEventHandler,
-  useGridApiOptionHandler,
-  useGridApiMethod,
-  useGridNativeEventListener,
-  useGridLogger,
-  useGridSelector,
-  gridVirtualizationColumnEnabledSelector,
-} from '@mui/x-data-grid';
-import {
-  clamp,
-  findParentElementFromClassName,
-  gridColumnsStateSelector,
-  useOnMount,
-  useTimeout,
-  createControllablePromise,
-  ControllablePromise,
-  GridStateColDef,
-  GridStateInitializer,
-} from '@mui/x-data-grid/internals';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
@@ -40,14 +14,40 @@ import {
   findGroupHeaderElementsFromField,
   findGridHeader,
   findGridCells,
+  findParentElementFromClassName,
 } from '../../../utils/domUtils';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GridAutosizeOptions,
   GridColumnResizeApi,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from './gridColumnResizeApi';
+import { CursorCoordinates } from '../../../models/cursorCoordinates';
+import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import { gridClasses } from '../../../constants/gridClasses';
+import {
+  useGridApiEventHandler,
+  useGridApiMethod,
+  useGridApiOptionHandler,
+  useGridLogger,
+  useGridNativeEventListener,
+  useGridSelector,
+  useOnMount,
+} from '../../utils';
+import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
+import {
+  ControllablePromise,
+  createControllablePromise,
+} from '../../../utils/createControllablePromise';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { clamp } from '../../../utils/utils';
+import { useTimeout } from '../../utils/useTimeout';
+import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
+import { gridColumnsStateSelector } from '../columns';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
+import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import type { GridEventListener } from '../../../models/events/gridEventListener';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
@@ -149,7 +149,7 @@ function preventClick(event: MouseEvent) {
  * Checker that returns a promise that resolves when the column virtualization
  * is disabled.
  */
-function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiPro>) {
+function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
   const promise = React.useRef<ControllablePromise>();
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
   const value = useGridSelector(apiRef, selector);
@@ -201,7 +201,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
 }
 
 function extractColumnWidths(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   options: AutosizeOptionsRequired,
   columns: GridStateColDef[],
 ) {
@@ -267,9 +267,9 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridProcessedProps,
     | 'autosizeOptions'
     | 'autosizeOnMount'
     | 'disableAutosize'
@@ -353,7 +353,11 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
-    const pinnedPosition = apiRef.current.isColumnPinned(colDefRef.current!.field);
+    const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
+      'isColumnPinned',
+      false,
+      colDefRef.current!.field,
+    );
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
       updateProperty(fillerLeftRef.current, 'width', widthDiff);
@@ -436,7 +440,11 @@ export const useGridColumnResize = (
     fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
     fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
 
-    const pinnedPosition = apiRef.current.isColumnPinned(colDef.field);
+    const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
+      'isColumnPinned',
+      false,
+      colDefRef.current!.field,
+    );
 
     leftPinnedCellsAfterRef.current =
       pinnedPosition !== GridPinnedColumnPosition.LEFT

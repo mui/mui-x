@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 
 const rows = [
   {
@@ -12,7 +12,7 @@ const rows = [
 export default function ColumnSizingGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         columns={[
           { field: 'id' },
           { field: 'username', width: 125, minWidth: 150, maxWidth: 200 },
