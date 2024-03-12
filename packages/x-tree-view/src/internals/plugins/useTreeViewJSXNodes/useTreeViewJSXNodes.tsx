@@ -66,16 +66,11 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
-      const parentId = prevState.nodes.nodeMap[nodeId].parentId ?? TREE_VIEW_ROOT_PARENT_ID;
       const newNodeMap = { ...prevState.nodes.nodeMap };
       const newItemMap = { ...prevState.nodes.itemMap };
-      const newItemIndexes = {
-        ...prevState.nodes.itemIndexes,
-        [parentId]: { ...prevState.nodes.itemIndexes[parentId] },
-      };
+
       delete newNodeMap[nodeId];
       delete newItemMap[nodeId];
-      delete newItemIndexes[parentId][nodeId];
 
       return {
         ...prevState,
@@ -83,7 +78,6 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
           ...prevState.nodes,
           nodeMap: newNodeMap,
           itemMap: newItemMap,
-          itemIndexes: newItemIndexes,
         },
       };
     });

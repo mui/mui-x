@@ -91,7 +91,6 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       orderedChildren.forEach((child, index) => {
         newIndexes[child.id] = index;
       });
-
       instance.setJSXItemsChildrenIndexes(id ?? null, newIndexes);
     }
   });

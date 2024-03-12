@@ -168,6 +168,8 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
+  console.log(JSON.stringify(state.nodes.itemIndexes, null, 2));
+
   const isItemUpdatedPreventedRef = React.useRef(false);
   const preventItemUpdate = useEventCallback(() => {
     isItemUpdatedPreventedRef.current = true;
