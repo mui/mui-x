@@ -5,34 +5,28 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Typography from '@mui/material/Typography';
 
-export default function TrackNodeSelectionToggle() {
-  const [lastSelectedNode, setLastSelectedNode] = React.useState<string | null>(
-    null,
-  );
+export default function TrackItemSelectionToggle() {
+  const [lastSelectedItem, setLastSelectedItem] = React.useState(null);
 
-  const handleNodeSelectionToggle = (
-    event: React.SyntheticEvent,
-    itemId: string,
-    isSelected: boolean,
-  ) => {
+  const handleItemSelectionToggle = (event, itemId, isSelected) => {
     if (isSelected) {
-      setLastSelectedNode(itemId);
+      setLastSelectedItem(itemId);
     }
   };
 
   return (
     <Stack spacing={2}>
       <Typography>
-        {lastSelectedNode == null
-          ? 'No node selection recorded'
-          : `Last selected node: ${lastSelectedNode}`}
+        {lastSelectedItem == null
+          ? 'No item selection recorded'
+          : `Last selected item: ${lastSelectedItem}`}
       </Typography>
       <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
-        <SimpleTreeView onNodeSelectionToggle={handleNodeSelectionToggle}>
-          <TreeItem itemId="grid" label="Data Grid">
-            <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
-            <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
-            <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
+        <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
+          <TreeItem nodeId="grid" label="Data Grid">
+            <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
+            <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
+            <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
           </TreeItem>
           <TreeItem itemId="pickers" label="Date and Time Pickers">
             <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />

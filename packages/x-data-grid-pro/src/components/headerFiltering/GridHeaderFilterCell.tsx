@@ -30,6 +30,10 @@ import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
+export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
+  inputRef: React.RefObject<unknown>;
+}
+
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
   height: number;
@@ -133,7 +137,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     let headerFilterComponent: React.ReactNode;
     if (colDef.renderHeaderFilter) {
-      headerFilterComponent = colDef.renderHeaderFilter(props);
+      headerFilterComponent = colDef.renderHeaderFilter({ ...props, inputRef });
     }
 
     React.useLayoutEffect(() => {

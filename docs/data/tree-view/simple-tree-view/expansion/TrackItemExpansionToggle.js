@@ -5,17 +5,10 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Typography from '@mui/material/Typography';
 
-export default function TrackNodeExpansionToggle() {
-  const [action, setAction] = React.useState<{
-    itemId: string;
-    isExpanded: boolean;
-  } | null>(null);
+export default function TrackItemExpansionToggle() {
+  const [action, setAction] = React.useState(null);
 
-  const handleNodeExpansionToggle = (
-    event: React.SyntheticEvent,
-    itemId: string,
-    isExpanded: boolean,
-  ) => {
+  const handleItemExpansionToggle = (event, itemId, isExpanded) => {
     setAction({ itemId, isExpanded });
   };
 
@@ -28,12 +21,13 @@ export default function TrackNodeExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
+
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
-        <SimpleTreeView onNodeExpansionToggle={handleNodeExpansionToggle}>
-          <TreeItem itemId="grid" label="Data Grid">
-            <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
-            <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
-            <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
+        <SimpleTreeView onItemExpansionToggle={handleItemExpansionToggle}>
+          <TreeItem nodeId="grid" label="Data Grid">
+            <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
+            <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
+            <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
           </TreeItem>
           <TreeItem itemId="pickers" label="Date and Time Pickers">
             <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />

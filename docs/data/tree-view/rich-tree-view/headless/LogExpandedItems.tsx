@@ -45,7 +45,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
   models,
 }) => {
-  const expandedStr = JSON.stringify(models.expandedNodes.value);
+  const expandedStr = JSON.stringify(models.expandedItems.value);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -142,7 +142,7 @@ const ITEMS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function LogExpandedNodes() {
+export default function LogExpandedItems() {
   const [logs, setLogs] = React.useState<string[]>([]);
 
   return (

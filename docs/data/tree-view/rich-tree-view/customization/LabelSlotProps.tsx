@@ -42,7 +42,7 @@ export default function LabelSlotProps() {
     <RichTreeView
       items={MUI_X_PRODUCTS}
       aria-label="customized"
-      defaultExpandedNodes={['pickers']}
+      defaultExpandedItems={['pickers']}
       sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
       slots={{ item: CustomTreeItem }}
     />

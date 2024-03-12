@@ -135,7 +135,7 @@ const DEFAULT_MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const DEFAULT_EXPANDED_NODES = ['pickers'];
+const DEFAULT_EXPANDED_ITEMS = ['pickers'];
 
 export default function LabelSlots() {
   const [products, setProducts] = React.useState(DEFAULT_MUI_X_PRODUCTS);
@@ -166,7 +166,7 @@ export default function LabelSlots() {
       <RichTreeView
         items={products}
         aria-label="customized"
-        defaultExpandedNodes={DEFAULT_EXPANDED_NODES}
+        defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
         sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
         slots={{ item: CustomTreeItem }}
       />

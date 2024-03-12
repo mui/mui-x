@@ -2,10 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import Typography from '@mui/material/Typography';
 
-const MUI_X_PRODUCTS = [
+const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -35,27 +35,32 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function TrackNodeExpansionToggle() {
-  const [action, setAction] = React.useState(null);
+export default function TrackItemSelectionToggle() {
+  const [lastSelectedItem, setLastSelectedItem] = React.useState<string | null>(
+    null,
+  );
 
-  const handleNodeExpansionToggle = (event, itemId, isExpanded) => {
-    setAction({ itemId, isExpanded });
+  const handleItemSelectionToggle = (
+    event: React.SyntheticEvent,
+    itemId: string,
+    isSelected: boolean,
+  ) => {
+    if (isSelected) {
+      setLastSelectedItem(itemId);
+    }
   };
 
   return (
     <Stack spacing={2}>
-      {action == null ? (
-        <Typography>No action recorded</Typography>
-      ) : (
-        <Typography>
-          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
-        </Typography>
-      )}
-
-      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
+      <Typography>
+        {lastSelectedItem == null
+          ? 'No item selection recorded'
+          : `Last selected item: ${lastSelectedItem}`}
+      </Typography>
+      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          onNodeExpansionToggle={handleNodeExpansionToggle}
+          onItemSelectionToggle={handleItemSelectionToggle}
         />
       </Box>
     </Stack>

@@ -63,7 +63,7 @@ export default function CustomContentTreeView() {
       <SimpleTreeView
         aria-label="icon expansion"
         sx={{ position: 'relative' }}
-        defaultExpandedNodes={['3']}
+        defaultExpandedItems={['3']}
       >
         <CustomTreeItem itemId="1" label="Amelia Hart">
           <CustomTreeItem itemId="2" label="Jane Fisher" />

@@ -8,6 +8,6 @@
 <Box sx={{ minHeight: 200, flexGrow: 1 }}>
   <RichTreeView
     items={MUI_X_PRODUCTS}
-    onNodeExpansionToggle={handleNodeExpansionToggle}
+    onItemExpansionToggle={handleItemExpansionToggle}
   />
 </Box>

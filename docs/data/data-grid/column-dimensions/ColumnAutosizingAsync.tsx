@@ -2,8 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, GridApiPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -53,7 +52,7 @@ function getFakeData(length: number): Promise<{ rows: GridData['rows'] }> {
 }
 
 export default function ColumnAutosizingAsync() {
-  const apiRef = useGridApiRef<GridApiPro>();
+  const apiRef = useGridApiRef();
   const [isLoading, setIsLoading] = React.useState(false);
   const [rows] = React.useState([]);
 

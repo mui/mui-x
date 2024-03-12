@@ -5,10 +5,17 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Typography from '@mui/material/Typography';
 
-export default function TrackNodeExpansionToggle() {
-  const [action, setAction] = React.useState(null);
+export default function TrackItemExpansionToggle() {
+  const [action, setAction] = React.useState<{
+    itemId: string;
+    isExpanded: boolean;
+  } | null>(null);
 
-  const handleNodeExpansionToggle = (event, itemId, isExpanded) => {
+  const handleItemExpansionToggle = (
+    event: React.SyntheticEvent,
+    itemId: string,
+    isExpanded: boolean,
+  ) => {
     setAction({ itemId, isExpanded });
   };
 
@@ -21,9 +28,8 @@ export default function TrackNodeExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
-
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
-        <SimpleTreeView onNodeExpansionToggle={handleNodeExpansionToggle}>
+        <SimpleTreeView onItemExpansionToggle={handleItemExpansionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
             <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />

@@ -120,6 +120,10 @@ export {
   EMPTY_DETAIL_PANELS,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
+export {
+  useGridColumnResize,
+  columnResizeStateInitializer,
+} from '../hooks/features/columnResize/useGridColumnResize';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';

@@ -169,12 +169,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           break;
         }
 
-        // Focus the next focusable node
+        // Focus the next focusable item
         case key === 'ArrowDown': {
           const nextItem = getNextNode(instance, state.focusedNodeId);
           if (nextItem) {
             event.preventDefault();
-            instance.focusNode(event, nextItem);
+            instance.focusItem(event, nextItem);
 
             // Multi select behavior when pressing Shift + ArrowDown
             // Toggles the selection state of the next item
@@ -198,7 +198,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           const previousItem = getPreviousNode(instance, state.focusedNodeId);
           if (previousItem) {
             event.preventDefault();
-            instance.focusNode(event, previousItem);
+            instance.focusItem(event, previousItem);
 
             // Multi select behavior when pressing Shift + ArrowUp
             // Toggles the selection state of the previous item
@@ -221,7 +221,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused item is collapsed and has children, we expand it
         case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
           if (instance.isNodeExpanded(state.focusedNodeId)) {
-            instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
+            instance.focusItem(event, getNextNode(instance, state.focusedNodeId));
             event.preventDefault();
           } else if (canToggleItemExpansion(state.focusedNodeId)) {
             instance.toggleNodeExpansion(event, state.focusedNodeId);
@@ -243,7 +243,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           } else {
             const parent = instance.getNode(state.focusedNodeId).parentId;
             if (parent) {
-              instance.focusNode(event, parent);
+              instance.focusItem(event, parent);
               event.preventDefault();
             }
           }
@@ -253,7 +253,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
         // Focuses the first node in the tree
         case key === 'Home': {
-          instance.focusNode(event, getFirstNode(instance));
+          instance.focusItem(event, getFirstNode(instance));
 
           // Multi select behavior when pressing Ctrl + Shift + Home
           // Selects the focused node and all nodes up to the first node.
@@ -272,7 +272,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
         // Focuses the last item in the tree
         case key === 'End': {
-          instance.focusNode(event, getLastNode(instance));
+          instance.focusItem(event, getLastNode(instance));
 
           // Multi select behavior when pressing Ctrl + Shirt + End
           // Selects the focused item and all the items down to the last item.
@@ -310,9 +310,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // Type-ahead
         // TODO: Support typing multiple characters
         case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
-          const matchingItem = getFirstMatchingItem(state.focusedNodeId, key);
-          if (matchingItem != null) {
-            instance.focusNode(event, matchingItem);
+          const matchingNode = getFirstMatchingItem(state.focusedNodeId, key);
+          if (matchingNode != null) {
+            instance.focusItem(event, matchingNode);
             event.preventDefault();
           }
           break;

@@ -280,7 +280,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     /* single-selection trees unset aria-selected on un-selected items.
      *
      * If the tree does not support multiple selection, aria-selected
-     * is set to true for the selected node and it is not present on any other node in the tree.
+     * is set to true for the selected item and it is not present on any other item in the tree.
      * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
      */
     ariaSelected = true;
@@ -294,7 +294,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, itemId);
+      instance.focusItem(event, itemId);
     }
   }
 
@@ -371,7 +371,7 @@ TreeItem.propTypes = {
    */
   ContentProps: PropTypes.object,
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -380,12 +380,12 @@ TreeItem.propTypes = {
    */
   itemId: PropTypes.string.isRequired,
   /**
-   * The tree node label.
+   * The tree item label.
    */
   label: PropTypes.node,
   /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
   /**
