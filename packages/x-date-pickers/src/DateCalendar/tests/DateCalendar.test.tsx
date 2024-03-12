@@ -133,13 +133,17 @@ describe('<DateCalendar />', () => {
   // test: https://github.com/mui/mui-x/issues/12373
   it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
     const onChange = spy();
-    const defaultDate = adapterToUse.date('2019-01-02T11:12:13');
+    const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
     render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
 
     userEvent.mousePress(
       screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
     );
     userEvent.mousePress(screen.getByRole('radio', { name: '2020' }));
+
+    // Finish the transition to the day view
+    clock.runToLast();
+
     userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
     userEvent.mousePress(
       screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
