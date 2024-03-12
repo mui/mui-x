@@ -440,9 +440,6 @@ export const useGridColumnResize = (
       apiRef.current,
     );
 
-    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
-    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
-
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
