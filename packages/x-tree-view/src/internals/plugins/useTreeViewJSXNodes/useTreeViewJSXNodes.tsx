@@ -11,6 +11,8 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
+import type { TreeItemProps } from '../../../TreeItem';
+import type { TreeItem2Props } from '../../../TreeItem2';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
@@ -80,8 +82,12 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   });
 };
 
-const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
-  const { children, disabled = false, label, nodeId, id, ContentProps: inContentProps } = props;
+const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
+  props,
+  rootRef,
+  contentRef,
+}) => {
+  const { children, disabled = false, label, nodeId, id } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
@@ -95,8 +101,10 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   const expandable = isExpandable(children);
 
   const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(setTreeItemElement, ref);
+  const pluginContentRef = React.useRef<HTMLDivElement>(null);
+
+  const handleRootRef = useForkRef(setTreeItemElement, rootRef);
+  const handleContentRef = useForkRef(pluginContentRef, contentRef);
 
   const descendant = React.useMemo<TreeItemDescendant>(
     () => ({
@@ -130,25 +138,22 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
     if (label) {
       return instance.mapFirstCharFromJSX(
         nodeId,
-        (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
+        (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
     }
     return undefined;
   }, [instance, nodeId, label]);
 
   return {
-    props: {
-      ...props,
-      ContentProps: {
-        ...inContentProps,
-        ref: contentRef,
-      },
-    },
-    ref: handleRef,
-    wrapItem: (item) => <DescendantProvider id={nodeId}>{item}</DescendantProvider>,
+    contentRef: handleContentRef,
+    rootRef: handleRootRef,
   };
 };
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+
+useTreeViewJSXNodes.wrapItem = ({ children, nodeId }) => (
+  <DescendantProvider id={nodeId}>{children}</DescendantProvider>
+);
 
 useTreeViewJSXNodes.params = {};

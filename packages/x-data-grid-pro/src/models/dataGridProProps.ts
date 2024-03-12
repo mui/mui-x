@@ -28,12 +28,7 @@ import type { GridProSlotProps } from './gridProSlotProps';
 import type { GridDataSource, GridDataSourceCache } from './gridDataSource';
 import type { GridAutosizeOptions } from '../hooks';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Enables the data grid to lazy load rows while scrolling.
-   */
-  lazyLoading: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
