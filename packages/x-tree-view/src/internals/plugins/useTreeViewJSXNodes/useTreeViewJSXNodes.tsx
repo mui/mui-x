@@ -8,10 +8,9 @@ import { UseTreeViewJSXNodesSignature } from './useTreeViewJSXNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
 import {
-  DescendantContext,
-  DescendantProvider,
-  TreeItemDescendant,
-} from '../../TreeViewProvider/DescendantProvider';
+  TreeViewChildrenItemContext,
+  TreeViewChildrenItemProvider,
+} from '../../TreeViewProvider/TreeViewChildrenItemProvider';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewNodes/useTreeViewNodes.utils';
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
@@ -123,17 +122,17 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   const { children, disabled = false, label, nodeId, id } = props;
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
-  const descendantContext = React.useContext(DescendantContext);
-  if (descendantContext == null) {
+  const parentContext = React.useContext(TreeViewChildrenItemContext);
+  if (parentContext == null) {
     throw new Error(
       [
-        'MUI X: Could not find the Descendant context.',
+        'MUI X: Could not find the Tree View Children Item context.',
         'It looks like you rendered your component outside of a SimpleTreeView parent component.',
         'This can also happen if you are bundling multiple versions of the Tree View.',
       ].join('\n'),
     );
   }
-  const { registerDescendant, unregisterDescendant, parentId } = descendantContext;
+  const { registerChild, unregisterChild, parentId } = parentContext;
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
@@ -152,17 +151,12 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    const descendant: TreeItemDescendant = {
-      element: pluginRootRef.current!,
-      id: nodeId,
-    };
-
-    registerDescendant(descendant);
+    registerChild(nodeId, pluginRootRef.current!);
 
     return () => {
-      unregisterDescendant(nodeId);
+      unregisterChild(nodeId);
     };
-  }, [registerDescendant, unregisterDescendant, nodeId]);
+  }, [registerChild, unregisterChild, nodeId]);
 
   React.useEffect(() => {
     instance.insertJSXNode({
@@ -195,11 +189,11 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
 
 useTreeViewJSXNodes.wrapItem = ({ children, nodeId }) => (
-  <DescendantProvider id={nodeId}>{children}</DescendantProvider>
+  <TreeViewChildrenItemProvider id={nodeId}>{children}</TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXNodes.wrapRoot = ({ children, rootRef }) => (
-  <DescendantProvider rootRef={rootRef}>{children}</DescendantProvider>
+  <TreeViewChildrenItemProvider rootRef={rootRef}>{children}</TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXNodes.params = {};
