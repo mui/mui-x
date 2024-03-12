@@ -37,6 +37,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   selection: {
     multiSelect: false,
   },
+  rootRef: { current: null },
 };
 
 describe('<TreeItem />', () => {
