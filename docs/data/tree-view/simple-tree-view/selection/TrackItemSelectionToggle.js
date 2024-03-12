@@ -23,10 +23,10 @@ export default function TrackItemSelectionToggle() {
       </Typography>
       <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
         <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
-          <TreeItem nodeId="grid" label="Data Grid">
-            <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
-            <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
-            <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
+          <TreeItem itemId="grid" label="Data Grid">
+            <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+            <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+            <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
           </TreeItem>
           <TreeItem itemId="pickers" label="Date and Time Pickers">
             <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
