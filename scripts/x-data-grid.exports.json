@@ -306,6 +306,7 @@
   { "name": "GridHeaderCheckbox", "kind": "Variable" },
   { "name": "GridHeaderFilterEventLookup", "kind": "Interface" },
   { "name": "gridHeaderFilteringEditFieldSelector", "kind": "Variable" },
+  { "name": "gridHeaderFilteringEnabledSelector", "kind": "Variable" },
   { "name": "gridHeaderFilteringMenuSelector", "kind": "Variable" },
   { "name": "gridHeaderFilteringStateSelector", "kind": "Variable" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },

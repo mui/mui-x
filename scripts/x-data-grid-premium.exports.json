@@ -369,6 +369,7 @@
   { "name": "GridHeaderFilterCellProps", "kind": "Interface" },
   { "name": "GridHeaderFilterEventLookup", "kind": "Interface" },
   { "name": "gridHeaderFilteringEditFieldSelector", "kind": "Variable" },
+  { "name": "gridHeaderFilteringEnabledSelector", "kind": "Variable" },
   { "name": "gridHeaderFilteringMenuSelector", "kind": "Variable" },
   { "name": "gridHeaderFilteringStateSelector", "kind": "Variable" },
   { "name": "GridHeaderFilterMenu", "kind": "Function" },
