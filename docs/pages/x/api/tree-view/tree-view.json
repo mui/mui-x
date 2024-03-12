@@ -22,18 +22,18 @@
         "describedArgs": ["event", "itemIds"]
       }
     },
+    "onItemFocus": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
+        "describedArgs": ["event", "itemId", "value"]
+      }
+    },
     "onNodeExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
-      }
-    },
-    "onNodeFocus": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
-        "describedArgs": ["event", "itemId", "value"]
       }
     },
     "onNodeSelectionToggle": {

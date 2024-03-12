@@ -222,6 +222,7 @@ The list includes these transformers
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-focus-callback`](#rename-focus-callback)
 - [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
@@ -316,6 +317,17 @@ Replace the `TransitionComponent` and `TransitionProps` components with the `gro
  />
 ```
 
+#### `rename-focus-callback`
+
+Replace the `onNodeFocus` callback with `onItemFocus`:
+
+```diff
+ <TreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
+```
+
 #### `rename-nodeid`
 
 Rename nodeId to itemId
@@ -324,7 +336,6 @@ Rename nodeId to itemId
  <TreeItem
 -  nodeId='unique-id'
 +  itemId='unique-id'
- />
 ```
 
 ## v6.0.0
