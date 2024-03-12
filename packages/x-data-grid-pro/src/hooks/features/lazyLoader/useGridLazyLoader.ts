@@ -8,14 +8,10 @@ import {
   useGridApiOptionHandler,
   GridEventListener,
   GridRowEntry,
-  GridFeatureMode,
 } from '@mui/x-data-grid';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
-  DataGridProProcessedProps,
-  GridExperimentalProFeatures,
-} from '../../../models/dataGridProProps';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
 function findSkeletonRowsSection({
@@ -62,24 +58,6 @@ function findSkeletonRowsSection({
     : undefined;
 }
 
-function isLazyLoadingDisabled({
-  lazyLoadingFeatureFlag,
-  rowsLoadingMode,
-}: {
-  lazyLoadingFeatureFlag: boolean;
-  rowsLoadingMode: GridFeatureMode;
-}) {
-  if (!lazyLoadingFeatureFlag) {
-    return true;
-  }
-
-  if (rowsLoadingMode !== 'server') {
-    return true;
-  }
-
-  return false;
-}
-
 /**
  * @requires useGridRows (state)
  * @requires useGridPagination (state)
@@ -104,11 +82,7 @@ export const useGridLazyLoader = (
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
-  const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
-  const isDisabled = isLazyLoadingDisabled({
-    lazyLoadingFeatureFlag: lazyLoading,
-    rowsLoadingMode: props.rowsLoadingMode,
-  });
+  const isDisabled = props.rowsLoadingMode !== 'server';
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
