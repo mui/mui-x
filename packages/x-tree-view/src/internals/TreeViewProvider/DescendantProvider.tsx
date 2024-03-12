@@ -4,14 +4,11 @@ import { useTreeViewContext } from './useTreeViewContext';
 import type { UseTreeViewJSXNodesSignature } from '../plugins/useTreeViewJSXNodes';
 import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewNodes/useTreeViewNodes.types';
 
-/** Credit: https://github.com/reach/reach-ui/blob/86a046f54d53b6420e392b3fa56dd991d9d4e458/packages/descendants/README.md
- *  Modified slightly to suit our purposes.
- */
 function binaryFindPosition(otherDescendants: TreeItemDescendant[], element: HTMLLIElement) {
   let start = 0;
-  let end = otherDescendants.length;
+  let end = otherDescendants.length - 1;
 
-  while (start < end - 1) {
+  while (start <= end) {
     const middle = Math.floor((start + end) / 2);
 
     if (
@@ -19,13 +16,13 @@ function binaryFindPosition(otherDescendants: TreeItemDescendant[], element: HTM
       otherDescendants[middle].element.compareDocumentPosition(element) &
       Node.DOCUMENT_POSITION_PRECEDING
     ) {
-      end = middle;
+      end = middle - 1;
     } else {
-      start = middle;
+      start = middle + 1;
     }
   }
 
-  return end;
+  return start;
 }
 
 export const DescendantContext = React.createContext<DescendantContextValue | null>(null);
