@@ -332,36 +332,11 @@ const customEnLocale: Locale = {
 
 ### With `luxon`
 
-For `luxon`, use the `Settings.defaultWeekSettings` object:
-
-```ts
-import { Settings } from 'luxon';
-
-Settings.defaultWeekSettings = {
-  // Sunday = 7, Monday = 1.
-  firstDay: 1,
-  // Makes sure we don't lose the other information from `defaultWeekSettings`
-  minimalDays: Info.getMinimumDaysInFirstWeek(),
-  weekend: Info.getWeekendWeekdays(),
-};
-```
-
 :::warning
-The [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
-Users on this browser will always see Monday as the start of the week.
-If you want to have the same start of week on all browsers,
-you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
+For `luxon`, breaking changes were required to enable the configuration of the week start.
+The necessary changes have been shipped only on the `7.0.0-alpha.3` release.
 
-For example, when using the `en-US` locale:
-
-```ts
-Settings.defaultWeekSettings = {
-  firstDay: 7,
-  minimalDays: Info.getMinimumDaysInFirstWeek(),
-  weekend: Info.getWeekendWeekdays(),
-};
-```
-
+If you need the customizable `Luxon` week start control, please consider using the latest v7 package version.
 :::
 
 ### With `moment`
