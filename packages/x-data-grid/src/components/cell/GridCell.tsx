@@ -260,17 +260,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const showLeftBorder = shouldCellShowLeftBorder({
-    indexInSection: sectionIndex,
-    pinnedPosition: gridPinnedColumnPositionLookup[pinnedPosition],
-  });
-
-  const showRightBorder = shouldCellShowRightBorder({
-    indexInSection: sectionIndex,
-    pinnedPosition: gridPinnedColumnPositionLookup[pinnedPosition],
+  const position = gridPinnedColumnPositionLookup[pinnedPosition];
+  const showLeftBorder = shouldCellShowLeftBorder(position, sectionIndex);
+  const showRightBorder = shouldCellShowRightBorder(
+    position,
+    sectionIndex,
     sectionLength,
-    showCellVerticalBorderRootProp: rootProps.showCellVerticalBorder,
-  });
+    rootProps.showCellVerticalBorder,
+  );
 
   const ownerState = {
     align,

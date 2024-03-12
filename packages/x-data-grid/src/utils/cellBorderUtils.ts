@@ -1,16 +1,11 @@
 import { GridPinnedColumnPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 
-export const shouldCellShowRightBorder = ({
-  pinnedPosition,
-  indexInSection,
-  sectionLength,
-  showCellVerticalBorderRootProp,
-}: {
-  pinnedPosition: GridPinnedColumnPosition | undefined;
-  indexInSection: number;
-  sectionLength: number;
-  showCellVerticalBorderRootProp: boolean;
-}) => {
+export const shouldCellShowRightBorder = (
+  pinnedPosition: GridPinnedColumnPosition | undefined,
+  indexInSection: number,
+  sectionLength: number,
+  showCellVerticalBorderRootProp: boolean,
+) => {
   const isSectionLastCell = indexInSection === sectionLength - 1;
 
   return (
@@ -20,12 +15,9 @@ export const shouldCellShowRightBorder = ({
   );
 };
 
-export const shouldCellShowLeftBorder = ({
-  pinnedPosition,
-  indexInSection,
-}: {
-  pinnedPosition: GridPinnedColumnPosition | undefined;
-  indexInSection: number;
-}) => {
+export const shouldCellShowLeftBorder = (
+  pinnedPosition: GridPinnedColumnPosition | undefined,
+  indexInSection: number,
+) => {
   return pinnedPosition === GridPinnedColumnPosition.RIGHT && indexInSection === 0;
 };

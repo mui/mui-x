@@ -123,17 +123,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
-  const showLeftBorder = shouldCellShowLeftBorder({
-    indexInSection,
+  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+  const showRightBorder = shouldCellShowRightBorder(
     pinnedPosition,
-  });
-
-  const showRightBorder = shouldCellShowRightBorder({
     indexInSection,
     sectionLength,
-    pinnedPosition,
-    showCellVerticalBorderRootProp: rootProps.showCellVerticalBorder,
-  });
+    rootProps.showCellVerticalBorder,
+  );
 
   const ownerState = {
     ...props,
