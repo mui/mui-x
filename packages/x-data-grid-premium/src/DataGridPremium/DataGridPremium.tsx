@@ -172,7 +172,7 @@ DataGridPremiumRaw.propTypes = {
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
    * Column region in pixels to render before/after the viewport
-   * @default 100
+   * @default 150
    */
   columnBufferPx: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
@@ -873,7 +873,7 @@ DataGridPremiumRaw.propTypes = {
   processRowUpdate: PropTypes.func,
   /**
    * Row region in pixels to render before/after the viewport
-   * @default 100
+   * @default 150
    */
   rowBufferPx: PropTypes.number,
   /**

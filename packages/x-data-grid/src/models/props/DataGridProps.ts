@@ -129,12 +129,12 @@ export interface DataGridPropsWithDefaultValues {
   checkboxSelectionVisibleOnly: boolean;
   /**
    * Column region in pixels to render before/after the viewport
-   * @default 100
+   * @default 150
    */
   columnBufferPx: number;
   /**
    * Row region in pixels to render before/after the viewport
-   * @default 100
+   * @default 150
    */
   rowBufferPx: number;
   /**
