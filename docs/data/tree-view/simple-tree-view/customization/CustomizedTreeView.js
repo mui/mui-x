@@ -115,6 +115,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 
   return (
     <StyledTreeItemRoot
+      slots={{
+        groupTransition: TransitionComponent,
+      }}
       label={
         <Box
           sx={{
@@ -132,7 +135,6 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
         </Box>
       }
       {...other}
-      slots={{ groupTransition: TransitionComponent }}
       ref={ref}
     />
   );
