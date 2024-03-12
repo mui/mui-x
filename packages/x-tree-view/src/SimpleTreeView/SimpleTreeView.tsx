@@ -173,8 +173,8 @@ SimpleTreeView.propTypes = {
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * @param {string} nodeId The id of the focused item.
+   * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
