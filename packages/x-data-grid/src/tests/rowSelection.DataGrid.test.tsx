@@ -10,6 +10,7 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
+  GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -353,6 +354,35 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(input2);
       expect(input1.checked).to.equal(false);
       expect(input2.checked).to.equal(true);
+    });
+
+    it('should only select filtered items when "select all" is toggled after applying a filter', () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [],
+              },
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(selectAllCheckbox);
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: '1' },
+      });
+      fireEvent.click(selectAllCheckbox); // Unselect all 
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      fireEvent.click(selectAllCheckbox); // Select all filtered rows
+      expect(getSelectedRowIds()).to.deep.equal([1]);
     });
   });
 
