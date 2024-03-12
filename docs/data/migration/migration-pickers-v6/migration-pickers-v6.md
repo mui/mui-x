@@ -87,7 +87,7 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Drop the legacy bundle
 
-The support for IE11 has been removed from all MUI X packages.
+The support for IE11 has been removed from all MUI X packages.
 The `legacy` bundle that used to support old browsers like IE11 is no longer included.
 
 :::info
