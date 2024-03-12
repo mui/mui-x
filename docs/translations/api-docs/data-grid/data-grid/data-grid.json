@@ -31,9 +31,6 @@
     "columns": {
       "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
     },
-    "columnThresholdPx": {
-      "description": "Number of pixels from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
-    },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
@@ -413,9 +410,6 @@
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
-    },
-    "rowThresholdPx": {
-      "description": "Number of pixels from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."

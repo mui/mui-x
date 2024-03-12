@@ -38,7 +38,6 @@
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "100" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnThresholdPx": { "type": { "name": "number" }, "default": "150" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -570,7 +569,6 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
-    "rowThresholdPx": { "type": { "name": "number" }, "default": "150" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
