@@ -294,7 +294,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, nodeId);
     }
   }
 
@@ -371,12 +371,12 @@ TreeItem.propTypes = {
    */
   ContentProps: PropTypes.object,
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * The tree node label.
+   * The tree item label.
    */
   label: PropTypes.node,
   /**
@@ -385,7 +385,7 @@ TreeItem.propTypes = {
   nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
   /**

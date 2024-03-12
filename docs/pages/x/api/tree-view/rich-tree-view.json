@@ -1,17 +1,17 @@
 {
   "props": {
     "apiRef": {
-      "type": { "name": "shape", "description": "{ current?: { focusNode: func, getItem: func } }" }
+      "type": { "name": "shape", "description": "{ current?: { focusItem: func, getItem: func } }" }
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultExpandedNodes": {
+    "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
     },
-    "defaultSelectedNodes": { "type": { "name": "any" }, "default": "[]" },
+    "defaultSelectedItems": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
-    "expandedNodes": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "`(item) => item.id`",
@@ -40,11 +40,18 @@
       }
     },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
-    "onExpandedNodesChange": {
+    "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: array) => void",
-        "describedArgs": ["event", "nodeIds"]
+        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "describedArgs": ["event", "itemIds"]
+      }
+    },
+    "onItemExpansionToggle": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onItemFocus": {
@@ -54,28 +61,21 @@
         "describedArgs": ["event", "itemId", "value"]
       }
     },
-    "onNodeExpansionToggle": {
+    "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isExpanded: array) => void",
-        "describedArgs": ["event", "nodeId", "isExpanded"]
+        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
-    "onNodeSelectionToggle": {
+    "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeId: array, isSelected: array) => void",
-        "describedArgs": ["event", "nodeId", "isSelected"]
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "describedArgs": ["event", "itemIds"]
       }
     },
-    "onSelectedNodesChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.SyntheticEvent, nodeIds: Array<string> | string) => void",
-        "describedArgs": ["event", "nodeIds"]
-      }
-    },
-    "selectedNodes": { "type": { "name": "any" } },
+    "selectedItems": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

@@ -8,11 +8,11 @@
       "requiresRef": true
     },
     "ContentProps": { "description": "Props applied to ContentComponent." },
-    "disabled": { "description": "If <code>true</code>, the node is disabled." },
-    "label": { "description": "The tree node label." },
+    "disabled": { "description": "If <code>true</code>, the item is disabled." },
+    "label": { "description": "The tree item label." },
     "nodeId": { "description": "The id of the node." },
     "onFocus": {
-      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a node&#39;s focus."
+      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -53,10 +53,10 @@
     }
   },
   "slotDescriptions": {
-    "collapseIcon": "The icon used to collapse the node.",
-    "endIcon": "The icon displayed next to an end node.",
-    "expandIcon": "The icon used to expand the node.",
+    "collapseIcon": "The icon used to collapse the item.",
+    "endIcon": "The icon displayed next to an end item.",
+    "expandIcon": "The icon used to expand the item.",
     "groupTransition": "The component that animates to appearance / disappearance of the item&#39;s children.",
-    "icon": "The icon to display next to the tree node&#39;s label."
+    "icon": "The icon to display next to the tree item&#39;s label."
   }
 }

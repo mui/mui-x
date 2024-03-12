@@ -39,7 +39,7 @@ export const useTreeItem2Utils = ({
     }
 
     if (!status.focused) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, nodeId);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
@@ -56,7 +56,7 @@ export const useTreeItem2Utils = ({
     }
 
     if (!status.focused) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, nodeId);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
