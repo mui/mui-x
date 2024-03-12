@@ -300,7 +300,7 @@ TreeItem2.propTypes = {
   nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
-   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a node's focus.
    */
   onFocus: unsupportedProp,
   /**
