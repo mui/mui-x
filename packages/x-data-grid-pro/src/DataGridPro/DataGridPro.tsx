@@ -149,11 +149,6 @@ DataGridProRaw.propTypes = {
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * Number of pixels from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 150
-   */
-  columnThresholdPx: PropTypes.number,
-  /**
    * Set the column visibility model of the Data Grid.
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
@@ -846,11 +841,6 @@ DataGridProRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Number of pixels from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 150
-   */
-  rowThresholdPx: PropTypes.number,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
