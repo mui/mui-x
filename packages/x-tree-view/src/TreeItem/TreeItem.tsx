@@ -199,7 +199,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
   const expandable = isExpandable(children);
   const expanded = instance.isItemExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
+  const focused = instance.isItemFocused(nodeId);
   const selected = instance.isNodeSelected(nodeId);
   const disabled = instance.isNodeDisabled(nodeId);
 

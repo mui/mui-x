@@ -14,7 +14,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   instance: {
     isItemExpandable: () => false,
     isItemExpanded: () => false,
-    isNodeFocused: () => false,
+    isItemFocused: () => false,
     isNodeSelected: () => false,
     isNodeDisabled: (nodeId: string | null): nodeId is string => !!nodeId,
     getTreeItemId: () => '',

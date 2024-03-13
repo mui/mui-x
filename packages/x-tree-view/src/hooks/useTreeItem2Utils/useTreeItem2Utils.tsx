@@ -14,10 +14,10 @@ interface UseTreeItem2UtilsReturnValue {
 }
 
 export const useTreeItem2Utils = ({
-  itemId,
+  nodeId,
   children,
 }: {
-  itemId: string;
+  nodeId: string;
   children: React.ReactNode;
 }): UseTreeItem2UtilsReturnValue => {
   const {
@@ -27,10 +27,10 @@ export const useTreeItem2Utils = ({
 
   const status: UseTreeItem2Status = {
     expandable: Boolean(Array.isArray(children) ? children.length : children),
-    expanded: instance.isItemExpanded(itemId),
-    focused: instance.isNodeFocused(itemId),
-    selected: instance.isNodeSelected(itemId),
-    disabled: instance.isNodeDisabled(itemId),
+    expanded: instance.isItemExpanded(nodeId),
+    focused: instance.isItemFocused(nodeId),
+    selected: instance.isNodeSelected(nodeId),
+    disabled: instance.isNodeDisabled(nodeId),
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -39,14 +39,14 @@ export const useTreeItem2Utils = ({
     }
 
     if (!status.focused) {
-      instance.focusItem(event, itemId);
+      instance.focusItem(event, nodeId);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
-      instance.toggleItemExpansion(event, itemId);
+    if (status.expandable && !(multiple && instance.isItemExpanded(nodeId))) {
+      instance.toggleItemExpansion(event, nodeId);
     }
   };
 
@@ -56,19 +56,19 @@ export const useTreeItem2Utils = ({
     }
 
     if (!status.focused) {
-      instance.focusItem(event, itemId);
+      instance.focusItem(event, nodeId);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     if (multiple) {
       if (event.shiftKey) {
-        instance.selectRange(event, { end: itemId });
+        instance.selectRange(event, { end: nodeId });
       } else {
-        instance.selectNode(event, itemId, true);
+        instance.selectNode(event, nodeId, true);
       }
     } else {
-      instance.selectNode(event, itemId);
+      instance.selectNode(event, nodeId);
     }
   };
 

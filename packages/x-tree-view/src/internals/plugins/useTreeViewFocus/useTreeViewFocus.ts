@@ -17,10 +17,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   models,
   rootRef,
 }) => {
-  const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
-    const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
-    if (state.focusedNodeId !== cleanNodeId) {
-      setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+  const setFocusedItemId = useEventCallback((itemId: React.SetStateAction<string | null>) => {
+    const cleanItemId = typeof itemId === 'function' ? itemId(state.focusedItemId) : itemId;
+    if (state.focusedItemId !== cleanItemId) {
+      setState((prevState) => ({ ...prevState, focusedItemId: cleanItemId }));
     }
   });
 
@@ -29,44 +29,44 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     [rootRef],
   );
 
-  const isNodeFocused = React.useCallback(
-    (nodeId: string) => state.focusedNodeId === nodeId && isTreeViewFocused(),
-    [state.focusedNodeId, isTreeViewFocused],
+  const isItemFocused = React.useCallback(
+    (itemId: string) => state.focusedItemId === itemId && isTreeViewFocused(),
+    [state.focusedItemId, isTreeViewFocused],
   );
 
-  const isNodeVisible = (nodeId: string) => {
-    const node = instance.getNode(nodeId);
-    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
+  const isItemVisible = (itemId: string) => {
+    const item = instance.getNode(itemId);
+    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
   };
 
-  const focusItem = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
-    // if we receive a nodeId, and it is visible, the focus will be set to it
-    if (nodeId && isNodeVisible(nodeId)) {
+  const focusItem = useEventCallback((event: React.SyntheticEvent, itemId: string | null) => {
+    // if we receive an itemId, and it is visible, the focus will be set to it
+    if (itemId && isItemVisible(itemId)) {
       if (!isTreeViewFocused()) {
         instance.focusRoot();
       }
-      setFocusedNodeId(nodeId);
+      setFocusedItemId(itemId);
       if (params.onItemFocus) {
-        params.onItemFocus(event, nodeId);
+        params.onItemFocus(event, itemId);
       }
     }
   });
 
-  const focusDefaultNode = useEventCallback((event: React.SyntheticEvent) => {
-    let nodeToFocusId: string | null | undefined;
+  const focusDefaultItem = useEventCallback((event: React.SyntheticEvent) => {
+    let itemToFocusId: string | null | undefined;
     if (Array.isArray(models.selectedItems.value)) {
-      nodeToFocusId = models.selectedItems.value.find(isNodeVisible);
-    } else if (models.selectedItems.value != null && isNodeVisible(models.selectedItems.value)) {
-      nodeToFocusId = models.selectedItems.value;
+      itemToFocusId = models.selectedItems.value.find(isItemVisible);
+    } else if (models.selectedItems.value != null && isItemVisible(models.selectedItems.value)) {
+      itemToFocusId = models.selectedItems.value;
     }
 
-    if (nodeToFocusId == null) {
-      nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
+    if (itemToFocusId == null) {
+      itemToFocusId = instance.getNavigableChildrenIds(null)[0];
     }
 
-    setFocusedNodeId(nodeToFocusId);
+    setFocusedItemId(itemToFocusId);
     if (params.onItemFocus) {
-      params.onItemFocus(event, nodeToFocusId);
+      params.onItemFocus(event, itemToFocusId);
     }
   });
 
@@ -75,10 +75,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
-    isNodeFocused,
+    isItemFocused,
     focusItem,
     focusRoot,
-    focusDefaultNode,
+    focusDefaultItem,
   });
 
   populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
@@ -86,14 +86,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
-    setFocusedNodeId((oldFocusedNodeId) => {
+    setFocusedItemId((oldFocusedItemId) => {
       if (
-        oldFocusedNodeId === id &&
+        oldFocusedItemId === id &&
         rootRef.current === ownerDocument(rootRef.current).activeElement
       ) {
         return instance.getChildrenIds(null)[0];
       }
-      return oldFocusedNodeId;
+      return oldFocusedItemId;
     });
   });
 
@@ -102,19 +102,19 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       otherHandlers.onFocus?.(event);
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
-        instance.focusDefaultNode(event);
+        instance.focusDefaultItem(event);
       }
     };
 
   const createHandleBlur =
     (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
       otherHandlers.onBlur?.(event);
-      setFocusedNodeId(null);
+      setFocusedItemId(null);
     };
 
-  const focusedNode = instance.getNode(state.focusedNodeId!);
-  const activeDescendant = focusedNode
-    ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
+  const focusedItem = instance.getNode(state.focusedItemId!);
+  const activeDescendant = focusedItem
+    ? instance.getTreeItemId(focusedItem.id, focusedItem.idAttribute)
     : null;
 
   return {
@@ -126,7 +126,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 };
 
-useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
+useTreeViewFocus.getInitialState = () => ({ focusedItemId: null });
 
 useTreeViewFocus.params = {
   onItemFocus: true,

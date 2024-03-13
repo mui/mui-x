@@ -6,9 +6,9 @@ import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
-  isNodeFocused: (nodeId: string) => boolean;
+  isItemFocused: (itemId: string) => boolean;
   focusItem: (event: React.SyntheticEvent, itemId: string | null) => void;
-  focusDefaultNode: (event: React.SyntheticEvent) => void;
+  focusDefaultItem: (event: React.SyntheticEvent) => void;
   focusRoot: () => void;
 }
 
@@ -27,7 +27,7 @@ export interface UseTreeViewFocusParameters {
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
-  focusedNodeId: string | null;
+  focusedItemId: string | null;
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
