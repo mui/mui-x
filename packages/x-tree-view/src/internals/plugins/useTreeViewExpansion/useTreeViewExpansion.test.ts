@@ -4,6 +4,10 @@ import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { act, fireEvent } from '@mui-internal/test-utils';
 
+/**
+ * All tests related to keyboard navigation, including expansion using "Enter" and "ArrowRight",
+ * are located in the `useTreeViewKeyboardNavigation.test.ts` file.
+ */
 describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', ({ render }) => {
   describe('expandedItems / defaultExpandedItems / onExpandedItemsChange props', () => {
     it('should not expand items when no default state and no control state are defined', () => {
@@ -143,8 +147,8 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     });
   });
 
-  describe('basic interactions', () => {
-    it('should expand collapsed item when clicking on its content', () => {
+  describe('click on item content', () => {
+    it('should expand collapsed item when clicking on an item content', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
       });
@@ -154,7 +158,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
     });
 
-    it('should collapse expanded item when clicking on its content', () => {
+    it('should collapse expanded item when clicking on an item content', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         defaultExpandedNodes: ['1'],
@@ -165,36 +169,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
     });
 
-    it('should expand collapsed item when pressing Enter', () => {
-      const { getItemRoot, getRoot } = render({
-        items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-      });
-
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
-      act(() => {
-        getRoot().focus();
-      });
-      fireEvent.keyDown(getRoot(), { key: 'Enter' });
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
-    });
-
-    it('should collapse expanded item when pressing Enter', () => {
-      const { getItemRoot, getRoot } = render({
-        items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
-      });
-
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
-      act(() => {
-        getRoot().focus();
-      });
-      fireEvent.keyDown(getRoot(), { key: 'Enter' });
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
-    });
-  });
-
-  describe('disabled item', () => {
-    it('should not expand collapsed item when clicking on its content', () => {
+    it('should not expand collapsed item when clicking on a disabled item content', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
       });
@@ -204,7 +179,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
     });
 
-    it('should not collapse expanded item when clicking on its content', () => {
+    it('should not collapse expanded item when clicking on a disabled item', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
         defaultExpandedNodes: ['1'],
@@ -212,35 +187,6 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
       fireEvent.click(getItemContent('1'));
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
-    });
-
-    it('should not expand collapsed item when pressing Enter', () => {
-      const { getItemRoot, getRoot } = render({
-        items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
-        disabledItemsFocusable: true,
-      });
-
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
-      act(() => {
-        getRoot().focus();
-      });
-      fireEvent.keyDown(getRoot(), { key: 'Enter' });
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
-    });
-
-    it('should not collapse expanded item when pressing Enter', () => {
-      const { getItemRoot, getRoot } = render({
-        items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
-        disabledItemsFocusable: true,
-      });
-
-      expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
-      act(() => {
-        getRoot().focus();
-      });
-      fireEvent.keyDown(getRoot(), { key: 'Enter' });
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
     });
   });

@@ -2230,6 +2230,25 @@ describe('<TreeItem />', () => {
 
     describe('expansion', () => {
       describe('`disabledItemsFocusable={true}`', () => {
+        it('should prevent expansion on enter', () => {
+          const { getByRole, getByTestId } = render(
+            <SimpleTreeView disabledItemsFocusable>
+              <TreeItem nodeId="one" label="one" />
+              <TreeItem nodeId="two" label="two" disabled data-testid="two">
+                <TreeItem nodeId="three" label="three" />
+              </TreeItem>
+            </SimpleTreeView>,
+          );
+
+          act(() => {
+            getByTestId('two').focus();
+          });
+          expect(getByTestId('two')).toHaveVirtualFocus();
+          expect(getByTestId('two')).to.have.attribute('aria-expanded', 'false');
+          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+          expect(getByTestId('two')).to.have.attribute('aria-expanded', 'false');
+        });
+
         it('should prevent expansion on right arrow', () => {
           const { getByRole, getByTestId } = render(
             <SimpleTreeView disabledItemsFocusable>
@@ -2267,6 +2286,19 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByRole('tree'), { key: 'ArrowLeft' });
           expect(getByTestId('two')).to.have.attribute('aria-expanded', 'true');
         });
+      });
+
+      it('should prevent expansion on click', () => {
+        const { getByText, getByTestId } = render(
+          <SimpleTreeView>
+            <TreeItem nodeId="one" label="one" disabled data-testid="one">
+              <TreeItem nodeId="two" label="two" />
+            </TreeItem>
+          </SimpleTreeView>,
+        );
+
+        fireEvent.click(getByText('one'));
+        expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
       });
     });
 
