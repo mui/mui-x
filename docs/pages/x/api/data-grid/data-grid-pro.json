@@ -704,12 +704,6 @@
       "class": null
     },
     {
-      "name": "baseSwitch",
-      "description": "The custom Switch component used in the grid.",
-      "default": "Switch",
-      "class": null
-    },
-    {
       "name": "baseButton",
       "description": "The custom Button component used in the grid.",
       "default": "Button",
