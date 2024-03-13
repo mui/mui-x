@@ -137,6 +137,7 @@ As a result, the following changes have been made:
   ```
 
 - The props `rowThreshold` and `columnThreshold` have been removed.
+  If you had the `rowThreshold` prop set to `0` to force new rows to be rendered more often – this is no longer necessary.
 
 ### Behavioral changes
 
