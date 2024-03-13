@@ -46,20 +46,21 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
     });
   });
 
-  const setJSXItemsChildrenIndexes = useEventCallback(
-    (parentId: string | null, indexes: { [id: string]: number }) => {
-      setState((prevState) => ({
-        ...prevState,
-        nodes: {
-          ...prevState.nodes,
-          itemIndexes: {
-            ...prevState.nodes.itemIndexes,
-            [parentId ?? TREE_VIEW_ROOT_PARENT_ID]: indexes,
-          },
+  const setJSXItemsChildrenIndexes = (
+    parentId: string | null,
+    indexes: { [id: string]: number },
+  ) => {
+    setState((prevState) => ({
+      ...prevState,
+      nodes: {
+        ...prevState.nodes,
+        itemIndexes: {
+          ...prevState.nodes.itemIndexes,
+          [parentId ?? TREE_VIEW_ROOT_PARENT_ID]: indexes,
         },
-      }));
-    },
-  );
+      },
+    }));
+  };
 
   const getJSXItemsChildrenIndexes = (parentId: string | null) =>
     state.nodes.itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID] ?? {};
