@@ -6,20 +6,20 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
-import { getTotalHeaderHeight, fastMemo, useTimeout } from '@mui/x-data-grid/internals';
-import {
-  GridEventListener,
-  GridScrollParams,
-  getDataGridUtilityClass,
-  gridClasses,
-  gridDensityFactorSelector,
-  useGridApiContext,
-  useGridApiEventHandler,
-  useGridSelector,
-  gridColumnsTotalWidthSelector,
-} from '@mui/x-data-grid';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { getDataGridUtilityClass, gridClasses } from '../constants';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { gridDimensionsSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
+import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
+import { GridScrollParams } from '../models/params/gridScrollParams';
+import { GridEventListener } from '../models/events';
+import { useTimeout } from '../hooks/utils/useTimeout';
+import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
+import { fastMemo } from '../utils/fastMemo';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -28,7 +28,7 @@ interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
 
-type OwnerState = DataGridProProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
+type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
@@ -69,6 +69,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const scrollPosition = React.useRef<GridScrollParams>({
     left: 0,
@@ -82,8 +83,6 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     }
 
     if (scrollDirection === 'right') {
-      const dimensions = apiRef.current.getRootDimensions();
-
       // Only render if the user has not reached yet the end of the list
       const maxScrollLeft = columnsTotalWidth - dimensions.viewportInnerSize.width;
       return scrollPosition.current.left < maxScrollLeft;
@@ -100,6 +99,18 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const classes = useUtilityClasses(ownerState);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
+
+  const style: React.CSSProperties = {
+    height: headerHeight,
+    top: totalHeaderHeight - headerHeight,
+  };
+
+  if (scrollDirection === 'left') {
+    style.left = dimensions.leftPinnedWidth;
+  } else if (scrollDirection === 'right') {
+    style.right =
+      dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+  }
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = (newScrollPosition) => {
     scrollPosition.current = newScrollPosition;
@@ -154,7 +165,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       className={clsx(classes.root)}
       ownerState={ownerState}
       onDragOver={handleDragOver}
-      style={{ height: headerHeight, top: totalHeaderHeight - headerHeight }}
+      style={style}
     />
   );
 }

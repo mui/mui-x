@@ -1211,12 +1211,6 @@
       "isGlobal": false
     },
     {
-      "key": "columnGroupHeader",
-      "className": "MuiDataGridPremium-columnGroupHeader",
-      "description": "Styles applied to the column group header element.",
-      "isGlobal": false
-    },
-    {
       "key": "columnHeader",
       "className": "MuiDataGridPremium-columnHeader",
       "description": "Styles applied to the column header element.",
@@ -1277,9 +1271,15 @@
       "isGlobal": false
     },
     {
-      "key": "columnHeader--showColumnBorder",
-      "className": "MuiDataGridPremium-columnHeader--showColumnBorder",
-      "description": "Styles applied to the column group header cell when show column border.",
+      "key": "columnHeader--pinnedLeft",
+      "className": "MuiDataGridPremium-columnHeader--pinnedLeft",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--pinnedRight",
+      "className": "MuiDataGridPremium-columnHeader--pinnedRight",
+      "description": "",
       "isGlobal": false
     },
     {
@@ -1292,6 +1292,12 @@
       "key": "columnHeader--sorted",
       "className": "MuiDataGridPremium-columnHeader--sorted",
       "description": "Styles applied to the column header if the column is sorted.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--withLeftBorder",
+      "className": "MuiDataGridPremium-columnHeader--withLeftBorder",
+      "description": "",
       "isGlobal": false
     },
     {
@@ -1310,24 +1316,6 @@
       "key": "columnHeaderDraggableContainer",
       "className": "MuiDataGridPremium-columnHeaderDraggableContainer",
       "description": "Styles applied to the column header's draggable container element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeaderDropZone",
-      "className": "MuiDataGridPremium-columnHeaderDropZone",
-      "description": "Styles applied to the column headers wrapper if a column is being dragged.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner",
-      "className": "MuiDataGridPremium-columnHeadersInner",
-      "description": "Styles applied to the column headers's inner element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner--scrollable",
-      "className": "MuiDataGridPremium-columnHeadersInner--scrollable",
-      "description": "Styles applied to the column headers's inner element if there is a horizontal scrollbar.",
       "isGlobal": false
     },
     {
@@ -1436,24 +1424,6 @@
       "key": "editInputCell",
       "className": "MuiDataGridPremium-editInputCell",
       "description": "Styles applied to the root of the input component.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler",
-      "className": "MuiDataGridPremium-filler",
-      "description": "Styles applied to the filler row.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler--pinnedLeft",
-      "className": "MuiDataGridPremium-filler--pinnedLeft",
-      "description": "Styles applied to the filler row pinned left section.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler--pinnedRight",
-      "className": "MuiDataGridPremium-filler--pinnedRight",
-      "description": "Styles applied to the filler row pinned right section.",
       "isGlobal": false
     },
     {
@@ -1628,24 +1598,6 @@
       "key": "paper",
       "className": "MuiDataGridPremium-paper",
       "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders",
-      "description": "Styles applied to the pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--left",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders--left",
-      "description": "Styles applied to the left pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--right",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders--right",
-      "description": "Styles applied to the right pinned column headers.",
       "isGlobal": false
     },
     {
