@@ -89,6 +89,7 @@ export const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseCheckbox: MUICheckbox,
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
+  // XXX: baseSelect needs to carry `.onClose` to `.MenuProps`
   baseSelect: MUISelect,
   baseSwitch: MUISwitch,
   baseButton: MUIButton,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
+import { BaseIconButtonProps } from '../../models/gridSlotsComponentsProps';
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -11,7 +11,7 @@ export type GridActionsCellItemProps = {
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 } & (
-  | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
+  | ({ showInMenu?: false; icon: React.ReactElement } & BaseIconButtonProps)
   | ({
       showInMenu: true;
       /**

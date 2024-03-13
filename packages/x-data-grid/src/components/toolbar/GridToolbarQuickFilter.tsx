@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid/internals';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -12,6 +12,8 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
 
 type OwnerState = DataGridProcessedProps;
+
+const TextField = DATA_GRID_DEFAULT_SLOTS_COMPONENTS.baseTextField;
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
@@ -148,7 +150,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
-            sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
+            style={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={handleSearchReset}
             {...rootProps.slotProps?.baseIconButton}
           >

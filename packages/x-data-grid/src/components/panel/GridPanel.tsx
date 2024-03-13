@@ -11,6 +11,12 @@ import { isEscapeKey } from '../../utils/keyboardUtils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
+// XXX: requires re-implementation to support the mantine style:
+// <Popover>
+//   <Popover.Target>...</Popover.Target>
+//   <Popover.Dropdown>...</Popover.Dropdown>
+// </Popover>
+
 type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelClasses {

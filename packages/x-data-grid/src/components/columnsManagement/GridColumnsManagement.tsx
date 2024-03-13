@@ -224,7 +224,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 <rootProps.slots.quickFilterIcon />
               </rootProps.slots.baseInputAdornment>
             ),
-            sx: { pl: 1.5 },
+            style: { paddingLeft: 6 },
           }}
           fullWidth
           {...rootProps.slotProps?.baseTextField}
@@ -241,7 +241,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 checked={columnVisibilityModel[column.field] !== false}
                 onClick={toggleColumn}
                 name={column.field}
-                sx={{ p: 0.5 }}
+                style={{ padding: 4 }}
                 inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
                 {...rootProps.slotProps?.baseCheckbox}
               />
@@ -266,7 +266,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                   indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
                   onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
                   name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
-                  sx={{ p: 0.5 }}
+                  style={{ padding: 4 }}
                   {...rootProps.slotProps?.baseCheckbox}
                 />
               }

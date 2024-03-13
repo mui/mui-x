@@ -86,26 +86,26 @@ const iconSlots: GridIconSlotsComponent = {
 
 export const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
-  baseCheckbox: MUICheckbox,
-  baseTextField: MUITextField,
-  baseFormControl: MUIFormControl,
-  baseSelect: MUISelect,
-  baseSwitch: MUISwitch,
   baseButton: MUIButton,
+  baseCheckbox: MUICheckbox,
+  baseChip: MUIChip,
+  baseFormControl: MUIFormControl,
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,
-  baseTooltip: MUITooltip,
-  basePopper: MUIPopper,
   baseInputLabel: MUIInputLabel,
+  basePopper: MUIPopper,
+  baseSelect: MUISelect,
   baseSelectOption: MUISelectOption,
-  baseChip: MUIChip,
+  baseSwitch: MUISwitch,
+  baseTextField: MUITextField,
+  baseTooltip: MUITooltip,
 };
 
 export const materialProps: Partial<DataGridProps> = {
   useThemeProps: useThemeProps as any,
 }
 
-export function DataGridMantine(props: DataGridProps) {
+export function DataGrid(props: DataGridProps) {
   return (
     <DataGridRaw
       {...materialProps}
@@ -115,4 +115,4 @@ export function DataGridMantine(props: DataGridProps) {
   )
 }
 
-export const DataGrid = DataGridMantine;
+export * from '../core'
