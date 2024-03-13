@@ -126,7 +126,7 @@ export default function ColDefChangesGridNoSnap() {
 
 function DocsLink(params) {
   return (
-    <IconButton href={params.value}>
+    <IconButton href={params.value} target="_blank">
       <LinkIcon />
     </IconButton>
   );
