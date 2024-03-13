@@ -17,7 +17,7 @@ export function useTreeItemState(nodeId: string) {
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       if (!focused) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, nodeId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
@@ -32,7 +32,7 @@ export function useTreeItemState(nodeId: string) {
   const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       if (!focused) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, nodeId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);

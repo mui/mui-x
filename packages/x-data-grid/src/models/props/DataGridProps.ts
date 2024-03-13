@@ -31,6 +31,7 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
+import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 
 export interface GridExperimentalFeatures {
   /**
@@ -69,7 +70,6 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableColumnReorder'
-  | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
@@ -372,6 +372,16 @@ export interface DataGridPropsWithDefaultValues {
    * @default 166
    */
   rowPositionsDebounceMs: number;
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: boolean;
+  /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: boolean;
 }
 
 /**
@@ -760,4 +770,22 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {string} data The data copied to the clipboard.
    */
   onClipboardCopy?: GridEventListener<'clipboardCopy'>;
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions?: GridAutosizeOptions;
+  /**
+   * Callback fired while a column is being resized.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnResize?: GridEventListener<'columnResize'>;
+  /**
+   * Callback fired when the width of a column is changed.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
 }

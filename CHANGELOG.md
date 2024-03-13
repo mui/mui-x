@@ -1731,7 +1731,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
   The Firefox browser currently does not support this behavior because the [getWeekInfo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) API is not yet implemented.
 
   ```ts
-  import { Settings } from 'luxon';
+  import { Settings, Info } from 'luxon';
 
   Settings.defaultWeekSettings = {
     firstDay: 1,

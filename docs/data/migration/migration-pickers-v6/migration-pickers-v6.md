@@ -430,7 +430,7 @@ If you want to keep the start of the week on Monday even if your locale says oth
 You can hardcode the week settings as follows:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   firstDay: 1,
