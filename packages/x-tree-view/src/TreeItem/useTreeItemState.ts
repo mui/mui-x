@@ -9,7 +9,7 @@ export function useTreeItemState(nodeId: string) {
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance.isNodeExpandable(nodeId);
-  const expanded = instance.isNodeExpanded(nodeId);
+  const expanded = instance.isItemExpanded(nodeId);
   const focused = instance.isNodeFocused(nodeId);
   const selected = instance.isNodeSelected(nodeId);
   const disabled = instance.isNodeDisabled(nodeId);
@@ -23,7 +23,7 @@ export function useTreeItemState(nodeId: string) {
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       // If already expanded and trying to toggle selection don't close
-      if (expandable && !(multiple && instance.isNodeExpanded(nodeId))) {
+      if (expandable && !(multiple && instance.isItemExpanded(nodeId))) {
         instance.toggleNodeExpansion(event, nodeId);
       }
     }

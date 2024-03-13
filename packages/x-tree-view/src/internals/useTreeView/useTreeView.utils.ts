@@ -21,7 +21,7 @@ export const getPreviousNode = (
 
   let currentNode: string = siblings[nodeIndex - 1];
   while (
-    instance.isNodeExpanded(currentNode) &&
+    instance.isItemExpanded(currentNode) &&
     instance.getNavigableChildrenIds(currentNode).length > 0
   ) {
     currentNode = instance.getNavigableChildrenIds(currentNode).pop()!;
@@ -35,7 +35,7 @@ export const getNextNode = (
   nodeId: string,
 ) => {
   // If expanded get first child
-  if (instance.isNodeExpanded(nodeId) && instance.getNavigableChildrenIds(nodeId).length > 0) {
+  if (instance.isItemExpanded(nodeId) && instance.getNavigableChildrenIds(nodeId).length > 0) {
     return instance.getNavigableChildrenIds(nodeId)[0];
   }
 
@@ -61,7 +61,7 @@ export const getLastNode = (
 ) => {
   let lastNode = instance.getNavigableChildrenIds(null).pop()!;
 
-  while (instance.isNodeExpanded(lastNode)) {
+  while (instance.isItemExpanded(lastNode)) {
     lastNode = instance.getNavigableChildrenIds(lastNode).pop()!;
   }
   return lastNode;

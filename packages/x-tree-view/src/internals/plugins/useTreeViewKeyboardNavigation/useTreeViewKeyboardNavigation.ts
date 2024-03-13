@@ -77,7 +77,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     // This really only works since the ids are strings
     Object.keys(firstCharMap.current).forEach((mapNodeId) => {
       const map = instance.getNode(mapNodeId);
-      const visible = map.parentId ? instance.isNodeExpanded(map.parentId) : true;
+      const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
       const shouldBeSkipped = params.disabledItemsFocusable
         ? false
         : instance.isNodeDisabled(mapNodeId);
@@ -220,7 +220,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused node is expanded, we move the focus to its first child
         // If the focused node is collapsed and has children, we expand it
         case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
-          if (instance.isNodeExpanded(state.focusedNodeId)) {
+          if (instance.isItemExpanded(state.focusedNodeId)) {
             instance.focusItem(event, getNextNode(instance, state.focusedNodeId));
             event.preventDefault();
           } else if (canToggleNodeExpansion(state.focusedNodeId)) {
@@ -236,7 +236,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         case (key === 'ArrowLeft' && !isRTL) || (key === 'ArrowRight' && isRTL): {
           if (
             canToggleNodeExpansion(state.focusedNodeId) &&
-            instance.isNodeExpanded(state.focusedNodeId)
+            instance.isItemExpanded(state.focusedNodeId)
           ) {
             instance.toggleNodeExpansion(event, state.focusedNodeId!);
             event.preventDefault();

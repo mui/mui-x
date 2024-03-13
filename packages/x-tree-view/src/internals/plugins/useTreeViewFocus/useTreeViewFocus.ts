@@ -36,7 +36,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const isNodeVisible = (nodeId: string) => {
     const node = instance.getNode(nodeId);
-    return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
+    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
   };
 
   const focusItem = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {

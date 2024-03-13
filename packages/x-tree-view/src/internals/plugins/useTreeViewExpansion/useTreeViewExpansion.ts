@@ -14,17 +14,17 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     models.expandedItems.setControlledValue(value);
   };
 
-  const isNodeExpanded = React.useCallback(
-    (nodeId: string) => {
+  const isItemExpanded = React.useCallback(
+    (itemId: string) => {
       return Array.isArray(models.expandedItems.value)
-        ? models.expandedItems.value.indexOf(nodeId) !== -1
+        ? models.expandedItems.value.indexOf(itemId) !== -1
         : false;
     },
     [models.expandedItems.value],
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
+    (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
@@ -51,20 +51,20 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
+    const node = instance.getNode(itemId);
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
+      (child) => instance.isNodeExpandable(child) && !instance.isItemExpanded(child),
     );
 
     const newExpanded = models.expandedItems.value.concat(diff);
 
     if (diff.length > 0) {
       if (params.onItemExpansionToggle) {
-        diff.forEach((newlyExpandedNodeId) => {
-          params.onItemExpansionToggle!(event, newlyExpandedNodeId, true);
+        diff.forEach((newlyExpandedItemId) => {
+          params.onItemExpansionToggle!(event, newlyExpandedItemId, true);
         });
       }
 
@@ -73,7 +73,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   populateInstance<UseTreeViewExpansionSignature>(instance, {
-    isNodeExpanded,
+    isItemExpanded,
     isNodeExpandable,
     toggleNodeExpansion,
     expandAllSiblings,
