@@ -116,7 +116,7 @@ export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TDate | null, TDate, TView, any, {}>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     DesktopOnlyPickerProps {
   /**
@@ -144,7 +144,7 @@ export interface UseDesktopPickerParams<
   >,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
-    'valueManager' | 'valueType' | 'validator'
+    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;
   getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
