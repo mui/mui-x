@@ -13,6 +13,13 @@
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
+    "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
+    "autosizeOptions": {
+      "type": {
+        "name": "shape",
+        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+      }
+    },
     "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -28,8 +35,10 @@
       },
       "default": "\"standard\""
     },
+    "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnFilter": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
+    "disableColumnResize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
@@ -248,11 +257,25 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onColumnResize": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnResizeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
     "onColumnVisibilityModelChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(model: GridColumnVisibilityModel, details: GridCallbackDetails) => void",
         "describedArgs": ["model", "details"]
+      }
+    },
+    "onColumnWidthChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnResizeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
       }
     },
     "onFilterModelChange": {

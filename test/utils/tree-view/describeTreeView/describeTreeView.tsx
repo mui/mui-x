@@ -187,7 +187,7 @@ type DescribeTreeView = {
  *   it('should do something', () => {
  *     const { getItemRoot } = render({
  *       items: [{ id: '1', children: [{ id: '1.1' }] }],
- *       defaultExpandedNodes: ['1'],
+ *       defaultExpandedItems: ['1'],
  *     });
  *   });
  * });

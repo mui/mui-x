@@ -22,7 +22,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should use the default state when defined', () => {
       const { getItemRoot, getAllItemRoots } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
+        defaultExpandedItems: ['1'],
       });
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
@@ -32,7 +32,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should use the control state when defined', () => {
       const { getItemRoot } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        expandedNodes: ['1'],
+        expandedItems: ['1'],
       });
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
@@ -42,8 +42,8 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should use the control state upon the default state when both are defined', () => {
       const { getItemRoot } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        expandedNodes: ['1'],
-        defaultExpandedNodes: ['2'],
+        expandedItems: ['1'],
+        defaultExpandedItems: ['2'],
       });
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
@@ -52,19 +52,19 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should react to control state update', () => {
       const { getItemRoot, setProps } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
-        expandedNodes: [],
+        expandedItems: [],
       });
 
-      setProps({ expandedNodes: ['1'] });
+      setProps({ expandedItems: ['1'] });
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
     });
 
     it('should call callback when expanded items are updated (add expanded item to empty list)', () => {
-      const onExpandedNodesChange = spy();
+      const onExpandedItemsChange = spy();
 
       const { getItemContent, getRoot } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
-        onExpandedNodesChange,
+        onExpandedItemsChange,
       });
 
       fireEvent.click(getItemContent('1'));
@@ -72,20 +72,20 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
         getRoot().focus();
       });
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.lastCall.args[1]).to.deep.equal(['1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
     });
 
     it('should call callback when expanded items are updated (add expanded item no non-empty list)', () => {
-      const onExpandedNodesChange = spy();
+      const onExpandedItemsChange = spy();
 
       const { getItemContent, getRoot } = render({
         items: [
           { id: '1', children: [{ id: '1.1' }] },
           { id: '2', children: [{ id: '2.1' }] },
         ],
-        onExpandedNodesChange,
-        defaultExpandedNodes: ['1'],
+        onExpandedItemsChange,
+        defaultExpandedItems: ['1'],
       });
 
       fireEvent.click(getItemContent('2'));
@@ -93,20 +93,20 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
         getRoot().focus();
       });
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
     });
 
     it('should call callback when expanded items are updated (remove expanded item)', () => {
-      const onExpandedNodesChange = spy();
+      const onExpandedItemsChange = spy();
 
       const { getItemContent, getRoot } = render({
         items: [
           { id: '1', children: [{ id: '1.1' }] },
           { id: '2', children: [{ id: '2.1' }] },
         ],
-        onExpandedNodesChange,
-        defaultExpandedNodes: ['1'],
+        onExpandedItemsChange,
+        defaultExpandedItems: ['1'],
       });
 
       fireEvent.click(getItemContent('1'));
@@ -114,35 +114,35 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
         getRoot().focus();
       });
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.lastCall.args[1]).to.deep.equal([]);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal([]);
     });
 
     it('should warn when switching from controlled to uncontrolled', () => {
       const { setProps } = render({
         items: [{ id: '1' }],
-        expandedNodes: [],
+        expandedItems: [],
       });
 
       expect(() => {
-        setProps({ expandedNodes: undefined });
+        setProps({ expandedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled expandedItems state of TreeView to be uncontrolled.',
       );
     });
 
     it('should warn and not react to update when updating the default state', () => {
       const { getItemRoot, setProps } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
+        defaultExpandedItems: ['1'],
       });
 
       expect(() => {
-        setProps({ defaultExpandedNodes: ['2'] });
+        setProps({ defaultExpandedItems: ['2'] });
         expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
         expect(getItemRoot('2')).not.to.have.attribute('aria-expanded', 'true');
       }).toErrorDev(
-        'MUI X: A component is changing the default expandedNodes state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+        'MUI X: A component is changing the default expandedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
       );
     });
   });
@@ -161,7 +161,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should collapse expanded item when clicking on an item content', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
+        defaultExpandedItems: ['1'],
       });
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
@@ -182,7 +182,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     it('should not collapse expanded item when clicking on a disabled item', () => {
       const { getItemRoot, getItemContent } = render({
         items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
-        defaultExpandedNodes: ['1'],
+        defaultExpandedItems: ['1'],
       });
 
       expect(getItemRoot('1')).to.have.attribute('aria-expanded', 'true');

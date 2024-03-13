@@ -317,7 +317,7 @@ const customEnLocale: Locale = {
 For `luxon`, use the `Settings.defaultWeekSettings` object:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   // Sunday = 7, Monday = 1.

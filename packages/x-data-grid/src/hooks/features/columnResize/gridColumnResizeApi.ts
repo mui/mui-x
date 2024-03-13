@@ -1,4 +1,4 @@
-import { GridColDef } from '@mui/x-data-grid';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
 
 export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
   includeHeaders: true,
