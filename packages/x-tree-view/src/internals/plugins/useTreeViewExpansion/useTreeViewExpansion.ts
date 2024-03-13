@@ -52,8 +52,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   );
 
   const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
-    const node = instance.getNode(itemId);
-    const siblings = instance.getChildrenIds(node.parentId);
+    const item = instance.getNode(itemId);
+    const siblings = instance.getChildrenIds(item.parentId);
 
     const diff = siblings.filter(
       (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
@@ -86,11 +86,11 @@ useTreeViewExpansion.models = {
   },
 };
 
-const DEFAULT_EXPANDED_NODES: string[] = [];
+const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_NODES,
+  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });
 
 useTreeViewExpansion.params = {
