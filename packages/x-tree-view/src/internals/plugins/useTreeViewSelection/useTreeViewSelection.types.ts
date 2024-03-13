@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { DefaultizedProps, TreeViewItemRange, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
@@ -76,8 +76,8 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
   dependantPlugins: [
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
   ];
 }>;

@@ -5,10 +5,10 @@ import {
   TreeViewUsedPublicAPI,
 } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
-import type { UseTreeViewNodesSignature } from '../plugins/useTreeViewNodes';
+import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewNodes';
 
 export const getPreviousItem = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature, UseTreeViewExpansionSignature]>,
+  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
   const item = instance.getNode(itemId);
@@ -31,7 +31,7 @@ export const getPreviousItem = (
 };
 
 export const getNextItem = (
-  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
+  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
   itemId: string,
 ) => {
   // If expanded get first child
@@ -57,7 +57,7 @@ export const getNextItem = (
 };
 
 export const getLastItem = (
-  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
+  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) => {
   let lastItem = instance.getNavigableChildrenIds(null).pop()!;
 
@@ -67,7 +67,7 @@ export const getLastItem = (
   return lastItem;
 };
 
-export const getFirstItem = (instance: TreeViewInstance<[UseTreeViewNodesSignature]>) =>
+export const getFirstItem = (instance: TreeViewInstance<[UseTreeViewItemsSignature]>) =>
   instance.getNavigableChildrenIds(null)[0];
 
 export const populateInstance = <T extends TreeViewAnyPluginSignature>(

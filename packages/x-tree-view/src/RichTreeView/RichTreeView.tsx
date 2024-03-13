@@ -112,14 +112,14 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const nodesToRender = instance.getNodesToRender();
+  const nodesToRender = instance.getItemsToRender();
 
   const renderNode = ({
     label,
     nodeId,
     id,
     children,
-  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
+  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
     return (
       <WrappedTreeItem
         slots={slots}

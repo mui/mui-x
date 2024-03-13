@@ -1,26 +1,26 @@
-import { TreeViewNode, DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { TreeViewItem, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 
-interface TreeViewNodeProps {
+interface TreeViewItemProps {
   label: string;
   nodeId: string;
   id: string | undefined;
-  children?: TreeViewNodeProps[];
+  children?: TreeViewItemProps[];
 }
 
-export interface UseTreeViewNodesInstance<R extends {}> {
-  getNode: (nodeId: string) => TreeViewNode;
+export interface UseTreeViewItemsInstance<R extends {}> {
+  getNode: (nodeId: string) => TreeViewItem;
   getItem: (nodeId: string) => R;
-  getNodesToRender: () => TreeViewNodeProps[];
+  getItemsToRender: () => TreeViewItemProps[];
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
 }
 
 export interface UseTreeViewNodesPublicAPI<R extends {}>
-  extends Pick<UseTreeViewNodesInstance<R>, 'getItem'> {}
+  extends Pick<UseTreeViewItemsInstance<R>, 'getItem'> {}
 
-export interface UseTreeViewNodesParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends {}> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -54,43 +54,43 @@ export interface UseTreeViewNodesParameters<R extends {}> {
   getItemId?: (item: R) => TreeViewItemId;
 }
 
-export type UseTreeViewNodesDefaultizedParameters<R extends {}> = DefaultizedProps<
-  UseTreeViewNodesParameters<R>,
+export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+  UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable'
 >;
 
-interface UseTreeViewNodesEventLookup {
+interface UseTreeViewItemsEventLookup {
   removeNode: {
     params: { id: string };
   };
 }
 
-export interface TreeViewNodeIdAndChildren {
+export interface TreeViewItemIdAndChildren {
   id: TreeViewItemId;
-  children?: TreeViewNodeIdAndChildren[];
+  children?: TreeViewItemIdAndChildren[];
 }
 
-export interface UseTreeViewNodesState<R extends {}> {
+export interface UseTreeViewItemsState<R extends {}> {
   nodes: {
-    nodeTree: TreeViewNodeIdAndChildren[];
+    nodeTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
   };
 }
 
-interface UseTreeViewNodesContextValue
-  extends Pick<UseTreeViewNodesDefaultizedParameters<any>, 'disabledItemsFocusable'> {}
+interface UseTreeViewItemsContextValue
+  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {}
 
-export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
-  params: UseTreeViewNodesParameters<any>;
-  defaultizedParams: UseTreeViewNodesDefaultizedParameters<any>;
-  instance: UseTreeViewNodesInstance<any>;
+export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
+  params: UseTreeViewItemsParameters<any>;
+  defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
+  instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewNodesPublicAPI<any>;
-  events: UseTreeViewNodesEventLookup;
-  state: UseTreeViewNodesState<any>;
-  contextValue: UseTreeViewNodesContextValue;
+  events: UseTreeViewItemsEventLookup;
+  state: UseTreeViewItemsState<any>;
+  contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewNodeMap = { [nodeId: string]: TreeViewNode };
+export type TreeViewNodeMap = { [nodeId: string]: TreeViewItem };
 
 export type TreeViewItemMap<R extends {}> = { [nodeId: string]: R };

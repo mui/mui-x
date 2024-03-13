@@ -1,7 +1,7 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
 
-export interface TreeViewNode {
+export interface TreeViewItem {
   id: string;
   idAttribute: string | undefined;
   index: number;

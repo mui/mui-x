@@ -1,5 +1,5 @@
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
@@ -11,7 +11,7 @@ export interface UseTreeViewKeyboardNavigationInstance {
 export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
   instance: UseTreeViewKeyboardNavigationInstance;
   dependantPlugins: [
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,

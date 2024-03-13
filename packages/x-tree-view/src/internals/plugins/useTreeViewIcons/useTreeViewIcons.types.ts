@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 export interface UseTreeViewIconsParameters {}
@@ -43,5 +43,5 @@ export type UseTreeViewIconsSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewIconsContextValue;
   slots: UseTreeViewIconsSlots;
   slotProps: UseTreeViewIconsSlotProps;
-  dependantPlugins: [UseTreeViewNodesSignature, UseTreeViewSelectionSignature];
+  dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewSelectionSignature];
 }>;

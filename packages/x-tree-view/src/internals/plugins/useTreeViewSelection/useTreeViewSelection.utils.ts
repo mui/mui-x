@@ -1,5 +1,5 @@
 import { TreeViewInstance } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
 
 /**
  * This is used to determine the start and end of a selection range so
@@ -16,7 +16,7 @@ import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
 export const findOrderInTremauxTree = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature]>,
+  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
   nodeAId: string,
   nodeBId: string,
 ) => {

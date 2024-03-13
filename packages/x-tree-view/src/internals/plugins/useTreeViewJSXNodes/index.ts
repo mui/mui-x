@@ -1,6 +1,6 @@
 export { useTreeViewJSXNodes } from './useTreeViewJSXNodes';
 export type {
   UseTreeViewJSXNodesSignature,
-  UseTreeViewNodesParameters,
-  UseTreeViewNodesDefaultizedParameters,
+  UseTreeViewItemsParameters,
+  UseTreeViewItemsDefaultizedParameters,
 } from './useTreeViewJSXNodes.types';
