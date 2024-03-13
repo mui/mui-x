@@ -94,7 +94,7 @@ export default function CustomContentTreeView() {
       <RichTreeView
         aria-label="icon expansion"
         sx={{ position: 'relative' }}
-        defaultExpandedNodes={['3']}
+        defaultExpandedItems={['3']}
         items={ITEMS}
         slots={{ item: CustomTreeItem }}
       />

@@ -7,12 +7,12 @@ const className = simpleTreeViewClasses.root;
 
 // prettier-ignore
 <SimpleTreeView
-  expandedNodes={[]}
-  defaultExpandedNodes={[]}
-  onExpandedNodesChange={expansionCallback}
-  selectedNodes={null}
-  defaultSelectedNodes={null}
-  onSelectedNodesChange={selectionCallback}
+  expandedItems={[]}
+  defaultExpandedItems={[]}
+  onExpandedItemsChange={expansionCallback}
+  selectedItems={null}
+  defaultSelectedItems={null}
+  onSelectedItemsChange={selectionCallback}
 >
   <TreeItem
     nodeId="1"

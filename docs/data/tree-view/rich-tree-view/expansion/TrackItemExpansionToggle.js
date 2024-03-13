@@ -35,11 +35,11 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function TrackNodeExpansionToggle() {
+export default function TrackItemExpansionToggle() {
   const [action, setAction] = React.useState(null);
 
-  const handleNodeExpansionToggle = (event, nodeId, isExpanded) => {
-    setAction({ nodeId, isExpanded });
+  const handleItemExpansionToggle = (event, itemId, isExpanded) => {
+    setAction({ itemId, isExpanded });
   };
 
   return (
@@ -48,14 +48,14 @@ export default function TrackNodeExpansionToggle() {
         <Typography>No action recorded</Typography>
       ) : (
         <Typography>
-          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
 
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          onNodeExpansionToggle={handleNodeExpansionToggle}
+          onItemExpansionToggle={handleItemExpansionToggle}
         />
       </Box>
     </Stack>

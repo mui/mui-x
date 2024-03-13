@@ -3,18 +3,49 @@ import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { RichTreeViewRoot } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import {
+  RichTreeViewPropsBase,
+  RichTreeViewRoot,
+} from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
+  UseTreeViewExpansionSignature,
+  TreeViewPlugin,
+  TreeViewPluginSignature,
+  DefaultTreeViewPluginParameters,
+  DefaultTreeViewPluginSlotProps,
+  DefaultTreeViewPluginSlots,
   DEFAULT_TREE_VIEW_PLUGINS,
   extractPluginParamsFromProps,
   useTreeView,
   TreeViewProvider,
 } from '@mui/x-tree-view/internals';
 
-const useTreeViewLogExpanded = ({ params, models }) => {
-  const expandedStr = JSON.stringify(models.expandedNodes.value);
+interface TreeViewLogExpandedParameters {
+  areLogsEnabled?: boolean;
+  logMessage?: (message: string) => void;
+}
+
+interface TreeViewLogExpandedDefaultizedParameters {
+  areLogsEnabled: boolean;
+  logMessage?: (message: string) => void;
+}
+
+type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
+  // The parameters of this plugin as they are passed to `useTreeView`
+  params: TreeViewLogExpandedParameters;
+  // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
+  defaultizedParams: TreeViewLogExpandedDefaultizedParameters;
+  // Dependencies of this plugin (we need the expansion plugin to access its model)
+  dependantPlugins: [UseTreeViewExpansionSignature];
+}>;
+
+const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
+  params,
+  models,
+}) => {
+  const expandedStr = JSON.stringify(models.expandedItems.value);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -34,13 +65,31 @@ useTreeViewLogExpanded.params = {
   logMessage: true,
 };
 
-const TREE_VIEW_PLUGINS = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
+export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
+  extends DefaultTreeViewPluginParameters<R, Multiple>,
+    TreeViewLogExpandedParameters,
+    RichTreeViewPropsBase {
+  slots?: DefaultTreeViewPluginSlots;
+  slotProps?: DefaultTreeViewPluginSlotProps;
+}
 
-function TreeView(inProps) {
+const TREE_VIEW_PLUGINS = [
+  ...DEFAULT_TREE_VIEW_PLUGINS,
+  useTreeViewLogExpanded,
+] as const;
+
+function TreeView<R extends {}, Multiple extends boolean | undefined>(
+  inProps: TreeViewProps<R, Multiple>,
+) {
   const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps;
+  const ownerState = themeProps as TreeViewProps<any, any>;
 
-  const { pluginParams, otherProps } = extractPluginParamsFromProps({
+  const { pluginParams, otherProps } = extractPluginParamsFromProps<
+    typeof TREE_VIEW_PLUGINS,
+    DefaultTreeViewPluginSlots,
+    DefaultTreeViewPluginSlotProps,
+    TreeViewProps<R, Multiple>
+  >({
     props: themeProps,
     plugins: TREE_VIEW_PLUGINS,
   });
@@ -57,7 +106,10 @@ function TreeView(inProps) {
 
   const nodesToRender = instance.getNodesToRender();
 
-  const renderNode = ({ children: itemChildren, ...itemProps }) => {
+  const renderNode = ({
+    children: itemChildren,
+    ...itemProps
+  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
     return (
       <TreeItem key={itemProps.nodeId} {...itemProps}>
         {itemChildren?.map(renderNode)}
@@ -74,7 +126,7 @@ function TreeView(inProps) {
   );
 }
 
-const ITEMS = [
+const ITEMS: TreeViewBaseItem[] = [
   {
     id: '1',
     label: 'Applications',
@@ -90,8 +142,8 @@ const ITEMS = [
   },
 ];
 
-export default function LogExpandedNodes() {
-  const [logs, setLogs] = React.useState([]);
+export default function LogExpandedItems() {
+  const [logs, setLogs] = React.useState<string[]>([]);
 
   return (
     <Stack spacing={2}>

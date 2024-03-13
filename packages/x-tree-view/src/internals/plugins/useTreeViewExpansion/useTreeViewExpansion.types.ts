@@ -11,44 +11,44 @@ export interface UseTreeViewExpansionInstance {
 
 export interface UseTreeViewExpansionParameters {
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes?: string[];
+  expandedItems?: string[];
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes?: string[];
+  defaultExpandedItems?: string[];
   /**
    * Callback fired when tree items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onExpandedNodesChange?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+  onExpandedItemsChange?: (event: React.SyntheticEvent, itemIds: string[]) => void;
   /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
-  onNodeExpansionToggle?: (
+  onItemExpansionToggle?: (
     event: React.SyntheticEvent,
-    nodeId: string,
+    itemId: string,
     isExpanded: boolean,
   ) => void;
 }
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   UseTreeViewExpansionParameters,
-  'defaultExpandedNodes'
+  'defaultExpandedItems'
 >;
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
-  modelNames: 'expandedNodes';
+  modelNames: 'expandedItems';
   dependantPlugins: [UseTreeViewNodesSignature];
 }>;

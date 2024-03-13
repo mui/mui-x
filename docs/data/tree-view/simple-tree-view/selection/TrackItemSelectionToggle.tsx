@@ -5,24 +5,30 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Typography from '@mui/material/Typography';
 
-export default function TrackNodeSelectionToggle() {
-  const [lastSelectedNode, setLastSelectedNode] = React.useState(null);
+export default function TrackItemSelectionToggle() {
+  const [lastSelectedItem, setLastSelectedItem] = React.useState<string | null>(
+    null,
+  );
 
-  const handleNodeSelectionToggle = (event, nodeId, isSelected) => {
+  const handleItemSelectionToggle = (
+    event: React.SyntheticEvent,
+    itemId: string,
+    isSelected: boolean,
+  ) => {
     if (isSelected) {
-      setLastSelectedNode(nodeId);
+      setLastSelectedItem(itemId);
     }
   };
 
   return (
     <Stack spacing={2}>
       <Typography>
-        {lastSelectedNode == null
-          ? 'No node selection recorded'
-          : `Last selected node: ${lastSelectedNode}`}
+        {lastSelectedItem == null
+          ? 'No item selection recorded'
+          : `Last selected item: ${lastSelectedItem}`}
       </Typography>
       <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
-        <SimpleTreeView onNodeSelectionToggle={handleNodeSelectionToggle}>
+        <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
           <TreeItem nodeId="grid" label="Data Grid">
             <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
             <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />

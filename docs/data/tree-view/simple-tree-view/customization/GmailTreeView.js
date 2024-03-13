@@ -143,8 +143,8 @@ export default function GmailTreeView() {
   return (
     <SimpleTreeView
       aria-label="gmail"
-      defaultExpandedNodes={['3']}
-      defaultSelectedNodes="5"
+      defaultExpandedItems={['3']}
+      defaultSelectedItems="5"
       slots={{
         expandIcon: ArrowRightIcon,
         collapseIcon: ArrowDropDownIcon,
