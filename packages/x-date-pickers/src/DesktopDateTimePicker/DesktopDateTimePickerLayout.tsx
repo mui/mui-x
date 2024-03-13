@@ -14,9 +14,11 @@ import { DateOrTimeViewWithMeridiem } from '../internals';
 /**
  * @ignore - internal component.
  */
-export function DesktopDateTimePickerLayout<TDate extends PickerValidDate>(
-  props: PickersLayoutProps<TDate | null, TDate, DateOrTimeViewWithMeridiem>,
-) {
+export function DesktopDateTimePickerLayout<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(props: PickersLayoutProps<TValue, TDate, TView>) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
