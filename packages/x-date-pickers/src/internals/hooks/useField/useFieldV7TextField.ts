@@ -174,7 +174,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     onClick?.(event, ...(args as []));
 
     if (parsedSelectedSections === 'all') {
-      window.setTimeout(() => {
+      setTimeout(() => {
         const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
 
         if (cursorPosition === 0) {
@@ -270,7 +270,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const handleContainerBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    window.setTimeout(() => {
+    setTimeout(() => {
       if (!sectionListRef.current) {
         return;
       }
@@ -420,7 +420,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           onClick: getInputContainerClickHandler(index),
         } as React.HTMLAttributes<HTMLSpanElement>,
         content: {
-          tabIndex: isContainerEditable ? undefined : 0,
+          tabIndex: isContainerEditable || index > 0 ? -1 : 0,
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           id: `${id}-${section.type}`,
@@ -522,7 +522,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       enableAccessibleFieldDOMStructure: true,
       elements,
       // TODO v7: Try to set to undefined when there is a section selected.
-      tabIndex: 0,
+      tabIndex: parsedSelectedSections === 0 ? -1 : 0,
       contentEditable: isContainerEditable,
       value: valueStr,
       onChange: handleValueStrChange,

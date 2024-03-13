@@ -89,7 +89,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       color: 'white',
     },
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: theme.spacing(3.5),
     [`& .${treeItemClasses.content}`]: {
       fontWeight: 500,
@@ -115,6 +115,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 
   return (
     <StyledTreeItemRoot
+      slots={{
+        groupTransition: TransitionComponent,
+      }}
       label={
         <Box
           sx={{
@@ -132,7 +135,6 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
         </Box>
       }
       {...other}
-      TransitionComponent={TransitionComponent}
       ref={ref}
     />
   );
@@ -142,8 +144,8 @@ export default function CustomizedTreeView() {
   return (
     <SimpleTreeView
       aria-label="gmail"
-      defaultExpandedNodes={['3']}
-      defaultSelectedNodes="3"
+      defaultExpandedItems={['3']}
+      defaultSelectedItems="3"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
       <StyledTreeItem nodeId="1" labelText="All Documents" labelIcon={FolderRounded}>

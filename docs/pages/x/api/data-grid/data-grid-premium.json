@@ -79,10 +79,7 @@
       "default": "\"cell\""
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -447,6 +444,10 @@
         "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
       }
+    },
+    "onRowCountChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(count: number) => void", "describedArgs": ["count"] }
     },
     "onRowDoubleClick": {
       "type": { "name": "func" },

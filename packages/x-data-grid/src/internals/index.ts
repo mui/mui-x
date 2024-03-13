@@ -120,6 +120,10 @@ export {
   EMPTY_DETAIL_PANELS,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
+export {
+  useGridColumnResize,
+  columnResizeStateInitializer,
+} from '../hooks/features/columnResize/useGridColumnResize';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -136,11 +140,7 @@ export type {
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export {
-  createSelector,
-  createSelectorMemoized,
-  unstable_resetCreateSelectorCache,
-} from '../utils/createSelector';
+export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,

@@ -174,14 +174,14 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(apiRef);
       const existingItems = [...filterModel.items];
       items.forEach((item) => {
-        const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+        const itemIndex = existingItems.findIndex((filterItem) => filterItem.id === item.id);
         if (itemIndex === -1) {
           existingItems.push(item);
         } else {
           existingItems[itemIndex] = item;
         }
       });
-      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItems');
+      apiRef.current.setFilterModel({ ...filterModel, items: existingItems }, 'upsertFilterItems');
     },
     [apiRef],
   );

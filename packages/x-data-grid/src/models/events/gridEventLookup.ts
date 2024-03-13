@@ -358,6 +358,10 @@ export interface GridControlledStateEventLookup {
    * Fired when the column visibility model changes.
    */
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
+  /**
+   * Fired when the row count change.
+   */
+  rowCountChange: { params: number };
 }
 
 export interface GridControlledStateReasonLookup {

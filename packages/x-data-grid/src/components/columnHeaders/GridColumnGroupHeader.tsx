@@ -173,7 +173,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       width={width}
       columnMenuIconButton={null}
       columnTitleIconButtons={null}
-      resizable={false}
+      resizable
       label={label}
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=

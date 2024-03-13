@@ -74,6 +74,8 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - Built with and exclusively for React ⚛️
 - High performance 🚀
 - [Column groups](/x/react-data-grid/column-groups/)
+- [Column resizing](/x/react-data-grid/column-dimensions/#resizing)
+- [Column autosizing](/x/react-data-grid/column-dimensions/#autosizing)
 - [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-pro"></span>
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
@@ -86,7 +88,6 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
-- [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
 - [Column hiding](/x/react-data-grid/column-visibility/)
@@ -111,7 +112,7 @@ Here are some resources you might be interested in to learn more about the data 
 
 - The [source on GitHub](https://github.com/mui/mui-x/tree/HEAD/packages/)
 - The [Material Design specification](https://m2.material.io/components/data-tables) specification
-- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
+- The accessibility [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The Figma, Adobe XD, and Sketch [design kits](https://mui.com/design-kits/).
 
 ## API

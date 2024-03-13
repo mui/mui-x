@@ -291,18 +291,25 @@ dayjs.updateLocale('en', {
 
 ### With `date-fns`
 
-For `date-fns`, use the `setDefaultOptions` utility:
+For `date-fns`, override the `options.weekStartsOn` of the used locale:
 
 ```ts
+import { Locale } from 'date-fns';
 // with date-fns v2.x
-import setDefaultOptions from 'date-fns/setDefaultOptions';
+import enUS from 'date-fns/locale/en-US';
 // with date-fns v3.x
-import { setDefaultOptions } from 'date-fns/setDefaultOptions';
+import { enUS } from 'date-fns/locale/en-US';
 
-setDefaultOptions({
-  // Sunday = 0, Monday = 1.
-  weekStartsOn: 1,
-});
+const customEnLocale: Locale = {
+  ...enUS,
+  options: {
+    ...enUS.options,
+    // Sunday = 0, Monday = 1.
+    weekStartsOn: 1,
+  },
+};
+
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={customEnLocale}>
 ```
 
 ### With `luxon`
@@ -310,7 +317,7 @@ setDefaultOptions({
 For `luxon`, use the `Settings.defaultWeekSettings` object:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   // Sunday = 7, Monday = 1.

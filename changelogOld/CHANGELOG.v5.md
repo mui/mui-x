@@ -2527,7 +2527,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Fix `yarn prettier` script (#3292) @oliviertassinari
 - [core] Improve tests for Tree Data (#3366) @flaviendelangle
 - [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
+- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] Replace `useFakeTimers` (#3323) @m4theushw

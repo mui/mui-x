@@ -294,6 +294,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowCountChange",
+    "description": "Fired when the row count change.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowDoubleClick",
     "description": "Fired when a row is double-clicked.",
     "params": "GridRowParams",

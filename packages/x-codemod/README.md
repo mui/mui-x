@@ -221,6 +221,8 @@ The list includes these transformers
 - [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
+- [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-focus-callback`](#rename-focus-callback)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -273,13 +275,13 @@ Rename the expansion props
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
@@ -290,13 +292,38 @@ Rename the selection props
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
+ />
+```
+
+#### `replace-transition-props-by-slot`
+
+Replace the `TransitionComponent` and `TransitionProps` components with the `groupTransition` slot:
+
+```diff
+ <TreeItem
+-  TransitionComponent={Fade}
++  slots={{ groupTransition: Fade }}
+
+-  TransitionProps={{ timeout: 600 }}
++  slotProps={{ groupTransition: { timeout: 600 } }}
+ />
+```
+
+#### `rename-focus-callback`
+
+Replace the `onNodeFocus` callback with `onItemFocus`:
+
+```diff
+ <TreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
  />
 ```
 
