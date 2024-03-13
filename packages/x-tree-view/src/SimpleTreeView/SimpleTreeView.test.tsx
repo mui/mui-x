@@ -22,31 +22,31 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the expandedNodes prop', () => {
+    it('should warn when switching from controlled to uncontrolled of the expandedItems prop', () => {
       const { setProps } = render(
-        <SimpleTreeView expandedNodes={[]}>
+        <SimpleTreeView expandedItems={[]}>
           <TreeItem nodeId="1" label="one" />
         </SimpleTreeView>,
       );
 
       expect(() => {
-        setProps({ expandedNodes: undefined });
+        setProps({ expandedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled expandedItems state of TreeView to be uncontrolled.',
       );
     });
 
-    it('should warn when switching from controlled to uncontrolled of the selectedNodes prop', () => {
+    it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
       const { setProps } = render(
-        <SimpleTreeView selectedNodes={null}>
+        <SimpleTreeView selectedItems={null}>
           <TreeItem nodeId="1" label="one" />
         </SimpleTreeView>,
       );
 
       expect(() => {
-        setProps({ selectedNodes: undefined });
+        setProps({ selectedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled selectedNodes state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
       );
     });
 
@@ -63,7 +63,7 @@ describe('<SimpleTreeView />', () => {
 
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
-        <SimpleTreeView multiSelect defaultExpandedNodes={['1', '1.1', '2']}>
+        <SimpleTreeView multiSelect defaultExpandedItems={['1', '1.1', '2']}>
           <TreeItem nodeId="1" label="Item 1">
             <TreeItem nodeId="1.1" label="Item 1.1">
               <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
@@ -198,14 +198,14 @@ describe('<SimpleTreeView />', () => {
     expect(handleBlur.callCount).to.equal(1);
   });
 
-  it('should be able to be controlled with the expandedNodes prop', () => {
+  it('should be able to be controlled with the expandedItems prop', () => {
     function MyComponent() {
       const [expandedState, setExpandedState] = React.useState([]);
-      const onExpandedNodesChange = (event, nodes) => {
-        setExpandedState(nodes);
+      const onExpandedItemsChange = (event, items) => {
+        setExpandedState(items);
       };
       return (
-        <SimpleTreeView expandedNodes={expandedState} onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView expandedItems={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem nodeId="1" label="one" data-testid="one">
             <TreeItem nodeId="2" label="two" />
           </TreeItem>
@@ -233,14 +233,14 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
   });
 
-  it('should be able to be controlled with the selectedNodes prop and singleSelect', () => {
+  it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState(null);
-      const onSelectedNodesChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
-        <SimpleTreeView selectedNodes={selectedState} onSelectedNodesChange={onSelectedNodesChange}>
+        <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
           <TreeItem nodeId="1" label="one" data-testid="one" />
           <TreeItem nodeId="2" label="two" data-testid="two" />
         </SimpleTreeView>
@@ -263,16 +263,16 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
   });
 
-  it('should be able to be controlled with the selectedNodes prop and multiSelect', () => {
+  it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState([]);
-      const onSelectedNodesChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
         <SimpleTreeView
-          selectedNodes={selectedState}
-          onSelectedNodesChange={onSelectedNodesChange}
+          selectedItems={selectedState}
+          onSelectedItemsChange={onSelectedItemsChange}
           multiSelect
         >
           <TreeItem nodeId="1" label="one" data-testid="one" />
@@ -388,7 +388,7 @@ describe('<SimpleTreeView />', () => {
   });
 
   describe('onItemFocus', () => {
-    it('should be called when node is focused', () => {
+    it('should be called when item is focused', () => {
       const focusSpy = spy();
       const { getByRole } = render(
         <SimpleTreeView onItemFocus={focusSpy}>
@@ -406,12 +406,12 @@ describe('<SimpleTreeView />', () => {
     });
   });
 
-  describe('onNodeToggle', () => {
-    it('should be called when a parent node label is clicked', () => {
-      const onExpandedNodesChange = spy();
+  describe('onExpandedItemsChange', () => {
+    it('should be called when a parent item label is clicked', () => {
+      const onExpandedItemsChange = spy();
 
       const { getByText } = render(
-        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -420,15 +420,15 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByText('outer'));
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
     });
 
-    it('should be called when a parent node icon is clicked', () => {
-      const onExpandedNodesChange = spy();
+    it('should be called when a parent item icon is clicked', () => {
+      const onExpandedItemsChange = spy();
 
       const { getByTestId } = render(
-        <SimpleTreeView onExpandedNodesChange={onExpandedNodesChange}>
+        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
           <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
             <TreeItem nodeId="2" label="inner" />
           </TreeItem>
@@ -437,8 +437,8 @@ describe('<SimpleTreeView />', () => {
 
       fireEvent.click(getByTestId('icon'));
 
-      expect(onExpandedNodesChange.callCount).to.equal(1);
-      expect(onExpandedNodesChange.args[0][1]).to.deep.equal(['1']);
+      expect(onExpandedItemsChange.callCount).to.equal(1);
+      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
     });
   });
 
@@ -447,7 +447,7 @@ describe('<SimpleTreeView />', () => {
       const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes={'2'} onItemFocus={onItemFocus}>
+        <SimpleTreeView selectedItems={'2'} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -464,7 +464,7 @@ describe('<SimpleTreeView />', () => {
       const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['2']} onItemFocus={onItemFocus}>
+        <SimpleTreeView multiSelect selectedItems={['2']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1" />
           <TreeItem nodeId="2" label="2" />
         </SimpleTreeView>,
@@ -481,7 +481,7 @@ describe('<SimpleTreeView />', () => {
       const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1', '2']} onItemFocus={onItemFocus}>
+        <SimpleTreeView multiSelect selectedItems={['1.1', '2']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -500,7 +500,7 @@ describe('<SimpleTreeView />', () => {
       const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView selectedNodes="1.1" onItemFocus={onItemFocus}>
+        <SimpleTreeView selectedItems="1.1" onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -519,7 +519,7 @@ describe('<SimpleTreeView />', () => {
       const onItemFocus = spy();
 
       const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedNodes={['1.1']} onItemFocus={onItemFocus}>
+        <SimpleTreeView multiSelect selectedItems={['1.1']} onItemFocus={onItemFocus}>
           <TreeItem nodeId="1" label="1">
             <TreeItem nodeId="1.1" label="1.1" />
           </TreeItem>
@@ -553,7 +553,7 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<TestCase />);
 
       act(() => {
-        apiRef.current?.focusNode({} as React.SyntheticEvent, '2');
+        apiRef.current?.focusItem({} as React.SyntheticEvent, '2');
       });
 
       expect(getByRole('tree')).toHaveFocus();
@@ -579,7 +579,7 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<TestCase />);
 
       act(() => {
-        apiRef.current?.focusNode({} as React.SyntheticEvent, '1.1');
+        apiRef.current?.focusItem({} as React.SyntheticEvent, '1.1');
       });
 
       expect(getByRole('tree')).not.toHaveFocus();

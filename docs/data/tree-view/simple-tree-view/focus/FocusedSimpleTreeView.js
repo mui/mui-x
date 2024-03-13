@@ -8,13 +8,13 @@ import { useTreeViewApiRef } from '@mui/x-tree-view/hooks/useTreeViewApiRef';
 export default function FocusedSimpleTreeView() {
   const apiRef = useTreeViewApiRef();
   const handleButtonClick = (event) => {
-    apiRef.current?.focusNode(event, 'pickers');
+    apiRef.current?.focusItem(event, 'pickers');
   };
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
-        <Button onClick={handleButtonClick}>Focus pickers node</Button>
+        <Button onClick={handleButtonClick}>Focus pickers item</Button>
       </Box>
       <Box sx={{ minHeight: 264, flexGrow: 1 }}>
         <SimpleTreeView apiRef={apiRef}>

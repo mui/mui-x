@@ -114,7 +114,7 @@ SimpleTreeView.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusNode: PropTypes.func.isRequired,
+      focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
     }),
   }),
@@ -128,17 +128,17 @@ SimpleTreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Selected node ids. (Uncontrolled)
+   * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedNodes: PropTypes.any,
+  defaultSelectedItems: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -150,10 +150,10 @@ SimpleTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -167,9 +167,16 @@ SimpleTreeView.propTypes = {
   /**
    * Callback fired when tree items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onExpandedNodesChange: PropTypes.func,
+  onExpandedItemsChange: PropTypes.func,
+  /**
+   * Callback fired when a tree item is expanded or collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   */
+  onItemExpansionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
@@ -178,31 +185,24 @@ SimpleTreeView.propTypes = {
    */
   onItemFocus: PropTypes.func,
   /**
-   * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
-   */
-  onNodeExpansionToggle: PropTypes.func,
-  /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelectionToggle: PropTypes.func,
+  onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onSelectedNodesChange: PropTypes.func,
+  onSelectedItemsChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedNodes: PropTypes.any,
+  selectedItems: PropTypes.any,
   /**
    * The props used for each component slot.
    */

@@ -93,7 +93,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 
 #### Define `expandIcon`
 
-The icon used to expand the children of a node (rendered when this node is collapsed)
+The icon used to expand the children of an item (rendered when this item is collapsed)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
@@ -132,7 +132,7 @@ you need to use the new `expandIcon` slot on this component:
   <SimpleTreeView>
     <TreeItem
       nodeId="1"
-      label="Node 1"
+      label="Item 1"
 -     expandIcon={<MyCustomExpandIcon />}
 +     slots={{ expandIcon: MyCustomExpandIcon }}
     />
@@ -141,7 +141,7 @@ you need to use the new `expandIcon` slot on this component:
 
 #### Define `collapseIcon`
 
-The icon used to collapse the children of a node (rendered when this node is expanded)
+The icon used to collapse the children of an item (rendered when this item is expanded)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
@@ -180,7 +180,7 @@ you need to use the new `collapseIcon` slot on this component:
   <SimpleTreeView>
     <TreeItem
       nodeId="1"
-      label="Node 1"
+      label="Item 1"
 -     collapseIcon={<MyCustomCollapseIcon />}
 +     slots={{ collapseIcon: MyCustomCollapseIcon }}
     />
@@ -232,7 +232,7 @@ you need to use the new `endIcon` slot on this component:
   <SimpleTreeView>
     <TreeItem
       nodeId="1"
-      label="Node 1"
+      label="Item 1"
 -     endIcon={<MyCustomEndIcon />}
 +     slots={{ endIcon: MyCustomEndIcon }}
     />
@@ -251,7 +251,7 @@ you need to use the new `icon` slot on this component:
   <SimpleTreeView>
     <TreeItem
       nodeId="1"
-      label="Node 1"
+      label="Item 1"
 -     icon={<MyCustomIcon />}
 +     slots={{ icon: MyCustomIcon }}
     />
@@ -274,7 +274,7 @@ you need to use the new `groupTransition` slot on this component:
  <SimpleTreeView>
    <TreeItem
      nodeId="1"
-     label="Node 1"
+     label="Item 1"
 -    TransitionComponent={Fade}
 +    slots={{ groupTransition: Fade }}
 -    TransitionProps={{ timeout: 600 }}
@@ -302,32 +302,32 @@ The expansion props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeToggle`    | `onExpandedNodesChange` |
-| `expanded`        | `expandedNodes`         |
-| `defaultExpanded` | `defaultExpandedNodes`  |
+| `onNodeToggle`    | `onExpandedItemsChange` |
+| `expanded`        | `expandedItems`         |
+| `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
-you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific item,
+you can use the new `onItemExpansionToggle` prop which is called whenever an item is expanded or collapsed with its id and expansion status
 
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
-    console.log(nodeId, isExpanded)
+  onItemExpansionToggle={(event, itemId, isExpanded) =>
+    console.log(itemId, isExpanded)
   }
 />
 ```
@@ -340,32 +340,32 @@ The selection props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeSelect`    | `onSelectedNodesChange` |
-| `selected`        | `selectedNodes`         |
-| `defaultSelected` | `defaultSelectedNodes`  |
+| `onNodeSelect`    | `onSelectedItemsChange` |
+| `selected`        | `selectedItems`         |
+| `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific node,
-you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
+If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific item,
+you can use the new `onItemSelectionToggle` prop which is called whenever an item is selected or deselected with its id and selection status.
 
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeSelectionToggle={(event, nodeId, isSelected) =>
-    console.log(nodeId, isSelected)
+  onItemSelectionToggle={(event, itemId, isSelected) =>
+    console.log(itemId, isSelected)
   }
 />
 ```

@@ -6,18 +6,18 @@
     },
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "defaultExpandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
+    "defaultExpandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
     },
-    "defaultSelectedNodes": {
-      "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    "defaultSelectedItems": {
+      "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
       "description": "If <code>true</code>, will allow focus on disabled items."
     },
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
-    "expandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    "expandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
@@ -25,11 +25,19 @@
     "multiSelect": {
       "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
-    "onExpandedNodesChange": {
+    "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
+        "itemIds": "The ids of the expanded items."
+      }
+    },
+    "onItemExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "itemId": "The itemId of the modified item.",
+        "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
     "onItemFocus": {
@@ -40,31 +48,23 @@
         "value": "of the focused item."
       }
     },
-    "onNodeExpansionToggle": {
-      "description": "Callback fired when a tree item is expanded or collapsed.",
-      "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
-        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
-      }
-    },
-    "onNodeSelectionToggle": {
+    "onItemSelectionToggle": {
       "description": "Callback fired when a tree item is selected or deselected.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
-        "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
+        "itemId": "The itemId of the modified item.",
+        "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
     },
-    "onSelectedNodesChange": {
+    "onSelectedItemsChange": {
       "description": "Callback fired when tree items are selected/deselected.",
       "typeDescriptions": {
         "event": "The event source of the callback",
-        "nodeIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+        "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },
-    "selectedNodes": {
-      "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    "selectedItems": {
+      "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },

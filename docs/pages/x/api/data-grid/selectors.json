@@ -265,6 +265,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridHeaderFilteringEnabledSelector",
+    "returnType": "boolean",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridHeaderFilteringMenuSelector",
     "returnType": "string | null",
     "description": "",

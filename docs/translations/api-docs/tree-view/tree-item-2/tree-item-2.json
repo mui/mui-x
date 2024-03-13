@@ -8,7 +8,7 @@
     "label": { "description": "The label of the node." },
     "nodeId": { "description": "The id of the node. Must be unique." },
     "onFocus": {
-      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a node&#39;s focus."
+      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }

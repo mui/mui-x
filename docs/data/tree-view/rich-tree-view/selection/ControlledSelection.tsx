@@ -34,28 +34,28 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemNodeIds = () => {
+const getAllItemItemIds = () => {
   const ids: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
+  const registerItemId = (item: TreeViewBaseItem) => {
     ids.push(item.id);
-    item.children?.forEach(registerNodeId);
+    item.children?.forEach(registerItemId);
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
   return ids;
 };
 
 export default function ControlledSelection() {
-  const [selectedNodes, setSelectedNodes] = React.useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
 
-  const handleSelectedNodesChange = (event: React.SyntheticEvent, ids: string[]) => {
-    setSelectedNodes(ids);
+  const handleSelectedItemsChange = (event: React.SyntheticEvent, ids: string[]) => {
+    setSelectedItems(ids);
   };
 
   const handleSelectClick = () => {
-    setSelectedNodes((oldSelected) =>
-      oldSelected.length === 0 ? getAllItemNodeIds() : [],
+    setSelectedItems((oldSelected) =>
+      oldSelected.length === 0 ? getAllItemItemIds() : [],
     );
   };
 
@@ -63,14 +63,14 @@ export default function ControlledSelection() {
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
         <Button onClick={handleSelectClick}>
-          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
+          {selectedItems.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
       </Box>
       <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          selectedNodes={selectedNodes}
-          onSelectedNodesChange={handleSelectedNodesChange}
+          selectedItems={selectedItems}
+          onSelectedItemsChange={handleSelectedItemsChange}
           multiSelect
         />
       </Box>

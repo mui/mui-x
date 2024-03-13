@@ -10,19 +10,19 @@ import { SlotComponentPropsFromProps } from '../internals/models';
 
 export interface TreeItemSlots {
   /**
-   * The icon used to collapse the node.
+   * The icon used to collapse the item.
    */
   collapseIcon?: React.ElementType;
   /**
-   * The icon used to expand the node.
+   * The icon used to expand the item.
    */
   expandIcon?: React.ElementType;
   /**
-   * The icon displayed next to an end node.
+   * The icon displayed next to an end item.
    */
   endIcon?: React.ElementType;
   /**
-   * The icon to display next to the tree node's label.
+   * The icon to display next to the tree item's label.
    */
   icon?: React.ElementType;
   /**
@@ -70,17 +70,17 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   ContentProps?: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> };
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled?: boolean;
   /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus?: null;
   /**
-   * The tree node label.
+   * The tree item label.
    */
   label?: React.ReactNode;
   /**
