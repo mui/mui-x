@@ -15,7 +15,7 @@ export * from './gridCell';
 export * from './gridColumnHeaderClass';
 export * from './api';
 export * from './gridIconSlotsComponent';
-export type { GridSlotsComponent } from './gridSlotsComponent';
+export * from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
 export * from './logger';

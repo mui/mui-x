@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { CommonProps } from '@mui/material/OverridableComponent';
+import { useThemeProps, Theme, SxProps } from '@mui/system';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -106,6 +104,11 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  * TODO: add multiSortKey
  */
 export interface DataGridPropsWithDefaultValues {
+  /*
+   * Internal: used to pass the material `useThemeProps` later on.
+   * @ignore - do not document
+   */
+  useThemeProps: typeof useThemeProps;
   /**
    * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
@@ -377,8 +380,7 @@ export interface DataGridPropsWithDefaultValues {
 /**
  * The `DataGrid` props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -394,6 +396,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @ignore - do not document.
    */
   signature?: string;
+  /**
+   * Root component classes
+   */
+  className?: string;
+  /*
+   * Root component CSS styles
+   */
+  style?: React.CSSProperties;
   /**
    * Override or extend the styles applied to the component.
    */

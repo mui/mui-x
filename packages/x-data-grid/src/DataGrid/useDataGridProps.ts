@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/system';
 import {
   DataGridProcessedProps,
   DataGridProps,
@@ -77,11 +77,13 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
   rowPositionsDebounceMs: 166,
+  useThemeProps,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
+  const useThemeProps = inProps.useThemeProps ?? DATA_GRID_PROPS_DEFAULT_VALUES.useThemeProps;
   const themedProps = useProps(
     // eslint-disable-next-line material-ui/mui-name-matches-component-name
     useThemeProps({

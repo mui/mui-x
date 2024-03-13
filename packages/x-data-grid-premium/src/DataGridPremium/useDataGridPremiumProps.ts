@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
 import { computeSlots, useProps } from '@mui/x-data-grid-pro/internals';
 import {
@@ -35,6 +34,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
+  const useThemeProps = inProps.useThemeProps ?? DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES.useThemeProps;
   const themedProps = useProps(
     // eslint-disable-next-line material-ui/mui-name-matches-component-name
     useThemeProps({

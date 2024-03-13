@@ -10,7 +10,7 @@ import {
   GridContextProvider,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { validateProps } from '@mui/x-data-grid/internals';
+import { fastMemo, validateProps } from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -21,7 +21,14 @@ export type { GridProSlotsComponent as GridSlots } from '../models';
 
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+export interface DataGridProComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): React.JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGridProRaw = fastMemo(React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -47,23 +54,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
       </GridRoot>
     </GridContextProvider>
   );
-});
-
-interface DataGridProComponent {
-  <R extends GridValidRowModel = any>(
-    props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): React.JSX.Element;
-  propTypes?: any;
-}
-
-/**
- * Demos:
- * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
- *
- * API:
- * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
- */
-export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
+})) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

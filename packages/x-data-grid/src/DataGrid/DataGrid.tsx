@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/system';
+import { fastMemo } from '../utils/fastMemo';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
@@ -14,6 +16,8 @@ import {
 } from '../internals/utils/propValidation';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
+
+export type GridUseThemeProps = typeof useThemeProps;
 
 const propValidators: PropValidator<DataGridProcessedProps>[] = [
   ...propValidatorsDataGrid,
@@ -30,7 +34,21 @@ const propValidators: PropValidator<DataGridProcessedProps>[] = [
     undefined,
 ];
 
-const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+export interface DataGridComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): React.JSX.Element;
+  propTypes?: any;
+}
+
+/**
+ * Demos:
+ * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
+ */
+export const DataGridRaw = fastMemo(React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -54,23 +72,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
       </GridRoot>
     </GridContextProvider>
   );
-});
-
-interface DataGridComponent {
-  <R extends GridValidRowModel = any>(
-    props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): React.JSX.Element;
-  propTypes?: any;
-}
-
-/**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
- *
- * API:
- * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
- */
-export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+})) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
