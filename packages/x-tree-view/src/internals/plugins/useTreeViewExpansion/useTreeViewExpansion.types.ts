@@ -4,7 +4,7 @@ import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewExpansionInstance {
   isItemExpanded: (itemId: string) => boolean;
-  isNodeExpandable: (itemId: string) => boolean;
+  isItemExpandable: (itemId: string) => boolean;
   toggleItemExpansion: (event: React.SyntheticEvent, value: string) => void;
   expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
 }

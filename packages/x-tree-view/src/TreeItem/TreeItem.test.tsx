@@ -12,7 +12,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> = {
   instance: {
-    isNodeExpandable: () => false,
+    isItemExpandable: () => false,
     isItemExpanded: () => false,
     isNodeFocused: () => false,
     isNodeSelected: () => false,

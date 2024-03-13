@@ -23,7 +23,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     [models.expandedItems.value],
   );
 
-  const isNodeExpandable = React.useCallback(
+  const isItemExpandable = React.useCallback(
     (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
@@ -56,7 +56,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isNodeExpandable(child) && !instance.isItemExpanded(child),
+      (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
     );
 
     const newExpanded = models.expandedItems.value.concat(diff);
@@ -74,7 +74,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   populateInstance<UseTreeViewExpansionSignature>(instance, {
     isItemExpanded,
-    isNodeExpandable,
+    isItemExpandable,
     toggleItemExpansion,
     expandAllSiblings,
   });

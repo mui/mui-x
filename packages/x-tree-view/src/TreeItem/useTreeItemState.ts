@@ -8,7 +8,7 @@ export function useTreeItemState(itemId: string) {
     selection: { multiSelect },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const expandable = instance.isNodeExpandable(itemId);
+  const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);
   const focused = instance.isNodeFocused(itemId);
   const selected = instance.isNodeSelected(itemId);

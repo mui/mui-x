@@ -50,12 +50,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    const newFirstCharMap: { [nodeId: string]: string } = {};
+    const newFirstCharMap: { [itemId: string]: string } = {};
 
     const processItem = (item: TreeViewBaseItem) => {
       const getItemId = params.getItemId;
-      const nodeId = getItemId ? getItemId(item) : (item as { id: string }).id;
-      newFirstCharMap[nodeId] = instance.getNode(nodeId).label!.substring(0, 1).toLowerCase();
+      const itemId = getItemId ? getItemId(item) : (item as { id: string }).id;
+      newFirstCharMap[itemId] = instance.getNode(itemId).label!.substring(0, 1).toLowerCase();
       item.children?.forEach(processItem);
     };
 
@@ -67,7 +67,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     updateFirstCharMap,
   });
 
-  const getFirstMatchingNode = (nodeId: string, firstChar: string) => {
+  const getFirstMatchingNode = (itemId: string, firstChar: string) => {
     let start: number;
     let index: number;
     const lowercaseChar = firstChar.toLowerCase();
@@ -89,7 +89,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     });
 
     // Get start index for search based on position of currentItem
-    start = firstCharIds.indexOf(nodeId) + 1;
+    start = firstCharIds.indexOf(itemId) + 1;
     if (start >= firstCharIds.length) {
       start = 0;
     }
@@ -110,11 +110,11 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     return null;
   };
 
-  const canToggleNodeSelection = (nodeId: string) =>
-    !params.disableSelection && !instance.isNodeDisabled(nodeId);
+  const canToggleNodeSelection = (itemId: string) =>
+    !params.disableSelection && !instance.isNodeDisabled(itemId);
 
-  const canToggleNodeExpansion = (nodeId: string) => {
-    return !instance.isNodeDisabled(nodeId) && instance.isNodeExpandable(nodeId);
+  const canToggleNodeExpansion = (itemId: string) => {
+    return !instance.isNodeDisabled(itemId) && instance.isItemExpandable(itemId);
   };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
