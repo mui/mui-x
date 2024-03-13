@@ -2,9 +2,9 @@ import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
 import {
   populateInstance,
-  getNextNode,
-  getFirstNode,
-  getLastNode,
+  getNextItem,
+  getFirstItem,
+  getLastItem,
 } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
@@ -92,7 +92,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     let current = first;
 
     while (current !== last) {
-      current = getNextNode(instance, current)!;
+      current = getNextItem(instance, current)!;
       nodes.push(current);
     }
 
@@ -170,7 +170,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getFirstNode(instance),
+      end: getFirstItem(instance),
     });
   };
 
@@ -183,7 +183,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getLastNode(instance),
+      end: getLastItem(instance),
     });
   };
 
