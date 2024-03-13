@@ -11,9 +11,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     root,
     componentNames: ['TreeView', 'SimpleTreeView'],
     props: {
-      expanded: 'expandedNodes',
-      defaultExpanded: 'defaultExpandedNodes',
-      onNodeToggle: 'onExpandedNodesChange',
+      expanded: 'expandedItems',
+      defaultExpanded: 'defaultExpandedItems',
+      onNodeToggle: 'onExpandedItemsChange',
     },
     j,
   }).toSource(printOptions);

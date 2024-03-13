@@ -292,13 +292,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, nodeId);
     }
   }
 
   function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
     onBlur?.(event);
-    instance.removeFocusedNode();
+    instance.removeFocusedItem();
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
@@ -307,7 +307,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const idAttribute = instance.getTreeItemId(nodeId, id);
-  const tabIndex = instance.canNodeBeTabbed(nodeId) ? 0 : -1;
+  const tabIndex = instance.canItemBeTabbed(nodeId) ? 0 : -1;
 
   return (
     <TreeItem2Provider nodeId={nodeId}>
@@ -382,12 +382,12 @@ TreeItem.propTypes = {
    */
   ContentProps: PropTypes.object,
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * The tree node label.
+   * The tree item label.
    */
   label: PropTypes.node,
   /**
@@ -396,7 +396,7 @@ TreeItem.propTypes = {
   nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
-   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
   /**

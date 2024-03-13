@@ -39,7 +39,7 @@ export default function BorderedTreeView() {
   return (
     <SimpleTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1', '3']}
+      defaultExpandedItems={['1', '3']}
       slots={{
         expandIcon: ExpandIcon,
         collapseIcon: CollapseIcon,

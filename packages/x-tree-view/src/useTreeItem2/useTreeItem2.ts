@@ -44,7 +44,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
       const canBeFocused = !status.disabled || disabledItemsFocusable;
       if (!status.focused && canBeFocused && event.currentTarget === event.target) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, nodeId);
       }
     };
 
@@ -57,7 +57,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
         return;
       }
 
-      instance.removeFocusedNode();
+      instance.removeFocusedItem();
     };
 
   const createRootHandleKeyDown =
@@ -123,7 +123,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canNodeBeTabbed(nodeId) ? 0 : -1,
+      tabIndex: instance.canItemBeTabbed(nodeId) ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
