@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Divider from '@mui/material/Divider';
 import {
@@ -14,7 +15,7 @@ import { DateOrTimeViewWithMeridiem } from '../internals';
 /**
  * @ignore - internal component.
  */
-export function DesktopDateTimePickerLayout<
+function DesktopDateTimePickerLayout<
   TValue,
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -50,3 +51,60 @@ export function DesktopDateTimePickerLayout<
     </PickersLayoutRoot>
   );
 }
+
+DesktopDateTimePickerLayout.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  isValid: PropTypes.func.isRequired,
+  onAccept: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
+  onSelectShortcut: PropTypes.func.isRequired,
+  onSetToday: PropTypes.func.isRequired,
+  onViewChange: PropTypes.func.isRequired,
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  readOnly: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.any,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
+  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
+} as any;
+
+export { DesktopDateTimePickerLayout };
