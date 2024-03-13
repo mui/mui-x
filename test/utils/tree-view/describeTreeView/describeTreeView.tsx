@@ -200,12 +200,6 @@ type DescribeTreeView = {
  * - The `render` function takes an array of items, even for `SimpleTreeView`
  * - Except for `items`, all the other properties passed to `render` will be forwarded to the Tree View as props
  * - If an item has no label, its `id` will be used as the label
- *
- * The `render` function returns an object with the following properties:
- * - `getRoot`: Returns the `root slot of the Tree View
- * - `getItemRoot`: Returns the `root` slot of the item with the given id (useful to simulate focus)
- * - `getItemContent`: Returns the `content` slot of the item with the given id (useful to simulate clicks)
- * - `setProps`: Updates the props of the Tree View
  */
 export const describeTreeView = createDescribe(
   'describeTreeView',
