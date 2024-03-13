@@ -5,7 +5,7 @@ import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { act, fireEvent } from '@mui-internal/test-utils';
 
 /**
- * All tests related to keyboard navigation, including expansion using "Enter" and "ArrowRight",
+ * All tests related to keyboard navigation (e.g: expanding using "Enter" and "ArrowRight")
  * are located in the `useTreeViewKeyboardNavigation.test.ts` file.
  */
 describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', ({ render }) => {
