@@ -57,7 +57,7 @@ function GridHeaders() {
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
-    columnHeadersContainerElementRef: columnsContainerRef,
+    columnHeadersContainerRef: columnsContainerRef,
   });
 
   return (

@@ -97,7 +97,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
       elementToFocus?.focus();
-      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+      apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
     }
   }, [apiRef, hasFocus]);
 

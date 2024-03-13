@@ -187,7 +187,7 @@ const findPinnedHeaders = ({
   position: 'left' | 'right';
   filterFn: (colIndex: number) => boolean;
 }) => {
-  if (!api.columnHeadersContainerElementRef?.current) {
+  if (!api.columnHeadersContainerRef?.current) {
     return [];
   }
   if (colIndex === null) {
@@ -195,7 +195,7 @@ const findPinnedHeaders = ({
   }
 
   const elements: HTMLElement[] = [];
-  api.columnHeadersContainerElementRef.current
+  api.columnHeadersContainerRef.current
     .querySelectorAll(
       `.${gridClasses[position === 'left' ? 'columnHeader--pinnedLeft' : 'columnHeader--pinnedRight']}`,
     )
@@ -229,7 +229,7 @@ export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, co
 }
 
 export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
-  const headers = api.columnHeadersContainerElementRef!.current!;
+  const headers = api.columnHeadersContainerRef!.current!;
   return headers.querySelector(`:scope > div > [data-field="${field}"][role="columnheader"]`);
 }
 

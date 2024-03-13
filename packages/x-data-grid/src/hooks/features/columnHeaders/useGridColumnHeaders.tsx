@@ -112,7 +112,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
 
   React.useEffect(() => {
-    apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+    apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
   }, [apiRef]);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(

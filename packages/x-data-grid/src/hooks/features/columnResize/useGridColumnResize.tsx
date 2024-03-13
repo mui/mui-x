@@ -426,7 +426,7 @@ export const useGridColumnResize = (
     colDefRef.current = colDef as GridStateColDef;
 
     columnHeaderElementRef.current = findHeaderElementFromField(
-      apiRef.current.columnHeadersContainerElementRef!.current!,
+      apiRef.current.columnHeadersContainerRef!.current!,
       colDef.field,
     );
 
@@ -438,7 +438,7 @@ export const useGridColumnResize = (
     }
 
     groupHeaderElementsRef.current = findGroupHeaderElementsFromField(
-      apiRef.current.columnHeadersContainerElementRef?.current!,
+      apiRef.current.columnHeadersContainerRef?.current!,
       colDef.field,
     );
 
@@ -782,7 +782,7 @@ export const useGridColumnResize = (
 
   useGridNativeEventListener(
     apiRef,
-    () => apiRef.current.columnHeadersContainerElementRef?.current,
+    () => apiRef.current.columnHeadersContainerRef?.current,
     'touchstart',
     handleTouchStart,
     { passive: doesSupportTouchActionNone() },
