@@ -19,6 +19,7 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../PickersSectionList';
+import { useSlotProps } from '@mui/base/utils';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -203,6 +204,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     startAdornment,
     renderSuffix,
     slots,
+    slotProps,
     contentEditable,
     tabIndex,
     onInput,
@@ -265,16 +267,22 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const classes = useUtilityClasses(ownerState);
 
   const InputRoot = slots?.root || PickersInputBaseRoot;
+  const inputRootProps = useSlotProps({
+    elementType: InputRoot,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      'aria-invalid': muiFormControl.error,
+      ref: handleRootRef,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
   return (
-    <InputRoot
-      {...other}
-      className={classes.root}
-      ownerState={ownerState}
-      aria-invalid={muiFormControl.error}
-      ref={handleRootRef}
-    >
+    <InputRoot {...inputRootProps}>
       {startAdornment}
       <PickersSectionList
         sectionListRef={sectionListRef}

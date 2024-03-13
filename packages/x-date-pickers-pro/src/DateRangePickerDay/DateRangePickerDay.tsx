@@ -252,7 +252,7 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
         ownerState: { isPreviewing, isHiddenDayFiller, isStartOfPreviewing, isFirstVisibleCell },
       }: {
         ownerState: OwnerState;
-      }) => isPreviewing && isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
+      }) => isPreviewing && !isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
       style: {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
@@ -263,7 +263,7 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
         ownerState: { isPreviewing, isHiddenDayFiller, isEndOfPreviewing, isLastVisibleCell },
       }: {
         ownerState: OwnerState;
-      }) => isPreviewing && isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
+      }) => isPreviewing && !isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
       style: {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,

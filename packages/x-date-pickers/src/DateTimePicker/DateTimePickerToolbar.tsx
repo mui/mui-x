@@ -150,7 +150,7 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
         },
       },
       {
-        props: { toolbarVariant: 'desktop', isLandscape: true },
+        props: { toolbarVariant: 'desktop', isLandscape: false },
         style: {
           gap: 9,
           marginRight: 4,
