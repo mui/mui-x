@@ -161,8 +161,10 @@ export function useGridDimensions(
     const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
+    const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
+
     const contentSize = {
-      width: columnsTotalWidth,
+      width: nonPinnedColumnsTotalWidth,
       height: rowsMeta.currentPageTotalHeight,
     };
 
@@ -223,7 +225,7 @@ export function useGridDimensions(
     );
 
     const minimumSize = {
-      width: contentSize.width,
+      width: columnsTotalWidth,
       height: topContainerHeight + contentSize.height + bottomContainerHeight,
     };
 
