@@ -357,42 +357,6 @@ describe('<SimpleTreeView />', () => {
     });
   });
 
-  describe('onExpandedItemsChange', () => {
-    it('should be called when a parent item label is clicked', () => {
-      const onExpandedItemsChange = spy();
-
-      const { getByText } = render(
-        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem nodeId="1" label="outer">
-            <TreeItem nodeId="2" label="inner" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      fireEvent.click(getByText('outer'));
-
-      expect(onExpandedItemsChange.callCount).to.equal(1);
-      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
-    });
-
-    it('should be called when a parent item icon is clicked', () => {
-      const onExpandedItemsChange = spy();
-
-      const { getByTestId } = render(
-        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
-            <TreeItem nodeId="2" label="inner" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      fireEvent.click(getByTestId('icon'));
-
-      expect(onExpandedItemsChange.callCount).to.equal(1);
-      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
-    });
-  });
-
   describe('useTreeViewFocus', () => {
     it('should focus the selected item when the tree is focused', () => {
       const onItemFocus = spy();

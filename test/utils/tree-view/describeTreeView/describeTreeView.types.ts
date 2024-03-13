@@ -33,6 +33,18 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    */
   getItemContent: (id: string) => HTMLElement;
   /**
+   * Returns the `label` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLElement} `label` slot of the item with the given id.
+   */
+  getItemLabel: (id: string) => HTMLElement;
+  /**
+   * Returns the `iconContainer` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLElement} `iconContainer` slot of the item with the given id.
+   */
+  getItemIconContainer: (id: string) => HTMLElement;
+  /**
    * Checks if an item is expanded.
    * Uses the `aria-expanded` attribute to check the expansion.
    * @param {string} id The id of the item to check.

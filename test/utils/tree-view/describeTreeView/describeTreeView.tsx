@@ -32,6 +32,12 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     const getItemContent = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
 
+    const getItemLabel = (id: string) =>
+      getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.label}`)!;
+
+    const getItemIconContainer = (id: string) =>
+      getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.iconContainer}`)!;
+
     const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
 
     return {
@@ -39,6 +45,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       getAllItemRoots,
       getItemRoot,
       getItemContent,
+      getItemLabel,
+      getItemIconContainer,
       isItemExpanded,
     };
   };

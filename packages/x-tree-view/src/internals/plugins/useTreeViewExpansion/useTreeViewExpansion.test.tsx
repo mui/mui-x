@@ -5,7 +5,7 @@ import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { act, fireEvent } from '@mui-internal/test-utils';
 
 /**
- * All tests related to keyboard navigation (e.g: expanding using "Enter" and "ArrowRight")
+ * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
 describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', ({ render }) => {
@@ -147,7 +147,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
     });
   });
 
-  describe('click on item content', () => {
+  describe('click interactions', () => {
     it('should expand collapsed item when clicking on an item content', () => {
       const response = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -187,6 +187,26 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
 
       expect(response.isItemExpanded('1')).to.equal(true);
       fireEvent.click(response.getItemContent('1'));
+      expect(response.isItemExpanded('1')).to.equal(true);
+    });
+
+    it('should expand collapsed item when clicking on an item label', () => {
+      const response = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+      });
+
+      expect(response.isItemExpanded('1')).to.equal(false);
+      fireEvent.click(response.getItemLabel('1'));
+      expect(response.isItemExpanded('1')).to.equal(true);
+    });
+
+    it('should expand collapsed item when clicking on an item icon container', () => {
+      const response = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+      });
+
+      expect(response.isItemExpanded('1')).to.equal(false);
+      fireEvent.click(response.getItemIconContainer('1'));
       expect(response.isItemExpanded('1')).to.equal(true);
     });
   });
