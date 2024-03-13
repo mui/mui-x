@@ -300,18 +300,6 @@ describe('<TreeItem />', () => {
         expect(getByTestId('test')).to.have.attribute('aria-expanded', 'false');
       });
 
-      it('should have the attribute `aria-expanded={true}` if expanded', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView defaultExpandedNodes={['test']}>
-            <TreeItem nodeId="test" label="test" data-testid="test">
-              <TreeItem nodeId="test2" label="test2" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('test')).to.have.attribute('aria-expanded', 'true');
-      });
-
       it('should not have the attribute `aria-expanded` if no children are present', () => {
         const { getByTestId } = render(
           <SimpleTreeView>
@@ -2242,25 +2230,6 @@ describe('<TreeItem />', () => {
 
     describe('expansion', () => {
       describe('`disabledItemsFocusable={true}`', () => {
-        it('should prevent expansion on enter', () => {
-          const { getByRole, getByTestId } = render(
-            <SimpleTreeView disabledItemsFocusable>
-              <TreeItem nodeId="one" label="one" />
-              <TreeItem nodeId="two" label="two" disabled data-testid="two">
-                <TreeItem nodeId="three" label="three" />
-              </TreeItem>
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('two').focus();
-          });
-          expect(getByTestId('two')).toHaveVirtualFocus();
-          expect(getByTestId('two')).to.have.attribute('aria-expanded', 'false');
-          fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
-          expect(getByTestId('two')).to.have.attribute('aria-expanded', 'false');
-        });
-
         it('should prevent expansion on right arrow', () => {
           const { getByRole, getByTestId } = render(
             <SimpleTreeView disabledItemsFocusable>
@@ -2298,19 +2267,6 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByRole('tree'), { key: 'ArrowLeft' });
           expect(getByTestId('two')).to.have.attribute('aria-expanded', 'true');
         });
-      });
-
-      it('should prevent expansion on click', () => {
-        const { getByText, getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem nodeId="one" label="one" disabled data-testid="one">
-              <TreeItem nodeId="two" label="two" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        fireEvent.click(getByText('one'));
-        expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
       });
     });
 

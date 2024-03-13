@@ -11,6 +11,7 @@ import {
   DescribeTreeViewTestRunner,
   DescribeTreeViewRenderer,
   DescribeTreeViewRendererReturnValue,
+  DescribeTreeViewItem,
 } from './describeTreeView.types';
 
 const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
@@ -24,6 +25,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
   ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps'> => {
     const getRoot = () => result.getByRole('tree');
 
+    const getAllItemRoots = () => result.queryAllByRole('treeitem');
+
     const getItemRoot = (id: string) => result.getByTestId(id);
 
     const getItemContent = (id: string) =>
@@ -31,6 +34,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
     return {
       getRoot,
+      getAllItemRoots,
       getItemRoot,
       getItemContent,
     };
@@ -38,7 +42,11 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
   describe(message, () => {
     describe('RichTreeView + TreeItem', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
         const result = render(
           <RichTreeView
             {...other}
@@ -49,7 +57,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
                   'data-testid': ownerState.nodeId,
                 }) as any,
             }}
-            getItemLabel={(item) => (item as any).label ?? (item as any).id}
+            getItemLabel={(item) => item.label ?? item.id}
+            isItemDisabled={(item) => !!item.disabled}
           />,
         );
 
@@ -63,7 +72,11 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('RichTreeView + TreeItem2', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
         const result = render(
           <RichTreeView
             {...other}
@@ -75,7 +88,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
                   'data-testid': ownerState.nodeId,
                 }) as any,
             }}
-            getItemLabel={(item) => (item as any).label ?? (item as any).id}
+            getItemLabel={(item) => item.label ?? item.id}
+            isItemDisabled={(item) => !!item.disabled}
           />,
         );
 
@@ -89,11 +103,16 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('SimpleTreeView + TreeItem', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
-        const renderItem = (item: any) => (
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
+        const renderItem = (item: DescribeTreeViewItem) => (
           <TreeItem
             nodeId={item.id}
             label={item.label ?? item.id}
+            disabled={item.disabled}
             data-testid={item.id}
             key={item.id}
           >
@@ -113,11 +132,16 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('SimpleTreeView + TreeItem2', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({ items, ...other }) => {
-        const renderItem = (item: any) => (
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
+        const renderItem = (item: DescribeTreeViewItem) => (
           <TreeItem2
             nodeId={item.id}
             label={item.label ?? item.id}
+            disabled={item.disabled}
             data-testid={item.id}
             key={item.id}
           >
