@@ -19,7 +19,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     isNodeDisabled: (nodeId: string | null): nodeId is string => !!nodeId,
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => () => {},
-    canNodeBeTabbed: () => false,
+    canItemBeTabbed: () => false,
   } as any,
   publicAPI: {
     focusItem: () => {},
