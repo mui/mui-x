@@ -122,6 +122,7 @@
   { "name": "DesktopDateRangePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDateRangePickerSlots", "kind": "Interface" },
   { "name": "DesktopDateTimePicker", "kind": "Variable" },
+  { "name": "DesktopDateTimePickerLayout", "kind": "Function" },
   { "name": "DesktopDateTimePickerProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlots", "kind": "Interface" },
