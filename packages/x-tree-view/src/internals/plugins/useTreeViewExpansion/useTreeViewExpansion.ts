@@ -28,7 +28,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     [instance],
   );
 
-  const toggleNodeExpansion = useEventCallback(
+  const toggleItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: string | null) => {
       if (itemId == null) {
         return;
@@ -75,7 +75,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   populateInstance<UseTreeViewExpansionSignature>(instance, {
     isItemExpanded,
     isNodeExpandable,
-    toggleNodeExpansion,
+    toggleItemExpansion,
     expandAllSiblings,
   });
 };

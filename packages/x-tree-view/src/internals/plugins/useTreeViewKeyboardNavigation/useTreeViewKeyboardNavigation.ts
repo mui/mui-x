@@ -154,7 +154,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // If the focused node has no children, we select it.
         case key === 'Enter': {
           if (canToggleNodeExpansion(state.focusedNodeId)) {
-            instance.toggleNodeExpansion(event, state.focusedNodeId);
+            instance.toggleItemExpansion(event, state.focusedNodeId);
             event.preventDefault();
           } else if (canToggleNodeSelection(state.focusedNodeId)) {
             if (params.multiSelect) {
@@ -224,7 +224,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             instance.focusItem(event, getNextNode(instance, state.focusedNodeId));
             event.preventDefault();
           } else if (canToggleNodeExpansion(state.focusedNodeId)) {
-            instance.toggleNodeExpansion(event, state.focusedNodeId);
+            instance.toggleItemExpansion(event, state.focusedNodeId);
             event.preventDefault();
           }
 
@@ -238,7 +238,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             canToggleNodeExpansion(state.focusedNodeId) &&
             instance.isItemExpanded(state.focusedNodeId)
           ) {
-            instance.toggleNodeExpansion(event, state.focusedNodeId!);
+            instance.toggleItemExpansion(event, state.focusedNodeId!);
             event.preventDefault();
           } else {
             const parent = instance.getNode(state.focusedNodeId).parentId;
