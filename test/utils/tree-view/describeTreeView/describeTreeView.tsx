@@ -32,11 +32,14 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     const getItemContent = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
 
+    const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
+
     return {
       getRoot,
       getAllItemRoots,
       getItemRoot,
       getItemContent,
+      isItemExpanded,
     };
   };
 
@@ -68,7 +71,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ render: renderRichTreeView });
+      testRunner({ render: renderRichTreeView, setup: 'RichTreeView + TreeItem' });
     });
 
     describe('RichTreeView + TreeItem2', () => {
@@ -99,7 +102,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ render: renderRichTreeView });
+      testRunner({ render: renderRichTreeView, setup: 'RichTreeView + TreeItem2' });
     });
 
     describe('SimpleTreeView + TreeItem', () => {
@@ -128,7 +131,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ render: renderSimpleTreeView });
+      testRunner({ render: renderSimpleTreeView, setup: 'SimpleTreeView + TreeItem' });
     });
 
     describe('SimpleTreeView + TreeItem2', () => {
@@ -157,7 +160,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         };
       };
 
-      testRunner({ render: renderSimpleTreeView });
+      testRunner({ render: renderSimpleTreeView, setup: 'SimpleTreeView + TreeItem2' });
     });
   });
 };

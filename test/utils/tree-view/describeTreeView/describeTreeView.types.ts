@@ -10,6 +10,7 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
   getAllItemRoots: () => HTMLElement[];
   getItemRoot: (id: string) => HTMLElement;
   getItemContent: (id: string) => HTMLElement;
+  isItemExpanded: (id: string) => boolean;
 }
 
 export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature> = <
@@ -22,6 +23,11 @@ export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature>
 
 interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSignature> {
   render: DescribeTreeViewRenderer<TPlugin>;
+  setup:
+    | 'SimpleTreeView + TreeItem'
+    | 'SimpleTreeView + TreeItem2'
+    | 'RichTreeView + TreeItem'
+    | 'RichTreeView + TreeItem2';
 }
 
 export interface DescribeTreeViewItem {
