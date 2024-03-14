@@ -200,7 +200,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const expandable = isExpandable(children);
   const expanded = instance.isItemExpanded(nodeId);
   const focused = instance.isItemFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
+  const selected = instance.isItemSelected(nodeId);
   const disabled = instance.isItemDisabled(nodeId);
 
   const ownerState: TreeItemOwnerState = {

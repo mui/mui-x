@@ -11,7 +11,7 @@ export function useTreeItemState(itemId: string) {
   const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);
   const focused = instance.isItemFocused(itemId);
-  const selected = instance.isNodeSelected(itemId);
+  const selected = instance.isItemSelected(itemId);
   const disabled = instance.isItemDisabled(itemId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -41,10 +41,10 @@ export function useTreeItemState(itemId: string) {
         if (event.shiftKey) {
           instance.selectRange(event, { end: itemId });
         } else {
-          instance.selectNode(event, itemId, true);
+          instance.selectItem(event, itemId, true);
         }
       } else {
-        instance.selectNode(event, itemId);
+        instance.selectItem(event, itemId);
       }
     }
   };

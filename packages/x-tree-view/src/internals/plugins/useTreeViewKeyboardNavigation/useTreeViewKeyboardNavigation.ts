@@ -143,9 +143,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (params.multiSelect && event.shiftKey) {
             instance.selectRange(event, { end: state.focusedItemId });
           } else if (params.multiSelect) {
-            instance.selectNode(event, state.focusedItemId, true);
+            instance.selectItem(event, state.focusedItemId, true);
           } else {
-            instance.selectNode(event, state.focusedItemId);
+            instance.selectItem(event, state.focusedItemId);
           }
           break;
         }
@@ -159,9 +159,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           } else if (canToggleItemSelection(state.focusedItemId)) {
             if (params.multiSelect) {
               event.preventDefault();
-              instance.selectNode(event, state.focusedItemId, true);
-            } else if (!instance.isNodeSelected(state.focusedItemId)) {
-              instance.selectNode(event, state.focusedItemId);
+              instance.selectItem(event, state.focusedItemId, true);
+            } else if (!instance.isItemSelected(state.focusedItemId)) {
+              instance.selectItem(event, state.focusedItemId);
               event.preventDefault();
             }
           }

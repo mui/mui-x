@@ -4,11 +4,11 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
-  isNodeSelected: (nodeId: string) => boolean;
-  selectNode: (event: React.SyntheticEvent, nodeId: string, multiple?: boolean) => void;
-  selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
-  rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
-  rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
+  isItemSelected: (itemId: string) => boolean;
+  selectItem: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
+  selectRange: (event: React.SyntheticEvent, items: TreeViewItemRange, stacked?: boolean) => void;
+  rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
+  rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
 }
 
 type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
