@@ -59,7 +59,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(response.isItemExpanded('1')).to.equal(true);
     });
 
-    it('should call callback when expanded items are updated (add expanded item to empty list)', () => {
+    it('should call the onExpandedItemsChange callback when model is updated (add expanded item to empty list)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
@@ -76,7 +76,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
     });
 
-    it('should call callback when expanded items are updated (add expanded item no non-empty list)', () => {
+    it('should call the onExpandedItemsChange callback when model is updated (add expanded item no non-empty list)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
@@ -97,7 +97,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
     });
 
-    it('should call callback when expanded items are updated (remove expanded item)', () => {
+    it('should call the onExpandedItemsChange callback when model is updated (remove expanded item)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
@@ -208,6 +208,37 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(response.isItemExpanded('1')).to.equal(false);
       fireEvent.click(response.getItemIconContainer('1'));
       expect(response.isItemExpanded('1')).to.equal(true);
+    });
+  });
+
+  describe('onItemExpansionToggle prop', () => {
+    it('should call the onItemExpansionToggle callback when expanding an item', () => {
+      const onItemExpansionToggle = spy();
+
+      const response = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        onItemExpansionToggle,
+      });
+
+      fireEvent.click(response.getItemContent('1'));
+      expect(onItemExpansionToggle.callCount).to.equal(1);
+      expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
+      expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+    });
+
+    it('should call the onItemExpansionToggle callback when collapsing an item', () => {
+      const onItemExpansionToggle = spy();
+
+      const response = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        defaultExpandedItems: ['1'],
+        onItemExpansionToggle,
+      });
+
+      fireEvent.click(response.getItemContent('1'));
+      expect(onItemExpansionToggle.callCount).to.equal(1);
+      expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
+      expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
     });
   });
 });
