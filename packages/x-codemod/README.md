@@ -223,6 +223,7 @@ The list includes these transformers
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
 - [`rename-focus-callback`](#rename-focus-callback)
+- [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -238,7 +239,7 @@ Renames the `TreeView` component to `SimpleTreeView`
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -253,8 +254,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -325,6 +326,16 @@ Replace the `onNodeFocus` callback with `onItemFocus`:
 -  onNodeFocus={onNodeFocus}
 +  onItemFocus={onItemFocus}
  />
+```
+
+#### `rename-nodeid`
+
+Rename nodeId to itemId
+
+```diff
+ <TreeItem
+-  nodeId='unique-id'
++  itemId='unique-id'
 ```
 
 ## v6.0.0

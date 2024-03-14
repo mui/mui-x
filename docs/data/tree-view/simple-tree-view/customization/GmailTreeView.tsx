@@ -87,7 +87,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   const theme = useTheme();
   const {
     id,
-    nodeId,
+    itemId,
     label,
     disabled,
     children,
@@ -107,7 +107,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem({ id, nodeId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const style = {
     '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,
@@ -116,7 +116,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2Provider nodeId={nodeId}>
+    <TreeItem2Provider itemId={itemId}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -176,11 +176,11 @@ export default function GmailTreeView() {
       }}
       sx={{ flexGrow: 1, maxWidth: 400 }}
     >
-      <CustomTreeItem nodeId="1" label="All Mail" labelIcon={MailIcon} />
-      <CustomTreeItem nodeId="2" label="Trash" labelIcon={DeleteIcon} />
-      <CustomTreeItem nodeId="3" label="Categories" labelIcon={Label}>
+      <CustomTreeItem itemId="1" label="All Mail" labelIcon={MailIcon} />
+      <CustomTreeItem itemId="2" label="Trash" labelIcon={DeleteIcon} />
+      <CustomTreeItem itemId="3" label="Categories" labelIcon={Label}>
         <CustomTreeItem
-          nodeId="5"
+          itemId="5"
           label="Social"
           labelIcon={SupervisorAccountIcon}
           labelInfo="90"
@@ -190,7 +190,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#00b4ff', 0.2)}
         />
         <CustomTreeItem
-          nodeId="6"
+          itemId="6"
           label="Updates"
           labelIcon={InfoIcon}
           labelInfo="2,294"
@@ -200,7 +200,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#ff8f00', 0.2)}
         />
         <CustomTreeItem
-          nodeId="7"
+          itemId="7"
           label="Forums"
           labelIcon={ForumIcon}
           labelInfo="3,566"
@@ -210,7 +210,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#9035ff', 0.15)}
         />
         <CustomTreeItem
-          nodeId="8"
+          itemId="8"
           label="Promotions"
           labelIcon={LocalOfferIcon}
           labelInfo="733"
@@ -220,7 +220,7 @@ export default function GmailTreeView() {
           bgColorForDarkMode={alpha('#64ff6a', 0.2)}
         />
       </CustomTreeItem>
-      <CustomTreeItem nodeId="4" label="History" labelIcon={Label} />
+      <CustomTreeItem itemId="4" label="History" labelIcon={Label} />
     </SimpleTreeView>
   );
 }
