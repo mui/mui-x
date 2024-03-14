@@ -10,16 +10,16 @@ export type UseTreeViewIconsDefaultizedParameters = UseTreeViewIconsParameters;
 
 interface UseTreeViewIconsSlots {
   /**
-   * The default icon used to collapse the node.
+   * The default icon used to collapse the item.
    */
   collapseIcon?: React.ElementType;
   /**
-   * The default icon used to expand the node.
+   * The default icon used to expand the item.
    */
   expandIcon?: React.ElementType;
   /**
-   * The default icon displayed next to an end node.
-   * This is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.
+   * The default icon displayed next to an end item.
+   * This is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.
    */
   endIcon?: React.ElementType;
 }

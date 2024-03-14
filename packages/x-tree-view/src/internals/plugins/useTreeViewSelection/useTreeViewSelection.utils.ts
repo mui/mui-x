@@ -3,39 +3,39 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 /**
  * This is used to determine the start and end of a selection range so
- * we can get the nodes between the two border nodes.
+ * we can get the items between the two border items.
  *
- * It finds the nodes' common ancestor using
+ * It finds the items' common ancestor using
  * a naive implementation of a lowest common ancestor algorithm
  * (https://en.wikipedia.org/wiki/Lowest_common_ancestor).
- * Then compares the ancestor's 2 children that are ancestors of nodeA and NodeB
- * so we can compare their indexes to work out which node comes first in a depth first search.
+ * Then compares the ancestor's 2 children that are ancestors of itemA and ItemB
+ * so we can compare their indexes to work out which item comes first in a depth first search.
  * (https://en.wikipedia.org/wiki/Depth-first_search)
  *
- * Another way to put it is which node is shallower in a trémaux tree
+ * Another way to put it is which item is shallower in a trémaux tree
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
 export const findOrderInTremauxTree = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
-  nodeAId: string,
-  nodeBId: string,
+  itemAId: string,
+  itemBId: string,
 ) => {
-  if (nodeAId === nodeBId) {
-    return [nodeAId, nodeBId];
+  if (itemAId === itemBId) {
+    return [itemAId, itemBId];
   }
 
-  const nodeA = instance.getNode(nodeAId);
-  const nodeB = instance.getNode(nodeBId);
+  const itemA = instance.getNode(itemAId);
+  const itemB = instance.getNode(itemBId);
 
-  if (nodeA.parentId === nodeB.id || nodeB.parentId === nodeA.id) {
-    return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
+  if (itemA.parentId === itemB.id || itemB.parentId === itemA.id) {
+    return itemB.parentId === itemA.id ? [itemA.id, itemB.id] : [itemB.id, itemA.id];
   }
 
-  const aFamily: (string | null)[] = [nodeA.id];
-  const bFamily: (string | null)[] = [nodeB.id];
+  const aFamily: (string | null)[] = [itemA.id];
+  const bFamily: (string | null)[] = [itemB.id];
 
-  let aAncestor = nodeA.parentId;
-  let bAncestor = nodeB.parentId;
+  let aAncestor = itemA.parentId;
+  let bAncestor = itemB.parentId;
 
   let aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
   let bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
@@ -70,6 +70,6 @@ export const findOrderInTremauxTree = (
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
 
   return ancestorFamily.indexOf(aSide!) < ancestorFamily.indexOf(bSide!)
-    ? [nodeAId, nodeBId]
-    : [nodeBId, nodeAId];
+    ? [itemAId, itemBId]
+    : [itemBId, itemAId];
 };
