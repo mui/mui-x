@@ -387,22 +387,20 @@ For example, if you were writing a test with `react-testing-library`, here is wh
 
 ```diff
  it('test example on first item', () => {
--  const { getByRole } = render(
-+  const { getAllByRole } = render(
+   const { getByRole } = render(
      <SimpleTreeView>
-       <TreeItem nodeId="one" />
-       <TreeItem nodeId="two" />
+       <TreeItem itemId="one">One</TreeItem>
+       <TreeItem itemId="two">Two</TreeItem>
     </SimpleTreeView>
    );
-
 -  const tree = getByRole('tree');
-+  const firstTreeItem = getAllByRole('treeitem')[0];
++  const treeItem = getByRole('treeitem', { name: 'One' });
    act(() => {
 -    tree.focus();
-+    firstTreeItem.focus();
++    treeItem.focus();
    });
 -  fireEvent.keyDown(tree, { key: 'ArrowDown' });
-+  fireEvent.keyDown(firstTreeItem, { key: 'ArrowDown' });
++  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
  })
 ```
 

@@ -562,7 +562,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it("should move focus to the node's parent node if focus is on a child node that is an end node", () => {
+        it("should move focus to the item's parent item if focus is on a child node that is an end node", () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem nodeId="one" label="one" data-testid="one">
@@ -1005,7 +1005,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('asterisk key interaction', () => {
-        it('expands all siblings that are at the same level as the current node', () => {
+        it('expands all siblings that are at the same level as the current item', () => {
           const onExpandedItemsChange = spy();
 
           const { getByTestId } = render(

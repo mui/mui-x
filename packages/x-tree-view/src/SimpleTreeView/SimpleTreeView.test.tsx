@@ -126,13 +126,15 @@ describe('<SimpleTreeView />', () => {
         <TreeItem nodeId="one" data-testid="one" onKeyDown={handleTreeItemKeyDown} />
       </SimpleTreeView>,
     );
+
+    const itemOne = getByTestId('one');
     act(() => {
-      getByTestId('one').focus();
+      itemOne.focus();
     });
 
-    fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
-    fireEvent.keyDown(getByTestId('one'), { key: 'A' });
-    fireEvent.keyDown(getByTestId('one'), { key: ']' });
+    fireEvent.keyDown(itemOne, { key: 'Enter' });
+    fireEvent.keyDown(itemOne, { key: 'A' });
+    fireEvent.keyDown(itemOne, { key: ']' });
 
     expect(handleTreeViewKeyDown.callCount).to.equal(3);
     expect(handleTreeItemKeyDown.callCount).to.equal(3);
@@ -160,8 +162,8 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the expandedItems prop', () => {
     function MyComponent() {
       const [expandedState, setExpandedState] = React.useState([]);
-      const onExpandedItemsChange = (event, nodes) => {
-        setExpandedState(nodes);
+      const onExpandedItemsChange = (event, items) => {
+        setExpandedState(items);
       };
       return (
         <SimpleTreeView expandedItems={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
@@ -195,8 +197,8 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState(null);
-      const onSelectedItemsChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
         <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
@@ -225,8 +227,8 @@ describe('<SimpleTreeView />', () => {
   it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
     function MyComponent() {
       const [selectedState, setSelectedState] = React.useState([]);
-      const onSelectedItemsChange = (event, nodes) => {
-        setSelectedState(nodes);
+      const onSelectedItemsChange = (event, items) => {
+        setSelectedState(items);
       };
       return (
         <SimpleTreeView
