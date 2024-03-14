@@ -214,7 +214,8 @@ export const useGridVirtualScroller = () => {
     );
 
     // PERF: use the computed minimum column width instead of a static one
-    const didCrossThreshold = rowScroll >= dimensions.rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
+    const didCrossThreshold =
+      rowScroll >= dimensions.rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
     const didChangeDirection = scrollCache.direction !== direction;
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
