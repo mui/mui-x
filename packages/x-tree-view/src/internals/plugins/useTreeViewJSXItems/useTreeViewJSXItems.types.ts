@@ -3,16 +3,16 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewItemsInstance {
-  insertJSXNode: (node: TreeViewItem) => void;
-  removeJSXNode: (nodeId: string) => void;
-  mapFirstCharFromJSX: (nodeId: string, firstChar: string) => () => void;
+  insertJSXItem: (item: TreeViewItem) => void;
+  removeJSXItem: (itemId: string) => void;
+  mapFirstCharFromJSX: (itemId: string, firstChar: string) => () => void;
 }
 
 export interface UseTreeViewItemsParameters {}
 
 export interface UseTreeViewItemsDefaultizedParameters {}
 
-export type UseTreeViewJSXNodesSignature = TreeViewPluginSignature<{
+export type UseTreeViewJSXItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters;
   instance: UseTreeViewItemsInstance;
