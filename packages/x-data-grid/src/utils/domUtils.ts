@@ -118,8 +118,17 @@ export function findGridElement(api: GridPrivateApiCommunity, klass: keyof typeo
   return api.rootElementRef.current!.querySelector(`.${gridClasses[klass]}`)! as HTMLElement;
 }
 
-export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
-  const colIndex = parseCellColIndex(col);
+const findPinnedCells = ({
+  api,
+  colIndex,
+  position,
+  filterFn,
+}: {
+  api: GridPrivateApiCommunity;
+  colIndex: number | null;
+  position: 'left' | 'right';
+  filterFn: (colIndex: number) => boolean;
+}) => {
   if (colIndex === null) {
     return [];
   }
@@ -132,47 +141,96 @@ export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: H
       return;
     }
 
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedLeft']}`);
-    rightPinnedCells.forEach((cell) => {
-      const currentColIndex = parseCellColIndex(cell);
-      if (currentColIndex !== null && currentColIndex > colIndex) {
-        cells.push(cell as HTMLElement);
-      }
-    });
+    rowElement
+      .querySelectorAll(
+        `.${gridClasses[position === 'left' ? 'cell--pinnedLeft' : 'cell--pinnedRight']}`,
+      )
+      .forEach((cell) => {
+        const currentColIndex = parseCellColIndex(cell);
+        if (currentColIndex !== null && filterFn(currentColIndex)) {
+          cells.push(cell as HTMLElement);
+        }
+      });
   });
 
   return cells;
+};
+
+export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  return findPinnedCells({
+    api,
+    colIndex,
+    position: 'left',
+    filterFn: (index) => index > colIndex!,
+  });
 }
 
 export function findRightPinnedCellsBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
   const colIndex = parseCellColIndex(col);
+  return findPinnedCells({
+    api,
+    colIndex,
+    position: 'right',
+    filterFn: (index) => index < colIndex!,
+  });
+}
+
+const findPinnedHeaders = ({
+  api,
+  colIndex,
+  position,
+  filterFn,
+}: {
+  api: GridPrivateApiCommunity;
+  colIndex: number | null;
+  position: 'left' | 'right';
+  filterFn: (colIndex: number) => boolean;
+}) => {
+  if (!api.columnHeadersContainerRef?.current) {
+    return [];
+  }
   if (colIndex === null) {
     return [];
   }
 
-  const cells: HTMLElement[] = [];
-
-  queryRows(api).forEach((rowElement) => {
-    const rowId = rowElement.getAttribute('data-id');
-    if (!rowId) {
-      return;
-    }
-
-    const rightPinnedCells = rowElement.querySelectorAll(`.${gridClasses['cell--pinnedRight']}`);
-    rightPinnedCells.forEach((cell) => {
-      const currentColIndex = parseCellColIndex(cell);
-      if (currentColIndex !== null && currentColIndex < colIndex) {
-        cells.push(cell as HTMLElement);
+  const elements: HTMLElement[] = [];
+  api.columnHeadersContainerRef.current
+    .querySelectorAll(
+      `.${gridClasses[position === 'left' ? 'columnHeader--pinnedLeft' : 'columnHeader--pinnedRight']}`,
+    )
+    .forEach((element) => {
+      const currentColIndex = parseCellColIndex(element);
+      if (currentColIndex !== null && filterFn(currentColIndex)) {
+        elements.push(element as HTMLElement);
       }
     });
-  });
+  return elements;
+};
 
-  return cells;
+export function findLeftPinnedHeadersAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  return findPinnedHeaders({
+    api,
+    position: 'left',
+    colIndex,
+    filterFn: (index) => index > colIndex!,
+  });
+}
+
+export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+  const colIndex = parseCellColIndex(col);
+  return findPinnedHeaders({
+    api,
+    position: 'right',
+    colIndex,
+    filterFn: (index) => index < colIndex!,
+  });
 }
 
 export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
-  const headers = api.columnHeadersContainerElementRef!.current!;
-  return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
+  const headers = api.columnHeadersContainerRef!.current!;
+  return headers.querySelector(`:scope > div > [data-field="${field}"][role="columnheader"]`);
 }
 
 export function findGridCells(api: GridPrivateApiCommunity, field: string) {
