@@ -141,10 +141,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const itemWrappers = plugins
     .map((plugin) => plugin.wrapItem)
     .filter((wrapItem): wrapItem is TreeItemWrapper => !!wrapItem);
-  contextValue.wrapItem = ({ nodeId, children }) => {
+  contextValue.wrapItem = ({ itemId, children }) => {
     let finalChildren: React.ReactNode = children;
     itemWrappers.forEach((itemWrapper) => {
-      finalChildren = itemWrapper({ nodeId, children: finalChildren });
+      finalChildren = itemWrapper({ itemId, children: finalChildren });
     });
 
     return finalChildren;

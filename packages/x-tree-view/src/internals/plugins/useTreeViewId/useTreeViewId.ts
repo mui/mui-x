@@ -8,7 +8,7 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ instance
   const treeId = useId(params.id);
 
   const getTreeItemId = React.useCallback(
-    (nodeId: string, idAttribute: string | undefined) => idAttribute ?? `${treeId}-${nodeId}`,
+    (itemId: string, idAttribute: string | undefined) => idAttribute ?? `${treeId}-${itemId}`,
     [treeId],
   );
 

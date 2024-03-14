@@ -194,6 +194,7 @@
   { "name": "GridColumnsPanel", "kind": "Function" },
   { "name": "GridColumnsPanelProps", "kind": "Interface" },
   { "name": "GridColumnsRawState", "kind": "TypeAlias" },
+  { "name": "GridColumnsRenderContext", "kind": "Interface" },
   { "name": "GridColumnsState", "kind": "Interface" },
   { "name": "gridColumnsStateSelector", "kind": "Variable" },
   { "name": "gridColumnsTotalWidthSelector", "kind": "Variable" },

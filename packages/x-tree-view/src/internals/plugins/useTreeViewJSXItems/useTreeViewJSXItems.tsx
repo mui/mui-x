@@ -87,7 +87,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
-  const { children, disabled = false, label, nodeId, id } = props;
+  const { children, disabled = false, label, itemId, id } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
 
@@ -109,9 +109,9 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   const descendant = React.useMemo<TreeItemDescendant>(
     () => ({
       element: treeItemElement!,
-      id: nodeId,
+      id: itemId,
     }),
-    [nodeId, treeItemElement],
+    [itemId, treeItemElement],
   );
 
   const { index, parentId } = useDescendant(descendant);
@@ -120,7 +120,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
     // On the first render a item's index will be -1. We want to wait for the real index.
     if (index !== -1) {
       instance.insertJSXItem({
-        id: nodeId,
+        id: itemId,
         idAttribute: id,
         index,
         parentId,
@@ -128,21 +128,21 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
         disabled,
       });
 
-      return () => instance.removeJSXItem(nodeId);
+      return () => instance.removeJSXItem(itemId);
     }
 
     return undefined;
-  }, [instance, parentId, index, nodeId, expandable, disabled, id]);
+  }, [instance, parentId, index, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
       return instance.mapFirstCharFromJSX(
-        nodeId,
+        itemId,
         (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
     }
     return undefined;
-  }, [instance, nodeId, label]);
+  }, [instance, itemId, label]);
 
   return {
     contentRef: handleContentRef,
@@ -152,8 +152,8 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, nodeId }) => (
-  <DescendantProvider id={nodeId}>{children}</DescendantProvider>
+useTreeViewJSXItems.wrapItem = ({ children, itemId }) => (
+  <DescendantProvider id={itemId}>{children}</DescendantProvider>
 );
 
 useTreeViewJSXItems.params = {};

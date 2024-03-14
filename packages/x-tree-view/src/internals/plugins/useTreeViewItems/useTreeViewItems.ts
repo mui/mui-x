@@ -100,35 +100,35 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   setState,
 }) => {
   const getNode = React.useCallback(
-    (nodeId: string) => state.items.nodeMap[nodeId],
+    (itemId: string) => state.items.nodeMap[itemId],
     [state.items.nodeMap],
   );
 
   const getItem = React.useCallback(
-    (nodeId: string) => state.items.itemMap[nodeId],
+    (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
 
   const isItemDisabled = React.useCallback(
-    (nodeId: string | null): nodeId is string => {
-      if (nodeId == null) {
+    (itemId: string | null): itemId is string => {
+      if (itemId == null) {
         return false;
       }
 
-      let node = instance.getNode(nodeId);
+      let item = instance.getNode(itemId);
 
-      // This can be called before the node has been added to the node map.
-      if (!node) {
+      // This can be called before the item has been added to the item map.
+      if (!item) {
         return false;
       }
 
-      if (node.disabled) {
+      if (item.disabled) {
         return true;
       }
 
-      while (node.parentId != null) {
-        node = instance.getNode(node.parentId);
-        if (node.disabled) {
+      while (item.parentId != null) {
+        item = instance.getNode(item.parentId);
+        if (item.disabled) {
           return true;
         }
       }
@@ -169,7 +169,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         }
       });
 
-      return { ...prevState, nodes: newState };
+      return { ...prevState, items: newState };
     });
   }, [
     instance,
