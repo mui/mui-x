@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.0",
-    "@mui/system": "^5.15.12",
-    "@mui/utils": "^5.15.12",
+    "@mui/system": "^5.15.13",
+    "@mui/utils": "^5.15.13",
     "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
