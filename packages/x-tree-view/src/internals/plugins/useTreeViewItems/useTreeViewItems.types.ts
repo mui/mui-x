@@ -60,7 +60,7 @@ export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedPro
 >;
 
 interface UseTreeViewItemsEventLookup {
-  removeNode: {
+  removeItem: {
     params: { id: string };
   };
 }

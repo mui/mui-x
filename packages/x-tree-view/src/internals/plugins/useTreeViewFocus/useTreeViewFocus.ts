@@ -85,7 +85,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     focusItem,
   });
 
-  useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
+  useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
     setFocusedItemId((oldFocusedItemId) => {
       if (
         oldFocusedItemId === id &&

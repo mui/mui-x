@@ -57,7 +57,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         },
       };
     });
-    publishTreeViewEvent(instance, 'removeNode', { id: itemId });
+    publishTreeViewEvent(instance, 'removeItem', { id: itemId });
   });
 
   const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {

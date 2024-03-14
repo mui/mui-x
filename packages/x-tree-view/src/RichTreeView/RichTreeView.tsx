@@ -112,9 +112,9 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const nodesToRender = instance.getItemsToRender();
+  const itemsToRender = instance.getItemsToRender();
 
-  const renderNode = ({
+  const renderItem = ({
     label,
     itemId,
     id,
@@ -129,14 +129,14 @@ const RichTreeView = React.forwardRef(function RichTreeView<
         id={id}
         itemId={itemId}
       >
-        {children?.map(renderNode)}
+        {children?.map(renderItem)}
       </WrappedTreeItem>
     );
   };
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{nodesToRender.map(renderNode)}</Root>
+      <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;

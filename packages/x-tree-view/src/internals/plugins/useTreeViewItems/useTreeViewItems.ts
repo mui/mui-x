@@ -165,7 +165,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       Object.values(prevState.items.nodeMap).forEach((item) => {
         if (!newState.nodeMap[item.id]) {
-          publishTreeViewEvent(instance, 'removeNode', { id: item.id });
+          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
         }
       });
 
