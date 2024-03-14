@@ -27,7 +27,7 @@ By default, columns coming under 150 pixels region are rendered outside of the v
 
 {{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
 
-You can disable column virtualization by calling `apiRef.current.setColumnVirtualization(false)`, or by setting the column buffer to `Number.MAX_SAFE_INTEGER`.
+You can disable column virtualization by calling `apiRef.current.unstable_setColumnVirtualization(false)`, or by setting the column buffer to `Number.MAX_SAFE_INTEGER`.
 
 ## Disable virtualization
 
