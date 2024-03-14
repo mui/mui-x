@@ -22,7 +22,11 @@ function TransitionComponent(props: TransitionProps) {
 
 const CustomTreeItem = React.forwardRef(
   (props: TreeItemProps, ref: React.Ref<HTMLLIElement>) => (
-    <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+    <TreeItem
+      {...props}
+      slots={{ groupTransition: TransitionComponent, ...props.slots }}
+      ref={ref}
+    />
   ),
 );
 
@@ -30,7 +34,7 @@ export default function CustomAnimation() {
   return (
     <SimpleTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1']}
+      defaultExpandedItems={['1']}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
       <CustomTreeItem nodeId="1" label="Main">

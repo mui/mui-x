@@ -5,7 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme, Theme } from '@mui/material/styles';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -24,12 +24,18 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import { clamp, range } from '../../../utils/utils';
-import { GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
+import type {
+  GridRenderContext,
+  GridColumnsRenderContext,
+  GridRowEntry,
+  GridRowId,
+} from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
+import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
   gridVirtualizationEnabledSelector,
@@ -41,8 +47,12 @@ export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactN
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
+interface PrivateApiWithInfiniteLoader
+  extends GridPrivateApiCommunity,
+    GridInfiniteLoaderPrivateApi {}
+
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
@@ -376,8 +386,10 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
+      if (isLastVisible) {
+        rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
+      }
     });
-
     return rows;
   };
 
@@ -783,7 +795,7 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 
 export function computeOffsetLeft(
   columnPositions: number[],
-  renderContext: GridRenderContext,
+  renderContext: GridColumnsRenderContext,
   direction: Theme['direction'],
   pinnedLeftLength: number,
 ) {

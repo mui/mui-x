@@ -8,22 +8,16 @@
       "requiresRef": true
     },
     "ContentProps": { "description": "Props applied to ContentComponent." },
-    "disabled": { "description": "If <code>true</code>, the node is disabled." },
-    "label": { "description": "The tree node label." },
+    "disabled": { "description": "If <code>true</code>, the item is disabled." },
+    "label": { "description": "The tree item label." },
     "nodeId": { "description": "The id of the node." },
     "onFocus": {
-      "description": "This prop isn&#39;t supported. Use the <code>onNodeFocus</code> callback on the tree if you need to monitor a node&#39;s focus."
+      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
-    "TransitionComponent": {
-      "description": "The component used for the transition. <a href=\"/material-ui/transitions/#transitioncomponent-prop\">Follow this guide</a> to learn more about the requirements for this component."
-    },
-    "TransitionProps": {
-      "description": "Props applied to the transition element. By default, the element is based on this <a href=\"https://reactcommunity.org/react-transition-group/transition/\"><code>Transition</code></a> component."
     }
   },
   "classDescriptions": {
@@ -46,10 +40,6 @@
       "nodeName": "the content element",
       "conditions": "focused"
     },
-    "group": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the transition component"
-    },
     "iconContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the tree node icon"
@@ -63,9 +53,10 @@
     }
   },
   "slotDescriptions": {
-    "collapseIcon": "The icon used to collapse the node.",
-    "endIcon": "The icon displayed next to an end node.",
-    "expandIcon": "The icon used to expand the node.",
-    "icon": "The icon to display next to the tree node&#39;s label."
+    "collapseIcon": "The icon used to collapse the item.",
+    "endIcon": "The icon displayed next to an end item.",
+    "expandIcon": "The icon used to expand the item.",
+    "groupTransition": "The component that animates to appearance / disappearance of the item&#39;s children.",
+    "icon": "The icon to display next to the tree item&#39;s label."
   }
 }

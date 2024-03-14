@@ -16,7 +16,7 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
       opacity: 0.3,
     },
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: 15,
     paddingLeft: 18,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
@@ -39,7 +39,7 @@ export default function BorderedTreeView() {
   return (
     <SimpleTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1', '3']}
+      defaultExpandedItems={['1', '3']}
       slots={{
         expandIcon: ExpandIcon,
         collapseIcon: CollapseIcon,
