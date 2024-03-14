@@ -45,6 +45,8 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 
+const MINIMUM_COLUMN_WIDTH = 50;
+
 interface PrivateApiWithInfiniteLoader
   extends GridPrivateApiCommunity,
     GridInfiniteLoaderPrivateApi {}
@@ -137,7 +139,7 @@ export const useGridVirtualScroller = () => {
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
       dimensions.rowHeight * 15,
-      50 * 3,
+      MINIMUM_COLUMN_WIDTH * 6,
     ),
   ).current;
 
@@ -211,7 +213,8 @@ export const useGridVirtualScroller = () => {
       scrollPosition.current.left - previousContextScrollPosition.current.left,
     );
 
-    const didCrossThreshold = rowScroll >= dimensions.rowHeight || columnScroll >= 50;
+    // PERF: use the computed minimum column width instead of a static one
+    const didCrossThreshold = rowScroll >= dimensions.rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
     const didChangeDirection = scrollCache.direction !== direction;
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
@@ -240,7 +243,7 @@ export const useGridVirtualScroller = () => {
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
       dimensions.rowHeight * 15,
-      50 * 3,
+      MINIMUM_COLUMN_WIDTH * 6,
     );
 
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
