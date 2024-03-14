@@ -55,21 +55,24 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     describe('RichTreeView + TreeItem', () => {
       const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
         items: rawItems,
+        slotProps,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
         const result = render(
           <RichTreeView
-            {...other}
             items={items}
             slotProps={{
+              ...slotProps,
               item: (ownerState) =>
                 ({
+                  ...slotProps?.item,
                   'data-testid': ownerState.nodeId,
                 }) as any,
             }}
             getItemLabel={(item) => item.label ?? item.id}
             isItemDisabled={(item) => !!item.disabled}
+            {...other}
           />,
         );
 
@@ -85,22 +88,26 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     describe('RichTreeView + TreeItem2', () => {
       const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
         items: rawItems,
+        slots,
+        slotProps,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
         const result = render(
           <RichTreeView
-            {...other}
             items={items}
-            slots={{ item: TreeItem2 }}
+            slots={{ item: TreeItem2, ...slots }}
             slotProps={{
+              ...slotProps,
               item: (ownerState) =>
                 ({
+                  ...slotProps?.item,
                   'data-testid': ownerState.nodeId,
                 }) as any,
             }}
             getItemLabel={(item) => item.label ?? item.id}
             isItemDisabled={(item) => !!item.disabled}
+            {...other}
           />,
         );
 
@@ -116,11 +123,14 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     describe('SimpleTreeView + TreeItem', () => {
       const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
         items: rawItems,
+        slots,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
+        const Item = slots?.item ?? TreeItem;
+
         const renderItem = (item: DescribeTreeViewItem) => (
-          <TreeItem
+          <Item
             nodeId={item.id}
             label={item.label ?? item.id}
             disabled={item.disabled}
@@ -128,10 +138,14 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
             key={item.id}
           >
             {item.children?.map(renderItem)}
-          </TreeItem>
+          </Item>
         );
 
-        const result = render(<SimpleTreeView {...other}>{items.map(renderItem)}</SimpleTreeView>);
+        const result = render(
+          <SimpleTreeView slots={slots} {...other}>
+            {items.map(renderItem)}
+          </SimpleTreeView>,
+        );
 
         return {
           setProps: result.setProps,
@@ -145,11 +159,13 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     describe('SimpleTreeView + TreeItem2', () => {
       const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
         items: rawItems,
+        slots,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
+        const Item = slots?.item ?? TreeItem2;
         const renderItem = (item: DescribeTreeViewItem) => (
-          <TreeItem2
+          <Item
             nodeId={item.id}
             label={item.label ?? item.id}
             disabled={item.disabled}
@@ -157,10 +173,14 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
             key={item.id}
           >
             {item.children?.map(renderItem)}
-          </TreeItem2>
+          </Item>
         );
 
-        const result = render(<SimpleTreeView {...other}>{items.map(renderItem)}</SimpleTreeView>);
+        const result = render(
+          <SimpleTreeView slots={slots} {...other}>
+            {items.map(renderItem)}
+          </SimpleTreeView>,
+        );
 
         return {
           setProps: result.setProps,

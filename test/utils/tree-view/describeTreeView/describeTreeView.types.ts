@@ -1,4 +1,7 @@
+import * as React from 'react';
 import { TreeViewAnyPluginSignature, TreeViewUsedParams } from '@mui/x-tree-view/internals/models';
+import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 export type DescribeTreeViewTestRunner<TPlugin extends TreeViewAnyPluginSignature> = (
   params: DescribeTreeViewTestRunnerParams<TPlugin>,
@@ -58,7 +61,10 @@ export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature>
 >(
   params: {
     items: readonly R[];
-  } & TreeViewUsedParams<TPlugin>,
+  } & Omit<TreeViewUsedParams<TPlugin>, 'slots' | 'slotProps'> & {
+      slots?: TreeViewUsedParams<TPlugin>['slots'] & { item?: React.ElementType };
+      slotProps?: TreeViewUsedParams<TPlugin>['slots'] & { item?: TreeItemProps | TreeItem2Props };
+    },
 ) => DescribeTreeViewRendererReturnValue<TPlugin>;
 
 interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSignature> {
