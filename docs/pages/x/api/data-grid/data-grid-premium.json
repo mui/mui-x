@@ -36,7 +36,7 @@
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
-    "columnBufferPx": { "type": { "name": "number" }, "default": "100" },
+    "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
@@ -541,7 +541,7 @@
         "returned": "Promise<R> | R"
       }
     },
-    "rowBufferPx": { "type": { "name": "number" }, "default": "100" },
+    "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
       "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
