@@ -25,9 +25,11 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.0.0-beta.7`
 
+- [DataGrid] Fix focus visible style on scrollbar (#12402) @oliviertassinari
+- [DataGrid] Fix the issue where pressing the Delete key resets various cell values to an empty string. (#12216) @sooster910
 - [DataGrid] Make `rowCount` part of the state (#12381) @MBilalShafi
 - [DataGrid] Make column resizing and autosizing available in Community plan (#12420) @cherniavskii
-- [DataGrid] Remove baseSwitch (#12439) @romgrk
+- [DataGrid] Remove `baseSwitch` slot (#12439) @romgrk
 - [l10n] Improve Japanese (ja-JP) locale (#12398) @makoto14
 
 #### `@mui/x-data-grid-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -96,8 +98,6 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 
 - [core] Fix CI (#12414) @flaviendelangle
 - [core] Fix PR deploy link for Tree View doc pages (#12411) @flaviendelangle
-- [data grid] Fix focus visible style on scrollbar (#12402) @oliviertassinari
-- [data grid] Fixed issue where pressing Delete key resets various cell values to empty string. (#12216) @sooster910
 
 ## 7.0.0-beta.6
 
