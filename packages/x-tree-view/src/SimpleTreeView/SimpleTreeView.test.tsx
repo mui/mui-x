@@ -25,7 +25,7 @@ describe('<SimpleTreeView />', () => {
     it('should warn when switching from controlled to uncontrolled of the expandedItems prop', () => {
       const { setProps } = render(
         <SimpleTreeView expandedItems={[]}>
-          <TreeItem nodeId="1" label="one" />
+          <TreeItem itemId="1" label="one" />
         </SimpleTreeView>,
       );
 
@@ -39,7 +39,7 @@ describe('<SimpleTreeView />', () => {
     it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
       const { setProps } = render(
         <SimpleTreeView selectedItems={null}>
-          <TreeItem nodeId="1" label="one" />
+          <TreeItem itemId="1" label="one" />
         </SimpleTreeView>,
       );
 
@@ -53,8 +53,8 @@ describe('<SimpleTreeView />', () => {
     it('should not crash when shift clicking a clean tree', () => {
       render(
         <SimpleTreeView multiSelect>
-          <TreeItem nodeId="one" label="one" />
-          <TreeItem nodeId="two" label="two" />
+          <TreeItem itemId="one" label="one" />
+          <TreeItem itemId="two" label="two" />
         </SimpleTreeView>,
       );
 
@@ -64,12 +64,12 @@ describe('<SimpleTreeView />', () => {
     it('should not crash when selecting multiple items in a deeply nested tree', () => {
       render(
         <SimpleTreeView multiSelect defaultExpandedItems={['1', '1.1', '2']}>
-          <TreeItem nodeId="1" label="Item 1">
-            <TreeItem nodeId="1.1" label="Item 1.1">
-              <TreeItem nodeId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
+          <TreeItem itemId="1" label="Item 1">
+            <TreeItem itemId="1.1" label="Item 1.1">
+              <TreeItem itemId="1.1.1" data-testid="item-1.1.1" label="Item 1.1.1" />
             </TreeItem>
           </TreeItem>
-          <TreeItem nodeId="2" data-testid="item-2" label="Item 2" />
+          <TreeItem itemId="2" data-testid="item-2" label="Item 2" />
         </SimpleTreeView>,
       );
       fireEvent.click(screen.getByText('Item 1.1.1'));
@@ -92,7 +92,7 @@ describe('<SimpleTreeView />', () => {
     it('should not crash when unmounting with duplicate ids', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function CustomTreeItem(props: any) {
-        return <TreeItem nodeId="iojerogj" />;
+        return <TreeItem itemId="iojerogj" />;
       }
       function App() {
         const [isVisible, hideTreeView] = React.useReducer(() => false, true);
@@ -104,8 +104,8 @@ describe('<SimpleTreeView />', () => {
             </button>
             {isVisible && (
               <SimpleTreeView>
-                <TreeItem nodeId="a" label="b">
-                  <CustomTreeItem nodeId="a" />
+                <TreeItem itemId="a" label="b">
+                  <CustomTreeItem itemId="a" />
                 </TreeItem>
               </SimpleTreeView>
             )}
@@ -132,7 +132,7 @@ describe('<SimpleTreeView />', () => {
 
     const { getByRole } = render(
       <SimpleTreeView onKeyDown={handleKeyDown}>
-        <TreeItem nodeId="test" label="test" data-testid="test" />
+        <TreeItem itemId="test" label="test" data-testid="test" />
       </SimpleTreeView>,
     );
     act(() => {
@@ -146,12 +146,12 @@ describe('<SimpleTreeView />', () => {
     expect(handleKeyDown.callCount).to.equal(3);
   });
 
-  it('should select node when Enter key is pressed ', () => {
+  it('should select item when Enter key is pressed ', () => {
     const handleKeyDown = spy();
 
     const { getByRole, getByTestId } = render(
       <SimpleTreeView onKeyDown={handleKeyDown}>
-        <TreeItem nodeId="one" label="test" data-testid="one" />
+        <TreeItem itemId="one" label="test" data-testid="one" />
       </SimpleTreeView>,
     );
     act(() => {
@@ -169,7 +169,7 @@ describe('<SimpleTreeView />', () => {
     const handleFocus = spy();
     const { getByRole } = render(
       <SimpleTreeView onFocus={handleFocus}>
-        <TreeItem nodeId="test" label="test" data-testid="test" />
+        <TreeItem itemId="test" label="test" data-testid="test" />
       </SimpleTreeView>,
     );
 
@@ -184,7 +184,7 @@ describe('<SimpleTreeView />', () => {
     const handleBlur = spy();
     const { getByRole } = render(
       <SimpleTreeView onBlur={handleBlur}>
-        <TreeItem nodeId="test" label="test" data-testid="test" />
+        <TreeItem itemId="test" label="test" data-testid="test" />
       </SimpleTreeView>,
     );
 
@@ -206,8 +206,8 @@ describe('<SimpleTreeView />', () => {
       };
       return (
         <SimpleTreeView expandedItems={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem nodeId="1" label="one" data-testid="one">
-            <TreeItem nodeId="2" label="two" />
+          <TreeItem itemId="1" label="one" data-testid="one">
+            <TreeItem itemId="2" label="two" />
           </TreeItem>
         </SimpleTreeView>
       );
@@ -241,8 +241,8 @@ describe('<SimpleTreeView />', () => {
       };
       return (
         <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
-          <TreeItem nodeId="1" label="one" data-testid="one" />
-          <TreeItem nodeId="2" label="two" data-testid="two" />
+          <TreeItem itemId="1" label="one" data-testid="one" />
+          <TreeItem itemId="2" label="two" data-testid="two" />
         </SimpleTreeView>
       );
     }
@@ -275,8 +275,8 @@ describe('<SimpleTreeView />', () => {
           onSelectedItemsChange={onSelectedItemsChange}
           multiSelect
         >
-          <TreeItem nodeId="1" label="one" data-testid="one" />
-          <TreeItem nodeId="2" label="two" data-testid="two" />
+          <TreeItem itemId="1" label="one" data-testid="one" />
+          <TreeItem itemId="2" label="two" data-testid="two" />
         </SimpleTreeView>
       );
     }
@@ -308,8 +308,8 @@ describe('<SimpleTreeView />', () => {
           }}
           id="tree"
         >
-          <TreeItem nodeId="one" label="one" data-testid="one">
-            <TreeItem nodeId="two" label="two" data-testid="two" />
+          <TreeItem itemId="one" label="one" data-testid="one">
+            <TreeItem itemId="two" label="two" data-testid="two" />
           </TreeItem>
         </SimpleTreeView>
       );
@@ -347,7 +347,7 @@ describe('<SimpleTreeView />', () => {
           <button type="button" onClick={() => setState(true)}>
             Hide
           </button>
-          <SimpleTreeView>{!hide && <TreeItem nodeId="test" label="test" />}</SimpleTreeView>
+          <SimpleTreeView>{!hide && <TreeItem itemId="test" label="test" />}</SimpleTreeView>
         </React.Fragment>
       );
     }
@@ -363,10 +363,10 @@ describe('<SimpleTreeView />', () => {
     const { getByRole, getByTestId } = render(
       <Portal>
         <SimpleTreeView id="tree">
-          <TreeItem nodeId="one" label="one" data-testid="one" />
-          <TreeItem nodeId="two" label="two" data-testid="two" />
-          <TreeItem nodeId="three" label="three" data-testid="three" />
-          <TreeItem nodeId="four" label="four" data-testid="four" />
+          <TreeItem itemId="one" label="one" data-testid="one" />
+          <TreeItem itemId="two" label="two" data-testid="two" />
+          <TreeItem itemId="three" label="three" data-testid="three" />
+          <TreeItem itemId="four" label="four" data-testid="four" />
         </SimpleTreeView>
       </Portal>,
     );
@@ -392,7 +392,7 @@ describe('<SimpleTreeView />', () => {
       const focusSpy = spy();
       const { getByRole } = render(
         <SimpleTreeView onItemFocus={focusSpy}>
-          <TreeItem nodeId="1" label="one" />
+          <TreeItem itemId="1" label="one" />
         </SimpleTreeView>,
       );
 
@@ -412,8 +412,8 @@ describe('<SimpleTreeView />', () => {
 
       const { getByText } = render(
         <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem nodeId="1" label="outer">
-            <TreeItem nodeId="2" label="inner" />
+          <TreeItem itemId="1" label="outer">
+            <TreeItem itemId="2" label="inner" />
           </TreeItem>
         </SimpleTreeView>,
       );
@@ -429,8 +429,8 @@ describe('<SimpleTreeView />', () => {
 
       const { getByTestId } = render(
         <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} nodeId="1" label="outer">
-            <TreeItem nodeId="2" label="inner" />
+          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} itemId="1" label="outer">
+            <TreeItem itemId="2" label="inner" />
           </TreeItem>
         </SimpleTreeView>,
       );
@@ -448,8 +448,8 @@ describe('<SimpleTreeView />', () => {
 
       const { getByRole } = render(
         <SimpleTreeView selectedItems={'2'} onItemFocus={onItemFocus}>
-          <TreeItem nodeId="1" label="1" />
-          <TreeItem nodeId="2" label="2" />
+          <TreeItem itemId="1" label="1" />
+          <TreeItem itemId="2" label="2" />
         </SimpleTreeView>,
       );
 
@@ -465,8 +465,8 @@ describe('<SimpleTreeView />', () => {
 
       const { getByRole } = render(
         <SimpleTreeView multiSelect selectedItems={['2']} onItemFocus={onItemFocus}>
-          <TreeItem nodeId="1" label="1" />
-          <TreeItem nodeId="2" label="2" />
+          <TreeItem itemId="1" label="1" />
+          <TreeItem itemId="2" label="2" />
         </SimpleTreeView>,
       );
 
@@ -482,10 +482,10 @@ describe('<SimpleTreeView />', () => {
 
       const { getByRole } = render(
         <SimpleTreeView multiSelect selectedItems={['1.1', '2']} onItemFocus={onItemFocus}>
-          <TreeItem nodeId="1" label="1">
-            <TreeItem nodeId="1.1" label="1.1" />
+          <TreeItem itemId="1" label="1">
+            <TreeItem itemId="1.1" label="1.1" />
           </TreeItem>
-          <TreeItem nodeId="2" label="2" />
+          <TreeItem itemId="2" label="2" />
         </SimpleTreeView>,
       );
 
@@ -501,10 +501,10 @@ describe('<SimpleTreeView />', () => {
 
       const { getByRole } = render(
         <SimpleTreeView selectedItems="1.1" onItemFocus={onItemFocus}>
-          <TreeItem nodeId="1" label="1">
-            <TreeItem nodeId="1.1" label="1.1" />
+          <TreeItem itemId="1" label="1">
+            <TreeItem itemId="1.1" label="1.1" />
           </TreeItem>
-          <TreeItem nodeId="2" label="2" />
+          <TreeItem itemId="2" label="2" />
         </SimpleTreeView>,
       );
 
@@ -520,10 +520,10 @@ describe('<SimpleTreeView />', () => {
 
       const { getByRole } = render(
         <SimpleTreeView multiSelect selectedItems={['1.1']} onItemFocus={onItemFocus}>
-          <TreeItem nodeId="1" label="1">
-            <TreeItem nodeId="1.1" label="1.1" />
+          <TreeItem itemId="1" label="1">
+            <TreeItem itemId="1.1" label="1.1" />
           </TreeItem>
-          <TreeItem nodeId="2" label="2" />
+          <TreeItem itemId="2" label="2" />
         </SimpleTreeView>,
       );
 
@@ -534,7 +534,7 @@ describe('<SimpleTreeView />', () => {
       expect(onItemFocus.lastCall.lastArg).to.equal('1');
     });
 
-    it('should focus specific node using `apiRef`', () => {
+    it('should focus specific item using `apiRef`', () => {
       let apiRef: SimpleTreeViewApiRef;
       const onItemFocus = spy();
 
@@ -542,10 +542,10 @@ describe('<SimpleTreeView />', () => {
         apiRef = useTreeViewApiRef();
         return (
           <SimpleTreeView apiRef={apiRef} onItemFocus={onItemFocus}>
-            <TreeItem nodeId="1" label="1">
-              <TreeItem nodeId="1.1" label="1.1" />
+            <TreeItem itemId="1" label="1">
+              <TreeItem itemId="1.1" label="1.1" />
             </TreeItem>
-            <TreeItem nodeId="2" label="2" />
+            <TreeItem itemId="2" label="2" />
           </SimpleTreeView>
         );
       }
@@ -560,7 +560,7 @@ describe('<SimpleTreeView />', () => {
       expect(onItemFocus.lastCall.lastArg).to.equal('2');
     });
 
-    it('should not focus node if parent is collapsed', () => {
+    it('should not focus item if parent is collapsed', () => {
       let apiRef: SimpleTreeViewApiRef;
       const onItemFocus = spy();
 
@@ -568,10 +568,10 @@ describe('<SimpleTreeView />', () => {
         apiRef = useTreeViewApiRef();
         return (
           <SimpleTreeView apiRef={apiRef} onItemFocus={onItemFocus}>
-            <TreeItem nodeId="1" label="1">
-              <TreeItem nodeId="1.1" label="1.1" />
+            <TreeItem itemId="1" label="1">
+              <TreeItem itemId="1.1" label="1.1" />
             </TreeItem>
-            <TreeItem nodeId="2" label="2" />
+            <TreeItem itemId="2" label="2" />
           </SimpleTreeView>
         );
       }

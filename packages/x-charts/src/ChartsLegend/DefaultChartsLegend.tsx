@@ -359,6 +359,9 @@ DefaultChartsLegend.propTypes = {
       top: PropTypes.number,
     }),
   ]),
+  /**
+   * The position of the legend.
+   */
   position: PropTypes.shape({
     horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
     vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
