@@ -81,6 +81,32 @@ It will remove the header showing the x-axis value from the tooltip.
 />
 ```
 
+### Overriding content
+
+To modify the tooltip content, use `slots.itemContent` or `slots.axisContent`.
+The first one is rendered when tooltip trigger is set to `"item"`.
+The second one when trigger is set to `"axis"`.
+
+```jsx
+// With single component
+<LineChart
+  slots={{
+    itemContent: CustomItemTooltip
+  }}
+/>
+
+// With composition
+<ChartContainer>
+  // ...
+  <Tooltip
+    trigger='item'
+    slots={{
+      itemContent: CustomItemTooltip
+    }}
+  />
+</ChartContainer>
+```
+
 ## Composition
 
 If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
