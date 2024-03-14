@@ -140,7 +140,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     }
 
     let range = getNodesInRange(start, end);
-    range = range.filter((node) => !instance.isNodeDisabled(node));
+    range = range.filter((node) => !instance.isItemDisabled(node));
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);

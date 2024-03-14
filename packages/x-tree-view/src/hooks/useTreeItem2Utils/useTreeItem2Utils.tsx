@@ -30,7 +30,7 @@ export const useTreeItem2Utils = ({
     expanded: instance.isItemExpanded(nodeId),
     focused: instance.isItemFocused(nodeId),
     selected: instance.isNodeSelected(nodeId),
-    disabled: instance.isNodeDisabled(nodeId),
+    disabled: instance.isItemDisabled(nodeId),
   };
 
   const handleExpansion = (event: React.MouseEvent) => {

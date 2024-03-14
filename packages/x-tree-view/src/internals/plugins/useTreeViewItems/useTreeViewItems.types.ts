@@ -3,21 +3,21 @@ import { TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
   label: string;
-  nodeId: string;
+  itemId: string;
   id: string | undefined;
   children?: TreeViewItemProps[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> {
-  getNode: (nodeId: string) => TreeViewItem;
-  getItem: (nodeId: string) => R;
+  getNode: (itemId: string) => TreeViewItem;
+  getItem: (itemId: string) => R;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (nodeId: string | null) => string[];
-  getNavigableChildrenIds: (nodeId: string | null) => string[];
-  isNodeDisabled: (nodeId: string | null) => nodeId is string;
+  getChildrenIds: (itemId: string | null) => string[];
+  getNavigableChildrenIds: (itemId: string | null) => string[];
+  isItemDisabled: (itemId: string | null) => itemId is string;
 }
 
-export interface UseTreeViewNodesPublicAPI<R extends {}>
+export interface UseTreeViewItemsPublicAPI<R extends {}>
   extends Pick<UseTreeViewItemsInstance<R>, 'getItem'> {}
 
 export interface UseTreeViewItemsParameters<R extends {}> {
@@ -71,7 +71,7 @@ export interface TreeViewItemIdAndChildren {
 }
 
 export interface UseTreeViewItemsState<R extends {}> {
-  nodes: {
+  items: {
     nodeTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
@@ -85,12 +85,12 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
   instance: UseTreeViewItemsInstance<any>;
-  publicAPI: UseTreeViewNodesPublicAPI<any>;
+  publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewNodeMap = { [nodeId: string]: TreeViewItem };
+export type TreeViewNodeMap = { [itemId: string]: TreeViewItem };
 
-export type TreeViewItemMap<R extends {}> = { [nodeId: string]: R };
+export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };

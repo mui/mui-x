@@ -80,7 +80,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
       const shouldBeSkipped = params.disabledItemsFocusable
         ? false
-        : instance.isNodeDisabled(mapNodeId);
+        : instance.isItemDisabled(mapNodeId);
 
       if (visible && !shouldBeSkipped) {
         firstCharIds.push(mapNodeId);
@@ -111,10 +111,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleNodeSelection = (itemId: string) =>
-    !params.disableSelection && !instance.isNodeDisabled(itemId);
+    !params.disableSelection && !instance.isItemDisabled(itemId);
 
   const canToggleNodeExpansion = (itemId: string) => {
-    return !instance.isNodeDisabled(itemId) && instance.isItemExpandable(itemId);
+    return !instance.isItemDisabled(itemId) && instance.isItemExpandable(itemId);
   };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction

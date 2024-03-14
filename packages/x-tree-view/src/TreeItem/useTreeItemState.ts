@@ -12,7 +12,7 @@ export function useTreeItemState(itemId: string) {
   const expanded = instance.isItemExpanded(itemId);
   const focused = instance.isItemFocused(itemId);
   const selected = instance.isNodeSelected(itemId);
-  const disabled = instance.isNodeDisabled(itemId);
+  const disabled = instance.isItemDisabled(itemId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {

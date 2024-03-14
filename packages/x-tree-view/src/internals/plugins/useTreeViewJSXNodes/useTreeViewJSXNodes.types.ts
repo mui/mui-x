@@ -1,5 +1,5 @@
 import { TreeViewItem, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewItemsInstance {

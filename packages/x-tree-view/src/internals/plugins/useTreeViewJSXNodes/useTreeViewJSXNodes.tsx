@@ -20,7 +20,7 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
 }) => {
   const insertJSXNode = useEventCallback((node: TreeViewItem) => {
     setState((prevState) => {
-      if (prevState.nodes.nodeMap[node.id] != null) {
+      if (prevState.items.nodeMap[node.id] != null) {
         throw new Error(
           [
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -33,10 +33,10 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
       return {
         ...prevState,
         nodes: {
-          ...prevState.nodes,
-          nodeMap: { ...prevState.nodes.nodeMap, [node.id]: node },
+          ...prevState.items,
+          nodeMap: { ...prevState.items.nodeMap, [node.id]: node },
           // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
-          itemMap: { ...prevState.nodes.itemMap, [node.id]: { id: node.id, label: node.label } },
+          itemMap: { ...prevState.items.itemMap, [node.id]: { id: node.id, label: node.label } },
         },
       };
     });
@@ -44,14 +44,14 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
 
   const removeJSXNode = useEventCallback((nodeId: string) => {
     setState((prevState) => {
-      const newNodeMap = { ...prevState.nodes.nodeMap };
-      const newItemMap = { ...prevState.nodes.itemMap };
+      const newNodeMap = { ...prevState.items.nodeMap };
+      const newItemMap = { ...prevState.items.itemMap };
       delete newNodeMap[nodeId];
       delete newItemMap[nodeId];
       return {
         ...prevState,
-        nodes: {
-          ...prevState.nodes,
+        items: {
+          ...prevState.items,
           nodeMap: newNodeMap,
           itemMap: newItemMap,
         },

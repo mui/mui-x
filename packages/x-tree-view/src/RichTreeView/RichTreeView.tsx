@@ -116,7 +116,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   const renderNode = ({
     label,
-    nodeId,
+    itemId,
     id,
     children,
   }: ReturnType<typeof instance.getItemsToRender>[number]) => {
@@ -124,10 +124,10 @@ const RichTreeView = React.forwardRef(function RichTreeView<
       <WrappedTreeItem
         slots={slots}
         slotProps={slotProps}
-        key={nodeId}
+        key={itemId}
         label={label}
         id={id}
-        nodeId={nodeId}
+        nodeId={itemId}
       >
         {children?.map(renderNode)}
       </WrappedTreeItem>

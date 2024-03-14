@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 export interface UseTreeViewExpansionInstance {
   isItemExpanded: (itemId: string) => boolean;

@@ -1,6 +1,6 @@
-export { useTreeViewNodes } from './useTreeViewNodes';
+export { useTreeViewItems } from './useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
   UseTreeViewItemsDefaultizedParameters,
-} from './useTreeViewNodes.types';
+} from './useTreeViewItems.types';

@@ -1,5 +1,5 @@
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';

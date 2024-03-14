@@ -5,7 +5,7 @@ import {
   TreeViewUsedPublicAPI,
 } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
-import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewNodes';
+import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
 export const getPreviousItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,

@@ -1,5 +1,5 @@
 import { useTreeViewId, UseTreeViewIdParameters } from './useTreeViewId';
-import { useTreeViewNodes, UseTreeViewItemsParameters } from './useTreeViewNodes';
+import { useTreeViewItems, UseTreeViewItemsParameters } from './useTreeViewItems';
 import { useTreeViewExpansion, UseTreeViewExpansionParameters } from './useTreeViewExpansion';
 import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeViewSelection';
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
@@ -9,7 +9,7 @@ import { ConvertPluginsIntoSignatures, MergePluginsProperty } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewId,
-  useTreeViewNodes,
+  useTreeViewItems,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,

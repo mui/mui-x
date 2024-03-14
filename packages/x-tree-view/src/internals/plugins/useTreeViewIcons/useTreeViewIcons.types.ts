@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 export interface UseTreeViewIconsParameters {}
