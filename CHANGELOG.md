@@ -13,7 +13,7 @@ We'd like to offer a big thanks to @LukasTy who made this release possible.
 
 #### `@mui/x-date-pickers@6.19.7`
 
-- [pickers] Keep the existing time when looking for closest enabled date (@LukasTy) (#12410) @github-actions[bot]
+- [pickers] Keep the existing time when looking for closest enabled date (#12410) @LukasTy
 
 #### `@mui/x-date-pickers-pro@6.19.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -21,7 +21,7 @@ Same changes as in `@mui/x-date-pickers@6.19.7`.
 
 ### Docs
 
-- [docs] Add Pickers custom start of week section (@LukasTy) (#12425)
+- [docs] Add Pickers custom start of week section (#12425) @LukasTy
 
 ## 6.19.6
 
