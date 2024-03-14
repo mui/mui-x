@@ -9,7 +9,7 @@ import { act, fireEvent } from '@mui-internal/test-utils';
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
 describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', ({ render }) => {
-  describe('expandedItems / defaultExpandedItems / onExpandedItemsChange props', () => {
+  describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
     it('should not expand items when no default state and no control state are defined', () => {
       const response = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -59,7 +59,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(response.isItemExpanded('1')).to.equal(true);
     });
 
-    it('should call the onExpandedItemsChange callback when model is updated (add expanded item to empty list)', () => {
+    it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to empty list)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
@@ -76,7 +76,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
     });
 
-    it('should call the onExpandedItemsChange callback when model is updated (add expanded item no non-empty list)', () => {
+    it('should call the onExpandedItemsChange callback when the model is updated (add expanded item no non-empty list)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
@@ -97,7 +97,7 @@ describeTreeView<UseTreeViewExpansionSignature>('useTreeViewExpansion plugin', (
       expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
     });
 
-    it('should call the onExpandedItemsChange callback when model is updated (remove expanded item)', () => {
+    it('should call the onExpandedItemsChange callback when the model is updated (remove expanded item)', () => {
       const onExpandedItemsChange = spy();
 
       const response = render({
