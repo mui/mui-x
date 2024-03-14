@@ -2,6 +2,7 @@
 export * from './columnMenu';
 export * from './columns';
 export * from './columnGrouping';
+export * from './columnResize';
 export * from './density';
 export * from './filter';
 export * from './focus';

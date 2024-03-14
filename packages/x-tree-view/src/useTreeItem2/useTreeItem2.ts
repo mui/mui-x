@@ -48,7 +48,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
       const canBeFocused = !status.disabled || disabledItemsFocusable;
       if (!status.focused && canBeFocused && event.currentTarget === event.target) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, nodeId);
       }
     };
 

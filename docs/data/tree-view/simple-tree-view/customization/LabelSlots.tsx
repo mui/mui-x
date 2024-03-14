@@ -45,7 +45,7 @@ const CustomTreeItem = React.forwardRef(
 export default function LabelSlots() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-      <SimpleTreeView defaultExpandedNodes={['pickers']}>
+      <SimpleTreeView defaultExpandedItems={['pickers']}>
         <CustomTreeItem nodeId="grid" label="Data Grid">
           <CustomTreeItem
             nodeId="grid-community"

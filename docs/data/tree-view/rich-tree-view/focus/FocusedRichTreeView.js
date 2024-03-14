@@ -38,13 +38,13 @@ const MUI_X_PRODUCTS = [
 export default function FocusedRichTreeView() {
   const apiRef = useTreeViewApiRef();
   const handleButtonClick = (event) => {
-    apiRef.current?.focusNode(event, 'pickers');
+    apiRef.current?.focusItem(event, 'pickers');
   };
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
       <Box sx={{ mb: 1 }}>
-        <Button onClick={handleButtonClick}>Focus pickers node</Button>
+        <Button onClick={handleButtonClick}>Focus pickers item</Button>
       </Box>
       <Box sx={{ height: 264, flexGrow: 1 }}>
         <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />

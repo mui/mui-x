@@ -2,12 +2,12 @@
   <Typography>No action recorded</Typography>
 ) : (
   <Typography>
-    Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.nodeId}
+    Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
   </Typography>
 )}
 <Box sx={{ minHeight: 200, flexGrow: 1 }}>
   <RichTreeView
     items={MUI_X_PRODUCTS}
-    onNodeExpansionToggle={handleNodeExpansionToggle}
+    onItemExpansionToggle={handleItemExpansionToggle}
   />
 </Box>

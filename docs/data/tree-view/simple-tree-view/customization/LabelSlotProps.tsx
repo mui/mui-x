@@ -20,7 +20,7 @@ export default function LabelSlotProps() {
   return (
     <SimpleTreeView
       aria-label="customized"
-      defaultExpandedNodes={['pickers']}
+      defaultExpandedItems={['pickers']}
       sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
     >
       <CustomTreeItem nodeId="grid" label="Data Grid">

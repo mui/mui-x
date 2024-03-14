@@ -35,32 +35,33 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function TrackNodeSelectionToggle() {
-  const [lastSelectedNode, setLastSelectedNode] = React.useState<string | null>(
-    null,
-  );
+export default function TrackItemExpansionToggle() {
+  const [action, setAction] = React.useState<{
+    itemId: string;
+    isExpanded: boolean;
+  } | null>(null);
 
-  const handleNodeSelectionToggle = (
+  const handleItemExpansionToggle = (
     event: React.SyntheticEvent,
-    nodeId: string,
-    isSelected: boolean,
+    itemId: string,
+    isExpanded: boolean,
   ) => {
-    if (isSelected) {
-      setLastSelectedNode(nodeId);
-    }
+    setAction({ itemId, isExpanded });
   };
 
   return (
     <Stack spacing={2}>
-      <Typography>
-        {lastSelectedNode == null
-          ? 'No node selection recorded'
-          : `Last selected node: ${lastSelectedNode}`}
-      </Typography>
-      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
+      {action == null ? (
+        <Typography>No action recorded</Typography>
+      ) : (
+        <Typography>
+          Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
+        </Typography>
+      )}
+      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          onNodeSelectionToggle={handleNodeSelectionToggle}
+          onItemExpansionToggle={handleItemExpansionToggle}
         />
       </Box>
     </Stack>

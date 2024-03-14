@@ -68,7 +68,7 @@ export default function CustomStyling() {
   return (
     <RichTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1']}
+      defaultExpandedItems={['1']}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
       slots={{ item: StyledTreeItem }}
       items={ITEMS}

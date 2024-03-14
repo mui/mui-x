@@ -328,8 +328,27 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
-      if (deleteValue || initialValue) {
-        newValue = deleteValue ? '' : initialValue;
+      if (deleteValue) {
+        const fieldType = apiRef.current.getColumn(field).type;
+        switch (fieldType) {
+          case 'boolean':
+            newValue = false;
+            break;
+          case 'date':
+          case 'dateTime':
+          case 'number':
+            newValue = undefined;
+            break;
+          case 'singleSelect':
+            newValue = null;
+            break;
+          case 'string':
+          default:
+            newValue = '';
+            break;
+        }
+      } else if (initialValue) {
+        newValue = initialValue;
       }
 
       const newProps = {

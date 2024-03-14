@@ -10,7 +10,6 @@ export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
-export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
@@ -120,6 +119,10 @@ export {
   EMPTY_DETAIL_PANELS,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
+export {
+  useGridColumnResize,
+  columnResizeStateInitializer,
+} from '../hooks/features/columnResize/useGridColumnResize';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
