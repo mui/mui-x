@@ -150,6 +150,7 @@ As a result, the following changes have been made:
   - [`columnGrouping`](/x/react-data-grid/column-groups/)
   - [`clipboardPaste`](/x/react-data-grid/clipboard/#clipboard-paste)
   - [`lazyLoading`](/x/react-data-grid/row-updates/#lazy-loading)
+  If you had the `rowThreshold` prop set to `0` to force new rows to be rendered more often – this is no longer necessary.
 
 ### Behavioral changes
 
