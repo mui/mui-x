@@ -41,6 +41,36 @@ The `legacy` bundle that used to support old browsers like IE11 is no longer inc
 If you need support for IE11, you will need to keep using the latest version of the `v6` release.
 :::
 
+### ✅ Rename `nodeId` to `itemId`
+
+The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-    <TreeItem label='Item 1' nodeId='one'>
++    <TreeItem label='Item 1' itemId='one'>
+ </TreeView>
+```
+
+The same change has been applied to the and `ContentComponent` prop:
+
+```diff
+  const CustomContent = React.forwardRef((props, ref) => {
+-  const id = props.nodeId;
++  const id = props.itemId;
+
+     // Render some UI
+   });
+
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+```
+
 ### ✅ Use `SimpleTreeView` instead of `TreeView`
 
 The `TreeView` component has been deprecated and will be removed in the next major.
@@ -406,15 +436,4 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 -  onNodeFocus={onNodeFocus}
 +  onItemFocus={onItemFocus}
  />
-```
-
-### ✅ Rename `nodeId` to `itemId`
-
-The required `nodeId` prop used by the `TreeItem` and `ContentComponent` prop has been renamed to `itemId` for consistency:
-
-```diff
- <TreeView>
--    <TreeItem label='Item 1' nodeId='one'>
-+    <TreeItem label='Item 1' itemId='one'>
- </TreeView>
 ```
