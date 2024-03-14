@@ -61,7 +61,7 @@ useCustomPlugin.getDefaultizedParams = (params) => ({
 ### Controllable models
 
 A model is a value that can either be controlled or initialized using a prop.
-The Tree View contains several models like the `expandedNodes` model which contains the ids of the nodes currently expanded.
+The Tree View contains several models like the `expandedItems` model which contains the ids of the items currently expanded.
 
 You can create your own models using the `models` property of your plugin:
 
@@ -110,14 +110,14 @@ Your plugin can access the instance methods, the params and the models of any ot
 ```ts
 const useCustomPlugin = ({ models }) => {
   const handleSomeAction = () => {
-    // Log the id of the nodes currently expanded
-    console.log(models.expandedNodes.value);
+    // Log the id of the items currently expanded
+    console.log(models.expandedItems.value);
 
-    // Collapse all the nodes
-    models.expandedNodes.setValue([]);
+    // Collapse all the items
+    models.expandedItems.setValue([]);
 
-    // Check if a node is expanded
-    const isExpanded = instance.isNodeExpanded('some-node-id');
+    // Check if an item is expanded
+    const isExpanded = instance.isNodeExpanded('some-item-id');
   };
 };
 ```
@@ -206,8 +206,8 @@ const useCustomPlugin = ({ params }) => {
 You can use the `contextValue` property in the returned object to pass elements to the Tree Item:
 
 :::warning
-The context is private for now and cannot be accessed outside of our own plugins.
-You need to modify the `useTreeItem` hook to return the new value returned by your plugin.
+The context is private for now and cannot be accessed outside the provided plugins.
+You need to modify the `useTreeItemState` hook to return the new value returned by your plugin.
 :::
 
 ```tsx
@@ -219,25 +219,25 @@ const useCustomPlugin = ({ params }) => {
   };
 };
 
-function useTreeItem(nodeId: string) {
+function useTreeItemState(nodeId: string) {
   const {
     customPlugin,
     // ...other elements returned by the context
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  // ...rest of the `useTreeItem` hook content
+  // ...rest of the `useTreeItemState` hook content
 
   return {
     customPlugin,
-    // ...other elements returned by `useTreeItem`
+    // ...other elements returned by `useTreeItemState`
   };
 }
 
 function TreeItemContent() {
   const {
     customPlugin,
-    // ...other elements returned by `useTreeItem`
-  } = useTreeItem(props.nodeId);
+    // ...other elements returned by `useTreeItemState`
+  } = useTreeItemState(props.nodeId);
 
   // Do something with customPlugin.enabled
 }
@@ -313,4 +313,4 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
 
 Interact with the tree view to see the expanded items being logged:
 
-{{"demo": "LogExpandedNodes.js"}}
+{{"demo": "LogExpandedItems.js"}}

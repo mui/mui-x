@@ -5,7 +5,6 @@ import { Theme } from '@mui/material/styles';
 import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
-  PickersCalendarHeaderProps,
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
@@ -25,6 +24,7 @@ import { DateRange } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
+import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -37,7 +37,7 @@ export interface DateRangeCalendarSlots<TDate extends PickerValidDate>
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
    * @default PickersCalendarHeader
    */
-  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  calendarHeader?: React.ElementType<PickersRangeCalendarHeaderProps<TDate>>;
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
