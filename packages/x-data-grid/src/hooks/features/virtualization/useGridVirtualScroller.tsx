@@ -83,12 +83,14 @@ const createScrollCache = (
 });
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
+const isJSDOM = typeof window !== 'undefined' ? /jsdom/.test(window.navigator.userAgent) : false;
+
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector);
-  const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector) && !isJSDOM;
+  const enabledForColumns = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector) && !isJSDOM;
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
