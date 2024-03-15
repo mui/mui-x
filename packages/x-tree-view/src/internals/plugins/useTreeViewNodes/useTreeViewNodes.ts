@@ -1,18 +1,19 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import {
   UseTreeViewNodesSignature,
   UseTreeViewNodesDefaultizedParameters,
   TreeViewNodeMap,
-  TreeViewNodeIdAndChildren,
+  TreeViewItemIdAndChildren,
   UseTreeViewNodesState,
+  TreeViewItemMap,
 } from './useTreeViewNodes.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem } from '../../../models';
 
-const updateState = ({
+const updateNodesState = ({
   items,
   isItemDisabled,
   getItemLabel,
@@ -20,14 +21,15 @@ const updateState = ({
 }: Pick<
   UseTreeViewNodesDefaultizedParameters<TreeViewBaseItem>,
   'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
->): UseTreeViewNodesState => {
+>): UseTreeViewNodesState<any>['nodes'] => {
   const nodeMap: TreeViewNodeMap = {};
+  const itemMap: TreeViewItemMap<any> = {};
 
   const processItem = (
     item: TreeViewBaseItem,
     index: number,
     parentId: string | null,
-  ): TreeViewNodeIdAndChildren => {
+  ): TreeViewItemIdAndChildren => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -68,10 +70,12 @@ const updateState = ({
       label,
       index,
       parentId,
-      idAttribute: id,
+      idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
     };
+
+    itemMap[id] = item;
 
     return {
       id,
@@ -84,37 +88,47 @@ const updateState = ({
   return {
     nodeMap,
     nodeTree,
+    itemMap,
   };
 };
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
+  publicAPI,
   params,
   state,
   setState,
 }) => {
-  const getNode = React.useCallback((nodeId: string) => state.nodeMap[nodeId], [state.nodeMap]);
+  const getNode = React.useCallback(
+    (itemId: string) => state.nodes.nodeMap[itemId],
+    [state.nodes.nodeMap],
+  );
+
+  const getItem = React.useCallback(
+    (itemId: string) => state.nodes.itemMap[itemId],
+    [state.nodes.itemMap],
+  );
 
   const isNodeDisabled = React.useCallback(
-    (nodeId: string | null): nodeId is string => {
-      if (nodeId == null) {
+    (itemId: string | null): itemId is string => {
+      if (itemId == null) {
         return false;
       }
 
-      let node = instance.getNode(nodeId);
+      let item = instance.getNode(itemId);
 
-      // This can be called before the node has been added to the node map.
-      if (!node) {
+      // This can be called before the item has been added to the node map.
+      if (!item) {
         return false;
       }
 
-      if (node.disabled) {
+      if (item.disabled) {
         return true;
       }
 
-      while (node.parentId != null) {
-        node = instance.getNode(node.parentId);
-        if (node.disabled) {
+      while (item.parentId != null) {
+        item = instance.getNode(item.parentId);
+        if (item.disabled) {
           return true;
         }
       }
@@ -124,38 +138,38 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.values(state.nodeMap)
-      .filter((node) => node.parentId === nodeId)
+  const getChildrenIds = useEventCallback((itemId: string | null) =>
+    Object.values(state.nodes.nodeMap)
+      .filter((item) => item.parentId === itemId)
       .sort((a, b) => a.index - b.index)
       .map((child) => child.id),
   );
 
-  const getNavigableChildrenIds = (nodeId: string | null) => {
-    let childrenIds = instance.getChildrenIds(nodeId);
+  const getNavigableChildrenIds = (itemId: string | null) => {
+    let childrenIds = instance.getChildrenIds(itemId);
 
     if (!params.disabledItemsFocusable) {
-      childrenIds = childrenIds.filter((node) => !instance.isNodeDisabled(node));
+      childrenIds = childrenIds.filter((item) => !instance.isNodeDisabled(item));
     }
     return childrenIds;
   };
 
   React.useEffect(() => {
     setState((prevState) => {
-      const newState = updateState({
+      const newState = updateNodesState({
         items: params.items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
       });
 
-      Object.values(prevState.nodeMap).forEach((node) => {
+      Object.values(prevState.nodes.nodeMap).forEach((node) => {
         if (!newState.nodeMap[node.id]) {
           publishTreeViewEvent(instance, 'removeNode', { id: node.id });
         }
       });
 
-      return { ...prevState, ...newState };
+      return { ...prevState, nodes: newState };
     });
   }, [
     instance,
@@ -166,29 +180,34 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getNodesToRender = useEventCallback(() => {
-    const getPropsFromNodeId = ({
+  const getNodesToRender = () => {
+    const getPropsFromItemId = ({
       id,
       children,
-    }: TreeViewNodeIdAndChildren): ReturnType<typeof instance.getNodesToRender>[number] => {
-      const node = state.nodeMap[id];
+    }: TreeViewItemIdAndChildren): ReturnType<typeof instance.getNodesToRender>[number] => {
+      const node = state.nodes.nodeMap[id];
       return {
         label: node.label!,
-        nodeId: node.id,
+        itemId: node.id,
         id: node.idAttribute,
-        children: children?.map(getPropsFromNodeId),
+        children: children?.map(getPropsFromItemId),
       };
     };
 
-    return state.nodeTree.map(getPropsFromNodeId);
-  });
+    return state.nodes.nodeTree.map(getPropsFromItemId);
+  };
 
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
+    getItem,
     getNodesToRender,
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
+  });
+
+  populatePublicAPI<UseTreeViewNodesSignature>(publicAPI, {
+    getItem,
   });
 
   return {
@@ -196,13 +215,14 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   };
 };
 
-useTreeViewNodes.getInitialState = (params) =>
-  updateState({
+useTreeViewNodes.getInitialState = (params) => ({
+  nodes: updateNodesState({
     items: params.items,
     isItemDisabled: params.isItemDisabled,
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
-  });
+  }),
+});
 
 useTreeViewNodes.getDefaultizedParams = (params) => ({
   ...params,
