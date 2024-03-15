@@ -101,7 +101,8 @@ const onBeforeClipboardPasteStart = async () => {
 <DataGridPremium onBeforeClipboardPasteStart={onBeforeClipboardPasteStart} />;
 ```
 
-The demo below calls [`window.confirm()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm) before pasting. If confirmed, it displays a loading indicator during the paste operation.
+The demo below uses the [`Dialog`](/material-ui/react-dialog/) component for paste confirmation.
+If confirmed, the Data Grid displays a loading indicator during the paste operation.
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 
