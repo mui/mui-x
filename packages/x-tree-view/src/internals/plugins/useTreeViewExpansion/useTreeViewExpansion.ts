@@ -15,16 +15,16 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   const isNodeExpanded = React.useCallback(
-    (nodeId: string) => {
+    (itemId: string) => {
       return Array.isArray(models.expandedItems.value)
-        ? models.expandedItems.value.indexOf(nodeId) !== -1
+        ? models.expandedItems.value.indexOf(itemId) !== -1
         : false;
     },
     [models.expandedItems.value],
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
+    (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
@@ -51,8 +51,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => {
+    const node = instance.getNode(itemId);
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
@@ -63,8 +63,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
     if (diff.length > 0) {
       if (params.onItemExpansionToggle) {
-        diff.forEach((newlyExpandedNodeId) => {
-          params.onItemExpansionToggle!(event, newlyExpandedNodeId, true);
+        diff.forEach((newlyExpandedItemId) => {
+          params.onItemExpansionToggle!(event, newlyExpandedItemId, true);
         });
       }
 
