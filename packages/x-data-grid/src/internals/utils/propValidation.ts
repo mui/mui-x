@@ -1,3 +1,4 @@
+import { isNumber } from '@mui/x-data-grid/utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
@@ -12,6 +13,11 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
         '',
         'Please remove one of these two props.',
       ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.paginationMode === 'client' &&
+      isNumber(props.rowCount) &&
+      'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
     undefined,
 ];
 
