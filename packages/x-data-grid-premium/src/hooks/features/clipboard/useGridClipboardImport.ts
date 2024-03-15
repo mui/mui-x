@@ -21,6 +21,7 @@ import {
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
+  useGridLogger,
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
@@ -318,6 +319,7 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteEnd'
     | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
+    | 'onBeforeClipboardPasteStart'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -325,8 +327,11 @@ export const useGridClipboardImport = (
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
   const rootEl = apiRef.current.rootElementRef?.current;
+  const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
+
+  const { pagination, onBeforeClipboardPasteStart } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -360,6 +365,15 @@ export const useGridClipboardImport = (
         return;
       }
 
+      if (onBeforeClipboardPasteStart) {
+        try {
+          await onBeforeClipboardPasteStart({ data: pastedData });
+        } catch (error) {
+          logger.debug('Clipboard paste operation cancelled');
+          return;
+        }
+      }
+
       const cellUpdater = new CellValueUpdater({
         apiRef,
         processRowUpdate,
@@ -377,7 +391,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
-        pagination: props.pagination,
+        pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -390,7 +404,9 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
-      props.pagination,
+      pagination,
+      onBeforeClipboardPasteStart,
+      logger,
     ],
   );
 
