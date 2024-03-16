@@ -90,7 +90,7 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 - [docs] Add `legacy` bundle drop mention in migration pages (#12424) @LukasTy
 - [docs] Add missing luxon `Info` import (#12427) @LukasTy
 - [docs] Improve slots definitions for charts (#12408) @alexfauquette
-- [docs] Polish What's new in MUI X blog titles (#12309) @oliviertassinari
+- [docs] Polish What's new in MUI X blog titles (#12309) @oliviertassinari
 - [docs] Replace `rel="noreferrer"` by `rel="noopener"` @oliviertassinari
 - [docs] Update `date-fns` `weekStarsOn` overriding example (#12416) @LukasTy
 
@@ -252,7 +252,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 ### Docs
 
 - [docs] Fix image layout shift when loading @oliviertassinari
-- [docs] Match Material UI repo comment for redirections @oliviertassinari
+- [docs] Match Material UI repo comment for redirections @oliviertassinari
 - [docs] Non breaking spaces @oliviertassinari
 - [docs] Polish the Date Picker playground (#11869) @zanivan
 - [docs] Standardize WAI-ARIA references @oliviertassinari
@@ -263,9 +263,9 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 - [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
 - [core] Remove `window.` reference for common globals @oliviertassinari
 - [core] Use runtime agnostic setTimeout type @oliviertassinari
-- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
+- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
 - [docs-infra] Fix missing non breaking spaces @oliviertassinari
-- [github] Update `no-response` workflow (#12193) @MBilalShafi
+- [infra] Update `no-response` workflow (#12193) @MBilalShafi
 - [infra] Fix missing permission reset @oliviertassinari
 
 ## 7.0.0-beta.4
@@ -282,7 +282,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Breaking changes
 
-- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
 
 ### Data Grid
 
@@ -392,7 +392,7 @@ These components are no longer exported from `@mui/x-charts`:
 ### Docs
 
 - [docs] Add recipe for hiding separator on non-resizable columns (#12134) @michelengelen
-- [docs] Add small improvements to the Gauge Chart page (#12076) @danilo-leal
+- [docs] Add small improvements to the Gauge page (#12076) @danilo-leal
 - [docs] Add the 'point' scaleType to the axis documentation (#12179) @alexfauquette
 - [docs] Clarify Pickers 'Component composition' section (#12097) @LukasTy
 - [docs] Fix "Licensing" page link (#12156) @LukasTy
@@ -975,7 +975,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
 - [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
 - [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
-- [charts] Remove a TS ignore (#11688) @alexfauquette
+- [charts] Remove a TypeScript ignore (#11688) @alexfauquette
 
 ### Tree View
 
@@ -1404,7 +1404,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [core] Fix release changelog (#11496) @romgrk
 - [core] Fix use of ::before & ::after (#11515) @oliviertassinari
 - [core] Localize the issue template to MUI X (#11511) @oliviertassinari
-- [core] Regen api files (#11542) @flaviendelangle
+- [core] Regenerate API files (#11542) @flaviendelangle
 - [core] Remove issue emoji @oliviertassinari
 - [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
@@ -1447,7 +1447,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
 
 #### `@mui/x-data-grid@7.0.0-alpha.6`
 
@@ -1658,7 +1658,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
 ### Core
 
 - [core] Automate cherry-pick of PRs from `next` -> `master` (#11382) @MBilalShafi
-- [github] Update `no-response` workflow (#11369) @MBilalShafi
+- [infra] Update `no-response` workflow (#11369) @MBilalShafi
 - [test] Fix flaky screenshots (#11388) @cherniavskii
 
 ## 7.0.0-alpha.4
@@ -1896,7 +1896,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 
 - [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11144) @michelengelen
 - [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
-- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix TypeScript config (#11259) @alexfauquette
 - [charts] Fix error with empty dataset (#11063) @alexfauquette
 - [charts] Fix export strategy (#11235) @alexfauquette
 - [charts] Remove outdated prop-types (#11045) @alexfauquette
