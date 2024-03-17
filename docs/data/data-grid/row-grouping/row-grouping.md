@@ -278,7 +278,7 @@ When using `rowGroupingColumnMode = "single"`, the default behavior is to:
 
 If you are rendering leaves with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
-You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupColDef`
+You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
 
 :::warning
 This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`.
