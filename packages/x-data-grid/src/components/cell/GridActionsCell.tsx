@@ -171,7 +171,7 @@ function GridActionsCell(props: GridActionsCellProps) {
 
     if (newIndex !== focusedButtonIndex) {
       event.preventDefault(); // Prevent scrolling
-      event.stopPropagation(); // Don't stop propagation for other keys, e.g. ArrowUp
+      event.stopPropagation(); // Don't stop propagation for other keys, for example ArrowUp
       setFocusedButtonIndex(newIndex);
     }
   };
