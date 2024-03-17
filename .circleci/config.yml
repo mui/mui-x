@@ -18,7 +18,7 @@ parameters:
     type: string
     default: ''
 
-defaults: &defaults
+default-job: &default-job
   parameters:
     react-dist-tag:
       description: The dist-tag of react to be used
@@ -45,6 +45,10 @@ defaults: &defaults
 # restore_repo: &restore_repo
 #   restore_cache:
 #     key: v1-repo-{{ .Branch }}-{{ .Revision }}
+
+default-context: &default-context
+  context:
+    - org-global
 
 commands:
   install_js:
@@ -116,7 +120,7 @@ commands:
 
 jobs:
   checkout:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -127,7 +131,7 @@ jobs:
           name: Check for duplicated packages
           command: yarn deduplicate
   test_unit:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -148,7 +152,7 @@ jobs:
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
   test_lint:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -162,7 +166,7 @@ jobs:
           name: Lint Markdown
           command: yarn markdownlint
   test_static:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -193,7 +197,7 @@ jobs:
             yarn docs:link-check
             git add -A && git diff --exit-code --staged
   test_browser:
-    <<: *defaults
+    <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
         environment:
@@ -210,7 +214,7 @@ jobs:
           path: /tmp/_karma_webpack_
           destination: artifact-file
   test_types:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -226,7 +230,7 @@ jobs:
           environment:
             NODE_OPTIONS: --max-old-space-size=3072
   test_e2e:
-    <<: *defaults
+    <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
         environment:
@@ -239,7 +243,7 @@ jobs:
           name: Run e2e tests
           command: yarn test:e2e
   test_e2e_website:
-    <<: *defaults
+    <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
         environment:
@@ -254,7 +258,7 @@ jobs:
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
-    <<: *defaults
+    <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
         environment:
@@ -270,7 +274,7 @@ jobs:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
   run_danger:
-    <<: *defaults
+    <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
         environment:
@@ -290,36 +294,46 @@ workflows:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout
+      - checkout:
+          <<: *default-context
       - test_unit:
+          <<: *default-context
           requires:
             - checkout
       - test_lint:
+          <<: *default-context
           requires:
             - checkout
       - test_static:
+          <<: *default-context
           requires:
             - checkout
       - test_browser:
+          <<: *default-context
           requires:
             - checkout
       - test_types:
+          <<: *default-context
           requires:
             - checkout
       - test_e2e:
+          <<: *default-context
           requires:
             - checkout
       - test_regressions:
+          <<: *default-context
           requires:
             - checkout
       - run_danger:
+          <<: *default-context
           requires:
             - checkout
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout
+      - checkout:
+          <<: *default-context
       - test_e2e_website:
           requires:
             - checkout
