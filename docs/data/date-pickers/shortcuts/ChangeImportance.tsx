@@ -16,7 +16,8 @@ const getMonthWeekday = (
   weekdayIndex: number,
   dayRank: number,
 ) => {
-  // Helper to find for example the 3rd monday in Jun
+  // Helper to find the nth weekday in a given month.
+  // For example, Find the 3rd Monday in January.
   const today = dayjs();
   const firstDayOfMonth = today.month(monthIndex).startOf('month');
   const weekDay = firstDayOfMonth.day(); // 0 (Sunday) to 6 (Saturday)
@@ -34,7 +35,6 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: "New Year's Day",
     getValue: () => {
       // (January 1)
-
       const today = dayjs();
       return today.month(0).date(1);
     },
@@ -50,7 +50,6 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Independence Day',
     getValue: () => {
       // (July 4)
-
       const today = dayjs();
       return today.month(6).date(4);
     },
@@ -73,7 +72,6 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Christmas Day',
     getValue: () => {
       // (December 25)
-
       const today = dayjs();
       return today.month(11).date(25);
     },

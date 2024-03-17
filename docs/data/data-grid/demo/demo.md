@@ -1,11 +1,9 @@
-# Data Grid - Demo
+# Data Grid Demo
 
-<p class="description">Use the demo below to explore the most significant features and their respective plans.</p>
+<p class="description">Explore all of the Data Grid features and understand which plan they're available in.</p>
 
 :::info
-We're using the Data Grid to display the following features' table.
-
-Filtering, sorting, and grouping (by plan) are at your disposal to help you explore the list.
+Note that this demo itself uses the Data Grid with features such as filtering, sorting, and grouping!
 :::
 
 {{"demo": "PopularFeaturesDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}

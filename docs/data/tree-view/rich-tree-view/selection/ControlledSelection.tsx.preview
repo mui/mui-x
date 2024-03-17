@@ -1,0 +1,13 @@
+<Box sx={{ mb: 1 }}>
+  <Button onClick={handleSelectClick}>
+    {selectedItems.length === 0 ? 'Select all' : 'Unselect all'}
+  </Button>
+</Box>
+<Box sx={{ minHeight: 200, flexGrow: 1 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    selectedItems={selectedItems}
+    onSelectedItemsChange={handleSelectedItemsChange}
+    multiSelect
+  />
+</Box>

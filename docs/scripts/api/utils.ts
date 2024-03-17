@@ -3,11 +3,11 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
-import { Project, ProjectNames } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 
-export type DocumentedInterfaces = Map<string, ProjectNames[]>;
+export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
-export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
+export const getSymbolDescription = (symbol: ts.Symbol, project: XTypeScriptProject) =>
   symbol
     .getDocumentationComment(project.checker)
     .flatMap((comment) => comment.text.split('\n'))
@@ -33,7 +33,7 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
-export const formatType = (rawType: string) => {
+export const formatType = async (rawType: string) => {
   if (!rawType) {
     return '';
   }
@@ -41,7 +41,7 @@ export const formatType = (rawType: string) => {
   const prefix = 'type FakeType = ';
   const signatureWithTypeName = `${prefix}${rawType}`;
 
-  const prettifiedSignatureWithTypeName = prettier.format(signatureWithTypeName, {
+  const prettifiedSignatureWithTypeName = await prettier.format(signatureWithTypeName, {
     printWidth: 999,
     singleQuote: true,
     semi: false,
@@ -52,7 +52,7 @@ export const formatType = (rawType: string) => {
   return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
 };
 
-export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
+export const stringifySymbol = async (symbol: ts.Symbol, project: XTypeScriptProject) => {
   let rawType: string;
 
   const declaration = symbol.declarations?.[0];
@@ -88,8 +88,12 @@ export function linkify(
   });
 }
 
-export function writePrettifiedFile(filename: string, data: string, project: Project) {
-  const prettierConfig = prettier.resolveConfig.sync(filename, {
+export async function writePrettifiedFile(
+  filename: string,
+  data: string,
+  project: XTypeScriptProject,
+) {
+  const prettierConfig = await prettier.resolveConfig(filename, {
     config: project.prettierConfigPath,
   });
   if (prettierConfig === null) {
@@ -98,9 +102,13 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
     );
   }
 
-  fse.writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
-    encoding: 'utf8',
-  });
+  fse.writeFileSync(
+    filename,
+    await prettier.format(data, { ...prettierConfig, filepath: filename }),
+    {
+      encoding: 'utf8',
+    },
+  );
 }
 
 /**
@@ -112,7 +120,7 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
  * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
  * Because we usually want to keep the description and tags of the aliased symbol.
  */
-export const resolveExportSpecifier = (symbol: ts.Symbol, project: Project) => {
+export const resolveExportSpecifier = (symbol: ts.Symbol, project: XTypeScriptProject) => {
   let resolvedSymbol = symbol;
 
   while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {

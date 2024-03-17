@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const hiddenFields = ['__row_group_by_columns_group__', 'status'];
+const hiddenFields = ['id', '__row_group_by_columns_group__', 'status'];
 
 const getTogglableColumns = (columns: GridColDef[]) => {
   return columns
@@ -45,7 +45,7 @@ export default function ColumnSelectorGridCustomizeColumns() {
           toolbar: GridToolbar,
         }}
         slotProps={{
-          columnsPanel: {
+          columnsManagement: {
             getTogglableColumns,
           },
         }}

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 const columns = [
   { field: 'city' },
-  { field: 'oct', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'nov', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-  { field: 'dec', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
+  { field: 'oct', type: 'number', valueFormatter: (value) => `${value} °C` },
+  { field: 'nov', type: 'number', valueFormatter: (value) => `${value} °C` },
+  { field: 'dec', type: 'number', valueFormatter: (value) => `${value} °C` },
 ];
 
 const rows = [
@@ -22,11 +22,11 @@ export default function StylingAllCells() {
       sx={{
         height: 300,
         width: '100%',
-        '& .cold': {
+        [`.${gridClasses.cell}.cold`]: {
           backgroundColor: '#b9d5ff91',
           color: '#1a3e72',
         },
-        '& .hot': {
+        [`.${gridClasses.cell}.hot`]: {
           backgroundColor: '#ff943975',
           color: '#1a3e72',
         },

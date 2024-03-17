@@ -1,13 +1,12 @@
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
-} from 'test/utils/pickers-utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+  expectFieldValueV7,
+  describeValidation,
+  describeValue,
+  formatFullTimeValue,
+  getFieldInputRoot,
+} from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {
@@ -23,25 +22,26 @@ describe('<TimeField /> - Describes', () => {
   describeValue(TimeField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
+      const fieldRoot = getFieldInputRoot();
+
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = formatFullTimeValue(adapterToUse, expectedValue);
+      } else {
+        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
       }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
-        : '';
-      expectInputValue(input, expectedValueStr);
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value, 1);
       selectSection('hours');
-      const input = getTextbox();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      pressKey(undefined, 'ArrowUp');
 
       return newValue;
     },

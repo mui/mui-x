@@ -1,5 +1,7 @@
 ---
 title: Charts - Line demonstration
+productId: x-charts
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot
 ---
 
 # Charts - Line demonstration
@@ -21,3 +23,11 @@ title: Charts - Line demonstration
 ## BiaxialLineChart
 
 {{"demo": "BiaxialLineChart.js"}}
+
+## LineChartWithReferenceLines
+
+{{"demo": "LineChartWithReferenceLines.js"}}
+
+## LineChartConnectNulls
+
+{{"demo": "LineChartConnectNulls.js"}}

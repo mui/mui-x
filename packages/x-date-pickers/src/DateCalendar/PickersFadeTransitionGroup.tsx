@@ -1,9 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Fade from '@mui/material/Fade';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionGroup } from 'react-transition-group';
+import Fade from '@mui/material/Fade';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersFadeTransitionGroupUtilityClass,
   PickersFadeTransitionGroupClasses,
@@ -14,6 +14,9 @@ export interface PickersFadeTransitionGroupProps {
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersFadeTransitionGroupClasses>;
 }
 
@@ -25,8 +28,6 @@ const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
 
   return composeClasses(slots, getPickersFadeTransitionGroupUtilityClass, classes);
 };
-
-const animationDuration = 500;
 
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
@@ -44,6 +45,7 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
   const props = useThemeProps({ props: inProps, name: 'MuiPickersFadeTransitionGroup' });
   const { children, className, reduceAnimations, transKey } = props;
   const classes = useUtilityClasses(props);
+  const theme = useTheme();
   if (reduceAnimations) {
     return children;
   }
@@ -55,7 +57,11 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
         mountOnEnter
         unmountOnExit
         key={transKey}
-        timeout={{ appear: animationDuration, enter: animationDuration / 2, exit: 0 }}
+        timeout={{
+          appear: theme.transitions.duration.enteringScreen,
+          enter: theme.transitions.duration.enteringScreen,
+          exit: 0,
+        }}
       >
         {children}
       </Fade>

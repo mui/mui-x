@@ -10,7 +10,7 @@ import {
   GridRowsProp,
   GridRowModesModel,
   GridRowModes,
-  DataGridPro,
+  DataGrid,
   GridColDef,
   GridToolbarContainer,
   GridActionsCellItem,
@@ -18,7 +18,8 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-} from '@mui/x-data-grid-pro';
+  GridSlots,
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -228,7 +229,7 @@ export default function FullFeaturedCrudGrid() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"
@@ -237,7 +238,7 @@ export default function FullFeaturedCrudGrid() {
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{
-          toolbar: EditToolbar,
+          toolbar: EditToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
           toolbar: { setRows, setRowModesModel },

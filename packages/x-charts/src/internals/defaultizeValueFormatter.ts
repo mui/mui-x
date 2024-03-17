@@ -1,22 +1,17 @@
-function defaultizeValueFormatter<ISeries extends {}, IFormatter extends (v: any) => string>(
-  series: {
-    [id: string]: ISeries;
-  },
+import { SeriesId } from '../models/seriesType/common';
+
+function defaultizeValueFormatter<
+  ISeries extends { valueFormatter?: IFormatter },
+  IFormatter extends (v: any) => string,
+>(
+  series: Record<SeriesId, ISeries>,
   defaultValueFormatter: IFormatter,
-): {
-  [id: string]: ISeries & {
-    valueFormatter: IFormatter;
-  };
-} {
-  const defaultizedSeries: {
-    [id: string]: ISeries & {
-      valueFormatter: IFormatter;
-    };
-  } = {};
+): Record<SeriesId, ISeries & { valueFormatter: IFormatter }> {
+  const defaultizedSeries: Record<SeriesId, ISeries & { valueFormatter: IFormatter }> = {};
   Object.keys(series).forEach((seriesId) => {
     defaultizedSeries[seriesId] = {
-      valueFormatter: defaultValueFormatter,
       ...series[seriesId],
+      valueFormatter: series[seriesId].valueFormatter ?? defaultValueFormatter,
     };
   });
   return defaultizedSeries;

@@ -1,40 +1,81 @@
 {
   "props": {
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
-  },
-  "slots": {
-    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "layout": { "type": { "name": "elementType" } },
-    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "tabs": { "type": { "name": "elementType" } },
-    "toolbar": { "type": { "name": "elementType" } }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
   },
   "name": "PickersLayout",
-  "styles": {
-    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
-    "globalClasses": {},
-    "name": "MuiPickersLayout"
-  },
+  "imports": [
+    "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",
+    "import { PickersLayout } from '@mui/x-date-pickers';",
+    "import { PickersLayout } from '@mui/x-date-pickers-pro';"
+  ],
+  "slots": [
+    {
+      "name": "tabs",
+      "description": "Tabs enabling toggling between views.",
+      "class": "MuiPickersLayout-tabs"
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.\nIt is placed above the picker views.",
+      "class": "MuiPickersLayout-toolbar"
+    },
+    {
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": "MuiPickersLayout-actionBar"
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": "MuiPickersLayout-shortcuts"
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "contentWrapper",
+      "className": "MuiPickersLayout-contentWrapper",
+      "description": "Styles applied to the contentWrapper element (which contains the tabs and the view itself).",
+      "isGlobal": false
+    },
+    {
+      "key": "landscape",
+      "className": "MuiPickersLayout-landscape",
+      "description": "Styles applied to the root element in landscape orientation.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersLayout-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPickersLayout",
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
+  "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
-  "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersLayout" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "PickersLayout" }
-  ]
+  "cssComponent": false
 }

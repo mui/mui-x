@@ -1,5 +1,6 @@
 ---
 title: Charts - Stacking
+productId: x-charts
 ---
 
 # Charts - Stacking
@@ -18,7 +19,7 @@ Series with the same `stack` value will get stacked together.
 
 Based on D3 [stack orders](https://github.com/d3/d3-shape#stack-orders) and [stack offsets](https://github.com/d3/d3-shape#stack-offsets) you can modify how series are stacked.
 
-To pass those attributes, use series properties `stackOffset` (default `'diverging'`) and `stackOrder` (default `'none'`).
+To pass those attributes, use series properties `stackOffset` (default `'diverging'` for bar and `'none'` for line) and `stackOrder` (default `'none'`).
 You can define them for only one of the series of a stack group.
 
 ### Stack offset

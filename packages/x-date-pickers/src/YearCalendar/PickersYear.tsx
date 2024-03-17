@@ -64,7 +64,7 @@ const PickersYearButton = styled('button', {
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: '8px 0',
+  margin: '6px 0',
   height: 36,
   width: 72,
   borderRadius: 18,
@@ -143,8 +143,10 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
         ref={ref}
         disabled={disabled}
         type="button"
+        role="radio"
         tabIndex={disabled ? -1 : tabIndex}
         aria-current={ariaCurrent}
+        aria-checked={selected}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}

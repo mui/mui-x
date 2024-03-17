@@ -1,0 +1,15 @@
+<DatePicker
+  label="Departure"
+  // Using an SVG component from `@mui/icons-material`
+  slots={{ openPickerIcon: FlightTakeoffIcon }}
+/>
+<DatePicker
+  label="Arrival"
+  // Using a custom SVG component
+  slots={{ openPickerIcon: FlightLandIcon }}
+/>
+<DatePicker
+  label="New release date"
+  // Using an img component
+  slots={{ openPickerIcon: MuiIcon }}
+/>

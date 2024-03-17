@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/monorepo/packages/markdown';
 import {
   escapeCell,
   getSymbolDescription,
@@ -13,11 +13,15 @@ import {
   resolveExportSpecifier,
   DocumentedInterfaces,
 } from './utils';
-import { Projects, Project, ProjectNames } from '../getTypeScriptProjects';
+import {
+  XTypeScriptProjects,
+  XTypeScriptProject,
+  XProjectNames,
+} from '../createXTypeScriptProjects';
 
 interface ParsedObject {
   name: string;
-  projects: ProjectNames[];
+  projects: XProjectNames[];
   description?: string;
   properties: ParsedProperty[];
   tags: { [tagName: string]: ts.JSDocTagInfo };
@@ -32,25 +36,26 @@ interface ParsedProperty {
   /**
    * Name of the projects on which the interface has this property
    */
-  projects: ProjectNames[];
+  projects: XProjectNames[];
 }
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
-  'GridRowSelectionApi',
-  'GridRowMultiSelectionApi',
   'GridCellSelectionApi',
-  'GridFilterApi',
-  'GridSortApi',
-  'GridPaginationApi',
-  'GridCsvExportApi',
-  'GridScrollApi',
-  'GridEditingApi',
-  'GridRowGroupingApi',
   'GridColumnPinningApi',
+  'GridColumnResizeApi',
+  'GridCsvExportApi',
   'GridDetailPanelApi',
-  'GridPrintExportApi',
-  'GridDisableVirtualizationApi',
+  'GridEditingApi',
   'GridExcelExportApi',
+  'GridFilterApi',
+  'GridPaginationApi',
+  'GridPrintExportApi',
+  'GridRowGroupingApi',
+  'GridRowMultiSelectionApi',
+  'GridRowSelectionApi',
+  'GridScrollApi',
+  'GridSortApi',
+  'GridVirtualizationApi',
 ];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -81,27 +86,30 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridAggregationFunction',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
+const parseProperty = async (
+  propertySymbol: ts.Symbol,
+  project: XTypeScriptProject,
+): Promise<ParsedProperty> => ({
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
   isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
-  typeStr: stringifySymbol(propertySymbol, project),
+  typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
 
 interface ProjectInterface {
-  project: Project;
+  project: XTypeScriptProject;
   symbol: ts.Symbol;
   type: ts.Type;
   declaration: ts.InterfaceDeclaration;
 }
 
-const parseInterfaceSymbol = (
+const parseInterfaceSymbol = async (
   interfaceName: string,
   documentedInterfaces: DocumentedInterfaces,
-  projects: Projects,
-): ParsedObject | null => {
+  projects: XTypeScriptProjects,
+): Promise<ParsedObject | null> => {
   const projectInterfaces = documentedInterfaces
     .get(interfaceName)!
     .map((projectName) => {
@@ -143,17 +151,20 @@ const parseInterfaceSymbol = (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  projectInterfaces.forEach(({ type, project }) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    propertiesOnProject.forEach((propertySymbol) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
       } else {
-        properties[propertySymbol.name] = parseProperty(propertySymbol, project);
+        // eslint-disable-next-line no-await-in-loop
+        properties[propertySymbol.name] = await parseProperty(propertySymbol, project);
       }
-    });
-  });
+    }
+  }
 
   parsedInterface.properties = Object.values(properties)
     .filter((property) => !property.tags.ignore)
@@ -219,7 +230,7 @@ function generateMarkdownFromProperties(
   return text;
 }
 
-function generateImportStatement(objects: ParsedObject[], projects: Projects) {
+async function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptProjects) {
   let imports = '```js\n';
 
   const projectImports = Array.from(projects.values())
@@ -240,7 +251,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
     // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.length - a.length);
 
-  imports += prettier.format(projectImports.join('\n// or\n'), {
+  imports += await prettier.format(projectImports.join('\n// or\n'), {
     singleQuote: true,
     semi: false,
     trailingComma: 'none',
@@ -251,14 +262,14 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   return imports;
 }
 
-function generateMarkdown(
+async function generateMarkdown(
   object: ParsedObject,
-  projects: Projects,
+  projects: XTypeScriptProjects,
   documentedInterfaces: DocumentedInterfaces,
 ) {
   const demos = object.tags.demos;
   const description = linkify(object.description, documentedInterfaces, 'html');
-  const imports = generateImportStatement([object], projects);
+  const imports = await generateImportStatement([object], projects);
 
   let text = `# ${object.name} Interface\n`;
   text += `<p class="description">${description}</p>\n\n`;
@@ -282,11 +293,13 @@ function generateMarkdown(
 }
 
 interface BuildInterfacesDocumentationOptions {
-  projects: Projects;
+  projects: XTypeScriptProjects;
   apiPagesFolder: string;
 }
 
-export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
+export default async function buildInterfacesDocumentation(
+  options: BuildInterfacesDocumentationOptions,
+) {
   const { projects, apiPagesFolder } = options;
 
   const allProjectsName = Array.from(projects.keys());
@@ -307,11 +320,19 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [interfaceName, packagesWithThisInterface] of Array.from(
+    documentedInterfaces.entries(),
+  )) {
     const project = projects.get(packagesWithThisInterface[0])!;
-    const parsedInterface = parseInterfaceSymbol(interfaceName, documentedInterfaces, projects);
+    // eslint-disable-next-line no-await-in-loop
+    const parsedInterface = await parseInterfaceSymbol(
+      interfaceName,
+      documentedInterfaces,
+      projects,
+    );
     if (!parsedInterface) {
-      return;
+      continue;
     }
 
     const slug = kebabCase(parsedInterface.name);
@@ -322,13 +343,12 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
         properties: parsedInterface.properties.map((property) => ({
           name: property.name,
-          description: renderMarkdownInline(
-            linkify(property.description, documentedInterfaces, 'html'),
-          ),
+          description: renderMarkdown(linkify(property.description, documentedInterfaces, 'html')),
           type: property.typeStr,
         })),
       };
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
@@ -336,14 +356,17 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', parsedInterface.name);
     } else {
-      const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      const markdown = await generateMarkdown(parsedInterface, projects, documentedInterfaces);
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.md`),
         markdown,
         project,
       );
 
-      writePrettifiedFile(
+      // eslint-disable-next-line no-await-in-loop
+      await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
@@ -359,7 +382,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       // eslint-disable-next-line no-console
       console.log('Built API docs for', parsedInterface.name);
     }
-  });
+  }
 
   return documentedInterfaces;
 }

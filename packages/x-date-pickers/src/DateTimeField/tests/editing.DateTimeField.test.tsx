@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { userEvent } from '@mui/monorepo/test/utils';
+import { fireEvent } from '@mui-internal/test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
-} from 'test/utils/pickers-utils';
+  expectFieldValueV7,
+} from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -23,16 +24,17 @@ describe('<DateTimeField /> - Editing', () => {
   describe('Reference value', () => {
     it('should use the referenceDate prop when defined', () => {
       const onChange = spy();
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const { input, selectSection } = renderWithProps({
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         format: adapterToUse.formats.month,
       });
 
-      selectSection('month');
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      v7Response.selectSection('month');
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
       // All sections not present should equal the one from the referenceDate, and the month should equal January (because it's an ArrowUp on an empty month).
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(referenceDate, 0));
@@ -40,18 +42,19 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a value is defined', () => {
       const onChange = spy();
-      const value = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const value = adapterToUse.date('2018-11-03T22:15:00');
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const { input, selectSection } = renderWithProps({
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         value,
         format: adapterToUse.formats.month,
       });
 
-      selectSection('month');
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      v7Response.selectSection('month');
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
       // Should equal the initial `value` prop with one less month.
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(value, 11));
@@ -59,18 +62,19 @@ describe('<DateTimeField /> - Editing', () => {
 
     it('should not use the referenceDate prop when a defaultValue is defined', () => {
       const onChange = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
-      const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
+      const defaultValue = adapterToUse.date('2018-11-03T22:15:00');
+      const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const { input, selectSection } = renderWithProps({
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         defaultValue,
         format: adapterToUse.formats.month,
       });
 
-      selectSection('month');
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      v7Response.selectSection('month');
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
       // Should equal the initial `defaultValue` prop with one less month.
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(defaultValue, 11));
@@ -80,13 +84,14 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year when granularity = month', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.month,
         });
 
-        selectSection('month');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('month');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01');
       });
@@ -94,13 +99,14 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year and month when granularity = day', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.dayOfMonth,
         });
 
-        selectSection('day');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('day');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-05-01');
       });
@@ -108,19 +114,20 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep up to the hours when granularity = minutes', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.fullTime24h,
         });
 
-        selectSection('hours');
+        v7Response.selectSection('hours');
 
         // Set hours
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         // Set minutes
-        userEvent.keyPress(input, { key: 'ArrowRight' });
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
+        fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-05-03T00:00:00.000Z');
       });
@@ -129,16 +136,17 @@ describe('<DateTimeField /> - Editing', () => {
     describe('Reference value based on validation props', () => {
       it("should create a reference date just after the `minDate` if it's after the current date", () => {
         const onChange = spy();
-        const minDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
+        const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
         });
 
-        selectSection('month');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('month');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2030-01-01T00:00');
@@ -146,16 +154,17 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should ignore the `minDate` if  it's before the current date", () => {
         const onChange = spy();
-        const minDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
+        const minDate = adapterToUse.date('2007-05-05T18:30:00');
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
         });
 
-        selectSection('month');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('month');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity but not the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01T00:00');
@@ -163,16 +172,17 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should create a reference date just before the `maxDate` if it's before the current date", () => {
         const onChange = spy();
-        const maxDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
+        const maxDate = adapterToUse.date('2007-05-05T18:30:00');
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
         });
 
-        selectSection('month');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('month');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2007-01-01T00:00');
@@ -180,20 +190,36 @@ describe('<DateTimeField /> - Editing', () => {
 
       it("should ignore the `maxDate` if  it's after the current date", () => {
         const onChange = spy();
-        const maxDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
+        const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
-        const { input, selectSection } = renderWithProps({
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
         });
 
-        selectSection('month');
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        v7Response.selectSection('month');
+        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity but not the maxDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01T00:00');
       });
     });
+  });
+
+  it('should correctly update `value` when both `format` and `value` are changed', () => {
+    const v7Response = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      value: null,
+      format: 'P',
+    });
+    expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+
+    v7Response.setProps({
+      format: 'Pp',
+      value: adapterToUse.date('2012-05-03T14:30:00'),
+    });
+    expectFieldValueV7(v7Response.getSectionsContainer(), '05/03/2012, 02:30 PM');
   });
 });

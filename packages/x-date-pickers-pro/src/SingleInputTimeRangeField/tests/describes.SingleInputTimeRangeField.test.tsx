@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
+import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<SingleInputTimeRangeField />, () => ({
+  describeConformance(<SingleInputTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

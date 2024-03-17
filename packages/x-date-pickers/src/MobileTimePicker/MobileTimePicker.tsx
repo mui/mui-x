@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
@@ -8,18 +9,35 @@ import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TDate>(
-  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+type MobileTimePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
 
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
-  inProps: MobileTimePickerProps<TDate>,
+/**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
+ */
+const MobileTimePicker = React.forwardRef(function MobileTimePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -29,7 +47,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
-    MobileTimePickerProps<TDate>
+    MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
@@ -65,11 +83,17 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useMobilePicker<
+    TDate,
+    TimeView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: localeText.openTimePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
     validator: validateTime,
   });
 
@@ -98,9 +122,6 @@ MobileTimePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
@@ -108,22 +129,10 @@ MobileTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -150,6 +159,10 @@ MobileTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -163,12 +176,7 @@ MobileTimePicker.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -182,17 +190,21 @@ MobileTimePicker.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -255,18 +267,29 @@ MobileTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.object,
+  /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -276,19 +299,7 @@ MobileTimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate
@@ -319,7 +330,7 @@ MobileTimePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -327,7 +338,7 @@ MobileTimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

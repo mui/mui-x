@@ -1,17 +1,15 @@
-import * as React from 'react';
 import moment from 'moment';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { expect } from 'chai';
+import { DateTimeField } from '@mui/x-date-pickers';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
-import { describeHijriAdapter } from '@mui/x-date-pickers/tests/describeHijriAdapter';
+  expectFieldValueV7,
+  describeHijriAdapter,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 import 'moment/locale/ar';
-import { AdapterFormats } from '@mui/x-date-pickers';
-import { expect } from 'chai';
 
 describe('<AdapterMomentHijri />', () => {
   describeHijriAdapter(AdapterMomentHijri, {
@@ -35,12 +33,10 @@ describe('<AdapterMomentHijri />', () => {
 
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
       expectDate('fullDate', '١٤٤١، جمادى الأولى ١');
-      expectDate('fullDateWithWeekday', '١٤٤١، جمادى الأولى ١، الأربعاء');
       expectDate('normalDate', 'الأربعاء، ٦ جمادى ١');
       expectDate('shortDate', '٦ جمادى ١');
       expectDate('year', '١٤٤١');
       expectDate('month', 'جمادى الأولى');
-      expectDate('monthAndDate', '٦ جمادى الأولى');
       expectDate('weekday', 'الأربعاء');
       expectDate('weekdayShort', 'أربعاء');
       expectDate('dayOfMonth', '٦');
@@ -50,13 +46,11 @@ describe('<AdapterMomentHijri />', () => {
       expectDate('hours24h', '٢٣');
       expectDate('minutes', '٤٤');
       expectDate('seconds', '٠٠');
-      expectDate('fullDateTime12h', '٦ جمادى الأولى ١١:٤٤ م');
-      expectDate('fullDateTime24h', '٦ جمادى الأولى ٢٣:٤٤');
     });
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       ar: {
         placeholder: 'YYYY/MM/DD hh:mm',
@@ -68,25 +62,34 @@ describe('<AdapterMomentHijri />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment-hijri',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

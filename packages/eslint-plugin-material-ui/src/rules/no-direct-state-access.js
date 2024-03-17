@@ -22,7 +22,7 @@ function reportIfDirectlyAccessingState(node, context, nodeToReport = node) {
     return;
   }
 
-  const parserServices = ESLintUtils.getParserServices(context);
+  const { parserServices } = context.sourceCode;
   const checker = parserServices.program.getTypeChecker();
 
   const originalNode = parserServices.esTreeNodeToTSNodeMap.get(maybeApiRef);

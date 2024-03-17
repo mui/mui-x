@@ -1,5 +1,7 @@
 ---
 title: Charts - Bar demonstration
+productId: x-charts
+components: BarChart, BarElement, BarPlot
 ---
 
 # Charts - Bar demonstration
@@ -21,6 +23,10 @@ title: Charts - Bar demonstration
 ## MixedBarChart
 
 {{"demo": "MixedBarChart.js"}}
+
+## PositiveAndNegativeBarChart
+
+{{"demo": "PositiveAndNegativeBarChart.js"}}
 
 ## BarChartStackedBySign
 

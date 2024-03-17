@@ -1,7 +1,5 @@
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, describeValidation, describePicker } from 'test/utils/pickers';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<StaticDateTime /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

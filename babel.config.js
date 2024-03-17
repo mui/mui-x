@@ -1,5 +1,5 @@
 const path = require('path');
-const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
+const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
 
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
@@ -7,16 +7,23 @@ function resolveAliasPath(relativeToBabelConf) {
 }
 
 const defaultAlias = {
-  '@mui/x-data-grid': resolveAliasPath('./packages/grid/x-data-grid/src'),
-  '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
-  '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
-  '@mui/x-data-grid-premium': resolveAliasPath('./packages/grid/x-data-grid-premium/src'),
-  '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
+  '@mui/x-data-grid': resolveAliasPath('./packages/x-data-grid/src'),
+  '@mui/x-data-grid-generator': resolveAliasPath('./packages/x-data-grid-generator/src'),
+  '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
+  '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
+  '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
+  '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
+  '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/markdown': '@mui/monorepo/packages/markdown',
-  '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
-  'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
+  '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
+  '@mui-internal/api-docs-builder': resolveAliasPath(
+    './node_modules/@mui/monorepo/packages/api-docs-builder',
+  ),
+  '@mui-internal/test-utils': resolveAliasPath(
+    './node_modules/@mui/monorepo/packages/test-utils/src',
+  ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),
@@ -27,7 +34,7 @@ const productionPlugins = [
 ];
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
+  const useESModules = api.env(['modern', 'stable', 'rollup']);
 
   const presets = [
     [
@@ -74,6 +81,21 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
+  if (process.env.NODE_ENV === 'test') {
+    plugins.push(['@babel/plugin-transform-export-namespace-from']);
+    // We replace `date-fns` imports with an aliased `date-fns@v3` version installed as `date-fns-v3` for tests.
+    // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
+    // TODO: remove when we upgrade to date-fns v3 by default.
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns/i,
+        replacer: 'date-fns-v3',
+        ignoreFilenames: 'AdapterDateFns.ts',
+      },
+    ]);
+  }
+
   if (process.env.NODE_ENV === 'production') {
     plugins.push(...productionPlugins);
 
@@ -91,19 +113,15 @@ module.exports = function getBabelConfig(api) {
       ]);
     }
   }
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push([
-      'babel-plugin-module-resolver',
-      {
-        alias: defaultAlias,
-        root: ['./'],
-      },
-    ]);
-  }
 
   return {
     assumptions: {
       noDocumentAll: true,
+      // TODO: Replace "loose" mode with these:
+      // setPublicClassFields: true,
+      // privateFieldsAsProperties: true,
+      // objectRestNoSymbols: true,
+      // setSpreadProperties: true,
     },
     presets,
     plugins,
@@ -137,12 +155,6 @@ module.exports = function getBabelConfig(api) {
           ],
         ],
       },
-      legacy: {
-        plugins: [
-          // IE11 support
-          '@babel/plugin-transform-object-assign',
-        ],
-      },
       test: {
         sourceMaps: 'both',
         plugins: [
@@ -150,17 +162,6 @@ module.exports = function getBabelConfig(api) {
             'babel-plugin-module-resolver',
             {
               root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
-      benchmark: {
-        plugins: [
-          ...productionPlugins,
-          [
-            'babel-plugin-module-resolver',
-            {
               alias: defaultAlias,
             },
           ],

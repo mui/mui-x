@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
 import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateRangePickerDay />', () => {
   const { render } = createPickerRenderer();

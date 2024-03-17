@@ -4,7 +4,7 @@
       <DateTimePicker
         label="Date Picker"
         defaultValue={moment(new Date(2022, 1, 1))}
-        // moment-hijri support dates bewteen 1356-01-01 and 1499-12-29 H (1937-03-14 and 2076-11-26)
+        // moment-hijri support dates between 1356-01-01 and 1499-12-29 H (1937-03-14 and 2076-11-26)
         minDate={moment(new Date(1938, 0, 1))}
         maxDate={moment(new Date(2075, 11, 31))}
       />

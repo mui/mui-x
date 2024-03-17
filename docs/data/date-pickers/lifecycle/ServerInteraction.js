@@ -24,8 +24,8 @@ function DisplayEvents(props) {
                 value === null
                   ? 'null'
                   : value.isValid()
-                  ? value.format('DD/MM/YYYY')
-                  : 'Invalid Date'
+                    ? value.format('DD/MM/YYYY')
+                    : 'Invalid Date'
               }`,
           )
           .join('\n')}
@@ -62,16 +62,19 @@ function DateFieldWithAccept(props) {
     default: null,
   });
 
-  // Debounced function needs to be memoized to keep the same timeout beween each render.
+  // Debounced function needs to be memoized to keep the same timeout between each render.
   // For the same reason, the `onAccept` needs to be wrapped in useCallback.
-  const deboucedOnAccept = React.useMemo(() => debounce(onAccept, 1000), [onAccept]);
+  const debouncedOnAccept = React.useMemo(
+    () => debounce(onAccept, 1000),
+    [onAccept],
+  );
 
   return (
     <DateField
       value={value}
       onChange={(newValue, context) => {
         setValue(newValue);
-        deboucedOnAccept(newValue);
+        debouncedOnAccept(newValue);
         onChange?.(newValue, context);
       }}
       {...other}

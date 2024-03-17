@@ -2,16 +2,11 @@
 title: Data Grid - Header filters
 ---
 
-# Data Grid - Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
 :::warning
-This feature is unstable, it needs to be explicitly activated using the `unstable_headerFilters` prop.
-
-```tsx
-<DataGridPro unstable_headerFilters {...otherProps} />
-```
 
 To use header filters, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
@@ -25,7 +20,7 @@ You can switch between different operators by clicking the operator button in th
 
 ## Simple header filters
 
-You can disable default filter panel using `disableColumnFilter` prop and only show the default operator by passing `slots.headerFilterMenu` as `null`.
+You can disable the default filter panel using `disableColumnFilter` prop and only show the default operator by passing `slots.headerFilterMenu` as `null`.
 
 {{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -71,6 +66,10 @@ Additionally, `slots.headerFilterMenu` could also be used to customize the menu 
 ```
 
 {{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Ignore diacritics (accents)
+
+You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
 
 ## API
 

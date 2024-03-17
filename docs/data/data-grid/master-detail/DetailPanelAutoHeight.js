@@ -69,7 +69,7 @@ function DetailPanelContent({ row: rowProp }) {
         field: 'total',
         headerName: 'Total',
         type: 'number',
-        valueGetter: ({ row }) => row.quantity * row.unitPrice,
+        valueGetter: (value, row) => row.quantity * row.unitPrice,
       },
       {
         field: 'actions',
@@ -113,11 +113,11 @@ function DetailPanelContent({ row: rowProp }) {
               </Typography>
             </Grid>
           </Grid>
-          <Box>
+          <div>
             <Button variant="outlined" size="small" onClick={addProduct}>
               Add Product
             </Button>
-          </Box>
+          </div>
           <DataGridPro
             density="compact"
             autoHeight
@@ -141,7 +141,7 @@ const columns = [
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc, product) => product.unitPrice * product.quantity,
         0,

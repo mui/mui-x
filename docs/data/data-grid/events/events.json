@@ -273,8 +273,8 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "renderedRowsIntervalChange",
-    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderedRowsIntervalChangeParams object.",
-    "params": "GridRenderedRowsIntervalChangeParams",
+    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderContext object.",
+    "params": "GridRenderContext",
     "event": "MuiEvent<{}>"
   },
   {
@@ -287,10 +287,17 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
-    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
+    "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onRowClick"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowCountChange",
+    "description": "Fired when the row count change.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -299,14 +306,6 @@
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onRowDoubleClick"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "rowEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridRowId",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onRowEditCommit"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

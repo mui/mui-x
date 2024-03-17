@@ -18,14 +18,14 @@ function QuickSearchToolbar() {
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-const getApplyFilterFnSameYear = (value) => {
+const getApplyQuickFilterFnSameYear = (value) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
-    // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
+    // If the value is not a 4-digit string, it cannot be a year so applying this filter is useless
     return null;
   }
-  return (params) => {
-    if (params.value instanceof Date) {
-      return params.value.getFullYear() === Number(value);
+  return (cellValue) => {
+    if (cellValue instanceof Date) {
+      return cellValue.getFullYear() === Number(value);
     }
     return false;
   };
@@ -47,7 +47,7 @@ export default function QuickFilteringCustomLogic() {
           if (column.field === 'dateCreated') {
             return {
               ...column,
-              getApplyQuickFilterFn: getApplyFilterFnSameYear,
+              getApplyQuickFilterFn: getApplyQuickFilterFnSameYear,
             };
           }
           if (column.field === 'name') {

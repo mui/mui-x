@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
+import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputTimeRangeField />', () => {
   const { render } = createPickerRenderer();
 
-  describeConformance(<MultiInputTimeRangeField />, () => ({
+  describeConformance(<MultiInputTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,
@@ -14,6 +14,6 @@ describe('<MultiInputTimeRangeField />', () => {
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
-    skip: ['reactTestRenderer', 'themeVariants'],
+    skip: ['reactTestRenderer', 'themeVariants', 'componentProp', 'componentsProp'],
   }));
 });

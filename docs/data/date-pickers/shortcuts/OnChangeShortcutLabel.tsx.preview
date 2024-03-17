@@ -1,0 +1,13 @@
+<StaticDatePicker
+  value={value}
+  onChange={handleChange}
+  slotProps={{
+    shortcuts: {
+      items: shortcutsItems,
+    },
+  }}
+/>
+<Typography>
+  Selected shortcut on last onChange call:{' '}
+  {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
+</Typography>

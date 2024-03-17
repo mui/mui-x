@@ -7,6 +7,7 @@ import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -70,9 +71,18 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
+/**
+ * Demos:
+ *
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
+ */
 const PickersLayout = function PickersLayout<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 >(inProps: PickersLayoutProps<TValue, TDate, TView>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
@@ -116,20 +126,11 @@ PickersLayout.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
@@ -158,6 +159,9 @@ PickersLayout.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

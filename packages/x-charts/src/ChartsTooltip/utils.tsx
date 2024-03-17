@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { SVGContext } from '../context/DrawingProvider';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { SvgContext } from '../context/DrawingProvider';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartSeriesType,
+} from '../models/seriesType/config';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
   if (mousePosition === null) {
@@ -37,7 +41,7 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
 }
 
 export function useMouseTracker() {
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = React.useContext(SvgContext);
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
@@ -72,7 +76,7 @@ export function useMouseTracker() {
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
 
-export function getTootipHasData(
+export function getTooltipHasData(
   trigger: TriggerOptions,
   displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {
@@ -84,4 +88,21 @@ export function getTootipHasData(
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
 
   return hasAxisXData || hasAxisYData;
+}
+
+export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
+  return ['bar', 'line', 'scatter'].includes(seriesType);
+}
+
+export function isCartesianSeries(
+  series: ChartSeriesDefaultized<ChartSeriesType>,
+): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
+  return isCartesianSeriesType(series.type);
+}
+
+export function utcFormatter(v: string | number | Date): string {
+  if (v instanceof Date) {
+    return v.toUTCString();
+  }
+  return v.toLocaleString();
 }

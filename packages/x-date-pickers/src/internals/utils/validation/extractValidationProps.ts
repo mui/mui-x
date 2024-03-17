@@ -32,7 +32,6 @@ export const TIME_VALIDATION_PROP_NAMES: (
   'disableFuture',
   'minTime',
   'maxTime',
-  'shouldDisableClock',
   'shouldDisableTime',
   'minutesStep',
   'ampm',
@@ -57,9 +56,12 @@ type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];
  * Limit the risk of forgetting some of them and reduce the bundle size.
  */
 export const extractValidationProps = <Props extends { [key: string]: any }>(props: Props) =>
-  VALIDATION_PROP_NAMES.reduce((extractedProps, propName) => {
-    if (props.hasOwnProperty(propName)) {
-      extractedProps[propName] = props[propName];
-    }
-    return extractedProps;
-  }, {} as Pick<Props, ValidationPropNames>);
+  VALIDATION_PROP_NAMES.reduce(
+    (extractedProps, propName) => {
+      if (props.hasOwnProperty(propName)) {
+        extractedProps[propName] = props[propName];
+      }
+      return extractedProps;
+    },
+    {} as Pick<Props, ValidationPropNames>,
+  );

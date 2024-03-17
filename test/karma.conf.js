@@ -1,9 +1,9 @@
-const playwright = require('playwright');
+const { chromium } = require('@playwright/test');
 const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
 
-process.env.CHROME_BIN = playwright.chromium.executablePath();
+process.env.CHROME_BIN = chromium.executablePath();
 
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
@@ -20,7 +20,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: ['mocha', 'webpack'],
+    frameworks: (process.env.PARALLEL === 'true' ? ['parallel'] : []).concat(['mocha', 'webpack']),
     files: [
       {
         pattern: 'test/karma.tests.js',
@@ -29,7 +29,12 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    plugins: (process.env.PARALLEL === 'true' ? ['karma-parallel'] : []).concat([
+      'karma-mocha',
+      'karma-chrome-launcher',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+    ]),
     /**
      * possible values:
      * - config.LOG_DISABLE

@@ -2,24 +2,26 @@ import {
   PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
-  addPositionPropertiesToSections,
-  createDateStrForInputFromSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
   areDatesEqual,
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../models/range';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  RangeFieldSection,
+  DateRange,
+  RangePosition,
 } from '../../models';
-import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
   TValue = [any, any],
-  TDate = any,
+  TDate extends PickerValidDate = any,
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
@@ -55,11 +57,13 @@ export const rangeValueManager: RangePickerValueManager = {
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
   getTimezone: (utils, value) => {
-    const timezoneStart = value[0] == null ? null : utils.getTimezone(value[0]);
-    const timezoneEnd = value[1] == null ? null : utils.getTimezone(value[1]);
+    const timezoneStart =
+      value[0] == null || !utils.isValid(value[0]) ? null : utils.getTimezone(value[0]);
+    const timezoneEnd =
+      value[1] == null || !utils.isValid(value[1]) ? null : utils.getTimezone(value[1]);
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
-      throw new Error('MUI: The timezone of the start and the end date should be the same');
+      throw new Error('MUI X: The timezone of the start and the end date should be the same.');
     }
 
     return timezoneStart ?? timezoneEnd;
@@ -89,7 +93,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, isRTL, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -112,7 +116,8 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
+            // TODO: Check if RTL still works
+            endSeparator: `${section.endSeparator} – `,
           };
         }
 
@@ -123,18 +128,23 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       });
     };
 
-    return addPositionPropertiesToSections<RangeFieldSection>(
-      [
-        ...getSections(start, separatedFallbackSections.startDate, 'start'),
-        ...getSections(end, separatedFallbackSections.endDate, 'end'),
-      ],
-      isRTL,
-    );
+    return [
+      ...getSections(start, separatedFallbackSections.startDate, 'start'),
+      ...getSections(end, separatedFallbackSections.endDate, 'end'),
+    ];
   },
-  getValueStrFromSections: (sections, isRTL) => {
+  getV7HiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForInputFromSections(
+    return createDateStrForV7HiddenInputFromSections([
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate,
+    ]);
+  },
+  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    return createDateStrForV6InputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      localizedDigits,
       isRTL,
     );
   },

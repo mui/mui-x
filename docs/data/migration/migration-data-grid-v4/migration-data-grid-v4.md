@@ -8,29 +8,31 @@ productId: x-data-grid
 
 ## Introduction
 
-This is a reference guide for upgrading your site from MUI X v4 to v5.
-MUI X v5 is fully compatible with MUI Core (includes Material UI) v5 and can be used with MUI Core v4 with some additional steps.
+This is a reference guide for upgrading your site from MUI X v4 to v5.
+MUI X v5 is fully compatible with Material UI v5 and MUI System v5 and can be used with Material UI v4 and MUI System v4 with some additional steps.
 Most breaking changes are renaming of CSS classes or variables to improve the consistency of the data grid.
 
-## Migrating MUI Core from v4
+## Migrating MUI Core from v4
 
-> We strongly recommend you [migrate MUI Core to v5](/material-ui/migration/migration-v4/) when using MUI X v5.
-> However, this might not be possible, depending on the complexity of the application.
-> The alternative is to install MUI Core v5 and configure it to keep MUI Core v4 running alongside.
+:::warning
+We strongly recommend you [migrate Material UI to v5](/material-ui/migration/migration-v4/) when using MUI X v5.
+However, this might not be possible, depending on the complexity of the application.
+The alternative is to install Material UI v5 and configure it to keep Material UI v4 running alongside.
+:::
 
-### Using MUI Core v4 with v5
+### Using MUI Core v4 with v5
 
-Using MUI Core v4 with v5 can be achieved with the following steps:
+Using Material UI v4 with v5 can be achieved with the following steps:
 
-1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
+1. First, make sure you have Material UI v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
 1. Add a custom [`createGenerateClassName`](/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({
-  // By enabling this option, if you have non-MUI elements (e.g. `<div />`)
-  // using MUI classes (e.g. `.MuiButton`) they will lose styles.
+  // By enabling this option, if you have non-MUI elements (for example `<div />`)
+  // using MUI classes (for example `.MuiButton`) they will lose styles.
   // Make sure to convert them to use `styled()` or `<Box />` first.
   disableGlobal: true,
   // Class names will receive this seed to avoid name collisions.
@@ -38,7 +40,7 @@ const generateClassName = createGenerateClassName({
 });
 ```
 
-3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
+3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different Material UI versions.
 
 ```jsx
 import { createMuiTheme as createThemeV4 } from '@material-ui/core/styles';
@@ -85,16 +87,16 @@ export default function DataGridDemo() {
 }
 ```
 
-**Done!** Now, you can render any dependencies that rely on MUI Core v5 without upgrading from v4, and they will both run seamlessly alongside.
+**Done!** Now, you can render any dependencies that rely on Material UI v5 without upgrading from v4, and they will both run seamlessly alongside.
 For example, the following interactive demo shows how these steps tie together with the data grid:
 
 {{"demo": "CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
-## Migrating MUI X
+## Migrating MUI X
 
-### Update MUI version
+### Update MUI X version
 
-To use the v5 version of MUI X, you first need to update to the new package names:
+To use the v5 version of MUI X, you first need to update to the new package names:
 
 - `@material-ui/data-grid` is now `@mui/x-data-grid` (MIT)
 - `@material-ui/x-grid` is now `@mui/x-data-grid-pro` (Commercial)
@@ -103,7 +105,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v4 classes                   | MUI X v5 classes                         |
+  | MUI X v4 classes                   | MUI X v5 classes                         |
   | :--------------------------------- | :--------------------------------------- |
   | `.MuiDataGrid-window`              | removed                                  |
   | `.MuiDataGrid-windowContainer`     | removed                                  |
@@ -232,7 +234,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
   You can use the new `initialState` prop instead.
 
   Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+  To fully control the state, use the feature's model prop and change callback (for example `filterModel` and `onFilterModelChange`).
 
   ```diff
    <DataGrid
@@ -248,7 +250,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
 
 - Some selectors have been renamed to match with our naming convention:
 
-  | MUI X v4 selectors                | MUI X v5 selectors                    |
+  | MUI X v4 selectors                | MUI X v5 selectors                    |
   | :-------------------------------- | :------------------------------------ |
   | `unorderedGridRowIdsSelector`     | `gridRowIdsSelector`                  |
   | `sortingGridStateSelector`        | `gridSortingStateSelector`            |

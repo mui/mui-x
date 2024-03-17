@@ -1,0 +1,8 @@
+<DateTimePicker
+  value={value}
+  onChange={setValue}
+  referenceDate={dayjs('2022-04-17T15:30')}
+/>
+<Typography>
+  Stored value: {value == null ? 'null' : value.format()}
+</Typography>

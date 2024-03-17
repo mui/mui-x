@@ -29,7 +29,7 @@ function DrawingAreaBox() {
         x={left}
         y={top}
         textAnchor="start"
-        alignmentBaseline="text-after-edge"
+        dominantBaseline="text-after-edge"
       >
         ({left},{top})
       </StyledText>
@@ -37,7 +37,7 @@ function DrawingAreaBox() {
         x={left + width}
         y={top + height}
         textAnchor="end"
-        alignmentBaseline="text-before-edge"
+        dominantBaseline="text-before-edge"
       >
         ({left + width},{top + height})
       </StyledText>

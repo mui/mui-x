@@ -1,6 +1,7 @@
 import { pie as d3Pie } from 'd3-shape';
 import { ChartSeriesDefaultized, Formatter } from '../models/seriesType/config';
 import { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
+import { SeriesId } from '../models/seriesType/common';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {
@@ -21,7 +22,7 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
 const formatter: Formatter<'pie'> = (params) => {
   const { seriesOrder, series } = params;
 
-  const defaultizedSeries: { [seriesId: string]: ChartSeriesDefaultized<'pie'> } = {};
+  const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
     const arcs = d3Pie()
       .startAngle((2 * Math.PI * (series[seriesId].startAngle ?? 0)) / 360)

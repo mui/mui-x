@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './year-calendar.json';
 
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers',
+    'docsx/translations/api-docs/date-pickers/year-calendar',
     false,
-    /\.\/year-calendar(-[a-z]{2})?\.json$/,
+    /\.\/year-calendar.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

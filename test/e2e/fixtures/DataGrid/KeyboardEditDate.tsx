@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 
-const baselineProps = {
+const baselineProps: DataGridProps = {
   rows: [
     {
       id: 0,
@@ -10,8 +10,8 @@ const baselineProps = {
     },
   ],
   columns: [
-    { field: 'birthday', type: 'date', editable: true, width: 100 },
-    { field: 'lastConnection', type: 'dateTime', editable: true, width: 100 },
+    { field: 'birthday', type: 'date', editable: true, width: 120 },
+    { field: 'lastConnection', type: 'dateTime', editable: true, width: 180 },
   ],
 };
 

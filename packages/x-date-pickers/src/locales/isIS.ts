@@ -15,16 +15,20 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næsti mánuður',
 
   // View navigation
-  openPreviousView: 'opna fyrri skoðun',
-  openNextView: 'opna næstu skoðun',
+  openPreviousView: 'Opna fyrri skoðun',
+  openNextView: 'Opna næstu skoðun',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Upphaf',
   end: 'Endir',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Hætta við',
@@ -40,9 +44,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Velja ${timeViews[view]}. ${
-      time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Velja ${timeViews[view]}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
@@ -51,10 +53,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   selectViewText: (view) => `Velja ${timeViews[view]}`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Vikunúmer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Vika ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -65,20 +67,34 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Velja tíma, valinn tími er ${utils.format(value, 'fullTime')}`
       : 'Velja tíma',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'velja tíma',
   dateTableLabel: 'velja dagsetningu',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Á'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'kk',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'ee',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const isIS = getPickersLocalization(isISPickers);

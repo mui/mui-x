@@ -30,7 +30,6 @@ export default function QuickFilteringGrid() {
         slotProps={{
           toolbar: {
             showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
           },
         }}
       />

@@ -1,0 +1,14 @@
+<FormControlLabel
+  checked={isHidden}
+  control={
+    <Checkbox onChange={(event) => setIsHidden(event.target.checked)} />
+  }
+  label="hide the legend"
+  labelPlacement="end"
+/>
+<PieChart
+  series={series}
+  slotProps={{ legend: { hidden: isHidden } }}
+  width={400}
+  height={200}
+/>

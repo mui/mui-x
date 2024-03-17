@@ -70,7 +70,11 @@ const COMPONENTS = {
   dateTimeRange: {
     field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],
     view: [],
-    picker: [],
+    picker: [
+      'DateTimeRangePicker',
+      'DesktopDateTimeRangePicker',
+      'MobileDateTimeRangePicker',
+    ],
   },
 };
 

@@ -1,4 +1,5 @@
 import { DefaultizedProps } from '../helpers';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonSeriesType,
@@ -7,12 +8,29 @@ import {
 } from './common';
 
 export interface BarSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'bar';
-  data: number[];
+  /**
+   * Data associated to each bar.
+   */
+  data?: (number | null)[];
+  /**
+   * The key used to retrive data from the dataset.
+   */
+  dataKey?: string;
   label?: string;
+  /**
+   * Layout of the bars. All bar should have the same layout.
+   * @default 'vertical'
+   */
+  layout?: 'horizontal' | 'vertical';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'diverging'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**
@@ -26,4 +44,4 @@ export type BarItemIdentifier = {
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color'> {}
+  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}

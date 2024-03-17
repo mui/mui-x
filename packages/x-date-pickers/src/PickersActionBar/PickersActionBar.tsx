@@ -19,6 +19,16 @@ export interface PickersActionBarProps extends DialogActionsProps {
   onSetToday: () => void;
 }
 
+/**
+ * Demos:
+ *
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
+ */
 function PickersActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
 

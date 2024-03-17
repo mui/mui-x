@@ -20,7 +20,7 @@ export interface ChartsLegendClasses {
 
 export type ChartsLegendClassKey = keyof ChartsLegendClasses;
 
-export function getChartsLegendUtilityClass(slot: string) {
+export function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLegend', slot);
 }
 

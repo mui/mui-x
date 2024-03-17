@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -48,23 +47,26 @@ const PickersToolbarRoot = styled('div', {
   }),
 }));
 
-const PickersToolbarContent = styled(Grid, {
+const PickersToolbarContent = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })<{
   ownerState: PickersToolbarProps<any, any>;
 }>(({ ownerState }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  width: '100%',
+  justifyContent: ownerState.isLandscape ? 'flex-start' : 'space-between',
+  flexDirection: ownerState.isLandscape ? ownerState.landscapeDirection ?? 'column' : 'row',
   flex: 1,
-  ...(!ownerState.isLandscape && {
-    alignItems: 'center',
-  }),
+  alignItems: ownerState.isLandscape ? 'flex-start' : 'center',
 }));
 
 type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
   TValue,
@@ -77,11 +79,13 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   const {
     children,
     className,
-    isLandscape,
-    landscapeDirection = 'column',
     toolbarTitle,
     hidden,
     titleId,
+    isLandscape,
+    classes: inClasses,
+    landscapeDirection,
+    ...other
   } = props;
 
   const ownerState = props;
@@ -97,6 +101,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
       data-mui-test="picker-toolbar"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      {...other}
     >
       <Typography
         data-mui-test="picker-toolbar-title"
@@ -106,14 +111,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
       >
         {toolbarTitle}
       </Typography>
-      <PickersToolbarContent
-        container
-        justifyContent={isLandscape ? 'flex-start' : 'space-between'}
-        className={classes.content}
-        ownerState={ownerState}
-        direction={isLandscape ? landscapeDirection : 'row'}
-        alignItems={isLandscape ? 'flex-start' : 'flex-end'}
-      >
+      <PickersToolbarContent className={classes.content} ownerState={ownerState}>
         {children}
       </PickersToolbarContent>
     </PickersToolbarRoot>

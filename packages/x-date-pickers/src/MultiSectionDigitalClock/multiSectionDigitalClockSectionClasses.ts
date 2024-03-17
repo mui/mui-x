@@ -11,8 +11,8 @@ export interface MultiSectionDigitalClockSectionClasses {
 export type MultiSectionDigitalClockSectionClassKey = keyof MultiSectionDigitalClockSectionClasses;
 
 export function getMultiSectionDigitalClockSectionUtilityClass(slot: string) {
-  return generateUtilityClass('MuiMultiSectionDigitalClock', slot);
+  return generateUtilityClass('MuiMultiSectionDigitalClockSection', slot);
 }
 
 export const multiSectionDigitalClockSectionClasses: MultiSectionDigitalClockSectionClasses =
-  generateUtilityClasses('MuiMultiSectionDigitalClock', ['root', 'item']);
+  generateUtilityClasses('MuiMultiSectionDigitalClockSection', ['root', 'item']);

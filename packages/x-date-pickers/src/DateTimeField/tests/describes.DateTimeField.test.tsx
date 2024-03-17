@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import TextField from '@mui/material/TextField';
-import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
   wrapPickerMount,
-} from 'test/utils/pickers-utils';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+  expectFieldValueV7,
+  describeValidation,
+  describeValue,
+  getFieldInputRoot,
+} from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -23,9 +22,9 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateTimeField />, () => ({
+  describeConformance(<DateTimeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
-    inheritComponent: TextField,
+    inheritComponent: PickersTextField,
     render,
     muiName: 'MuiDateTimeField',
     wrapMount: wrapPickerMount,
@@ -44,29 +43,30 @@ describe('<DateTimeField /> - Describes', () => {
   describeValue(DateTimeField, () => ({
     render,
     componentFamily: 'field',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(
-            expectedValue,
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = adapterToUse.format(
+          expectedValue,
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        );
+      } else {
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value, 1);
       selectSection('day');
-      const input = getTextbox();
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+      pressKey(undefined, 'ArrowUp');
+
       return newValue;
     },
   }));

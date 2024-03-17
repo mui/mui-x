@@ -1,11 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePosition } from './DateRangeCalendar.types';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
-interface UseDragRangeParams<TDate> {
+interface UseDragRangeParams<TDate extends PickerValidDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
   setRangeDragDay: (value: TDate | null) => void;
@@ -29,13 +29,13 @@ interface UseDragRangeEvents {
   onTouchEnd?: React.TouchEventHandler<HTMLButtonElement>;
 }
 
-interface UseDragRangeResponse<TDate> extends UseDragRangeEvents {
+interface UseDragRangeResponse<TDate extends PickerValidDate> extends UseDragRangeEvents {
   isDragging: boolean;
   rangeDragDay: TDate | null;
   draggingDatePosition: DateRangePosition | null;
 }
 
-const resolveDateFromTarget = <TDate>(
+const resolveDateFromTarget = <TDate extends PickerValidDate>(
   target: EventTarget,
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
@@ -45,7 +45,7 @@ const resolveDateFromTarget = <TDate>(
     return null;
   }
   const timestamp = +timestampString;
-  return utils.dateWithTimezone(new Date(timestamp).toISOString(), timezone);
+  return utils.date(new Date(timestamp).toISOString(), timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
@@ -87,7 +87,7 @@ const resolveElementFromTouch = (
   return null;
 };
 
-const useDragRangeEvents = <TDate>({
+const useDragRangeEvents = <TDate extends PickerValidDate>({
   utils,
   setRangeDragDay,
   setIsDragging,
@@ -152,12 +152,6 @@ const useDragRangeEvents = <TDate>({
     }
 
     setRangeDragDay(newDate);
-    setIsDragging(true);
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
-      onDatePositionChange(buttonDataset.position as DateRangePosition);
-    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -173,13 +167,28 @@ const useDragRangeEvents = <TDate>({
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
-    if (!isDragging || !target) {
+    if (!target) {
       return;
     }
 
     const newDate = resolveDateFromTarget(target, utils, timezone);
     if (newDate) {
       setRangeDragDay(newDate);
+    }
+
+    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
+    const targetsAreIdentical = target === event.changedTouches[0].target;
+    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
+      return;
+    }
+
+    // on mobile we should only initialize dragging state after move is detected
+    setIsDragging(true);
+
+    const button = event.target as HTMLButtonElement;
+    const buttonDataset = button.dataset;
+    if (buttonDataset.position) {
+      onDatePositionChange(buttonDataset.position as DateRangePosition);
     }
   });
 
@@ -267,7 +276,7 @@ const useDragRangeEvents = <TDate>({
   };
 };
 
-export const useDragRange = <TDate>({
+export const useDragRange = <TDate extends PickerValidDate>({
   disableDragEditing,
   utils,
   onDatePositionChange,

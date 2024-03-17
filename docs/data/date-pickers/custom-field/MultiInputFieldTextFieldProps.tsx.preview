@@ -1,0 +1,9 @@
+<DateRangePicker
+  slotProps={{
+    textField: ({ position }) => ({
+      color: position === 'start' ? 'success' : 'warning',
+      focused: true,
+    }),
+  }}
+  defaultValue={[dayjs('2022-04-17'), null]}
+/>

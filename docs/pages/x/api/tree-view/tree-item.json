@@ -1,0 +1,107 @@
+{
+  "props": {
+    "itemId": { "type": { "name": "string" }, "required": true },
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "ContentComponent": {
+      "type": { "name": "custom", "description": "element type" },
+      "default": "TreeItemContent"
+    },
+    "ContentProps": { "type": { "name": "object" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "node" } },
+    "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
+  "name": "TreeItem",
+  "imports": [
+    "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
+    "import { TreeItem } from '@mui/x-tree-view';"
+  ],
+  "slots": [
+    { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
+    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
+    { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
+    {
+      "name": "icon",
+      "description": "The icon to display next to the tree item's label.",
+      "class": null
+    },
+    {
+      "name": "groupTransition",
+      "description": "The component that animates to appearance / disappearance of the item's children.",
+      "default": "TreeItem2Group",
+      "class": "MuiTreeItem-groupTransition"
+    }
+  ],
+  "classes": [
+    {
+      "key": "content",
+      "className": "MuiTreeItem-content",
+      "description": "Styles applied to the content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the element when disabled.",
+      "isGlobal": true
+    },
+    {
+      "key": "expanded",
+      "className": "Mui-expanded",
+      "description": "State class applied to the content element when expanded.",
+      "isGlobal": true
+    },
+    {
+      "key": "focused",
+      "className": "Mui-focused",
+      "description": "State class applied to the content element when focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "iconContainer",
+      "className": "MuiTreeItem-iconContainer",
+      "description": "Styles applied to the tree node icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreeItem-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTreeItem-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the content element when selected.",
+      "isGlobal": true
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiTreeItem",
+  "forwardsRefTo": "HTMLLIElement",
+  "filename": "/packages/x-tree-view/src/TreeItem/TreeItem.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li></ul>",
+  "cssComponent": false
+}

@@ -52,6 +52,7 @@ export default function ChartsUsageDemo({
             m: 'auto',
             display: 'flex',
             alignItems: 'center',
+            width: '100%',
           }}
         >
           {renderDemo(demoProps)}

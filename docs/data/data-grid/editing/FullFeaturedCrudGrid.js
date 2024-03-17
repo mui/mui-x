@@ -8,11 +8,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowModes,
-  DataGridPro,
+  DataGrid,
   GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -215,7 +215,7 @@ export default function FullFeaturedCrudGrid() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"

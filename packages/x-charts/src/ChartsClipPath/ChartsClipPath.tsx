@@ -7,6 +7,11 @@ export type ChartsClipPathProps = {
   offset?: { top?: number; right?: number; bottom?: number; left?: number };
 };
 
+/**
+ * API:
+ *
+ * - [ChartsClipPath API](https://mui.com/x/api/charts/charts-clip-path/)
+ */
 function ChartsClipPath(props: ChartsClipPathProps) {
   const { id, offset: offsetProps } = props;
   const { left, top, width, height } = React.useContext(DrawingContext);

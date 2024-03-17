@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './pie-chart.json';
 
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts',
+    'docsx/translations/api-docs/charts/pie-chart',
     false,
-    /\.\/pie-chart(-[a-z]{2})?\.json$/,
+    /\.\/pie-chart.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

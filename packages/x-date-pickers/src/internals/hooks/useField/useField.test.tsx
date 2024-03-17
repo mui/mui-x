@@ -8,10 +8,11 @@ const COMMON_PROPERTIES = {
   type: 'year',
   modified: false,
   format: 'YYYY',
-  hasLeadingZeros: true,
   hasLeadingZerosInFormat: true,
   maxLength: 4,
 } as const;
+
+const DEFAULT_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 describe('useField utility functions', () => {
   describe('getSectionVisibleValue', () => {
@@ -20,6 +21,7 @@ describe('useField utility functions', () => {
         getSectionVisibleValue(
           { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: true },
           'non-input',
+          DEFAULT_LOCALIZED_DIGITS,
         ),
       ).to.equal('1');
     });
@@ -29,6 +31,7 @@ describe('useField utility functions', () => {
         getSectionVisibleValue(
           { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: false },
           'input-ltr',
+          DEFAULT_LOCALIZED_DIGITS,
         ),
       ).to.equal('1\u200e');
     });
@@ -38,6 +41,7 @@ describe('useField utility functions', () => {
         getSectionVisibleValue(
           { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: false },
           'input-rtl',
+          DEFAULT_LOCALIZED_DIGITS,
         ),
       ).to.equal('\u20681\u200e\u2069');
     });
@@ -47,6 +51,7 @@ describe('useField utility functions', () => {
         getSectionVisibleValue(
           { ...COMMON_PROPERTIES, value: '1', placeholder: '', hasLeadingZerosInInput: true },
           'input-rtl',
+          DEFAULT_LOCALIZED_DIGITS,
         ),
       ).to.equal('\u20681\u2069');
     });

@@ -9,7 +9,7 @@
     },
     {
       "name": "getDataAsCsv",
-      "description": "Returns the grid data as a CSV string.\nThis method is used internally by <code>exportDataAsCsv</code>.",
+      "description": "Returns the grid data as a CSV string. This method is used internally by <code>exportDataAsCsv</code>.",
       "type": "(options?: GridCsvExportOptions) => string"
     }
   ]

@@ -3,60 +3,80 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
+import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any; fieldType?: string };
+type DateRangeFieldComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
-const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
-  inProps: SingleInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+/**
+ * Demos:
+ *
+ * - [DateRangeField](http://mui.com/x/react-date-pickers/date-range-field/)
+ * - [Fields](https://mui.com/x/react-date-pickers/fields/)
+ *
+ * API:
+ *
+ * - [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)
+ */
+const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
-  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputDateRangeFieldProps<TDate> =
-    useSlotProps({
-      elementType: TextField,
-      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-      externalForwardedProps: other,
-      ownerState,
-    });
+  const TextField =
+    slots?.textField ??
+    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+  const textFieldProps = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: slotProps?.textField,
+    externalForwardedProps: other,
+    ownerState,
+    additionalProps: {
+      ref: inRef,
+    },
+  }) as SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const {
-    ref: inputRef,
-    onPaste,
-    onKeyDown,
-    inputMode,
-    readOnly,
-    ...fieldProps
-  } = useSingleInputDateRangeField<TDate, typeof textFieldProps>({
-    props: textFieldProps,
-    inputRef: externalInputRef,
+  const fieldResponse = useSingleInputDateRangeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof textFieldProps
+  >(textFieldProps);
+  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
+
+  const processedFieldProps = useClearableField({
+    ...convertedFieldResponse,
+    slots,
+    slotProps,
   });
 
-  return (
-    <TextField
-      ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
-    />
-  );
+  return <TextField {...processedFieldProps} />;
 }) as DateRangeFieldComponent;
 
 SingleInputDateRangeField.fieldType = 'single-input';
@@ -73,28 +93,22 @@ SingleInputDateRangeField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable: PropTypes.bool,
+  /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
-   * [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+   * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
+  component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
    * @default false
@@ -110,6 +124,10 @@ SingleInputDateRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -168,12 +186,7 @@ SingleInputDateRangeField.propTypes = {
   /**
    * Pass a ref to the `input` element.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    */
@@ -186,11 +199,11 @@ SingleInputDateRangeField.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Name attribute of the `input` element.
    */
@@ -205,9 +218,9 @@ SingleInputDateRangeField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * @ignore
+   * Callback fired when the clear button is clicked.
    */
-  onClick: PropTypes.func,
+  onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -233,7 +246,7 @@ SingleInputDateRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
@@ -241,17 +254,18 @@ SingleInputDateRangeField.propTypes = {
   required: PropTypes.bool,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -261,13 +275,12 @@ SingleInputDateRangeField.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
@@ -316,7 +329,7 @@ SingleInputDateRangeField.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -328,7 +341,7 @@ SingleInputDateRangeField.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The variant to use.
    * @default 'outlined'

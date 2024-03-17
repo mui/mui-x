@@ -6,8 +6,8 @@ import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -32,16 +32,20 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
 
 interface PickersLayoutPropsWithValueRequired<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 > extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
-interface UsePickerLayoutResponse extends SubComponents {}
+interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
-const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem>(
+const usePickerLayout = <
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: PickersLayoutProps<TValue, TDate, TView>,
-): UsePickerLayoutResponse => {
+): UsePickerLayoutResponse<TValue> => {
   const {
     wrapperVariant,
     onAccept,
@@ -59,18 +63,13 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
     disabled,
     readOnly,
     children,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
     // - For pickers value: TDate | null
     // - For range pickers value: [TDate | null, TDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
@@ -122,7 +121,9 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem
 
   const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
+    view && Tabs ? (
+      <Tabs view={view} onViewChange={onViewChange} className={classes.tabs} {...slotProps?.tabs} />
+    ) : null;
 
   // Shortcuts
 

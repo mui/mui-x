@@ -1,4 +1,2 @@
-<Stack direction="column">
-  <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
-  <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
-</Stack>
+<BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
+<BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />

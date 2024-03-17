@@ -1,22 +1,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 
-type StaticDateRangePickerComponent = (<TDate>(
+type StaticDateRangePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
-const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
-  inProps: StaticDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+/**
+ * Demos:
+ *
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
+ */
+const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
+  TDate extends PickerValidDate,
+>(inProps: StaticDateRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     StaticDateRangePickerProps<TDate>
@@ -71,25 +81,10 @@ StaticDateRangePicker.propTypes = {
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render.
-   * @default 2
+   * @default 1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise.
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   /**
    * Position the current month is rendered in.
    * @default 1
@@ -97,15 +92,11 @@ StaticDateRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
+   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value={[null, null]}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
   /**
    * The initial position in the edited date range.
    * Used when the component is not controlled.
@@ -116,7 +107,7 @@ StaticDateRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -157,9 +148,8 @@ StaticDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
-   * @default undefined
+   * The day view will show as many weeks as needed after the end of the current month to match this value.
+   * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -176,11 +166,11 @@ StaticDateRangePicker.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -229,18 +219,26 @@ StaticDateRangePicker.propTypes = {
   rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Component displaying when passed `loading` true.
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.object,
+  /**
+   * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
    */
   renderLoading: PropTypes.func,
   /**
    * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
@@ -280,7 +278,7 @@ StaticDateRangePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -288,7 +286,7 @@ StaticDateRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.

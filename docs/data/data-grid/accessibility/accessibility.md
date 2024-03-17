@@ -13,10 +13,10 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meet the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what MUI aims to support very well.
+Level AA meets the most commonly encountered conformance guidelines.
+This is the most common target for organizations so what we aims to support very well.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 
@@ -47,7 +47,7 @@ The Data Grid listens for keyboard interactions from the user and emits events i
 
 ### Tab sequence
 
-According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
+According to [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
 When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.
@@ -62,11 +62,11 @@ Use the `tabIndex` prop passed to the `renderCell` params to determine if the re
 
 ```jsx
 renderCell: (params) => (
-  <Box>
+  <div>
     <Link tabIndex={params.tabIndex} href="/#">
       more info
     </Link>
-  </Box>
+  </div>
 );
 ```
 

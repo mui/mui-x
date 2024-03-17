@@ -5,7 +5,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
@@ -17,9 +16,9 @@ const barChartsParams = {
     },
   ],
   series: [
-    { data: [2, 5, 3, 4, 1], stack: '1', label: 'series x' },
-    { data: [10, 3, 1, 2, 10], stack: '1', label: 'series y' },
-    { data: [10, 3, 1, 2, 10], stack: '1', label: 'series z' },
+    { data: [2, 5, 3, 4, 1], stack: '1', label: 'Series x' },
+    { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
+    { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series z' },
   ],
   margin: { top: 10, right: 10 },
   sx: {

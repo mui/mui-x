@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './date-picker-toolbar.json';
 
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers',
+    'docsx/translations/api-docs/date-pickers/date-picker-toolbar',
     false,
-    /\.\/date-picker-toolbar(-[a-z]{2})?\.json$/,
+    /\.\/date-picker-toolbar.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

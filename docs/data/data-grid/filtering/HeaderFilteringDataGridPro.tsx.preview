@@ -9,5 +9,5 @@
       },
     },
   }}
-  unstable_headerFilters
+  headerFilters
 />

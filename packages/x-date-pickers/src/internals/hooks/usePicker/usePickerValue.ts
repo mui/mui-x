@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { FieldSection, PickerChangeHandlerContext, PickerValidDate } from '../../../models';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -19,7 +21,6 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
-  PickerChangeHandlerContext,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 
@@ -62,7 +63,7 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -145,16 +146,16 @@ const shouldClosePicker = <TValue, TError>(
  */
 export const usePickerValue = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
+  TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
   props,
   valueManager,
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TSection, TExternalProps>): UsePickerValueResponse<
+}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
   TValue,
   TSection,
   InferError<TExternalProps>
@@ -167,8 +168,6 @@ export const usePickerValue = <
     value: inValue,
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
-    selectedSections: selectedSectionsProp,
-    onSelectedSectionsChange,
     timezone: timezoneProp,
   } = props;
 
@@ -181,7 +180,7 @@ export const usePickerValue = <
       if (isControlled !== (inValue !== undefined)) {
         console.error(
           [
-            `MUI: A component is changing the ${
+            `MUI X: A component is changing the ${
               isControlled ? '' : 'un'
             }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -198,7 +197,7 @@ export const usePickerValue = <
       if (!isControlled && defaultValue !== inDefaultValue) {
         console.error(
           [
-            `MUI: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
+            `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
               `To suppress this warning opt to use a controlled value.`,
           ].join('\n'),
         );
@@ -209,13 +208,6 @@ export const usePickerValue = <
 
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
-
-  const [selectedSections, setSelectedSections] = useControlled({
-    controlled: selectedSectionsProp,
-    default: null,
-    name: 'usePickerValue',
-    state: 'selectedSections',
-  });
 
   const { isOpen, setIsOpen } = useOpenState(props);
 
@@ -287,6 +279,10 @@ export const usePickerValue = <
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
       };
+
+      if (action.name === 'setValueFromShortcut') {
+        context.shortcut = action.shortcut;
+      }
 
       handleValueChange(action.value, context);
     }
@@ -371,24 +367,22 @@ export const usePickerValue = <
   );
 
   const handleSelectShortcut = useEventCallback(
-    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+    (
+      newValue: TValue,
+      changeImportance: PickerShortcutChangeImportance,
+      shortcut: PickersShortcutsItemContext,
+    ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
-        changeImportance: changeImportance ?? 'accept',
+        changeImportance,
+        shortcut,
       }),
   );
 
   const handleChangeFromField = useEventCallback(
     (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
       updateDate({ name: 'setValueFromField', value: newValue, context }),
-  );
-
-  const handleFieldSelectedSectionsChange = useEventCallback(
-    (newSelectedSections: FieldSelectedSections) => {
-      setSelectedSections(newSelectedSections);
-      onSelectedSectionsChange?.(newSelectedSections);
-    },
   );
 
   const actions: UsePickerValueActions = {
@@ -404,8 +398,6 @@ export const usePickerValue = <
   const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
     onChange: handleChangeFromField,
-    selectedSections,
-    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
   const viewValue = React.useMemo(
@@ -418,7 +410,6 @@ export const usePickerValue = <
     onChange: handleChange,
     onClose: handleClose,
     open: isOpen,
-    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
   const isValid = (testedValue: TValue) => {

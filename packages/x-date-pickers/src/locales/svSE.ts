@@ -15,16 +15,20 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Nästa månad',
 
   // View navigation
-  openPreviousView: 'öppna föregående vy',
-  openNextView: 'öppna nästa vy',
+  openPreviousView: 'Öppna föregående vy',
+  openNextView: 'Öppna nästa vy',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvyn är öppen, byt till kalendervy'
       : 'kalendervyn är öppen, byt till årsvy',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -40,9 +44,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Välj ${timeViews[view]}. ${
-      time === null ? 'Ingen tid vald' : `Vald tid är ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Välj ${timeViews[view]}. ${time === null ? 'Ingen tid vald' : `Vald tid är ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timmar`,
   minutesClockNumberText: (minutes) => `${minutes} minuter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -65,6 +67,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
       : 'Välj tid',
+  // fieldClearLabel: 'Clear value',
 
   // Table labels
   timeTableLabel: 'välj tid',
@@ -79,6 +82,19 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
   // fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const svSE = getPickersLocalization(svSEPickers);

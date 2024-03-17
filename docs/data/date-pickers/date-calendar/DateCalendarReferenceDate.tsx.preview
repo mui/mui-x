@@ -1,0 +1,4 @@
+<DateCalendar
+  referenceDate={dayjs('2022-04-17')}
+  views={['year', 'month', 'day']}
+/>

@@ -1,5 +1,7 @@
 ---
-title: Charts - Lines
+title: React Line chart
+productId: x-charts
+components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
 ---
 
 # Charts - Lines
@@ -17,6 +19,19 @@ By default, those y values will be associated with integers starting from 0 (0, 
 To modify the x values, you should provide a `xAxis` with data property.
 
 {{"demo": "BasicLineChart.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
+For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+
+Here is a plot of the evolution of world electricity production by source.
+
+{{"demo": "LineDataset.js"}}
 
 ### Area
 
@@ -39,14 +54,123 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
+## Partial data
+
+### Skip missing points
+
+Line series can have fewer data points than the axis.
+You can handle lines with partial data or data starting at different points by providing `null` values.
+
+By default, the tooltip does not show series if they have no value.
+To override this behavior, use the `valueFormatter` to return a string if the value is `null` or `undefined`.
+
+{{"demo": "DifferentLength.js"}}
+
+:::info
+When series data length is smaller than the axis one, overflowing values are `undefined` and not `null`.
+
+The following code plots a line for x between 2 and 4.
+
+- For x<2, values are set to `null` and then not shown.
+- For x>4, values are set to `undefined` and then not shown.
+
+```jsx
+<LineChart
+  series={[{ data: [null, null, 10, 11, 12] }]}
+  xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6] }]}
+/>
+```
+
+:::
+
+### Connect missing points
+
+Line series accepts a `connectNulls` property which will continue the interpolation across points with a `null` value.
+This property can link two sets of points, with `null` data between them.
+However, it cannot extrapolate the curve before the first non-null data point or after the last one.
+
+{{"demo": "ConnectNulls.js"}}
+
+## Click event
+
+Line charts provides multiple click handlers:
+
+- `onAreaClick` for click on a specific area.
+- `onLineClick` for click on a specific line.
+- `onMarkClick` for click on a specific mark.
+- `onAxisClick` for a click anywhere in the chart
+
+They all provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "LineClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onAxisClick` and the others:
+
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
+
+:::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <LinePlot onItemClick={onLineClick} />
+  <AreaPlot onItemClick={onAreaClick} />
+</ChartContainer>;
+```
+
 ## Styling
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
 
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline", "disableAd": true}}
+This series property adds the option to control the interpolation of a series.
+Different series could even have different interpolations.
+
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+
+### Optimization
+
+To show mark elements, use `showMark` series property.
+It accepts a boolean or a callback.
+The next example shows how to use it to display only one mark every two data points.
+
+When a value is highlighted, a mark is rendered for that given value.
+If the charts already have some marks (due to `showMark=true`) the highlight one will be on top of others.
+
+This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
+
+In this example, you have one mark for every value with an even index.
+The highlighted data has a mark regardless if it has an even or odd index.
+
+{{"demo": "MarkOptimization.js"}}
 
 ### CSS
 
@@ -65,9 +189,6 @@ sx={{
     strokeDasharray: '10 5',
     strokeWidth: 4,
   },
-  '& .MuiMarkElement-root': {
-    display: 'none',
-  },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",
   },
@@ -75,3 +196,30 @@ sx={{
 ```
 
 {{"demo": "CSSCustomization.js"}}
+
+## Animation
+
+To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+:::warning
+If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
+
+Otherwise the chart will have no way to know if you are modifying, removing, or adding some series.
+This will lead to strange behaviors.
+:::
+
+```jsx
+// For a single component chart
+<LineChart skipAnimation />
+
+// For a composed chart
+<ResponsiveChartContainer>
+  <LinePlot skipAnimation />
+  <AreaPlot skipAnimation />
+</ResponsiveChartContainer>
+```
+
+{{"demo": "LineAnimation.js"}}

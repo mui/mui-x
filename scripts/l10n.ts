@@ -9,7 +9,10 @@ import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
-import nextConfig from '../docs/next.config';
+import {
+  SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
+  SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
+} from '../docs/constants';
 
 const MyOctokit = Octokit.plugin(retry);
 
@@ -23,8 +26,8 @@ const packagesWithL10n = [
   {
     key: 'data-grid',
     reportName: '🧑‍💼 DataGrid, DataGridPro, DataGridPremium',
-    constantsRelativePath: 'packages/grid/x-data-grid/src/constants/localeTextConstants.ts',
-    localesRelativePath: 'packages/grid/x-data-grid/src/locales',
+    constantsRelativePath: 'packages/x-data-grid/src/constants/localeTextConstants.ts',
+    localesRelativePath: 'packages/x-data-grid/src/locales',
     documentationReportPath: 'docs/data/data-grid/localization/data.json',
   },
   {
@@ -67,7 +70,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}(Grid|Pickers)/.test(node.id.name)) {
+          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers)/.test(node.id.name)) {
             visitorPath.skip();
             return;
           }
@@ -139,7 +142,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, e.g. MuiTablePagination
+        // Ignore translations for MUI Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -164,7 +167,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
 function findLocales(localesDirectory: string, constantsPath: string) {
   const items = fse.readdirSync(localesDirectory);
   const locales: any[] = [];
-  const localeRegex = /^[a-z]{2}[A-Z]{2}/;
+  const localeRegex = /^[a-z]{2}[A-Z]{2}|^[a-z]{2}(?=.ts)/;
 
   items.forEach((item) => {
     const match = item.match(localeRegex);
@@ -173,7 +176,10 @@ function findLocales(localesDirectory: string, constantsPath: string) {
     }
 
     const localePath = path.resolve(localesDirectory, item);
-    const code = match[0];
+    if (fse.lstatSync(localePath).isDirectory()) {
+      return;
+    }
+    const code = match[0] || match[1];
     if (constantsPath !== localePath) {
       // Ignore the locale used as a reference
       locales.push([localePath, code]);
@@ -321,9 +327,10 @@ const generateDocReport = async (
         return;
       }
 
-      const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
-        .slice(2)
-        .toUpperCase()}`;
+      const languageTag =
+        importName.length > 2
+          ? `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`
+          : importName;
       const localeName = localeNames[languageTag];
 
       if (localeName === undefined) {
@@ -340,7 +347,7 @@ const generateDocReport = async (
         localeName,
         missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
         totalKeysCount: baseTranslationsNumber[packageKey],
-        githubLink: `${nextConfig.env.SOURCE_CODE_REPO}/blob/${nextConfig.env.SOURCE_GITHUB_BRANCH}/${info.path}`,
+        githubLink: `${DOCS_SOURCE_CODE_REPO}/blob/${DOCS_SOURCE_GITHUB_BRANCH}/${info.path}`,
       });
     });
 
@@ -394,73 +401,77 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   const missingTranslations: Record<string, any> = {};
   const baseTranslationsNumber: Record<string, number> = {};
 
-  packagesWithL10n.forEach((packageInfo) => {
-    const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
-    const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
+  await Promise.all(
+    packagesWithL10n.map(async (packageInfo) => {
+      const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
+      const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
-    baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
+      baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
 
-    const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
-    const locales = findLocales(localesDirectory, constantsPath);
+      const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
+      const locales = findLocales(localesDirectory, constantsPath);
 
-    locales.forEach(([localePath, localeCode]) => {
-      const { translations: existingTranslations, transformedCode } =
-        extractAndReplaceTranslations(localePath);
+      await Promise.all(
+        locales.map(async ([localePath, localeCode]) => {
+          const { translations: existingTranslations, transformedCode } =
+            extractAndReplaceTranslations(localePath);
 
-      if (!transformedCode || Object.keys(existingTranslations).length === 0) {
-        return;
-      }
-
-      const codeWithNewTranslations = injectTranslations(
-        transformedCode,
-        existingTranslations,
-        baseTranslationsByGroup,
-      );
-
-      const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
-      const prettierConfig = prettier.resolveConfig.sync(localePath, {
-        config: prettierConfigPath,
-      });
-
-      const prettifiedCode = prettier.format(codeWithNewTranslations, {
-        ...prettierConfig,
-        filepath: localePath,
-      });
-
-      // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
-      if (!missingTranslations[localeCode]) {
-        missingTranslations[localeCode] = {};
-      }
-      if (!missingTranslations[localeCode][packageInfo.key]) {
-        missingTranslations[localeCode][packageInfo.key] = {
-          path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
-          missingKeys: [],
-        };
-      }
-      const lines = codeWithNewTranslations.split('\n');
-      Object.entries(baseTranslations).forEach(([key]) => {
-        if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
-          const location = lines.findIndex(
-            (line) =>
-              line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
-          );
-          // Ignore when both the translation and the placeholder are missing
-          if (location >= 0) {
-            missingTranslations[localeCode][packageInfo.key].missingKeys.push({
-              currentLineContent: lines[location].trim().slice(3),
-              lineIndex: location + 1,
-            });
+          if (!transformedCode || Object.keys(existingTranslations).length === 0) {
+            return;
           }
-        }
-      });
 
-      if (!report) {
-        fse.writeFileSync(localePath, prettifiedCode);
-        // eslint-disable-next-line no-console
-        console.log(`Wrote ${localeCode} locale.`);
-      }
-    });
-  });
+          const codeWithNewTranslations = injectTranslations(
+            transformedCode,
+            existingTranslations,
+            baseTranslationsByGroup,
+          );
+
+          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
+          const prettierConfig = await prettier.resolveConfig(localePath, {
+            config: prettierConfigPath,
+          });
+
+          const prettifiedCode = await prettier.format(codeWithNewTranslations, {
+            ...prettierConfig,
+            filepath: localePath,
+          });
+
+          // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
+          if (!missingTranslations[localeCode]) {
+            missingTranslations[localeCode] = {};
+          }
+          if (!missingTranslations[localeCode][packageInfo.key]) {
+            missingTranslations[localeCode][packageInfo.key] = {
+              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              missingKeys: [],
+            };
+          }
+          const lines = codeWithNewTranslations.split('\n');
+          Object.entries(baseTranslations).forEach(([key]) => {
+            if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
+              const location = lines.findIndex(
+                (line) =>
+                  line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
+              );
+              // Ignore when both the translation and the placeholder are missing
+              if (location >= 0) {
+                missingTranslations[localeCode][packageInfo.key].missingKeys.push({
+                  currentLineContent: lines[location].trim().slice(3),
+                  lineIndex: location + 1,
+                });
+              }
+            }
+          });
+
+          if (!report) {
+            fse.writeFileSync(localePath, prettifiedCode);
+            // eslint-disable-next-line no-console
+            console.log(`Wrote ${localeCode} locale.`);
+          }
+        }),
+      );
+    }),
+  );
 
   await generateDocReport(missingTranslations, baseTranslationsNumber);
 

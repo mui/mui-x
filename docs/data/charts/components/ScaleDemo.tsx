@@ -79,7 +79,7 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement> }) {
         x={left + 5}
         y={mouseY}
         textAnchor="start"
-        alignmentBaseline="text-after-edge"
+        dominantBaseline="text-after-edge"
       >
         {leftAxisScale.invert(mouseY).toFixed(0)}
       </StyledText>
@@ -88,7 +88,7 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement> }) {
         x={left + width - 5}
         y={mouseY}
         textAnchor="end"
-        alignmentBaseline="text-after-edge"
+        dominantBaseline="text-after-edge"
       >
         {rightAxisScale.invert(mouseY).toFixed(0)}
       </StyledText>

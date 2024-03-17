@@ -1,47 +1,35 @@
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional, UncapitalizeObjectKeys } from '../internals';
-import { DateView } from '../models';
+import { MakeOptional } from '../internals/models/helpers';
+import { DateView, PickerValidDate } from '../models';
 
-export interface StaticDatePickerSlotsComponent<TDate>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate, DateView> {}
+export interface StaticDatePickerSlots<TDate extends PickerValidDate>
+  extends BaseDatePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate, DateView> {}
 
-export interface StaticDatePickerSlotsComponentsProps<TDate>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps<TDate, DateView> {}
+export interface StaticDatePickerSlotProps<TDate extends PickerValidDate>
+  extends BaseDatePickerSlotProps<TDate>,
+    UseStaticPickerSlotProps<TDate, DateView> {}
 
-export interface StaticDatePickerProps<TDate>
+export interface StaticDatePickerProps<TDate extends PickerValidDate>
   extends BaseDatePickerProps<TDate>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: StaticDatePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: StaticDatePickerSlotsComponentsProps<TDate>;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<StaticDatePickerSlotsComponent<TDate>>;
+  slots?: StaticDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticDatePickerSlotProps<TDate>;
 }

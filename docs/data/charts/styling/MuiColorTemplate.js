@@ -6,7 +6,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Chance } from 'chance';
@@ -37,12 +36,15 @@ function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
 }
 
 const legendPlacement = {
-  legend: {
-    position: {
-      vertical: 'middle',
-      horizontal: 'right',
+  slotProps: {
+    legend: {
+      position: {
+        vertical: 'middle',
+        horizontal: 'right',
+      },
+      direction: 'column',
+      itemGap: 2,
     },
-    direction: 'column',
   },
   margin: {
     top: 20,
@@ -51,19 +53,19 @@ const legendPlacement = {
 };
 
 const series = [
-  { label: 'series 1', data: getGaussianSeriesData([-5, 0]) },
-  { label: 'series 2', data: getGaussianSeriesData([-4, 0]) },
-  { label: 'series 3', data: getGaussianSeriesData([-3, 0]) },
-  { label: 'series 4', data: getGaussianSeriesData([-2, 0]) },
-  { label: 'series 5', data: getGaussianSeriesData([-1, 0]) },
-  { label: 'series 6', data: getGaussianSeriesData([0, 0]) },
-  { label: 'series 7', data: getGaussianSeriesData([1, 0]) },
-  { label: 'series 8', data: getGaussianSeriesData([2, 0]) },
-  { label: 'series 9', data: getGaussianSeriesData([3, 0]) },
-  { label: 'series 10', data: getGaussianSeriesData([4, 0]) },
-  { label: 'series 11', data: getGaussianSeriesData([5, 0]) },
-  { label: 'series 12', data: getGaussianSeriesData([6, 0]) },
-  { label: 'series 13', data: getGaussianSeriesData([7, 0]) },
+  { label: 'Series 1', data: getGaussianSeriesData([-5, 0]) },
+  { label: 'Series 2', data: getGaussianSeriesData([-4, 0]) },
+  { label: 'Series 3', data: getGaussianSeriesData([-3, 0]) },
+  { label: 'Series 4', data: getGaussianSeriesData([-2, 0]) },
+  { label: 'Series 5', data: getGaussianSeriesData([-1, 0]) },
+  { label: 'Series 6', data: getGaussianSeriesData([0, 0]) },
+  { label: 'Series 7', data: getGaussianSeriesData([1, 0]) },
+  { label: 'Series 8', data: getGaussianSeriesData([2, 0]) },
+  { label: 'Series 9', data: getGaussianSeriesData([3, 0]) },
+  { label: 'Series 10', data: getGaussianSeriesData([4, 0]) },
+  { label: 'Series 11', data: getGaussianSeriesData([5, 0]) },
+  { label: 'Series 12', data: getGaussianSeriesData([6, 0]) },
+  { label: 'Series 13', data: getGaussianSeriesData([7, 0]) },
 ].map((s) => ({
   ...s,
   valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
@@ -92,8 +94,12 @@ export default function MuiColorTemplate() {
             colors={categories[colorScheme]}
             {...legendPlacement}
           />
-          <Stack direction="row" alignItems="center" justifyContent="space-evenly">
-            <Box>
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            alignItems="center"
+            justifyContent="space-evenly"
+          >
+            <div>
               <Button
                 sx={{ ml: 1 }}
                 onClick={() =>
@@ -106,9 +112,10 @@ export default function MuiColorTemplate() {
               >
                 {colorMode} mode
               </Button>
-            </Box>
+            </div>
             <TextField
               select
+              sx={{ maxWidth: 1 }}
               value={colorScheme}
               onChange={(event) => setColorScheme(event.target.value)}
             >

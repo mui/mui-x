@@ -1,9 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -11,6 +14,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -20,7 +24,7 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: string;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -32,7 +36,7 @@ export function getBarElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarElement', slot);
 }
 
-export const lineElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
+export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
   'root',
 ]);
 
@@ -45,7 +49,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-const BarElementPath = styled('rect', {
+export const BarElementPath = styled(animated.rect, {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -59,13 +63,52 @@ const BarElementPath = styled('rect', {
   opacity: (ownerState.isFaded && 0.3) || 1,
 }));
 
+interface BarProps extends Omit<React.ComponentPropsWithoutRef<'path'>, 'id' | 'color'> {
+  highlightScope?: Partial<HighlightScope>;
+  onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+  ownerState: BarElementOwnerState;
+}
+
+export interface BarElementSlots {
+  /**
+   * The component that renders the bar.
+   * @default BarElementPath
+   */
+  bar?: React.JSXElementConstructor<BarProps>;
+}
+
+export interface BarElementSlotProps {
+  bar?: Partial<BarProps>;
+}
+
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
     highlightScope?: Partial<HighlightScope>;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: BarElementSlotProps;
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: BarElementSlots;
   };
 
-export function BarElement(props: BarElementProps) {
-  const { id, dataIndex, classes: innerClasses, color, highlightScope, ...other } = props;
+function BarElement(props: BarElementProps) {
+  const {
+    id,
+    dataIndex,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    style,
+    onClick,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -88,12 +131,45 @@ export function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  return (
-    <BarElementPath
-      {...other}
-      ownerState={ownerState}
-      className={classes.root}
-      {...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex })}
-    />
-  );
+  const Bar = slots?.bar ?? BarElementPath;
+  const barProps = useSlotProps({
+    elementType: Bar,
+    externalSlotProps: slotProps?.bar,
+    additionalProps: {
+      ...other,
+      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      style,
+      className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
+    },
+    ownerState,
+  });
+  return <Bar {...barProps} />;
 }
+
+BarElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  dataIndex: PropTypes.number.isRequired,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { BarElement };
