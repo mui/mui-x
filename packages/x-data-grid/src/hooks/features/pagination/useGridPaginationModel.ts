@@ -12,11 +12,7 @@ import {
   useGridApiEventHandler,
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import {
-  gridPageCountSelector,
-  gridPaginationModelSelector,
-  gridPaginationMetaSelector,
-} from './gridPaginationSelector';
+import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
   getPageCount,
   defaultPageSize,
