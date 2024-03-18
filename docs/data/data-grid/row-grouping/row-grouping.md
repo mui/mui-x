@@ -271,17 +271,20 @@ To change the default cell indent, you can use the `--DataGrid-cellOffsetMultipl
 
 ### Single grouping column
 
-When using `rowGroupingColumnMode = "single"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the top-level grouping criteria.
+When using `rowGroupingColumnMode = "single"`, the default behavior is to:
+
+- sort each grouping criteria using the `sortComparator` of the column
+- apply the `filterOperators` of the top-level grouping criteria
 
 If you are rendering leaves with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
-In both cases, you can force the sorting and filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
+You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
 
 :::warning
 This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`.
 :::
 
-{{"demo": "RowGroupingSortingSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Multiple grouping columns
 
