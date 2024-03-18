@@ -24,6 +24,7 @@ const GridColumnHeadersRoot = styled('div', {
   overridesResolver: (props, styles) => styles.columnHeaders,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
+  flexDirection: 'column',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
   borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
 });

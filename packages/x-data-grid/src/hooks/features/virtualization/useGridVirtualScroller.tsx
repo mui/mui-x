@@ -24,7 +24,12 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import { clamp, range } from '../../../utils/utils';
-import { GridRenderContext, GridRowEntry, GridRowId } from '../../../models';
+import type {
+  GridRenderContext,
+  GridColumnsRenderContext,
+  GridRowEntry,
+  GridRowId,
+} from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
@@ -790,7 +795,7 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 
 export function computeOffsetLeft(
   columnPositions: number[],
-  renderContext: GridRenderContext,
+  renderContext: GridColumnsRenderContext,
   direction: Theme['direction'],
   pinnedLeftLength: number,
 ) {

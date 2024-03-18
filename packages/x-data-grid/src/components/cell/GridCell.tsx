@@ -32,6 +32,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 export enum PinnedPosition {
   NONE,
@@ -39,6 +41,13 @@ export enum PinnedPosition {
   RIGHT,
   VIRTUAL,
 }
+
+export const gridPinnedColumnPositionLookup = {
+  [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,
+  [PinnedPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
+  [PinnedPosition.NONE]: undefined,
+  [PinnedPosition.VIRTUAL]: undefined,
+};
 
 export type GridCellProps = {
   align: GridAlignment;
@@ -251,14 +260,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const isSectionLastCell = sectionIndex === sectionLength - 1;
-
-  const showLeftBorder = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
-
-  const showRightBorder =
-    (rootProps.showCellVerticalBorder &&
-      (pinnedPosition !== PinnedPosition.LEFT ? !isSectionLastCell : true)) ||
-    (pinnedPosition === PinnedPosition.LEFT && isSectionLastCell);
+  const position = gridPinnedColumnPositionLookup[pinnedPosition];
+  const showLeftBorder = shouldCellShowLeftBorder(position, sectionIndex);
+  const showRightBorder = shouldCellShowRightBorder(
+    position,
+    sectionIndex,
+    sectionLength,
+    rootProps.showCellVerticalBorder,
+  );
 
   const ownerState = {
     align,

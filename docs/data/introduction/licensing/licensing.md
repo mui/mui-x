@@ -221,7 +221,7 @@ While we recommend hard-coding the license key in git, you can also use an envir
 This method is required if your codebase is "source-available" (to hide the license key), and can be preferred if you want to granularly share the license key with your licensed developers.
 :::
 
-The license key is validated on the server and client side so you must expose the environment variable to the browser.
+The license key is validated on the server and client-side so you must expose the environment variable to the browser.
 To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
 
 ```tsx

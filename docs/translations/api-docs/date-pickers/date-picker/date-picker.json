@@ -116,7 +116,7 @@
       "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
         "day": "The date to test.",
         "boolean": "If <code>true</code> the date will be disabled."

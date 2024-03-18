@@ -6,7 +6,7 @@ import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
-  isNodeFocused: (nodeId: string) => boolean;
+  isNodeFocused: (itemId: string) => boolean;
   focusItem: (event: React.SyntheticEvent, itemId: string | null) => void;
   focusDefaultNode: (event: React.SyntheticEvent) => void;
   focusRoot: () => void;

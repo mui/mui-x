@@ -5,21 +5,21 @@ import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/mode
 
 export interface UseTreeItem2Parameters {
   /**
-   * The id attribute of the node. If not provided, it will be generated.
+   * The id attribute of the item. If not provided, it will be generated.
    */
   id?: string;
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled?: boolean;
   /**
-   * The id of the node.
+   * The id of the item.
    * Must be unique.
    */
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
   /**
-   * The label of the node.
+   * The label of the item.
    */
   label?: React.ReactNode;
   rootRef?: React.Ref<HTMLLIElement>;

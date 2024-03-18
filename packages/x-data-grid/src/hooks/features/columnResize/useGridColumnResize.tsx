@@ -15,6 +15,8 @@ import {
   findGridHeader,
   findGridCells,
   findParentElementFromClassName,
+  findLeftPinnedHeadersAfterCol,
+  findRightPinnedHeadersBeforeCol,
 } from '../../../utils/domUtils';
 import {
   GridAutosizeOptions,
@@ -191,7 +193,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
   const iqr = q3 - q1;
 
   // We make a small adjustment if `iqr < 5` for the cases where the IQR is
-  // very small (e.g. zero) due to very close by values in the input data.
+  // very small (for example zero) due to very close by values in the input data.
   // Otherwise, with an IQR of `0`, anything outside that would be considered
   // an outlier, but it makes more sense visually to allow for this 5px variance
   // rather than showing a cropped cell.
@@ -290,6 +292,8 @@ export const useGridColumnResize = (
   const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
   const fillerLeftRef = React.useRef<HTMLElement>();
   const fillerRightRef = React.useRef<HTMLElement>();
+  const leftPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
+  const rightPinnedHeadersBeforeRef = React.useRef<HTMLElement[]>([]);
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -365,6 +369,9 @@ export const useGridColumnResize = (
       leftPinnedCellsAfterRef.current.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
+      leftPinnedHeadersAfterRef.current.forEach((header) => {
+        updateProperty(header, 'left', widthDiff);
+      });
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
@@ -372,6 +379,9 @@ export const useGridColumnResize = (
 
       rightPinnedCellsBeforeRef.current.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
+      });
+      rightPinnedHeadersBeforeRef.current.forEach((header) => {
+        updateProperty(header, 'right', widthDiff);
       });
     }
   };
@@ -416,7 +426,7 @@ export const useGridColumnResize = (
     colDefRef.current = colDef as GridStateColDef;
 
     columnHeaderElementRef.current = findHeaderElementFromField(
-      apiRef.current.columnHeadersContainerElementRef!.current!,
+      apiRef.current.columnHeadersContainerRef!.current!,
       colDef.field,
     );
 
@@ -428,7 +438,7 @@ export const useGridColumnResize = (
     }
 
     groupHeaderElementsRef.current = findGroupHeaderElementsFromField(
-      apiRef.current.columnHeadersContainerElementRef?.current!,
+      apiRef.current.columnHeadersContainerRef?.current!,
       colDef.field,
     );
 
@@ -454,6 +464,15 @@ export const useGridColumnResize = (
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
         : findRightPinnedCellsBeforeCol(apiRef.current, columnHeaderElementRef.current);
+
+    leftPinnedHeadersAfterRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.LEFT
+        ? []
+        : findLeftPinnedHeadersAfterCol(apiRef.current, columnHeaderElementRef.current);
+    rightPinnedHeadersBeforeRef.current =
+      pinnedPosition !== GridPinnedColumnPosition.RIGHT
+        ? []
+        : findRightPinnedHeadersBeforeCol(apiRef.current, columnHeaderElementRef.current);
 
     resizeDirection.current = getResizeDirection(separator, theme.direction);
 
@@ -763,7 +782,7 @@ export const useGridColumnResize = (
 
   useGridNativeEventListener(
     apiRef,
-    () => apiRef.current.columnHeadersElementRef?.current,
+    () => apiRef.current.columnHeadersContainerRef?.current,
     'touchstart',
     handleTouchStart,
     { passive: doesSupportTouchActionNone() },

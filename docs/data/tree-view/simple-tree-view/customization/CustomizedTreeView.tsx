@@ -163,32 +163,32 @@ export default function CustomizedTreeView() {
       defaultSelectedItems="3"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
-      <StyledTreeItem nodeId="1" labelText="All Documents" labelIcon={FolderRounded}>
-        <StyledTreeItem nodeId="5" labelText="Company" labelIcon={FolderRounded}>
-          <StyledTreeItem nodeId="8" labelText="Payments" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="9" labelText="Meeting notes" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="10" labelText="Tasks list" labelIcon={DotIcon} />
-          <StyledTreeItem nodeId="11" labelText="Equipment" labelIcon={DotIcon} />
+      <StyledTreeItem itemId="1" labelText="All Documents" labelIcon={FolderRounded}>
+        <StyledTreeItem itemId="5" labelText="Company" labelIcon={FolderRounded}>
+          <StyledTreeItem itemId="8" labelText="Payments" labelIcon={DotIcon} />
+          <StyledTreeItem itemId="9" labelText="Meeting notes" labelIcon={DotIcon} />
+          <StyledTreeItem itemId="10" labelText="Tasks list" labelIcon={DotIcon} />
+          <StyledTreeItem itemId="11" labelText="Equipment" labelIcon={DotIcon} />
         </StyledTreeItem>
-        <StyledTreeItem nodeId="6" labelText="Personal" labelIcon={DotIcon} />
-        <StyledTreeItem nodeId="7" labelText="Images" labelIcon={DotIcon} />
+        <StyledTreeItem itemId="6" labelText="Personal" labelIcon={DotIcon} />
+        <StyledTreeItem itemId="7" labelText="Images" labelIcon={DotIcon} />
       </StyledTreeItem>
-      <StyledTreeItem nodeId="3" labelText="Bookmarked" labelIcon={Label}>
+      <StyledTreeItem itemId="3" labelText="Bookmarked" labelIcon={Label}>
         <StyledTreeItem
-          nodeId="12"
+          itemId="12"
           labelText="Learning materials"
           labelIcon={DotIcon}
         />
-        <StyledTreeItem nodeId="13" labelText="News" labelIcon={DotIcon} />
-        <StyledTreeItem nodeId="14" labelText="Forums" labelIcon={DotIcon} />
+        <StyledTreeItem itemId="13" labelText="News" labelIcon={DotIcon} />
+        <StyledTreeItem itemId="14" labelText="Forums" labelIcon={DotIcon} />
         <StyledTreeItem
-          nodeId="15"
+          itemId="15"
           labelText="Travel documents"
           labelIcon={AirplanemodeActiveIcon}
         />
       </StyledTreeItem>
-      <StyledTreeItem nodeId="4" labelText="History" labelIcon={FolderRounded} />
-      <StyledTreeItem nodeId="2" labelText="Trash" labelIcon={DeleteIcon} />
+      <StyledTreeItem itemId="4" labelText="History" labelIcon={FolderRounded} />
+      <StyledTreeItem itemId="2" labelText="Trash" labelIcon={DeleteIcon} />
     </SimpleTreeView>
   );
 }

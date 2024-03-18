@@ -36,19 +36,19 @@ export default function CustomStyling() {
       defaultExpandedItems={['1']}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
-      <StyledTreeItem nodeId="1" label="Main">
-        <StyledTreeItem nodeId="2" label="Hello" />
-        <StyledTreeItem nodeId="3" label="Subtree with children">
-          <StyledTreeItem nodeId="6" label="Hello" />
-          <StyledTreeItem nodeId="7" label="Sub-subtree with children">
-            <StyledTreeItem nodeId="9" label="Child 1" />
-            <StyledTreeItem nodeId="10" label="Child 2" />
-            <StyledTreeItem nodeId="11" label="Child 3" />
+      <StyledTreeItem itemId="1" label="Main">
+        <StyledTreeItem itemId="2" label="Hello" />
+        <StyledTreeItem itemId="3" label="Subtree with children">
+          <StyledTreeItem itemId="6" label="Hello" />
+          <StyledTreeItem itemId="7" label="Sub-subtree with children">
+            <StyledTreeItem itemId="9" label="Child 1" />
+            <StyledTreeItem itemId="10" label="Child 2" />
+            <StyledTreeItem itemId="11" label="Child 3" />
           </StyledTreeItem>
-          <StyledTreeItem nodeId="8" label="Hello" />
+          <StyledTreeItem itemId="8" label="Hello" />
         </StyledTreeItem>
-        <StyledTreeItem nodeId="4" label="World" />
-        <StyledTreeItem nodeId="5" label="Something something" />
+        <StyledTreeItem itemId="4" label="World" />
+        <StyledTreeItem itemId="5" label="Something something" />
       </StyledTreeItem>
     </SimpleTreeView>
   );
