@@ -1,17 +1,24 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
+import { isNumber } from '../../../utils/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPaginationRowCountApi } from './gridPaginationInterfaces';
+import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
-import { useGridLogger, useGridSelector, useGridApiMethod } from '../../utils';
+import {
+  useGridLogger,
+  useGridSelector,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { gridPaginationRowCountSelector } from './gridPaginationSelector';
+import {
+  gridPaginationRowCountSelector,
+  gridPaginationMetaSelector,
+  gridPaginationModelSelector,
+} from './gridPaginationSelector';
 import { noRowCountInServerMode } from './gridPaginationUtils';
 
-/**
- * @requires useGridFilter (state)
- * @requires useGridDimensions (event) - can be after
- */
 export const useGridRowCount = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
@@ -22,7 +29,10 @@ export const useGridRowCount = (
   const logger = useGridLogger(apiRef, 'useGridRowCount');
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
-  const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const rowCountState = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const paginationMeta = useGridSelector(apiRef, gridPaginationMetaSelector);
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
+  const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
@@ -37,7 +47,7 @@ export const useGridRowCount = (
    */
   const setRowCount = React.useCallback<GridPaginationRowCountApi['setRowCount']>(
     (newRowCount) => {
-      if (rowCount === newRowCount) {
+      if (rowCountState === newRowCount) {
         return;
       }
       logger.debug("Setting 'rowCount' to", newRowCount);
@@ -50,7 +60,7 @@ export const useGridRowCount = (
         },
       }));
     },
-    [apiRef, logger, rowCount],
+    [apiRef, logger, rowCountState],
   );
 
   const paginationRowCountApi: GridPaginationRowCountApi = {
@@ -110,6 +120,54 @@ export const useGridRowCount = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
+   * EVENTS
+   */
+  const handlePaginationMetaChange = React.useCallback(
+    (meta: GridPaginationState['meta']) => {
+      if (props.paginationMode === 'client') {
+        return;
+      }
+      if (meta.hasNextPage === false && rowCountState === -1) {
+        apiRef.current.setRowCount(paginationModel.pageSize * (paginationModel.page + 1));
+        return;
+      }
+
+      if (meta.hasNextPage === true && rowCountState !== -1) {
+        const lastPage = Math.max(0, Math.ceil(rowCountState / paginationModel.pageSize) - 1);
+        if (paginationModel.page === lastPage) {
+          apiRef.current.setRowCount(-1);
+        }
+      }
+    },
+    [apiRef, props.paginationMode, rowCountState, paginationModel],
+  );
+
+  const handlePaginationModelChange = React.useCallback(
+    (model: GridPaginationState['paginationModel']) => {
+      if (props.paginationMode === 'client' || !previousPageSize.current) {
+        return;
+      }
+      if (model.pageSize !== previousPageSize.current) {
+        // The page size has changed
+        previousPageSize.current = model.pageSize;
+        if (rowCountState !== -1) {
+          // Row count unknown and page size changed, reset the page
+          apiRef.current.setPage(0);
+          return;
+        }
+        const lastPage = Math.max(0, Math.ceil(rowCountState / model.pageSize) - 1);
+        if (model.page > lastPage) {
+          apiRef.current.setPage(lastPage);
+        }
+      }
+    },
+    [props.paginationMode, previousPageSize, rowCountState, apiRef],
+  );
+
+  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridApiEventHandler(apiRef, 'paginationMetaChange', handlePaginationMetaChange);
+
+  /**
    * EFFECTS
    */
   React.useEffect(() => {
@@ -123,8 +181,18 @@ export const useGridRowCount = (
   React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(visibleTopLevelRowCount);
-    } else if (props.rowCount != null) {
+      return;
+    }
+
+    if (isNumber(props.rowCount)) {
       apiRef.current.setRowCount(props.rowCount);
     }
-  }, [apiRef, visibleTopLevelRowCount, props.paginationMode, props.rowCount]);
+  }, [
+    apiRef,
+    visibleTopLevelRowCount,
+    props.paginationMode,
+    props.rowCount,
+    paginationMeta,
+    paginationModel,
+  ]);
 };

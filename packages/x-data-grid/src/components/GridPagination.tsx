@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import TablePagination, {
   tablePaginationClasses,
   TablePaginationProps,
 } from '@mui/material/TablePagination';
-import { styled } from '@mui/material/styles';
+// import TablePagination, { tablePaginationClasses, TablePaginationProps } from './tablePagination';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridPaginationModelSelector,
   gridPaginationRowCountSelector,
+  gridPageCountSelector,
 } from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
@@ -27,6 +29,17 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   },
 })) as typeof TablePagination;
 
+const getLabelDisplayedRows: (
+  estimatedRowCount?: number,
+) => TablePaginationProps['labelDisplayedRows'] =
+  (estimatedRowCount?: number) =>
+  ({ from, to, count }: { from: number; to: number; count: number }) => {
+    if (!estimatedRowCount) {
+      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+    }
+    return `${from}–${to} of ${count !== -1 ? count : `more than ${estimatedRowCount > to ? estimatedRowCount : to}`}`;
+  };
+
 // A mutable version of a readonly array.
 
 type MutableArray<A> = A extends readonly (infer T)[] ? T[] : never;
@@ -37,11 +50,34 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
     const rootProps = useGridRootProps();
     const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
     const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-    const lastPage = React.useMemo(() => {
-      const calculatedValue = Math.ceil(rowCount / (paginationModel.pageSize || 1)) - 1;
-      return Math.max(0, calculatedValue);
-    }, [rowCount, paginationModel.pageSize]);
+    const { paginationMode, loading, estimatedRowCount } = rootProps;
+
+    const computedProps: Partial<TablePaginationProps> = React.useMemo(() => {
+      if (paginationMode === 'server' && loading) {
+        return {
+          backIconButtonProps: { disabled: true },
+          nextIconButtonProps: { disabled: true },
+        };
+      }
+
+      return {};
+    }, [loading, paginationMode]);
+
+    const lastPage = React.useMemo(() => Math.max(0, pageCount - 1), [pageCount]);
+
+    const computedPage = React.useMemo(() => {
+      if (rowCount === -1) {
+        return paginationModel.page;
+      }
+      return paginationModel.page <= lastPage ? paginationModel.page : lastPage;
+    }, [lastPage, paginationModel.page, rowCount]);
+
+    const labelDisplayedRows = React.useMemo(
+      () => getLabelDisplayedRows(estimatedRowCount),
+      [estimatedRowCount],
+    );
 
     const handlePageSizeChange = React.useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -102,7 +138,8 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
         ref={ref}
         component="div"
         count={rowCount}
-        page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
+        estimatedCount={estimatedRowCount}
+        page={computedPage}
         // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
         // for x-data-grid is past the fix.
         // Note that Material UI will not mutate the array, so this is safe.
@@ -110,8 +147,10 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
         rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
+        {...computedProps}
         {...apiRef.current.getLocaleText('MuiTablePagination')}
         {...props}
+        labelDisplayedRows={labelDisplayedRows}
       />
     );
   },
