@@ -49,7 +49,7 @@ export interface MultiInputFieldRefs {
 
 export interface RangeFieldSeparatorProps {
   /**
-   * String displayed between the start and the end date.
+   * String displayed between the start and the end dates.
    * @default "–"
    */
   dateSeparator?: string;
