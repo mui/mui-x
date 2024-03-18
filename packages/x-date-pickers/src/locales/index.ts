@@ -1,3 +1,4 @@
+export * from './arEg';
 export * from './beBY';
 export * from './caES';
 export * from './csCZ';
