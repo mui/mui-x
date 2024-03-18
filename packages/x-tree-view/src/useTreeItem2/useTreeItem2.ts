@@ -26,11 +26,11 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     publicAPI,
   } = useTreeViewContext<TPlugins>();
 
-  const { id, nodeId, label, children, rootRef } = parameters;
+  const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItem2Utils({ nodeId, children });
-  const idAttribute = instance.getTreeItemId(nodeId, id);
+  const { interactions, status } = useTreeItem2Utils({ itemId, children });
+  const idAttribute = instance.getTreeItemId(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
 
   const createRootHandleFocus =
@@ -48,7 +48,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
       const canBeFocused = !status.disabled || disabledItemsFocusable;
       if (!status.focused && canBeFocused && event.currentTarget === event.target) {
-        instance.focusItem(event, nodeId);
+        instance.focusItem(event, itemId);
       }
     };
 
@@ -93,7 +93,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       /* single-selection trees unset aria-selected on un-selected items.
        *
        * If the tree does not support multiple selection, aria-selected
-       * is set to true for the selected node and it is not present on any other node in the tree.
+       * is set to true for the selected item and it is not present on any other item in the tree.
        * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
        */
       ariaSelected = true;

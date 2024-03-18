@@ -7,8 +7,8 @@ export interface UseTreeViewNodesInstance {
   insertJSXNode: (node: TreeViewNode) => void;
   setJSXItemsChildrenIndexes: (itemId: string | null, indexes: TreeViewItemChildrenIndexes) => void;
   getJSXItemsChildrenIndexes: (itemId: string | null) => TreeViewItemChildrenIndexes;
-  removeJSXNode: (nodeId: string) => void;
-  mapFirstCharFromJSX: (nodeId: string, firstChar: string) => () => void;
+  removeJSXNode: (itemId: string) => void;
+  mapFirstCharFromJSX: (itemId: string, firstChar: string) => () => void;
 }
 
 export interface UseTreeViewNodesParameters {}

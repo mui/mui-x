@@ -399,7 +399,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
 
 ### Accessibility
 
@@ -478,6 +478,10 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 - The `.MuiDataGrid-cell--withRenderer` class has been removed.
 - The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
+- The `columnHeader--showColumnBorder` class was replaced by `columnHeader--withLeftBorder` and `columnHeader--withRightBorder`.
+- The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
+- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
+  The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
 
 ### Changes to the public API
 

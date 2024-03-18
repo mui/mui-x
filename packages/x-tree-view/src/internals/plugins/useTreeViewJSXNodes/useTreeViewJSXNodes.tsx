@@ -65,14 +65,13 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   const getJSXItemsChildrenIndexes = (parentId: string | null) =>
     state.nodes.itemIndexes[parentId ?? TREE_VIEW_ROOT_PARENT_ID] ?? {};
 
-  const removeJSXNode = useEventCallback((nodeId: string) => {
+  const removeJSXNode = useEventCallback((itemId: string) => {
     setState((prevState) => {
       const newNodeMap = { ...prevState.nodes.nodeMap };
       const newItemMap = { ...prevState.nodes.itemMap };
 
-      delete newNodeMap[nodeId];
-      delete newItemMap[nodeId];
-
+      delete newNodeMap[itemId];
+      delete newItemMap[itemId];
       return {
         ...prevState,
         nodes: {
@@ -82,19 +81,19 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
         },
       };
     });
-    publishTreeViewEvent(instance, 'removeNode', { id: nodeId });
+    publishTreeViewEvent(instance, 'removeNode', { id: itemId });
   });
 
-  const mapFirstCharFromJSX = useEventCallback((nodeId: string, firstChar: string) => {
+  const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
     instance.updateFirstCharMap((firstCharMap) => {
-      firstCharMap[nodeId] = firstChar;
+      firstCharMap[itemId] = firstChar;
       return firstCharMap;
     });
 
     return () => {
       instance.updateFirstCharMap((firstCharMap) => {
         const newMap = { ...firstCharMap };
-        delete newMap[nodeId];
+        delete newMap[itemId];
         return newMap;
       });
     };
@@ -114,7 +113,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
-  const { children, disabled = false, label, nodeId, id } = props;
+  const { children, disabled = false, label, itemId, id } = props;
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -146,34 +145,34 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    registerChild(nodeId, pluginRootRef.current!);
+    registerChild(itemId, pluginRootRef.current!);
 
     return () => {
-      unregisterChild(nodeId);
+      unregisterChild(itemId);
     };
-  }, [registerChild, unregisterChild, nodeId]);
+  }, [registerChild, unregisterChild, itemId]);
 
   React.useEffect(() => {
     instance.insertJSXNode({
-      id: nodeId,
+      id: itemId,
       idAttribute: id,
       parentId,
       expandable,
       disabled,
     });
 
-    return () => instance.removeJSXNode(nodeId);
-  }, [instance, parentId, nodeId, expandable, disabled, id]);
+    return () => instance.removeJSXNode(itemId);
+  }, [instance, parentId, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
       return instance.mapFirstCharFromJSX(
-        nodeId,
+        itemId,
         (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
     }
     return undefined;
-  }, [instance, nodeId, label]);
+  }, [instance, itemId, label]);
 
   return {
     contentRef: handleContentRef,
@@ -183,8 +182,8 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
 
-useTreeViewJSXNodes.wrapItem = ({ children, nodeId }) => (
-  <TreeViewChildrenItemProvider id={nodeId}>{children}</TreeViewChildrenItemProvider>
+useTreeViewJSXNodes.wrapItem = ({ children, itemId }) => (
+  <TreeViewChildrenItemProvider id={itemId}>{children}</TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXNodes.wrapRoot = ({ children, rootRef }) => (
