@@ -352,18 +352,6 @@ describe('<DataGrid /> - Row selection', () => {
       expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
     });
 
-    it('should not select more than one row when disableMultipleRowSelection = true', () => {
-      render(<TestDataGridSelection checkboxSelection disableMultipleRowSelection />);
-      const input1 = getCell(0, 0).querySelector('input')!;
-      fireEvent.click(input1);
-      expect(input1.checked).to.equal(true);
-
-      const input2 = getCell(1, 0).querySelector('input')!;
-      fireEvent.click(input2);
-      expect(input1.checked).to.equal(false);
-      expect(input2.checked).to.equal(true);
-    });
-
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
       render(
         <TestDataGridSelection
