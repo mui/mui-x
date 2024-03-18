@@ -18,6 +18,7 @@ import {
   useGridApiRef,
   GridApi,
   GridPreferencePanelsValue,
+  gridClasses,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -26,7 +27,6 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
-  grid,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -368,7 +368,9 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(selectAllCheckbox);
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '4 rows selected',
+        );
       });
 
       fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -377,19 +379,23 @@ describe('<DataGrid /> - Row selection', () => {
       await waitFor(() => {
         // Previous selection remains, but only one row is visible
         expect(getSelectedRowIds()).to.deep.equal([1]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '4 rows selected',
+        );
       });
 
       fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
-        expect(grid('selectedRowCount')).to.equal(null);
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)).to.equal(null);
       });
 
       fireEvent.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '1 row selected',
+        );
       });
     });
   });
