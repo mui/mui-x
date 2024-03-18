@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -10,6 +17,7 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
+  GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -18,6 +26,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
+  grid,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -341,6 +350,59 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'Select row' }));
       expect(screen.queryByRole('checkbox', { name: 'Select row' })).to.equal(null);
       expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
+    });
+
+    it('should not select more than one row when disableMultipleRowSelection = true', () => {
+      render(<TestDataGridSelection checkboxSelection disableMultipleRowSelection />);
+      const input1 = getCell(0, 0).querySelector('input')!;
+      fireEvent.click(input1);
+      expect(input1.checked).to.equal(true);
+
+      const input2 = getCell(1, 0).querySelector('input')!;
+      fireEvent.click(input2);
+      expect(input1.checked).to.equal(false);
+      expect(input2.checked).to.equal(true);
+    });
+
+    it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(selectAllCheckbox);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      });
+
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
+      await waitFor(() => {
+        // Previous selection remains, but only one row is visible
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      });
+
+      fireEvent.click(selectAllCheckbox); // Unselect all
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(grid('selectedRowCount')).to.equal(null);
+      });
+
+      fireEvent.click(selectAllCheckbox); // Select all filtered rows
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+      });
     });
   });
 
