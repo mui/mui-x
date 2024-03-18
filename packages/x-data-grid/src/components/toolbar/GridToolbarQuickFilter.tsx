@@ -1,8 +1,11 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -10,9 +13,6 @@ import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
-import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass } from '@mui/x-data-grid/constants';
-import clsx from 'clsx';
 
 type OwnerState = DataGridProcessedProps;
 
