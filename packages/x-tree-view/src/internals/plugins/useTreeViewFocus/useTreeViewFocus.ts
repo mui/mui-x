@@ -12,9 +12,9 @@ const useTabbableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
   selectedItems: string | string[] | null,
 ) => {
-  const isItemVisible = (nodeId: string) => {
-    const item = instance.getNode(nodeId);
-    return item && (item.parentId == null || instance.isNodeExpanded(item.parentId));
+  const isItemVisible = (itemId: string) => {
+    const node = instance.getNode(itemId);
+    return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
   };
 
   let tabbableItemId: string | null | undefined;
@@ -67,8 +67,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const item = instance.getNode(itemId);
-    const itemElement = document.getElementById(instance.getTreeItemId(itemId, item.idAttribute));
+    const node = instance.getNode(itemId);
+    const itemElement = document.getElementById(instance.getTreeItemId(itemId, node.idAttribute));
     if (itemElement) {
       itemElement.focus();
     }
@@ -106,9 +106,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       return;
     }
 
-    const item = instance.getNode(state.focusedNodeId);
+    const node = instance.getNode(state.focusedNodeId);
     const itemElement = document.getElementById(
-      instance.getTreeItemId(state.focusedNodeId, item.idAttribute),
+      instance.getTreeItemId(state.focusedNodeId, node.idAttribute),
     );
     if (itemElement) {
       itemElement.blur();
@@ -117,7 +117,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  const canItemBeTabbed = (nodeId: string) => nodeId === tabbableItemId;
+  const canItemBeTabbed = (itemId: string) => itemId === tabbableItemId;
 
   populateInstance<UseTreeViewFocusSignature>(instance, {
     isNodeFocused,

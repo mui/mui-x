@@ -10,7 +10,7 @@ export interface UseTreeViewKeyboardNavigationInstance {
   updateFirstCharMap: (updater: (map: TreeViewFirstCharMap) => TreeViewFirstCharMap) => void;
   handleItemKeyDown: (
     event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
-    nodeId: string,
+    itemId: string,
   ) => void;
 }
 

@@ -519,7 +519,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('two')).toHaveFocus();
         });
 
-        it('should do nothing if focus is on an end node', () => {
+        it('should do nothing if focus is on an end item', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -540,7 +540,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('left arrow interaction', () => {
-        it('should close the node if focus is on an open node', () => {
+        it('should close the item if focus is on an open item', () => {
           const { getByTestId, getByText } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -562,7 +562,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it("should move focus to the item's parent item if focus is on a child node that is an end node", () => {
+        it("should move focus to the item's parent item if focus is on a child node that is an end item", () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -660,7 +660,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('two')).toHaveFocus();
         });
 
-        it('moves focus to a child node', () => {
+        it('moves focus to a child item', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -679,7 +679,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('two')).toHaveFocus();
         });
 
-        it('moves focus to a child node works with a dynamic tree', () => {
+        it('moves focus to a child item works with a dynamic tree', () => {
           function TestComponent() {
             const [hide, setState] = React.useState(false);
 
@@ -1266,7 +1266,7 @@ describe('<TreeItem />', () => {
           });
         });
 
-        it('should deselect the node when pressing space on a selected node', () => {
+        it('should deselect the item when pressing space on a selected item', () => {
           const { getByTestId } = render(
             <SimpleTreeView multiSelect defaultSelectedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one" />

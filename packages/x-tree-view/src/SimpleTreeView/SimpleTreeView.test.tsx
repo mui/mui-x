@@ -362,7 +362,7 @@ describe('<SimpleTreeView />', () => {
     });
   });
 
-  describe('onNodeToggle', () => {
+  describe('onExpandedItemsChange', () => {
     it('should be called when a parent item label is clicked', () => {
       const onExpandedItemsChange = spy();
 

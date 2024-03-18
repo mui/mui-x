@@ -7,7 +7,7 @@ import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (itemId: string) => boolean;
-  canItemBeTabbed: (nodeId: string) => boolean;
+  canItemBeTabbed: (itemId: string) => boolean;
   focusItem: (event: React.SyntheticEvent, nodeId: string) => void;
   focusDefaultNode: (event: React.SyntheticEvent | null) => void;
   removeFocusedItem: () => void;
