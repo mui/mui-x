@@ -232,7 +232,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
           ref: React.Ref<HTMLLIElement>,
         ) {
           const { interactions } = useTreeItem2Utils({
-            nodeId: props.nodeId,
+            itemId: props.itemId,
             children: props.children,
           });
 

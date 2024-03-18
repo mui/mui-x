@@ -67,7 +67,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
               item: (ownerState) =>
                 ({
                   ...slotProps?.item,
-                  'data-testid': ownerState.nodeId,
+                  'data-testid': ownerState.itemId,
                 }) as any,
             }}
             getItemLabel={(item) => item.label ?? item.id}
@@ -102,7 +102,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
               item: (ownerState) =>
                 ({
                   ...slotProps?.item,
-                  'data-testid': ownerState.nodeId,
+                  'data-testid': ownerState.itemId,
                 }) as any,
             }}
             getItemLabel={(item) => item.label ?? item.id}
@@ -131,7 +131,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         const renderItem = (item: DescribeTreeViewItem) => (
           <Item
-            nodeId={item.id}
+            itemId={item.id}
             label={item.label ?? item.id}
             disabled={item.disabled}
             data-testid={item.id}
@@ -166,7 +166,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
         const Item = slots?.item ?? TreeItem2;
         const renderItem = (item: DescribeTreeViewItem) => (
           <Item
-            nodeId={item.id}
+            itemId={item.id}
             label={item.label ?? item.id}
             disabled={item.disabled}
             data-testid={item.id}
