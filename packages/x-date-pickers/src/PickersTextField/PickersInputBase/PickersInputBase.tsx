@@ -6,6 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
+import { useSlotProps } from '@mui/base/utils';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import {
   pickersInputBaseClasses,
@@ -19,7 +20,6 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../PickersSectionList';
-import { useSlotProps } from '@mui/base/utils';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
