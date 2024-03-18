@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import TablePagination, {
   tablePaginationClasses,
   TablePaginationProps,
+  LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
-// import TablePagination, { tablePaginationClasses, TablePaginationProps } from './tablePagination';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -29,16 +29,24 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   },
 })) as typeof TablePagination;
 
-const getLabelDisplayedRows: (
-  estimatedRowCount?: number,
-) => TablePaginationProps['labelDisplayedRows'] =
-  (estimatedRowCount?: number) =>
-  ({ from, to, count }: { from: number; to: number; count: number }) => {
-    if (!estimatedRowCount) {
-      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-    }
-    return `${from}–${to} of ${count !== -1 ? count : `more than ${estimatedRowCount > to ? estimatedRowCount : to}`}`;
-  };
+type WrappedLabelDisplayedRows = (
+  args: LabelDisplayedRowsArgs & { estimated?: number },
+) => React.ReactNode;
+
+const wrapLabelDisplayedRows = (
+  labelDisplayedRows: WrappedLabelDisplayedRows,
+  estimated?: number,
+): TablePaginationProps['labelDisplayedRows'] => {
+  return ({ from, to, count, page }: LabelDisplayedRowsArgs) =>
+    labelDisplayedRows!({ from, to, count, page, estimated });
+};
+
+const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count, estimated }) => {
+  if (!estimated) {
+    return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  }
+  return `${from}–${to} of ${count !== -1 ? count : `more than ${estimated > to ? estimated : to}`}`;
+};
 
 // A mutable version of a readonly array.
 
@@ -73,11 +81,6 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
       }
       return paginationModel.page <= lastPage ? paginationModel.page : lastPage;
     }, [lastPage, paginationModel.page, rowCount]);
-
-    const labelDisplayedRows = React.useMemo(
-      () => getLabelDisplayedRows(estimatedRowCount),
-      [estimatedRowCount],
-    );
 
     const handlePageSizeChange = React.useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -133,12 +136,17 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
       ? rootProps.pageSizeOptions
       : [];
 
+    const locales = apiRef.current.getLocaleText('MuiTablePagination');
+    const wrappedLabelDisplayedRows = wrapLabelDisplayedRows(
+      locales.labelDisplayedRows || defaultLabelDisplayedRows,
+      estimatedRowCount,
+    );
+
     return (
       <GridPaginationRoot
         ref={ref}
         component="div"
         count={rowCount}
-        estimatedCount={estimatedRowCount}
         page={computedPage}
         // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
         // for x-data-grid is past the fix.
@@ -148,9 +156,9 @@ export const GridPagination = React.forwardRef<unknown, Partial<TablePaginationP
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
         {...computedProps}
-        {...apiRef.current.getLocaleText('MuiTablePagination')}
+        {...locales}
+        labelDisplayedRows={wrappedLabelDisplayedRows}
         {...props}
-        labelDisplayedRows={labelDisplayedRows}
       />
     );
   },
