@@ -51,7 +51,7 @@ This adornment is purely decorative, the focus remains on the field when the pic
 
 ### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-You can use the `dateSeparator` prop to change the separator rendered between the two `TextField`:
+You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
 
 {{"demo": "RangeFieldDateSeparator.js"}}
 
