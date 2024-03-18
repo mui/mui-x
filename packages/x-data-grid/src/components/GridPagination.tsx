@@ -32,12 +32,17 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
 
 type MutableArray<A> = A extends readonly (infer T)[] ? T[] : never;
 
+interface GridPaginationOwnProps {
+  component?: React.ElementType;
+}
+
 const GridPagination = React.forwardRef<
   unknown,
   Partial<
     // See https://github.com/mui/material-ui/issues/40427
-    Omit<TablePaginationProps, 'component'> & { component?: React.ElementType }
-  >
+    Omit<TablePaginationProps, 'component'>
+  > &
+    GridPaginationOwnProps
 >(function GridPagination(props, ref) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
