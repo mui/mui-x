@@ -400,7 +400,7 @@ describe('<SimpleTreeView />', () => {
           </button>
           <SimpleTreeView onSelectedItemsChange={onSelectedItemsChange} multiSelect>
             {items.map((itemId) => (
-              <TreeItem key={itemId} nodeId={itemId} label={itemId} />
+              <TreeItem key={itemId} itemId={itemId} label={itemId} />
             ))}
           </SimpleTreeView>
         </React.Fragment>
