@@ -12,7 +12,7 @@ productId: x-tree-view
 
 TBD
 
-## Start using the alpha release
+## Start using the beta release
 
 In `package.json`, change the version of the tree view package to `next`.
 
@@ -32,6 +32,45 @@ Please update your `@mui/material` package to this or a newer version.
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 
+### Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
+### ✅ Rename `nodeId` to `itemId`
+
+The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-    <TreeItem label='Item 1' nodeId='one'>
++    <TreeItem label='Item 1' itemId='one'>
+ </TreeView>
+```
+
+The same change has been applied to the and `ContentComponent` prop:
+
+```diff
+  const CustomContent = React.forwardRef((props, ref) => {
+-  const id = props.nodeId;
++  const id = props.itemId;
+
+     // Render some UI
+   });
+
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+```
+
 ### ✅ Use `SimpleTreeView` instead of `TreeView`
 
 The `TreeView` component has been deprecated and will be removed in the next major.
@@ -47,7 +86,7 @@ You can start replacing it with the new `SimpleTreeView` component which has exa
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -84,7 +123,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 
 #### Define `expandIcon`
 
-The icon used to expand the children of a node (rendered when this node is collapsed)
+The icon used to expand the children of an item (rendered when this item is collapsed)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
@@ -122,8 +161,8 @@ you need to use the new `expandIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     expandIcon={<MyCustomExpandIcon />}
 +     slots={{ expandIcon: MyCustomExpandIcon }}
     />
@@ -132,7 +171,7 @@ you need to use the new `expandIcon` slot on this component:
 
 #### Define `collapseIcon`
 
-The icon used to collapse the children of a node (rendered when this node is expanded)
+The icon used to collapse the children of an item (rendered when this item is expanded)
 is now defined as a slot both on the Tree View and the `TreeItem` components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
@@ -170,8 +209,8 @@ you need to use the new `collapseIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     collapseIcon={<MyCustomCollapseIcon />}
 +     slots={{ collapseIcon: MyCustomCollapseIcon }}
     />
@@ -222,8 +261,8 @@ you need to use the new `endIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     endIcon={<MyCustomEndIcon />}
 +     slots={{ endIcon: MyCustomEndIcon }}
     />
@@ -241,8 +280,8 @@ you need to use the new `icon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     icon={<MyCustomIcon />}
 +     slots={{ icon: MyCustomIcon }}
     />
@@ -264,8 +303,8 @@ you need to use the new `groupTransition` slot on this component:
 ```diff
  <SimpleTreeView>
    <TreeItem
-     nodeId="1"
-     label="Node 1"
+     itemId="1"
+     label="Item 1"
 -    TransitionComponent={Fade}
 +    slots={{ groupTransition: Fade }}
 -    TransitionProps={{ timeout: 600 }}
@@ -293,32 +332,32 @@ The expansion props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeToggle`    | `onExpandedNodesChange` |
-| `expanded`        | `expandedNodes`         |
-| `defaultExpanded` | `defaultExpandedNodes`  |
+| `onNodeToggle`    | `onExpandedItemsChange` |
+| `expanded`        | `expandedItems`         |
+| `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
-you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific item,
+you can use the new `onItemExpansionToggle` prop which is called whenever an item is expanded or collapsed with its id and expansion status
 
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
-    console.log(nodeId, isExpanded)
+  onItemExpansionToggle={(event, itemId, isExpanded) =>
+    console.log(itemId, isExpanded)
   }
 />
 ```
@@ -331,32 +370,32 @@ The selection props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeSelect`    | `onSelectedNodesChange` |
-| `selected`        | `selectedNodes`         |
-| `defaultSelected` | `defaultSelectedNodes`  |
+| `onNodeSelect`    | `onSelectedItemsChange` |
+| `selected`        | `selectedItems`         |
+| `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific node,
-you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
+If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific item,
+you can use the new `onItemSelectionToggle` prop which is called whenever an item is selected or deselected with its id and selection status.
 
 ```tsx
 // It is also available on the deprecated `TreeView` component
 <SimpleTreeView
-  onNodeSelectionToggle={(event, nodeId, isSelected) =>
-    console.log(nodeId, isSelected)
+  onItemSelectionToggle={(event, itemId, isSelected) =>
+    console.log(itemId, isSelected)
   }
 />
 ```
@@ -373,8 +412,8 @@ This will help create a new headless version of the `TreeItem` component based o
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -386,4 +425,15 @@ This will help create a new headless version of the `TreeItem` component based o
      </SimpleTreeView>
    )
  }
+```
+
+### ✅ Rename `onNodeFocus`
+
+The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
+
+```diff
+ <SimpleTreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
 ```
