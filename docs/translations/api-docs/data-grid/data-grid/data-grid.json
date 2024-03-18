@@ -14,6 +14,10 @@
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
     },
+    "autosizeOnMount": {
+      "description": "If <code>true</code>, columns are autosized after the datagrid is mounted."
+    },
+    "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
@@ -38,8 +42,12 @@
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
     "density": { "description": "Set the density of the Data Grid." },
+    "disableAutosize": {
+      "description": "If <code>true</code>, column autosizing on header separator double-click is disabled."
+    },
     "disableColumnFilter": { "description": "If <code>true</code>, column filters are disabled." },
     "disableColumnMenu": { "description": "If <code>true</code>, the column menu is disabled." },
+    "disableColumnResize": { "description": "If <code>true</code>, resizing columns is disabled." },
     "disableColumnSelector": {
       "description": "If <code>true</code>, hiding/showing columns is disabled."
     },
@@ -264,10 +272,26 @@
         "details": "Additional details for this callback."
       }
     },
+    "onColumnResize": {
+      "description": "Callback fired while a column is being resized.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnResizeParams.",
+        "event": "The event object.",
+        "details": "Additional details for this callback."
+      }
+    },
     "onColumnVisibilityModelChange": {
       "description": "Callback fired when the column visibility model changes.",
       "typeDescriptions": {
         "model": "The new model.",
+        "details": "Additional details for this callback."
+      }
+    },
+    "onColumnWidthChange": {
+      "description": "Callback fired when the width of a column is changed.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnResizeParams.",
+        "event": "The event object.",
         "details": "Additional details for this callback."
       }
     },
@@ -340,6 +364,10 @@
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
+    },
+    "onRowCountChange": {
+      "description": "Callback fired when the row count has changed.",
+      "typeDescriptions": { "count": "Updated row count." }
     },
     "onRowDoubleClick": {
       "description": "Callback fired when a double click event comes from a row container element.",
@@ -570,10 +598,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
-    "columnGroupHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column group header element"
-    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
@@ -622,11 +646,8 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
-    "columnHeader--showColumnBorder": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the column group header cell",
-      "conditions": "show column border"
-    },
+    "columnHeader--pinnedLeft": { "description": "" },
+    "columnHeader--pinnedRight": { "description": "" },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -637,6 +658,7 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
+    "columnHeader--withLeftBorder": { "description": "" },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if <code>showColumnVerticalBorder={true}</code>."
     },
@@ -647,20 +669,6 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header&#39;s draggable container element"
-    },
-    "columnHeaderDropZone": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers wrapper",
-      "conditions": "a column is being dragged"
-    },
-    "columnHeadersInner": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column headers&#39;s inner element"
-    },
-    "columnHeadersInner--scrollable": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers&#39;s inner element",
-      "conditions": "there is a horizontal scrollbar"
     },
     "columnHeaderTitle": {
       "description": "Styles applied to the column header&#39;s title element;"
@@ -737,15 +745,6 @@
     "editInputCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
-    },
-    "filler": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the filler row" },
-    "filler--pinnedLeft": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned left section"
-    },
-    "filler--pinnedRight": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned right section"
     },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
@@ -857,18 +856,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumnHeaders": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned column headers"
-    },
-    "pinnedColumnHeaders--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned column headers"
-    },
-    "pinnedColumnHeaders--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned column headers"
-    },
     "pinnedColumns": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"
@@ -1043,7 +1030,6 @@
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
-    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",

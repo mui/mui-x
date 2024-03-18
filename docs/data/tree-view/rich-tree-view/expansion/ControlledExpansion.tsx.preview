@@ -1,12 +1,12 @@
 <Box sx={{ mb: 1 }}>
   <Button onClick={handleExpandClick}>
-    {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
+    {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
   </Button>
 </Box>
 <Box sx={{ minHeight: 200, flexGrow: 1 }}>
   <RichTreeView
     items={MUI_X_PRODUCTS}
-    expandedNodes={expandedNodes}
-    onExpandedNodesChange={handleExpandedNodesChange}
+    expandedItems={expandedItems}
+    onExpandedItemsChange={handleExpandedItemsChange}
   />
 </Box>

@@ -65,12 +65,12 @@ The demo below shows each one of them using their field component:
 
 Each _Picker_ is available in a responsive, desktop and mobile variant:
 
-- The responsive component (e.g. `DatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
+- The responsive component (for example `DatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
 
-- The desktop component (e.g. `DesktopDatePicker`) which works best for mouse devices and large screens.
+- The desktop component (for example `DesktopDatePicker`) which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The mobile component (e.g. `MobileDatePicker`) which works best for touch devices and small screens.
+- The mobile component (for example `MobileDatePicker`) which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
 {{"demo": "ResponsivePickers.js"}}
@@ -151,7 +151,7 @@ Importing it from `@mui/x-date-pickers-pro` is enough.
 ### Responsive components
 
 :::info
-Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
+Some test environments (for example `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
 :::
 
 Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
