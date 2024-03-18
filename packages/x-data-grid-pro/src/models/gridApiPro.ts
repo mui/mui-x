@@ -4,8 +4,7 @@ import {
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
-import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
-import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/models/api/gridInfiniteLoaderApi';
+import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
