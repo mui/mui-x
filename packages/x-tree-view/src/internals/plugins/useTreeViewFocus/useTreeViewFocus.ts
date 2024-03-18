@@ -42,10 +42,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 }) => {
   const tabbableItemId = useTabbableItemId(instance, models.selectedItems.value);
 
-  const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
-    const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
-    if (state.focusedNodeId !== cleanNodeId) {
-      setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
+  const setFocusedItemId = useEventCallback((itemId: React.SetStateAction<string | null>) => {
+    const cleanItemId = typeof itemId === 'function' ? itemId(state.focusedNodeId) : itemId;
+    if (state.focusedNodeId !== cleanItemId) {
+      setState((prevState) => ({ ...prevState, focusedNodeId: cleanItemId }));
     }
   });
 
@@ -57,12 +57,12 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isNodeFocused = React.useCallback(
-    (nodeId: string) => state.focusedNodeId === nodeId && isTreeViewFocused(),
+    (itemId: string) => state.focusedNodeId === itemId && isTreeViewFocused(),
     [state.focusedNodeId, isTreeViewFocused],
   );
 
-  const isNodeVisible = (nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const isNodeVisible = (itemId: string) => {
+    const node = instance.getNode(itemId);
     return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
   };
 
@@ -73,7 +73,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       itemElement.focus();
     }
 
-    setFocusedNodeId(itemId);
+    setFocusedItemId(itemId);
     if (params.onItemFocus) {
       params.onItemFocus(event, itemId);
     }
@@ -114,7 +114,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       itemElement.blur();
     }
 
-    setFocusedNodeId(null);
+    setFocusedItemId(null);
   });
 
   const canItemBeTabbed = (nodeId: string) => nodeId === tabbableItemId;

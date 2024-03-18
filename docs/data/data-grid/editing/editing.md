@@ -41,7 +41,7 @@ To enable this behavior, set the `editMode` prop on the Data Grid to `"row"`. No
 ```
 
 The following demo illustrates how row editing works.
-The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (e.g. double-clicking a cell).
+The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (for example double-clicking a cell).
 
 {{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

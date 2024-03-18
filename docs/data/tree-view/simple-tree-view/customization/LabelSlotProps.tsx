@@ -9,7 +9,7 @@ const CustomTreeItem = React.forwardRef(
       {...props}
       slotProps={{
         label: {
-          id: `${props.nodeId}-label`,
+          id: `${props.itemId}-label`,
         },
       }}
     />
@@ -23,14 +23,14 @@ export default function LabelSlotProps() {
       defaultExpandedItems={['pickers']}
       sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
     >
-      <CustomTreeItem nodeId="grid" label="Data Grid">
-        <CustomTreeItem nodeId="grid-community" label="@mui/x-data-grid" />
-        <CustomTreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
-        <CustomTreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
+      <CustomTreeItem itemId="grid" label="Data Grid">
+        <CustomTreeItem itemId="grid-community" label="@mui/x-data-grid" />
+        <CustomTreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+        <CustomTreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
       </CustomTreeItem>
-      <CustomTreeItem nodeId="pickers" label="Date and Time Pickers">
-        <CustomTreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
-        <CustomTreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
+      <CustomTreeItem itemId="pickers" label="Date and Time Pickers">
+        <CustomTreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+        <CustomTreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
       </CustomTreeItem>
     </SimpleTreeView>
   );

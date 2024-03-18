@@ -24,4 +24,4 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
   ];
 }>;
 
-export type TreeViewFirstCharMap = { [nodeId: string]: string };
+export type TreeViewFirstCharMap = { [itemId: string]: string };

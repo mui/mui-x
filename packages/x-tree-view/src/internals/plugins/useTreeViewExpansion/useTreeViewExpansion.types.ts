@@ -3,10 +3,10 @@ import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewExpansionInstance {
-  isNodeExpanded: (nodeId: string) => boolean;
-  isNodeExpandable: (nodeId: string) => boolean;
+  isNodeExpanded: (itemId: string) => boolean;
+  isNodeExpandable: (itemId: string) => boolean;
   toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
-  expandAllSiblings: (event: React.KeyboardEvent, nodeId: string) => void;
+  expandAllSiblings: (event: React.KeyboardEvent, itemId: string) => void;
 }
 
 export interface UseTreeViewExpansionParameters {

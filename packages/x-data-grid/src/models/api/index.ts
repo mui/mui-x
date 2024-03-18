@@ -18,7 +18,7 @@ export * from './gridPreferencesPanelApi';
 export * from './gridPrintExportApi';
 export * from './gridCallbackDetails';
 export * from './gridScrollApi';
-export * from './gridVirtualizationApi';
+export type { GridVirtualizationApi } from './gridVirtualizationApi';
 export type { GridApiCommon } from './gridApiCommon';
 
 export type { GridEditingApi, GridCellModesModel, GridRowModesModel } from './gridEditingApi';

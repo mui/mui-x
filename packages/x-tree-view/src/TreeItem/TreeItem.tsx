@@ -171,7 +171,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    nodeId,
+    itemId,
     id,
     label,
     onClick,
@@ -201,10 +201,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isNodeExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
-  const disabled = instance.isNodeDisabled(nodeId);
+  const expanded = instance.isNodeExpanded(itemId);
+  const focused = instance.isNodeFocused(itemId);
+  const selected = instance.isNodeSelected(itemId);
+  const disabled = instance.isNodeDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -283,7 +283,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     /* single-selection trees unset aria-selected on un-selected items.
      *
      * If the tree does not support multiple selection, aria-selected
-     * is set to true for the selected node and it is not present on any other node in the tree.
+     * is set to true for the selected item and it is not present on any other item in the tree.
      * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
      */
     ariaSelected = true;
@@ -292,7 +292,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusItem(event, nodeId);
+      instance.focusItem(event, itemId);
     }
   }
 
@@ -303,14 +303,14 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
     onKeyDown?.(event);
-    instance.handleItemKeyDown(event, nodeId);
+    instance.handleItemKeyDown(event, itemId);
   };
 
-  const idAttribute = instance.getTreeItemId(nodeId, id);
-  const tabIndex = instance.canItemBeTabbed(nodeId) ? 0 : -1;
+  const idAttribute = instance.getTreeItemId(itemId, id);
+  const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   return (
-    <TreeItem2Provider nodeId={nodeId}>
+    <TreeItem2Provider itemId={itemId}>
       <TreeItemRoot
         className={clsx(classes.root, className)}
         role="treeitem"
@@ -338,7 +338,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
             label: classes.label,
           }}
           label={label}
-          nodeId={nodeId}
+          itemId={itemId}
           onClick={onClick}
           onMouseDown={onMouseDown}
           icon={icon}
@@ -373,7 +373,7 @@ TreeItem.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The component used for the content node.
+   * The component used to render the content of the item.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
@@ -387,13 +387,13 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * The id of the item.
+   */
+  itemId: PropTypes.string.isRequired,
+  /**
    * The tree item label.
    */
   label: PropTypes.node,
-  /**
-   * The id of the node.
-   */
-  nodeId: PropTypes.string.isRequired,
   /**
    * This prop isn't supported.
    * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
