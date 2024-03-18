@@ -19,6 +19,7 @@ import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
@@ -464,5 +465,7 @@ export function getTotalHeaderHeight(
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
+  const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
+  const multiplicationFactor = isHeaderFilteringEnabled ? 2 : 1;
+  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + multiplicationFactor);
 }

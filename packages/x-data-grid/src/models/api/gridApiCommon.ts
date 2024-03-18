@@ -34,6 +34,7 @@ import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
+import type { GridColumnResizeApi } from '../../hooks/features/columnResize';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -63,7 +64,8 @@ export interface GridApiCommon<
     GridStateApi<GridState>,
     GridStatePersistenceApi<GridInitialState>,
     GridColumnGroupingApi,
-    GridHeaderFilteringApi {}
+    GridHeaderFilteringApi,
+    GridColumnResizeApi {}
 
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,

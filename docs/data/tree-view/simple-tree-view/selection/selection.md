@@ -25,21 +25,21 @@ Use the `disableSelection` prop if you don't want your items to be selectable:
 
 ## Controlled selection
 
-Use the `selectedNodes` prop to control selected Tree View items.
-You can also use the `onSelectedNodesChange` prop to listen to changes in the selected items and update the prop accordingly.
+Use the `selectedItems` prop to control selected Tree View items.
+You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 
 :::info
 
-- The selection is **controlled** when its parent manages it by providing a `selectedNodes` prop.
-- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelectedNodes` prop.
+- The selection is **controlled** when its parent manages it by providing a `selectedItems` prop.
+- The selection is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultSelectedItems` prop.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
 
-## Track node selection change
+## Track item selection change
 
-Use the `onNodeSelectionToggle` prop if you want to react to a node selection change:
+Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
 
-{{"demo": "TrackNodeSelectionToggle.js"}}
+{{"demo": "TrackItemSelectionToggle.js"}}

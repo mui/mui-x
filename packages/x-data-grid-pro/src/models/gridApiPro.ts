@@ -4,12 +4,10 @@ import {
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
-import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
-import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/models/api/gridInfiniteLoaderApi';
+import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
-  GridColumnResizeApi,
   GridDetailPanelApi,
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
@@ -23,7 +21,6 @@ export interface GridApiPro
   extends GridApiCommon<GridStatePro, GridInitialStatePro>,
     GridRowProApi,
     GridColumnPinningApi,
-    GridColumnResizeApi,
     GridDetailPanelApi,
     GridRowPinningApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans

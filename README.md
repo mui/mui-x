@@ -95,7 +95,7 @@ From community guidance to critical business support, we're here to help. Read t
 Read the [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
 
 Contributing to MUI X is about more than just issues and pull requests!
-There are many other ways to [support MUI](https://mui.com/material-ui/getting-started/faq/#mui-is-awesome-how-can-i-support-the-project) beyond contributing to the code base.
+There are many other ways to [support MUI X](https://mui.com/material-ui/getting-started/faq/#mui-is-awesome-how-can-i-support-the-project) beyond contributing to the code base.
 
 ## Changelog
 
@@ -103,7 +103,7 @@ The [changelog](https://github.com/mui/mui-x/releases) is regularly updated to r
 
 ## Roadmap
 
-Future plans and high-priority features and enhancements can be found in our [roadmap](https://mui.com/x/introduction/roadmap/).
+Future plans and high-priority features and enhancements can be found in the [roadmap](https://mui.com/x/introduction/roadmap/).
 
 ## Security
 

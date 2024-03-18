@@ -63,8 +63,8 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 export default function App() {
   return (
     <SimpleTreeView>
-      <TreeItem nodeId="1" label="Item 1" />
-      <TreeItem nodeId="2" label="Item 2" />
+      <TreeItem itemId="1" label="Item 1" />
+      <TreeItem itemId="2" label="Item 2" />
     </SimpleTreeView>
   );
 }
@@ -95,8 +95,8 @@ import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 export default function App() {
   return (
     <SimpleTreeView>
-      <TreeItem2 nodeId="1" label="Item 1" />
-      <TreeItem2 nodeId="2" label="Item 2" />
+      <TreeItem2 itemId="1" label="Item 1" />
+      <TreeItem2 itemId="2" label="Item 2" />
     </SimpleTreeView>
   );
 }

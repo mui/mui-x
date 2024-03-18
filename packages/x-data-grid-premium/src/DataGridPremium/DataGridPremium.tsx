@@ -323,7 +323,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -544,6 +543,14 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange: PropTypes.func,
+  /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
