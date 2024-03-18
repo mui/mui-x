@@ -8,15 +8,10 @@ import {
   useGridApiOptionHandler,
   GridEventListener,
   GridRowEntry,
-  GridDimensions,
-  GridFeatureMode,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows } from '@mui/x-data-grid/internals';
+import { getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
-  DataGridProProcessedProps,
-  GridExperimentalProFeatures,
-} from '../../../models/dataGridProProps';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
 function findSkeletonRowsSection({
@@ -63,26 +58,6 @@ function findSkeletonRowsSection({
     : undefined;
 }
 
-function isLazyLoadingDisabled({
-  lazyLoadingFeatureFlag,
-  rowsLoadingMode,
-  gridDimensions,
-}: {
-  lazyLoadingFeatureFlag: boolean;
-  rowsLoadingMode: GridFeatureMode;
-  gridDimensions: GridDimensions | null;
-}) {
-  if (!lazyLoadingFeatureFlag || !gridDimensions) {
-    return true;
-  }
-
-  if (rowsLoadingMode !== 'server') {
-    return true;
-  }
-
-  return false;
-}
-
 /**
  * @requires useGridRows (state)
  * @requires useGridPagination (state)
@@ -101,28 +76,19 @@ export const useGridLazyLoader = (
     | 'experimentalFeatures'
   >,
 ): void => {
-  const visibleRows = useGridVisibleRows(privateApiRef, props);
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef({
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
-  const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
+  const isDisabled = props.rowsLoadingMode !== 'server';
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
     (params) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
-
-      if (
-        isLazyLoadingDisabled({
-          lazyLoadingFeatureFlag: lazyLoading,
-          rowsLoadingMode: props.rowsLoadingMode,
-          gridDimensions: dimensions,
-        })
-      ) {
+      if (isDisabled) {
         return;
       }
 
@@ -140,10 +106,19 @@ export const useGridLazyLoader = (
         return;
       }
 
+      renderedRowsIntervalCache.current = {
+        firstRowToRender: params.firstRowIndex,
+        lastRowToRender: params.lastRowIndex,
+      };
+
       if (sortModel.length === 0 && filterModel.items.length === 0) {
+        const currentVisibleRows = getVisibleRows(privateApiRef, {
+          pagination: props.pagination,
+          paginationMode: props.paginationMode,
+        });
         const skeletonRowsSection = findSkeletonRowsSection({
           apiRef: privateApiRef,
-          visibleRows: visibleRows.rows,
+          visibleRows: currentVisibleRows.rows,
           range: {
             firstRowIndex: params.firstRowIndex,
             lastRowIndex: params.lastRowIndex,
@@ -158,26 +133,14 @@ export const useGridLazyLoader = (
         fetchRowsParams.lastRowToRender = skeletonRowsSection.lastRowIndex;
       }
 
-      renderedRowsIntervalCache.current = {
-        firstRowToRender: params.firstRowIndex,
-        lastRowToRender: params.lastRowIndex,
-      };
-
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, props.rowsLoadingMode, sortModel, filterModel, visibleRows.rows, lazyLoading],
+    [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
-      if (
-        isLazyLoadingDisabled({
-          lazyLoadingFeatureFlag: lazyLoading,
-          rowsLoadingMode: props.rowsLoadingMode,
-          gridDimensions: dimensions,
-        })
-      ) {
+      if (isDisabled) {
         return;
       }
 
@@ -193,20 +156,12 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, props.rowsLoadingMode, filterModel, lazyLoading],
+    [privateApiRef, isDisabled, filterModel],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
-      const dimensions = privateApiRef.current.getRootDimensions();
-
-      if (
-        isLazyLoadingDisabled({
-          lazyLoadingFeatureFlag: lazyLoading,
-          rowsLoadingMode: props.rowsLoadingMode,
-          gridDimensions: dimensions,
-        })
-      ) {
+      if (isDisabled) {
         return;
       }
 
@@ -222,7 +177,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, props.rowsLoadingMode, sortModel, lazyLoading],
+    [privateApiRef, isDisabled, sortModel],
   );
 
   useGridApiEventHandler(

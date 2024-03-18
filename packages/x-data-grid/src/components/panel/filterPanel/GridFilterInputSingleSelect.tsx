@@ -60,7 +60,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
+     * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
@@ -76,6 +76,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
+    variant = 'standard',
     isFilterActive,
     clearButton,
     InputLabelProps,
@@ -128,7 +129,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           id={labelId}
           htmlFor={id}
           shrink
-          variant="standard"
+          variant={variant}
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -138,7 +139,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValue}
           onChange={onFilterChange}
-          variant="standard"
+          variant={variant}
           type={type || 'text'}
           inputProps={{
             tabIndex,
@@ -146,6 +147,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
           }}
           native={isSelectNative}
+          notched={variant === 'outlined' ? true : undefined}
           {
             ...(others as any) /* FIXME: typing error */
           }
@@ -182,7 +184,7 @@ GridFilterInputSingleSelect.propTypes = {
   ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
+   * required is selected (for example `isEmpty`)
    */
   isFilterActive: PropTypes.bool,
   item: PropTypes.shape({

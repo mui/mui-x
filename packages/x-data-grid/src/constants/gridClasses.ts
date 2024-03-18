@@ -49,6 +49,10 @@ export interface GridClasses {
    */
   'cell--editing': string;
   /**
+   * Styles applied to the cell element in flex display mode.
+   */
+  'cell--flex': string;
+  /**
    * Styles applied to the cell element if `align="center"`.
    */
   'cell--textCenter': string;
@@ -60,10 +64,6 @@ export interface GridClasses {
    * Styles applied to the cell element if `align="right"`.
    */
   'cell--textRight': string;
-  /**
-   * Styles applied to the cell element if the cell has a custom renderer.
-   */
-  'cell--withRenderer': string;
   /**
    * Styles applied to the cell element if it is at the top edge of a cell selection range.
    */
@@ -96,10 +96,6 @@ export interface GridClasses {
    * Styles applied to the cell element.
    */
   cell: string;
-  /**
-   * Styles applied to the element that wraps the cell content.
-   */
-  cellContent: string;
   /**
    * Styles applied to the cell checkbox element.
    */
@@ -157,14 +153,12 @@ export interface GridClasses {
    * Styles applied to the column header if the column has a filter applied to it.
    */
   'columnHeader--filtered': string;
+  'columnHeader--pinnedLeft': string;
+  'columnHeader--pinnedRight': string;
   /**
    * Styles applied to the column header element.
    */
   columnHeader: string;
-  /**
-   * Styles applied to the column group header element.
-   */
-  columnGroupHeader: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -177,10 +171,6 @@ export interface GridClasses {
    * Styles applied to the row's draggable placeholder element inside the special row reorder cell.
    */
   rowReorderCellPlaceholder: string;
-  /**
-   * Styles applied to the column headers wrapper if a column is being dragged.
-   */
-  columnHeaderDropZone: string;
   /**
    * Styles applied to the column header's title element;
    */
@@ -202,21 +192,9 @@ export interface GridClasses {
    */
   'columnHeader--emptyGroup': string;
   /**
-   * Styles applied to the column group header cell when show column border.
-   */
-  'columnHeader--showColumnBorder': string;
-  /**
    * Styles applied to the column headers.
    */
   columnHeaders: string;
-  /**
-   * Styles applied to the column headers's inner element.
-   */
-  columnHeadersInner: string;
-  /**
-   * Styles applied to the column headers's inner element if there is a horizontal scrollbar.
-   */
-  'columnHeadersInner--scrollable': string;
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
@@ -311,14 +289,17 @@ export interface GridClasses {
   editBooleanCell: string;
   /**
    * Styles applied to the filler row.
+   * @ignore - do not document.
    */
   filler: string;
   /**
    * Styles applied to the filler row pinned left section.
+   * @ignore - do not document.
    */
   'filler--pinnedLeft': string;
   /**
    * Styles applied to the filler row pinned right section.
+   * @ignore - do not document.
    */
   'filler--pinnedRight': string;
   /**
@@ -430,18 +411,6 @@ export interface GridClasses {
    */
   pinnedColumns: string;
   /**
-   * Styles applied to the pinned column headers.
-   */
-  pinnedColumnHeaders: string;
-  /**
-   * Styles applied to the left pinned column headers.
-   */
-  'pinnedColumnHeaders--left': string;
-  /**
-   * Styles applied to the right pinned column headers.
-   */
-  'pinnedColumnHeaders--right': string;
-  /**
    * Styles applied to the root element.
    */
   root: string;
@@ -535,6 +504,26 @@ export interface GridClasses {
    */
   'scrollbar--vertical': string;
   /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell.
+   */
+  scrollbarFiller: string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, in header position.
+   */
+  'scrollbarFiller--header': string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, with a border top.
+   */
+  'scrollbarFiller--borderTop': string;
+  /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell.
+   */
+  'scrollbarFiller--pinnedRight': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -571,6 +560,7 @@ export interface GridClasses {
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
+  'columnHeader--withLeftBorder': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */
@@ -623,10 +613,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'booleanCell',
   'cell--editable',
   'cell--editing',
+  'cell--flex',
   'cell--textCenter',
   'cell--textLeft',
   'cell--textRight',
-  'cell--withRenderer',
   'cell--rangeTop',
   'cell--rangeBottom',
   'cell--rangeLeft',
@@ -635,7 +625,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--pinnedRight',
   'cell--selectionMode',
   'cell',
-  'cellContent',
   'cellCheckbox',
   'cellEmpty',
   'cellSkeleton',
@@ -650,20 +639,17 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--sortable',
   'columnHeader--sorted',
   'columnHeader--filtered',
+  'columnHeader--pinnedLeft',
+  'columnHeader--pinnedRight',
   'columnHeader',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
-  'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',
-  'columnGroupHeader',
   'columnHeader--filledGroup',
   'columnHeader--emptyGroup',
-  'columnHeader--showColumnBorder',
   'columnHeaders',
-  'columnHeadersInner',
-  'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator--sideLeft',
@@ -736,6 +722,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar',
   'scrollbar--vertical',
   'scrollbar--horizontal',
+  'scrollbarFiller',
+  'scrollbarFiller--header',
+  'scrollbarFiller--borderTop',
+  'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
@@ -745,14 +735,12 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
-  'pinnedColumnHeaders',
-  'pinnedColumnHeaders--left',
-  'pinnedColumnHeaders--right',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
   'cell--withLeftBorder',
   'columnHeader--withRightBorder',
+  'columnHeader--withLeftBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',

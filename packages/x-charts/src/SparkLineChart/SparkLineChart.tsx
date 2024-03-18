@@ -263,7 +263,6 @@ SparkLineChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -339,7 +338,6 @@ SparkLineChart.propTypes = {
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
   /**
@@ -370,10 +368,12 @@ SparkLineChart.propTypes = {
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
     tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,
     tickMinStep: PropTypes.number,
     tickNumber: PropTypes.number,
+    tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
     tickSize: PropTypes.number,
     valueFormatter: PropTypes.func,
   }),

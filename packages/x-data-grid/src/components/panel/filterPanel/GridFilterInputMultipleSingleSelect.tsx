@@ -78,8 +78,15 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     if (!Array.isArray(item.value)) {
       return [];
     }
-    return item.value;
-  }, [item.value]);
+
+    return item.value.reduce<ValueOptions[]>((acc, value) => {
+      const resolvedValue = resolvedValueOptions.find((v) => getOptionValue(v) === value);
+      if (resolvedValue != null) {
+        acc.push(resolvedValue);
+      }
+      return acc;
+    }, [] as ValueOptions[]);
+  }, [getOptionValue, item.value, resolvedValueOptions]);
 
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>

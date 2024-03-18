@@ -79,6 +79,9 @@ export interface PickerPopperProps extends UsePickerValueActions {
   onBlur?: () => void;
   slots?: PickersPopperSlots;
   slotProps?: PickersPopperSlotProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;
@@ -243,7 +246,7 @@ function useClickAwayListener(
     // TODO This behavior is not tested automatically
     // It's unclear whether this is due to different update semantics in test (batched in act() vs discrete on click).
     // Or if this is a timing related issues due to different Transition components
-    // Once we get rid of all the manual scheduling (e.g. setTimeout(update, 0)) we can revisit this code+test.
+    // Once we get rid of all the manual scheduling (for example setTimeout(update, 0)) we can revisit this code+test.
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 
@@ -338,8 +341,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
-      // IE11, Edge (prior to using Blink?) use 'Esc'
-      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
+      if (open && nativeEvent.key === 'Escape') {
         onDismiss();
       }
     }

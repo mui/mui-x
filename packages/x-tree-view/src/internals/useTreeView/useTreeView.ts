@@ -7,6 +7,8 @@ import {
   TreeViewPlugin,
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
+  TreeItemWrapper,
+  TreeViewPublicAPI,
 } from '../models';
 import {
   UseTreeViewDefaultizedParameters,
@@ -17,6 +19,21 @@ import {
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
 import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+
+export function useTreeViewApiInitialization<T>(
+  inputApiRef: React.MutableRefObject<T> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      inputApiRef.current = {} as T;
+    }
+    return inputApiRef.current;
+  }
+
+  return fallbackPublicApiRef.current;
+}
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
   inParams: UseTreeViewParameters<Plugins>,
@@ -40,6 +57,9 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     {} as TreeViewInstance<Signatures>,
   );
   const instance = instanceRef.current as TreeViewInstance<Signatures>;
+
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
+
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
@@ -61,6 +81,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
   const contextValue = {
+    publicAPI,
     instance: instance as TreeViewInstance<any>,
   } as TreeViewContextValue<Signatures>;
 
@@ -68,6 +89,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     const pluginResponse =
       plugin({
         instance,
+        publicAPI,
         params,
         slots: params.slots,
         slotProps: params.slotProps,
@@ -88,40 +110,44 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   plugins.forEach(runPlugin);
 
-  contextValue.runItemPlugins = ({ props, ref }) => {
-    let finalProps = props;
-    let finalRef = ref;
-    const itemWrappers: ((children: React.ReactNode) => React.ReactNode)[] = [];
+  contextValue.runItemPlugins = (itemPluginProps) => {
+    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
+    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
 
     plugins.forEach((plugin) => {
       if (!plugin.itemPlugin) {
         return;
       }
 
-      const itemPluginResponse = plugin.itemPlugin({ props: finalProps, ref: finalRef });
-      if (itemPluginResponse?.props) {
-        finalProps = itemPluginResponse.props;
+      const itemPluginResponse = plugin.itemPlugin({
+        props: itemPluginProps,
+        rootRef: finalRootRef,
+        contentRef: finalContentRef,
+      });
+      if (itemPluginResponse?.rootRef) {
+        finalRootRef = itemPluginResponse.rootRef;
       }
-      if (itemPluginResponse?.ref) {
-        finalRef = itemPluginResponse.ref;
-      }
-      if (itemPluginResponse?.wrapItem) {
-        itemWrappers.push(itemPluginResponse.wrapItem);
+      if (itemPluginResponse?.contentRef) {
+        finalContentRef = itemPluginResponse.contentRef;
       }
     });
 
     return {
-      props: finalProps,
-      ref: finalRef,
-      wrapItem: (children) => {
-        let finalChildren: React.ReactNode = children;
-        itemWrappers.forEach((itemWrapper) => {
-          finalChildren = itemWrapper(finalChildren);
-        });
-
-        return finalChildren;
-      },
+      contentRef: finalContentRef,
+      rootRef: finalRootRef,
     };
+  };
+
+  const itemWrappers = plugins
+    .map((plugin) => plugin.wrapItem)
+    .filter((wrapItem): wrapItem is TreeItemWrapper => !!wrapItem);
+  contextValue.wrapItem = ({ itemId, children }) => {
+    let finalChildren: React.ReactNode = children;
+    itemWrappers.forEach((itemWrapper) => {
+      finalChildren = itemWrapper({ itemId, children: finalChildren });
+    });
+
+    return finalChildren;
   };
 
   const getRootProps = <TOther extends EventHandlers = {}>(

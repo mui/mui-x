@@ -85,6 +85,15 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
 ## Component slots
 
 ### Rename `components` to `slots`
@@ -237,11 +246,28 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 
    // If you were already using the day object, just remove the first argument.
 -  dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
-+  dayOfWeekFormatter={day => `${day.format('dd')}.`
++  dayOfWeekFormatter={day => `${day.format('dd')}.`}
  />
 ```
 
 ## Field components
+
+### Update the format of `selectedSections`
+
+The `selectedSections` prop no longer accepts start and end indexes.
+When selecting several — but not all — sections,
+the field components were not behaving correctly, you can now only select one or all sections:
+
+```diff
+ <DateField
+-  selectedSections={{ startIndex: 0, endIndex: 0 }}
++  selectedSections={0}
+
+   // If the field has 3 sections
+-  selectedSections={{ startIndex: 0, endIndex: 2 }}
++  selectedSections="all"
+ />
+```
 
 ### Replace the section `hasLeadingZeros` property
 
@@ -358,6 +384,41 @@ If your custom field is based on one of the examples of the [Custom field](/x/re
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::
 
+#### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
+
+The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
+This is used to know if the current UI expected is built using the accessible DOM structure or not.
+Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+
+When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+
+```diff
+  function MyCustomTextField(props) {
+    const {
++     // Should be ignored
++     enableAccessibleFieldDOMStructure,
+
+      // ... rest of the props you are using
+    }
+
+    return ( /* Some UI to edit the date */ )
+  }
+
+  function MyCustomField(props) {
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...props,
++     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     enableAccessibleFieldDOMStructure: false,
+    });
+
+    return <MyCustomTextField ref={ref} {...fieldResponse} />;
+  }
+
+  function App() {
+    return <DatePicker slots={{ field: MyCustomField }} />;
+  }
+```
+
 ## Date management
 
 ### Use localized week with luxon
@@ -369,7 +430,7 @@ If you want to keep the start of the week on Monday even if your locale says oth
 You can hardcode the week settings as follows:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   firstDay: 1,
@@ -459,7 +520,7 @@ The `locales` export has been removed from the root of the packages.
 In an effort to reduce the bundle size, the locales are now only available from the `@mui/x-date-pickers/locales` or `@mui/x-date-pickers-pro/locales` paths.
 If you were still relying on the root level export, please update your code.
 
-Before v7, it was possible to import locales from the package root (i.e. `import { frFR } from '@mui/x-date-pickers'`).
+Before v7, it was possible to import locales from the package root (that is `import { frFR } from '@mui/x-date-pickers'`).
 
 ```diff
 -import { frFR } from '@mui/x-date-pickers';
@@ -852,3 +913,14 @@ Which is the same type as the one accepted by the components `value` prop.
 ```
 
 </details>
+
+## Removed internal types
+
+The following internal types were exported by mistake and have been removed from the public API:
+
+- `UseDateFieldDefaultizedProps`
+- `UseTimeFieldDefaultizedProps`
+- `UseDateTimeFieldDefaultizedProps`
+- `UseSingleInputDateRangeFieldComponentProps`
+- `UseSingleInputTimeRangeFieldComponentProps`
+- `UseSingleInputDateTimeRangeFieldComponentProps`

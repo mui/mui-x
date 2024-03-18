@@ -1,12 +1,10 @@
 import {
   BaseDateValidationProps,
-  DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import type { DateRangeValidationError, DateRange } from '../../models';
-import { RangeFieldSection } from './fields';
+import type { DateRangeValidationError, RangeFieldSection, DateRange } from '../../models';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -15,7 +13,7 @@ export interface DayRangeValidationProps<TDate extends PickerValidDate> {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.
@@ -25,27 +23,21 @@ export interface DayRangeValidationProps<TDate extends PickerValidDate> {
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
 
-/**
- * Props used in every range picker.
- */
-export interface BaseRangeProps {
-  /**
-   * If `true`, the component is disabled.
-   * @default false
-   */
-  disabled?: boolean;
-}
-
-export interface UseDateRangeFieldProps<TDate extends PickerValidDate>
-  extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, DateRangeValidationError>,
+export interface UseDateRangeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
+      Omit<
+        UseFieldInternalProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          DateRangeValidationError
+        >,
+        'unstableFieldRef'
+      >,
       'format'
     >,
     DayRangeValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    BaseRangeProps {}
-
-export type UseDateRangeFieldDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
-  UseDateRangeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format'
->;
+    BaseDateValidationProps<TDate> {}

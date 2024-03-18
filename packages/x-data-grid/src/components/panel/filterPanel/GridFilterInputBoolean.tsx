@@ -11,7 +11,7 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
+     * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
   };
@@ -35,6 +35,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     label: labelProp,
+    variant = 'standard',
     InputLabelProps,
     ...others
   } = props;
@@ -71,7 +72,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
           shrink
-          variant="standard"
+          variant={variant}
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -81,7 +82,8 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           label={label}
           value={filterValueState}
           onChange={onFilterChange}
-          variant="standard"
+          variant={variant}
+          notched={variant === 'outlined' ? true : undefined}
           native={isSelectNative}
           displayEmpty
           inputProps={{ ref: focusElementRef, tabIndex }}
@@ -131,7 +133,7 @@ GridFilterInputBoolean.propTypes = {
   focusElementRef: refType,
   /**
    * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
+   * required is selected (for example `isEmpty`)
    */
   isFilterActive: PropTypes.bool,
   item: PropTypes.shape({

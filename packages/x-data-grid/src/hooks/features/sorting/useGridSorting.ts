@@ -7,7 +7,6 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
-import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -81,7 +80,7 @@ export const useGridSorting = (
       const existingIdx = sortModel.findIndex((c) => c.field === field);
       let newSortModel = [...sortModel];
       if (existingIdx > -1) {
-        if (!sortItem) {
+        if (sortItem?.sort == null) {
           newSortModel.splice(existingIdx, 1);
         } else {
           newSortModel.splice(existingIdx, 1, sortItem);
@@ -192,7 +191,7 @@ export const useGridSorting = (
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortItem[];
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
-        sortModel = !sortItem ? [] : [sortItem];
+        sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {
         sortModel = upsertSortModel(column.field, sortItem);
       }
@@ -322,7 +321,7 @@ export const useGridSorting = (
         return;
       }
       // Ctrl + Enter opens the column menu
-      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
+      if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey) {
         sortColumn(field, undefined, event.shiftKey);
       }
     },

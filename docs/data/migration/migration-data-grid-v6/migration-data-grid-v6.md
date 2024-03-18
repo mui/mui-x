@@ -96,6 +96,15 @@ Since v7 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v6 to v7.
 
+### Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
 ### DOM changes
 
 The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
@@ -104,6 +113,7 @@ As a result, the following changes have been made:
 - The main element now corresponds to the virtal scroller element.
 - Headers are now contained in the virtual scroller.
 - Pinned row and column sections are now contained in the virtual scroller.
+- The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
 
 <!-- ### Renamed props
 
@@ -133,6 +143,11 @@ As a result, the following changes have been made:
     getOptionLabel: (value: any) => value.name,
   };
   ```
+
+- Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
+  - [`columnGrouping`](/x/react-data-grid/column-groups/)
+  - [`clipboardPaste`](/x/react-data-grid/clipboard/#clipboard-paste)
+  - [`lazyLoading`](/x/react-data-grid/row-updates/#lazy-loading)
 
 ### Behavioral changes
 
@@ -185,8 +200,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The type `GridPinnedColumns` has been renamed to `GridPinnedColumnFields`.
 
 - The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
-
-- Column grouping is now enabled by default. The flag `columnGrouping` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
 
 - The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
 
@@ -300,7 +313,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Clipboard
 
-- Clipboard paste is now enabled by default. The flag `clipboardPaste` is no longer needed to be passed to the `experimentalFeatures` prop to enable it.
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
 
 ### Print export
@@ -387,7 +399,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
 
 ### Accessibility
 
@@ -416,9 +428,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   - When [Tree data](/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-<!-- ### Editing
+### Editing
 
-- -->
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 
@@ -436,7 +448,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   ```
 
 - The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` are no longer exported.
-  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#DataGrid-prop-filterDebounceMs) prop to customize filter debounce time.
+  Use the [`filterDebounceMs`](/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `GridPreferencesPanel` component is not exported anymore as it wasn't meant to be used outside of the Data Grid.
 
@@ -460,10 +472,16 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
  }
 ```
 
-### CSS classes
+### CSS classes and styling
 
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
+- The `.MuiDataGrid-cell--withRenderer` class has been removed.
+- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
+- The `columnHeader--showColumnBorder` class was replaced by `columnHeader--withLeftBorder` and `columnHeader--withRightBorder`.
+- The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
+- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
+  The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
 
 ### Changes to the public API
 

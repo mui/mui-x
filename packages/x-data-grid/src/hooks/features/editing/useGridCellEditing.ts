@@ -29,7 +29,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
-import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import { buildWarning } from '../../../utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
@@ -43,7 +43,7 @@ import {
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
     'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
   ],
   'error',
@@ -171,12 +171,11 @@ export const useGridCellEditing = (
         }
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+        } else if (isPasteShortcut(event)) {
           reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete' || event.key === 'Backspace') {
-          // Delete on Windows, Backspace on macOS
+        } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
 
@@ -329,8 +328,27 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
-      if (deleteValue || initialValue) {
-        newValue = deleteValue ? '' : initialValue;
+      if (deleteValue) {
+        const fieldType = apiRef.current.getColumn(field).type;
+        switch (fieldType) {
+          case 'boolean':
+            newValue = false;
+            break;
+          case 'date':
+          case 'dateTime':
+          case 'number':
+            newValue = undefined;
+            break;
+          case 'singleSelect':
+            newValue = null;
+            break;
+          case 'string':
+          default:
+            newValue = '';
+            break;
+        }
+      } else if (initialValue) {
+        newValue = initialValue;
       }
 
       const newProps = {

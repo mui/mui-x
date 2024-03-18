@@ -124,6 +124,7 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  dayOfMonthFull: 'do',
   weekday: 'EEEE',
   weekdayShort: 'EEEEEE',
   hours24h: 'HH',
@@ -500,6 +501,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   public getWeekNumber = (date: Date) => {
     return getWeek(date, { locale: this.locale });
   };
+
+  public getDayOfWeek(value: Date) {
+    return value.getDay() + 1;
+  }
 
   public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = this.startOfYear(start);

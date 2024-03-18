@@ -36,6 +36,7 @@ const sparklineColumnType: GridColTypeDef<number[]> = {
   sortable: false,
   editable: false,
   groupable: false,
+  display: 'flex',
   renderCell: (params) => <GridSparklineCell {...params} />,
 };
 

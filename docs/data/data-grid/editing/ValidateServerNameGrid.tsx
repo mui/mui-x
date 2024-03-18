@@ -25,7 +25,7 @@ const StyledBox = styled('div')(({ theme }) => ({
   },
 }));
 
-let promiseTimeout: any;
+let promiseTimeout: ReturnType<typeof setTimeout>;
 function validateName(username: string): Promise<boolean> {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
 

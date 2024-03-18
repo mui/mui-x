@@ -2,8 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -15,7 +14,12 @@ const columns = [
   { field: 'id', headerName: 'Brand ID' },
   { field: 'brand', headerName: 'Brand name' },
   { field: 'rep', headerName: 'Representative' },
-  { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex',
+  },
 ];
 
 function renderRating(params) {

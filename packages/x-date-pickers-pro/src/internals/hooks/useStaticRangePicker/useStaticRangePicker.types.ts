@@ -11,9 +11,8 @@ import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateRange } from '../../../models';
+import { RangeFieldSection, DateRange } from '../../../models';
 import { UseRangePositionProps } from '../useRangePosition';
-import { RangeFieldSection } from '../../models/fields';
 
 export interface UseStaticRangePickerSlots<
   TDate extends PickerValidDate,

@@ -2,6 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridRowsMetaSelector } from '../../hooks/features/rows';
+import { gridRenderContextSelector } from '../../hooks/features/virtualization';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -26,7 +30,6 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
   flexDirection: 'column',
-  transform: 'translate3d(0, var(--DataGrid-offsetTop), 0)',
 });
 
 const GridVirtualScrollerRenderZone = React.forwardRef<
@@ -34,14 +37,23 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerRenderZone(props, ref) {
   const { className, ...other } = props;
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
+  const offsetTop = useGridSelector(apiRef, () => {
+    const renderContext = gridRenderContextSelector(apiRef);
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+  });
 
   return (
     <VirtualScrollerRenderZoneRoot
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={rootProps}
+      style={{
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
+      }}
       {...other}
     />
   );

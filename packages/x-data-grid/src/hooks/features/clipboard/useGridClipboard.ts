@@ -74,7 +74,14 @@ export const useGridClipboard = (
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      if (!((event.ctrlKey || event.metaKey) && event.key === 'c')) {
+      if (
+        !(
+          (event.ctrlKey || event.metaKey) &&
+          event.key.toLowerCase() === 'c' &&
+          !event.shiftKey &&
+          !event.altKey
+        )
+      ) {
         return;
       }
 
@@ -90,6 +97,7 @@ export const useGridClipboard = (
           includeHeaders: false,
           // TODO: make it configurable
           delimiter: clipboardCopyCellDelimiter,
+          shouldAppendQuotes: false,
         });
       } else {
         const focusedCell = gridFocusCellSelector(apiRef);
@@ -98,6 +106,7 @@ export const useGridClipboard = (
           textToCopy = serializeCellValue(cellParams, {
             delimiterCharacter: clipboardCopyCellDelimiter,
             ignoreValueFormatter,
+            shouldAppendQuotes: false,
           });
         }
       }

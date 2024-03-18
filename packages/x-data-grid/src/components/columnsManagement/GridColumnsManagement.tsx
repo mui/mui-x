@@ -255,7 +255,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           </GridColumnsManagementEmptyText>
         )}
       </GridColumnsManagementBody>
-      {!disableShowHideToggle && !disableResetButton && currentColumns.length > 0 ? (
+      {(!disableShowHideToggle || !disableResetButton) && currentColumns.length > 0 ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
             <FormControlLabel

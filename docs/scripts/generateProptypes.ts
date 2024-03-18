@@ -2,7 +2,10 @@ import * as yargs from 'yargs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
-import { getPropTypesFromFile, injectPropTypesInFile } from '@mui-internal/typescript-to-proptypes';
+import {
+  getPropTypesFromFile,
+  injectPropTypesInFile,
+} from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
@@ -21,6 +24,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'referenceDate',
         'day',
         'currentMonth',
+        'month',
       ];
 
       if (T_DATE_PROPS.includes(name)) {
