@@ -4,10 +4,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS"
@@ -557,6 +553,7 @@
     "rowModesModel": { "type": { "name": "object" } },
     "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
+    "rows": { "type": { "name": "array" }, "default": "[]" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {

@@ -680,8 +680,9 @@ DataGridRaw.propTypes = {
   rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array,
   /**
    * If `false`, the row selection mode is disabled.
    * @default true
