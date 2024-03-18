@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import TablePagination, {
   tablePaginationClasses,
   TablePaginationProps,
@@ -31,11 +32,11 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
 
 type MutableArray<A> = A extends readonly (infer T)[] ? T[] : never;
 
-export const GridPagination = React.forwardRef<
+const GridPagination = React.forwardRef<
   unknown,
   Partial<
     // See https://github.com/mui/material-ui/issues/40427
-    Omit<TablePaginationProps, 'component'> & { component: React.ElementType }
+    Omit<TablePaginationProps, 'component'> & { component?: React.ElementType }
   >
 >(function GridPagination(props, ref) {
   const apiRef = useGridApiContext();
@@ -120,3 +121,13 @@ export const GridPagination = React.forwardRef<
     />
   );
 });
+
+GridPagination.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  component: PropTypes.elementType,
+} as any;
+
+export { GridPagination };

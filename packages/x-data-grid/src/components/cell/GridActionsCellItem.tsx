@@ -83,6 +83,10 @@ GridActionsCellItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
+   */
+  component: PropTypes.elementType,
   icon: PropTypes.element,
   label: PropTypes.string.isRequired,
   showInMenu: PropTypes.bool,
