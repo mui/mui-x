@@ -449,7 +449,6 @@ export const useGridRowSelection = (
         : gridExpandedSortedRowIdsSelector(apiRef);
 
       const filterModel = gridFilterModelSelector(apiRef);
-
       apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],

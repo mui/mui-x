@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -19,6 +26,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
+  grid,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -182,7 +190,6 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelection = true (multi selection)', () => {
-    clock.withFakeTimers();
     it('should allow to toggle prop.checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
@@ -357,7 +364,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    it('should only select filtered items when "select all" is toggled after applying a filter', () => {
+    it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -366,25 +373,36 @@ describe('<DataGrid /> - Row selection', () => {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
-            filter: {
-              filterModel: {
-                items: [],
-              },
-            },
           }}
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       fireEvent.click(selectAllCheckbox);
-      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      });
+
       fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
         target: { value: 1 },
       });
-      clock.tick(500);
+      await waitFor(() => {
+        // Previous selection remains, but only one row is visible
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      });
+
       fireEvent.click(selectAllCheckbox); // Unselect all
-      expect(getSelectedRowIds()).to.deep.equal([]);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(grid('selectedRowCount')).to.equal(null);
+      });
+
       fireEvent.click(selectAllCheckbox); // Select all filtered rows
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+      });
     });
   });
 
