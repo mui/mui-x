@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui-internal/test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -10,6 +17,8 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
+  GridPreferencePanelsValue,
+  gridClasses,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -341,6 +350,53 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'Select row' }));
       expect(screen.queryByRole('checkbox', { name: 'Select row' })).to.equal(null);
       expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
+    });
+
+    it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(selectAllCheckbox);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '4 rows selected',
+        );
+      });
+
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
+      await waitFor(() => {
+        // Previous selection remains, but only one row is visible
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '4 rows selected',
+        );
+      });
+
+      fireEvent.click(selectAllCheckbox); // Unselect all
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)).to.equal(null);
+      });
+
+      fireEvent.click(selectAllCheckbox); // Select all filtered rows
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(document.querySelector(`.${gridClasses.selectedRowCount}`)?.textContent).to.equal(
+          '1 row selected',
+        );
+      });
     });
   });
 
