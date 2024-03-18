@@ -170,7 +170,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   wrapItem?: TreeItemWrapper;
   /**
    * Render function used to add React wrappers around the TreeView.
-   * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the root
+   * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the root.
    * @returns {React.ReactNode} The wrapped root.
    */
   wrapRoot?: TreeRootWrapper;
