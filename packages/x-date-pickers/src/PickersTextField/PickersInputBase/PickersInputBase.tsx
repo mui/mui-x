@@ -400,6 +400,11 @@ PickersInputBase.propTypes = {
     }),
   ]),
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * The components used for each slot inside.
    *
    * @default {}
