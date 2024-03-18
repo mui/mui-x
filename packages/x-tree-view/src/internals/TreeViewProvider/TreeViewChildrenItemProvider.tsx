@@ -54,7 +54,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     if (rootRef) {
       element = rootRef.current;
     } else if (id && parentContext) {
-      // The DescendantProvider is not aware of the ref of its own item,
+      // The TreeViewChildrenItemProvider is not aware of the ref of its own item,
       // but its parent can give him this information.
       element = parentContext.getChild(id);
     }
