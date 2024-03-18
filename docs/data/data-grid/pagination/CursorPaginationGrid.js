@@ -62,10 +62,6 @@ export default function CursorPaginationGrid() {
   }, [hasNextPage]);
 
   React.useEffect(() => {
-    console.log(paginationMeta);
-  }, [paginationMeta]);
-
-  React.useEffect(() => {
     if (!isLoading && nextCursor) {
       // We add nextCursor when available
       mapPageToNextCursor.current[paginationModel.page] = nextCursor;
