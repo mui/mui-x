@@ -9,7 +9,7 @@ import {
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
 import { UseDateRangeFieldProps } from '../internals/models';
-import { DateRange, RangeFieldSection, DateRangeValidationError } from '../models';
+import type { DateRange, RangeFieldSection, DateRangeValidationError } from '../models';
 
 export interface UseSingleInputDateRangeFieldProps<
   TDate extends PickerValidDate,
