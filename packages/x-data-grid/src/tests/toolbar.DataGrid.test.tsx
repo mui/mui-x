@@ -13,7 +13,7 @@ import {
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from '../hooks/features/density/useGridDensity';
+} from '../hooks/features/density/densitySelector';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

@@ -35,7 +35,7 @@ import {
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
-import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
+import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
