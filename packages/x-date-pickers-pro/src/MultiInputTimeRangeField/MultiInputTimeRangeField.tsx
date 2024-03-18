@@ -206,7 +206,7 @@ MultiInputTimeRangeField.propTypes = {
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**
-   * String displayed between the start and the end date.
+   * String displayed between the start and the end dates.
    * @default "–"
    */
   dateSeparator: PropTypes.string,
