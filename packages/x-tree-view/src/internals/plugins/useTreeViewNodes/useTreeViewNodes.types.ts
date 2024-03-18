@@ -17,7 +17,7 @@ export interface UseTreeViewNodesInstance<R extends {}> {
   isNodeDisabled: (itemId: string | null) => itemId is string;
   /**
    * Freeze any future update to the state based on the `items` prop.
-   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources if truth.
+   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
    */
   preventItemUpdate: () => void;
 }
