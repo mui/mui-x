@@ -27,7 +27,7 @@ import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps;
+  let baselineProps: DataGridProProps & { rows: GridRowModel[] };
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
