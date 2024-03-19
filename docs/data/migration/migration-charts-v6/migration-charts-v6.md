@@ -4,6 +4,8 @@ productId: x-charts
 
 # Migration from v6 to v7
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate Charts from v6 to v7.</p>
 
 ## Introduction
@@ -14,11 +16,11 @@ Not big breaking changes are expected.
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^7.0.0`.
 
 ```diff
 -"@mui/x-charts": "6.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^7.0.0",
 ```
 
 ## Update `@mui/material` package

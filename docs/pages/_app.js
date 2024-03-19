@@ -30,7 +30,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #default-branch-switch
     // Use the "latest" npm tag for the master git branch
     // Use the "next" npm tag for the next git branch
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;

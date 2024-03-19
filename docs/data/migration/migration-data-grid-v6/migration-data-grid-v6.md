@@ -14,15 +14,15 @@ To get started, check out [the blog post about the release of MUI X v6](https:/
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `next`.
+In `package.json`, change the version of the data grid package to `^7.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "6.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "^7.0.0",
 -"@mui/x-data-grid-pro": "6.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "^7.0.0",
 -"@mui/x-data-grid-premium": "6.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "^7.0.0",
 ```
 
 Since v7 is a major release, it contains changes that affect the public API.
@@ -48,7 +48,7 @@ If you have `@mui/x-license-pro` in the `dependencies` section of your `package.
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",
-+"@mui/x-license": "next",
++"@mui/x-license": "^7.0.0",
 ```
 
 ## Run codemods
@@ -60,10 +60,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Data Grid specific
-npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
 
 // Target other MUI X components as well
-npx @mui/x-codemod@next v7.0.0/preset-safe <path>
+npx @mui/x-codemod v7.0.0/preset-safe <path>
 ```
 
 :::info
