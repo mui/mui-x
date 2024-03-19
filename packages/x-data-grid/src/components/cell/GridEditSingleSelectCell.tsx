@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { SelectProps, SelectChangeEvent, BaseSelectProps } from '@mui/material/Select';
+import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
 import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
@@ -16,7 +16,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export interface GridEditSingleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<BaseSelectProps, 'id' | 'tabIndex' | 'value'> {
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {SelectChangeEvent<any>} event The event source of the callback.

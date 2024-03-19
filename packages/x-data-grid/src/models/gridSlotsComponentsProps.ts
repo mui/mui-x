@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
-import type { BaseSelectProps } from '@mui/material/Select';
+import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { ButtonProps } from '@mui/material/Button';
 import type { IconButtonProps } from '@mui/material/IconButton';
@@ -66,7 +66,7 @@ export interface GridSlotProps {
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
-  baseSelect: BaseSelectProps & BaseSelectPropsOverrides;
+  baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
