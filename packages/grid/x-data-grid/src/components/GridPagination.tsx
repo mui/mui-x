@@ -46,12 +46,17 @@ const GridPagination = React.forwardRef<
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
-  const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
-  const lastPage = React.useMemo(() => {
-    const calculatedValue = Math.ceil(rowCount / (paginationModel.pageSize || 1)) - 1;
-    return Math.max(0, calculatedValue);
-  }, [rowCount, paginationModel.pageSize]);
+  const rowCount = React.useMemo(
+    () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
+    [rootProps.rowCount, visibleTopLevelRowCount],
+  );
+
+  const lastPage = React.useMemo(
+    () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+    [rowCount, paginationModel.pageSize],
+  );
 
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
