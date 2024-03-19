@@ -1930,6 +1930,15 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.15.9.tgz#c29138c70cc0fb49cd909c29beef3fb0647e5af7"
   integrity sha512-CSDpVevGaxsvMkiYBZ8ztki1z/eT0mM2MqUT21eCRiMz3DU4zQw5rXG5ML/yTuJF9Z2Wv9SliIeaRAuSR/9Nig==
 
+"@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/37466089/@mui/docs":
+  version "5.15.13"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/37466089/@mui/docs#85a033168f755ec320f5d9e5a71415ced47e83b3"
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+    clsx "^2.1.0"
+    nprogress "^0.2.0"
+    prop-types "^15.8.1"
+
 "@mui/icons-material@^5.15.9":
   version "5.15.9"
   resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.15.9.tgz#8d11839d35cf3cfd62df40934d8e9485f66be620"
