@@ -1937,6 +1937,14 @@
   dependencies:
     "@babel/runtime" "^7.23.9"
 
+"@mui/internal-docs-utils@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@mui/internal-docs-utils/-/internal-docs-utils-1.0.4.tgz#dd20bde31582e09e3b475f5956795c3297291cae"
+  integrity sha512-aZ70CqKohMZ/RS3V5Nl3FmBNVMKHNjtXachtkcWnxyQCi9DPuaGCz8l1Q0Iealjax+j08vT5vDO0JwWFImMsnA==
+  dependencies:
+    rimraf "^5.0.5"
+    typescript "^5.3.3"
+
 "@mui/internal-markdown@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@mui/internal-markdown/-/internal-markdown-1.0.0.tgz#e7c19efc9a8989dff410c99bfb7d09f491ed4738"
