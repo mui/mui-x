@@ -45,9 +45,6 @@ describe('<DataGridPro /> - Lazy loader', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
-          experimentalFeatures={{
-            lazyLoading: true,
-          }}
           apiRef={apiRef}
           {...baselineProps}
           {...props}

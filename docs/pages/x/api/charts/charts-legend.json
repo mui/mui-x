@@ -3,6 +3,12 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

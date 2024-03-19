@@ -13,7 +13,8 @@
     "markGap": { "description": "Space between the mark and the label (in px)." },
     "padding": {
       "description": "Legend padding (in px). Can either be a single number, or an object with top, left, bottom, right properties."
-    }
+    },
+    "position": { "description": "The position of the legend." }
   },
   "classDescriptions": {
     "mark": { "description": "" },

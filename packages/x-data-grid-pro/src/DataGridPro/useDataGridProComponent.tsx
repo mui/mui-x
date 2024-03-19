@@ -45,6 +45,8 @@ import {
   useGridHeaderFiltering,
   virtualizationStateInitializer,
   useGridVirtualization,
+  useGridColumnResize,
+  columnResizeStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -54,10 +56,6 @@ import {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
-import {
-  useGridColumnResize,
-  columnResizeStateInitializer,
-} from '../hooks/features/columnResize/useGridColumnResize';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 import {

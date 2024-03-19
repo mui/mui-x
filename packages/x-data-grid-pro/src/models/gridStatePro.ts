@@ -8,7 +8,6 @@ import type {
   GridDetailPanelState,
   GridDetailPanelInitialState,
   GridColumnReorderState,
-  GridColumnResizeState,
 } from '../hooks';
 
 /**
@@ -16,7 +15,6 @@ import type {
  */
 export interface GridStatePro extends GridStateCommunity {
   columnReorder: GridColumnReorderState;
-  columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
   detailPanel: GridDetailPanelState;
 }

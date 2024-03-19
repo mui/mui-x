@@ -135,4 +135,10 @@ export const useGridColumnPinningPreProcessors = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);
+
+  const isColumnPinned = React.useCallback<GridPipeProcessor<'isColumnPinned'>>(
+    (initialValue, field) => apiRef.current.isColumnPinned(field),
+    [apiRef],
+  );
+  useGridRegisterPipeProcessor(apiRef, 'isColumnPinned', isColumnPinned);
 };

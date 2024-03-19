@@ -36,7 +36,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
-- `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
+- `filterItem.operator`: name of the operator method to use (for example _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')): required when multiple filter items are used.
 
 :::info

@@ -43,7 +43,7 @@ const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any, an
 
 const MultiInputDateTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
   )),
   {
     name: 'MuiMultiInputDateTimeRangeField',
@@ -59,7 +59,9 @@ const MultiInputDateTimeRangeFieldSeparator = styled(
     slot: 'Separator',
     overridesResolver: (props, styles) => styles.separator,
   },
-)({});
+)({
+  lineHeight: '1.4375em', // 23px
+});
 
 type MultiInputDateTimeRangeFieldComponent = (<
   TDate extends PickerValidDate,
@@ -343,7 +345,7 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.

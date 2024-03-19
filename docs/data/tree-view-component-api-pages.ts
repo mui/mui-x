@@ -14,6 +14,10 @@ const apiPages: MuiPage[] = [
     title: 'TreeItem',
   },
   {
+    pathname: '/x/api/tree-view/tree-item-2',
+    title: 'TreeItem2',
+  },
+  {
     pathname: '/x/api/tree-view/tree-view',
     title: 'TreeView',
   },

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {

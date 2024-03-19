@@ -111,10 +111,30 @@
     "import { BarChart } from '@mui/x-charts';"
   ],
   "slots": [
-    { "name": "axisLine", "description": "", "class": null },
-    { "name": "axisTick", "description": "", "class": null },
-    { "name": "axisTickLabel", "description": "", "class": null },
-    { "name": "axisLabel", "description": "", "class": null },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
     {
       "name": "bar",
       "description": "The component that renders the bar.",
@@ -127,9 +147,24 @@
       "default": "DefaultChartsLegend",
       "class": null
     },
-    { "name": "popper", "description": "", "class": null },
-    { "name": "axisContent", "description": "", "class": null },
-    { "name": "itemContent", "description": "", "class": null }
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "axisContent",
+      "description": "Custom component for displaying tooltip content when triggered by axis event.",
+      "default": "DefaultChartsAxisTooltipContent",
+      "class": null
+    },
+    {
+      "name": "itemContent",
+      "description": "Custom component for displaying tooltip content when triggered by item event.",
+      "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiBarChart",

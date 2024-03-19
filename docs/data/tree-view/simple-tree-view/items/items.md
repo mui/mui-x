@@ -24,12 +24,12 @@ The Simple Tree View component receives its items directly as JSX children.
 
 ### Item identifier
 
-Each Tree Item must have a unique `nodeId`.
+Each Tree Item must have a unique `itemId`.
 This is used internally to identify the item in the various models, and to track it across updates.
 
 ```tsx
 <SimpleTreeView>
-  <TreeItem nodeId="item-unique-id" {...otherItemProps} />
+  <TreeItem itemId="item-unique-id" {...otherItemProps} />
 </SimpleTreeView>
 ```
 

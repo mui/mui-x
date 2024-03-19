@@ -61,7 +61,7 @@ export default function CustomIcons() {
   return (
     <RichTreeView
       aria-label="customized"
-      defaultExpandedNodes={['1']}
+      defaultExpandedItems={['1']}
       slots={{
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,

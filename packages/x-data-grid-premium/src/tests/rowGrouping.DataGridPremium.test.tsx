@@ -1852,7 +1852,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
     clock.withFakeTimers();
 
     describe('prop: rowGroupingColumnMode = "single"', () => {
-      it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', async () => {
+      it('should use each grouping criteria for sorting if leafField are not defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1869,15 +1869,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '',
           'Cat A (3)',
-          'Cat 1 (1)',
-          '',
           'Cat 2 (2)',
           '',
+          '',
+          'Cat 1 (1)',
           '',
         ]);
       });
 
-      it('should use the column grouping criteria for sorting if mainGroupingCriteria is one of the grouping criteria and leaf field is defined', () => {
+      it('should sort leaves if leaf field is defined', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1890,17 +1890,17 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal([
+          'Cat B (2)',
+          'Cat 2 (1)',
+          '3',
+          'Cat 1 (1)',
+          '4',
           'Cat A (3)',
           'Cat 2 (2)',
           '1',
           '2',
           'Cat 1 (1)',
           '0',
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '3',
-          'Cat 1 (1)',
-          '4',
         ]);
       });
 

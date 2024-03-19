@@ -153,14 +153,12 @@ export interface GridClasses {
    * Styles applied to the column header if the column has a filter applied to it.
    */
   'columnHeader--filtered': string;
+  'columnHeader--pinnedLeft': string;
+  'columnHeader--pinnedRight': string;
   /**
    * Styles applied to the column header element.
    */
   columnHeader: string;
-  /**
-   * Styles applied to the column group header element.
-   */
-  columnGroupHeader: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -173,10 +171,6 @@ export interface GridClasses {
    * Styles applied to the row's draggable placeholder element inside the special row reorder cell.
    */
   rowReorderCellPlaceholder: string;
-  /**
-   * Styles applied to the column headers wrapper if a column is being dragged.
-   */
-  columnHeaderDropZone: string;
   /**
    * Styles applied to the column header's title element;
    */
@@ -198,21 +192,9 @@ export interface GridClasses {
    */
   'columnHeader--emptyGroup': string;
   /**
-   * Styles applied to the column group header cell when show column border.
-   */
-  'columnHeader--showColumnBorder': string;
-  /**
    * Styles applied to the column headers.
    */
   columnHeaders: string;
-  /**
-   * Styles applied to the column headers's inner element.
-   */
-  columnHeadersInner: string;
-  /**
-   * Styles applied to the column headers's inner element if there is a horizontal scrollbar.
-   */
-  'columnHeadersInner--scrollable': string;
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
@@ -307,14 +289,17 @@ export interface GridClasses {
   editBooleanCell: string;
   /**
    * Styles applied to the filler row.
+   * @ignore - do not document.
    */
   filler: string;
   /**
    * Styles applied to the filler row pinned left section.
+   * @ignore - do not document.
    */
   'filler--pinnedLeft': string;
   /**
    * Styles applied to the filler row pinned right section.
+   * @ignore - do not document.
    */
   'filler--pinnedRight': string;
   /**
@@ -425,18 +410,6 @@ export interface GridClasses {
    * Styles applied to the pinned columns.
    */
   pinnedColumns: string;
-  /**
-   * Styles applied to the pinned column headers.
-   */
-  pinnedColumnHeaders: string;
-  /**
-   * Styles applied to the left pinned column headers.
-   */
-  'pinnedColumnHeaders--left': string;
-  /**
-   * Styles applied to the right pinned column headers.
-   */
-  'pinnedColumnHeaders--right': string;
   /**
    * Styles applied to the root element.
    */
@@ -587,6 +560,7 @@ export interface GridClasses {
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
+  'columnHeader--withLeftBorder': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */
@@ -665,20 +639,17 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--sortable',
   'columnHeader--sorted',
   'columnHeader--filtered',
+  'columnHeader--pinnedLeft',
+  'columnHeader--pinnedRight',
   'columnHeader',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
-  'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',
-  'columnGroupHeader',
   'columnHeader--filledGroup',
   'columnHeader--emptyGroup',
-  'columnHeader--showColumnBorder',
   'columnHeaders',
-  'columnHeadersInner',
-  'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator--sideLeft',
@@ -764,14 +735,12 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
-  'pinnedColumnHeaders',
-  'pinnedColumnHeaders--left',
-  'pinnedColumnHeaders--right',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
   'cell--withLeftBorder',
   'columnHeader--withRightBorder',
+  'columnHeader--withLeftBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',

@@ -524,12 +524,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  it('should react to an update of rowCount', () => {
+  it('should react to an update of rowCount when `paginationMode = server`', () => {
     const { setProps } = render(
       <BaselineTestCase
         rowCount={5}
         paginationModel={{ page: 0, pageSize: 1 }}
         pageSizeOptions={[1]}
+        paginationMode="server"
       />,
     );
     expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1–1 of 5'); // "–" is not a hyphen, it's an "en dash"

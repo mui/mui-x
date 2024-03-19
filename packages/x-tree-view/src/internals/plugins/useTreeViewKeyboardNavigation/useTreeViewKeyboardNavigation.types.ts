@@ -9,8 +9,8 @@ import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 export interface UseTreeViewKeyboardNavigationInstance {
   updateFirstCharMap: (updater: (map: TreeViewFirstCharMap) => TreeViewFirstCharMap) => void;
   handleItemKeyDown: (
-    event: React.KeyboardEvent<HTMLLIElement> & MuiCancellableEvent,
-    nodeId: string,
+    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
+    itemId: string,
   ) => void;
 }
 
@@ -24,4 +24,4 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
   ];
 }>;
 
-export type TreeViewFirstCharMap = { [nodeId: string]: string };
+export type TreeViewFirstCharMap = { [itemId: string]: string };

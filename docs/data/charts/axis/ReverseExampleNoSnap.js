@@ -9,6 +9,8 @@ import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 
 const dataset = [
   { min: -12, max: -4, precip: 79, month: 'Jan' },
@@ -82,6 +84,7 @@ export default function ReverseExampleNoSnap() {
           dataset={dataset}
           height={400}
         >
+          <ChartsGrid horizontal />
           <BarPlot />
           <LinePlot />
           <MarkPlot />
@@ -93,6 +96,7 @@ export default function ReverseExampleNoSnap() {
             position="right"
             label="precipitation (mm)"
           />
+          <ChartsTooltip />
         </ResponsiveChartContainer>
       </Box>
     </Stack>

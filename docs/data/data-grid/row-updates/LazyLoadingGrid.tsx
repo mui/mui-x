@@ -105,9 +105,6 @@ export default function LazyLoadingGrid() {
         filterMode="server"
         rowsLoadingMode="server"
         onFetchRows={debouncedHandleFetchRows}
-        experimentalFeatures={{
-          lazyLoading: true,
-        }}
       />
     </div>
   );

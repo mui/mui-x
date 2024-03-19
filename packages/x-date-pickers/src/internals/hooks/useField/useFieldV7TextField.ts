@@ -420,7 +420,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           onClick: getInputContainerClickHandler(index),
         } as React.HTMLAttributes<HTMLSpanElement>,
         content: {
-          tabIndex: isContainerEditable ? undefined : 0,
+          tabIndex: isContainerEditable || index > 0 ? -1 : 0,
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           id: `${id}-${section.type}`,
@@ -494,7 +494,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           '',
           '<DatePicker slots={{ textField: MyCustomTextField }} />',
           '',
-          'Learn more about the field accessible DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
+          'Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
         ].join('\n'),
       );
     }
@@ -522,7 +522,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       enableAccessibleFieldDOMStructure: true,
       elements,
       // TODO v7: Try to set to undefined when there is a section selected.
-      tabIndex: 0,
+      tabIndex: parsedSelectedSections === 0 ? -1 : 0,
       contentEditable: isContainerEditable,
       value: valueStr,
       onChange: handleValueStrChange,

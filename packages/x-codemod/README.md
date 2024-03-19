@@ -222,6 +222,8 @@ The list includes these transformers
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-focus-callback`](#rename-focus-callback)
+- [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -237,7 +239,7 @@ Renames the `TreeView` component to `SimpleTreeView`
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -252,8 +254,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -274,13 +276,13 @@ Rename the expansion props
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
@@ -291,13 +293,13 @@ Rename the selection props
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 
@@ -313,6 +315,27 @@ Replace the `TransitionComponent` and `TransitionProps` components with the `gro
 -  TransitionProps={{ timeout: 600 }}
 +  slotProps={{ groupTransition: { timeout: 600 } }}
  />
+```
+
+#### `rename-focus-callback`
+
+Replace the `onNodeFocus` callback with `onItemFocus`:
+
+```diff
+ <TreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
+```
+
+#### `rename-nodeid`
+
+Rename nodeId to itemId
+
+```diff
+ <TreeItem
+-  nodeId='unique-id'
++  itemId='unique-id'
 ```
 
 ## v6.0.0

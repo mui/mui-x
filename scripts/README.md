@@ -23,7 +23,7 @@ yarn release:changelog
    --release       The branch to release (default: master)
 ```
 
-You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
+You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 

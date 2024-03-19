@@ -57,7 +57,7 @@ export const useGridScroll = (
 ): void => {
   const theme = useTheme();
   const logger = useGridLogger(apiRef, 'useGridScroll');
-  const colRef = apiRef.current.columnHeadersElementRef!;
+  const colRef = apiRef.current.columnHeadersContainerRef!;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 

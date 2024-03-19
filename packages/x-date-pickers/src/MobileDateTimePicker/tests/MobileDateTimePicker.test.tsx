@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   it('should render date and time by default', () => {
     render(
@@ -136,6 +136,8 @@ describe('<MobileDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
+
+      clock.runToLast();
 
       // Change the date
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));

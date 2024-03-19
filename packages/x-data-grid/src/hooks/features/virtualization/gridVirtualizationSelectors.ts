@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridRenderContext } from '../../../models/params/gridScrollParams';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
  * Get the columns state
@@ -45,9 +45,7 @@ export const gridRenderContextSelector = createSelector(
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
   (state: GridStateCommunity) => state.virtualization.renderContext.firstColumnIndex,
   (state: GridStateCommunity) => state.virtualization.renderContext.lastColumnIndex,
-  (firstColumnIndex, lastColumnIndex): GridRenderContext => ({
-    firstRowIndex: -1,
-    lastRowIndex: -1,
+  (firstColumnIndex, lastColumnIndex): GridColumnsRenderContext => ({
     firstColumnIndex,
     lastColumnIndex,
   }),

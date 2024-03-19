@@ -131,7 +131,7 @@
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/jaJP.ts"
   },

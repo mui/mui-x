@@ -11,10 +11,10 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Learn how to focus Tree View items.</p>
 
-## Focus a specific node
+## Focus a specific item
 
-You can use the the `apiRef.focusNode` method to focus a specific node.
-This methods receives two parameters: `event` and `nodeId`.
+You can use the the `apiRef.focusItem` method to focus a specific item.
+This methods receives two parameters: `event` and `itemId`.
 
 :::success
 To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
@@ -29,8 +29,8 @@ return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 :::
 
 :::info
-This method only works with nodes that are currently visible.
-Calling `apiRef.focusNode` on a node whose parent is collapsed will do nothing.
+This method only works with items that are currently visible.
+Calling `apiRef.focusItem` on an item whose parent is collapsed will do nothing.
 :::
 
 {{"demo": "FocusedRichTreeView.js"}}

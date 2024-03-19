@@ -7,7 +7,6 @@ import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
-import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
@@ -146,57 +145,6 @@ const IconButton = React.forwardRef<
       variant="plain"
       ref={ref}
       sx={sx as SxProps<Theme>}
-    />
-  );
-});
-
-const Switch = React.forwardRef<any, GridSlotProps['baseSwitch']>(function Switch(
-  {
-    name,
-    checkedIcon,
-    color: colorProp,
-    disableRipple,
-    disableFocusRipple,
-    disableTouchRipple,
-    edge,
-    icon,
-    inputProps,
-    inputRef,
-    size,
-    sx,
-    onChange,
-    onClick,
-    ...props
-  },
-  ref,
-) {
-  return (
-    <JoySwitch
-      {...(props as JoySwitchProps)}
-      onChange={onChange as JoySwitchProps['onChange']}
-      size={convertSize(size)}
-      color={convertColor(colorProp)}
-      ref={ref}
-      slotProps={{
-        input: {
-          ...inputProps,
-          name,
-          onClick: onClick as React.JSX.IntrinsicElements['input']['onClick'],
-          ref: inputRef,
-        },
-        thumb: {
-          children: icon,
-        },
-      }}
-      sx={
-        [
-          {
-            ...(edge === 'start' && { ml: '-8px' }),
-            ...(edge === 'end' && { mr: '-8px' }),
-          },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ] as SxProps<Theme>
-      }
     />
   );
 });
@@ -430,7 +378,6 @@ const joySlots: Partial<GridSlotsComponent> = {
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
-  baseSwitch: Switch,
   baseSelect: Select,
   baseSelectOption: Option,
   baseInputLabel: InputLabel,

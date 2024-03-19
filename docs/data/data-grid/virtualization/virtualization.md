@@ -27,7 +27,7 @@ By default, 2 columns are rendered outside of the viewport. You can change this 
 
 {{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
 
-You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
+You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, for example with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
 
 ## Disable virtualization
 

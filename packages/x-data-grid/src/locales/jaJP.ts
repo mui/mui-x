@@ -38,9 +38,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Excelダウンロード',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: '検索',
+  columnsManagementNoColumns: 'カラムなし',
+  columnsManagementShowHideAllText: 'すべて表示/非表示',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',

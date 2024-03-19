@@ -25,6 +25,7 @@ import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
+import type { GridColumnResizeState } from '../hooks/features/columnResize';
 
 /**
  * The state of `DataGrid`.
@@ -50,6 +51,7 @@ export interface GridStateCommunity {
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   virtualization: GridVirtualizationState;
+  columnResize: GridColumnResizeState;
 }
 
 /**

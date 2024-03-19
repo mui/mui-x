@@ -33,5 +33,9 @@
       "nodeName": "the valueCell element"
     }
   },
-  "slotDescriptions": { "axisContent": "", "itemContent": "", "popper": "" }
+  "slotDescriptions": {
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "popper": "Custom component for the tooltip popper."
+  }
 }

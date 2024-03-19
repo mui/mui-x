@@ -37,7 +37,7 @@ interface GetRowsResponse {
   rows: GridRowModel[];
   /**
    * To reflect updates in total `rowCount` (optional).
-   * Useful when the `rowCount` is inaccurate (e.g. when filtering) or not available upfront.
+   * Useful when the `rowCount` is inaccurate (for example when filtering) or not available upfront.
    */
   rowCount?: number;
   /**

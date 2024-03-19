@@ -54,7 +54,7 @@ export interface GridRowsMetaPrivateApi {
   rowHasAutoHeight: (id: GridRowId) => boolean;
   /**
    * Returns the index of the last row measured.
-   * The value considers only the rows reachable by scroll, e.g. first row has index=0 in all pages.
+   * The value considers only the rows reachable by scroll, for example first row has index=0 in all pages.
    * @returns {number} The index of the last measured row.
    */
   getLastMeasuredRowIndex: () => number;

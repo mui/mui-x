@@ -31,9 +31,25 @@ export type D3ContinuouseScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export interface ChartsAxisSlots {
+  /**
+   * Custom component for the axis main line.
+   * @default 'line'
+   */
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for the axis tick.
+   * @default 'line'
+   */
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for tick label.
+   * @default ChartsText
+   */
   axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for axis label.
+   * @default ChartsText
+   */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
 }
 

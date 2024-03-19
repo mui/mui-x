@@ -16,6 +16,7 @@ import {
   useGridSelector,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
+  GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
   fastMemo,
@@ -24,11 +25,17 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
+
+export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
+  inputRef: React.RefObject<unknown>;
+}
 
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
@@ -42,12 +49,21 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
+  pinnedPosition?: GridPinnedColumnPosition;
+  style?: React.CSSProperties;
+  indexInSection: number;
+  sectionLength: number;
 }
 
-type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;
+type OwnerState = DataGridProProcessedProps & {
+  colDef: GridColDef;
+  pinnedPosition?: GridPinnedColumnPosition;
+  showRightBorder: boolean;
+  showLeftBorder: boolean;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, showColumnVerticalBorder } = ownerState;
+  const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
 
   const slots = {
     root: [
@@ -56,7 +72,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
       'withBorderColor',
-      showColumnVerticalBorder && 'columnHeader--withRightBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
+      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
+      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
   };
 
@@ -80,6 +99,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       headerFilterMenuRef,
       InputComponentProps,
       showClearIcon = true,
+      pinnedPosition,
+      style: styleProp,
+      indexInSection,
+      sectionLength,
       ...other
     } = props;
 
@@ -133,7 +156,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     let headerFilterComponent: React.ReactNode;
     if (colDef.renderHeaderFilter) {
-      headerFilterComponent = colDef.renderHeaderFilter(props);
+      headerFilterComponent = colDef.renderHeaderFilter({ ...props, inputRef });
     }
 
     React.useLayoutEffect(() => {
@@ -144,7 +167,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         }
         const elementToFocus = focusableElement || cellRef.current;
         elementToFocus?.focus();
-        apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+        apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
       }
     }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
@@ -242,9 +265,20 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       [onMouseDown, onKeyDown, publish],
     );
 
-    const ownerState = {
+    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showRightBorder = shouldCellShowRightBorder(
+      pinnedPosition,
+      indexInSection,
+      sectionLength,
+      rootProps.showCellVerticalBorder,
+    );
+
+    const ownerState: OwnerState = {
       ...rootProps,
+      pinnedPosition,
       colDef,
+      showLeftBorder,
+      showRightBorder,
     };
 
     const classes = useUtilityClasses(ownerState as OwnerState);
@@ -270,6 +304,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
           width,
           minWidth: width,
           maxWidth: width,
+          ...styleProp,
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
@@ -352,6 +387,7 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
+  indexInSection: PropTypes.number.isRequired,
   InputComponentProps: PropTypes.object,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
@@ -359,8 +395,11 @@ GridHeaderFilterCell.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  pinnedPosition: PropTypes.oneOf(['left', 'right']),
+  sectionLength: PropTypes.number.isRequired,
   showClearIcon: PropTypes.bool,
   sortIndex: PropTypes.number,
+  style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   width: PropTypes.number.isRequired,
 } as any;

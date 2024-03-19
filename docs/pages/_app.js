@@ -215,7 +215,7 @@ function AppWrapper(props) {
           text: `v${process.env.LIB_VERSION}`,
           current: true,
         },
-        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -230,7 +230,7 @@ function AppWrapper(props) {
             text: `v${process.env.DATA_GRID_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
@@ -246,7 +246,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           {
             text: 'v5',
@@ -263,7 +263,7 @@ function AppWrapper(props) {
             text: `v${process.env.CHARTS_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-charts/` },
         ],
       };
     } else if (productId === 'x-tree-view') {
@@ -277,7 +277,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
         ],
       };

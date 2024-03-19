@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0-beta.7
+
+_Mar 14, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🦥 The Lazy loading feature is now stable and the `lazyLoading` feature flag was removed from the `experimentalFeatures` prop.
+- 🌍 Improve Japanese (ja-JP) locale for the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The `columnHeader--showColumnBorder` class was replaced by `columnHeader--withLeftBorder` and `columnHeader--withRightBorder`.
+- The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
+- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
+  The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
+
+#### `@mui/x-data-grid@7.0.0-beta.7`
+
+- [DataGrid] Fix focus visible style on scrollbar (#12402) @oliviertassinari
+- [DataGrid] Fix the issue where pressing the Delete key resets various cell values to an empty string. (#12216) @sooster910
+- [DataGrid] Make `rowCount` part of the state (#12381) @MBilalShafi
+- [DataGrid] Make column resizing and autosizing available in Community plan (#12420) @cherniavskii
+- [DataGrid] Remove `baseSwitch` slot (#12439) @romgrk
+- [l10n] Improve Japanese (ja-JP) locale (#12398) @makoto14
+
+#### `@mui/x-data-grid-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0-beta.7`, plus:
+
+- [DataGridPro] Add `inputRef` to the props passed to `colDef.renderHeaderFilter` (#12328) @vovarudomanenko
+- [DataGridPro] Fix filler rendered for no reason when there are pinned columns (#12440) @cherniavskii
+- [DataGridPro] Make lazy loading feature stable (#12421) @cherniavskii
+- [DataGridPro] Render pinned and non-pinned column headers in one row (#12376) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.0.0-beta.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.7`, plus:
+
+- [DataGridPremium] Fix auto-scroll not working when selecting cell range (#12267) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.0.0-beta.7`
+
+- [fields] Fix `tabIndex` on accessible field DOM structure (#12311) @flaviendelangle
+- [fields] Fix items alignment on multi input range fields (#12312) @flaviendelangle
+- [pickers] Improve the customization of the range picker calendar header (#11988) @flaviendelangle
+- [pickers] Keep the existing time when looking for closest enabled date (#12377) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0-beta.7`.
+
+### Charts
+
+#### `@mui/x-charts@7.0.0-beta.7`
+
+- [charts] Fix axis highlight when axis is reversed (#12407) @alexfauquette
+
+### Tree View
+
+#### Breaking changes
+
+The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
+
+```diff
+ <SimpleTreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
+```
+
+#### `@mui/x-tree-view@7.0.0-beta.7`
+
+- [TreeView] Clean the usage of the term "item" and "node" in API introduced during v7 (#12368) @noraleonte
+- [TreeView] Introduce a new `TreeItem2` component and a new `useTreeItem2` hook (#11721) @flaviendelangle
+- [TreeView] Rename `onNodeFocus` to `onItemFocus` (#12419) @noraleonte
+
+### Docs
+
+- [docs] Add `legacy` bundle drop mention in migration pages (#12424) @LukasTy
+- [docs] Add missing luxon `Info` import (#12427) @LukasTy
+- [docs] Improve slots definitions for charts (#12408) @alexfauquette
+- [docs] Polish What's new in MUI X blog titles (#12309) @oliviertassinari
+- [docs] Replace `rel="noreferrer"` by `rel="noopener"` @oliviertassinari
+- [docs] Update `date-fns` `weekStarsOn` overriding example (#12416) @LukasTy
+
+### Core
+
+- [core] Fix CI (#12414) @flaviendelangle
+- [core] Fix PR deploy link for Tree View doc pages (#12411) @flaviendelangle
+
 ## 7.0.0-beta.6
 
 _Mar 8, 2024_
@@ -156,7 +252,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 ### Docs
 
 - [docs] Fix image layout shift when loading @oliviertassinari
-- [docs] Match Material UI repo comment for redirections @oliviertassinari
+- [docs] Match Material UI repo comment for redirections @oliviertassinari
 - [docs] Non breaking spaces @oliviertassinari
 - [docs] Polish the Date Picker playground (#11869) @zanivan
 - [docs] Standardize WAI-ARIA references @oliviertassinari
@@ -167,9 +263,9 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 - [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
 - [core] Remove `window.` reference for common globals @oliviertassinari
 - [core] Use runtime agnostic setTimeout type @oliviertassinari
-- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
+- [docs-infra] Fix Stack Overflow breaking space @oliviertassinari
 - [docs-infra] Fix missing non breaking spaces @oliviertassinari
-- [github] Update `no-response` workflow (#12193) @MBilalShafi
+- [infra] Update `no-response` workflow (#12193) @MBilalShafi
 - [infra] Fix missing permission reset @oliviertassinari
 
 ## 7.0.0-beta.4
@@ -186,7 +282,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Breaking changes
 
-- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
 
 ### Data Grid
 
@@ -296,7 +392,7 @@ These components are no longer exported from `@mui/x-charts`:
 ### Docs
 
 - [docs] Add recipe for hiding separator on non-resizable columns (#12134) @michelengelen
-- [docs] Add small improvements to the Gauge Chart page (#12076) @danilo-leal
+- [docs] Add small improvements to the Gauge page (#12076) @danilo-leal
 - [docs] Add the 'point' scaleType to the axis documentation (#12179) @alexfauquette
 - [docs] Clarify Pickers 'Component composition' section (#12097) @LukasTy
 - [docs] Fix "Licensing" page link (#12156) @LukasTy
@@ -879,7 +975,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 
 - [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11689) @alexfauquette
 - [charts] Fix default `stackOffset` for `LineChart` (#11647) @alexfauquette
-- [charts] Remove a TS ignore (#11688) @alexfauquette
+- [charts] Remove a TypeScript ignore (#11688) @alexfauquette
 
 ### Tree View
 
@@ -1308,7 +1404,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [core] Fix release changelog (#11496) @romgrk
 - [core] Fix use of ::before & ::after (#11515) @oliviertassinari
 - [core] Localize the issue template to MUI X (#11511) @oliviertassinari
-- [core] Regen api files (#11542) @flaviendelangle
+- [core] Regenerate API files (#11542) @flaviendelangle
 - [core] Remove issue emoji @oliviertassinari
 - [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
@@ -1351,7 +1447,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
 
 #### `@mui/x-data-grid@7.0.0-alpha.6`
 
@@ -1562,7 +1658,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
 ### Core
 
 - [core] Automate cherry-pick of PRs from `next` -> `master` (#11382) @MBilalShafi
-- [github] Update `no-response` workflow (#11369) @MBilalShafi
+- [infra] Update `no-response` workflow (#11369) @MBilalShafi
 - [test] Fix flaky screenshots (#11388) @cherniavskii
 
 ## 7.0.0-alpha.4
@@ -1731,7 +1827,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
   The Firefox browser currently does not support this behavior because the [getWeekInfo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) API is not yet implemented.
 
   ```ts
-  import { Settings } from 'luxon';
+  import { Settings, Info } from 'luxon';
 
   Settings.defaultWeekSettings = {
     firstDay: 1,
@@ -1800,7 +1896,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 
 - [charts] Adjusted `defaultizeValueFormatter` util to accept an optional `series.valueFormatter` value (#11144) @michelengelen
 - [charts] Apply `labelStyle` and `tickLabelStyle` props on `<ChartsYAxis />` (#11180) @akamfoad
-- [charts] Fix TS config (#11259) @alexfauquette
+- [charts] Fix TypeScript config (#11259) @alexfauquette
 - [charts] Fix error with empty dataset (#11063) @alexfauquette
 - [charts] Fix export strategy (#11235) @alexfauquette
 - [charts] Remove outdated prop-types (#11045) @alexfauquette
@@ -2520,6 +2616,26 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.7
+
+_Mar 14, 2024_
+
+We'd like to offer a big thanks to @LukasTy who made this release possible.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.7`
+
+- [pickers] Keep the existing time when looking for closest enabled date (#12410) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.7`.
+
+### Docs
+
+- [docs] Add Pickers custom start of week section (#12425) @LukasTy
 
 ## 6.19.6
 

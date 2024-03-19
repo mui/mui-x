@@ -13,7 +13,10 @@ import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
+import {
+  GridHydrateColumnsValue,
+  GridPinnedColumnPosition,
+} from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
@@ -58,6 +61,7 @@ export interface GridPipeProcessingLookup {
     value: boolean;
     context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
   };
+  isColumnPinned: { value: GridPinnedColumnPosition | false; context: string };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

@@ -93,13 +93,13 @@ The value returned by `valueGetter` is used for:
 ### Value formatter
 
 The value formatter allows you to convert the value before displaying it.
-Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
+Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
 
 Note, that the value returned by `valueFormatter` is only used for rendering purposes.
 Filtering and sorting are based on the raw value (`row[field]`) or the value returned by [`valueGetter`](/x/react-data-grid/column-definition/#value-getter).
 
-In the following demo, `valueGetter` is used to convert the tax rate (e.g. `0.2`) to a decimal value (e.g. `20`),
-and `valueFormatter` is used to display it as a percentage (e.g. `20%`).
+In the following demo, `valueGetter` is used to convert the tax rate (for example `0.2`) to a decimal value (for example `20`),
+and `valueFormatter` is used to display it as a percentage (for example `20%`).
 
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
 

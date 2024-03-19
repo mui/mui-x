@@ -36,11 +36,6 @@ export interface GridBaseSlots {
    */
   baseSelect: React.JSXElementConstructor<GridSlotProps['baseSelect']>;
   /**
-   * The custom Switch component used in the grid.
-   * @default Switch
-   */
-  baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
-  /**
    * The custom Button component used in the grid.
    * @default Button
    */

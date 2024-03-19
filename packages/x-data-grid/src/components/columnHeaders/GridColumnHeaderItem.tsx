@@ -15,6 +15,8 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -30,16 +32,29 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
   disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
+  pinnedPosition?: GridPinnedColumnPosition;
+  style?: React.CSSProperties;
+  indexInSection: number;
+  sectionLength: number;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
+  showLeftBorder: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
-    ownerState;
+  const {
+    colDef,
+    classes,
+    isDragging,
+    sortDirection,
+    showRightBorder,
+    showLeftBorder,
+    filterItemsCounter,
+    pinnedPosition,
+  } = ownerState;
 
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
@@ -59,6 +74,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnNumeric && 'columnHeader--numeric',
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
+      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
+      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -82,6 +100,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     disableReorder,
     separatorSide,
+    style,
+    pinnedPosition,
+    indexInSection,
+    sectionLength,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -101,10 +123,19 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
+  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+  const showRightBorder = shouldCellShowRightBorder(
+    pinnedPosition,
+    indexInSection,
+    sectionLength,
+    rootProps.showCellVerticalBorder,
+  );
+
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder: rootProps.showColumnVerticalBorder,
+    showRightBorder,
+    showLeftBorder,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -227,7 +258,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
       elementToFocus?.focus();
-      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+      apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
     }
   }, [apiRef, hasFocus]);
 
@@ -264,6 +295,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       columnMenu={columnMenu}
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
+      style={style}
       {...mouseEventsHandlers}
     />
   );
@@ -281,11 +313,15 @@ GridColumnHeaderItem.propTypes = {
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
+  indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  pinnedPosition: PropTypes.oneOf(['left', 'right']),
+  sectionLength: PropTypes.number.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
+  style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 } as any;
 

@@ -48,7 +48,7 @@ useGridApiEventHandler(apiRef, 'rowClick', handleEvent);
 ```
 
 :::warning
-This hook can only be used inside the scope of the Data Grid (i.e. inside component slots or cell renderers).
+This hook can only be used inside the scope of the Data Grid (that is inside component slots or cell renderers).
 :::
 
 The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`—try it out by clicking on any row:

@@ -9,48 +9,48 @@ import type { UseTreeViewNodesSignature } from '../plugins/useTreeViewNodes';
 
 export const getPreviousNode = (
   instance: TreeViewInstance<[UseTreeViewNodesSignature, UseTreeViewExpansionSignature]>,
-  nodeId: string,
+  itemId: string,
 ) => {
-  const node = instance.getNode(nodeId);
-  const siblings = instance.getNavigableChildrenIds(node.parentId);
-  const nodeIndex = siblings.indexOf(nodeId);
+  const item = instance.getNode(itemId);
+  const siblings = instance.getNavigableChildrenIds(item.parentId);
+  const itemIndex = siblings.indexOf(itemId);
 
-  if (nodeIndex === 0) {
-    return node.parentId;
+  if (itemIndex === 0) {
+    return item.parentId;
   }
 
-  let currentNode: string = siblings[nodeIndex - 1];
+  let currentItem: string = siblings[itemIndex - 1];
   while (
-    instance.isNodeExpanded(currentNode) &&
-    instance.getNavigableChildrenIds(currentNode).length > 0
+    instance.isNodeExpanded(currentItem) &&
+    instance.getNavigableChildrenIds(currentItem).length > 0
   ) {
-    currentNode = instance.getNavigableChildrenIds(currentNode).pop()!;
+    currentItem = instance.getNavigableChildrenIds(currentItem).pop()!;
   }
 
-  return currentNode;
+  return currentItem;
 };
 
 export const getNextNode = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
-  nodeId: string,
+  itemId: string,
 ) => {
   // If expanded get first child
-  if (instance.isNodeExpanded(nodeId) && instance.getNavigableChildrenIds(nodeId).length > 0) {
-    return instance.getNavigableChildrenIds(nodeId)[0];
+  if (instance.isNodeExpanded(itemId) && instance.getNavigableChildrenIds(itemId).length > 0) {
+    return instance.getNavigableChildrenIds(itemId)[0];
   }
 
-  let node = instance.getNode(nodeId);
-  while (node != null) {
+  let item = instance.getNode(itemId);
+  while (item != null) {
     // Try to get next sibling
-    const siblings = instance.getNavigableChildrenIds(node.parentId);
-    const nextSibling = siblings[siblings.indexOf(node.id) + 1];
+    const siblings = instance.getNavigableChildrenIds(item.parentId);
+    const nextSibling = siblings[siblings.indexOf(item.id) + 1];
 
     if (nextSibling) {
       return nextSibling;
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    node = instance.getNode(node.parentId!);
+    item = instance.getNode(item.parentId!);
   }
 
   return null;
@@ -59,12 +59,12 @@ export const getNextNode = (
 export const getLastNode = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
 ) => {
-  let lastNode = instance.getNavigableChildrenIds(null).pop()!;
+  let lastItem = instance.getNavigableChildrenIds(null).pop()!;
 
-  while (instance.isNodeExpanded(lastNode)) {
-    lastNode = instance.getNavigableChildrenIds(lastNode).pop()!;
+  while (instance.isNodeExpanded(lastItem)) {
+    lastItem = instance.getNavigableChildrenIds(lastItem).pop()!;
   }
-  return lastNode;
+  return lastItem;
 };
 
 export const getFirstNode = (instance: TreeViewInstance<[UseTreeViewNodesSignature]>) =>

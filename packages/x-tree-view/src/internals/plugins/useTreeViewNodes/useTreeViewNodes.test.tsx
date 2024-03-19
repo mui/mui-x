@@ -46,8 +46,8 @@ describe('useTreeViewNodes', () => {
       render(
         <ErrorBoundary>
           <SimpleTreeView>
-            <TreeItem nodeId="1" label="A" />
-            <TreeItem nodeId="1" label="B" />
+            <TreeItem itemId="1" label="A" />
+            <TreeItem itemId="1" label="B" />
           </SimpleTreeView>
         </ErrorBoundary>,
       ),

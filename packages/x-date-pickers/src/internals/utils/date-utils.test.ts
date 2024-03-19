@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
+import { useFakeTimers } from 'sinon';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
@@ -97,6 +98,25 @@ describe('findClosestEnabledDate', () => {
     })!;
 
     expect(adapterToUse.isSameDay(result, today)).to.equal(true);
+  });
+
+  it('should return now with given time part if disablePast and now is valid', () => {
+    const clock = useFakeTimers({ now: new Date('2000-01-02') });
+
+    const tryDate = adapterToUse.date('2000-01-01T11:12:13');
+    const result = findClosestEnabledDate({
+      date: tryDate,
+      minDate: adapterToUse.date('1900-01-01'),
+      maxDate: adapterToUse.date('2100-01-01'),
+      utils: adapterToUse,
+      isDateDisabled: () => false,
+      disableFuture: false,
+      disablePast: true,
+      timezone: 'default',
+    })!;
+
+    expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
+    clock.reset();
   });
 
   it('should fallback to today if disablePast+disableFuture and now is invalid', () => {

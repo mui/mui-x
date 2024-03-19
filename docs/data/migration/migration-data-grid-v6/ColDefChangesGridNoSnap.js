@@ -21,6 +21,7 @@ const columns = [
     field: 'propsToControlProgrammatically',
     headerName: 'Props to control programmatically',
     minWidth: 300,
+    display: 'flex',
     renderCell: List,
   },
   {
@@ -33,7 +34,7 @@ const columns = [
     field: 'docs',
     headerName: 'Docs',
     renderCell: DocsLink,
-    width: 60,
+    width: 61,
     disableColumnMenu: true,
     sortable: false,
     resizable: false,
@@ -125,7 +126,7 @@ export default function ColDefChangesGridNoSnap() {
 
 function DocsLink(params) {
   return (
-    <IconButton href={params.value}>
+    <IconButton href={params.value} target="_blank">
       <LinkIcon />
     </IconButton>
   );
@@ -143,7 +144,9 @@ function List(params) {
   return (
     <ul style={{ paddingLeft: 5 }}>
       {params.value.split(', ').map((v) => (
-        <li key={v}>{v}</li>
+        <li key={v}>
+          <code>{v}</code>
+        </li>
       ))}
     </ul>
   );

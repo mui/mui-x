@@ -41,12 +41,12 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "area": "The component that renders the area.",
-    "axisContent": "",
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
     "bar": "The component that renders the bar.",
-    "itemContent": "",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",
-    "popper": ""
+    "popper": "Custom component for the tooltip popper."
   }
 }

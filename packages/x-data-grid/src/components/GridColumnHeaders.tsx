@@ -1,25 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { refType } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
-import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<UseGridColumnHeadersProps, 'innerRef'> {
+    UseGridColumnHeadersProps {
   ref?: React.Ref<HTMLDivElement>;
-  innerRef?: React.Ref<HTMLDivElement>;
 }
 
 const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
-      innerRef,
       className,
       visibleColumns,
       sortColumnLookup,
@@ -36,29 +32,25 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       ...other
     } = props;
 
-    const { isDragging, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
-      useGridColumnHeaders({
-        innerRef,
-        visibleColumns,
-        sortColumnLookup,
-        filterColumnLookup,
-        columnHeaderTabIndexState,
-        columnGroupHeaderTabIndexState,
-        columnHeaderFocus,
-        columnGroupHeaderFocus,
-        headerGroupingMaxDepth,
-        columnMenuState,
-        columnVisibility,
-        columnGroupsHeaderStructure,
-        hasOtherElementInTabSequence,
-      });
+    const { getInnerProps, getColumnHeadersRow, getColumnGroupHeadersRows } = useGridColumnHeaders({
+      visibleColumns,
+      sortColumnLookup,
+      filterColumnLookup,
+      columnHeaderTabIndexState,
+      columnGroupHeaderTabIndexState,
+      columnHeaderFocus,
+      columnGroupHeaderFocus,
+      headerGroupingMaxDepth,
+      columnMenuState,
+      columnVisibility,
+      columnGroupsHeaderStructure,
+      hasOtherElementInTabSequence,
+    });
 
     return (
-      <GridBaseColumnHeaders ref={ref} {...other}>
-        <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-          {getColumnGroupHeaders()}
-          {getColumnHeaders()}
-        </GridColumnHeadersInner>
+      <GridBaseColumnHeaders ref={ref} {...other} {...getInnerProps()}>
+        {getColumnGroupHeadersRows()}
+        {getColumnHeadersRow()}
       </GridBaseColumnHeaders>
     );
   },
@@ -99,7 +91,6 @@ GridColumnHeaders.propTypes = {
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
-  innerRef: refType,
   sortColumnLookup: PropTypes.object.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

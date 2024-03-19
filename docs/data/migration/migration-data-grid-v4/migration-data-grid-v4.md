@@ -31,8 +31,8 @@ Using Material UI v4 with v5 can be achieved with the following steps:
 import { createGenerateClassName } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({
-  // By enabling this option, if you have non-MUI elements (e.g. `<div />`)
-  // using MUI classes (e.g. `.MuiButton`) they will lose styles.
+  // By enabling this option, if you have non-MUI elements (for example `<div />`)
+  // using MUI classes (for example `.MuiButton`) they will lose styles.
   // Make sure to convert them to use `styled()` or `<Box />` first.
   disableGlobal: true,
   // Class names will receive this seed to avoid name collisions.
@@ -234,7 +234,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   You can use the new `initialState` prop instead.
 
   Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+  To fully control the state, use the feature's model prop and change callback (for example `filterModel` and `onFilterModelChange`).
 
   ```diff
    <DataGrid

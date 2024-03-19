@@ -7,10 +7,6 @@ export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
 // eslint-disable-next-line import/export
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
-  useGridColumnResize,
-  columnResizeStateInitializer,
-} from '../hooks/features/columnResize/useGridColumnResize';
-export {
   useGridColumnPinning,
   columnPinningStateInitializer,
 } from '../hooks/features/columnPinning/useGridColumnPinning';

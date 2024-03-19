@@ -107,7 +107,7 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
 }));
 
 type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**

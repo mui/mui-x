@@ -310,8 +310,8 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [docs] Add missing API docs (#2167) @ZeeshanTamboli
 - [docs] Describe how to export custom rendered cells (#2194) @m4theushw
-- [docs] Generate api doc for the GridExportCSVOptions interface (#2102) @flaviendelangle
-- [docs] Handle generics in api doc generation (#2210) @flaviendelangle
+- [docs] Generate API doc for the GridExportCSVOptions interface (#2102) @flaviendelangle
+- [docs] Handle generics in API doc generation (#2210) @flaviendelangle
 
 ### Core
 
@@ -1260,7 +1260,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Rename `GridBaseComponentProps` type to `GridSlotComponentProps` (#1252) @DanailH
 - [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
 - [DataGrid] Rename modules (#1292) @DanailH
-- [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
+- [DataGrid] Rename all events related to column reordering, for example `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
 - [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://mui.com/x/react-data-grid/column-ordering/) (#1299) @m4theushw
 - [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
 - [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
@@ -1475,7 +1475,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [DataGrid] Fix process is not defined (EXPERIMENTAL_ENABLED) (#1027) @leontastic
 - [DataGrid] Fix scrollbar size on windows (#1061) @dtassone
 - [DataGrid] Fix warning with v5 (#1038) @oliviertassinari
-- [DataGrid] Resolve the api ref at the same time as any other ref (#990) @oliviertassinari
+- [DataGrid] Resolve the apiRef at the same time as any other ref (#990) @oliviertassinari
 - [DataGrid] Use the disableDensitySelector to disable the DensitySelector (#1031) @DanailH
 - [DataGrid] Fix passing [] or undefined in sortModel prop (#1035) @dtassone
 - [XGrid] Fix server-side multi filters (#1029) @dtassone
@@ -1501,7 +1501,7 @@ _Feb 5, 2021_
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add getRowId prop (#972) @dtassone
-- 🚀 Add streaming delete row api (#980) @dtassone
+- 🚀 Add streaming delete row API (#980) @dtassone
 - 💅 Fix autoHeight (#940) @oliviertassinari
 - 🙌 Enable the data grid to work under strict mode (#933) @dtassone
 - ⚡️ Add component slots for toolbar and preference panel (#971) @DanailH
@@ -1511,7 +1511,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add component slots for toolbar and preference panel (#971) @DanailH
 - [DataGrid] Add getRowId prop (#972) @dtassone
-- [DataGrid] Add streaming delete row api (#980) @dtassone
+- [DataGrid] Add streaming delete row API (#980) @dtassone
 - [DataGrid] Fix autoHeight (#940) @oliviertassinari
 - [DataGrid] Fix column reorder instability (#950) @dtassone
 - [DataGrid] Fix footer visual regression (#932) @dtassone
@@ -1525,7 +1525,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 ### docs
 
 - [docs] Add sorting page in datagrid docs (#931) @dtassone
-- [docs] Api page update with component slots (#969) @dtassone
+- [docs] API page update with component slots (#969) @dtassone
 - [docs] Catch leaks ahread of time (#979) @oliviertassinari
 - [docs] Fix immutability with filter operator demos (#975) @dtassone
 - [docs] Improve docs of DataGrid about filter operators (#973) @SaskiaKeil
@@ -1728,7 +1728,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Add missing props to DataGrid and XGrid api pages (#721) @DanailH
+- [docs] Add missing props to DataGrid and XGrid API pages (#721) @DanailH
 - [docs] Fix wrong link anchor @oliviertassinari
 - [docs] Proxy production version @oliviertassinari
 
@@ -1853,7 +1853,7 @@ _Nov 20, 2020_
 
 ### Core
 
-- [core] Prepare work for a future public state api (#533) @dtassone
+- [core] Prepare work for a future public state API (#533) @dtassone
 - [core] Fix yarn prettier write @oliviertassinari
 - [test] Share karma setup (#576) @oliviertassinari
 
@@ -1974,7 +1974,7 @@ You can find the documentation at this address: https://mui.com/x/react-data-gri
 
 ### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
 
-- [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
+- [DataGrid] Add API pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
 - [DataGrid] Better explain the limits of MIT vs commercial (#225) @oliviertassinari
 - [DataGrid] First v4 alpha version (#291) @dtassone
