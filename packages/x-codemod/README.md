@@ -166,6 +166,7 @@ The list includes these transformers
 
 - [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
 - [`rename-cell-selection-props`](#rename-cell-selection-props)
+- [`remove-stabilized-v7-experimentalFeatures`](#remove-stabilized-v7-experimentalFeatures)
 
 #### `rename-components-to-slots-data-grid`
 
@@ -203,6 +204,25 @@ Rename props related to `cellSelection` feature.
 
 ```bash
 npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+#### `remove-stabilized-v7-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    lazyLoading: true,
+-    ariaV7: true,
+-    clipboardPaste: true,
+-    columnGrouping: true,
+-  }}
+ />
+```
+
+```bash
+npx @mui/x-codemod@next v7.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Tree View codemods

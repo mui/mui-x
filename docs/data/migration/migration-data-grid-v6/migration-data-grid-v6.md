@@ -14,15 +14,15 @@ To get started, check out [the blog post about the release of MUI X v6](https:/
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `next`.
+In `package.json`, change the version of the data grid package to `7.x.x`.
 
 ```diff
 -"@mui/x-data-grid": "6.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "7.x.x",
 -"@mui/x-data-grid-pro": "6.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "7.x.x",
 -"@mui/x-data-grid-premium": "6.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "7.x.x",
 ```
 
 Since v7 is a major release, it contains changes that affect the public API.
@@ -48,7 +48,7 @@ If you have `@mui/x-license-pro` in the `dependencies` section of your `package.
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",
-+"@mui/x-license": "next",
++"@mui/x-license": "7.x.x",
 ```
 
 ## Run codemods
@@ -121,7 +121,7 @@ As a result, the following changes have been made:
 
 ### Removed props
 
-- The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
+- ✅ The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 - The `getOptionValue` and `getOptionLabel` props were removed from the following components:
 
@@ -144,7 +144,7 @@ As a result, the following changes have been made:
   };
   ```
 
-- Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
+- ✅ Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
   - [`columnGrouping`](/x/react-data-grid/column-groups/)
   - [`clipboardPaste`](/x/react-data-grid/clipboard/#clipboard-paste)
   - [`lazyLoading`](/x/react-data-grid/row-updates/#lazy-loading)
@@ -313,7 +313,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Clipboard
 
-- The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
+- ✅ The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are not anymore prefixed with `unstable_`.
 
 ### Print export
 
@@ -403,7 +403,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Accessibility
 
-- The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
+- ✅ The `ariaV7` experimental flag has been removed and the Data Grid now uses the improved accessibility implementation by default.
   If you were using the `ariaV7` flag, you can remove it from the `experimentalFeatures` prop:
 
   ```diff
