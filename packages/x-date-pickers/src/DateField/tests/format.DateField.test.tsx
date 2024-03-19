@@ -7,7 +7,7 @@ import {
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
-describeAdapters.only('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
+describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   it('should support escaped characters in start separator', () => {
     const { start: startChar, end: endChar } = adapter.escapedCharacters;
 

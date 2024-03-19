@@ -213,18 +213,23 @@ const buildSections = <TDate extends PickerValidDate>(
   let i = 0;
   while (i < expandedFormat.length) {
     const escapedPartOfCurrentChar = getEscapedPartOfCurrentChar(i);
+    const isEscapedChar = escapedPartOfCurrentChar != null;
 
     const isTokenStartRegExp = new RegExp(
       isTokenStartRegExpStr,
       'g', // used to get access to lastIndex state
     );
 
-    const isEscapedChar = escapedPartOfCurrentChar != null;
+    // The remaining format starts with a token,
+    // We extract this token to create a new section.
     if (!isEscapedChar && isTokenStartRegExp.test(expandedFormat.slice(i))) {
       const currentTokenValue = expandedFormat.slice(i, i + isTokenStartRegExp.lastIndex);
       sections.push(createSection({ ...params, now, token: currentTokenValue, startSeparator }));
       i += isTokenStartRegExp.lastIndex;
-    } else {
+    }
+    // The remaining format does not start with a token,
+    // We take the first character and add it to the current section's end separator.
+    else {
       const char = expandedFormat[i];
 
       // If we are on the opening or closing character of an escaped part of the format,
