@@ -28,7 +28,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/internal-markdown": "^1.0.0",
-    "@mui/base": "^5.0.0-beta.32",
+    "@mui/joy": "^5.0.0-beta.32",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
     "@mui/styles": "^5.15.14",
