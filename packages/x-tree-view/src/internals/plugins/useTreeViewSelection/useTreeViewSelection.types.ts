@@ -7,8 +7,8 @@ export interface UseTreeViewSelectionInstance {
   isNodeSelected: (itemId: string) => boolean;
   selectNode: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
   selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
-  rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
-  rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
+  rangeSelectToFirst: (event: React.KeyboardEvent, itemId: string) => void;
+  rangeSelectToLast: (event: React.KeyboardEvent, itemId: string) => void;
 }
 
 type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true

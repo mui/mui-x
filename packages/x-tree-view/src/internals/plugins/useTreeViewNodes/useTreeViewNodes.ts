@@ -148,16 +148,19 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = useEventCallback((itemId: string | null) => {
-    const childrenIndexes = state.nodes.itemIndexes[itemId ?? TREE_VIEW_ROOT_PARENT_ID];
-    if (childrenIndexes == null) {
-      return [];
-    }
+  const getChildrenIds = React.useCallback(
+    (itemId: string | null) => {
+      const childrenIndexes = state.nodes.itemIndexes[itemId ?? TREE_VIEW_ROOT_PARENT_ID];
+      if (childrenIndexes == null) {
+        return [];
+      }
 
-    return Object.entries(childrenIndexes)
-      .sort((a, b) => a[1] - b[1])
-      .map(([id]) => id);
-  });
+      return Object.entries(childrenIndexes)
+        .sort((a, b) => a[1] - b[1])
+        .map(([id]) => id);
+    },
+    [state.nodes.itemIndexes],
+  );
 
   const getNavigableChildrenIds = (itemId: string | null) => {
     let childrenIds = instance.getChildrenIds(itemId);

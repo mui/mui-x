@@ -18,7 +18,10 @@ import {
 } from './gridRowSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
-import { gridExpandedSortedRowIdsSelector } from '../filter/gridFilterSelector';
+import {
+  gridExpandedSortedRowIdsSelector,
+  gridFilterModelSelector,
+} from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
@@ -445,7 +448,8 @@ export const useGridRowSelection = (
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
         : gridExpandedSortedRowIdsSelector(apiRef);
 
-      apiRef.current.selectRows(rowsToBeSelected, params.value);
+      const filterModel = gridFilterModelSelector(apiRef);
+      apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
