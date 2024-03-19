@@ -507,6 +507,11 @@ DataGridRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange: PropTypes.func,
+  /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.

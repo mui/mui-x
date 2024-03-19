@@ -36,7 +36,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   columnThreshold: 3,
   rowThreshold: 3,
   rowSelection: true,
-  density: 'standard',
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,

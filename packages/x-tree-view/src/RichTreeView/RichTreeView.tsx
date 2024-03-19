@@ -62,7 +62,7 @@ function WrappedTreeItem<R extends {}>({
 const childrenWarning = buildWarning([
   'MUI X: The `RichTreeView` component does not support JSX children.',
   'If you want to add items, you need to use the `items` prop',
-  'Check the documentation for more details: https://next.mui.com/x/react-tree-view/rich-tree-view/items/',
+  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
 ]);
 
 /**

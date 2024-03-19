@@ -153,11 +153,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnThreshold: number;
   /**
-   * Set the density of the Data Grid.
-   * @default "standard"
-   */
-  density: GridDensity;
-  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -409,6 +404,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   classes?: Partial<GridClasses>;
   /**
+   * Set the density of the Data Grid.
+   * @default "standard"
+   */
+  density?: GridDensity;
+  /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
@@ -561,6 +561,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
+  /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange?: (density: GridDensity) => void;
   /**
    * Callback fired when a row is clicked.
    * Not called if the target clicked is an interactive element added by the built-in columns.

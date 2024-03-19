@@ -592,6 +592,11 @@ DataGridProRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange: PropTypes.func,
+  /**
    * Callback fired when the detail panel of a row is opened or closed.
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.

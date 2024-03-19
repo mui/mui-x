@@ -6,7 +6,7 @@ export interface UseTreeViewExpansionInstance {
   isNodeExpanded: (itemId: string) => boolean;
   isNodeExpandable: (itemId: string) => boolean;
   toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
-  expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, itemId: string) => void;
+  expandAllSiblings: (event: React.KeyboardEvent, itemId: string) => void;
 }
 
 export interface UseTreeViewExpansionParameters {
