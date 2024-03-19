@@ -93,8 +93,8 @@ export const createRowsInternalCache = ({
   const dataRowIdToModelLookup: GridRowIdToModelLookup = {};
   const dataRowIdToIdLookup: GridRowIdToIdLookup = {};
 
-  for (let i = 0; i < rows!.length; i += 1) {
-    const model = rows![i];
+  for (let i = 0; i < rows.length; i += 1) {
+    const model = rows[i];
     const id = getRowIdFromRowModel(model, getRowId);
     dataRowIdToModelLookup[id] = model;
     dataRowIdToIdLookup[id] = id;

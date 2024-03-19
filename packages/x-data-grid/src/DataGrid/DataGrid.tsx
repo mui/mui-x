@@ -682,7 +682,7 @@ DataGridRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    * @default []
    */
-  rows: PropTypes.array,
+  rows: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `false`, the row selection mode is disabled.
    * @default true

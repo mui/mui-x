@@ -35,6 +35,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
+            // @ts-expect-error
             valueGetter: (value, row) => row.lastName,
           },
         ]}

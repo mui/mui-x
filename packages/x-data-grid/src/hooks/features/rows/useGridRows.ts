@@ -629,7 +629,7 @@ export const useGridRows = (
       return;
     }
 
-    logger.debug(`Updating all rows, new length ${props.rows!.length}`);
+    logger.debug(`Updating all rows, new length ${props.rows.length}`);
     throttledRowsChange({
       cache: createRowsInternalCache({
         rows: props.rows,
