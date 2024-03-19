@@ -31,12 +31,14 @@ export interface UseTreeItem2Parameters {
 
 export interface UseTreeItem2RootSlotOwnProps {
   role: 'treeitem';
-  tabIndex: -1;
+  tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
-  onFocus: MuiCancellableEventHandler<React.FocusEvent>;
+  onFocus: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
 }
 
