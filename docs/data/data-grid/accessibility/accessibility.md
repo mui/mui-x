@@ -22,23 +22,56 @@ The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid
 
 You can change the density of the rows and the column header.
 
-### Density selector
+### Density selection from the toolbar
 
-To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-The user can then change the density of the Data Grid by using the density selector from the toolbar, as the following demo illustrates:
+To enable the density selection from the toolbar, you can do one of the following:
+
+1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
+2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
+
+The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
 
-To hide the density selector, add the `disableDensitySelector` prop to the Data Grid.
+To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
 
-### Density prop
+### Set the density programmatically
 
-Set the vertical density of the Data Grid using the `density` prop. In order to listen to the updates to the density, pass the `onDensityChange` callback.
+The Data Grid exposes the `density` prop which supports the following values:
+
+- `standard` (default)
+- `compact`
+- `comfortable`
+
+The `density` prop supports controlled mode, which means you can set it programmatically in one of the following ways:
+
+1. Initialize the density with the `initialState.density` prop.
+
+   ```tsx
+   <DataGrid
+     initialState={{
+       density: 'compact',
+     }}
+   />
+   ```
+
+2. Control the density with the `density` prop. In order for the Data Grid to reflect the changes, you need to update the `density` prop when the user changes the density by listening to the `onDensityChange` callback. For more advanced use cases, you can also subscribe to the `densityChange` grid event.
+
+   ```tsx
+   const [density, setDensity] = React.useState<GridDensity>('compact');
+
+   return (
+     <DataGrid
+       density={density}
+       onDensityChange={(newDensity) => setDensity(newDensity)}
+     />
+   );
+   ```
 
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the default density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
+The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
 
 {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
 

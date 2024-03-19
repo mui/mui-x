@@ -30,23 +30,17 @@ export const useGridDensity = (
   });
 
   const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
+    const currentDensity = gridDensitySelector(apiRef.current.state);
+    if (currentDensity === newDensity) {
+      return;
+    }
+
     logger.debug(`Set grid density to ${newDensity}`);
-    apiRef.current.setState((state) => {
-      const currentDensity = gridDensitySelector(state);
 
-      if (currentDensity === newDensity) {
-        return state;
-      }
-
-      if (props.onDensityChange) {
-        props.onDensityChange(newDensity);
-      }
-
-      return {
-        ...state,
-        density: newDensity,
-      };
-    });
+    apiRef.current.setState((state) => ({
+      ...state,
+      density: newDensity,
+    }));
   });
 
   React.useEffect(() => {
