@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.0",
-    "@mui/base": "^5.0.0-beta.39",
-    "@mui/system": "^5.15.13",
-    "@mui/utils": "^5.15.13",
+    "@mui/base": "^5.0.0-beta.40",
+    "@mui/system": "^5.15.14",
+    "@mui/utils": "^5.15.14",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
     "clsx": "^2.1.0",
@@ -55,7 +55,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.13",
+    "@mui/material": "^5.15.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

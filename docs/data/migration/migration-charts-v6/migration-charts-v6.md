@@ -23,7 +23,7 @@ In `package.json`, change the version of the charts package to `next`.
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.13`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
