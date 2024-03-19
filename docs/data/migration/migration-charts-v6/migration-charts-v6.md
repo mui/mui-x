@@ -14,11 +14,11 @@ No big breaking changes are expected.
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^7.0.0`.
 
 ```diff
 -"@mui/x-charts": "6.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
