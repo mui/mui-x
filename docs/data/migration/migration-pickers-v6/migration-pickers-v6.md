@@ -4,8 +4,6 @@ productId: x-date-pickers
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
 
 ## Introduction

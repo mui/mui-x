@@ -4,8 +4,6 @@ productId: x-data-grid
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v6 to v7.</p>
 
 ## Introduction
