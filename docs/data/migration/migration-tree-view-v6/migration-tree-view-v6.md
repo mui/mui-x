@@ -10,7 +10,8 @@ productId: x-tree-view
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-tree-view` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the beta release
 

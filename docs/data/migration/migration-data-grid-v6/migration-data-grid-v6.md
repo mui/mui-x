@@ -8,9 +8,10 @@ productId: x-data-grid
 
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v6 to v7.</p>
 
-<!-- ## Introduction
+## Introduction
 
-To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/). -->
+This is a reference guide for upgrading `@mui/x-data-grid` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the new release
 
