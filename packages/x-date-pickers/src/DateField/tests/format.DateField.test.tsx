@@ -7,7 +7,7 @@ import {
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
-describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
+describeAdapters.only('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   it('should support escaped characters in start separator', () => {
     const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
@@ -158,6 +158,15 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     const input = getTextbox();
     expectFieldPlaceholderV6(input, 'Escaped Escaped');
+  });
+
+  it('should support format without separators', () => {
+    const v7Response = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      format: `${adapter.formats.dayOfMonth}${adapter.formats.monthShort}`,
+    });
+
+    expectFieldValueV7(v7Response.getSectionsContainer(), 'DDMMMM');
   });
 
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {

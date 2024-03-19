@@ -202,30 +202,31 @@ const buildSections = <TDate extends PickerValidDate>(
   const sections: FieldSection[] = [];
   let startSeparator: string = '';
 
-  // This RegExp test if the beginning of a string corresponds to a supported token
-  const isTokenStartRegExp = new RegExp(
-    `^(${Object.keys(utils.formatTokenMap)
-      .sort((a, b) => b.length - a.length) // Sort to put longest word first
-      .join('|')})`,
-    'g', // used to get access to lastIndex state
-  );
+  // This RegExp tests if the beginning of a string corresponds to a supported token
+  const isTokenStartRegExpStr = `^(${Object.keys(utils.formatTokenMap)
+    .sort((a, b) => b.length - a.length) // Sort to put longest word first
+    .join('|')})`;
 
-  let currentTokenValue = '';
+  const getEscapedPartOfCurrentChar = (i: number) =>
+    escapedParts.find((escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i);
 
-  for (let i = 0; i < expandedFormat.length; i += 1) {
-    const escapedPartOfCurrentChar = escapedParts.find(
-      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+  let i = 0;
+  while (i < expandedFormat.length) {
+    const escapedPartOfCurrentChar = getEscapedPartOfCurrentChar(i);
+
+    const isTokenStartRegExp = new RegExp(
+      isTokenStartRegExpStr,
+      'g', // used to get access to lastIndex state
     );
 
-    const char = expandedFormat[i];
     const isEscapedChar = escapedPartOfCurrentChar != null;
-    const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
-    const regExpMatch = isTokenStartRegExp.test(potentialToken);
-
-    if (!isEscapedChar && char.match(/([A-Za-z]+)/) && regExpMatch) {
-      currentTokenValue = potentialToken.slice(0, isTokenStartRegExp.lastIndex);
-      i += isTokenStartRegExp.lastIndex - 1;
+    if (!isEscapedChar && isTokenStartRegExp.test(expandedFormat.slice(i))) {
+      const currentTokenValue = expandedFormat.slice(i, i + isTokenStartRegExp.lastIndex);
+      sections.push(createSection({ ...params, now, token: currentTokenValue, startSeparator }));
+      i += isTokenStartRegExp.lastIndex;
     } else {
+      const char = expandedFormat[i];
+
       // If we are on the opening or closing character of an escaped part of the format,
       // Then we ignore this character.
       const isEscapeBoundary =
@@ -233,13 +234,6 @@ const buildSections = <TDate extends PickerValidDate>(
         escapedPartOfCurrentChar?.end === i;
 
       if (!isEscapeBoundary) {
-        if (currentTokenValue !== '') {
-          sections.push(
-            createSection({ ...params, now, token: currentTokenValue, startSeparator }),
-          );
-          currentTokenValue = '';
-        }
-
         if (sections.length === 0) {
           startSeparator += char;
         } else {
@@ -247,11 +241,9 @@ const buildSections = <TDate extends PickerValidDate>(
           sections[sections.length - 1].endSeparator += char;
         }
       }
-    }
-  }
 
-  if (currentTokenValue !== '') {
-    sections.push(createSection({ ...params, now, token: currentTokenValue, startSeparator }));
+      i += 1;
+    }
   }
 
   if (sections.length === 0 && startSeparator.length > 0) {
