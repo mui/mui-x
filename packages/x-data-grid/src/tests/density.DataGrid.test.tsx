@@ -49,6 +49,13 @@ describe('<DataGrid /> - Density', () => {
       `${Math.floor(value)}px`,
     );
   }
+  
+  before(function beforeHook() {
+    if (isJSDOM) {
+      // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
+      this.skip();
+    }
+  });
 
   describe('prop: `initialState.density`', () => {
     it('should set the density to the value of initialState.density', () => {
@@ -140,13 +147,6 @@ describe('<DataGrid /> - Density', () => {
   });
 
   describe('density selection menu', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        this.skip();
-      }
-    });
-
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
