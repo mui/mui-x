@@ -45,7 +45,7 @@ export interface GridExperimentalFeatures {
  * The props users can give to the `DataGrid` component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
-  Partial<DataGridPropsWithDefaultValues> &
+  Partial<DataGridPropsWithDefaultValues<R>> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
     DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
@@ -294,7 +294,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * Set of rows of type [[GridRowsProp]].
    * @default []
    */
-  rows?: GridRowsProp<R>;
+  rows: GridRowsProp<R>;
   /**
    * Sets the height in pixel of a row in the Data Grid.
    * @default 52

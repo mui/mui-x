@@ -59,7 +59,9 @@ function RowEditingProps() {
 function RowPropTest() {
   return (
     <div>
+      {/* @ts-expect-error */}
       <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />;
+      {/* @ts-expect-error */}
       <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />;
       <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />;
       <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />;
@@ -112,12 +114,16 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
+            // @ts-expect-error
             valueGetter: (value, row) => row.lastName,
+            // @ts-expect-error
             valueParser: (value, row) => row!.lastName,
             valueSetter: (value, row) => {
+              // @ts-expect-error
               const lastName = row.lastName;
               return {} as any;
             },
+            // @ts-expect-error
             renderCell: (params) => params.row.lastName,
           },
         ]}
