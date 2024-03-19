@@ -79,16 +79,6 @@ describe('<SimpleTreeView />', () => {
       expect(screen.getByTestId('item-2')).to.have.attribute('aria-selected', 'true');
     });
 
-    it('should not crash on keydown on an empty tree', () => {
-      render(<SimpleTreeView />);
-
-      act(() => {
-        screen.getByRole('tree').focus();
-      });
-
-      fireEvent.keyDown(screen.getByRole('tree'), { key: ' ' });
-    });
-
     it('should not crash when unmounting with duplicate ids', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function CustomTreeItem(props: any) {
@@ -128,74 +118,45 @@ describe('<SimpleTreeView />', () => {
   });
 
   it('should call onKeyDown when a key is pressed', () => {
-    const handleKeyDown = spy();
+    const handleTreeViewKeyDown = spy();
+    const handleTreeItemKeyDown = spy();
 
-    const { getByRole } = render(
-      <SimpleTreeView onKeyDown={handleKeyDown}>
-        <TreeItem itemId="test" label="test" data-testid="test" />
+    const { getByTestId } = render(
+      <SimpleTreeView onKeyDown={handleTreeViewKeyDown}>
+        <TreeItem itemId="one" data-testid="one" onKeyDown={handleTreeItemKeyDown} />
       </SimpleTreeView>,
     );
+
+    const itemOne = getByTestId('one');
     act(() => {
-      getByRole('tree').focus();
+      itemOne.focus();
     });
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
-    fireEvent.keyDown(getByRole('tree'), { key: 'A' });
-    fireEvent.keyDown(getByRole('tree'), { key: ']' });
+    fireEvent.keyDown(itemOne, { key: 'Enter' });
+    fireEvent.keyDown(itemOne, { key: 'A' });
+    fireEvent.keyDown(itemOne, { key: ']' });
 
-    expect(handleKeyDown.callCount).to.equal(3);
+    expect(handleTreeViewKeyDown.callCount).to.equal(3);
+    expect(handleTreeItemKeyDown.callCount).to.equal(3);
   });
 
   it('should select item when Enter key is pressed ', () => {
     const handleKeyDown = spy();
 
-    const { getByRole, getByTestId } = render(
+    const { getByTestId } = render(
       <SimpleTreeView onKeyDown={handleKeyDown}>
-        <TreeItem itemId="one" label="test" data-testid="one" />
+        <TreeItem itemId="one" data-testid="one" />
       </SimpleTreeView>,
     );
     act(() => {
-      getByRole('tree').focus();
+      getByTestId('one').focus();
     });
 
     expect(getByTestId('one')).not.to.have.attribute('aria-selected');
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'Enter' });
+    fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
 
     expect(getByTestId('one')).to.have.attribute('aria-selected');
-  });
-
-  it('should call onFocus when tree is focused', () => {
-    const handleFocus = spy();
-    const { getByRole } = render(
-      <SimpleTreeView onFocus={handleFocus}>
-        <TreeItem itemId="test" label="test" data-testid="test" />
-      </SimpleTreeView>,
-    );
-
-    act(() => {
-      getByRole('tree').focus();
-    });
-
-    expect(handleFocus.callCount).to.equal(1);
-  });
-
-  it('should call onBlur when tree is blurred', () => {
-    const handleBlur = spy();
-    const { getByRole } = render(
-      <SimpleTreeView onBlur={handleBlur}>
-        <TreeItem itemId="test" label="test" data-testid="test" />
-      </SimpleTreeView>,
-    );
-
-    act(() => {
-      getByRole('tree').focus();
-    });
-    act(() => {
-      getByRole('tree').blur();
-    });
-
-    expect(handleBlur.callCount).to.equal(1);
   });
 
   it('should be able to be controlled with the expandedItems prop', () => {
@@ -206,20 +167,20 @@ describe('<SimpleTreeView />', () => {
       };
       return (
         <SimpleTreeView expandedItems={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem itemId="1" label="one" data-testid="one">
-            <TreeItem itemId="2" label="two" />
+          <TreeItem itemId="one" label="one" data-testid="one">
+            <TreeItem itemId="two" />
           </TreeItem>
         </SimpleTreeView>
       );
     }
 
-    const { getByRole, getByTestId, getByText } = render(<MyComponent />);
+    const { getByTestId, getByText } = render(<MyComponent />);
 
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
 
     fireEvent.click(getByText('one'));
     act(() => {
-      getByRole('tree').focus();
+      getByTestId('one').focus();
     });
 
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
@@ -228,7 +189,7 @@ describe('<SimpleTreeView />', () => {
 
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
 
-    fireEvent.keyDown(getByRole('tree'), { key: '*' });
+    fireEvent.keyDown(getByTestId('one'), { key: '*' });
 
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
   });
@@ -303,39 +264,35 @@ describe('<SimpleTreeView />', () => {
 
       return (
         <SimpleTreeView
-          onFocus={() => {
+          defaultExpandedItems={['one']}
+          onItemFocus={() => {
             setState(Math.random);
           }}
-          id="tree"
         >
-          <TreeItem itemId="one" label="one" data-testid="one">
-            <TreeItem itemId="two" label="two" data-testid="two" />
+          <TreeItem itemId="one" data-testid="one">
+            <TreeItem itemId="two" data-testid="two" />
           </TreeItem>
         </SimpleTreeView>
       );
     }
 
-    const { getByRole, getByText, getByTestId } = render(<MyComponent />);
+    const { getByTestId } = render(<MyComponent />);
 
-    fireEvent.click(getByText('one'));
-    // Clicks would normally focus tree
-    act(() => {
-      getByRole('tree').focus();
-    });
+    fireEvent.focus(getByTestId('one'));
+    fireEvent.focus(getByTestId('one'));
+    expect(getByTestId('one')).toHaveFocus();
 
-    expect(getByTestId('one')).toHaveVirtualFocus();
+    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+    expect(getByTestId('two')).toHaveFocus();
 
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    fireEvent.keyDown(getByTestId('two'), { key: 'ArrowUp' });
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowUp' });
+    expect(getByTestId('one')).toHaveFocus();
 
-    expect(getByTestId('one')).toHaveVirtualFocus();
+    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
-
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    expect(getByTestId('two')).toHaveFocus();
   });
 
   it('should support conditional rendered tree items', () => {
@@ -360,49 +317,48 @@ describe('<SimpleTreeView />', () => {
   });
 
   it('should work in a portal', () => {
-    const { getByRole, getByTestId } = render(
+    const { getByTestId } = render(
       <Portal>
-        <SimpleTreeView id="tree">
-          <TreeItem itemId="one" label="one" data-testid="one" />
-          <TreeItem itemId="two" label="two" data-testid="two" />
-          <TreeItem itemId="three" label="three" data-testid="three" />
-          <TreeItem itemId="four" label="four" data-testid="four" />
+        <SimpleTreeView>
+          <TreeItem itemId="one" data-testid="one" />
+          <TreeItem itemId="two" data-testid="two" />
+          <TreeItem itemId="three" data-testid="three" />
+          <TreeItem itemId="four" data-testid="four" />
         </SimpleTreeView>
       </Portal>,
     );
 
     act(() => {
-      getByRole('tree').focus();
+      getByTestId('one').focus();
     });
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
 
-    expect(getByTestId('two')).toHaveVirtualFocus();
+    expect(getByTestId('two')).toHaveFocus();
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+    fireEvent.keyDown(getByTestId('two'), { key: 'ArrowDown' });
 
-    expect(getByTestId('three')).toHaveVirtualFocus();
+    expect(getByTestId('three')).toHaveFocus();
 
-    fireEvent.keyDown(getByRole('tree'), { key: 'ArrowDown' });
+    fireEvent.keyDown(getByTestId('three'), { key: 'ArrowDown' });
 
-    expect(getByTestId('four')).toHaveVirtualFocus();
+    expect(getByTestId('four')).toHaveFocus();
   });
 
   describe('onItemFocus', () => {
-    it('should be called when item is focused', () => {
-      const focusSpy = spy();
-      const { getByRole } = render(
-        <SimpleTreeView onItemFocus={focusSpy}>
-          <TreeItem itemId="1" label="one" />
+    it('should be called when an item is focused', () => {
+      const onFocus = spy();
+      const { getByTestId } = render(
+        <SimpleTreeView onItemFocus={onFocus}>
+          <TreeItem itemId="one" data-testid="one" />
         </SimpleTreeView>,
       );
 
-      // First item receives focus when tree focused
       act(() => {
-        getByRole('tree').focus();
+        getByTestId('one').focus();
       });
 
-      expect(focusSpy.callCount).to.equal(1);
-      expect(focusSpy.args[0][1]).to.equal('1');
+      expect(onFocus.callCount).to.equal(1);
+      expect(onFocus.args[0][1]).to.equal('one');
     });
   });
 
@@ -443,95 +399,70 @@ describe('<SimpleTreeView />', () => {
   });
 
   describe('useTreeViewFocus', () => {
-    it('should focus the selected item when the tree is focused', () => {
-      const onItemFocus = spy();
-
-      const { getByRole } = render(
-        <SimpleTreeView selectedItems={'2'} onItemFocus={onItemFocus}>
-          <TreeItem itemId="1" label="1" />
-          <TreeItem itemId="2" label="2" />
+    it('should set tabIndex={0} on the selected item', () => {
+      const { getByTestId } = render(
+        <SimpleTreeView selectedItems="one">
+          <TreeItem itemId="one" data-testid="one" />
+          <TreeItem itemId="two" data-testid="two" />
         </SimpleTreeView>,
       );
 
-      act(() => {
-        getByRole('tree').focus();
-      });
-
-      expect(onItemFocus.lastCall.lastArg).to.equal('2');
+      expect(getByTestId('one').tabIndex).to.equal(0);
+      expect(getByTestId('two').tabIndex).to.equal(-1);
     });
 
-    it('should focus the selected item when the tree is focused (multi select)', () => {
-      const onItemFocus = spy();
-
-      const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedItems={['2']} onItemFocus={onItemFocus}>
-          <TreeItem itemId="1" label="1" />
-          <TreeItem itemId="2" label="2" />
+    it('should set tabIndex={0} on the selected item (multi select)', () => {
+      const { getByTestId } = render(
+        <SimpleTreeView multiSelect selectedItems={['one']}>
+          <TreeItem itemId="one" data-testid="one" />
+          <TreeItem itemId="two" data-testid="two" />
         </SimpleTreeView>,
       );
 
-      act(() => {
-        getByRole('tree').focus();
-      });
-
-      expect(onItemFocus.lastCall.lastArg).to.equal('2');
+      expect(getByTestId('one').tabIndex).to.equal(0);
+      expect(getByTestId('two').tabIndex).to.equal(-1);
     });
 
-    it('should focus the first visible selected item when the tree is focused (multi select)', () => {
-      const onItemFocus = spy();
-
-      const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedItems={['1.1', '2']} onItemFocus={onItemFocus}>
-          <TreeItem itemId="1" label="1">
-            <TreeItem itemId="1.1" label="1.1" />
+    it('should set tabIndex={0} on the first visible selected item (multi select)', () => {
+      const { getByTestId } = render(
+        <SimpleTreeView multiSelect selectedItems={['two', 'three']}>
+          <TreeItem itemId="one" data-testid="one">
+            <TreeItem itemId="two" data-testid="two" />
           </TreeItem>
-          <TreeItem itemId="2" label="2" />
+          <TreeItem itemId="three" data-testid="three" />
         </SimpleTreeView>,
       );
 
-      act(() => {
-        getByRole('tree').focus();
-      });
-
-      expect(onItemFocus.lastCall.lastArg).to.equal('2');
+      expect(getByTestId('one').tabIndex).to.equal(-1);
+      expect(getByTestId('three').tabIndex).to.equal(0);
     });
 
-    it('should focus the first item if the selected item is not visible', () => {
-      const onItemFocus = spy();
-
-      const { getByRole } = render(
-        <SimpleTreeView selectedItems="1.1" onItemFocus={onItemFocus}>
-          <TreeItem itemId="1" label="1">
-            <TreeItem itemId="1.1" label="1.1" />
+    it('should set tabIndex={0} on the first item if the selected item is not visible', () => {
+      const { getByTestId } = render(
+        <SimpleTreeView selectedItems="two">
+          <TreeItem itemId="one" data-testid="one">
+            <TreeItem itemId="two" data-testid="two" />
           </TreeItem>
-          <TreeItem itemId="2" label="2" />
+          <TreeItem itemId="three" data-testid="three" />
         </SimpleTreeView>,
       );
 
-      act(() => {
-        getByRole('tree').focus();
-      });
-
-      expect(onItemFocus.lastCall.lastArg).to.equal('1');
+      expect(getByTestId('one').tabIndex).to.equal(0);
+      expect(getByTestId('three').tabIndex).to.equal(-1);
     });
 
-    it('should focus the first item if no selected item is visible (multi select)', () => {
-      const onItemFocus = spy();
-
-      const { getByRole } = render(
-        <SimpleTreeView multiSelect selectedItems={['1.1']} onItemFocus={onItemFocus}>
-          <TreeItem itemId="1" label="1">
-            <TreeItem itemId="1.1" label="1.1" />
+    it('should set tabIndex={0} on the first item if no selected item is visible (multi select)', () => {
+      const { getByTestId } = render(
+        <SimpleTreeView multiSelect selectedItems={['two']}>
+          <TreeItem itemId="one" data-testid="one">
+            <TreeItem itemId="two" data-testid="two" />
           </TreeItem>
-          <TreeItem itemId="2" label="2" />
+          <TreeItem itemId="three" data-testid="three" />
         </SimpleTreeView>,
       );
 
-      act(() => {
-        getByRole('tree').focus();
-      });
-
-      expect(onItemFocus.lastCall.lastArg).to.equal('1');
+      expect(getByTestId('one').tabIndex).to.equal(0);
+      expect(getByTestId('three').tabIndex).to.equal(-1);
     });
 
     it('should focus specific item using `apiRef`', () => {
@@ -542,22 +473,22 @@ describe('<SimpleTreeView />', () => {
         apiRef = useTreeViewApiRef();
         return (
           <SimpleTreeView apiRef={apiRef} onItemFocus={onItemFocus}>
-            <TreeItem itemId="1" label="1">
-              <TreeItem itemId="1.1" label="1.1" />
+            <TreeItem itemId="one" data-testid="one">
+              <TreeItem itemId="two" data-testid="two" />
             </TreeItem>
-            <TreeItem itemId="2" label="2" />
+            <TreeItem itemId="three" data-testid="three" />
           </SimpleTreeView>
         );
       }
 
-      const { getByRole } = render(<TestCase />);
+      const { getByTestId } = render(<TestCase />);
 
       act(() => {
-        apiRef.current?.focusItem({} as React.SyntheticEvent, '2');
+        apiRef.current?.focusItem({} as React.SyntheticEvent, 'three');
       });
 
-      expect(getByRole('tree')).toHaveFocus();
-      expect(onItemFocus.lastCall.lastArg).to.equal('2');
+      expect(getByTestId('three')).toHaveFocus();
+      expect(onItemFocus.lastCall.lastArg).to.equal('three');
     });
 
     it('should not focus item if parent is collapsed', () => {
