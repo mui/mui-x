@@ -203,9 +203,11 @@ const buildSections = <TDate extends PickerValidDate>(
   let startSeparator: string = '';
 
   // This RegExp tests if the beginning of a string corresponds to a supported token
-  const isTokenStartRegExpStr = `^(${Object.keys(utils.formatTokenMap)
-    .sort((a, b) => b.length - a.length) // Sort to put longest word first
-    .join('|')})`;
+  const validTokens = Object.keys(utils.formatTokenMap).sort((a, b) => b.length - a.length); // Sort to put longest word first
+
+  const regExpFirstWordInFormat = /^([a-zA-Z]+)$/;
+  const regExpWordOnlyComposedOfTokens = new RegExp(`^(${validTokens.join('|')})*$`);
+  const regExpFirstTokenInWord = new RegExp(`^(${validTokens.join('|')})`);
 
   const getEscapedPartOfCurrentChar = (i: number) =>
     escapedParts.find((escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i);
@@ -214,18 +216,24 @@ const buildSections = <TDate extends PickerValidDate>(
   while (i < expandedFormat.length) {
     const escapedPartOfCurrentChar = getEscapedPartOfCurrentChar(i);
     const isEscapedChar = escapedPartOfCurrentChar != null;
+    const firstWordInFormat = regExpFirstWordInFormat.exec(expandedFormat.slice(i))?.[1];
 
-    const isTokenStartRegExp = new RegExp(
-      isTokenStartRegExpStr,
-      'g', // used to get access to lastIndex state
-    );
+    // The new word in the format is only composed of tokens.
+    // We extract those tokens to create a new sections.
+    if (
+      !isEscapedChar &&
+      firstWordInFormat != null &&
+      regExpWordOnlyComposedOfTokens.test(firstWordInFormat)
+    ) {
+      let word = firstWordInFormat;
+      while (word.length > 0) {
+        const firstWord = regExpFirstTokenInWord.exec(word)![1];
+        word = word.slice(firstWord.length);
+        sections.push(createSection({ ...params, now, token: firstWord, startSeparator }));
+        startSeparator = '';
+      }
 
-    // The remaining format starts with a token,
-    // We extract this token to create a new section.
-    if (!isEscapedChar && isTokenStartRegExp.test(expandedFormat.slice(i))) {
-      const currentTokenValue = expandedFormat.slice(i, i + isTokenStartRegExp.lastIndex);
-      sections.push(createSection({ ...params, now, token: currentTokenValue, startSeparator }));
-      i += isTokenStartRegExp.lastIndex;
+      i += firstWordInFormat.length;
     }
     // The remaining format does not start with a token,
     // We take the first character and add it to the current section's end separator.
@@ -242,7 +250,6 @@ const buildSections = <TDate extends PickerValidDate>(
         if (sections.length === 0) {
           startSeparator += char;
         } else {
-          startSeparator = '';
           sections[sections.length - 1].endSeparator += char;
         }
       }

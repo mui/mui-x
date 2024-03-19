@@ -216,7 +216,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
     // This RegExp tests if a string is only mad of supported tokens
     const validTokens = [...Object.keys(this.formatTokenMap), 'yyyyy'];
-    const isTokenStartRegExpStr = new RegExp(`(${validTokens.join('|')})*`);
+    const isWordComposedOfTokens = new RegExp(`^(${validTokens.join('|')})+$`);
 
     // Extract words to test if they are a token or a word to escape.
     const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
@@ -233,7 +233,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
           return expandedToken.replace(catchWordsRegexp, (substring, g1, g2) => {
             const word = g1 || g2; // words are either in group 1 or group 2
 
-            if (isTokenStartRegExpStr.test(word)) {
+            if (isWordComposedOfTokens.test(word)) {
               return substring;
             }
             return `'${substring}'`;
