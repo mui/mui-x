@@ -49,7 +49,7 @@ describe('<DataGrid /> - Density', () => {
       `${Math.floor(value)}px`,
     );
   }
-  
+
   before(function beforeHook() {
     if (isJSDOM) {
       // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
