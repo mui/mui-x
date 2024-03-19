@@ -60,10 +60,13 @@ export default function ColumnAutosizingAsync() {
     setIsLoading(true);
     getFakeData(100)
       .then((data) => {
-        return ReactDOM.flushSync(() => {
+        ReactDOM.flushSync(() => {
           setIsLoading(false);
           apiRef.current.updateRows(data.rows);
         });
+        // `setTimeout` is required because `.updateRows` is an async
+        // function throttled to avoid choking on frequent changes.
+        return new Promise((resolve) => setTimeout(resolve, 0))
       })
       .then(() =>
         apiRef.current.autosizeColumns({
