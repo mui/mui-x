@@ -31,7 +31,6 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
             groupingValueGetter: (value, row) => row.lastName,
           },
         ]}
