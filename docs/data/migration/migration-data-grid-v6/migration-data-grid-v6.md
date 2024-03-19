@@ -309,23 +309,23 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 1. Move it to the `initialState.density` to initialize it.
 
-   ```diff
-   <DataGrid
-   -  density="compact"
-   +  initialState={{ density: "compact" }}
-   />
-   ```
+```diff
+ <DataGrid
+-  density="compact"
++  initialState={{ density: "compact" }}
+ />
+```
 
 2. Move it to the state and use `onDensityChange` callback to update the `density` prop accordingly for it to work as expected.
 
-   ```diff
-   const [density, setDensity] = React.useState<GridDensity>('compact');
-   <DataGrid
-   -  density="compact"
-   +  density={density}
-   +  onDensityChange={(newDensity) => setDensity(newDensity)}
-   />
-   ```
+```diff
+ const [density, setDensity] = React.useState<GridDensity>('compact');
+ <DataGrid
+-  density="compact"
++  density={density}
++  onDensityChange={(newDensity) => setDensity(newDensity)}
+ />
+```
 
 - The selector `gridDensityValueSelector` is removed, use the `gridDensitySelector` instead.
 
