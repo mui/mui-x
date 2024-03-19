@@ -64,10 +64,10 @@ export default function ColumnAutosizingAsync() {
           setIsLoading(false);
           apiRef.current.updateRows(data.rows);
         });
-        // `setTimeout` is required because `.updateRows` is an async
-        // function throttled to avoid choking on frequent changes.
-        return new Promise((resolve) => setTimeout(resolve, 0))
       })
+      // `sleep`/`setTimeout` is required because `.updateRows` is an
+      // async function throttled to avoid choking on frequent changes.
+      .then(() => sleep(0))
       .then(() =>
         apiRef.current.autosizeColumns({
           includeHeaders: true,
@@ -105,4 +105,10 @@ export default function ColumnAutosizingAsync() {
       </div>
     </div>
   );
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
