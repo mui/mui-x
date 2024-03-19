@@ -51,7 +51,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### Premium plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The Premium version includes everything from Pro, as well as advanced features for data analysis and large dataset management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
+The Premium version includes everything from Pro, as well as advanced features for data analysis and large dataset management, like row grouping with aggregation functions (for example "Sum") and the ability to export to Excel files.
 
 You can visit the [showcase page](/x/react-data-grid/demo/) for a comprehensible overview of all features exclusive to this plan.
 
