@@ -295,6 +295,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onDensityChange": {
+      "description": "Callback fired when the density changes.",
+      "typeDescriptions": { "density": "New density value." }
+    },
     "onFilterModelChange": {
       "description": "Callback fired when the Filter model changes before the filters are applied.",
       "typeDescriptions": {
