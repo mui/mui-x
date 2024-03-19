@@ -205,7 +205,7 @@ const buildSections = <TDate extends PickerValidDate>(
   // This RegExp tests if the beginning of a string corresponds to a supported token
   const validTokens = Object.keys(utils.formatTokenMap).sort((a, b) => b.length - a.length); // Sort to put longest word first
 
-  const regExpFirstWordInFormat = /^([a-zA-Z]+)$/;
+  const regExpFirstWordInFormat = /^([a-zA-Z]+)/;
   const regExpWordOnlyComposedOfTokens = new RegExp(`^(${validTokens.join('|')})*$`);
   const regExpFirstTokenInWord = new RegExp(`^(${validTokens.join('|')})`);
 
@@ -218,7 +218,7 @@ const buildSections = <TDate extends PickerValidDate>(
     const isEscapedChar = escapedPartOfCurrentChar != null;
     const firstWordInFormat = regExpFirstWordInFormat.exec(expandedFormat.slice(i))?.[1];
 
-    // The new word in the format is only composed of tokens.
+    // The first word in the format is only composed of tokens.
     // We extract those tokens to create a new sections.
     if (
       !isEscapedChar &&
