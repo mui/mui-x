@@ -544,6 +544,14 @@ DataGridPremiumRaw.propTypes = {
    */
   onAggregationModelChange: PropTypes.func,
   /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart: PropTypes.func,
+  /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.

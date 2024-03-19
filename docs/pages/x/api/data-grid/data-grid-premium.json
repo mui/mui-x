@@ -232,6 +232,10 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onBeforeClipboardPasteStart": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
+    },
     "onCellClick": {
       "type": { "name": "func" },
       "signature": {

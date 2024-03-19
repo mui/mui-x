@@ -399,7 +399,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (e.g. filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
 
 ### Accessibility
 

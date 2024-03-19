@@ -170,6 +170,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
   /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart?: (params: { data: string[][] }) => Promise<any>;
+  /**
    * Callback fired when the clipboard paste operation starts.
    */
   onClipboardPasteStart?: GridEventListener<'clipboardPasteStart'>;

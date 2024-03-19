@@ -249,6 +249,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onBeforeClipboardPasteStart": {
+      "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",
+      "typeDescriptions": { "params": "Params passed to the callback." }
+    },
     "onCellClick": {
       "description": "Callback fired when any cell is clicked.",
       "typeDescriptions": {
