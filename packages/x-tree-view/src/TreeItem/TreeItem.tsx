@@ -362,7 +362,7 @@ TreeItem.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The component used for the content node.
+   * The component used to render the content of the item.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,

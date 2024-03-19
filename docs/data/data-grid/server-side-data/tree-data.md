@@ -4,7 +4,7 @@ title: React Server-side tree data
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
-<p class="description">Tree data lazy-loading with server side data source.</p>
+<p class="description">Tree data lazy-loading with server-side data source.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.
