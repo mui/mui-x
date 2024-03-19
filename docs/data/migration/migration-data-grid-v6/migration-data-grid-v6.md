@@ -327,7 +327,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
  />
 ```
 
-- The selector `gridDensityValueSelector` is removed, use the `gridDensitySelector` instead.
+- The selector `gridDensityValueSelector` was removed, use the `gridDensitySelector` instead.
 
 <!-- ### Rows
 

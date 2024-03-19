@@ -43,9 +43,9 @@ The Data Grid exposes the `density` prop which supports the following values:
 - `compact`
 - `comfortable`
 
-The `density` prop supports controlled mode, which means you can set it programmatically in one of the following ways:
+You can set the density programmatically in one of the following ways:
 
-1. Initialize the density with the `initialState.density` prop.
+1. Uncontrolled – initialize the density with the `initialState.density` prop.
 
    ```tsx
    <DataGrid
@@ -55,7 +55,7 @@ The `density` prop supports controlled mode, which means you can set it programm
    />
    ```
 
-2. Control the density with the `density` prop. In order for the Data Grid to reflect the changes, you need to update the `density` prop when the user changes the density by listening to the `onDensityChange` callback. For more advanced use cases, you can also subscribe to the `densityChange` grid event.
+2. Controlled – pass the `density` and `onDensityChange` props. For more advanced use cases, you can also subscribe to the `densityChange` grid event.
 
    ```tsx
    const [density, setDensity] = React.useState<GridDensity>('compact');
