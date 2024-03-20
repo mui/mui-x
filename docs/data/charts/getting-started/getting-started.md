@@ -13,17 +13,19 @@ packageName: '@mui/x-charts'
 
 Run one of the following commands to add the MUI X Charts to your project:
 
+<!-- #default-branch-switch -->
+
 <codeblock storageKey="package-manager">
 ```bash npm
-npm install @mui/x-charts@next
+npm install @mui/x-charts
 ```
 
 ```bash yarn
-yarn add @mui/x-charts@next
+yarn add @mui/x-charts
 ```
 
 ```bash pnpm
-pnpm add @mui/x-charts@next
+pnpm add @mui/x-charts
 ```
 
 </codeblock>

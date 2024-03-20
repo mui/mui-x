@@ -34,7 +34,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   columnBufferPx: 150,
   rowBufferPx: 150,
   rowSelection: true,
-  density: 'standard',
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,
