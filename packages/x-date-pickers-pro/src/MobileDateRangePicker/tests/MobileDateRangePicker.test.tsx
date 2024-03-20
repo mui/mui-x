@@ -112,7 +112,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
+    it('should call onClose and onAccept when selecting the start date then the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -130,14 +130,17 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
-      // Change the end date
+      // Change the start date
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
       userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
-
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime('2018-01-02');
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime('2018-01-03');
       expect(onClose.callCount).to.equal(1);
     });
 

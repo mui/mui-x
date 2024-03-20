@@ -272,8 +272,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
       rangePositionDirtyRef.current[rangePosition] = true;
       const isFinalSelection =
-        // rangePositionDirtyRef.current.start &&
-        // rangePositionDirtyRef.current.end &&
+        rangePositionDirtyRef.current.start &&
+        rangePositionDirtyRef.current.end &&
         isRangeValid(utils, newRange);
       setValueAndGoToNextView(
         newRange,
