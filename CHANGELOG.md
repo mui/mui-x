@@ -21,6 +21,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 🚀 Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
 - ✨ Set focus on the focused Tree Item instead of the Tree View (#12226) @flaviendelangle
+- Controlled `density` for the Data Grid (#12332) @MBilalShafi
+- Dynamic virtualization range for the Data Grid (#12353) @romgrk
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
