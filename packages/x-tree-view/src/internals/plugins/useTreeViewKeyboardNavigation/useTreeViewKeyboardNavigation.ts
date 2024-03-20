@@ -34,17 +34,15 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
-  const hasFirstCharMapBeenUpdatedImperatively = React.useRef(false);
 
   const updateFirstCharMap = useEventCallback(
     (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
-      hasFirstCharMapBeenUpdatedImperatively.current = true;
       firstCharMap.current = callback(firstCharMap.current);
     },
   );
 
   React.useEffect(() => {
-    if (hasFirstCharMapBeenUpdatedImperatively.current) {
+    if (instance.isItemUpdatePrevented()) {
       return;
     }
 

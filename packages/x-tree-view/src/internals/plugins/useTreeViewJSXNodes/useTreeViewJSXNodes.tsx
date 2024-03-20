@@ -18,6 +18,8 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   instance,
   setState,
 }) => {
+  instance.preventItemUpdate();
+
   const insertJSXNode = useEventCallback((node: TreeViewNode) => {
     setState((prevState) => {
       if (prevState.nodes.nodeMap[node.id] != null) {
