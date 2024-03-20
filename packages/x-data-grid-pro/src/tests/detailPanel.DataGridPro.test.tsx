@@ -59,8 +59,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={({ id }) => (Number(id) % 2 === 0 ? 1 : 2) * rowHeight} // 50px for even rows, otherwise 100px
         getDetailPanelContent={() => <div />}
         rowHeight={rowHeight}
-        rowBuffer={0}
-        rowThreshold={0}
+        rowBufferPx={0}
         initialState={{
           detailPanel: {
             expandedRowIds: [0, 1],

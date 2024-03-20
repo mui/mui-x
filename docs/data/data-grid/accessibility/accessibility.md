@@ -16,28 +16,62 @@ WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
 This is the most common target for organizations so what we aims to support very well.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 
 You can change the density of the rows and the column header.
 
-### Density selector
+### Density selection from the toolbar
 
-To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-The user can then change the density of the Data Grid by using the density selector from the toolbar, as the following demo illustrates:
+To enable the density selection from the toolbar, you can do one of the following:
+
+1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
+2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
+
+The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
 
-To hide the density selector, add the `disableDensitySelector` prop to the Data Grid.
+To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
 
-### Density prop
+### Set the density programmatically
 
-Set the vertical density of the Data Grid using the `density` prop.
-This prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
+The Data Grid exposes the `density` prop which supports the following values:
+
+- `standard` (default)
+- `compact`
+- `comfortable`
+
+You can set the density programmatically in one of the following ways:
+
+1. Uncontrolled – initialize the density with the `initialState.density` prop.
+
+   ```tsx
+   <DataGrid
+     initialState={{
+       density: 'compact',
+     }}
+   />
+   ```
+
+2. Controlled – pass the `density` and `onDensityChange` props. For more advanced use cases, you can also subscribe to the `densityChange` grid event.
+
+   ```tsx
+   const [density, setDensity] = React.useState<GridDensity>('compact');
+
+   return (
+     <DataGrid
+       density={density}
+       onDensityChange={(newDensity) => setDensity(newDensity)}
+     />
+   );
+   ```
+
+The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the default density set to `compact`:
+The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
 
 {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
 
@@ -47,7 +81,7 @@ The Data Grid listens for keyboard interactions from the user and emits events i
 
 ### Tab sequence
 
-According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
+According to [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
 When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.

@@ -87,7 +87,22 @@ For convenience, you can also listen to these events using their respective prop
 - `onClipboardPasteStart`
 - `onClipboardPasteEnd`
 
-The demo below shows how to use these events to display a loading indicator while the clipboard paste operation is in progress:
+Additionally, there is the `onBeforeClipboardPasteStart` prop, which is called before the clipboard paste operation starts
+and can be used to cancel or confirm the paste operation:
+
+```tsx
+const onBeforeClipboardPasteStart = async () => {
+  const confirmed = window.confirm('Are you sure you want to paste?');
+  if (!confirmed) {
+    throw new Error('Paste operation cancelled');
+  }
+};
+
+<DataGridPremium onBeforeClipboardPasteStart={onBeforeClipboardPasteStart} />;
+```
+
+The demo below uses the [`Dialog`](/material-ui/react-dialog/) component for paste confirmation.
+If confirmed, the Data Grid displays a loading indicator during the paste operation.
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 

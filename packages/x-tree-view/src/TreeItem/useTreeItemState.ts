@@ -2,29 +2,29 @@ import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 
-export function useTreeItemState(nodeId: string) {
+export function useTreeItemState(itemId: string) {
   const {
     instance,
     selection: { multiSelect, checkboxSelection, disableSelection },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const expandable = instance.isNodeExpandable(nodeId);
-  const expanded = instance.isNodeExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
-  const disabled = instance.isNodeDisabled(nodeId);
+  const expandable = instance.isNodeExpandable(itemId);
+  const expanded = instance.isNodeExpanded(itemId);
+  const focused = instance.isNodeFocused(itemId);
+  const selected = instance.isNodeSelected(itemId);
+  const disabled = instance.isNodeDisabled(itemId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       if (!focused) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, itemId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       // If already expanded and trying to toggle selection don't close
-      if (expandable && !(multiple && instance.isNodeExpanded(nodeId))) {
-        instance.toggleNodeExpansion(event, nodeId);
+      if (expandable && !(multiple && instance.isNodeExpanded(itemId))) {
+        instance.toggleNodeExpansion(event, itemId);
       }
     }
   };
@@ -32,7 +32,7 @@ export function useTreeItemState(nodeId: string) {
   const handleSelection = (event: React.ChangeEvent | React.MouseEvent) => {
     if (!disabled) {
       if (!focused) {
-        instance.focusNode(event, nodeId);
+        instance.focusItem(event, itemId);
       }
 
       const nativeEvent = (event.type === 'change'
@@ -44,12 +44,12 @@ export function useTreeItemState(nodeId: string) {
 
       if (multiple) {
         if (nativeEvent.shiftKey) {
-          instance.selectRange(event, { end: nodeId });
+          instance.selectRange(event, { end: itemId });
         } else {
-          instance.selectNode(event, nodeId, true);
+          instance.selectNode(event, itemId, true);
         }
       } else {
-        instance.selectNode(event, nodeId);
+        instance.selectNode(event, itemId);
       }
     }
   };

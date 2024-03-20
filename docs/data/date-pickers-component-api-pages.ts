@@ -164,6 +164,11 @@ const apiPages: MuiPage[] = [
     title: 'PickersLayout',
   },
   {
+    pathname: '/x/api/date-pickers/pickers-range-calendar-header',
+    title: 'PickersRangeCalendarHeader',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/pickers-section-list',
     title: 'PickersSectionList',
   },

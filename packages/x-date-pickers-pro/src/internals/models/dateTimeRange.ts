@@ -8,7 +8,12 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DayRangeValidationProps } from './dateRange';
-import { DateTimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
+import {
+  DateTimeRangeValidationError,
+  RangeFieldSection,
+  DateRange,
+  RangeFieldSeparatorProps,
+} from '../../models';
 
 export interface UseDateTimeRangeFieldProps<
   TDate extends PickerValidDate,
@@ -26,6 +31,7 @@ export interface UseDateTimeRangeFieldProps<
       >,
       'format'
     >,
+    RangeFieldSeparatorProps,
     DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,

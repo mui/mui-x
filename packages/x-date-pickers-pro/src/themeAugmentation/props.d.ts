@@ -3,7 +3,8 @@ import { DateRangePickerDayProps } from '../DateRangePickerDay';
 import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
-import { DateRangePickerProps, DateRangePickerToolbarProps } from '../DateRangePicker';
+import { DateRangePickerProps } from '../DateRangePicker';
+import { ExportedDateRangePickerToolbarProps } from '../DateRangePicker/DateRangePickerToolbar';
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
 import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
@@ -16,13 +17,15 @@ import { DesktopDateTimeRangePickerProps } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicker';
 import { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
 import { ExportedDateTimeRangePickerToolbarProps } from '../DateTimeRangePicker/DateTimeRangePickerToolbar';
+import { ExportedPickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<PickerValidDate>;
   MuiDateRangePickerDay: DateRangePickerDayProps<PickerValidDate>;
   MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
-  MuiDateRangePickerToolbar: DateRangePickerToolbarProps<PickerValidDate>;
+  MuiDateRangePickerToolbar: ExportedDateRangePickerToolbarProps;
   MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
+  MuiPickersRangeCalendarHeader: ExportedPickersRangeCalendarHeaderProps<PickerValidDate>;
 
   // Multi input range fields
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<PickerValidDate, any>;

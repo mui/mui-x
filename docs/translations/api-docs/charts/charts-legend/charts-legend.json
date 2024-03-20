@@ -6,6 +6,7 @@
       "description": "The direction of the legend layout. The default depends on the chart."
     },
     "hidden": { "description": "Set to true to hide the legend." },
+    "position": { "description": "The position of the legend." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },

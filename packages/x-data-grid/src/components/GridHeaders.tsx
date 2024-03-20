@@ -54,18 +54,15 @@ function GridHeaders() {
     cellTabIndexState === null
   );
 
-  const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
-    columnHeadersContainerElementRef: columnsContainerRef,
-    columnHeadersElementRef: columnHeadersRef,
+    columnHeadersContainerRef: columnsContainerRef,
   });
 
   return (
     <rootProps.slots.columnHeaders
       ref={columnsContainerRef}
-      innerRef={columnHeadersRef}
       visibleColumns={visibleColumns}
       filterColumnLookup={filterColumnLookup}
       sortColumnLookup={sortColumnLookup}

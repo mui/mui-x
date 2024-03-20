@@ -147,14 +147,7 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
-      const initialHeights = {} as Record<string, number>;
-      /* eslint-disable-next-line no-restricted-syntax */
-      for (const key in sizes) {
-        if (/^base[A-Z]/.test(key)) {
-          initialHeights[key] = sizes[key];
-        }
-      }
-      initialHeights.baseCenter = baseRowHeight;
+      const initialHeights = { baseCenter: baseRowHeight } as Record<string, number>;
 
       if (getRowSpacing) {
         const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
@@ -185,21 +178,18 @@ export const useGridRowsMeta = (
     const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
       positions.push(acc);
 
-      let maximumBaseSize = 0;
       let otherSizes = 0;
 
       const processedSizes = calculateRowProcessedSizes(row);
       /* eslint-disable-next-line no-restricted-syntax, guard-for-in */
       for (const key in processedSizes) {
         const value = processedSizes[key];
-        if (/^base[A-Z]/.test(key)) {
-          maximumBaseSize = value > maximumBaseSize ? value : maximumBaseSize;
-        } else {
+        if (key !== 'baseCenter') {
           otherSizes += value;
         }
       }
 
-      return acc + maximumBaseSize + otherSizes;
+      return acc + processedSizes.baseCenter + otherSizes;
     }, 0);
 
     pinnedRows?.top?.forEach((row) => {

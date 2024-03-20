@@ -5,6 +5,7 @@ import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-da
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
+  gridRenderContextSelector,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
 
@@ -15,22 +16,36 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-export function GridPinnedRows({ position, virtualScroller, ...other }: GridPinnedRowsProps) {
+export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProps) {
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
+  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
+  const rows = pinnedRowsData[position];
+
+  const pinnedRenderContext = React.useMemo(
+    () => ({
+      firstRowIndex: 0,
+      lastRowIndex: rows.length,
+      firstColumnIndex: renderContext.firstColumnIndex,
+      lastColumnIndex: renderContext.lastColumnIndex,
+    }),
+    [rows, renderContext.firstColumnIndex, renderContext.lastColumnIndex],
+  );
+
+  if (rows.length === 0) {
+    return null;
+  }
+
   const pinnedRows = virtualScroller.getRows({
     position,
-    rows: pinnedRowsData[position],
+    rows,
+    renderContext: pinnedRenderContext,
   });
 
   return (
-    <div
-      {...other}
-      className={clsx(classes.root, other.className, gridClasses[`pinnedRows--${position}`])}
-      role="presentation"
-    >
+    <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="presentation">
       {pinnedRows}
     </div>
   );
