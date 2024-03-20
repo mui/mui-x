@@ -36,9 +36,8 @@
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
-    "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -553,7 +552,7 @@
         "returned": "Promise<R> | R"
       }
     },
-    "rowBuffer": { "type": { "name": "number" }, "default": "3" },
+    "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
       "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
@@ -578,7 +577,6 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
-    "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },

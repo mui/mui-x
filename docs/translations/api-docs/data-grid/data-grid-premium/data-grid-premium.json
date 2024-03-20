@@ -36,17 +36,14 @@
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard."
     },
-    "columnBuffer": {
-      "description": "Number of extra columns to be rendered before/after the visible slice."
+    "columnBufferPx": {
+      "description": "Column region in pixels to render before/after the viewport"
     },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
     "columns": {
       "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
-    },
-    "columnThreshold": {
-      "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
     },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
@@ -578,9 +575,7 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "rowBuffer": {
-      "description": "Number of extra rows to be rendered before/after the visible slice."
-    },
+    "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
       "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."
     },
@@ -602,9 +597,6 @@
     },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
-    },
-    "rowThreshold": {
-      "description": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."

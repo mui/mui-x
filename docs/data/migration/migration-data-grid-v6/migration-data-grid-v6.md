@@ -114,9 +114,10 @@ As a result, the following changes have been made:
 - Pinned row and column sections are now contained in the virtual scroller.
 - The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
 
-<!-- ### Renamed props
+## Renamed props
 
-- -->
+- The props `rowBuffer` and `columnBuffer` were renamed to `rowBufferPx` and `columnBufferPx`.
+  Their value is now a pixel value rather than a number of items. Their default value is now `150`.
 
 ### Removed props
 
@@ -143,6 +144,8 @@ As a result, the following changes have been made:
   };
   ```
 
+- The props `rowThreshold` and `columnThreshold` have been removed.
+  If you had the `rowThreshold` prop set to `0` to force new rows to be rendered more often – this is no longer necessary.
 - ✅ Some feature flags were removed from the `experimentalFeatures` prop. These features are now stable and enabled by default:
   - [`columnGrouping`](/x/react-data-grid/column-groups/)
   - [`clipboardPaste`](/x/react-data-grid/clipboard/#clipboard-paste)
