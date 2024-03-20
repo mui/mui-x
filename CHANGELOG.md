@@ -3,6 +3,176 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.0.0
+
+_Mar 20, 2024_
+
+We're excited to [announce the first v7 stable release](https://mui.com/blog/mui-x-v7/)! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Migration guides are available with a complete list of the breaking changes:
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v6/)
+- [Date Pickers](https://mui.com/x/migration/migration-pickers-v6/)
+- [Tree View](https://mui.com/x/migration/migration-tree-view-v6/)
+- [Charts](https://mui.com/x/migration/migration-charts-v6/)
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
+- ✨ Set focus on the focused Tree Item instead of the Tree View (#12226) @flaviendelangle
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### Breaking changes
+
+- The `density` is a [controlled prop](https://mui.com/x/react-data-grid/accessibility/#set-the-density-programmatically) now, if you were previously passing the `density` prop to the Data Grid, you will need to do one of the following:
+
+1. Move it to the `initialState.density` to initialize it.
+
+   ```diff
+   <DataGrid
+   -  density="compact"
+   +  initialState={{ density: "compact" }}
+   />
+   ```
+
+2. Move it to the state and use `onDensityChange` callback to update the `density` prop accordingly for it to work as expected.
+
+   ```diff
+   + const [density, setDensity] = React.useState<GridDensity>('compact');
+   <DataGrid
+   -  density="compact"
+   +  density={density}
+   +  onDensityChange={(newDensity) => setDensity(newDensity)}
+   />
+   ```
+
+- The selector `gridDensityValueSelector` was removed, use the `gridDensitySelector` instead.
+
+#### `@mui/x-data-grid@7.0.0`
+
+- [DataGrid] Allow to control the grid density (#12332) @MBilalShafi
+- [DataGrid] Dynamic virtualization range (#12353) @romgrk
+- [DataGrid] Fix `ElementType` usage (#12479) @cherniavskii
+- [DataGrid] Fix cell value formatting on copy (#12357) @sai6855
+- [DataGrid] Make `rows` an optional prop (#12478) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.0`.
+
+#### `@mui/x-data-grid-premium@7.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.0`, plus:
+
+- [DataGridPremium] Add support for confirmation before clipboard paste (#12225) @cherniavskii
+- [DataGridPremium] Fix single grouping column sorting (#9679) @cherniavskii
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The `DesktopDateTimePicker` view rendering has been optimized by using the same technique as for `DesktopDateTimeRangePicker`.
+  - The `dateTimeViewRenderers` have been removed in favor of reusing existing time view renderers (`renderTimeViewClock`, `renderDigitalClockTimeView` and `renderMultiSectionDigitalClockTimeView`) and date view renderer (`renderDateViewCalendar`).
+  - Passing `renderTimeViewClock` to time view renderers will no longer revert to the old behavior of rendering only date or time view.
+
+#### `@mui/x-date-pickers@7.0.0`
+
+- [fields] Allow to override the separator between the start and the end date in all range fields (#12174) @flaviendelangle
+- [fields] Support format without separator (#12489) @flaviendelangle
+- [pickers] Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.0.0`
+
+- [charts] Fix small typo in `CartesianContextProvider` (#12461) @Janpot
+
+### Tree View
+
+#### Breaking changes
+
+- The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-    <TreeItem label='Item 1' nodeId='one'>
++    <TreeItem label='Item 1' itemId='one'>
+ </TreeView>
+```
+
+- The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+  This change will allow new features that require the focus to be on the Tree Item,
+  like the drag and drop reordering of items.
+  It also solves several issues with focus management,
+  like the inability to scroll to the focused item when a lot of items are rendered.
+
+  This will mostly impact how you write tests to interact with the Tree View:
+
+  For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
+
+  ```diff
+   it('test example on first item', () => {
+  -  const { getByRole } = render(
+  +  const { getAllByRole } = render(
+       <SimpleTreeView>
+         <TreeItem nodeId="one" />
+         <TreeItem nodeId="two" />
+      </SimpleTreeView>
+     );
+
+  -  const tree = getByRole('tree');
+  +  const firstTreeItem = getAllByRole('treeitem')[0];
+     act(() => {
+  -    tree.focus();
+  +    firstTreeItem.focus();
+     });
+  -  fireEvent.keyDown(tree, { key: 'ArrowDown' });
+  +  fireEvent.keyDown(firstTreeItem, { key: 'ArrowDown' });
+   })
+  ```
+
+#### `@mui/x-tree-view@7.0.0`
+
+- [TreeView] Rename `nodeId` to `itemId` (#12418) @noraleonte
+- [TreeView] Set focus on the focused Tree Item instead of the Tree View (#12226) @flaviendelangle
+- [TreeView] Update JSDoc of the `ContentComponent` prop to avoid using the word "node" (#12476) @flaviendelangle
+
+### `@mui/x-codemod@7.0.0`
+
+- [codemod] Add a codemod and update the grid migration guide (#12488) @MBilalShafi
+
+### Docs
+
+- [docs] Finalize migration guide (#12501) @noraleonte
+- [docs] Fix nested cells alignment in the popular features demo (#12450) @cherniavskii
+- [docs] Fix some Vale errors (#12469) @oliviertassinari
+- [docs] Remove mentions of pre release (#12513) @noraleonte
+- [docs] Update branch name and tags (#12498) @cherniavskii
+- [docs] Update links to v6 (#12496) @cherniavskii
+- [docs] Update links to v7 docs (#12500) @noraleonte
+- [docs] Update supported versions (#12508) @joserodolfofreitas
+
+### Core
+
+- [core] Bump `@mui/material` peer dependency for all packages (#12516) @LukasTy
+- [core] Fix `no-restricted-imports` ESLint rule not working for data grid packages (#12477) @cherniavskii
+- [core] Lower the frequency of no-response action runs (#12491) @michaldudak
+- [core] Remove leftover `legacy` `browserlistrc` entry (#12415) @LukasTy
+- [core] Update NPM tag (#12511) @cherniavskii
+- [core] Use Circle CI context @oliviertassinari
+- Fix checkbox selection is keeping selection when filtering (#11751) @g1mishra
+- [DateTimeRangePicker] Add component `JSDoc` (#12518) @LukasTy
+- [license] Fix grammar on expired license error message (#12460) @joserodolfofreitas
+
 ## 7.0.0-beta.7
 
 _Mar 14, 2024_
@@ -324,33 +494,33 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
 - The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
   This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
- When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
-  ```diff
-    function MyCustomTextField(props) {
-      const {
-  +     // Should be ignored
-  +     enableAccessibleFieldDOMStructure,
-        // ... rest of the props you are using
-      } = props;
+```diff
+  function MyCustomTextField(props) {
+    const {
++     // Should be ignored
++     enableAccessibleFieldDOMStructure,
+      // ... rest of the props you are using
+    } = props;
 
-      return ( /* Some UI to edit the date */ )
-    }
+    return ( /* Some UI to edit the date */ )
+  }
 
-    function MyCustomField(props) {
-      const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
-        ...props,
-  +     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
-  +     enableAccessibleFieldDOMStructure: false,
-      });
+  function MyCustomField(props) {
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...props,
++     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     enableAccessibleFieldDOMStructure: false,
+    });
 
-      return <MyCustomTextField ref={ref} {...fieldResponse} />;
-    }
+    return <MyCustomTextField ref={ref} {...fieldResponse} />;
+  }
 
-    function App() {
-      return <DatePicker slots={{ field: MyCustomField }} />;
-    }
-  ```
+  function App() {
+    return <DatePicker slots={{ field: MyCustomField }} />;
+  }
+```
 
 - The following internal types were exported by mistake and have been removed from the public API:
 
