@@ -30,25 +30,25 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - The `density` is a [controlled prop](https://mui.com/x/react-data-grid/accessibility/#set-the-density-programmatically) now, if you were previously passing the `density` prop to the Data Grid, you will need to do one of the following:
 
-1. Move it to the `initialState.density` to initialize it.
+  1. Move it to the `initialState.density` to initialize it.
 
-   ```diff
+  ```diff
    <DataGrid
-   -  density="compact"
-   +  initialState={{ density: "compact" }}
+  -  density="compact"
+  +  initialState={{ density: "compact" }}
    />
-   ```
+  ```
 
-2. Move it to the state and use `onDensityChange` callback to update the `density` prop accordingly for it to work as expected.
+  2. Move it to the state and use `onDensityChange` callback to update the `density` prop accordingly for it to work as expected.
 
-   ```diff
-   + const [density, setDensity] = React.useState<GridDensity>('compact');
+  ```diff
+  + const [density, setDensity] = React.useState<GridDensity>('compact');
    <DataGrid
-   -  density="compact"
-   +  density={density}
-   +  onDensityChange={(newDensity) => setDensity(newDensity)}
+  -  density="compact"
+  +  density={density}
+  +  onDensityChange={(newDensity) => setDensity(newDensity)}
    />
-   ```
+  ```
 
 - The selector `gridDensityValueSelector` was removed, use the `gridDensitySelector` instead.
 
