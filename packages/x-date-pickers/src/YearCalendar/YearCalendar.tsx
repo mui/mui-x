@@ -112,6 +112,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     hasFocus,
     onFocusedViewChange,
     yearsPerRow,
+    yearsReversed,
     timezone: timezoneProp,
     gridLabelId,
     ...other
@@ -221,22 +222,25 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     );
   }, [selectedYear]);
 
+  const horizontalDirection = theme.direction === 'ltr' && !yearsReversed ? 1 : -1;
+  const verticalDirection = !yearsReversed ? yearsPerRow * 1 : yearsPerRow * -1;
+
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {
       case 'ArrowUp':
-        focusYear(year - yearsPerRow);
+        focusYear(year - verticalDirection);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusYear(year + yearsPerRow);
+        focusYear(year + verticalDirection);
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
+        focusYear(year - horizontalDirection);
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
+        focusYear(year + horizontalDirection);
         event.preventDefault();
         break;
       default:
@@ -282,6 +286,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
+  const yearRange = utils.getYearRange([minDate, maxDate]);
+  if (yearsReversed) {
+    yearRange.reverse();
+  }
+
   return (
     <YearCalendarRoot
       ref={handleRef}
@@ -291,7 +300,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
       aria-labelledby={gridLabelId}
       {...other}
     >
-      {utils.getYearRange([minDate, maxDate]).map((year) => {
+      {yearRange.map((year) => {
         const yearNumber = utils.getYear(year);
         const isSelected = yearNumber === selectedYear;
         const isDisabled = disabled || isYearDisabled(year);
@@ -414,4 +423,8 @@ YearCalendar.propTypes = {
    * @default 3
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Display years from newest to oldest (used on year only picker)
+   */
+  yearsReversed: PropTypes.bool,
 } as any;
