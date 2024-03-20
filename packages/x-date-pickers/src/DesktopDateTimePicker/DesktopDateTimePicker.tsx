@@ -72,8 +72,9 @@ const rendererInterceptor = function rendererInterceptor<
     focusedView: null,
     sx: [
       {
-        borderBottom: 0,
-        width: 'auto',
+        [`&.${multiSectionDigitalClockClasses.root}`]: {
+          borderBottom: 0,
+        },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
             maxHeight: VIEW_HEIGHT,
