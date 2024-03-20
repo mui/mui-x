@@ -143,11 +143,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSelection: boolean;
   /**
-   * Set the density of the Data Grid.
-   * @default "standard"
-   */
-  density: GridDensity;
-  /**
    * If `true`, column filters are disabled.
    * @default false
    */
