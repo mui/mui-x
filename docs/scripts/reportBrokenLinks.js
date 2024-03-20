@@ -26,12 +26,11 @@ const availableLinksCore = {};
 const usedLinksX = {};
 const usedLinksCore = {};
 
-parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX, '');
+parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX);
 parseDocFolder(
   path.resolve(__dirname, '../../node_modules/@mui/monorepo/docs/pages/'),
   availableLinksCore,
   usedLinksCore,
-  '',
 );
 
 function removeApiLinkHash(link) {
