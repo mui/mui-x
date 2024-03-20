@@ -3,13 +3,17 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
-export default function MultiInputFieldSeparatorSlotProps() {
+export default function RangeFieldDateSeparator() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
-        <DateRangePicker slotProps={{ fieldSeparator: { variant: 'body2' } }} />
-        <DateRangePicker slotProps={{ fieldSeparator: { sx: { opacity: 0.5 } } }} />
+        <DateRangePicker slotProps={{ field: { dateSeparator: 'to' } }} />
+        <DateRangePicker
+          slotProps={{ field: { dateSeparator: 'to' } }}
+          slots={{ field: SingleInputDateRangeField }}
+        />
       </DemoContainer>
     </LocalizationProvider>
   );
