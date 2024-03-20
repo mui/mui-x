@@ -45,7 +45,7 @@ export interface GridExperimentalFeatures {
  * The props users can give to the `DataGrid` component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
-  Partial<DataGridPropsWithDefaultValues> &
+  Partial<DataGridPropsWithDefaultValues<R>> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
     DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
@@ -105,7 +105,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
  */
-export interface DataGridPropsWithDefaultValues {
+export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
   /**
    * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
@@ -275,6 +275,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default "client"
    */
   paginationMode: GridFeatureMode;
+  /**
+   * Set of rows of type [[GridRowsProp]].
+   * @default []
+   */
+  rows: GridRowsProp<R>;
   /**
    * Sets the height in pixel of a row in the Data Grid.
    * @default 52
@@ -723,10 +728,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce?: string;
-  /**
-   * Set of rows of type [[GridRowsProp]].
-   */
-  rows: GridRowsProp<R>;
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.

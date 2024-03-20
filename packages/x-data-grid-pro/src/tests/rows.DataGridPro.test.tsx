@@ -21,13 +21,14 @@ import {
   GridApi,
   gridFocusCellSelector,
   gridClasses,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps;
+  let baselineProps: DataGridProProps & { rows: GridValidRowModel };
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
