@@ -53,11 +53,9 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
                     className={classes.mark}
                   />
                 </ChartsTooltipCell>
-
                 <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
                   {label ? <Typography>{label}</Typography> : null}
                 </ChartsTooltipCell>
-
                 <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                   <Typography>{formattedValue}</Typography>
                 </ChartsTooltipCell>
