@@ -43,7 +43,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -239,6 +239,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     onRangePositionChange: inOnRangePositionChange,
   });
 
+  const rangePositionDirtyRef = React.useRef<Record<RangePosition, boolean>>({
+    start: false,
+    end: false,
+  });
+
   const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
     if (rangePosition !== position) {
       onRangePositionChange(position);
@@ -265,9 +270,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         onRangePositionChange(nextSelection);
       }
 
+      rangePositionDirtyRef.current[rangePosition] = true;
+      const isFullRangeSelected =
+        rangePositionDirtyRef.current.start &&
+        rangePositionDirtyRef.current.end &&
+        isRangeValid(utils, newRange);
       setValueAndGoToNextView(
         newRange,
-        isRangeValid(utils, newRange) || !isNextSectionAvailable ? 'finish' : 'partial',
+        isFullRangeSelected || !isNextSectionAvailable ? 'finish' : 'partial',
         view,
       );
     },
