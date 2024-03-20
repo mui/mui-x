@@ -65,7 +65,12 @@ describe('<DateRangeCalendar />', () => {
       expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
       expect(onChange.lastCall.firstArg[1]).to.equal(null);
 
-      fireEvent.click(screen.getByRole('button', { name: 'Next month' }));
+      // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
+      const [visibleButton] = screen.getAllByRole('button', {
+        hidden: true,
+        name: 'Next month',
+      });
+      fireEvent.click(visibleButton);
       clock.runToLast();
 
       fireEvent.click(getPickerDay('30', 'March 2019'));
