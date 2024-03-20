@@ -48,6 +48,12 @@
   ],
   "classes": [
     {
+      "key": "checkbox",
+      "className": "MuiTreeItem-checkbox",
+      "description": "Styles applied to the checkbox element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiTreeItem-content",
       "description": "Styles applied to the content element.",
@@ -98,7 +104,7 @@
     {
       "key": "selected",
       "className": "Mui-selected",
-      "description": "State class applied to the content element when selected and not using the checkbox selection.",
+      "description": "State class applied to the content element when selected.",
       "isGlobal": true
     }
   ],

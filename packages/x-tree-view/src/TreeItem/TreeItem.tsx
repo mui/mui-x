@@ -88,7 +88,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   [`&.${treeItemClasses.focused}`]: {
     backgroundColor: (theme.vars || theme).palette.action.focus,
   },
-  [`.${treeItemClasses.selected}`]: {
+  [`&.${treeItemClasses.selected}`]: {
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),

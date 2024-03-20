@@ -14,7 +14,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     root: string;
     /** State class applied to the content element when expanded. */
     expanded: string;
-    /** State class applied to the content element when selected and not using the checkbox selection. */
+    /** State class applied to the content element when selected. */
     selected: string;
     /** State class applied to the content element when clicking it causes an action. */
     interactive: string;
@@ -83,6 +83,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
   } = useTreeItemState(itemId);
 
@@ -114,7 +115,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleCheckboxSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleSelection(event);
+    handleCheckboxSelection(event);
   };
 
   return (
@@ -123,7 +124,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       {...other}
       className={clsx(className, classes.root, {
         [classes.expanded]: expanded,
-        [classes.selected]: selected && !checkboxSelection,
+        [classes.selected]: selected,
         [classes.interactive]: (!checkboxSelection && !disableSelection) || expandable,
         [classes.focused]: focused,
         [classes.disabled]: disabled,

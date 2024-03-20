@@ -61,6 +61,12 @@
   ],
   "classes": [
     {
+      "key": "checkbox",
+      "className": "MuiTreeItem2-checkbox",
+      "description": "Styles applied to the checkbox element.",
+      "isGlobal": false
+    },
+    {
       "key": "disabled",
       "className": "Mui-disabled",
       "description": "State class applied to the element when disabled.",
@@ -87,7 +93,7 @@
     {
       "key": "selected",
       "className": "Mui-selected",
-      "description": "State class applied to the content element when selected and not using the checkbox selection.",
+      "description": "State class applied to the content element when selected.",
       "isGlobal": true
     }
   ],

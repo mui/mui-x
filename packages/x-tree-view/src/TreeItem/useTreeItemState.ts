@@ -29,21 +29,16 @@ export function useTreeItemState(itemId: string) {
     }
   };
 
-  const handleSelection = (event: React.ChangeEvent | React.MouseEvent) => {
+  const handleSelection = (event: React.MouseEvent) => {
     if (!disabled) {
       if (!focused) {
         instance.focusItem(event, itemId);
       }
 
-      const nativeEvent = (event.type === 'change'
-        ? event.nativeEvent
-        : event) as unknown as React.MouseEvent;
-
-      const multiple =
-        multiSelect && (nativeEvent.shiftKey || nativeEvent.ctrlKey || nativeEvent.metaKey);
+      const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       if (multiple) {
-        if (nativeEvent.shiftKey) {
+        if (event.shiftKey) {
           instance.selectRange(event, { end: itemId });
         } else {
           instance.selectNode(event, itemId, true);
@@ -51,6 +46,18 @@ export function useTreeItemState(itemId: string) {
       } else {
         instance.selectNode(event, itemId);
       }
+    }
+  };
+
+  const handleCheckboxSelection = (event: React.ChangeEvent) => {
+    if (multiSelect) {
+      if ((event.nativeEvent as PointerEvent).shiftKey) {
+        instance.selectRange(event, { end: itemId });
+      } else {
+        instance.selectNode(event, itemId, multiSelect);
+      }
+    } else {
+      instance.selectNode(event, itemId);
     }
   };
 
@@ -71,6 +78,7 @@ export function useTreeItemState(itemId: string) {
     checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
   };
 }

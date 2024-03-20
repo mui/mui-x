@@ -14,6 +14,10 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {
+    "checkbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the checkbox element"
+    },
     "disabled": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the element",
@@ -37,7 +41,7 @@
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "selected and not using the checkbox selection"
+      "conditions": "selected"
     }
   },
   "slotDescriptions": {

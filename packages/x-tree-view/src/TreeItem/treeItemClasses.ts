@@ -10,7 +10,7 @@ export interface TreeItemClasses {
   content: string;
   /** State class applied to the content element when expanded. */
   expanded: string;
-  /** State class applied to the content element when selected and not using the checkbox selection. */
+  /** State class applied to the content element when selected. */
   selected: string;
   /** State class applied to the content element when clicking it causes an action. */
   interactive: string;
