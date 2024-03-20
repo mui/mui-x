@@ -27,7 +27,7 @@ import { DateRangePosition } from './DateRangeCalendar.types';
 const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-const dynamicShouldDisableDate = (date, position: DateRangePosition) => {
+const dynamicShouldDisableDate = (date: any, position: DateRangePosition) => {
   if (position === 'end') {
     return adapterToUse.getDate(date) % 3 === 0;
   }
@@ -61,26 +61,17 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      fireEvent.click(getPickerDay('1', 'January 2019'));
+      fireEvent.click(getPickerDay('19', 'January 2019'));
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).to.equal(null);
 
-      // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
-      const [visibleButton] = screen.getAllByRole('button', {
-        hidden: true,
-        name: 'Next month',
-      });
-      fireEvent.click(visibleButton);
+      fireEvent.click(screen.getByRole('button', { name: 'Next month' }));
       clock.runToLast();
-      fireEvent.click(getPickerDay('19', 'March 2019'));
 
+      fireEvent.click(getPickerDay('30', 'March 2019'));
       expect(onChange.callCount).to.equal(2);
-
-      const rangeOn1stCall = onChange.firstCall.firstArg;
-      expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
-      expect(rangeOn1stCall[1]).to.equal(null);
-
-      const rangeOn2ndCall = onChange.lastCall.firstArg;
-      expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
-      expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-03-30');
     });
 
     it('should continue start selection if selected "end" date is before start', () => {
@@ -91,16 +82,74 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('30', 'January 2019'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-30');
+      expect(onChange.lastCall.firstArg[1]).to.equal(null);
+
       fireEvent.click(getPickerDay('19', 'January 2019'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).to.equal(null);
 
       expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
 
       fireEvent.click(getPickerDay('30', 'January 2019'));
 
       expect(onChange.callCount).to.equal(3);
-      const range = onChange.lastCall.firstArg;
-      expect(range[0]).to.toEqualDateTime(new Date(2019, 0, 19));
-      expect(range[1]).to.toEqualDateTime(new Date(2019, 0, 30));
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-30');
+    });
+
+    it('should select the end date then the start date when defaultRangePosition="end"', () => {
+      const onChange = spy();
+
+      render(
+        <DateRangeCalendar
+          onChange={onChange}
+          referenceDate={adapterToUse.date('2019-01-01')}
+          defaultRangePosition="end"
+        />,
+      );
+
+      fireEvent.click(getPickerDay('30', 'January 2019'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg[0]).to.equal(null);
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-30');
+
+      fireEvent.click(getPickerDay('19', 'January 2019'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-30');
+    });
+
+    it('should continue end selection if selected "start" date is after end (defaultRangePosition="end")', () => {
+      const onChange = spy();
+
+      render(
+        <DateRangeCalendar
+          onChange={onChange}
+          referenceDate={adapterToUse.date('2019-01-01')}
+          defaultRangePosition="end"
+        />,
+      );
+
+      fireEvent.click(getPickerDay('19', 'January 2019'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg[0]).to.equal(null);
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-19');
+
+      fireEvent.click(getPickerDay('30', 'January 2019'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg[0]).to.equal(null);
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-30');
+
+      expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
+
+      fireEvent.click(getPickerDay('19', 'January 2019'));
+
+      expect(onChange.callCount).to.equal(3);
+      expect(onChange.lastCall.firstArg[0]).toEqualDateTime('2019-01-19');
+      expect(onChange.lastCall.firstArg[1]).toEqualDateTime('2019-01-30');
     });
 
     it('should highlight the selected range of dates', () => {
