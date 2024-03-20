@@ -119,6 +119,16 @@ type DesktopDateRangePickerComponent = (<
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeRangePicker](https://mui.com/x/react-date-pickers/date-time-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
+ */
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
