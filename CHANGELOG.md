@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.8
+
+_Mar 20, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible.
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.8`
+
+- [DataGrid] Fix `ElementType` usage (#12505) @cherniavskii
+- [DataGrid] Fix cell value formatting on copy (#12483) @sai6855
+- [DataGrid] Fix checkbox selection when filtering (#12485) @g1mishra
+
+#### `@mui/x-data-grid-pro@6.19.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.8`.
+
+#### `@mui/x-data-grid-premium@6.19.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.8`, plus:
+
+- [DataGridPremium] Add support for confirmation before clipboard paste (#12466) @cherniavskii
+
+### Docs
+
+- [docs] Update links to v7 (#12495) @cherniavskii
+
 ## 6.19.7
 
 _Mar 14, 2024_
