@@ -11,6 +11,8 @@ We'd like to offer a big thanks to @LukasTy who made this release possible.
 
 ### Date Pickers
 
+This is a test
+
 #### `@mui/x-date-pickers@6.19.7`
 
 - [pickers] Keep the existing time when looking for closest enabled date (#12410) @LukasTy
