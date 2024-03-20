@@ -69,8 +69,11 @@ export type DateTimePickerViewRenderers<
 > = PickerViewRendererLookup<
   TDate | null,
   TView,
-  DateViewRendererProps<TDate, TView> &
-    TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+  Omit<DateViewRendererProps<TDate, TView>, 'slots' | 'slotProps'> &
+    Omit<
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      'slots' | 'slotProps'
+    >,
   TAdditionalProps
 >;
 
