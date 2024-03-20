@@ -24,6 +24,8 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
+const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
+
 const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
@@ -562,6 +564,91 @@ describe('<DateRangeCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       userEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+    });
+  });
+
+  TIMEZONE_TO_TEST.forEach((timezone) => {
+    describe(`timezone change from utc to ${timezone}`, () => {
+      it('on timezone change the rendered UI should display the Calendar of same month', () => {
+        // Render the component with initial timezone prop
+        const { rerender } = render(<DateRangeCalendar timezone="UTC" />);
+
+        // Create a map of buttons with their indices for the initial render
+        const renderButtonsMap = {};
+        screen.getAllByRole('gridcell').forEach((element, index) => {
+          if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+            const numberMatch = element.textContent.trim().match(/\d+/);
+            if (numberMatch) {
+              const number = parseInt(numberMatch[0], 10);
+              renderButtonsMap[index] = number;
+            }
+          }
+        });
+
+        // Rerender the component with a different timezone prop
+        rerender(<DateRangeCalendar timezone={timezone} />);
+
+        // Create a map of buttons with their indices for the rerender
+        const reRenderButtonsMap = {};
+
+        screen.getAllByRole('gridcell').forEach((element, index) => {
+          if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+            const numberMatch = element.textContent.trim().match(/\d+/);
+            if (numberMatch) {
+              const number = parseInt(numberMatch[0], 10);
+              reRenderButtonsMap[index] = number;
+            }
+          }
+        });
+
+        // Ensure the number of buttons and their numbers are consistent
+        expect(Object.keys(reRenderButtonsMap).length).equals(Object.keys(renderButtonsMap).length);
+        Object.keys(renderButtonsMap).forEach((index) => {
+          expect(reRenderButtonsMap[index]).equals(renderButtonsMap[index]);
+        });
+      });
+
+      it('should select the range from the next month', () => {
+        const { rerender } = render(
+          <DateRangeCalendar
+            timezone="UTC"
+            defaultValue={[adapterToUse.date('2019-01-01'), null]}
+          />,
+        );
+
+        fireEvent.click(getPickerDay('10', 'January 2019'));
+        fireEvent.click(getPickerDay('19', 'February 2019'));
+
+        const renderButtons = screen
+          .getAllByRole('gridcell')
+          .filter((button) => button.tagName.toLowerCase() === 'button');
+
+        const selectedStartDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'start',
+        );
+
+        const selectedEndDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'end',
+        );
+
+        rerender(
+          <DateRangeCalendar
+            timezone={timezone}
+            defaultValue={[adapterToUse.date('2019-01-01'), null]}
+          />,
+        );
+
+        const rerenderedStartDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'start',
+        );
+
+        const rerenderedEndDateButton = renderButtons.findIndex(
+          (button) => button.dataset.position === 'end',
+        );
+
+        expect(Math.abs(selectedStartDateButton - rerenderedStartDateButton)).lessThanOrEqual(1);
+        expect(Math.abs(selectedEndDateButton - rerenderedEndDateButton)).lessThanOrEqual(1);
+      });
     });
   });
 });

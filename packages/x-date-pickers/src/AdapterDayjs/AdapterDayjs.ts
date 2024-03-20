@@ -677,4 +677,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
     return years;
   };
+
+  public setMonthYearDate = (value: Dayjs, year: number, month: number, date: number) => {
+    return this.adjustOffset(value.set('year', year).set('month', month).set('date', date));
+  };
 }
