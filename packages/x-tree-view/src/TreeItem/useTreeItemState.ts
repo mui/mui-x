@@ -54,7 +54,7 @@ export function useTreeItemState(itemId: string) {
       if ((event.nativeEvent as PointerEvent).shiftKey) {
         instance.selectRange(event, { end: itemId });
       } else {
-        instance.selectNode(event, itemId, multiSelect);
+        instance.selectNode(event, itemId, true);
       }
     } else {
       instance.selectNode(event, itemId);

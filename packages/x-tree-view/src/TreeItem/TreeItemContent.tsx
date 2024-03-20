@@ -141,6 +141,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
           onChange={handleCheckboxSelectionChange}
           disabled={disableSelection}
           ref={checkboxRef}
+          tabIndex={-1}
         />
       )}
 

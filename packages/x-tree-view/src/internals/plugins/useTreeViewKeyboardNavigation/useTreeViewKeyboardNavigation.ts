@@ -121,7 +121,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    if (event.altKey || event.currentTarget !== event.target) {
+    if (event.altKey) {
       return;
     }
 
