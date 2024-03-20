@@ -271,13 +271,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       }
 
       rangePositionDirtyRef.current[rangePosition] = true;
-      const isFullRangeSelected =
-        rangePositionDirtyRef.current.start &&
-        rangePositionDirtyRef.current.end &&
+      const isFinalSelection =
+        // rangePositionDirtyRef.current.start &&
+        // rangePositionDirtyRef.current.end &&
         isRangeValid(utils, newRange);
       setValueAndGoToNextView(
         newRange,
-        isFullRangeSelected || !isNextSectionAvailable ? 'finish' : 'partial',
+        isFinalSelection || !isNextSectionAvailable ? 'finish' : 'partial',
         view,
       );
     },
