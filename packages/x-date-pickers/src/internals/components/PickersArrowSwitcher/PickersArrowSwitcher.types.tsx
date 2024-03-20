@@ -21,7 +21,7 @@ export interface ExportedPickersArrowSwitcherProps {
   classes?: Partial<PickersArrowSwitcherClasses>;
   /**
    * Format used to display the date.
-   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   * @default ${adapter.formats.month} ${adapter.formats.year}
    */
   format?: string;
 }
