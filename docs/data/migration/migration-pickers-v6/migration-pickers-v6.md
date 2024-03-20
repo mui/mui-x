@@ -4,21 +4,20 @@ productId: x-date-pickers
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-date-pickers` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `^7.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "6.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
@@ -44,7 +43,7 @@ If you have `@mui/x-license-pro` in the `dependencies` section of your `package.
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",
-+"@mui/x-license": "next",
++"@mui/x-license": "^7.0.0",
 ```
 
 ## Run codemods
@@ -55,10 +54,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
 
 // Target Data Grid as well
-npx @mui/x-codemod@next v7.0.0/preset-safe <path>
+npx @mui/x-codemod v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -85,6 +84,15 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
 ## Component slots
 
 ### Rename `components` to `slots`
@@ -97,7 +105,7 @@ And are removed from the v7.
 If not already done, this modification can be handled by the codemod
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/ <path>
+npx @mui/x-codemod v7.0.0/pickers/ <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
@@ -421,7 +429,7 @@ If you want to keep the start of the week on Monday even if your locale says oth
 You can hardcode the week settings as follows:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   firstDay: 1,
@@ -511,7 +519,7 @@ The `locales` export has been removed from the root of the packages.
 In an effort to reduce the bundle size, the locales are now only available from the `@mui/x-date-pickers/locales` or `@mui/x-date-pickers-pro/locales` paths.
 If you were still relying on the root level export, please update your code.
 
-Before v7, it was possible to import locales from the package root (i.e. `import { frFR } from '@mui/x-date-pickers'`).
+Before v7, it was possible to import locales from the package root (that is `import { frFR } from '@mui/x-date-pickers'`).
 
 ```diff
 -import { frFR } from '@mui/x-date-pickers';

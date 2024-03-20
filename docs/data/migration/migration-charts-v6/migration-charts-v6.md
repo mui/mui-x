@@ -10,15 +10,15 @@ productId: x-charts
 
 This is a reference guide for upgrading `@mui/x-charts` from v6 to v7.
 The change between v6 and v7 is mostly here to match the version with other MUI X packages.
-Not big breaking changes are expected.
+No big breaking changes are expected.
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^7.0.0`.
 
 ```diff
 -"@mui/x-charts": "6.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
@@ -31,6 +31,15 @@ Please update your `@mui/material` package to this or a newer version.
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
+
+### Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
 
 ### Renaming
 

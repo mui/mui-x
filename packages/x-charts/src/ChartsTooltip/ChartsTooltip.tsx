@@ -22,8 +22,20 @@ import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTo
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
 
 export interface ChartsTooltipSlots {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
   popper?: React.ElementType<PopperProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by axis event.
+   * @default DefaultChartsAxisTooltipContent
+   */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by item event.
+   * @default DefaultChartsItemTooltipContent
+   */
   itemContent?: React.ElementType<ChartsItemContentProps>;
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
-import { spyApi, getCell } from 'test/utils/helperFn';
+import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, userEvent, screen } from '@mui-internal/test-utils';
 import {
   DataGridPremium,
@@ -388,17 +388,23 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.click(cell71);
 
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-      const rect = virtualScroller.getBoundingClientRect();
+      const gridRect = grid('root')!.getBoundingClientRect();
 
       virtualScroller.scrollTop = 30;
       virtualScroller.dispatchEvent(new Event('scroll'));
       expect(virtualScroller.scrollTop).to.equal(30);
 
       const cell11 = getCell(1, 1);
-      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y + 25 }); // 25=half speed
+      fireEvent.mouseOver(cell11, {
+        clientX: gridRect.x,
+        clientY: gridRect.y + border + columnHeaderHeight + 25, // 25=half speed
+      });
       expect(virtualScroller.scrollTop).to.equal(20);
 
-      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y }); // 0=full speed
+      fireEvent.mouseOver(cell11, {
+        clientX: gridRect.x,
+        clientY: gridRect.y + border + columnHeaderHeight + 0, // 0=full speed
+      });
       expect(virtualScroller.scrollTop).to.equal(0);
 
       (window.requestAnimationFrame as SinonStub).restore();

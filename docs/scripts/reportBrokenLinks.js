@@ -36,7 +36,7 @@ parseDocFolder(
 
 function removeApiLinkHash(link) {
   // Determine if the link is an API path
-  // e.g. /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
+  // for example /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
   const isApiPath = link.match(/^\/[\w-]+\/api\//);
   if (!isApiPath) {
     return link;

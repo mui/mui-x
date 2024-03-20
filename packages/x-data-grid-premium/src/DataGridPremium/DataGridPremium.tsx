@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
@@ -170,10 +171,10 @@ DataGridPremiumRaw.propTypes = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region in pixels to render before/after the viewport
+   * @default 150
    */
-  columnBuffer: PropTypes.number,
+  columnBufferPx: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -184,11 +185,6 @@ DataGridPremiumRaw.propTypes = {
    * Set of columns of type [[GridColDef]][].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  columnThreshold: PropTypes.number,
   /**
    * Set the column visibility model of the Data Grid.
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
@@ -322,7 +318,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -544,6 +539,14 @@ DataGridPremiumRaw.propTypes = {
    */
   onAggregationModelChange: PropTypes.func,
   /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart: PropTypes.func,
+  /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -671,6 +674,11 @@ DataGridPremiumRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange: PropTypes.func,
+  /**
    * Callback fired when the detail panel of a row is opened or closed.
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -754,6 +762,11 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowClick: PropTypes.func,
+  /**
+   * Callback fired when the row count has changed.
+   * @param {number} count Updated row count.
+   */
+  onRowCountChange: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
@@ -871,10 +884,10 @@ DataGridPremiumRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * Row region in pixels to render before/after the viewport
+   * @default 150
    */
-  rowBuffer: PropTypes.number,
+  rowBufferPx: PropTypes.number,
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -940,11 +953,6 @@ DataGridPremiumRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  rowThreshold: PropTypes.number,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */

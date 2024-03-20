@@ -14,7 +14,7 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
 
@@ -55,13 +55,13 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
-  const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
   const handleRef = useForkRef(rootElementRef, ref);
 
   const ownerState = {
     ...rootProps,
-    density: densityValue,
+    density,
   };
 
   const classes = useUtilityClasses(ownerState);

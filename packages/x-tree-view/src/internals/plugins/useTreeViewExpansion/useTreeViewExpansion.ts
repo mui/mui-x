@@ -9,66 +9,66 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   params,
   models,
 }) => {
-  const setExpandedNodes = (event: React.SyntheticEvent, value: string[]) => {
-    params.onExpandedNodesChange?.(event, value);
-    models.expandedNodes.setControlledValue(value);
+  const setExpandedItems = (event: React.SyntheticEvent, value: string[]) => {
+    params.onExpandedItemsChange?.(event, value);
+    models.expandedItems.setControlledValue(value);
   };
 
   const isNodeExpanded = React.useCallback(
-    (nodeId: string) => {
-      return Array.isArray(models.expandedNodes.value)
-        ? models.expandedNodes.value.indexOf(nodeId) !== -1
+    (itemId: string) => {
+      return Array.isArray(models.expandedItems.value)
+        ? models.expandedItems.value.indexOf(itemId) !== -1
         : false;
     },
-    [models.expandedNodes.value],
+    [models.expandedItems.value],
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
+    (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
   const toggleNodeExpansion = useEventCallback(
-    (event: React.SyntheticEvent, nodeId: string | null) => {
-      if (nodeId == null) {
+    (event: React.SyntheticEvent, itemId: string | null) => {
+      if (itemId == null) {
         return;
       }
 
-      const isExpandedBefore = models.expandedNodes.value.indexOf(nodeId!) !== -1;
+      const isExpandedBefore = models.expandedItems.value.indexOf(itemId!) !== -1;
 
       let newExpanded: string[];
       if (isExpandedBefore) {
-        newExpanded = models.expandedNodes.value.filter((id) => id !== nodeId);
+        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
       } else {
-        newExpanded = [nodeId].concat(models.expandedNodes.value);
+        newExpanded = [itemId].concat(models.expandedItems.value);
       }
 
-      if (params.onNodeExpansionToggle) {
-        params.onNodeExpansionToggle(event, nodeId, !isExpandedBefore);
+      if (params.onItemExpansionToggle) {
+        params.onItemExpansionToggle(event, itemId, !isExpandedBefore);
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const expandAllSiblings = (event: React.KeyboardEvent, itemId: string) => {
+    const node = instance.getNode(itemId);
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
     );
 
-    const newExpanded = models.expandedNodes.value.concat(diff);
+    const newExpanded = models.expandedItems.value.concat(diff);
 
     if (diff.length > 0) {
-      if (params.onNodeExpansionToggle) {
-        diff.forEach((newlyExpandedNodeId) => {
-          params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
+      if (params.onItemExpansionToggle) {
+        diff.forEach((newlyExpandedItemId) => {
+          params.onItemExpansionToggle!(event, newlyExpandedItemId, true);
         });
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     }
   };
 
@@ -81,8 +81,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 };
 
 useTreeViewExpansion.models = {
-  expandedNodes: {
-    getDefaultValue: (params) => params.defaultExpandedNodes,
+  expandedItems: {
+    getDefaultValue: (params) => params.defaultExpandedItems,
   },
 };
 
@@ -90,12 +90,12 @@ const DEFAULT_EXPANDED_NODES: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpandedNodes: params.defaultExpandedNodes ?? DEFAULT_EXPANDED_NODES,
+  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_NODES,
 });
 
 useTreeViewExpansion.params = {
-  expandedNodes: true,
-  defaultExpandedNodes: true,
-  onExpandedNodesChange: true,
-  onNodeExpansionToggle: true,
+  expandedItems: true,
+  defaultExpandedItems: true,
+  onExpandedItemsChange: true,
+  onItemExpansionToggle: true,
 };
