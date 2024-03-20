@@ -48,8 +48,10 @@ You can browse the documentation, find an example close to your use case, and th
 #### Use starter templates
 
 You can use a starter template to build a reproduction case with:
+
 <!-- #default-branch-switch -->
-- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
+
+- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
 ## Stack Overflow

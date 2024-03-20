@@ -26,17 +26,14 @@
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard."
     },
-    "columnBuffer": {
-      "description": "Number of extra columns to be rendered before/after the visible slice."
+    "columnBufferPx": {
+      "description": "Column region in pixels to render before/after the viewport"
     },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
     "columns": {
       "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
-    },
-    "columnThreshold": {
-      "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
     },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
@@ -295,6 +292,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onDensityChange": {
+      "description": "Callback fired when the density changes.",
+      "typeDescriptions": { "density": "New density value." }
+    },
     "onFilterModelChange": {
       "description": "Callback fired when the Filter model changes before the filters are applied.",
       "typeDescriptions": {
@@ -423,9 +424,7 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "rowBuffer": {
-      "description": "Number of extra rows to be rendered before/after the visible slice."
-    },
+    "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
       "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."
     },
@@ -439,9 +438,6 @@
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
-    },
-    "rowThreshold": {
-      "description": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."
@@ -594,10 +590,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
-    "columnGroupHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column group header element"
-    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
@@ -646,11 +638,8 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
-    "columnHeader--showColumnBorder": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the column group header cell",
-      "conditions": "show column border"
-    },
+    "columnHeader--pinnedLeft": { "description": "" },
+    "columnHeader--pinnedRight": { "description": "" },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -661,6 +650,7 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
+    "columnHeader--withLeftBorder": { "description": "" },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if <code>showColumnVerticalBorder={true}</code>."
     },
@@ -671,20 +661,6 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header&#39;s draggable container element"
-    },
-    "columnHeaderDropZone": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers wrapper",
-      "conditions": "a column is being dragged"
-    },
-    "columnHeadersInner": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column headers&#39;s inner element"
-    },
-    "columnHeadersInner--scrollable": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers&#39;s inner element",
-      "conditions": "there is a horizontal scrollbar"
     },
     "columnHeaderTitle": {
       "description": "Styles applied to the column header&#39;s title element;"
@@ -761,15 +737,6 @@
     "editInputCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
-    },
-    "filler": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the filler row" },
-    "filler--pinnedLeft": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned left section"
-    },
-    "filler--pinnedRight": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned right section"
     },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
@@ -881,18 +848,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumnHeaders": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned column headers"
-    },
-    "pinnedColumnHeaders--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned column headers"
-    },
-    "pinnedColumnHeaders--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned column headers"
-    },
     "pinnedColumns": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"
@@ -1067,7 +1022,6 @@
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
-    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",

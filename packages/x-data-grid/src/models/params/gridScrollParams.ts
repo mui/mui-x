@@ -1,8 +1,10 @@
-export interface GridRenderContext {
-  firstRowIndex: number;
-  lastRowIndex: number;
+export interface GridColumnsRenderContext {
   firstColumnIndex: number;
   lastColumnIndex: number;
+}
+export interface GridRenderContext extends GridColumnsRenderContext {
+  firstRowIndex: number;
+  lastRowIndex: number;
 }
 
 export interface GridScrollParams {

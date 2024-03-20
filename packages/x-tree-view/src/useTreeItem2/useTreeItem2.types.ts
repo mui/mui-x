@@ -5,21 +5,21 @@ import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/mode
 
 export interface UseTreeItem2Parameters {
   /**
-   * The id attribute of the node. If not provided, it will be generated.
+   * The id attribute of the item. If not provided, it will be generated.
    */
   id?: string;
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled?: boolean;
   /**
-   * The id of the node.
+   * The id of the item.
    * Must be unique.
    */
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
   /**
-   * The label of the node.
+   * The label of the item.
    */
   label?: React.ReactNode;
   rootRef?: React.Ref<HTMLLIElement>;
@@ -31,12 +31,14 @@ export interface UseTreeItem2Parameters {
 
 export interface UseTreeItem2RootSlotOwnProps {
   role: 'treeitem';
-  tabIndex: -1;
+  tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
-  onFocus: MuiCancellableEventHandler<React.FocusEvent>;
+  onFocus: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
 }
 

@@ -10,7 +10,6 @@ export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
-export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
@@ -152,7 +151,9 @@ export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
+export * from '../utils/cellBorderUtils';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
+export type { GridInfiniteLoaderPrivateApi } from '../models/api/gridInfiniteLoaderApi';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 export * from '../hooks/utils';
 

@@ -74,9 +74,24 @@
       "default": "BarElementPath",
       "class": null
     },
-    { "name": "popper", "description": "", "class": null },
-    { "name": "axisContent", "description": "", "class": null },
-    { "name": "itemContent", "description": "", "class": null }
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "axisContent",
+      "description": "Custom component for displaying tooltip content when triggered by axis event.",
+      "default": "DefaultChartsAxisTooltipContent",
+      "class": null
+    },
+    {
+      "name": "itemContent",
+      "description": "Custom component for displaying tooltip content when triggered by item event.",
+      "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiSparkLineChart",
