@@ -52,6 +52,12 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - The selector `gridDensityValueSelector` was removed, use the `gridDensitySelector` instead.
 
+- The props `rowBuffer` and `columnBuffer` were renamed to `rowBufferPx` and `columnBufferPx`.
+  Their value is now a pixel value rather than a number of items. Their default value is now `150`.
+
+- The props `rowThreshold` and `columnThreshold` have been removed.
+  If you had the `rowThreshold` prop set to `0` to force new rows to be rendered more often – this is no longer necessary.
+
 #### `@mui/x-data-grid@7.0.0`
 
 - [DataGrid] Allow to control the grid density (#12332) @MBilalShafi
