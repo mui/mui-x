@@ -110,7 +110,6 @@ type DesktopDateRangePickerComponent = (<
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-
 /**
  * Demos:
  *
