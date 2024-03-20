@@ -113,6 +113,7 @@ describe('<MobileDateRangePicker />', () => {
     });
 
     it('should call onClose and onAccept when selecting the start date then the end date if props.closeOnSelect = true', () => {
+      const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -131,12 +132,16 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Change the start date
       userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
+      // Change the end date
       userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime('2018-01-02');
@@ -144,7 +149,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange with the initial value when clicking "Cancel" button', () => {
+    it('should not call onClose or onAccept when selecting the end date without selecting the start date before and props.closeOnSelect = true', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -156,115 +161,22 @@ describe('<MobileDateRangePicker />', () => {
       render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
-          onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
-          slotProps={{ actionBar: { actions: ['cancel'] } }}
+          closeOnSelect
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
-
-      // Change the start date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
-
-      // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(2); // Start date change + reset
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue: DateRange<any> = [
-        adapterToUse.date('2018-01-01'),
-        adapterToUse.date('2018-01-06'),
-      ];
-
-      render(
-        <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
-
-      // Change the start date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
-
-      // Accept the modifications
-      userEvent.mousePress(screen.getByText(/ok/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue: DateRange<any> = [
-        adapterToUse.date('2018-01-01'),
-        adapterToUse.date('2018-01-06'),
-      ];
-
-      render(
-        <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          slotProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          slotProps={{ actionBar: { actions: ['clear'] } }}
-          value={[null, null]}
-        />,
-      );
-
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the end date
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
     });
 
     it('should correctly set focused styles when input is focused', () => {

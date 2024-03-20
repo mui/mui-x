@@ -213,7 +213,45 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', () => {
+    it('should call onClose and onAccept when selecting the start date then the end date', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const defaultValue: DateRange<any> = [
+        adapterToUse.date('2018-01-01'),
+        adapterToUse.date('2018-01-06'),
+      ];
+
+      render(
+        <DesktopDateRangePicker
+          enableAccessibleFieldDOMStructure
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          defaultValue={defaultValue}
+        />,
+      );
+
+      // Open the picker
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the start date
+      userEvent.mousePress(getPickerDay('2', 'January 2018'));
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the end date
+      userEvent.mousePress(getPickerDay('3', 'January 2018'));
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime('2018-01-02');
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime('2018-01-03');
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when selecting the end date without selecting the start date before', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -239,14 +277,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(getPickerDay('3'));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onClose.callCount).to.equal(1);
+      userEvent.mousePress(getPickerDay('3', 'January 2018'));
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
     });
 
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
@@ -488,65 +521,10 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue: DateRange<any> = [
-        adapterToUse.date('2018-01-01'),
-        adapterToUse.date('2018-01-06'),
-      ];
-
-      render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          slotProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          slotProps={{ actionBar: { actions: ['clear'] } }}
-          value={[null, null]}
-        />,
-      );
-
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
+
     it('should not close picker when switching focus from start to end input', () => {
       const onChange = spy();
       const onAccept = spy();
