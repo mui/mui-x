@@ -68,6 +68,7 @@ const PickersYearButton = styled('button', {
   height: 36,
   width: 72,
   borderRadius: 18,
+  textAlign: 'center',
   cursor: 'pointer',
   '&:focus': {
     backgroundColor: theme.vars
