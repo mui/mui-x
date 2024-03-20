@@ -31,6 +31,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    checkbox: ['checkbox'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -130,6 +131,9 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     minWidth: 0,
     position: 'relative',
     ...theme.typography.body1,
+  },
+  [`& .${treeItemClasses.checkbox}`]: {
+    padding: 0,
   },
 }));
 
@@ -340,6 +344,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
             disabled: classes.disabled,
             iconContainer: classes.iconContainer,
             label: classes.label,
+            checkbox: classes.checkbox,
           }}
           label={label}
           itemId={itemId}

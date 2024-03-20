@@ -26,6 +26,8 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     iconContainer: string;
     /** Styles applied to the label element. */
     label: string;
+    /** Styles applied to the checkbox element. */
+    checkbox: string;
   };
   /**
    * The tree item label.
@@ -133,6 +135,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       <div className={classes.iconContainer}>{icon}</div>
       {checkboxSelection && (
         <Checkbox
+          className={classes.checkbox}
           checked={selected}
           onChange={handleCheckboxSelectionChange}
           disabled={disableSelection}

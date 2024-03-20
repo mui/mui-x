@@ -22,6 +22,8 @@ export interface TreeItemClasses {
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
+  /** Styles applied to the checkbox element. */
+  checkbox: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -41,4 +43,5 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'disabled',
   'iconContainer',
   'label',
+  'checkbox',
 ]);
