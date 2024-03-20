@@ -155,7 +155,6 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   ) => {
     const rootProps: UseTreeViewRootSlotProps = {
       role: 'tree',
-      tabIndex: 0,
       ...otherHandlers,
       ref: handleRootRef,
     };
