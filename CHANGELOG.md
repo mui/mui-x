@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 20, 2024_
 
-We'd like to offer a big thanks to the 2 contributors who made this release possible.
+We'd like to offer a big thanks to the 3 contributors who made this release possible.
 
 ### Data Grid
 
@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [DataGrid] Fix `ElementType` usage (#12505) @cherniavskii
 - [DataGrid] Fix cell value formatting on copy (#12483) @sai6855
-- [DataGrid] Fix checkbox selection keeping selection when filtering (#12485) @g1mishra
+- [DataGrid] Fix checkbox selection when filtering (#12485) @g1mishra
 
 #### `@mui/x-data-grid-pro@6.19.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
