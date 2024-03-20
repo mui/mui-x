@@ -526,6 +526,16 @@ Before v7, it was possible to import locales from the package root (that is `imp
 +import { frFR } from '@mui/x-date-pickers/locales';
 ```
 
+## Remove `dateTimeViewRenderers` export
+
+The `dateTimeViewRenderers` export has been removed in favor of reusing existing time view renderers (`renderTimeViewClock`, `renderDigitalClockTimeView` and `renderMultiSectionDigitalClockTimeView`) and date view renderer (`renderDateViewCalendar`) to render the `DesktopDateTimePicker`.
+
+If you were relying on this import, you can refer to the implementation of the `DesktopDateTimePicker` to see how to combine the renderers yourself.
+
+:::info
+The additional side-effect of this change is that passing `renderTimeViewClock` to time view renderers will no longer revert to the old behavior of rendering only date or time view.
+:::
+
 ## Adapters internal changes
 
 :::success

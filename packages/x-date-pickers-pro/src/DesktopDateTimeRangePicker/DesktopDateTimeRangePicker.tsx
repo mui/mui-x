@@ -6,7 +6,7 @@ import {
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
-  PickerViewRendererLookup,
+  PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
@@ -22,6 +22,7 @@ import {
 import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -32,47 +33,54 @@ import {
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
-import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
+import {
+  DateTimeRangePickerRenderers,
+  useDateTimeRangePickerDefaultizedProps,
+} from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
+  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
-  rendererProps: DefaultizedProps<
-    Omit<
-      UseDesktopRangePickerProps<
-        TDate,
-        DateTimeRangePickerView,
-        TEnableAccessibleFieldDOMStructure,
-        any,
-        any
+  rendererProps: PickerViewsRendererProps<
+    DateRange<TDate>,
+    DateTimeRangePickerView,
+    DefaultizedProps<
+      Omit<
+        UseDesktopRangePickerProps<
+          TDate,
+          DateTimeRangePickerView,
+          TEnableAccessibleFieldDOMStructure,
+          any,
+          any
+        >,
+        'onChange' | 'sx' | 'className'
       >,
-      'onChange'
+      'rangePosition' | 'onRangePositionChange' | 'openTo'
     >,
-    'rangePosition' | 'onRangePositionChange' | 'openTo'
+    {}
   >,
 ) {
-  const { openTo, rangePosition, sx, ...otherProps } = rendererProps;
+  const { openTo, rangePosition, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
     rangePosition,
     focusedView: null,
     sx: [
       {
-        borderBottom: 0,
-        width: 'auto',
+        [`&.${multiSectionDigitalClockClasses.root}`]: {
+          borderBottom: 0,
+        },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
             maxHeight: RANGE_VIEW_HEIGHT,
           },
       },
-      ...(Array.isArray(sx) ? sx : [sx]),
     ],
   };
   const isTimeViewActive = isInternalTimeView(popperView);
@@ -88,6 +96,7 @@ const rendererInterceptor = function rendererInterceptor<
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
         view={isTimeViewActive ? popperView : 'hours'}
+        views={finalProps.views.filter(isInternalTimeView)}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
           inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
@@ -127,12 +136,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: PickerViewRendererLookup<
-    DateRange<TDate>,
-    DateTimeRangePickerView,
-    any,
-    {}
-  > = {
+  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -159,7 +163,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     calendars: defaultizedProps.calendars ?? 1,
     slots: {
       field: MultiInputDateTimeRangeField,
-      layout: DesktopDateTimeRangePickerLayout,
+      layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
     slotProps: {
