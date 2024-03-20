@@ -89,7 +89,7 @@
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
     "@mui/utils": "^5.15.14",
     "@next/eslint-plugin-next": "14.0.4",
-    "@octokit/plugin-retry": "^6.0.1",
+    "@octokit/plugin-retry": "^7.0.3",
     "@octokit/rest": "^20.0.2",
     "@playwright/test": "1.41.2",
     "@testing-library/react": "^14.2.1",
