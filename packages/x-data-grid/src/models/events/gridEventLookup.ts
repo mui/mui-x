@@ -364,13 +364,13 @@ export interface GridControlledStateEventLookup {
    */
   rowCountChange: { params: number };
   /**
-   * Fired when the pagination meta change.
-   */
-  paginationMetaChange: { params: GridPaginationMeta };
-  /*
    * Fired when the density changes.
    */
   densityChange: { params: GridDensity };
+  /**
+   * Fired when the pagination meta change.
+   */
+  paginationMetaChange: { params: GridPaginationMeta };
 }
 
 export interface GridControlledStateReasonLookup {
