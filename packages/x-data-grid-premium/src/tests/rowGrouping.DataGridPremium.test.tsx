@@ -35,11 +35,11 @@ import { spy } from 'sinon';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [
-  { id: 0, category1: 'Cat A', category2: 'Cat 1', isFilled: false },
-  { id: 1, category1: 'Cat A', category2: 'Cat 2', isFilled: false },
-  { id: 2, category1: 'Cat A', category2: 'Cat 2', isFilled: false },
-  { id: 3, category1: 'Cat B', category2: 'Cat 2', isFilled: false },
-  { id: 4, category1: 'Cat B', category2: 'Cat 1', isFilled: false },
+  { id: 0, category1: 'Cat A', category2: 'Cat 1' },
+  { id: 1, category1: 'Cat A', category2: 'Cat 2' },
+  { id: 2, category1: 'Cat A', category2: 'Cat 2' },
+  { id: 3, category1: 'Cat B', category2: 'Cat 2' },
+  { id: 4, category1: 'Cat B', category2: 'Cat 1' },
 ];
 
 const unbalancedRows: GridRowsProp = [
@@ -65,10 +65,6 @@ const baselineProps: DataGridPremiumProps = {
     },
     {
       field: 'category2',
-    },
-    {
-      field: 'isFilled',
-      type: 'boolean',
     },
   ],
 };
@@ -175,6 +171,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
               model: ['isFilled'],
             },
           }}
+          columns={[...baselineProps.columns, { field: 'isFilled', type: 'boolean' }]}
+          rows={baselineProps.rows.map((row) => ({ ...row, isFilled: false }))}
         />,
       );
 
