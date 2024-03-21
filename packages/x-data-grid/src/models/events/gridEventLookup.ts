@@ -25,6 +25,7 @@ import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcess
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
+import { GridDensity } from '../gridDensity';
 
 export interface GridRowEventLookup {
   /**
@@ -366,6 +367,10 @@ export interface GridControlledStateEventLookup {
    * Fired when the pagination meta change.
    */
   paginationMetaChange: { params: GridPaginationMeta };
+  /*
+   * Fired when the density changes.
+   */
+  densityChange: { params: GridDensity };
 }
 
 export interface GridControlledStateReasonLookup {

@@ -60,7 +60,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
+     * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
@@ -184,7 +184,7 @@ GridFilterInputSingleSelect.propTypes = {
   ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
+   * required is selected (for example `isEmpty`)
    */
   isFilterActive: PropTypes.bool,
   item: PropTypes.shape({

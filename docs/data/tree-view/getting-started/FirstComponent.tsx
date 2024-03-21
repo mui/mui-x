@@ -8,13 +8,13 @@ export default function FirstComponent() {
       aria-label="file system navigator"
       sx={{ height: 200, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
     >
-      <TreeItem nodeId="1" label="Applications">
-        <TreeItem nodeId="2" label="Calendar" />
+      <TreeItem itemId="1" label="Applications">
+        <TreeItem itemId="2" label="Calendar" />
       </TreeItem>
-      <TreeItem nodeId="5" label="Documents">
-        <TreeItem nodeId="10" label="OSS" />
-        <TreeItem nodeId="6" label="MUI">
-          <TreeItem nodeId="8" label="index.js" />
+      <TreeItem itemId="5" label="Documents">
+        <TreeItem itemId="10" label="OSS" />
+        <TreeItem itemId="6" label="MUI">
+          <TreeItem itemId="8" label="index.js" />
         </TreeItem>
       </TreeItem>
     </SimpleTreeView>

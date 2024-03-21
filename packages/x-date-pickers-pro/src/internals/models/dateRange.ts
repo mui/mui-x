@@ -4,7 +4,12 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import type { DateRangeValidationError, RangeFieldSection, DateRange } from '../../models';
+import {
+  DateRangeValidationError,
+  RangeFieldSection,
+  DateRange,
+  RangeFieldSeparatorProps,
+} from '../../models';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -13,7 +18,7 @@ export interface DayRangeValidationProps<TDate extends PickerValidDate> {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.
@@ -39,5 +44,6 @@ export interface UseDateRangeFieldProps<
       >,
       'format'
     >,
+    RangeFieldSeparatorProps,
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate> {}

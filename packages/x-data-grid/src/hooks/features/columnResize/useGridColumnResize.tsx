@@ -193,7 +193,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
   const iqr = q3 - q1;
 
   // We make a small adjustment if `iqr < 5` for the cases where the IQR is
-  // very small (e.g. zero) due to very close by values in the input data.
+  // very small (for example zero) due to very close by values in the input data.
   // Otherwise, with an IQR of `0`, anything outside that would be considered
   // an outlier, but it makes more sense visually to allow for this 5px variance
   // rather than showing a cropped cell.

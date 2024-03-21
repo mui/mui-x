@@ -124,15 +124,9 @@
   },
   {
     "name": "gridDensitySelector",
-    "returnType": "GridDensityState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDensityValueSelector",
     "returnType": "GridDensity",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridDetailPanelExpandedRowIdsSelector",

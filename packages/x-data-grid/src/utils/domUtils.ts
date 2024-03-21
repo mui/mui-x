@@ -244,7 +244,7 @@ export function findGridCells(api: GridPrivateApiCommunity, field: string) {
 
 function queryRows(api: GridPrivateApiCommunity) {
   return api.virtualScrollerRef.current!.querySelectorAll(
-    // Use > to ignore rows from nested data grids (e.g. in detail panel)
+    // Use > to ignore rows from nested data grids (for example in detail panel)
     `:scope > div > div > .${gridClasses.row}`,
   );
 }
