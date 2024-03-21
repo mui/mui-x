@@ -17,13 +17,15 @@ export type PickerViewsRendererProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
-> = TExternalProps &
+> = Omit<TExternalProps, 'className' | 'sx'> &
   TAdditionalProps &
   UsePickerValueViewsResponse<TValue> & {
     view: TView;
     views: readonly TView[];
     focusedView: TView | null;
     onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
+    showViewSwitcher: boolean;
+    timeViewsCount: number;
   };
 
 export type PickerViewRenderer<
@@ -133,9 +135,7 @@ export interface UsePickerViewParams<
   rendererInterceptor?: (
     viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
     popperView: TView,
-    rendererProps: Omit<TExternalProps, 'className' | 'sx'> &
-      TAdditionalProps &
-      UsePickerValueViewsResponse<TValue>,
+    rendererProps: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
   ) => React.ReactNode;
 }
 
@@ -303,7 +303,12 @@ export const usePickerViews = <
         return null;
       }
 
-      const rendererProps = {
+      const rendererProps: PickerViewsRendererProps<
+        TValue,
+        TView,
+        TExternalProps,
+        TAdditionalProps
+      > = {
         ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,

@@ -8,7 +8,12 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // @ts-expect-error This expected error should be gone once we update the monorepo
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra.js';
 import { findPages } from './src/modules/utils/find.mjs';
-import { LANGUAGES, LANGUAGES_SSR } from './config.js';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from './config.js';
 import constants from './constants.js';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
@@ -97,12 +102,15 @@ export default withDocsInfra({
             test: /\.md$/,
             oneOf: [
               {
-                resourceQuery: /@mui\/markdown/,
+                resourceQuery: /muiMarkdown/,
                 use: [
                   options.defaultLoaders.babel,
                   {
-                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    loader: require.resolve('@mui/internal-markdown/loader'),
                     options: {
+                      workspaceRoot,
+                      ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
+                      languagesInProgress: LANGUAGES_IN_PROGRESS,
                       env: {
                         SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
                         LIB_VERSION: options.config.env.LIB_VERSION,

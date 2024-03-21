@@ -38,7 +38,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridPremiumPropsWithDefaultValue> &
+    Partial<DataGridPremiumPropsWithDefaultValue<R>> &
       DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
       DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
@@ -64,7 +64,8 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface.
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
-export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
+export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridProPropsWithDefaultValue<R> {
   /**
    * If `true`, the cell selection mode is enabled.
    * @default false
