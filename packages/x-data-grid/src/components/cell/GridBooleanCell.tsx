@@ -109,6 +109,7 @@ GridBooleanCellRaw.propTypes = {
    * If true, the cell is the active element.
    */
   hasFocus: PropTypes.bool.isRequired,
+  hideDescendantCount: PropTypes.bool,
   /**
    * The grid row id.
    */
