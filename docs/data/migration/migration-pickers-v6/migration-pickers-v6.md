@@ -26,7 +26,7 @@ Described below are the steps needed to migrate from v6 to v7.
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
@@ -525,6 +525,16 @@ Before v7, it was possible to import locales from the package root (that is `imp
 -import { frFR } from '@mui/x-date-pickers';
 +import { frFR } from '@mui/x-date-pickers/locales';
 ```
+
+## Remove `dateTimeViewRenderers` export
+
+The `dateTimeViewRenderers` export has been removed in favor of reusing existing time view renderers (`renderTimeViewClock`, `renderDigitalClockTimeView` and `renderMultiSectionDigitalClockTimeView`) and date view renderer (`renderDateViewCalendar`) to render the `DesktopDateTimePicker`.
+
+If you were relying on this import, you can refer to the implementation of the `DesktopDateTimePicker` to see how to combine the renderers yourself.
+
+:::info
+The additional side-effect of this change is that passing `renderTimeViewClock` to time view renderers will no longer revert to the old behavior of rendering only date or time view.
+:::
 
 ## Adapters internal changes
 

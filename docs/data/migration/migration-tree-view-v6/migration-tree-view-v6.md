@@ -11,7 +11,7 @@ productId: x-tree-view
 This is a reference guide for upgrading `@mui/x-tree-view` from v6 to v7.
 To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
-## Start using the beta release
+## Start using the new release
 
 In `package.json`, change the version of the tree view package to `^7.0.0`.
 
@@ -22,7 +22,7 @@ In `package.json`, change the version of the tree view package to `^7.0.0`.
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 

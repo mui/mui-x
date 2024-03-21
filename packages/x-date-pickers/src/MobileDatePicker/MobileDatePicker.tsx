@@ -4,10 +4,9 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
-import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
@@ -49,7 +48,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDatePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
+  const viewRenderers: DatePickerViewRenderers<TDate, DateView, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
