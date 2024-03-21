@@ -187,5 +187,5 @@ export interface GridPreProcessEditCellProps<V = any, R extends GridValidRowMode
    * Object containing the props of the other fields.
    * Only available for row editing and when using the new editing API.
    */
-  otherFieldsProps?: Record<string, GridEditCellProps<V>>;
+  otherFieldsProps?: Record<string, GridEditCellProps>;
 }
