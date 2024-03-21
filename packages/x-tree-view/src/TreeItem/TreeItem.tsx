@@ -176,6 +176,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
     label,
     onClick,
     onMouseDown,
+    onFocus,
+    onBlur,
+    onKeyDown,
     ...other
   } = props;
 
@@ -287,18 +290,24 @@ export const TreeItem = React.forwardRef(function TreeItem(
   }
 
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
-    // DOM focus stays on the tree which manages focus with aria-activedescendant
-    if (event.target === event.currentTarget) {
-      instance.focusRoot();
-    }
-
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
       instance.focusItem(event, itemId);
     }
   }
 
+  function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
+    onBlur?.(event);
+    instance.removeFocusedItem();
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    onKeyDown?.(event);
+    instance.handleItemKeyDown(event, itemId);
+  };
+
   const idAttribute = instance.getTreeItemId(itemId, id);
+  const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   return (
     <TreeItem2Provider itemId={itemId}>
@@ -309,10 +318,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
         aria-selected={ariaSelected}
         aria-disabled={disabled || undefined}
         id={idAttribute}
-        tabIndex={-1}
+        tabIndex={tabIndex}
         {...other}
         ownerState={ownerState}
         onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         ref={handleRootRef}
       >
         <StyledTreeItemContent

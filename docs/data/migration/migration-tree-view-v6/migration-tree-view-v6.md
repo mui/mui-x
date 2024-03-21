@@ -4,26 +4,25 @@ productId: x-tree-view
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Tree View from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-tree-view` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
-## Start using the beta release
+## Start using the new release
 
-In `package.json`, change the version of the tree view package to `next`.
+In `package.json`, change the version of the tree view package to `^7.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "6.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
@@ -401,6 +400,38 @@ you can use the new `onItemSelectionToggle` prop which is called whenever an ite
 ```
 
 :::
+
+### Focus the Tree Item instead of the Tree View
+
+The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+This change will allow new features that require the focus to be on the Tree Item,
+like the drag and drop reordering of items.
+It also solves several issues with focus management,
+like the inability to scroll to the focused item when a lot of items are rendered.
+
+This will mostly impact how you write tests to interact with the Tree View:
+
+For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
+
+```diff
+ it('test example on first item', () => {
+   const { getByRole } = render(
+     <SimpleTreeView>
+       <TreeItem itemId="one">One</TreeItem>
+       <TreeItem itemId="two">Two</TreeItem>
+    </SimpleTreeView>
+   );
+-  const tree = getByRole('tree');
++  const treeItem = getByRole('treeitem', { name: 'One' });
+   act(() => {
+-    tree.focus();
++    treeItem.focus();
+   });
+-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
++  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
+ })
+```
 
 ### ✅ Use `useTreeItemState` instead of `useTreeItem`
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import {
@@ -138,11 +137,13 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = useEventCallback((itemId: string | null) =>
-    Object.values(state.nodes.nodeMap)
-      .filter((item) => item.parentId === itemId)
-      .sort((a, b) => a.index - b.index)
-      .map((child) => child.id),
+  const getChildrenIds = React.useCallback(
+    (itemId: string | null) =>
+      Object.values(state.nodes.nodeMap)
+        .filter((item) => item.parentId === itemId)
+        .sort((a, b) => a.index - b.index)
+        .map((child) => child.id),
+    [state.nodes.nodeMap],
   );
 
   const getNavigableChildrenIds = (itemId: string | null) => {

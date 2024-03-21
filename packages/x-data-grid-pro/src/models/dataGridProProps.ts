@@ -41,7 +41,7 @@ interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridProPropsWithDefaultValue> &
+    Partial<DataGridProPropsWithDefaultValue<R>> &
       DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
@@ -56,7 +56,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue,
+  extends DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
     Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
@@ -67,7 +67,8 @@ export type DataGridProForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
-export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
+export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridPropsWithDefaultValues<R> {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
