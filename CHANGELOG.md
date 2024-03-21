@@ -100,6 +100,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0`, plus:
 Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 
 - [DateTimeRangePicker] Add component `JSDoc` (#12518) @LukasTy
+- [DateTimeRangePicker] Fix views behavior regression (#12529) @LukasTy
 
 ### Charts
 
