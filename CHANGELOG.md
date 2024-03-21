@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 21, 2024_
 
-We're excited to [announce the first v7 stable release](https://mui.com/blog/mui-x-v7/)! 🎉🚀
+We're excited to [announce the first v7 stable release](https://deploy-preview-41563--material-ui.netlify.app/blog/mui-x-v7/)! 🎉🚀
 
 This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
 Migration guides are available with a complete list of the breaking changes:
@@ -19,7 +19,7 @@ Migration guides are available with a complete list of the breaking changes:
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
+- 🚀 Improve the usage of custom `viewRenderers`  on `DateTimePicker` (#12441) @LukasTy
 - ✨ Set focus on the focused Tree Item instead of the Tree View (#12226) @flaviendelangle
 - 🕹️ Support controlled `density` for the Data Grid (#12332) @MBilalShafi
 - 🎁 Dynamic virtualization range for the Data Grid (#12353) @romgrk
