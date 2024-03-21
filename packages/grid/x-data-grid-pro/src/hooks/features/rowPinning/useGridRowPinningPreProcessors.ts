@@ -6,7 +6,6 @@ import {
 } from '@mui/x-data-grid/internals';
 import {
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
   GridPinnedRowNode,
   GridRowEntry,
   GridRowId,
@@ -126,22 +125,39 @@ export const useGridRowPinningPreProcessors = (
         });
       });
 
-      // If row with the same `id` is present both in `rows` and `pinnedRows` - remove it from the root group children
+      // If row with the same `id` is present both in `rows` and `pinnedRows` - remove it from the group children
       if (pinnedRowsCache.bottomIds?.length || pinnedRowsCache.topIds?.length) {
-        const shouldKeepRow = (rowId: GridRowId) => {
-          if (newGroupingParams.tree[rowId] && newGroupingParams.tree[rowId].type === 'pinnedRow') {
+        // Removes pinned rows from the row group children
+        const filterOutPinnedRows = (id: GridRowId) => {
+          const rowNode = newGroupingParams.tree[id];
+
+          if (!rowNode) {
             return false;
           }
+
+          if (rowNode.type === 'pinnedRow') {
+            return false;
+          }
+
+          if (rowNode.type === 'group') {
+            newGroupingParams.tree[id] = {
+              ...rowNode,
+              children: rowNode.children.filter(filterOutPinnedRows),
+            };
+          }
+
           return true;
         };
 
-        const rootGroupNode = newGroupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-        newGroupingParams.tree[GRID_ROOT_GROUP_ID] = {
-          ...rootGroupNode,
-          children: rootGroupNode.children.filter(shouldKeepRow),
-        };
+        filterOutPinnedRows(GRID_ROOT_GROUP_ID);
 
-        newGroupingParams.dataRowIds = newGroupingParams.dataRowIds.filter(shouldKeepRow);
+        newGroupingParams.dataRowIds = newGroupingParams.dataRowIds.filter((rowId) => {
+          const rowNode = newGroupingParams.tree[rowId];
+          if (rowNode && rowNode.type === 'pinnedRow') {
+            return false;
+          }
+          return true;
+        });
       }
 
       return newGroupingParams;
