@@ -2,9 +2,9 @@
   label="Picker with error icon"
   maxDate={dayjs('2022-04-17')}
   defaultValue={dayjs('2022-04-18')}
-  onError={(error) => setHasError(!!error)}
+  onError={setError}
   slots={{ inputAdornment: CustomInputAdornment }}
   slotProps={{
-    inputAdornment: { hasError } as any,
+    inputAdornment: { hasError: !!error } as any,
   }}
 />
