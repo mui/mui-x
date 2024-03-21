@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 21, 2024_
 
-We're excited to [announce the first v7 stable release](https://deploy-preview-41563--material-ui.netlify.app/blog/mui-x-v7/)! 🎉🚀
+We're excited to [announce the first v7 stable release](https://mui.com/blog/mui-x-v7/)! 🎉🚀
 
 This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
 Migration guides are available with a complete list of the breaking changes:
