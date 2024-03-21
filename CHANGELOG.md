@@ -179,6 +179,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 - [core] Lower the frequency of `no-response` action runs (#12491) @michaldudak
 - [core] Remove leftover `legacy` `browserlistrc` entry (#12415) @LukasTy
 - [core] Update NPM tag (#12511) @cherniavskii
+- [core] Update supported browsers (browserlistrc) (#12521) @LukasTy
 - [core] Use Circle CI context @oliviertassinari
 - [license] Fix grammar on expired license error message (#12460) @joserodolfofreitas
 
