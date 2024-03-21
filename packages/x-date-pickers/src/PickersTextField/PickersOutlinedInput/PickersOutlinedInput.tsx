@@ -61,7 +61,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       .map((color) => ({
         props: { color },
         style: {
-          [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]:
+          [`&.${pickersOutlinedInputClasses.focused}:not(.${pickersOutlinedInputClasses.error}) .${pickersOutlinedInputClasses.notchedOutline}`]:
             {
               // @ts-ignore
               borderColor: (theme.vars || theme).palette[color].main,
