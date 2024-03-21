@@ -144,7 +144,7 @@ export type TreeViewItemPlugin<TProps extends {}> = (
 ) => void | TreeViewItemPluginResponse;
 
 export type TreeItemWrapper = (params: {
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
   children: React.ReactNode;
 }) => React.ReactNode;
 
