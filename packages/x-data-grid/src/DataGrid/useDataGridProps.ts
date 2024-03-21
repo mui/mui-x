@@ -33,6 +33,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   checkboxSelectionVisibleOnly: false,
   columnBufferPx: 150,
   rowBufferPx: 150,
+  rows: [],
   rowSelection: true,
   disableColumnFilter: false,
   disableColumnMenu: false,

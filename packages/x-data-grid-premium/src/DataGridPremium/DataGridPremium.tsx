@@ -926,8 +926,9 @@ DataGridPremiumRaw.propTypes = {
   rowReordering: PropTypes.bool,
   /**
    * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `false`, the row selection mode is disabled.
    * @default true

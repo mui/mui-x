@@ -30,11 +30,6 @@ pnpm add @mui/x-charts
 
 </codeblock>
 
-:::info
-The `next` tag is used to download the latest, **pre-release**, v7 version.
-Remove it to get the current stable version.
-:::
-
 The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
