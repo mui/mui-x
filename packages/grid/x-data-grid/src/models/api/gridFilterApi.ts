@@ -30,9 +30,10 @@ export interface GridFilterApi {
   upsertFilterItems: (items: GridFilterItem[]) => void;
   /**
    * Applies all filters on all rows.
+   * @param {skipIfNoValidItem} skipIfNoValidItem If `true`, only applies filters if a valid item is present.
    * @ignore - do not document.
    */
-  unstable_applyFilters: () => void;
+  unstable_applyFilters: (skipIfNoValidItem?: boolean) => void;
   /**
    * Deletes a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to delete.
