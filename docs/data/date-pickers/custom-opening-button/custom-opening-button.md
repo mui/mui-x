@@ -34,3 +34,10 @@ If you want to track the opening of the picker, you should use the `onOpen` / `o
 ```
 
 :::
+
+## Add a second icon next to the opening button
+
+If you want to add a second icon next to the opening button, you can use the `inputAdornment` slot.
+In the example below, the warning icon will be visible anytime the current value is invalid:
+
+{{"demo": "SecondIconNextToOpeningButton.js"}}
