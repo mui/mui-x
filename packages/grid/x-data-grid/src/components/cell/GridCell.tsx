@@ -354,6 +354,20 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     return cellStyle;
   }, [width, height, isNotVisible, styleProp]);
 
+  const scrollCellIntoView = React.useCallback(() => {
+    const rect = cellRef.current!.getBoundingClientRect();
+
+    const isInViewPort =
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || cellRef.current!.clientHeight) &&
+      rect.right <= (window.innerWidth || cellRef.current!.clientWidth);
+
+    if (!isInViewPort) {
+      cellRef.current!.scrollIntoView({ block: 'nearest' });
+    }
+  }, [cellRef]);
+
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
@@ -367,13 +381,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
       if (doesSupportPreventScroll()) {
         elementToFocus.focus({ preventScroll: true });
+        scrollCellIntoView();
       } else {
         const scrollPosition = apiRef.current.getScrollPosition();
         elementToFocus.focus();
         apiRef.current.scroll(scrollPosition);
       }
     }
-  }, [hasFocus, cellMode, apiRef]);
+  }, [hasFocus, cellMode, apiRef, scrollCellIntoView]);
 
   let handleFocus: any = other.onFocus;
 
