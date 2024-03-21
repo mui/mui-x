@@ -6,7 +6,7 @@ import {
   getPropTypesFromFile,
   injectPropTypesInFile,
 } from '@mui/internal-scripts/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui-internal/docs-utils';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {

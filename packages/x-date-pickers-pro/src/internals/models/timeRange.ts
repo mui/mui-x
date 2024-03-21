@@ -5,7 +5,12 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { TimeRangeValidationError, RangeFieldSection, DateRange } from '../../models';
+import {
+  TimeRangeValidationError,
+  RangeFieldSection,
+  DateRange,
+  RangeFieldSeparatorProps,
+} from '../../models';
 
 export interface UseTimeRangeFieldProps<
   TDate extends PickerValidDate,
@@ -23,6 +28,7 @@ export interface UseTimeRangeFieldProps<
       >,
       'format'
     >,
+    RangeFieldSeparatorProps,
     TimeValidationProps<TDate>,
     BaseTimeValidationProps {
   /**

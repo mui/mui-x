@@ -27,6 +27,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",
+    "@mui/internal-markdown": "^1.0.0",
     "@mui/joy": "^5.0.0-beta.32",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
@@ -91,7 +92,7 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@mui-internal/docs-utils": "^1.0.2",
+    "@mui/internal-docs-utils": "^1.0.4",
     "@mui/internal-scripts": "^1.0.1",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",

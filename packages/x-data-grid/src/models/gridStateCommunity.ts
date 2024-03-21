@@ -63,4 +63,5 @@ export interface GridInitialStateCommunity {
   filter?: GridFilterInitialState;
   columns?: GridColumnsInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+  density?: GridDensityState;
 }
