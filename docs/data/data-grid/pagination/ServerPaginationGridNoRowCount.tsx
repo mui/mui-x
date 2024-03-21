@@ -1,14 +1,22 @@
 import * as React from 'react';
-import { DataGrid, GridPaginationMeta, GridPaginationModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridPaginationMeta,
+  GridPaginationModel,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const SERVER_OPTIONS = {
   useCursorPagination: false,
 };
 
-const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
+const rowLength = 98;
+
+const { useQuery, ...data } = createFakeServer({ rowLength }, SERVER_OPTIONS);
 
 export default function ServerPaginationGridNoRowCount() {
+  const apiRef = useGridApiRef();
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
@@ -40,9 +48,17 @@ export default function ServerPaginationGridNoRowCount() {
     [],
   );
 
+  React.useEffect(() => {
+    if (paginationMeta?.hasNextPage === false) {
+      // On last page set the row count to the number of rows
+      apiRef.current.setRowCount(rowLength);
+    }
+  }, [apiRef, paginationMeta]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        apiRef={apiRef}
         rows={rows}
         {...data}
         initialState={{ ...data.initialState, pagination: { rowCount: -1 } }}

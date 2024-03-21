@@ -1,4 +1,5 @@
 <DataGrid
+  apiRef={apiRef}
   rows={rows}
   {...data}
   initialState={{ ...data.initialState, pagination: { rowCount: -1 } }}

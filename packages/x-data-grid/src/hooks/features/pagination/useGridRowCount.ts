@@ -127,16 +127,11 @@ export const useGridRowCount = (
       if (props.paginationMode === 'client') {
         return;
       }
-      if (meta.hasNextPage === false && rowCountState === -1) {
-        apiRef.current.setRowCount(paginationModel.pageSize * (paginationModel.page + 1));
-        return;
-      }
 
-      if (meta.hasNextPage === true && rowCountState !== -1) {
-        const lastPage = Math.max(0, Math.ceil(rowCountState / paginationModel.pageSize) - 1);
-        if (paginationModel.page === lastPage) {
-          apiRef.current.setRowCount(-1);
-        }
+      if (!meta.hasNextPage && rowCountState === -1) {
+        apiRef.current.setRowCount(
+          paginationModel.pageSize * paginationModel.page + paginationModel.pageSize,
+        );
       }
     },
     [apiRef, props.paginationMode, rowCountState, paginationModel],
