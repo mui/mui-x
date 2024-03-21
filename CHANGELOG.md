@@ -79,6 +79,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0`, plus:
 
 - [DataGridPremium] Add support for confirmation before clipboard paste (#12225) @cherniavskii
 - [DataGridPremium] Fix single grouping column sorting (#9679) @cherniavskii
+- [DataGridPremium] Fix boolean cell not rendered in group rows (#12492) @sai6855
 
 ### Date and Time Pickers
 
