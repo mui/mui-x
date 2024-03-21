@@ -48,8 +48,10 @@ You can browse the documentation, find an example close to your use case, and th
 #### Use starter templates
 
 You can use a starter template to build a reproduction case with:
+
 <!-- #default-branch-switch -->
-- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
+
+- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
 ## Stack Overflow
@@ -92,9 +94,9 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
-- MUI X v6: ✅ Stable major (Continuous support)
-- MUI X v5: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v7: ✅ Stable major (Continuous support).
+- MUI X v6: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v5: 🅧 No longer supported.
 - MUI X v4: 🅧 No longer supported.
 - MUI X v3: 🅧 Never existed.
 - MUI X v2: 🅧 Never existed.

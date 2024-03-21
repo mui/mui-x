@@ -26,6 +26,12 @@ export default function App() {
             checked: 'true',
           },
         }}
+        experimentalFeatures={{
+          lazyLoading: true,
+          ariaV7: true,
+          columnGrouping: true,
+          clipboardPaste: true,
+        }}
       />
       <DataGridPremium
         components={{

@@ -4,4 +4,5 @@ export type {
   UseDesktopPickerSlotProps,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
+  UseDesktopPickerProps,
 } from './useDesktopPicker.types';

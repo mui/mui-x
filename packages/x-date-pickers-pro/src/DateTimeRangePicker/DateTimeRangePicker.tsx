@@ -16,6 +16,16 @@ type DateTimeRangePickerComponent = (<
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeRangePicker](https://mui.com/x/react-date-pickers/date-time-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DateTimeRangePicker API](https://mui.com/x/api/date-pickers/date-time-range-picker/)
+ */
 const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,

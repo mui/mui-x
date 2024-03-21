@@ -62,6 +62,21 @@ export interface BaseDateTimePickerSlotProps<TDate extends PickerValidDate>
   toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
+export type DateTimePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  Omit<DateViewRendererProps<TDate, TView>, 'slots' | 'slotProps'> &
+    Omit<
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      'slots' | 'slotProps'
+    >,
+  TAdditionalProps
+>;
+
 export interface BaseDateTimePickerProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -89,15 +104,7 @@ export interface BaseDateTimePickerProps<
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      TDate | null,
-      TView,
-      DateViewRendererProps<TDate, TView> &
-        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
-      {}
-    >
-  >;
+  viewRenderers?: Partial<DateTimePickerViewRenderers<TDate, TView>>;
 }
 
 type UseDateTimePickerDefaultizedProps<

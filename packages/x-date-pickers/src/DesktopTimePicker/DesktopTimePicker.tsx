@@ -5,13 +5,12 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
-import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -67,7 +66,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeViewWithMeridiem, any, {}> = {
+  const viewRenderers: TimePickerViewRenderers<TDate, TimeViewWithMeridiem, any> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,

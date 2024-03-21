@@ -163,6 +163,22 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
     });
 
+    it('should display icon on auto-generated row', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: {
+              model: ['isFilled'],
+            },
+          }}
+          columns={[...baselineProps.columns, { field: 'isFilled', type: 'boolean' }]}
+          rows={baselineProps.rows.map((row) => ({ ...row, isFilled: false }))}
+        />,
+      );
+
+      expect(screen.getByTestId('CloseIcon')).toBeVisible();
+    });
+
     it('should respect the grouping criteria with colDef.groupable = false', () => {
       render(
         <Test

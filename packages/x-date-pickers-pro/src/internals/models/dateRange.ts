@@ -4,7 +4,12 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import type { DateRangeValidationError, RangeFieldSection, DateRange } from '../../models';
+import {
+  DateRangeValidationError,
+  RangeFieldSection,
+  DateRange,
+  RangeFieldSeparatorProps,
+} from '../../models';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -39,5 +44,6 @@ export interface UseDateRangeFieldProps<
       >,
       'format'
     >,
+    RangeFieldSeparatorProps,
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate> {}

@@ -203,6 +203,13 @@
     "componentProp": "onResize"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "densityChange",
+    "description": "Fired when the density changes.",
+    "params": "GridDensity",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "excelExportStateChange",
     "description": "Fired when the state of the Excel export task changes",

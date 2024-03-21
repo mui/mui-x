@@ -49,7 +49,7 @@ Push the working branch on the documentation release branch to deploy the docume
 <!-- #default-branch-switch -->
 
 ```bash
-git push -f upstream next:docs-next
+git push -f upstream master:docs-v7
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-next)
