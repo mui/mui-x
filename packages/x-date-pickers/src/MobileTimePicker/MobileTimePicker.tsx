@@ -5,9 +5,8 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
-import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
@@ -50,7 +49,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+  const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
