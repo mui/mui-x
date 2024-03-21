@@ -120,14 +120,13 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
         },
       },
       {
-        props: ({ ownerState: { startAdornment } }: { ownerState: OwnerStateType }) =>
-          !!startAdornment,
+        props: ({ startAdornment }: OwnerStateType) => !!startAdornment,
         style: {
           paddingLeft: 12,
         },
       },
       {
-        props: ({ ownerState: { endAdornment } }: { ownerState: OwnerStateType }) => !!endAdornment,
+        props: ({ endAdornment }: OwnerStateType) => !!endAdornment,
         style: {
           paddingRight: 12,
         },
@@ -154,14 +153,13 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
       },
     },
     {
-      props: ({ ownerState: { startAdornment } }: { ownerState: OwnerStateType }) =>
-        !!startAdornment,
+      props: ({ startAdornment }: OwnerStateType) => !!startAdornment,
       style: {
         paddingLeft: 0,
       },
     },
     {
-      props: ({ ownerState: { endAdornment } }: { ownerState: OwnerStateType }) => !!endAdornment,
+      props: ({ endAdornment }: OwnerStateType) => !!endAdornment,
       style: {
         paddingRight: 0,
       },
