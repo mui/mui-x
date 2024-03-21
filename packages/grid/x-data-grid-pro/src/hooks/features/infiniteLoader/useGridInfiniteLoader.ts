@@ -32,6 +32,14 @@ export const useGridInfiniteLoader = (
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
+  // Set isInScrollBottomArea to false when new rows are being added,
+  // indicating that the scroll position is no longer at the bottom of the content.
+  React.useEffect(() => {
+    if (isInScrollBottomArea.current) {
+      isInScrollBottomArea.current = false;
+    }
+  }, [currentPage.rows.length, isInScrollBottomArea]);
+
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
       const dimensions = apiRef.current.getRootDimensions();
