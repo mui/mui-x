@@ -22,9 +22,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridBooleanCellProps
-  extends GridRenderCellParams,
-    Omit<SvgIconProps, 'tabIndex' | 'id'> {}
+interface GridBooleanCellProps extends GridRenderCellParams, Omit<SvgIconProps, 'tabIndex' | 'id'> {
+  hideDescendantCount?: boolean;
+}
 
 function GridBooleanCellRaw(props: GridBooleanCellProps) {
   const {
@@ -40,6 +40,7 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
     isEditable,
     hasFocus,
     tabIndex,
+    hideDescendantCount,
     ...other
   } = props;
 
