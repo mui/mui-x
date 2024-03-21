@@ -506,31 +506,31 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
 
   When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
-```diff
-  function MyCustomTextField(props) {
-    const {
-+     // Should be ignored
-+     enableAccessibleFieldDOMStructure,
-      // ... rest of the props you are using
-    } = props;
+  ```diff
+    function MyCustomTextField(props) {
+      const {
+  +     // Should be ignored
+  +     enableAccessibleFieldDOMStructure,
+        // ... rest of the props you are using
+      } = props;
 
-    return ( /* Some UI to edit the date */ )
-  }
+      return ( /* Some UI to edit the date */ )
+    }
 
-  function MyCustomField(props) {
-    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
-      ...props,
-+     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
-+     enableAccessibleFieldDOMStructure: false,
-    });
+    function MyCustomField(props) {
+      const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+        ...props,
+  +     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
+  +     enableAccessibleFieldDOMStructure: false,
+      });
 
-    return <MyCustomTextField ref={ref} {...fieldResponse} />;
-  }
+      return <MyCustomTextField ref={ref} {...fieldResponse} />;
+    }
 
-  function App() {
-    return <DatePicker slots={{ field: MyCustomField }} />;
-  }
-```
+    function App() {
+      return <DatePicker slots={{ field: MyCustomField }} />;
+    }
+  ```
 
 - The following internal types were exported by mistake and have been removed from the public API:
 
