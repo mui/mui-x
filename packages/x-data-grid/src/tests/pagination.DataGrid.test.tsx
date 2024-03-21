@@ -10,7 +10,6 @@ import {
   GridRowsProp,
   GridApi,
   useGridApiRef,
-  GridPaginationMeta,
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
