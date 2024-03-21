@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## v7.0.0
 
-_Mar 20, 2024_
+_Mar 21, 2024_
 
 We're excited to [announce the first v7 stable release](https://mui.com/blog/mui-x-v7/)! 🎉🚀
 
@@ -13,7 +13,7 @@ This is now the officially supported major version, where we'll keep rolling out
 Migration guides are available with a complete list of the breaking changes:
 
 - [Data Grid](https://mui.com/x/migration/migration-data-grid-v6/)
-- [Date Pickers](https://mui.com/x/migration/migration-pickers-v6/)
+- [Date and Time Pickers](https://mui.com/x/migration/migration-pickers-v6/)
 - [Tree View](https://mui.com/x/migration/migration-tree-view-v6/)
 - [Charts](https://mui.com/x/migration/migration-charts-v6/)
 
@@ -21,8 +21,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 🚀 Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
 - ✨ Set focus on the focused Tree Item instead of the Tree View (#12226) @flaviendelangle
-- Controlled `density` for the Data Grid (#12332) @MBilalShafi
-- Dynamic virtualization range for the Data Grid (#12353) @romgrk
+- 🕹️ Support controlled `density` for the Data Grid (#12332) @MBilalShafi
+- 🎁 Dynamic virtualization range for the Data Grid (#12353) @romgrk
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -66,6 +66,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Dynamic virtualization range (#12353) @romgrk
 - [DataGrid] Fix `ElementType` usage (#12479) @cherniavskii
 - [DataGrid] Fix cell value formatting on copy (#12357) @sai6855
+- [DataGrid] Fix checkbox selection is keeping selection when filtering (#11751) @g1mishra
 - [DataGrid] Make `rows` an optional prop (#12478) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@7.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -91,11 +92,13 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0`, plus:
 
 - [fields] Allow to override the separator between the start and the end date in all range fields (#12174) @flaviendelangle
 - [fields] Support format without separator (#12489) @flaviendelangle
-- [pickers] Use renderer interceptor on `DateTimePicker` (#12441) @LukasTy
+- [pickers] Use renderer interceptor on `DesktopDateTimePicker` (#12441) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.0.0`.
+Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
+
+- [DateTimeRangePicker] Add component `JSDoc` (#12518) @LukasTy
 
 ### Charts
 
@@ -111,8 +114,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0`.
 
 ```diff
  <TreeView>
--    <TreeItem label='Item 1' nodeId='one'>
-+    <TreeItem label='Item 1' itemId='one'>
+-    <TreeItem label="Item 1" nodeId="one">
++    <TreeItem label="Item 1" itemId="one">
  </TreeView>
 ```
 
@@ -172,13 +175,11 @@ Same changes as in `@mui/x-date-pickers@7.0.0`.
 ### Core
 
 - [core] Bump `@mui/material` peer dependency for all packages (#12516) @LukasTy
-- [core] Fix `no-restricted-imports` ESLint rule not working for data grid packages (#12477) @cherniavskii
-- [core] Lower the frequency of no-response action runs (#12491) @michaldudak
+- [core] Fix `no-restricted-imports` ESLint rule not working for Data Grid packages (#12477) @cherniavskii
+- [core] Lower the frequency of `no-response` action runs (#12491) @michaldudak
 - [core] Remove leftover `legacy` `browserlistrc` entry (#12415) @LukasTy
 - [core] Update NPM tag (#12511) @cherniavskii
 - [core] Use Circle CI context @oliviertassinari
-- Fix checkbox selection is keeping selection when filtering (#11751) @g1mishra
-- [DateTimeRangePicker] Add component `JSDoc` (#12518) @LukasTy
 - [license] Fix grammar on expired license error message (#12460) @joserodolfofreitas
 
 ## 7.0.0-beta.7
