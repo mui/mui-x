@@ -302,14 +302,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "rowEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridRowId",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onRowEditCommit"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
     "params": "GridRowEditStartParams",
