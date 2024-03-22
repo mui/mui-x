@@ -19,6 +19,7 @@ import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
@@ -428,41 +429,13 @@ export function getFirstNonSpannedColumnToRender({
   return firstNonSpannedColumnToRender;
 }
 
-export function getFirstColumnIndexToRender({
-  firstColumnIndex,
-  minColumnIndex,
-  columnBuffer,
-  firstRowToRender,
-  lastRowToRender,
-  apiRef,
-  visibleRows,
-}: {
-  firstColumnIndex: number;
-  minColumnIndex: number;
-  columnBuffer: number;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  firstRowToRender: number;
-  lastRowToRender: number;
-  visibleRows: GridRowEntry[];
-}) {
-  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
-
-  const firstColumnToRender = getFirstNonSpannedColumnToRender({
-    firstColumnToRender: initialFirstColumnToRender,
-    apiRef,
-    firstRowToRender,
-    lastRowToRender,
-    visibleRows,
-  });
-
-  return firstColumnToRender;
-}
-
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   headerHeight: number,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
+  const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
+  const multiplicationFactor = isHeaderFilteringEnabled ? 2 : 1;
+  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + multiplicationFactor);
 }

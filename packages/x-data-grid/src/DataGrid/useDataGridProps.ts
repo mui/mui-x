@@ -19,7 +19,6 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   pagination: true,
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
-  disableColumnResize: true,
   keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
@@ -32,12 +31,10 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   autoPageSize: false,
   checkboxSelection: false,
   checkboxSelectionVisibleOnly: false,
-  columnBuffer: 3,
-  rowBuffer: 3,
-  columnThreshold: 3,
-  rowThreshold: 3,
+  columnBufferPx: 150,
+  rowBufferPx: 150,
+  rows: [],
   rowSelection: true,
-  density: 'standard',
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,
@@ -62,7 +59,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
   paginationMode: 'client',
-  paginationType: 'index',
   rowHeight: 52,
   pageSizeOptions: [25, 50, 100],
   rowSpacingType: 'margin',
@@ -78,7 +74,8 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   ignoreValueFormatterDuringExport: false,
   clipboardCopyCellDelimiter: '\t',
   rowPositionsDebounceMs: 166,
-  rows: [],
+  autosizeOnMount: false,
+  disableAutosize: false,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;

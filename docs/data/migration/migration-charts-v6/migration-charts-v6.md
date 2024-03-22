@@ -10,20 +10,20 @@ productId: x-charts
 
 This is a reference guide for upgrading `@mui/x-charts` from v6 to v7.
 The change between v6 and v7 is mostly here to match the version with other MUI X packages.
-Not big breaking changes are expected.
+No big breaking changes are expected.
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^7.0.0`.
 
 ```diff
 -"@mui/x-charts": "6.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 

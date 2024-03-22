@@ -30,7 +30,8 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
-import { GridPaginationModel, GridPaginationType } from '../gridPaginationProps';
+import { GridPaginationModel } from '../gridPaginationProps';
+import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 
 export interface GridExperimentalFeatures {
   /**
@@ -44,7 +45,7 @@ export interface GridExperimentalFeatures {
  * The props users can give to the `DataGrid` component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
-  Partial<DataGridPropsWithDefaultValues> &
+  Partial<DataGridPropsWithDefaultValues<R>> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
     DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
@@ -69,7 +70,6 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableColumnReorder'
-  | 'disableColumnResize'
   | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
@@ -107,11 +107,6 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
   /**
-   * Set of rows of type [[GridRowsProp]].
-   * @default []
-   */
-  rows: GridRowsProp<R>;
-  /**
    * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
    * @default false
    */
@@ -133,35 +128,20 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   checkboxSelectionVisibleOnly: boolean;
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region in pixels to render before/after the viewport
+   * @default 150
    */
-  columnBuffer: number;
+  columnBufferPx: number;
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * Row region in pixels to render before/after the viewport
+   * @default 150
    */
-  rowBuffer: number;
+  rowBufferPx: number;
   /**
    * If `false`, the row selection mode is disabled.
    * @default true
    */
   rowSelection: boolean;
-  /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  rowThreshold: number;
-  /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  columnThreshold: number;
-  /**
-   * Set the density of the Data Grid.
-   * @default "standard"
-   */
-  density: GridDensity;
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -296,13 +276,10 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   paginationMode: GridFeatureMode;
   /**
-   * Server-side pagination could either be based on a page number or a cursor.
-   * Set it to 'index' if the pagination is based on a page number.
-   * Set it to 'cursor' if the pagination is based on a cursor.
-   * Only applicable when `paginationMode` is set to 'server'.
-   * @default "index"
+   * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  paginationType: GridPaginationType;
+  rows: GridRowsProp<R>;
   /**
    * Sets the height in pixel of a row in the Data Grid.
    * @default 52
@@ -385,6 +362,16 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default 166
    */
   rowPositionsDebounceMs: number;
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: boolean;
+  /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: boolean;
 }
 
 /**
@@ -411,6 +398,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridClasses>;
+  /**
+   * Set the density of the Data Grid.
+   * @default "standard"
+   */
+  density?: GridDensity;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -564,6 +556,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
+  /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange?: (density: GridDensity) => void;
   /**
    * Callback fired when a row is clicked.
    * Not called if the target clicked is an interactive element added by the built-in columns.
@@ -769,4 +766,22 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {string} data The data copied to the clipboard.
    */
   onClipboardCopy?: GridEventListener<'clipboardCopy'>;
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions?: GridAutosizeOptions;
+  /**
+   * Callback fired while a column is being resized.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnResize?: GridEventListener<'columnResize'>;
+  /**
+   * Callback fired when the width of a column is changed.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
 }

@@ -49,6 +49,10 @@ import {
   useGridVirtualization,
   virtualizationStateInitializer,
 } from '../hooks/features/virtualization';
+import {
+  columnResizeStateInitializer,
+  useGridColumnResize,
+} from '../hooks/features/columnResize/useGridColumnResize';
 
 export const useDataGridComponent = (
   inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
@@ -78,6 +82,7 @@ export const useDataGridComponent = (
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
+  useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
@@ -97,6 +102,7 @@ export const useDataGridComponent = (
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
+  useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);

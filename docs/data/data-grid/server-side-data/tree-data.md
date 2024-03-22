@@ -4,7 +4,7 @@ title: React Server-side tree data
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Tree data lazy-loading with server side data source.</p>
+<p class="description">Tree data lazy-loading with server-side data source.</p>
 
 To use the server-side tree data, pass the `unstable_dataSource` prop as explained in the overview section, in addition to that passing of some additional props is required for the server-side tree data to work properly.
 

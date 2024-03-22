@@ -32,7 +32,7 @@ const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) 
 
 type DataType<ComponentProps> = {
   /**
-   * Name of the prop, e.g. 'children'
+   * Name of the prop, for example 'children'
    */
   propName: Extract<keyof ComponentProps, string>;
   /**
