@@ -111,6 +111,11 @@ SingleInputDateTimeRangeField.propTypes = {
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   component: PropTypes.elementType,
   /**
+   * String displayed between the start and the end dates.
+   * @default "–"
+   */
+  dateSeparator: PropTypes.string,
+  /**
    * The default value. Use when the component is not controlled.
    */
   defaultValue: PropTypes.arrayOf(PropTypes.object),

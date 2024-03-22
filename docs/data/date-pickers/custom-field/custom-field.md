@@ -18,7 +18,7 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Customize the separator of multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
 
@@ -48,6 +48,12 @@ You can manually add an `endAdornment` if you want your range picker to look exa
 :::info
 This adornment is purely decorative, the focus remains on the field when the picker is opened.
 :::
+
+### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
+
+{{"demo": "RangeFieldDateSeparator.js"}}
 
 ### Change the format density
 

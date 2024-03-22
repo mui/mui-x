@@ -2,12 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerValidDate, TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
-import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,7 +35,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate extend
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+  const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,

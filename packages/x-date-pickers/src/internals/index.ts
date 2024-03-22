@@ -70,6 +70,7 @@ export type {
   UsePickerParams,
   UsePickerProps,
   UsePickerValueFieldResponse,
+  PickerViewsRendererProps,
 } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,

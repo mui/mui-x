@@ -5,23 +5,26 @@ import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export type GridActionsCellItemProps = {
+interface GridActionsCellItemCommonProps {
   label: string;
   icon?: React.ReactElement;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
-} & (
-  | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
-  | ({
-      showInMenu: true;
-      /**
-       * If false, the menu will not close when this item is clicked.
-       * @default true
-       */
-      closeMenuOnClick?: boolean;
-      closeMenu?: () => void;
-    } & MenuItemProps)
-);
+}
+
+export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
+  (
+    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({
+        showInMenu: true;
+        /**
+         * If false, the menu will not close when this item is clicked.
+         * @default true
+         */
+        closeMenuOnClick?: boolean;
+        closeMenu?: () => void;
+      } & Omit<MenuItemProps, 'component'>)
+  );
 
 const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
   (props, ref) => {
@@ -80,6 +83,10 @@ GridActionsCellItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
+   */
+  component: PropTypes.elementType,
   icon: PropTypes.element,
   label: PropTypes.string.isRequired,
   showInMenu: PropTypes.bool,

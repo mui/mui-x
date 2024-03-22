@@ -21,6 +21,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'enableAccessibleFieldDOMStructure',
   'disabled',
   'readOnly',
+  'dateSeparator',
 ] as const;
 
 export const splitFieldInternalAndForwardedProps = <

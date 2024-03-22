@@ -214,6 +214,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     // Extract escaped section to avoid extending them
     const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
 
+    // This RegExp tests if a string is only mad of supported tokens
+    const validTokens = [...Object.keys(this.formatTokenMap), 'yyyyy'];
+    const isWordComposedOfTokens = new RegExp(`^(${validTokens.join('|')})+$`);
+
     // Extract words to test if they are a token or a word to escape.
     const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
@@ -225,12 +229,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
             return token;
           }
           const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
-          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+
+          return expandedToken.replace(catchWordsRegexp, (substring, g1, g2) => {
             const word = g1 || g2; // words are either in group 1 or group 2
-            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
-              return correspondance;
+
+            if (isWordComposedOfTokens.test(word)) {
+              return substring;
             }
-            return `'${correspondance}'`;
+            return `'${substring}'`;
           });
         })
         .join('')

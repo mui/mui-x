@@ -300,7 +300,7 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         });

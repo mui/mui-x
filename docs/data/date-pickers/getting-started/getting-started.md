@@ -20,10 +20,6 @@ Using your favorite package manager, install:
 
 <!-- #default-branch-switch -->
 
-:::warning
-The `next` tag is used to download the latest v7 **pre-release** version.
-:::
-
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info

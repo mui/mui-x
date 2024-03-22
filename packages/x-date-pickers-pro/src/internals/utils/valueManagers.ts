@@ -74,7 +74,11 @@ export const rangeValueManager: RangePickerValueManager = {
   ],
 };
 
-export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {
+export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
+  dateSeparator = '–',
+}: {
+  dateSeparator: string | undefined;
+}): FieldValueManager<DateRange<TDate>, TDate, RangeFieldSection> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
@@ -117,7 +121,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
             ...section,
             dateName: position,
             // TODO: Check if RTL still works
-            endSeparator: `${section.endSeparator} – `,
+            endSeparator: `${section.endSeparator} ${dateSeparator} `,
           };
         }
 
@@ -149,26 +153,26 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
     );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
-    // TODO: Improve because it would not work if the date format has `–` as a separator.
-    const [startStr, endStr] = valueStr.split('–');
+    // TODO: Improve because it would not work if some section have the same separator as the dateSeparator.
+    const [startStr, endStr] = valueStr.split(dateSeparator);
 
     return [startStr, endStr].map((dateStr, index) => {
       if (dateStr == null) {
         return null;
       }
 
-      return parseDate(dateStr.trim(), referenceValue[index]);
+      return parseDate(dateStr.trim(), referenceValue[index]!);
     }) as DateRange<any>;
   },
   getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
-    const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
-      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
+    const updateDateInRange = (newDate: TDate | null, prevDateRange: DateRange<TDate>) =>
+      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<TDate>;
 
     return {
       date: state.value[index],
-      referenceDate: state.referenceValue[index],
+      referenceDate: state.referenceValue[index]!,
       getSections: (sections) => {
         const dateRangeSections = splitDateRangeSections(sections);
         if (index === 0) {
@@ -186,4 +190,4 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       }),
     };
   },
-};
+});

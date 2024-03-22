@@ -4,7 +4,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
-import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
@@ -13,7 +13,6 @@ import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type DesktopDatePickerComponent = (<
@@ -50,7 +49,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDatePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
+  const viewRenderers: DatePickerViewRenderers<TDate, DateView, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
