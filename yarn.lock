@@ -2018,7 +2018,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.14"
-  resolved "https://github.com/mui/material-ui.git#9585d28317c90f2c71ab88dd5ae37638bb64ad82"
+  resolved "https://github.com/mui/material-ui.git#39fe215ce8bb1ed215e9a274f63b979714876e61"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@netlify/functions" "^2.6.0"
