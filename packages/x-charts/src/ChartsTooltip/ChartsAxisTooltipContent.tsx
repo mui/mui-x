@@ -10,6 +10,11 @@ import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
 import { isCartesianSeriesType } from './utils';
+import colorGetter from '../internals/colorGetter';
+
+type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
+  getColor: (dataIndex: number) => string;
+};
 
 export type ChartsAxisContentProps = {
   /**
@@ -19,7 +24,7 @@ export type ChartsAxisContentProps = {
   /**
    * The series linked to the triggered axis.
    */
-  series: ChartSeriesDefaultized<ChartSeriesType>[];
+  series: ChartSeriesDefaultizedWithColorGetter[];
   /**
    * The properties of the triggered axis.
    */
@@ -67,12 +72,19 @@ function ChartsAxisTooltipContent(props: {
           const item = series[seriesType]!.series[seriesId];
           const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-            rep.push(series[seriesType]!.series[seriesId]);
+            const seriesToAdd = series[seriesType]!.series[seriesId];
+
+            const color = colorGetter(
+              seriesToAdd,
+              xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+              yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+            );
+            rep.push({ ...seriesToAdd, getColor: color });
           }
         });
       });
     return rep;
-  }, [USED_AXIS_ID, isXaxis, series]);
+  }, [USED_AXIS_ID, isXaxis, series, xAxis, xAxisIds, yAxis, yAxisIds]);
 
   const relevantAxis = React.useMemo(() => {
     return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];

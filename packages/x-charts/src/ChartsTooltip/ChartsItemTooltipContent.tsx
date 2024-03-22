@@ -7,6 +7,8 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
+import { CartesianContext } from '../context/CartesianContextProvider';
+import colorGetter from '../internals/colorGetter';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -21,6 +23,12 @@ export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> 
    * Override or extend the styles applied to the component.
    */
   classes: ChartsTooltipClasses;
+  /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: (dataIndex: number) => string;
   sx?: SxProps<Theme>;
 };
 
@@ -37,6 +45,21 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
+  const axisData = React.useContext(CartesianContext);
+
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
+
+  const getColor =
+    series.type === 'pie'
+      ? colorGetter(series)
+      : colorGetter(
+          series,
+          xAxis[series.xAxisKey ?? defaultXAxisId],
+          yAxis[series.yAxisKey ?? defaultYAxisId],
+        );
+
   const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({
     elementType: Content,
@@ -46,6 +69,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
       series,
       sx,
       classes,
+      getColor,
     },
     ownerState: {},
   });

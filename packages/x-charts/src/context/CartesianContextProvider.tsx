@@ -27,6 +27,7 @@ import {
 import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
 import { SeriesId } from '../models/seriesType/common';
+import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 
 export type CartesianContextProviderProps = {
   /**
@@ -179,7 +180,10 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
     };
 
     const allXAxis: AxisConfig[] = [
-      ...(xAxis?.map((axis, index) => ({ id: `deaultized-x-axis-${index}`, ...axis })) ?? []),
+      ...(xAxis?.map((axis, index) => ({
+        id: `deaultized-x-axis-${index}`,
+        ...axis,
+      })) ?? []),
       // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
       ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
         ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
@@ -206,6 +210,8 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -213,6 +219,8 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           ...axis,
           scale: scalePoint(axis.data!, range),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -234,11 +242,15 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scaleType,
         scale: niceScale.domain(domain),
         tickNumber,
+        colorScale: axis.colorMap && getColorScale(axis.colorMap),
       } as AxisDefaultized<typeof scaleType>;
     });
 
     const allYAxis: AxisConfig[] = [
-      ...(yAxis?.map((axis, index) => ({ id: `deaultized-y-axis-${index}`, ...axis })) ?? []),
+      ...(yAxis?.map((axis, index) => ({
+        id: `deaultized-y-axis-${index}`,
+        ...axis,
+      })) ?? []),
       ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
         ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
         : []),
@@ -262,6 +274,8 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -269,6 +283,8 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           ...axis,
           scale: scalePoint(axis.data!, [range[1], range[0]]),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -290,6 +306,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scaleType,
         scale: niceScale.domain(domain),
         tickNumber,
+        colorScale: axis.colorMap && getColorScale(axis.colorMap),
       } as AxisDefaultized<typeof scaleType>;
     });
 

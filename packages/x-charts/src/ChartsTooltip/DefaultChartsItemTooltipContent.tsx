@@ -15,7 +15,7 @@ import { CommonSeriesType } from '../models/seriesType/common';
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData, sx, classes } = props;
+  const { series, itemData, sx, classes, getColor } = props;
 
   if (itemData.dataIndex === undefined) {
     return null;
@@ -23,11 +23,11 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
   const { displayedLabel, color } =
     series.type === 'pie'
       ? {
-          color: series.data[itemData.dataIndex].color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: series.data[itemData.dataIndex].label,
         }
       : {
-          color: series.color,
+          color: getColor(itemData.dataIndex) ?? series.color,
           displayedLabel: series.label,
         };
 

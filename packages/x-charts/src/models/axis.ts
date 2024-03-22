@@ -5,10 +5,14 @@ import type {
   ScaleTime,
   ScaleLinear,
   ScalePoint,
+  ScaleOrdinal,
+  ScaleSequential,
+  ScaleThreshold,
 } from 'd3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
+import { ContinuouseColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export type AxisId = string | number;
 
@@ -171,37 +175,75 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
+    colorMap?: OrdinalColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
+    colorMap?: OrdinalColorConfig;
   };
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
   pow: {
     scaleType: 'pow';
     scale: ScalePower<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
     scale: ScalePower<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
     scale: ScaleTime<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
     scale: ScaleTime<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
     scale: ScaleLinear<number, number>;
+    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
   };
 }
 
+interface AxisScaleComputedConfig {
+  band: {
+    colorScale?:
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>;
+  };
+  point: {
+    colorScale?:
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>;
+  };
+  log: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  pow: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  sqrt: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  time: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  utc: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  linear: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+}
 export type AxisValueFormatterContext = {
   location: 'tick' | 'tooltip';
 };
@@ -252,7 +294,8 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   AxisConfig<S, V>,
   'scaleType'
 > &
-  AxisScaleConfig[S] & {
+  AxisScaleConfig[S] &
+  AxisScaleComputedConfig[S] & {
     /**
      * An indication of the expected number of ticks.
      */
