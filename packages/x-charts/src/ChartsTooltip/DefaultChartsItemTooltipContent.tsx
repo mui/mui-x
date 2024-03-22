@@ -68,6 +68,12 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   classes: PropTypes.object.isRequired,
   /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: PropTypes.func.isRequired,
+  /**
    * The data used to identify the triggered item.
    */
   itemData: PropTypes.shape({

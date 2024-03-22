@@ -85,6 +85,7 @@ ChartsItemTooltipContent.propTypes = {
   content: PropTypes.elementType,
   contentProps: PropTypes.shape({
     classes: PropTypes.object,
+    getColor: PropTypes.func,
     itemData: PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

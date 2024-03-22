@@ -451,6 +451,43 @@ ScatterChart.propTypes = {
     PropTypes.shape({
       axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          overflowColor: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.string,
+          ]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          slices: PropTypes.arrayOf(
+            PropTypes.shape({
+              color: PropTypes.string.isRequired,
+              lg: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              lge: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              sm: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              sme: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            }),
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
@@ -494,6 +531,43 @@ ScatterChart.propTypes = {
     PropTypes.shape({
       axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          overflowColor: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.string,
+          ]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          slices: PropTypes.arrayOf(
+            PropTypes.shape({
+              color: PropTypes.string.isRequired,
+              lg: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              lge: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              sm: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+              sme: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            }),
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
