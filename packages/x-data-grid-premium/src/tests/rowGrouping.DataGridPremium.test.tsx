@@ -172,7 +172,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
             },
           }}
           columns={[...baselineProps.columns, { field: 'isFilled', type: 'boolean' }]}
-          rows={baselineProps.rows.map((row) => ({ ...row, isFilled: false }))}
+          rows={baselineProps.rows?.map((row) => ({ ...row, isFilled: false }))}
         />,
       );
 
