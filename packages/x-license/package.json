@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "7.0.0-beta.6",
+  "version": "7.0.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
