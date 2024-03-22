@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## v7.0.0
 
-_Mar 21, 2024_
+_Mar 22, 2024_
 
 We're excited to [announce the first v7 stable release](https://mui.com/blog/mui-x-v7/)! 🎉🚀
 
