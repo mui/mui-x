@@ -21,7 +21,7 @@ export const ADAPTER_TO_LIBRARY: Record<string, string> = {
 const PICKERS_ADAPTER_REGEX = /^@mui\/(lab|x-date-pickers(?:-pro)?)\/(?<adapterName>Adapter.*)/;
 
 export const postProcessImport = (importName: string): Record<string, string> | null => {
-  // e.g. date-fns
+  // for example date-fns
   const dateAdapterMatch = PICKERS_ADAPTER_REGEX.exec(importName);
   if (dateAdapterMatch !== null) {
     /**

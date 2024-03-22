@@ -9,8 +9,7 @@ yarn && yarn docs:dev
 ```
 
 If you do not have yarn installed, select your OS and follow the instructions on the [Yarn website](https://yarnpkg.com/lang/en/docs/install/#mac-stable).
-
-_DO NOT USE NPM, use Yarn to install the dependencies._
+DO NOT USE npm, use Yarn to install the dependencies.
 
 ## How can I add a new demo to the documentation?
 

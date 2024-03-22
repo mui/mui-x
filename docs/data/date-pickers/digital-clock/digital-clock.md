@@ -52,7 +52,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-The components use the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The components use the hour format of the locale's time setting, that is the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 
@@ -77,7 +77,7 @@ The prop accepts:
 
 ## Skip rendering disabled options
 
-With the `skipDisabled` prop, the components don't render options that are not available to the user (e.g. through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
+With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
 
 The following example combines these properties to customize which options are rendered.
 

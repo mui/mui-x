@@ -15,7 +15,7 @@ const className = simpleTreeViewClasses.root;
   onSelectedItemsChange={selectionCallback}
 >
   <TreeItem
-    nodeId="1"
+    itemId="1"
     label="Item 1"
     slots={{
       groupTransition: Fade,

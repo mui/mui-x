@@ -124,27 +124,37 @@ describe('<DataGridPro /> - Infnite loader', () => {
     await waitFor(() => {
       expect(getRow.callCount).to.equal(1);
     });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
 
     await waitFor(() => {
       expect(getRow.callCount).to.equal(2);
     });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    });
 
     await waitFor(() => {
       expect(getRow.callCount).to.equal(3);
     });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+    });
 
     await waitFor(() => {
       expect(getRow.callCount).to.equal(4);
     });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
 
     await waitFor(() => {
       expect(getRow.callCount).to.equal(5);
     });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+    });
 
     await sleep(200);
     // should not load more rows because the threshold is not reached

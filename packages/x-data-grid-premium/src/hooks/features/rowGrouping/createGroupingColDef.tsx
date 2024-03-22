@@ -88,11 +88,11 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
       // We only want to sort the groups of the current grouping criteria
       if (
         cellParams1.rowNode.type === 'group' &&
-        cellParams1.rowNode.groupingField === groupedByColDef.field &&
         cellParams2.rowNode.type === 'group' &&
-        cellParams2.rowNode.groupingField === groupedByColDef.field
+        cellParams1.rowNode.groupingField === cellParams2.rowNode.groupingField
       ) {
-        return groupedByColDef.sortComparator!(v1, v2, cellParams1, cellParams2);
+        const colDef = cellParams1.api.getColumn(cellParams1.rowNode.groupingField);
+        return colDef.sortComparator(v1, v2, cellParams1, cellParams2);
       }
 
       return groupingFieldIndexComparator(v1, v2, cellParams1, cellParams2);

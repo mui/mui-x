@@ -26,17 +26,16 @@ const availableLinksCore = {};
 const usedLinksX = {};
 const usedLinksCore = {};
 
-parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX, '');
+parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX);
 parseDocFolder(
   path.resolve(__dirname, '../../node_modules/@mui/monorepo/docs/pages/'),
   availableLinksCore,
   usedLinksCore,
-  '',
 );
 
 function removeApiLinkHash(link) {
   // Determine if the link is an API path
-  // e.g. /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
+  // for example /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
   const isApiPath = link.match(/^\/[\w-]+\/api\//);
   if (!isApiPath) {
     return link;

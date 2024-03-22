@@ -25,11 +25,9 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
-} from '@mui/x-data-grid/internals';
-import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
-} from '@mui/x-data-grid/utils/cellBorderUtils';
+} from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';

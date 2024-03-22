@@ -15,7 +15,7 @@ import { TreeViewItemId } from '../models';
 import { TreeViewPublicAPI } from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
   label: string;
 }
 

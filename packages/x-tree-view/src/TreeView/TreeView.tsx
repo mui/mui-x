@@ -48,7 +48,7 @@ const warn = () => {
 
 /**
  * This component has been deprecated in favor of the new `SimpleTreeView` component.
- * You can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
+ * You can have a look at how to migrate to the new component in the v7 [migration guide](https://mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
  *

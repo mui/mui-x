@@ -429,36 +429,6 @@ export function getFirstNonSpannedColumnToRender({
   return firstNonSpannedColumnToRender;
 }
 
-export function getFirstColumnIndexToRender({
-  firstColumnIndex,
-  minColumnIndex,
-  columnBuffer,
-  firstRowToRender,
-  lastRowToRender,
-  apiRef,
-  visibleRows,
-}: {
-  firstColumnIndex: number;
-  minColumnIndex: number;
-  columnBuffer: number;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  firstRowToRender: number;
-  lastRowToRender: number;
-  visibleRows: GridRowEntry[];
-}) {
-  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
-
-  const firstColumnToRender = getFirstNonSpannedColumnToRender({
-    firstColumnToRender: initialFirstColumnToRender,
-    apiRef,
-    firstRowToRender,
-    lastRowToRender,
-    visibleRows,
-  });
-
-  return firstColumnToRender;
-}
-
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   headerHeight: number,

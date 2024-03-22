@@ -4,7 +4,7 @@ title: React Server-side infinite loading
 
 # Data Grid - Server-side infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
-<p class="description">Row infinite loading with server side data source.</p>
+<p class="description">Row infinite loading with server-side data source.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

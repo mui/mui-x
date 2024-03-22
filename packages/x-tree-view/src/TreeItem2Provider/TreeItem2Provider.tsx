@@ -3,10 +3,10 @@ import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
-  const { children, nodeId } = props;
+  const { children, itemId } = props;
   const { wrapItem } = useTreeViewContext<[]>();
 
-  return wrapItem({ children, nodeId });
+  return wrapItem({ children, itemId });
 }
 
 TreeItem2Provider.propTypes = {
@@ -15,7 +15,7 @@ TreeItem2Provider.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  nodeId: PropTypes.string.isRequired,
+  itemId: PropTypes.string.isRequired,
 } as any;
 
 export { TreeItem2Provider };

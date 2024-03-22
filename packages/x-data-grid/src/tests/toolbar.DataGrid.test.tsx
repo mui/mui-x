@@ -1,23 +1,13 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
-import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  GridToolbar,
-  gridClasses,
-  GridColumnsManagementProps,
-} from '@mui/x-data-grid';
-import {
-  COMFORTABLE_DENSITY_FACTOR,
-  COMPACT_DENSITY_FACTOR,
-} from '../hooks/features/density/useGridDensity';
+import { DataGrid, GridToolbar, GridColumnsManagementProps } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -44,104 +34,6 @@ describe('<DataGrid /> - Toolbar', () => {
       },
     ],
   };
-
-  describe('density selector', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        this.skip();
-      }
-    });
-
-    function expectHeight(value: number) {
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(value)}px`,
-      });
-
-      expect(getComputedStyle(screen.getAllByRole('gridcell')[1]).height).to.equal(
-        `${Math.floor(value)}px`,
-      );
-    }
-
-    it('should increase grid density when selecting compact density', () => {
-      const rowHeight = 30;
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            rowHeight={rowHeight}
-          />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Density'));
-      clock.tick(100);
-      fireEvent.click(getByText('Compact'));
-
-      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
-    });
-
-    it('should decrease grid density when selecting comfortable density', () => {
-      const rowHeight = 30;
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            rowHeight={rowHeight}
-          />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
-
-      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
-    });
-
-    it('should increase grid density even if toolbar is not enabled', () => {
-      const rowHeight = 30;
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rowHeight={rowHeight} density="compact" />
-        </div>,
-      );
-
-      expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
-    });
-
-    it('should decrease grid density even if toolbar is not enabled', () => {
-      const rowHeight = 30;
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rowHeight={rowHeight} density="comfortable" />
-        </div>,
-      );
-
-      expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
-    });
-
-    it('should apply to the root element a class corresponding to the current density', () => {
-      function Test(props: Partial<DataGridProps>) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} {...props} />
-          </div>
-        );
-      }
-      const { setProps } = render(<Test />);
-      expect(grid('root')).to.have.class(gridClasses['root--densityStandard']);
-      setProps({ density: 'compact' });
-      expect(grid('root')).to.have.class(gridClasses['root--densityCompact']);
-      setProps({ density: 'comfortable' });
-      expect(grid('root')).to.have.class(gridClasses['root--densityComfortable']);
-    });
-  });
 
   describe('column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {

@@ -37,7 +37,6 @@ export default function ControlMasterDetail() {
         <DataGridPro
           rows={rows}
           columns={columns}
-          rowThreshold={0}
           getDetailPanelContent={({ row }) => (
             <Box sx={{ p: 2 }}>{`Order #${row.id}`}</Box>
           )}

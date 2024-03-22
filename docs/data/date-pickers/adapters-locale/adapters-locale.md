@@ -96,7 +96,7 @@ import 'moment/locale/de';
 
 ## Meridiem — 12h/24h format
 
-All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+All the time and datetime components will automatically adjust to the locale's time setting, that is the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
@@ -141,7 +141,7 @@ Here is the list of the currently supported formats:
 - The month
 
   - ✅ 1-based digit (e.g: `08`)
-  - ✅ Multi-letter values (e.g. `Aug`, `August`)
+  - ✅ Multi-letter values (for example `Aug`, `August`)
   - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
 
 - The day of the month

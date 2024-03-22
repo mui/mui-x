@@ -46,7 +46,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-The component uses the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The component uses the hour format of the locale's time setting, that is the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 

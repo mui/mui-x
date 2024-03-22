@@ -65,7 +65,7 @@ createTheme({
     },
     MuiTreeItem: {
       defaultProps: {
-        nodeId: '1',
+        itemId: '1',
         // @ts-expect-error invalid MuiTreeItem prop
         someRandomProp: true,
       },
@@ -84,7 +84,7 @@ createTheme({
     },
     MuiTreeItem2: {
       defaultProps: {
-        nodeId: '1',
+        itemId: '1',
         // @ts-expect-error invalid MuiTreeItem2 prop
         someRandomProp: true,
       },

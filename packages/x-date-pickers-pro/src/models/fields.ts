@@ -47,6 +47,14 @@ export interface MultiInputFieldRefs {
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
 
+export interface RangeFieldSeparatorProps {
+  /**
+   * String displayed between the start and the end dates.
+   * @default "–"
+   */
+  dateSeparator?: string;
+}
+
 /**
  * Props the multi input field can receive when used inside a picker.
  * Only contains what the MUI components are passing to the field,
@@ -59,9 +67,10 @@ export interface BaseMultiInputFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-    BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-    'unstableFieldRef'
-  > {
+      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      'unstableFieldRef'
+    >,
+    RangeFieldSeparatorProps {
   sx?: SxProps<any>;
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;

@@ -103,9 +103,9 @@ See more about the `renderCell` method in the [rendering cells](/x/react-data-gr
 
 It is a function that allows you to derive the cell value from the row data. It is the most performant way to customize the cell content. It is also the only way to customize the cell value without changing the row data. It should be used when you need to derive the cell value from the row data. Common use cases are:
 
-- Transforming the value (e.g. convert a decimal value to a percentage value)
-- Deriving the value from multiple fields (e.g. concatenating first name and last name)
-- Deriving the value from a nested field (e.g. `user.address.city`)
+- Transforming the value (for example convert a decimal value to a percentage value)
+- Deriving the value from multiple fields (for example concatenating first name and last name)
+- Deriving the value from a nested field (for example `user.address.city`)
 
 This value is also used internally in the Grid to filter, sort, and render (if no `renderCell` or `valueFormatter` is provided). You can learn more about it in the [value getter](/x/react-data-grid/column-definition/#value-getter) section.
 

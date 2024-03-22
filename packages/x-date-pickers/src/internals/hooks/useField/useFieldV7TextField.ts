@@ -494,7 +494,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           '',
           '<DatePicker slots={{ textField: MyCustomTextField }} />',
           '',
-          'Learn more about the field accessible DOM structure on the MUI documentation: https://next.mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
+          'Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
         ].join('\n'),
       );
     }

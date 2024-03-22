@@ -173,7 +173,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const { id, nodeId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
     getRootProps,
@@ -184,7 +184,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     status,
   } = useTreeItem2({
     id,
-    nodeId,
+    itemId,
     children,
     label,
     disabled,
@@ -252,7 +252,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
   });
 
   return (
-    <TreeItem2Provider nodeId={nodeId}>
+    <TreeItem2Provider itemId={itemId}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
@@ -281,23 +281,23 @@ TreeItem2.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * The id attribute of the node. If not provided, it will be generated.
+   * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
   /**
-   * The label of the node.
-   */
-  label: PropTypes.node,
-  /**
-   * The id of the node.
+   * The id of the item.
    * Must be unique.
    */
-  nodeId: PropTypes.string.isRequired,
+  itemId: PropTypes.string.isRequired,
+  /**
+   * The label of the item.
+   */
+  label: PropTypes.node,
   /**
    * This prop isn't supported.
    * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.

@@ -11,7 +11,7 @@ export const useOpenState = ({ open, onOpen, onClose }: OpenStateProps) => {
   const [openState, setIsOpenState] = React.useState(false);
 
   // It is required to update inner state in useEffect in order to avoid situation when
-  // Our component is not mounted yet, but `open` state is set to `true` (e.g. initially opened)
+  // Our component is not mounted yet, but `open` state is set to `true` (for example initially opened)
   React.useEffect(() => {
     if (isControllingOpenProp) {
       if (typeof open !== 'boolean') {

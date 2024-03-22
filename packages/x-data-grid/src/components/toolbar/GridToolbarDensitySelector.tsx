@@ -6,7 +6,7 @@ import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -33,7 +33,7 @@ const GridToolbarDensitySelector = React.forwardRef<
   const tooltipProps = slotProps.tooltip || {};
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const density = useGridSelector(apiRef, gridDensitySelector);
   const densityButtonId = useId();
   const densityMenuId = useId();
 
@@ -60,7 +60,7 @@ const GridToolbarDensitySelector = React.forwardRef<
   ];
 
   const startIcon = React.useMemo<React.ReactElement>(() => {
-    switch (densityValue) {
+    switch (density) {
       case 'compact':
         return <rootProps.slots.densityCompactIcon />;
       case 'comfortable':
@@ -68,7 +68,7 @@ const GridToolbarDensitySelector = React.forwardRef<
       default:
         return <rootProps.slots.densityStandardIcon />;
     }
-  }, [densityValue, rootProps]);
+  }, [density, rootProps]);
 
   const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setOpen((prevOpen) => !prevOpen);
@@ -100,7 +100,7 @@ const GridToolbarDensitySelector = React.forwardRef<
     <MenuItem
       key={index}
       onClick={() => handleDensityUpdate(option.value)}
-      selected={option.value === densityValue}
+      selected={option.value === density}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
       {option.label}

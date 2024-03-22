@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next <codemod> <paths...>
+npx @mui/x-codemod <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,8 +29,8 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@latest v6.0.0/preset-safe src
-  npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
+  npx @mui/x-codemod v6.0.0/preset-safe src
+  npx @mui/x-codemod v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
 
@@ -40,9 +40,9 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 
 ```bash
 // single option
-npx @mui/x-codemod@next --jscodeshift=--run-in-band
+npx @mui/x-codemod --jscodeshift=--run-in-band
 // multiple options
-npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -53,7 +53,7 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
 ## v7.0.0
@@ -66,7 +66,7 @@ It runs codemods for both Data Grid and Date and Time Pickers packages.
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -82,7 +82,7 @@ The corresponding sub-sections are listed below
 The `preset-safe` codemods for pickers.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -108,7 +108,7 @@ This change only affects Date and Time Picker components.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-components-to-slots <path>
+npx @mui/x-codemod v7.0.0/pickers/rename-components-to-slots <path>
 ```
 
 #### `rename-default-calendar-month-to-reference-date`
@@ -121,7 +121,7 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+npx @mui/x-codemod v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
 ```
 
 #### `rename-day-picker-classes`
@@ -134,7 +134,7 @@ Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-day-picker-classes <path>
+npx @mui/x-codemod v7.0.0/pickers/rename-day-picker-classes <path>
 ```
 
 #### `rename-slots-types`
@@ -149,7 +149,7 @@ Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-slots-types <path>
+npx @mui/x-codemod v7.0.0/pickers/rename-slots-types <path>
 ```
 
 ### Data Grid codemods
@@ -159,13 +159,14 @@ npx @mui/x-codemod@next v7.0.0/pickers/rename-slots-types <path>
 The `preset-safe` codemods for data grid.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
 
 - [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
 - [`rename-cell-selection-props`](#rename-cell-selection-props)
+- [`remove-stabilized-v7-experimentalFeatures`](#remove-stabilized-v7-experimentalFeatures)
 
 #### `rename-components-to-slots-data-grid`
 
@@ -183,7 +184,7 @@ This change only affects Data Grid components.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod v7.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 #### `rename-cell-selection-props`
@@ -202,7 +203,26 @@ Rename props related to `cellSelection` feature.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
+npx @mui/x-codemod v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+#### `remove-stabilized-v7-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    lazyLoading: true,
+-    ariaV7: true,
+-    clipboardPaste: true,
+-    columnGrouping: true,
+-  }}
+ />
+```
+
+```bash
+npx @mui/x-codemod@next v7.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Tree View codemods
@@ -212,7 +232,7 @@ npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
 The `preset-safe` codemods for tree view.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod v7.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -223,6 +243,7 @@ The list includes these transformers
 - [`rename-selection-props`](#rename-selection-props)
 - [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
 - [`rename-focus-callback`](#rename-focus-callback)
+- [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
 
@@ -238,7 +259,7 @@ Renames the `TreeView` component to `SimpleTreeView`
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -253,8 +274,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -325,6 +346,16 @@ Replace the `onNodeFocus` callback with `onItemFocus`:
 -  onNodeFocus={onNodeFocus}
 +  onItemFocus={onItemFocus}
  />
+```
+
+#### `rename-nodeid`
+
+Rename nodeId to itemId
+
+```diff
+ <TreeItem
+-  nodeId='unique-id'
++  itemId='unique-id'
 ```
 
 ## v6.0.0

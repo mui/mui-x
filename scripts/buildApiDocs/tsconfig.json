@@ -14,7 +14,6 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@mui/markdown": ["../../node_modules/@mui/monorepo/packages/markdown/index.d.ts"],
       "@mui/material-nextjs/*": [
         "../../node_modules/@mui/monorepo/packages/mui-material-nextjs/src/*"
       ],

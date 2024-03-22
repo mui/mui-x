@@ -40,7 +40,7 @@ const cache = new WeakMap<CacheKey, Map<any[], any>>();
 
 const missingInstanceIdWarning = buildWarning([
   'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
-  'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g. `mySelector(state, apiRef.current.instanceId)`.',
+  'To fix, call it with `apiRef`, for example `mySelector(apiRef)`, or pass the instance ID explicitly, for example `mySelector(state, apiRef.current.instanceId)`.',
 ]);
 
 function checkIsAPIRef(value: any) {

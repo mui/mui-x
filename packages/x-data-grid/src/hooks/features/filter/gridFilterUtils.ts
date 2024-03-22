@@ -258,7 +258,7 @@ const buildAggregatedFilterItemsApplier = (
   }
 
   // We generate a new function with `new Function()` to avoid expensive patterns for JS engines
-  // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
+  // such as a dynamic object assignment, for example `{ [dynamicKey]: value }`.
   const filterItemCore = new Function(
     'appliers',
     'row',

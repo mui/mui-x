@@ -46,31 +46,31 @@ export default function LabelSlots() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <SimpleTreeView defaultExpandedItems={['pickers']}>
-        <CustomTreeItem nodeId="grid" label="Data Grid">
+        <CustomTreeItem itemId="grid" label="Data Grid">
           <CustomTreeItem
-            nodeId="grid-community"
+            itemId="grid-community"
             label="@mui/x-data-grid"
             labelTooltip="Community version (MIT) of the Data Grid"
           />
           <CustomTreeItem
-            nodeId="grid-pro"
+            itemId="grid-pro"
             label="@mui/x-data-grid-pro"
             labelTooltip="Pro version (commercial) of the Data Grid"
           />
           <CustomTreeItem
-            nodeId="grid-premium"
+            itemId="grid-premium"
             label="@mui/x-data-grid-premium"
             labelTooltip="Premium version (commercial) of the Data Grid"
           />
         </CustomTreeItem>
-        <CustomTreeItem nodeId="pickers" label="Date and Time Pickers">
+        <CustomTreeItem itemId="pickers" label="Date and Time Pickers">
           <CustomTreeItem
-            nodeId="pickers-community"
+            itemId="pickers-community"
             label="@mui/x-date-pickers"
             labelTooltip="Community version (MIT) of the Date and Time Pickers"
           />
           <CustomTreeItem
-            nodeId="pickers-pro"
+            itemId="pickers-pro"
             label="@mui/x-date-pickers-pro"
             labelTooltip="Pro version (commercial) of the Date and Time Pickers"
           />

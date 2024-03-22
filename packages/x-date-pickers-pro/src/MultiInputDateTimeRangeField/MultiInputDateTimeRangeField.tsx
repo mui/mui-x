@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import {
@@ -52,14 +52,11 @@ const MultiInputDateTimeRangeFieldRoot = styled(
   },
 )({});
 
-const MultiInputDateTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
-  {
-    name: 'MuiMultiInputDateTimeRangeField',
-    slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
-  },
-)({
+const MultiInputDateTimeRangeFieldSeparator = styled(Typography, {
+  name: 'MuiMultiInputDateTimeRangeField',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})({
   lineHeight: '1.4375em', // 23px
 });
 
@@ -154,6 +151,9 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const separatorProps = useSlotProps({
     elementType: Separator,
     externalSlotProps: slotProps?.separator,
+    additionalProps: {
+      children: ` ${internalProps.dateSeparator ?? '–'} `,
+    },
     ownerState,
     className: classes.separator,
   });
@@ -202,6 +202,11 @@ MultiInputDateTimeRangeField.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
+  /**
+   * String displayed between the start and the end dates.
+   * @default "–"
+   */
+  dateSeparator: PropTypes.string,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -345,7 +350,7 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.

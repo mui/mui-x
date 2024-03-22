@@ -160,6 +160,15 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldPlaceholderV6(input, 'Escaped Escaped');
   });
 
+  it('should support format without separators', () => {
+    const v7Response = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      format: `${adapter.formats.dayOfMonth}${adapter.formats.monthShort}`,
+    });
+
+    expectFieldValueV7(v7Response.getSectionsContainer(), 'DDMMMM');
+  });
+
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
     // Test with v7 input
     const v7Response = renderWithProps({

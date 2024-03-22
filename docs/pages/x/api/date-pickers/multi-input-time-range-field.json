@@ -3,6 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "direction": {
       "type": {

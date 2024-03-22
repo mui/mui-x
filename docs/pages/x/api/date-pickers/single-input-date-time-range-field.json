@@ -10,6 +10,7 @@
       },
       "default": "'primary'"
     },
+    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },

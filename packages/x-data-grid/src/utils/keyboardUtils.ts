@@ -10,7 +10,7 @@ export const isEscapeKey = (key: string): boolean => key === 'Escape';
  */
 export const isTabKey = (key: string): boolean => key === 'Tab';
 
-// Non printable keys have a name, e.g. "ArrowRight", see the whole list:
+// Non printable keys have a name, for example "ArrowRight", see the whole list:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
 // So event.key.length === 1 is often enough.
 //

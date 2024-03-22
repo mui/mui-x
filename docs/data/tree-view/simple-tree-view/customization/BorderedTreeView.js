@@ -47,19 +47,19 @@ export default function BorderedTreeView() {
       }}
       sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
     >
-      <CustomTreeItem nodeId="1" label="Main">
-        <CustomTreeItem nodeId="2" label="Hello" />
-        <CustomTreeItem nodeId="3" label="Subtree with children">
-          <CustomTreeItem nodeId="6" label="Hello" />
-          <CustomTreeItem nodeId="7" label="Sub-subtree with children">
-            <CustomTreeItem nodeId="9" label="Child 1" />
-            <CustomTreeItem nodeId="10" label="Child 2" />
-            <CustomTreeItem nodeId="11" label="Child 3" />
+      <CustomTreeItem itemId="1" label="Main">
+        <CustomTreeItem itemId="2" label="Hello" />
+        <CustomTreeItem itemId="3" label="Subtree with children">
+          <CustomTreeItem itemId="6" label="Hello" />
+          <CustomTreeItem itemId="7" label="Sub-subtree with children">
+            <CustomTreeItem itemId="9" label="Child 1" />
+            <CustomTreeItem itemId="10" label="Child 2" />
+            <CustomTreeItem itemId="11" label="Child 3" />
           </CustomTreeItem>
-          <CustomTreeItem nodeId="8" label="Hello" />
+          <CustomTreeItem itemId="8" label="Hello" />
         </CustomTreeItem>
-        <CustomTreeItem nodeId="4" label="World" />
-        <CustomTreeItem nodeId="5" label="Something something" />
+        <CustomTreeItem itemId="4" label="World" />
+        <CustomTreeItem itemId="5" label="Something something" />
       </CustomTreeItem>
     </SimpleTreeView>
   );

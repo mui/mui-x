@@ -4,7 +4,7 @@ title: React Server-side lazy loading
 
 # Data Grid - Server-side lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
-<p class="description">Row lazy-loading with server side data source.</p>
+<p class="description">Row lazy-loading with server-side data source.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

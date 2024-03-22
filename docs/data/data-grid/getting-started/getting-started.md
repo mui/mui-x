@@ -8,10 +8,6 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-d
 
 <!-- #default-branch-switch -->
 
-:::warning
-The `next` tag is used to download the latest v7 **pre-release** version.
-:::
-
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 The Data Grid package has a peer dependency on `@mui/material`.

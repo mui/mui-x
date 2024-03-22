@@ -5,10 +5,12 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
-import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
+import {
+  DateTimePickerViewRenderers,
+  useDateTimePickerDefaultizedProps,
+} from '../DateTimePicker/shared';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
@@ -51,7 +53,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     MobileDateTimePickerProps<TDate, DateOrTimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+  const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeView, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -377,7 +379,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.
