@@ -105,7 +105,7 @@ const rendererInterceptor = function rendererInterceptor<
           viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
         }
         view={view && isInternalTimeView(view) ? view : 'hours'}
-        views={finalProps.views.filter(isInternalTimeView)}
+        views={finalProps.views as TimeViewWithMeridiem[]}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
       />
     );
