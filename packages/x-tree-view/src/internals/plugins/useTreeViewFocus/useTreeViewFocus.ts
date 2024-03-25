@@ -107,11 +107,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
 
     const node = instance.getNode(state.focusedNodeId);
-    const itemElement = document.getElementById(
-      instance.getTreeItemId(state.focusedNodeId, node.idAttribute),
-    );
-    if (itemElement) {
-      itemElement.blur();
+    if (node) {
+      const itemElement = document.getElementById(
+        instance.getTreeItemId(state.focusedNodeId, node.idAttribute),
+      );
+      if (itemElement) {
+        itemElement.blur();
+      }
     }
 
     setFocusedItemId(null);
