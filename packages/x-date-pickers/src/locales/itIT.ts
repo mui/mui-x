@@ -77,7 +77,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'GG',
-  fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'GGGG' : 'GG',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'GGGG' : 'GG'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
