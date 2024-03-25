@@ -25,10 +25,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Inizio',
   end: 'Fine',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data di inizio',
+  startTime: 'Ora di inizio',
+  endDate: 'Data di fine',
+  endTime: 'Ora di fine',
 
   // Action bar
   cancelButtonLabel: 'Cancellare',
@@ -67,7 +67,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Cancella valore',
 
   // Table labels
   timeTableLabel: "scegli un'ora",
@@ -77,24 +77,24 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'GG',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'GGGG' : 'GG'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Anno',
+  month: 'Mese',
+  day: 'Giorno',
+  weekDay: 'Giorno della settimana',
+  hours: 'Ore',
+  minutes: 'Minuti',
+  seconds: 'Secondi',
+  meridiem: 'Meridiano',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Vuoto',
 };
 
 export const itIT = getPickersLocalization(itITPickers);
