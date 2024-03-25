@@ -7,7 +7,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import type { DataGridPremiumSharedProps, GridApiCommunity } from '../../internals';
+import type { GridApiCommunity } from '../../internals';
 import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
@@ -31,7 +31,10 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type {
+  DataGridProcessedProps,
+  DataGridProcessedPropsWithShared,
+} from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
@@ -77,8 +80,6 @@ export type GridCellProps = {
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
   api: GridApiCommunity;
 };
-
-type RootPropsWithSharedProps = DataGridProcessedProps & DataGridPremiumSharedProps;
 
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
@@ -179,7 +180,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps() as RootPropsWithSharedProps;
+  const rootProps = useGridRootProps() as DataGridProcessedPropsWithShared;
 
   const field = column.field;
 

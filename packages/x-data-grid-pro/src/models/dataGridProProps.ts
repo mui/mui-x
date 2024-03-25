@@ -15,7 +15,7 @@ import {
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   GridPinnedColumnFields,
-  DataGridProSharedProps,
+  DataGridProSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -44,8 +44,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue<R>> &
       DataGridProPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridProPropsWithoutDefaultValue<R> &
-      DataGridProSharedProps,
+      DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
   > {}
 
@@ -60,8 +59,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'>,
-    DataGridProSharedProps {}
+    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -71,7 +69,8 @@ export type DataGridProForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
 export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues<R> {
+  extends DataGridPropsWithDefaultValues<R>,
+    DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80

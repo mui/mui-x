@@ -11,7 +11,7 @@ import {
   DataGridProPropsWithoutDefaultValue,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
-  DataGridPremiumSharedProps,
+  DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
@@ -41,8 +41,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridPremiumPropsWithDefaultValue<R>> &
       DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridPremiumPropsWithoutDefaultValue<R> &
-      DataGridPremiumSharedProps,
+      DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
   > {}
 
@@ -57,8 +56,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPremiumPropsWithoutDefaultValue,
-    DataGridPremiumSharedProps {}
+    DataGridPremiumPropsWithoutDefaultValue {}
 
 export type DataGridPremiumForcedPropsKey = 'signature';
 
@@ -68,7 +66,8 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
 export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue<R> {
+  extends DataGridProPropsWithDefaultValue<R>,
+    DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, aggregation is disabled.
    * @default false

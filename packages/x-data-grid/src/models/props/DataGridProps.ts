@@ -786,7 +786,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
 }
 
-export interface DataGridProSharedProps {
+export interface DataGridProSharedPropsWithDefaultValue {
   /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
@@ -794,10 +794,18 @@ export interface DataGridProSharedProps {
   headerFilters: boolean;
 }
 
-export interface DataGridPremiumSharedProps {
+export interface DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, the cell selection mode is enabled.
    * @default false
    */
   cellSelection: boolean;
 }
+
+/**
+ * Contains the commercial packages' props shared in the MIT version.
+ */
+export interface DataGridProcessedPropsWithShared
+  extends DataGridProcessedProps,
+    Partial<DataGridProSharedPropsWithDefaultValue>,
+    Partial<DataGridPremiumSharedPropsWithDefaultValue> {}

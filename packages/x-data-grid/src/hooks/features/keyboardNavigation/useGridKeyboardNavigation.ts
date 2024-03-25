@@ -6,10 +6,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import {
-  DataGridProSharedProps,
-  DataGridProcessedProps,
-} from '../../../models/props/DataGridProps';
+import { DataGridProcessedPropsWithShared } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
@@ -82,8 +79,6 @@ const getRightColumnIndex = ({
   }
   return null;
 };
-
-type DataGridProcessedPropsWithShared = DataGridProcessedProps & DataGridProSharedProps;
 
 /**
  * @requires useGridSorting (method) - can be after
