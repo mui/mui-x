@@ -510,6 +510,8 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
 - The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
   The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
+- The column headers and pinned section now require an explicit color. By default, the MUI `theme.palette.background.default` color will be used. To customize it, see https://mui.com/material-ui/customization/palette/#customization
+  We will be adding a new color name to the palette for additional customization, read [#12443](https://github.com/mui/mui-x/issues/12443) for more details.
 
 ### Changes to the public API
 
