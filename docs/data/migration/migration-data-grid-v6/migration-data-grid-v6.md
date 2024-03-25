@@ -513,7 +513,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The column headers and pinned section now require an explicit color. By default, the MUI `theme.palette.background.default` color will be used. To customize it, see https://mui.com/material-ui/customization/palette/#customization  
   We will be adding a new color name to the palette for additional customization, read [#12443](https://github.com/mui/mui-x/issues/12443) for more details.
 
-
 ### Changes to the public API
 
 - The method `getRootDimensions()` now returns a non-null value.
