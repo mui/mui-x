@@ -442,7 +442,11 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           }
           if (!missingTranslations[localeCode][packageInfo.key]) {
             missingTranslations[localeCode][packageInfo.key] = {
-              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              path: localePath
+                .replace(workspaceRoot, '')
+                .slice(1) // Remove leading slash
+                .split(path.sep)
+                .join('/'), // Ensure the path is using forward slashes even on Windows machines
               missingKeys: [],
             };
           }
