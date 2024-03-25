@@ -2,25 +2,110 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
-import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
+import {
+  useDateTimePickerDefaultizedProps,
+  DateTimePickerViewRenderers,
+} from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { renderDesktopDateTimeView } from '../dateTimeViewRenderers';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';
-import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
 import {
   resolveDateTimeFormat,
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 import { PickerValidDate } from '../models';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
+import {
+  DefaultizedProps,
+  UsePickerViewsProps,
+  VIEW_HEIGHT,
+  isDatePickerView,
+  isInternalTimeView,
+} from '../internals';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
+import { digitalClockClasses } from '../DigitalClock';
+import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
+
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inViewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeViewWithMeridiem, any>,
+  popperView: TView,
+  rendererProps: PickerViewsRendererProps<
+    TDate | null,
+    TView,
+    DefaultizedProps<
+      UseDesktopPickerProps<
+        TDate,
+        TView,
+        TEnableAccessibleFieldDOMStructure,
+        any,
+        UsePickerViewsProps<TDate | null, TDate, TView, any, {}>
+      >,
+      'openTo'
+    >,
+    {}
+  >,
+) {
+  const { openTo, focusedView, timeViewsCount, ...otherProps } = rendererProps;
+
+  const finalProps = {
+    ...otherProps,
+    focusedView: null,
+    sx: [
+      {
+        [`&.${multiSectionDigitalClockClasses.root}`]: {
+          borderBottom: 0,
+        },
+        [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
+          {
+            maxHeight: VIEW_HEIGHT,
+          },
+      },
+    ],
+  };
+  const isTimeViewActive = isInternalTimeView(popperView);
+  return (
+    <React.Fragment>
+      {inViewRenderers[!isTimeViewActive ? popperView : 'day']?.({
+        ...rendererProps,
+        view: !isTimeViewActive ? popperView : 'day',
+        focusedView: focusedView && isDatePickerView(focusedView) ? focusedView : null,
+        views: rendererProps.views.filter(isDatePickerView),
+      })}
+      {timeViewsCount > 0 && (
+        <React.Fragment>
+          <Divider orientation="vertical" />
+          {inViewRenderers[isTimeViewActive ? popperView : 'hours']?.({
+            ...finalProps,
+            view: isTimeViewActive ? popperView : 'hours',
+            focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
+            openTo: isInternalTimeView(openTo) ? openTo : 'hours',
+            views: rendererProps.views.filter(isInternalTimeView),
+          })}
+        </React.Fragment>
+      )}
+    </React.Fragment>
+  );
+};
 
 type DesktopDateTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -60,37 +145,34 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const {
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
-    views,
+    views: resolvedViews,
     timeSteps,
   } = resolveTimeViewsResponse<TDate>(defaultizedProps);
-  const shouldUseNewRenderer =
-    !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeViewWithMeridiem, any, {}> =
-    // we can only ensure the expected two-column layout if none of the renderers are overridden
-    shouldUseNewRenderer
-      ? {
-          day: renderDesktopDateTimeView,
-          month: renderDesktopDateTimeView,
-          year: renderDesktopDateTimeView,
-          hours: renderDesktopDateTimeView,
-          minutes: renderDesktopDateTimeView,
-          seconds: renderDesktopDateTimeView,
-          meridiem: renderDesktopDateTimeView,
-        }
-      : {
-          day: renderDateViewCalendar,
-          month: renderDateViewCalendar,
-          year: renderDateViewCalendar,
-          hours: null,
-          minutes: null,
-          seconds: null,
-          meridiem: null,
-          ...defaultizedProps.viewRenderers,
-        };
+  const renderTimeView = shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
+
+  const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeViewWithMeridiem, any> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
+    ...defaultizedProps.viewRenderers,
+  };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  // add "accept" action only when the new date time view renderers are used
-  const actionBarActions: PickersActionBarAction[] = shouldUseNewRenderer ? ['accept'] : [];
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? resolvedViews.filter((view) => view !== 'meridiem')
+    : resolvedViews;
+  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
+    ? []
+    : ['accept'];
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -105,6 +187,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
+      layout: DesktopDateTimePickerLayout,
       openPickerIcon: CalendarIcon,
       ...defaultizedProps.slots,
     },
@@ -118,17 +201,17 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       toolbar: {
         hidden: true,
         ampmInClock,
-        toolbarVariant: shouldUseNewRenderer ? 'desktop' : 'mobile',
+        toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: {
+      actionBar: (ownerState: any) => ({
         actions: actionBarActions,
-        ...defaultizedProps.slotProps?.actionBar,
-      },
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -144,6 +227,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     getOpenDialogAriaText:
       props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
     validator: validateDateTime,
+    rendererInterceptor,
   });
 
   return renderPicker();
