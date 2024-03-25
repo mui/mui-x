@@ -122,7 +122,7 @@ React.useEffect(() => {
 
 :::warning
 The `rowCount` prop is used in server-side pagination mode to inform the DataGrid about the total number of rows in your dataset.
-This prop is ignored when the `paginationMode` is set to `client`, meaning the pagination is handled on the client-side.
+This prop is ignored when the `paginationMode` is set to `client`, i.e. when the pagination is handled on the client-side.
 :::
 
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
