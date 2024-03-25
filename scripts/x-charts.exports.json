@@ -155,6 +155,8 @@
   { "name": "HighlightElementClassKey", "kind": "TypeAlias" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },
   { "name": "HighlightScope", "kind": "TypeAlias" },
+  { "name": "isBarSeries", "kind": "Function" },
+  { "name": "isDefaultizedBarSeries", "kind": "Function" },
   { "name": "LayoutConfig", "kind": "TypeAlias" },
   { "name": "legendClasses", "kind": "Variable" },
   { "name": "LegendRendererProps", "kind": "Interface" },
