@@ -155,15 +155,15 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return childrenIds;
   };
 
-  const isItemUpdatedPreventedRef = React.useRef(false);
-  const preventItemUpdate = React.useCallback(() => {
-    isItemUpdatedPreventedRef.current = true;
+  const areItemUpdatesPreventedRef = React.useRef(false);
+  const preventItemUpdates = React.useCallback(() => {
+    areItemUpdatesPreventedRef.current = true;
   }, []);
 
-  const isItemUpdatePrevented = React.useCallback(() => isItemUpdatedPreventedRef.current, []);
+  const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
   React.useEffect(() => {
-    if (instance.isItemUpdatePrevented()) {
+    if (instance.areItemUpdatesPrevented()) {
       return;
     }
 
@@ -216,8 +216,8 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getChildrenIds,
     getNavigableChildrenIds,
     isNodeDisabled,
-    preventItemUpdate,
-    isItemUpdatePrevented,
+    preventItemUpdates,
+    areItemUpdatesPrevented,
   });
 
   populatePublicAPI<UseTreeViewNodesSignature>(publicAPI, {

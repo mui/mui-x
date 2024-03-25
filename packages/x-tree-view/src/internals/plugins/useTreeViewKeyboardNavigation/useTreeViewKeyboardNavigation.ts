@@ -42,7 +42,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   );
 
   React.useEffect(() => {
-    if (instance.isItemUpdatePrevented()) {
+    if (instance.areItemUpdatesPrevented()) {
       return;
     }
 
