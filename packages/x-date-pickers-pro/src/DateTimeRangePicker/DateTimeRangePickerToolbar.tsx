@@ -80,11 +80,8 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   borderBottom: 'none',
   variants: [
     {
-      props: ({
-        ownerState: { toolbarVariant },
-      }: {
-        ownerState: DateTimeRangePickerStartOrEndToolbarProps<any>;
-      }) => toolbarVariant !== 'desktop',
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+        toolbarVariant !== 'desktop',
       style: {
         padding: '12px 8px 0 12px',
       },

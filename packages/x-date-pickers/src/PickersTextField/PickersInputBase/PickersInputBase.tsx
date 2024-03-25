@@ -80,11 +80,8 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
     },
     {
       // Can't use the object notation because label can be null or undefined
-      props: ({
-        ownerState: { adornedStart, focused, filled, label },
-      }: {
-        ownerState: OwnerStateType;
-      }) => !adornedStart && !focused && !filled && label == null,
+      props: ({ adornedStart, focused, filled, label }: OwnerStateType) =>
+        !adornedStart && !focused && !filled && label == null,
       style: theme.vars
         ? {
             opacity: theme.vars.opacity.inputPlaceholder,

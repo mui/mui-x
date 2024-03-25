@@ -137,11 +137,8 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
     }),
     variants: [
       {
-        props: ({
-          ownerState: { isLandscape, toolbarVariant },
-        }: {
-          ownerState: DateTimePickerToolbarProps<any>;
-        }) => isLandscape && toolbarVariant !== 'desktop',
+        props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarProps<any>) =>
+          isLandscape && toolbarVariant !== 'desktop',
         style: {
           flexDirection: 'column',
           ...(theme.direction === 'rtl' && {
