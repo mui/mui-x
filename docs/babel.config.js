@@ -12,7 +12,6 @@ const alias = {
   '@mui/x-tree-view': '../packages/x-tree-view/src',
   '@mui/x-license': '../packages/x-license/src',
   '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
-  '@mui/markdown': '../node_modules/@mui/monorepo/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
   '@mui/material-nextjs': '../node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': '../node_modules/@mui/monorepo/packages/api-docs-builder',

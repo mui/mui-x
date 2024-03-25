@@ -51,7 +51,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### Premium plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The Premium version includes everything from Pro, as well as advanced features for data analysis and large dataset management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
+The Premium version includes everything from Pro, as well as advanced features for data analysis and large dataset management, like row grouping with aggregation functions (for example "Sum") and the ability to export to Excel files.
 
 You can visit the [showcase page](/x/react-data-grid/demo/) for a comprehensible overview of all features exclusive to this plan.
 
@@ -74,6 +74,8 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - Built with and exclusively for React ⚛️
 - High performance 🚀
 - [Column groups](/x/react-data-grid/column-groups/)
+- [Column resizing](/x/react-data-grid/column-dimensions/#resizing)
+- [Column autosizing](/x/react-data-grid/column-dimensions/#autosizing)
 - [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-pro"></span>
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
@@ -86,7 +88,6 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
-- [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
 - [Column hiding](/x/react-data-grid/column-visibility/)

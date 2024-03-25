@@ -31,9 +31,25 @@ export type D3ContinuouseScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export interface ChartsAxisSlots {
+  /**
+   * Custom component for the axis main line.
+   * @default 'line'
+   */
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for the axis tick.
+   * @default 'line'
+   */
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for tick label.
+   * @default ChartsText
+   */
   axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for axis label.
+   * @default ChartsText
+   */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
 }
 
@@ -186,6 +202,10 @@ interface AxisScaleConfig {
   };
 }
 
+export type AxisValueFormatterContext = {
+  location: 'tick' | 'tooltip';
+};
+
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
    * Id used to identify the axis.
@@ -209,7 +229,13 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
-  valueFormatter?: (value: V) => string;
+  /**
+   * Formats the axis value.
+   * @param {V} value The value to format.
+   * @param {AxisValueFormatterContext} context The rendering context of the value.
+   * @returns {string} The string to display.
+   */
+  valueFormatter?: (value: V, context: AxisValueFormatterContext) => string;
   /**
    * If `true`, hide this value in the tooltip
    */

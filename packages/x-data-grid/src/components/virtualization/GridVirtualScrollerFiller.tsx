@@ -40,6 +40,7 @@ function GridVirtualScrollerFiller() {
     viewportOuterSize,
     minimumSize,
     hasScrollX,
+    hasScrollY,
     scrollbarSize,
     leftPinnedWidth,
     rightPinnedWidth,
@@ -64,7 +65,7 @@ function GridVirtualScrollerFiller() {
       {rightPinnedWidth > 0 && (
         <PinnedRight
           className={gridClasses['filler--pinnedRight']}
-          style={{ width: rightPinnedWidth }}
+          style={{ width: rightPinnedWidth + (hasScrollY ? scrollbarSize : 0) }}
         />
       )}
     </Filler>

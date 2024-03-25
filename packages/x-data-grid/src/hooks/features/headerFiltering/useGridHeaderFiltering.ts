@@ -15,9 +15,10 @@ import {
   GridHeaderFilteringPrivateApi,
 } from '../../../models/api/gridHeaderFilteringApi';
 
-export const headerFilteringStateInitializer: GridStateInitializer = (state) => ({
+export const headerFilteringStateInitializer: GridStateInitializer = (state, props) => ({
   ...state,
-  headerFiltering: { editing: null, menuOpen: null },
+  // @ts-expect-error Access `Pro` prop in MIT
+  headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
 });
 
 export const useGridHeaderFiltering = (
@@ -25,7 +26,8 @@ export const useGridHeaderFiltering = (
   props: Pick<DataGridProcessedProps, 'signature'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
-
+  // @ts-expect-error Access `Pro` prop in MIT
+  const isHeaderFilteringEnabled = props.headerFilters ?? false;
   const setHeaderFilterState = React.useCallback(
     (headerFilterState: Partial<GridHeaderFilteringState>) => {
       apiRef.current.setState((state) => {
@@ -37,6 +39,7 @@ export const useGridHeaderFiltering = (
         return {
           ...state,
           headerFiltering: {
+            enabled: isHeaderFilteringEnabled ?? false,
             editing: headerFilterState.editing ?? null,
             menuOpen: headerFilterState.menuOpen ?? null,
           },
@@ -44,7 +47,7 @@ export const useGridHeaderFiltering = (
       });
       apiRef.current.forceUpdate();
     },
-    [apiRef, props.signature],
+    [apiRef, props.signature, isHeaderFilteringEnabled],
   );
 
   const startHeaderFilterEditMode = React.useCallback<
@@ -117,4 +120,16 @@ export const useGridHeaderFiltering = (
 
   useGridApiMethod(apiRef, headerFilterApi, 'public');
   useGridApiMethod(apiRef, headerFilterPrivateApi, 'private');
+
+  /*
+   * EFFECTS
+   */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else {
+      apiRef.current.setHeaderFilterState({ enabled: isHeaderFilteringEnabled });
+    }
+  }, [apiRef, isHeaderFilteringEnabled]);
 };

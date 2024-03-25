@@ -11,9 +11,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     root,
     componentNames: ['TreeView', 'SimpleTreeView'],
     props: {
-      selected: 'selectedNodes',
-      defaultSelected: 'defaultSelectedNodes',
-      onNodeSelect: 'onSelectedNodesChange',
+      selected: 'selectedItems',
+      defaultSelected: 'defaultSelectedItems',
+      onNodeSelect: 'onSelectedItemsChange',
     },
     j,
   }).toSource(printOptions);

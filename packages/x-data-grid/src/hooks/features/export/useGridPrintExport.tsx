@@ -16,7 +16,7 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { defaultGetRowsToExport, getColumnsToExport } from './utils';
-import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
+import { getDerivedPaginationModel } from '../pagination/useGridPaginationModel';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GridExportDisplayOptions,
@@ -139,12 +139,6 @@ export const useGridPrintExport = (
 
       // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
       gridClone!.style.contain = 'size';
-
-      const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
-      const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
-        `.${gridClasses.columnHeadersInner}`,
-      )!;
-      columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
         gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
@@ -307,11 +301,18 @@ export const useGridPrintExport = (
           page: 0,
           pageSize: visibleRowCount,
         };
-        apiRef.current.updateControlState(
-          'pagination',
-          // Using signature `DataGridPro` to allow more than 100 rows in the print export
-          mergeStateWithPaginationModel(visibleRowCount, 'DataGridPro', paginationModel),
-        );
+        apiRef.current.setState((state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              // Using signature `DataGridPro` to allow more than 100 rows in the print export
+              'DataGridPro',
+              paginationModel,
+            ),
+          },
+        }));
         apiRef.current.forceUpdate();
       }
 
