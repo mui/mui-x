@@ -1,26 +1,3 @@
-type ColorSliceType<V> = {
-  /**
-   * This slice contains values larger that this value.
-   */
-  lg?: V;
-  /**
-   * This slice contains values smaller that this value.
-   */
-  sm?: V;
-  /**
-   * This slice contains values larger or equal than this value.
-   */
-  lge?: V;
-  /**
-   * This slice contains values smaller or equal than this value.
-   */
-  sme?: V;
-  /**
-   * The color of the slice.
-   */
-  color: string;
-};
-
 export interface ContinuouseColorConfig<V = number | Date> {
   type: 'continuous';
   /**
@@ -37,23 +14,19 @@ export interface ContinuouseColorConfig<V = number | Date> {
    * The colors to render. Can either be and array with the extrem colors, or an interpolation function.
    */
   color: [string, string] | ((t: number) => string);
-  /**
-   * The color to use for values outside of the range.
-   * Can be a single color, or an array of two colors to distinguish values bellow  min from values above max.
-   */
-  overflowColor?: string | [string, string];
 }
 
 export interface PiecewiseColorConfig<V = number | Date> {
   type: 'piecewise';
   /**
-   * The color slices, defining slice range and color.
+   * The thresholds where color should change from one category to another.
    */
-  slices: ColorSliceType<V>[];
+  thresholds: V[];
   /**
-   * The color to use for values that does not belong to any slice.
+   * The colors used for each band defined by `thresholds`.
+   * Should contain N+1 colors with N the number of thresholds.
    */
-  unknownColor?: string;
+  colors: string[];
 }
 
 export interface OrdinalColorConfig<V = number | Date | string> {

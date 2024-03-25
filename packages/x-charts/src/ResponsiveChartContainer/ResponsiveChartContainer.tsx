@@ -128,24 +128,14 @@ ResponsiveChartContainer.propTypes = {
           ]).isRequired,
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          overflowColor: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.string,
-          ]),
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({
-          slices: PropTypes.arrayOf(
-            PropTypes.shape({
-              color: PropTypes.string.isRequired,
-              lg: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              lge: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              sm: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              sme: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-            }),
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -208,24 +198,14 @@ ResponsiveChartContainer.propTypes = {
           ]).isRequired,
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          overflowColor: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.string,
-          ]),
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({
-          slices: PropTypes.arrayOf(
-            PropTypes.shape({
-              color: PropTypes.string.isRequired,
-              lg: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              lge: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              sm: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-              sme: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-            }),
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

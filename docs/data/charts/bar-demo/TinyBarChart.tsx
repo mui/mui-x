@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContainer, BarPlot, ChartsTooltip } from '@mui/x-charts';
+import { ChartContainer, BarPlot } from '@mui/x-charts';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const xLabels = [
@@ -18,16 +18,6 @@ export default function TinyBarChart() {
       width={500}
       height={300}
       series={[{ data: uData, label: 'uv', type: 'bar' }]}
-      yAxis={[
-        {
-          colorMap: {
-            type: 'continuous',
-            min: 2000,
-            max: 5000,
-            color: ['blue', 'red'],
-          },
-        },
-      ]}
       xAxis={[
         {
           scaleType: 'band',
@@ -48,7 +38,6 @@ export default function TinyBarChart() {
       ]}
     >
       <BarPlot />
-      <ChartsTooltip trigger="item" />
     </ChartContainer>
   );
 }

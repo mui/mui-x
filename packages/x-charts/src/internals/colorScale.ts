@@ -9,52 +9,7 @@ export function getSequentialColorScale<V extends number | Date>(
   config: ContinuouseColorConfig<V> | PiecewiseColorConfig<V>,
 ) {
   if (config.type === 'piecewise') {
-    const sortedSlices = config.slices.sort((sliceA, sliceB) => {
-      const minA = sliceA.sm ?? sliceA.sme;
-      if (minA === undefined) {
-        return 1;
-      }
-      const minB = sliceB.sm ?? sliceB.sme;
-      if (minB === undefined) {
-        return -1;
-      }
-
-      return minA < minB ? 1 : -1;
-    });
-
-    const thresholds: (number | Date)[] = [];
-    const colors: (string | null)[] = [];
-
-    sortedSlices.forEach((slice) => {
-      const min = slice.sm ?? slice.sme;
-      const max = slice.lg ?? slice.lge;
-      if (min === undefined) {
-        if (max) {
-          thresholds.push(max);
-        }
-        colors.push(config.unknownColor ?? null);
-        colors.push(slice.color);
-        return;
-      }
-      if (min === thresholds[thresholds.length - 1]) {
-        thresholds.push(min);
-        if (max) {
-          thresholds.push(max);
-        }
-        colors.push(slice.color);
-        return;
-      }
-      if (min > thresholds[thresholds.length - 1]) {
-        thresholds.push(min);
-        if (max) {
-          thresholds.push(max);
-        }
-        colors.push(config.unknownColor ?? null);
-        colors.push(slice.color);
-      }
-    });
-
-    return scaleThreshold(thresholds, colors);
+    return scaleThreshold(config.thresholds, config.colors);
   }
 
   return scaleSequential([config.min ?? 0, config.max ?? 100], config.color);

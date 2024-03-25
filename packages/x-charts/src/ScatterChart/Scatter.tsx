@@ -21,6 +21,7 @@ export interface ScatterProps {
   yScale: D3Scale;
   markerSize: number;
   color: string;
+  colorGetter?: (dataIndex: number) => string;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -43,7 +44,7 @@ export interface ScatterProps {
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, markerSize, onItemClick } = props;
+  const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
   const highlightScope: HighlightScope = React.useMemo(
     () => ({ highlighted: 'item', faded: 'global', ...series.highlightScope }),
@@ -68,6 +69,7 @@ function Scatter(props: ScatterProps) {
 
     const temp: (ScatterValueType & {
       dataIndex: number;
+      color: string;
       isHighlighted: boolean;
       isFaded: boolean;
       interactionProps: ReturnType<typeof getInteractionItemProps>;
@@ -93,12 +95,23 @@ function Scatter(props: ScatterProps) {
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
           dataIndex: i,
+          color: colorGetter ? colorGetter(i) : color,
         });
       }
     }
 
     return temp;
-  }, [xScale, yScale, series.data, series.id, item, highlightScope, getInteractionItemProps]);
+  }, [
+    xScale,
+    yScale,
+    series.data,
+    series.id,
+    item,
+    highlightScope,
+    getInteractionItemProps,
+    color,
+    colorGetter,
+  ]);
 
   return (
     <g>
@@ -109,7 +122,7 @@ function Scatter(props: ScatterProps) {
           cy={0}
           r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}
           transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
-          fill={color}
+          fill={dataPoint.color}
           opacity={(dataPoint.isFaded && 0.3) || 1}
           onClick={
             onItemClick &&
@@ -134,6 +147,7 @@ Scatter.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
+  colorGetter: PropTypes.func,
   markerSize: PropTypes.number.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
