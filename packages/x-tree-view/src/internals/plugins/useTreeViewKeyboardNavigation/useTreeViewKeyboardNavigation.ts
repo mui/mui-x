@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewNode, TreeViewPlugin } from '../../models';
 import {
   getFirstNode,
   getLastNode,
@@ -13,7 +13,6 @@ import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
-import { TreeViewBaseItem } from '../../../models';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 
 function isPrintableCharacter(string: string) {
@@ -31,36 +30,31 @@ function findNextFirstChar(firstChars: string[], startIndex: number, char: strin
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
-> = ({ instance, params }) => {
+> = ({ instance, params, state }) => {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
-  const hasFirstCharMapBeenUpdatedImperatively = React.useRef(false);
 
   const updateFirstCharMap = useEventCallback(
     (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
-      hasFirstCharMapBeenUpdatedImperatively.current = true;
       firstCharMap.current = callback(firstCharMap.current);
     },
   );
 
   React.useEffect(() => {
-    if (hasFirstCharMapBeenUpdatedImperatively.current) {
+    if (instance.areItemUpdatesPrevented()) {
       return;
     }
 
     const newFirstCharMap: { [itemId: string]: string } = {};
 
-    const processItem = (item: TreeViewBaseItem) => {
-      const getItemId = params.getItemId;
-      const itemId = getItemId ? getItemId(item) : (item as { id: string }).id;
-      newFirstCharMap[itemId] = instance.getNode(itemId).label!.substring(0, 1).toLowerCase();
-      item.children?.forEach(processItem);
+    const processItem = (node: TreeViewNode) => {
+      newFirstCharMap[node.id] = node.label!.substring(0, 1).toLowerCase();
     };
 
-    params.items.forEach(processItem);
+    Object.values(state.nodes.nodeMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [params.items, params.getItemId, instance]);
+  }, [state.nodes.nodeMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, firstChar: string) => {
     let start: number;
