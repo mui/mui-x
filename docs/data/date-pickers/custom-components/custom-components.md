@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom slots and subcomponents
-components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersShortcuts, DateRangePickerToolbar
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar
 ---
 
 # Custom slots and subcomponents
@@ -219,6 +219,34 @@ Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolb
 
 {{"demo": "ToolbarComponent.js"}}
 
+## Calendar header
+
+The calendar header is available on any component that renders a calendar to select a date or a range of dates.
+It allows the user to navigate through months and to switch to the month and year views when available.
+
+### Component props
+
+You can pass props to the calendar header as shown below:
+
+{{"demo": "CalendarHeaderComponentProps.js", "defaultCodeOpen": false}}
+
+### Component
+
+You can pass custom components to replace the header, as shown below:
+
+{{"demo": "CalendarHeaderComponent.js", "defaultCodeOpen": false}}
+
+When used with a date range component,
+you receive three additional props to let you handle scenarios where multiple months are rendered:
+
+- `calendars`: The number of calendars rendered
+- `month`: The month used for the header being rendered
+- `monthIndex`: The index of the month used for the header being rendered
+
+The demo below shows how to navigate the months two by two:
+
+{{"demo": "CalendarHeaderComponentRange.js", "defaultCodeOpen": false}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
@@ -232,7 +260,7 @@ You can pass props to the icons and buttons as shown below:
 
 ### Component
 
-You can pass custom components—to replace the icons, for example—as shown below:
+You can pass custom components to replace the icons, as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
 

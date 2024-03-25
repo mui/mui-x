@@ -142,7 +142,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, e.g. MuiTablePagination
+        // Ignore translations for MUI Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -442,7 +442,10 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           }
           if (!missingTranslations[localeCode][packageInfo.key]) {
             missingTranslations[localeCode][packageInfo.key] = {
-              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              // prettier-ignore
+              path: localePath
+                .replace(workspaceRoot, '').slice(1) // Remove leading slash
+                .split(path.sep).join('/'), // Ensure the path is using forward slashes even on Windows machines
               missingKeys: [],
             };
           }

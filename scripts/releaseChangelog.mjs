@@ -164,6 +164,7 @@ async function main(argv) {
         pickersCommits.push(commitItem);
         break;
       case 'DateRangePicker':
+      case 'DateTimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts':
@@ -246,7 +247,7 @@ Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
-### Date Pickers
+### Date and Time Pickers
 
 #### \`@mui/x-date-pickers@__VERSION__\`
 
@@ -259,11 +260,15 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}
 
-### Charts / \`@mui/x-charts@__VERSION__\`
+### Charts
+ 
+#### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 
-### Tree View / \`@mui/x-tree-view@__VERSION__\`
+### Tree View
+
+#### \`@mui/x-tree-view@__VERSION__\`
 
 ${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
@@ -296,7 +301,7 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         });

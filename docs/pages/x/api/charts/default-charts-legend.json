@@ -9,6 +9,13 @@
       "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
       "required": true
     },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      },
+      "required": true
+    },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "itemGap": { "type": { "name": "number" }, "default": "10" },
     "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },

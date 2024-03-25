@@ -102,6 +102,21 @@ DataGridRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
+  /**
    * Controls the modes of the cells.
    */
   cellModesModel: PropTypes.object,
@@ -120,10 +135,10 @@ DataGridRaw.propTypes = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region in pixels to render before/after the viewport
+   * @default 150
    */
-  columnBuffer: PropTypes.number,
+  columnBufferPx: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -135,11 +150,6 @@ DataGridRaw.propTypes = {
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  columnThreshold: PropTypes.number,
-  /**
    * Set the column visibility model of the Data Grid.
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
@@ -150,6 +160,11 @@ DataGridRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -159,6 +174,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   disableColumnMenu: PropTypes.bool,
+  /**
+   * If `true`, resizing columns is disabled.
+   * @default false
+   */
+  disableColumnResize: PropTypes.bool,
   /**
    * If `true`, hiding/showing columns is disabled.
    * @default false
@@ -462,11 +482,30 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
+   * Callback fired while a column is being resized.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnResize: PropTypes.func,
+  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
+  /**
+   * Callback fired when the width of a column is changed.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
@@ -527,6 +566,11 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowClick: PropTypes.func,
+  /**
+   * Callback fired when the row count has changed.
+   * @param {number} count Updated row count.
+   */
+  onRowCountChange: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
@@ -609,10 +653,10 @@ DataGridRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * Row region in pixels to render before/after the viewport
+   * @default 150
    */
-  rowBuffer: PropTypes.number,
+  rowBufferPx: PropTypes.number,
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -636,8 +680,9 @@ DataGridRaw.propTypes = {
   rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `false`, the row selection mode is disabled.
    * @default true
@@ -656,11 +701,6 @@ DataGridRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  rowThreshold: PropTypes.number,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */

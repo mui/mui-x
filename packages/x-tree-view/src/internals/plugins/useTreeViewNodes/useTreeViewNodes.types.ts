@@ -3,18 +3,29 @@ import { TreeViewItemId } from '../../../models';
 
 interface TreeViewNodeProps {
   label: string;
-  nodeId: string;
+  itemId: string;
   id: string | undefined;
   children?: TreeViewNodeProps[];
 }
 
 export interface UseTreeViewNodesInstance<R extends {}> {
-  getNode: (nodeId: string) => TreeViewNode;
-  getItem: (nodeId: string) => R;
+  getNode: (itemId: string) => TreeViewNode;
+  getItem: (itemId: string) => R;
   getNodesToRender: () => TreeViewNodeProps[];
-  getChildrenIds: (nodeId: string | null) => string[];
-  getNavigableChildrenIds: (nodeId: string | null) => string[];
-  isNodeDisabled: (nodeId: string | null) => nodeId is string;
+  getChildrenIds: (itemId: string | null) => string[];
+  getNavigableChildrenIds: (itemId: string | null) => string[];
+  isNodeDisabled: (itemId: string | null) => itemId is string;
+  /**
+   * Freeze any future update to the state based on the `items` prop.
+   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   */
+  preventItemUpdates: () => void;
+  /**
+   * Check if the updates to the state based on the `items` prop are prevented.
+   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
+   */
+  areItemUpdatesPrevented: () => boolean;
 }
 
 export interface UseTreeViewNodesPublicAPI<R extends {}>
@@ -65,14 +76,14 @@ interface UseTreeViewNodesEventLookup {
   };
 }
 
-export interface TreeViewNodeIdAndChildren {
+export interface TreeViewItemIdAndChildren {
   id: TreeViewItemId;
-  children?: TreeViewNodeIdAndChildren[];
+  children?: TreeViewItemIdAndChildren[];
 }
 
 export interface UseTreeViewNodesState<R extends {}> {
   nodes: {
-    nodeTree: TreeViewNodeIdAndChildren[];
+    nodeTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
   };
@@ -91,6 +102,6 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewNodesContextValue;
 }>;
 
-export type TreeViewNodeMap = { [nodeId: string]: TreeViewNode };
+export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
 
-export type TreeViewItemMap<R extends {}> = { [nodeId: string]: R };
+export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };

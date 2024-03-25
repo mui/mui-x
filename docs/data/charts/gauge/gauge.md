@@ -21,7 +21,7 @@ The Gauge displays a numeric value that varies within a defined range.
 
 ## Value range
 
-The Gauge chart's value is provided through the `value` props, which accept a value range between 0 and 100.
+The Gauge's value is provided through the `value` props, which accept a value range between 0 and 100.
 To modify it, use the `valueMin` and `valueMax` props.
 
 {{"demo": "GaugeValueRangeNoSnap.js"}}
@@ -37,7 +37,7 @@ Modify the arc shape with the following props:
 {{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
 
 :::success
-Notice that the arc position is computed to let the Gauge chart take as much space as possible in the drawing area.
+Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
 
 Use the `cx` and/or `cy` props to fix the coordinate of the arc center.
 :::
@@ -66,7 +66,7 @@ For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
 
 ### Using the default Gauge
 
-To insert more elements into the Gauge chart, the first option would be to add them as children, which means they will be stacked on top of the default rendering.
+To insert more elements into the Gauge, the first option would be to add them as children, which means they will be stacked on top of the default rendering.
 
 ```tsx
 import { Gauge } from '@mui/x-charts/Gauge';
@@ -113,7 +113,7 @@ To create your own components, use the `useGaugeState` hook which provides all y
 
 ## Accessibility
 
-The MUI X Gauge chart is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+The MUI X Gauge is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
 
 ### Label
 

@@ -91,7 +91,7 @@ You can select the whole week using the `day` component slot:
 ## Dynamic data
 
 Sometimes it may be necessary to display additional info right in the calendar.
-The following demo shows how to add a badge on some day based on server side data:
+The following demo shows how to add a badge on some day based on server-side data:
 
 {{"demo": "DateCalendarServerRequest.js"}}
 

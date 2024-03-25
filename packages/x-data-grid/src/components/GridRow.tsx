@@ -13,7 +13,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import type { GridPinnedColumns } from '../hooks/features/columns';
+import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
@@ -29,8 +29,9 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { PinnedPosition } from './cell/GridCell';
+import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
+import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -314,6 +315,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
       minHeight,
+      '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
     if (sizes?.spacingTop) {
@@ -368,25 +370,13 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
-    let pinnedOffset: number;
-    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
-    // eslint-disable-next-line default-case
-    switch (pinnedPosition) {
-      case PinnedPosition.LEFT:
-        pinnedOffset = columnPositions[indexRelativeToAllColumns];
-        break;
-      case PinnedPosition.RIGHT:
-        pinnedOffset =
-          dimensions.columnsTotalWidth -
-          columnPositions[indexRelativeToAllColumns] -
-          column.computedWidth +
-          scrollbarWidth;
-        break;
-      case PinnedPosition.NONE:
-      case PinnedPosition.VIRTUAL:
-        pinnedOffset = 0;
-        break;
-    }
+    const pinnedOffset = getPinnedCellOffset(
+      gridPinnedColumnPositionLookup[pinnedPosition],
+      column.computedWidth,
+      indexRelativeToAllColumns,
+      columnPositions,
+      dimensions,
+    );
 
     if (rowNode?.type === 'skeletonRow') {
       return (
@@ -420,19 +410,17 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         column={column}
         width={width}
         rowId={rowId}
-        height={rowHeight}
         align={column.align || 'left'}
         colIndex={indexRelativeToAllColumns}
         colSpan={colSpan}
         disableDragEvents={disableDragEvents}
         editCellState={editCellState}
         isNotVisible={cellIsNotVisible}
-        {...slotProps?.cell}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
-        gridHasScrollX={dimensions.hasScrollX}
+        {...slotProps?.cell}
       />
     );
   };
@@ -534,7 +522,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
+      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>

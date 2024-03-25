@@ -1,7 +1,6 @@
-import * as React from 'react';
 import type { VirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export interface GridPinnedRowsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GridPinnedRowsProps {
   position: 'top' | 'bottom';
   virtualScroller: VirtualScroller;
 }

@@ -11,11 +11,15 @@ import {
   TreeItemDescendant,
   useDescendant,
 } from '../../TreeViewProvider/DescendantProvider';
+import type { TreeItemProps } from '../../../TreeItem';
+import type { TreeItem2Props } from '../../../TreeItem2';
 
 export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
   instance,
   setState,
 }) => {
+  instance.preventItemUpdates();
+
   const insertJSXNode = useEventCallback((node: TreeViewNode) => {
     setState((prevState) => {
       if (prevState.nodes.nodeMap[node.id] != null) {
@@ -40,12 +44,12 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
     });
   });
 
-  const removeJSXNode = useEventCallback((nodeId: string) => {
+  const removeJSXNode = useEventCallback((itemId: string) => {
     setState((prevState) => {
       const newNodeMap = { ...prevState.nodes.nodeMap };
       const newItemMap = { ...prevState.nodes.itemMap };
-      delete newNodeMap[nodeId];
-      delete newItemMap[nodeId];
+      delete newNodeMap[itemId];
+      delete newItemMap[itemId];
       return {
         ...prevState,
         nodes: {
@@ -55,19 +59,19 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
         },
       };
     });
-    publishTreeViewEvent(instance, 'removeNode', { id: nodeId });
+    publishTreeViewEvent(instance, 'removeNode', { id: itemId });
   });
 
-  const mapFirstCharFromJSX = useEventCallback((nodeId: string, firstChar: string) => {
+  const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
     instance.updateFirstCharMap((firstCharMap) => {
-      firstCharMap[nodeId] = firstChar;
+      firstCharMap[itemId] = firstChar;
       return firstCharMap;
     });
 
     return () => {
       instance.updateFirstCharMap((firstCharMap) => {
         const newMap = { ...firstCharMap };
-        delete newMap[nodeId];
+        delete newMap[itemId];
         return newMap;
       });
     };
@@ -80,8 +84,12 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
   });
 };
 
-const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
-  const { children, disabled = false, label, nodeId, id, ContentProps: inContentProps } = props;
+const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
+  props,
+  rootRef,
+  contentRef,
+}) => {
+  const { children, disabled = false, label, itemId, id } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
 
@@ -95,15 +103,17 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
   const expandable = isExpandable(children);
 
   const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(setTreeItemElement, ref);
+  const pluginContentRef = React.useRef<HTMLDivElement>(null);
+
+  const handleRootRef = useForkRef(setTreeItemElement, rootRef);
+  const handleContentRef = useForkRef(pluginContentRef, contentRef);
 
   const descendant = React.useMemo<TreeItemDescendant>(
     () => ({
       element: treeItemElement!,
-      id: nodeId,
+      id: itemId,
     }),
-    [nodeId, treeItemElement],
+    [itemId, treeItemElement],
   );
 
   const { index, parentId } = useDescendant(descendant);
@@ -112,7 +122,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
     // On the first render a node's index will be -1. We want to wait for the real index.
     if (index !== -1) {
       instance.insertJSXNode({
-        id: nodeId,
+        id: itemId,
         idAttribute: id,
         index,
         parentId,
@@ -120,35 +130,32 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin = ({ props, ref }) => {
         disabled,
       });
 
-      return () => instance.removeJSXNode(nodeId);
+      return () => instance.removeJSXNode(itemId);
     }
 
     return undefined;
-  }, [instance, parentId, index, nodeId, expandable, disabled, id]);
+  }, [instance, parentId, index, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
       return instance.mapFirstCharFromJSX(
-        nodeId,
-        (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
+        itemId,
+        (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
     }
     return undefined;
-  }, [instance, nodeId, label]);
+  }, [instance, itemId, label]);
 
   return {
-    props: {
-      ...props,
-      ContentProps: {
-        ...inContentProps,
-        ref: contentRef,
-      },
-    },
-    ref: handleRef,
-    wrapItem: (item) => <DescendantProvider id={nodeId}>{item}</DescendantProvider>,
+    contentRef: handleContentRef,
+    rootRef: handleRootRef,
   };
 };
 
 useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+
+useTreeViewJSXNodes.wrapItem = ({ children, itemId }) => (
+  <DescendantProvider id={itemId}>{children}</DescendantProvider>
+);
 
 useTreeViewJSXNodes.params = {};

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -70,10 +71,15 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getRenderZoneProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
+    getRows,
   } = virtualScroller;
+
+  const rows = getRows();
 
   return (
     <Container className={classes.root} {...getContainerProps()}>
+      <GridScrollArea scrollDirection="left" />
+      <GridScrollArea scrollDirection="right" />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
           <GridHeaders />
@@ -84,12 +90,12 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
-            {virtualScroller.getRows()}
+            {rows}
             {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>
         </Content>
 
-        <SpaceFiller />
+        {rows.length > 0 && <SpaceFiller />}
 
         <BottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
