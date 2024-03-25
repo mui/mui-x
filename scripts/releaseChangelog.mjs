@@ -164,6 +164,7 @@ async function main(argv) {
         pickersCommits.push(commitItem);
         break;
       case 'DateRangePicker':
+      case 'DateTimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts':
@@ -300,7 +301,7 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         });
