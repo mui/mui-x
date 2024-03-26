@@ -67,6 +67,16 @@ async function main() {
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
+  function navigateToTest(testIndex) {
+    // Use client-side routing which is much faster than full page navigation via page.goto().
+    // Could become an issue with test isolation.
+    // If tests are flaky due to global pollution switch to page.goto(route);
+    // puppeteers built-in click() times out
+    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
+      link.click();
+    });
+  }
+
   describe('visual regressions', () => {
     after(async () => {
       await browser.close();
@@ -91,13 +101,15 @@ async function main() {
           this.timeout(6000);
         }
 
-        // Use client-side routing which is much faster than full page navigation via page.goto().
-        // Could become an issue with test isolation.
-        // If tests are flaky due to global pollution switch to page.goto(route);
-        // puppeteers built-in click() times out
-        await page.$eval(`#tests li:nth-of-type(${index + 1}) a`, (link) => {
-          link.click();
-        });
+        try {
+          await navigateToTest(index + 1);
+        } catch (error) {
+          // When one demo crashes, the page becomes empty and there are no links to demos,
+          // so navigation to the next demo throws an error.
+          // Reloading the page fixes this.
+          await page.reload();
+          await navigateToTest(index + 1);
+        }
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 

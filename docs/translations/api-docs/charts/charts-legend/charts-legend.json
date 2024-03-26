@@ -1,0 +1,28 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "direction": {
+      "description": "The direction of the legend layout. The default depends on the chart."
+    },
+    "hidden": { "description": "Set to true to hide the legend." },
+    "position": { "description": "The position of the legend." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {
+    "column": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with column layout"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
+    "root": { "description": "Styles applied to the root element." },
+    "row": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with row layout"
+    },
+    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
+  },
+  "slotDescriptions": { "legend": "Custom rendering of the legend." }
+}

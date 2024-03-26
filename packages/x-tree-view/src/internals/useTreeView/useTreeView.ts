@@ -7,6 +7,8 @@ import {
   TreeViewPlugin,
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
+  TreeItemWrapper,
+  TreeViewPublicAPI,
 } from '../models';
 import {
   UseTreeViewDefaultizedParameters,
@@ -14,10 +16,24 @@ import {
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
 import { TreeViewContextValue } from '../TreeViewProvider';
 import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+
+export function useTreeViewApiInitialization<T>(
+  inputApiRef: React.MutableRefObject<T> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      inputApiRef.current = {} as T;
+    }
+    return inputApiRef.current;
+  }
+
+  return fallbackPublicApiRef.current;
+}
 
 export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
   inParams: UseTreeViewParameters<Plugins>,
@@ -40,7 +56,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
     {} as TreeViewInstance<Signatures>,
   );
-  const instance = instanceRef.current;
+  const instance = instanceRef.current as TreeViewInstance<Signatures>;
+
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
+
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
@@ -61,29 +80,81 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  let contextValue: TreeViewContextValue<Signatures> = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
+  const contextValue = {
+    publicAPI,
+    instance: instance as TreeViewInstance<any>,
+  } as TreeViewContextValue<Signatures>;
 
-  const runPlugin = (plugin: TreeViewPlugin<any>) => {
+  const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse =
-      plugin({ instance, params, state, setState, rootRef: innerRootRef, models }) || {};
+      plugin({
+        instance,
+        publicAPI,
+        params,
+        slots: params.slots,
+        slotProps: params.slotProps,
+        state,
+        setState,
+        rootRef: innerRootRef,
+        models,
+      }) || {};
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
     }
 
     if (pluginResponse.contextValue) {
-      contextValue = pluginResponse.contextValue;
+      Object.assign(contextValue, pluginResponse.contextValue);
     }
   };
 
   plugins.forEach(runPlugin);
+
+  contextValue.runItemPlugins = (itemPluginProps) => {
+    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
+    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
+
+    plugins.forEach((plugin) => {
+      if (!plugin.itemPlugin) {
+        return;
+      }
+
+      const itemPluginResponse = plugin.itemPlugin({
+        props: itemPluginProps,
+        rootRef: finalRootRef,
+        contentRef: finalContentRef,
+      });
+      if (itemPluginResponse?.rootRef) {
+        finalRootRef = itemPluginResponse.rootRef;
+      }
+      if (itemPluginResponse?.contentRef) {
+        finalContentRef = itemPluginResponse.contentRef;
+      }
+    });
+
+    return {
+      contentRef: finalContentRef,
+      rootRef: finalRootRef,
+    };
+  };
+
+  const itemWrappers = plugins
+    .map((plugin) => plugin.wrapItem)
+    .filter((wrapItem): wrapItem is TreeItemWrapper => !!wrapItem);
+  contextValue.wrapItem = ({ itemId, children }) => {
+    let finalChildren: React.ReactNode = children;
+    itemWrappers.forEach((itemWrapper) => {
+      finalChildren = itemWrapper({ itemId, children: finalChildren });
+    });
+
+    return finalChildren;
+  };
 
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,
   ) => {
     const rootProps: UseTreeViewRootSlotProps = {
       role: 'tree',
-      tabIndex: 0,
       ...otherHandlers,
       ref: handleRootRef,
     };
@@ -95,5 +166,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return rootProps;
   };
 
-  return { getRootProps, rootRef: handleRootRef, contextValue };
+  return {
+    getRootProps,
+    rootRef: handleRootRef,
+    contextValue: contextValue as any,
+    instance: instance as any,
+  };
 };

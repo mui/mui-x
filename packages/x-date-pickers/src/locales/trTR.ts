@@ -15,16 +15,20 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Sonraki ay',
 
   // View navigation
-  openPreviousView: 'sonraki görünüm',
-  openNextView: 'önceki görünüm',
+  openPreviousView: 'Sonraki görünüm',
+  openNextView: 'Önceki görünüm',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Başlangıç',
   end: 'Bitiş',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'iptal',
@@ -40,9 +44,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} seç.  ${
-      time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} seç.  ${time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
@@ -80,6 +82,19 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'dd',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const trTR = getPickersLocalization(trTRPickers);

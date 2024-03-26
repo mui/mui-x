@@ -1,5 +1,7 @@
 ---
 title: Charts - Custom components
+productId: x-charts
+components: ChartsClipPath, ChartsSurface
 ---
 
 # Charts - Custom components

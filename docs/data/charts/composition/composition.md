@@ -1,6 +1,8 @@
 ---
 title: React Chart composition
+productId: x-charts
 githubLabel: 'component: charts'
+components: ChartContainer, ResponsiveChartContainer, ChartsGrid
 packageName: '@mui/x-charts'
 ---
 
@@ -93,6 +95,12 @@ By modifying the series `type` property, you can switch between rendering a line
 
 ## Subcomponents
 
+:::info
+The CSS `z-index` property does not exist on SVG elements.
+Elements rendered after overlap on top of elements rendered before.
+The order of elements in composition is the only way to define how they overlap.
+:::
+
 ### Plotting
 
 To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
@@ -103,6 +111,12 @@ To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in t
 
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
 If `axisId` is not provided it will pick the first one.
+
+### Grid
+
+To add a grid, you can use the `<ChartsGrid />` component.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
 ### Additional information
 

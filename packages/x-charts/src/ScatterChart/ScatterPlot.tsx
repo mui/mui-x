@@ -12,7 +12,7 @@ export interface ScatterPlotSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
-export interface ScatterPlotProps {
+export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -36,7 +36,7 @@ export interface ScatterPlotProps {
  * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
  */
 function ScatterPlot(props: ScatterPlotProps) {
-  const { slots, slotProps } = props;
+  const { slots, slotProps, onItemClick } = props;
   const seriesData = React.useContext(SeriesContext).scatter;
   const axisData = React.useContext(CartesianContext);
 
@@ -65,6 +65,7 @@ function ScatterPlot(props: ScatterPlotProps) {
             color={color}
             markerSize={markerSize ?? 4}
             series={series[seriesId]}
+            onItemClick={onItemClick}
             {...slotProps?.scatter}
           />
         );
@@ -78,6 +79,12 @@ ScatterPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Callback fired when clicking on a scatter item.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

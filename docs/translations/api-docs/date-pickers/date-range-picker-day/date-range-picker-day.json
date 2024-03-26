@@ -1,0 +1,159 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "action": {
+      "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."
+    },
+    "centerRipple": {
+      "description": "If <code>true</code>, the ripples are centered. They won&#39;t start at the cursor interaction position."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "day": { "description": "The date to show." },
+    "disabled": { "description": "If <code>true</code>, renders as disabled." },
+    "disableHighlightToday": {
+      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+    },
+    "disableMargin": {
+      "description": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days."
+    },
+    "disableRipple": {
+      "description": "If <code>true</code>, the ripple effect is disabled.<br>⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure to highlight the element by applying separate styles with the <code>.Mui-focusVisible</code> class."
+    },
+    "disableTouchRipple": {
+      "description": "If <code>true</code>, the touch ripple effect is disabled."
+    },
+    "draggable": {
+      "description": "If <code>true</code>, the day can be dragged to change the current date range."
+    },
+    "focusRipple": {
+      "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
+    },
+    "focusVisibleClassName": {
+      "description": "This prop can help identify which element has keyboard focus. The class name will be applied when the element gains the focus through keyboard interaction. It&#39;s a polyfill for the <a href=\"https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo\">CSS :focus-visible selector</a>. The rationale for using this feature <a href=\"https://github.com/WICG/focus-visible/blob/HEAD/explainer.md\">is explained here</a>. A <a href=\"https://github.com/WICG/focus-visible\">polyfill can be used</a> to apply a <code>focus-visible</code> class to other components if needed."
+    },
+    "isEndOfHighlighting": {
+      "description": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range."
+    },
+    "isEndOfPreviewing": {
+      "description": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range."
+    },
+    "isFirstVisibleCell": {
+      "description": "If <code>true</code>, day is the first visible cell of the month. Either the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+    },
+    "isHighlighting": {
+      "description": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range."
+    },
+    "isLastVisibleCell": {
+      "description": "If <code>true</code>, day is the last visible cell of the month. Either the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+    },
+    "isPreviewing": {
+      "description": "Set to <code>true</code> if the <code>day</code> is in a preview date range."
+    },
+    "isStartOfHighlighting": {
+      "description": "Set to <code>true</code> if the <code>day</code> is the start of a highlighted date range."
+    },
+    "isStartOfPreviewing": {
+      "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range."
+    },
+    "isVisuallySelected": { "description": "Indicates if the day should be visually selected." },
+    "onFocusVisible": {
+      "description": "Callback fired when the component is focused with a keyboard. We trigger a <code>onFocus</code> callback too."
+    },
+    "outsideCurrentMonth": {
+      "description": "If <code>true</code>, day is outside of month and will be hidden."
+    },
+    "selected": { "description": "If <code>true</code>, renders as selected." },
+    "showDaysOutsideCurrentMonth": {
+      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "today": { "description": "If <code>true</code>, renders as today date." },
+    "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
+    "touchRippleRef": {
+      "description": "A ref that points to the <code>TouchRipple</code> element."
+    }
+  },
+  "classDescriptions": {
+    "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
+    "dayInsideRangeInterval": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the day element",
+      "conditions": "<code>selected=false</code> and <code>isHighlighting=true</code>"
+    },
+    "dayOutsideRangeInterval": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the day element",
+      "conditions": "<code>isHighlighting=false</code>"
+    },
+    "endOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the end of the month"
+    },
+    "firstVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the first visible cell of the month"
+    },
+    "hiddenDayFiller": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is an empty cell used to fill the week"
+    },
+    "lastVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the last visible cell of the month"
+    },
+    "notSelectedDate": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the day element",
+      "conditions": "<code>selected=false</code>"
+    },
+    "outsideCurrentMonth": {
+      "description": "Styles applied to the root element if <code>outsideCurrentMonth=true</code>"
+    },
+    "rangeIntervalDayHighlight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isHighlighting=true</code>"
+    },
+    "rangeIntervalDayHighlightEnd": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isEndOfHighlighting=true</code>"
+    },
+    "rangeIntervalDayHighlightStart": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isStartOfHighlighting=true</code>"
+    },
+    "rangeIntervalDayPreview": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isPreviewing=true</code>"
+    },
+    "rangeIntervalDayPreviewEnd": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isEndOfPreviewing=true</code>"
+    },
+    "rangeIntervalDayPreviewStart": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isStartOfPreviewing=true</code>"
+    },
+    "rangeIntervalPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preview element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "startOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the start of the month"
+    }
+  }
+}

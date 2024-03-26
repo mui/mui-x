@@ -18,9 +18,7 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
-:::warning
-The `next` tag is used to download the latest v7 **pre-release** version.
-:::
+<!-- #default-branch-switch -->
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
@@ -57,7 +55,7 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ### Style engine
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
 ```bash npm
@@ -74,7 +72,7 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Setup your date library adapter
 

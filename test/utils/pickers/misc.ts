@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 
@@ -40,6 +40,12 @@ export const getExpectedOnChangeCount = (
       params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
     );
   }
+  if (componentFamily === 'picker' && params.type === 'date-time-range') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily('multi-section-digital-clock')
+    );
+  }
   if (componentFamily === 'clock') {
     // the `TimeClock` fires change for both touch move and touch end
     // but does not have meridiem control
@@ -48,7 +54,7 @@ export const getExpectedOnChangeCount = (
   return getChangeCountForComponentFamily(componentFamily);
 };
 
-export const getDateOffset = <TDate extends unknown>(
+export const getDateOffset = <TDate extends PickerValidDate>(
   adapter: MuiPickersAdapter<TDate>,
   date: TDate,
 ) => {
@@ -57,7 +63,7 @@ export const getDateOffset = <TDate extends unknown>(
   return cleanUtcHour * 60;
 };
 
-export const formatFullTimeValue = <TDate extends unknown>(
+export const formatFullTimeValue = <TDate extends PickerValidDate>(
   adapter: MuiPickersAdapter<TDate>,
   value: TDate,
 ) => {

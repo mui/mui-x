@@ -4,26 +4,47 @@ productId: x-date-pickers
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-date-pickers` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `^7.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "6.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v6 to v7.
+
+## Update `@mui/material` package
+
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
+It is a change in minor version only, so it should not cause any breaking changes.
+Please update your `@mui/material` package to this or a newer version.
+
+## Update the license package
+
+If you're using the commercial version of the Pickers ([Pro](/x/introduction/licensing/#pro-plan) plan), you need to update the import path:
+
+```diff
+-import { LicenseInfo } from '@mui/x-license-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
+
+```diff
+-"@mui/x-license-pro": "6.x.x",
++"@mui/x-license": "^7.0.0",
+```
 
 ## Run codemods
 
@@ -40,7 +61,7 @@ npx @mui/x-codemod v7.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers-v700) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v700) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -63,12 +84,21 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Drop the legacy bundle
+
+The support for IE11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+
+:::info
+If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+:::
+
 ## Component slots
 
 ### Rename `components` to `slots`
 
 The `components` and `componentsProps` props are renamed to `slots` and `slotProps` props respectively.
-This is a slow and ongoing effort between the different MUI libraries.
+This is a slow and ongoing effort between all the different libraries maintained by MUI.
 To smooth the transition, they were deprecated during the [v6](/x/migration/migration-pickers-v5/#rename-components-to-slots-optional).
 And are removed from the v7.
 
@@ -111,10 +141,10 @@ If you are not relying on the codemod, consider checking all the renamed types i
 Here is an example on the `DateCalendar` typing.
 
 ```diff
-- DateCalendarSlotsComponent
-+ DateCalendarSlots
-- DateCalendarSlotsComponentsProps
-+ DateCalendarSlotProps
+-DateCalendarSlotsComponent
++DateCalendarSlots
+-DateCalendarSlotsComponentsProps
++DateCalendarSlotProps
 ```
 
 ### Add new parameters to the `shortcuts` slot `onChange` callback
@@ -215,11 +245,28 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 
    // If you were already using the day object, just remove the first argument.
 -  dayOfWeekFormatter={(_dayStr, day) => `${day.format('dd')}.`
-+  dayOfWeekFormatter={day => `${day.format('dd')}.`
++  dayOfWeekFormatter={day => `${day.format('dd')}.`}
  />
 ```
 
 ## Field components
+
+### Update the format of `selectedSections`
+
+The `selectedSections` prop no longer accepts start and end indexes.
+When selecting several — but not all — sections,
+the field components were not behaving correctly, you can now only select one or all sections:
+
+```diff
+ <DateField
+-  selectedSections={{ startIndex: 0, endIndex: 0 }}
++  selectedSections={0}
+
+   // If the field has 3 sections
+-  selectedSections={{ startIndex: 0, endIndex: 2 }}
++  selectedSections="all"
+ />
+```
 
 ### Replace the section `hasLeadingZeros` property
 
@@ -245,7 +292,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impacts you if you are using hooks like `useDateField` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -336,6 +383,41 @@ If your custom field is based on one of the examples of the [Custom field](/x/re
 then you can look at the page to see all the examples improved and updated to use the new simplified API.
 :::
 
+#### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
+
+The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
+This is used to know if the current UI expected is built using the accessible DOM structure or not.
+Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+
+When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
+
+```diff
+  function MyCustomTextField(props) {
+    const {
++     // Should be ignored
++     enableAccessibleFieldDOMStructure,
+
+      // ... rest of the props you are using
+    }
+
+    return ( /* Some UI to edit the date */ )
+  }
+
+  function MyCustomField(props) {
+    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+      ...props,
++     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     enableAccessibleFieldDOMStructure: false,
+    });
+
+    return <MyCustomTextField ref={ref} {...fieldResponse} />;
+  }
+
+  function App() {
+    return <DatePicker slots={{ field: MyCustomField }} />;
+  }
+```
+
 ## Date management
 
 ### Use localized week with luxon
@@ -343,10 +425,11 @@ then you can look at the page to see all the examples improved and updated to us
 The `AdapterLuxon` now uses the localized week when Luxon `v3.4.4` or higher is installed.
 This improvement aligns `AdapterLuxon` with the behavior of other adapters.
 
-If you want to keep the start of the week on Monday even if your locale says otherwise, you can hardcode the week settings as follows:
+If you want to keep the start of the week on Monday even if your locale says otherwise.
+You can hardcode the week settings as follows:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   firstDay: 1,
@@ -358,7 +441,8 @@ Settings.defaultWeekSettings = {
 ### Remove the `monthAndYear` format
 
 The `monthAndYear` format has been removed.
-It was used in the header of the calendar views, you can replace it with the new `format` prop of the `calendarHeader` slot:
+It was used in the header of the calendar views.
+You can replace it with the new `format` prop of the `calendarHeader` slot:
 
 ```diff
  <LocalizationProvider
@@ -429,6 +513,29 @@ dayjs.extend(customParseFormatPlugin);
 
 The other plugins are still added before the adapter initialization.
 
+## Remove root level `locales` export
+
+The `locales` export has been removed from the root of the packages.
+In an effort to reduce the bundle size, the locales are now only available from the `@mui/x-date-pickers/locales` or `@mui/x-date-pickers-pro/locales` paths.
+If you were still relying on the root level export, please update your code.
+
+Before v7, it was possible to import locales from the package root (that is `import { frFR } from '@mui/x-date-pickers'`).
+
+```diff
+-import { frFR } from '@mui/x-date-pickers';
++import { frFR } from '@mui/x-date-pickers/locales';
+```
+
+## Remove `dateTimeViewRenderers` export
+
+The `dateTimeViewRenderers` export has been removed in favor of reusing existing time view renderers (`renderTimeViewClock`, `renderDigitalClockTimeView` and `renderMultiSectionDigitalClockTimeView`) and date view renderer (`renderDateViewCalendar`) to render the `DesktopDateTimePicker`.
+
+If you were relying on this import, you can refer to the implementation of the `DesktopDateTimePicker` to see how to combine the renderers yourself.
+
+:::info
+The additional side-effect of this change is that passing `renderTimeViewClock` to time view renderers will no longer revert to the old behavior of rendering only date or time view.
+:::
+
 ## Adapters internal changes
 
 :::success
@@ -455,13 +562,14 @@ The `dateWithTimezone` method has been removed and its content has been moved th
 You can use the `date` method instead:
 
 ```diff
--adater.dateWithTimezone(undefined, 'system');
-+adater.date(undefined, 'system');
+-adapter.dateWithTimezone(undefined, 'system');
++adapter.date(undefined, 'system');
 ```
 
 #### Remove the `getDiff` method
 
-The `getDiff` method have been removed, you can directly use your date library:
+The `getDiff` method has been removed.
+You can directly use your date library:
 
 ```diff
  // For Day.js
@@ -518,14 +626,16 @@ The `getDiff` method have been removed, you can directly use your date library:
 
 #### Remove the `getFormatHelperText` method
 
-The `getFormatHelperText` method have been removed, you can use the `expandFormat` instead:
+The `getFormatHelperText` method has been removed.
+You can use the `expandFormat` instead:
 
 ```diff
 -const expandedFormat = adapter.getFormatHelperText(format);
 +const expandedFormat = adapter.expandFormat(format);
 ```
 
-And if you need the exact same output, you can apply the following transformation:
+And if you need the exact same output.
+You can apply the following transformation:
 
 ```diff
  // For Day.js
@@ -547,7 +657,8 @@ And if you need the exact same output, you can apply the following transformatio
 
 #### Remove the `getMeridiemText` method
 
-The `getMeridiemText` method have been removed, you can use the `setHours`, `date` and `format` methods to recreate its behavior:
+The `getMeridiemText` method has been removed.
+You can use the `setHours`, `date` and `format` methods to recreate its behavior:
 
 ```diff
 -const meridiem = adapter.getMeridiemText('am');
@@ -561,7 +672,8 @@ The `getMeridiemText` method have been removed, you can use the `setHours`, `dat
 
 #### Remove the `getMonthArray` method
 
-The `getMonthArray` method have been removed, you can use the `startOfYear` and `addMonths` methods to recreate its behavior:
+The `getMonthArray` method has been removed.
+You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 ```diff
 -const monthArray = adapter.getMonthArray(value);
@@ -582,7 +694,8 @@ The `getMonthArray` method have been removed, you can use the `startOfYear` and 
 
 #### Remove the `getNextMonth` method
 
-The `getNextMonth` method have been removed, you can use the `addMonths` method instead:
+The `getNextMonth` method has been removed.
+You can use the `addMonths` method instead:
 
 ```diff
 -const nextMonth = adapter.getNextMonth(value);
@@ -591,7 +704,8 @@ The `getNextMonth` method have been removed, you can use the `addMonths` method 
 
 #### Remove the `getPreviousMonth` method
 
-The `getPreviousMonth` method have been removed, you can use the `addMonths` method instead:
+The `getPreviousMonth` method has been removed.
+You can use the `addMonths` method instead:
 
 ```diff
 -const previousMonth = adapter.getPreviousMonth(value);
@@ -600,7 +714,8 @@ The `getPreviousMonth` method have been removed, you can use the `addMonths` met
 
 #### Remove the `getWeekdays` method
 
-The `getWeekdays` method have been removed, you can use the `startOfWeek` and `addDays` methods instead:
+The `getWeekdays` method has been removed.
+You can use the `startOfWeek` and `addDays` methods instead:
 
 ```diff
 -const weekDays = adapter.getWeekdays(value);
@@ -614,7 +729,8 @@ The `getWeekdays` method have been removed, you can use the `startOfWeek` and `a
 
 #### Remove the `isNull` method
 
-The `isNull` method have been removed, you can replace it with a very basic check:
+The `isNull` method has been removed.
+You can replace it with a very basic check:
 
 ```diff
 -const isNull = adapter.isNull(value);
@@ -623,7 +739,8 @@ The `isNull` method have been removed, you can replace it with a very basic chec
 
 #### Remove the `mergeDateAndTime` method
 
-The `mergeDateAndTime` method have been removed, you can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
+The `mergeDateAndTime` method has been removed.
+You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
 
 ```diff
 -const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
@@ -644,7 +761,8 @@ The `mergeDateAndTime` method have been removed, you can use the `setHours`, `se
 
 #### Remove the `parseISO` method
 
-The `parseISO` method have been removed, you can directly use your date library:
+The `parseISO` method has been removed.
+You can directly use your date library:
 
 ```diff
  // For Day.js
@@ -666,13 +784,24 @@ The `parseISO` method have been removed, you can directly use your date library:
 
 #### Remove the `toISO` method
 
-The `toISO` method have been removed, you can directly use your date library:
+The `toISO` method has been removed.
+You can directly use your date library:
 
 ```diff
+ // For Day.js
 -const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
+
+ // For Luxon
+-const isoString = adapter.toISO(value);
 +const isoString = value.toUTC().toISO({ format: 'extended' });
+
+ // For DateFns
+-const isoString = adapter.toISO(value);
 +const isoString = dateFns.formatISO(value, { format: 'extended' });
+
+ // For Moment
+-const isoString = adapter.toISO(value);
 +const isoString = value.toISOString();
 ```
 
@@ -718,7 +847,7 @@ The method has been simplified and now only accepts an already-parsed date or `n
  const adapterDayjs = new AdapterDayjs();
  const adapterLuxon = new AdapterLuxon();
  const adapterDateFns = new AdapterDateFns();
- const adapterMoment = new AdatperMoment();
+ const adapterMoment = new AdapterMoment();
 
  // Supported formats
  const isEqual = adapterDayjs.isEqual(null, null); // Same for the other adapters
@@ -760,7 +889,7 @@ Which is the same type as the one accepted by the components `value` prop.
  const adapterDayjs = new AdapterDayjs();
  const adapterLuxon = new AdapterLuxon();
  const adapterDateFns = new AdapterDateFns();
- const adapterMoment = new AdatperMoment();
+ const adapterMoment = new AdapterMoment();
 
  // Supported formats
  const isValid = adapterDayjs.isValid(null); // Same for the other adapters
@@ -793,3 +922,14 @@ Which is the same type as the one accepted by the components `value` prop.
 ```
 
 </details>
+
+## Removed internal types
+
+The following internal types were exported by mistake and have been removed from the public API:
+
+- `UseDateFieldDefaultizedProps`
+- `UseTimeFieldDefaultizedProps`
+- `UseDateTimeFieldDefaultizedProps`
+- `UseSingleInputDateRangeFieldComponentProps`
+- `UseSingleInputTimeRangeFieldComponentProps`
+- `UseSingleInputDateTimeRangeFieldComponentProps`

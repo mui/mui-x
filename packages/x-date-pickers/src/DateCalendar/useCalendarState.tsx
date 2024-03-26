@@ -3,12 +3,12 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter, PickersTimezone } from '../models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 
-interface CalendarState<TDate> {
+interface CalendarState<TDate extends PickerValidDate> {
   currentMonth: TDate;
   focusedDay: TDate | null;
   isMonthSwitchingAnimating: boolean;
@@ -17,12 +17,12 @@ interface CalendarState<TDate> {
 
 type ReducerAction<TType, TAdditional = {}> = { type: TType } & TAdditional;
 
-interface ChangeMonthPayload<TDate> {
+interface ChangeMonthPayload<TDate extends PickerValidDate> {
   direction: SlideDirection;
   newMonth: TDate;
 }
 
-interface ChangeFocusedDayPayload<TDate> {
+interface ChangeFocusedDayPayload<TDate extends PickerValidDate> {
   focusedDay: TDate | null;
   /**
    * The update does not trigger month switching animation.
@@ -32,7 +32,7 @@ interface ChangeFocusedDayPayload<TDate> {
 }
 
 export const createCalendarStateReducer =
-  <TDate extends unknown>(
+  <TDate extends PickerValidDate>(
     reduceAnimations: boolean,
     disableSwitchToMonthOnDayFocus: boolean,
     utils: MuiPickersAdapter<TDate>,
@@ -93,7 +93,7 @@ export const createCalendarStateReducer =
     }
   };
 
-interface UseCalendarStateParams<TDate>
+interface UseCalendarStateParams<TDate extends PickerValidDate>
   extends Pick<
     DateCalendarDefaultizedProps<TDate>,
     | 'value'
@@ -110,7 +110,9 @@ interface UseCalendarStateParams<TDate>
   timezone: PickersTimezone;
 }
 
-export const useCalendarState = <TDate extends unknown>(params: UseCalendarStateParams<TDate>) => {
+export const useCalendarState = <TDate extends PickerValidDate>(
+  params: UseCalendarStateParams<TDate>,
+) => {
   const {
     value,
     referenceDate: referenceDateProp,

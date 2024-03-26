@@ -5,13 +5,22 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import {
+  UseDesktopPickerParams,
+  UseDesktopPickerProps,
+  UseDesktopPickerSlotProps,
+} from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../useValidation';
-import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import {
+  FieldSection,
+  PickerValidDate,
+  FieldRef,
+  BaseSingleInputFieldProps,
+} from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -21,14 +30,21 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  * - DesktopTimePicker
  */
 export const useDesktopPicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopPickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopPickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -36,6 +52,9 @@ export const useDesktopPicker = <
     sx,
     format,
     formatDensity,
+    enableAccessibleFieldDOMStructure,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     name,
     label,
@@ -48,8 +67,9 @@ export const useDesktopPicker = <
   } = props;
 
   const utils = useUtils<TDate>();
-  const internalInputRef = React.useRef<HTMLInputElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
@@ -64,7 +84,7 @@ export const useDesktopPicker = <
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
-    inputRef: internalInputRef,
+    fieldRef,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
@@ -96,12 +116,20 @@ export const useDesktopPicker = <
   const OpenPickerIcon = slots.openPickerIcon;
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const fieldProps = useSlotProps<
+    typeof Field,
+    UseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    Partial<
+      BaseSingleInputFieldProps<
+        TDate | null,
+        TDate,
+        FieldSection,
+        TEnableAccessibleFieldDOMStructure,
+        InferError<TExternalProps>
+      >
+    >,
+    TExternalProps
+  >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -113,11 +141,15 @@ export const useDesktopPicker = <
       sx,
       format,
       formatDensity,
+      enableAccessibleFieldDOMStructure,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
       label,
       name,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
+      ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
   });
@@ -134,15 +166,10 @@ export const useDesktopPicker = <
           </OpenPickerButton>
         </InputAdornment>
       ),
-    };
+    } as typeof fieldProps.InputProps;
   }
 
-  const slotsForField: BaseSingleInputFieldProps<
-    TDate | null,
-    TDate,
-    FieldSection,
-    unknown
-  >['slots'] = {
+  const slotsForField = {
     textField: slots.textField,
     clearIcon: slots.clearIcon,
     clearButton: slots.clearButton,
@@ -150,8 +177,6 @@ export const useDesktopPicker = <
   };
 
   const Layout = slots.layout ?? PickersLayout;
-
-  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
 
   let labelledById = labelId;
   if (isToolbarHidden) {
@@ -173,13 +198,15 @@ export const useDesktopPicker = <
     },
   };
 
+  const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <Field
         {...fieldProps}
         slots={slotsForField}
         slotProps={slotProps}
-        inputRef={handleInputRef}
+        unstableFieldRef={handleFieldRef}
       />
       <PickersPopper
         role="dialog"

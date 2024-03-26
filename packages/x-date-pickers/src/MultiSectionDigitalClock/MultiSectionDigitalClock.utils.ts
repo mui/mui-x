@@ -1,7 +1,7 @@
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter, PickerValidDate } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
-interface IGetHoursSectionOptions<TDate> {
+interface IGetHoursSectionOptions<TDate extends PickerValidDate> {
   now: TDate;
   value: TDate | null;
   utils: MuiPickersAdapter<TDate>;
@@ -12,7 +12,7 @@ interface IGetHoursSectionOptions<TDate> {
   valueOrReferenceDate: TDate;
 }
 
-export const getHourSectionOptions = <TDate>({
+export const getHourSectionOptions = <TDate extends PickerValidDate>({
   now,
   value,
   utils,
@@ -66,7 +66,7 @@ export const getHourSectionOptions = <TDate>({
   return result;
 };
 
-interface IGetTimeSectionOptions<TDate> {
+interface IGetTimeSectionOptions<TDate extends PickerValidDate> {
   value: number | null;
   utils: MuiPickersAdapter<TDate>;
   isDisabled: (value: number) => boolean;
@@ -76,7 +76,7 @@ interface IGetTimeSectionOptions<TDate> {
   resolveAriaLabel: (value: string) => string;
 }
 
-export const getTimeSectionOptions = <TDate>({
+export const getTimeSectionOptions = <TDate extends PickerValidDate>({
   value,
   utils,
   isDisabled,

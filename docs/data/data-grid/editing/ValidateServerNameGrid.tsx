@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import {
   GridColDef,
@@ -11,7 +10,7 @@ import {
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
   height: 400,
   width: '100%',
   '& .MuiDataGrid-cell--editable': {
@@ -26,15 +25,18 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-let promiseTimeout: any;
+let promiseTimeout: ReturnType<typeof setTimeout>;
 function validateName(username: string): Promise<boolean> {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
 
   return new Promise<any>((resolve) => {
-    promiseTimeout = setTimeout(() => {
-      const exists = existingUsers.includes(username.toLowerCase());
-      resolve(exists ? `${username} is already taken.` : null);
-    }, Math.random() * 500 + 100); // simulate network latency
+    promiseTimeout = setTimeout(
+      () => {
+        const exists = existingUsers.includes(username.toLowerCase());
+        resolve(exists ? `${username} is already taken.` : null);
+      },
+      Math.random() * 500 + 100,
+    ); // simulate network latency
   });
 }
 

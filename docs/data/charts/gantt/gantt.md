@@ -1,8 +1,9 @@
 ---
 title: React Gantt chart
+productId: x-charts
 ---
 
-# Charts - Gantt [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Gantt [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">Gantt charts can illustrate a schedule and the relationships between its various activities.</p>
 

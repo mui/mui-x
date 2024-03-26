@@ -9,21 +9,38 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
   "name": "DayCalendarSkeleton",
   "imports": [
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';",
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers';",
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "week", "daySkeleton"],
-    "globalClasses": {},
-    "name": "MuiDayCalendarSkeleton"
-  },
+  "classes": [
+    {
+      "key": "daySkeleton",
+      "className": "MuiDayCalendarSkeleton-daySkeleton",
+      "description": "Styles applied to the day element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDayCalendarSkeleton-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "week",
+      "className": "MuiDayCalendarSkeleton-week",
+      "description": "Styles applied to the week element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiDayCalendarSkeleton",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "cssComponent": false
 }

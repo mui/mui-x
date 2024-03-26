@@ -8,7 +8,9 @@ import type {
 } from 'd3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { ChartsTextProps } from '../internals/components/ChartsText';
+import { ChartsTextProps } from '../ChartsText';
+
+export type AxisId = string | number;
 
 export type D3Scale<
   Domain extends { toString(): string } = number | Date | string,
@@ -29,9 +31,25 @@ export type D3ContinuouseScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export interface ChartsAxisSlots {
+  /**
+   * Custom component for the axis main line.
+   * @default 'line'
+   */
   axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for the axis tick.
+   * @default 'line'
+   */
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  /**
+   * Custom component for tick label.
+   * @default ChartsText
+   */
   axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for axis label.
+   * @default ChartsText
+   */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
 }
 
@@ -47,7 +65,7 @@ export interface ChartsAxisProps extends TickParams {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId?: string;
+  axisId?: AxisId;
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -153,7 +171,7 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
-  };
+  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
@@ -184,11 +202,15 @@ interface AxisScaleConfig {
   };
 }
 
+export type AxisValueFormatterContext = {
+  location: 'tick' | 'tooltip';
+};
+
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
    * Id used to identify the axis.
    */
-  id: string;
+  id: AxisId;
   /**
    * The minimal value of the domain.
    * If not provided, it gets computed to display the entire chart data.
@@ -207,11 +229,21 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
-  valueFormatter?: (value: V) => string;
+  /**
+   * Formats the axis value.
+   * @param {V} value The value to format.
+   * @param {AxisValueFormatterContext} context The rendering context of the value.
+   * @returns {string} The string to display.
+   */
+  valueFormatter?: (value: V, context: AxisValueFormatterContext) => string;
   /**
    * If `true`, hide this value in the tooltip
    */
   hideTooltip?: boolean;
+  /**
+   * If `true`, Reverse the axis scaleBand.
+   */
+  reverse?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams;

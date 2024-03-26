@@ -15,16 +15,20 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næsti mánuður',
 
   // View navigation
-  openPreviousView: 'opna fyrri skoðun',
-  openNextView: 'opna næstu skoðun',
+  openPreviousView: 'Opna fyrri skoðun',
+  openNextView: 'Opna næstu skoðun',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Upphaf',
   end: 'Endir',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Hætta við',
@@ -40,9 +44,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Velja ${timeViews[view]}. ${
-      time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Velja ${timeViews[view]}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
@@ -80,6 +82,19 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'ee',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const isIS = getPickersLocalization(isISPickers);

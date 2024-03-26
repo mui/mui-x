@@ -7,7 +7,7 @@
       },
       "default": "`['cancel', 'accept']` for mobile and `[]` for desktop"
     },
-    "disableSpacing": { "type": { "name": "bool" } },
+    "disableSpacing": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
@@ -16,15 +16,31 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
   "name": "PickersActionBar",
   "imports": [
     "import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';",
     "import { PickersActionBar } from '@mui/x-date-pickers';",
     "import { PickersActionBar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiPickersActionBar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "spacing",
+      "className": "MuiPickersActionBar-spacing",
+      "description": "Styles applied to the root element unless `disableSpacing={true}`.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiPickersActionBar",
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
+  "cssComponent": false
 }

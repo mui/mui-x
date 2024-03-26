@@ -18,6 +18,9 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridi
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
+  /**
+   * Available views.
+   */
   views: readonly TView[];
   disabled?: boolean;
   readOnly?: boolean;
@@ -34,15 +37,14 @@ export interface ExportedBaseToolbarProps {
    * @default "––"
    */
   toolbarPlaceholder?: React.ReactNode;
-  /**
-   * className applied to the root component.
-   */
   className?: string;
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden?: boolean;
-
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }

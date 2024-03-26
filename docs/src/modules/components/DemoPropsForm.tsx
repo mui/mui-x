@@ -32,7 +32,7 @@ const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) 
 
 type DataType<ComponentProps> = {
   /**
-   * Name of the prop, e.g. 'children'
+   * Name of the prop, for example 'children'
    */
   propName: Extract<keyof ComponentProps, string>;
   /**
@@ -367,14 +367,15 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                       ? (props[propName] as number)
                       : (defaultValue as string)
                   }
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    if (Number.isNaN(Number.parseFloat(event.target.value))) {
+                      return;
+                    }
                     setProps((latestProps) => ({
                       ...latestProps,
-                      [propName]: Number.isNaN(event.target.value)
-                        ? undefined
-                        : Number.parseFloat(event.target.value),
-                    }))
-                  }
+                      [propName]: Number.parseFloat(event.target.value),
+                    }));
+                  }}
                   sx={{
                     textTransform: 'capitalize',
                     [`& .${inputClasses.root}`]: {

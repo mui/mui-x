@@ -4,21 +4,23 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Link from 'docs/src/modules/components/Link';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import { Link } from '@mui/docs/Link';
 
-function components() {
+function getComponents() {
   return [
     {
       title: 'Bar Chart',
       srcLight: '/static/x/component-illustrations/bar-light.png',
       srcDark: '/static/x/component-illustrations/bar-dark.png',
-      href: '/x/react-charts/bar/',
+      href: '/x/react-charts/bars/',
     },
     {
       title: 'Line Chart',
       srcLight: '/static/x/component-illustrations/lines-light.png',
       srcDark: '/static/x/component-illustrations/lines-dark.png',
-      href: '/x/react-charts/line/',
+      href: '/x/react-charts/lines/',
     },
     {
       title: 'Pie Chart',
@@ -33,10 +35,62 @@ function components() {
       href: '/x/react-charts/scatter/',
     },
     {
-      title: 'Sparkline Chart',
+      title: 'Sparkline',
       srcLight: '/static/x/component-illustrations/sparkline-light.png',
       srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
+    },
+    {
+      title: 'Gauge',
+      srcLight: '/static/x/component-illustrations/gauge-light.png',
+      srcDark: '/static/x/component-illustrations/gauge-dark.png',
+      href: '/x/react-charts/gauge/',
+    },
+    {
+      title: 'Radar Chart',
+      srcLight: '/static/x/component-illustrations/radar-light.png',
+      srcDark: '/static/x/component-illustrations/radar-dark.png',
+      href: '/x/react-charts/radar/',
+      planned: true,
+    },
+    {
+      title: 'Treemap',
+      srcLight: '/static/x/component-illustrations/treemap-light.png',
+      srcDark: '/static/x/component-illustrations/treemap-dark.png',
+      href: '/x/react-charts/tree-map/',
+      planned: true,
+    },
+    {
+      title: 'Heatmap',
+      srcLight: '/static/x/component-illustrations/heatmap-light.png',
+      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
+      href: '/x/react-charts/heat-map/',
+      planned: true,
+      pro: true,
+    },
+    {
+      title: 'Funnel Chart',
+      srcLight: '/static/x/component-illustrations/funnel-light.png',
+      srcDark: '/static/x/component-illustrations/funnel-dark.png',
+      href: '/x/react-charts/funnel/',
+      planned: true,
+      pro: true,
+    },
+    {
+      title: 'Sankey Chart',
+      srcLight: '/static/x/component-illustrations/sankey-light.png',
+      srcDark: '/static/x/component-illustrations/sankey-dark.png',
+      href: '/x/react-charts/sankey/',
+      planned: true,
+      pro: true,
+    },
+    {
+      title: 'Gantt Chart',
+      srcLight: '/static/x/component-illustrations/gantt-light.png',
+      srcDark: '/static/x/component-illustrations/gantt-dark.png',
+      href: '/x/react-charts/gantt/',
+      planned: true,
+      pro: true,
     },
   ];
 }
@@ -44,11 +98,12 @@ function components() {
 export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
-      {components().map((component) => (
+      {getComponents().map((component) => (
         <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={component.title}>
           <Card
             component={Link}
             noLinkStyle
+            prefetch={false}
             variant="outlined"
             href={component.href}
             sx={(theme) => ({
@@ -67,26 +122,54 @@ export default function ChartComponentsGrid() {
               component="img"
               alt=""
               image={component.srcLight}
+              loading="lazy"
               sx={(theme) => ({
                 aspectRatio: '16 / 9',
                 background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                borderBottom: '1px solid',
-                borderColor: 'divider',
+                opacity: component.planned ? 0.4 : 1,
+                filter: component.planned ? 'grayscale(100%)' : undefined,
                 ...theme.applyDarkStyles({
+                  opacity: component.planned ? 0.4 : 1,
                   content: `url(${component.srcDark})`,
                   background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                  borderColor: 'divider',
                 }),
               })}
             />
-            <Typography
-              component="h2"
-              variant="body2"
-              fontWeight="semiBold"
-              sx={{ px: 2, py: 1.5 }}
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider' }}
             >
-              {component.title}
-            </Typography>
+              <Typography component="h3" variant="body2" fontWeight="semiBold" mr={0.5}>
+                {component.title}
+              </Typography>
+              {component.pro && <span className="plan-pro" />}
+              {component.planned && (
+                <Chip
+                  label="Planned"
+                  size="small"
+                  variant="outlined"
+                  color="grey"
+                  sx={(theme) => ({
+                    ml: 'auto',
+                    height: 20,
+                    backgroundColor: 'grey.50',
+                    borderColor: 'grey.200',
+                    '.MuiChip-label': {
+                      px: '6px',
+                      fontSize: '0.65rem',
+                      letterSpacing: '.04rem',
+                      textTransform: 'uppercase',
+                      color: 'text.primary',
+                    },
+                    ...theme.applyDarkStyles({
+                      backgroundColor: 'divider',
+                      borderColor: 'divider',
+                    }),
+                  })}
+                />
+              )}
+            </Stack>
           </Card>
         </Grid>
       ))}

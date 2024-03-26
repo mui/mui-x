@@ -1,4 +1,4 @@
-import { DateView, TimeView } from '@mui/x-date-pickers/models/views';
+import { DateView, TimeView } from '../../models/views';
 
 export type WrapperVariant = 'mobile' | 'desktop' | null;
 

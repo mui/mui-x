@@ -22,9 +22,13 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
       ? 'תצוגת שנה פתוחה, מעבר לתצוגת לוח שנה'
       : 'תצוגת לוח שנה פתוחה, מעבר לתצוגת שנה',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'תחילה',
   end: 'סיום',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'ביטול',
@@ -40,9 +44,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `בחירת ${views[view]}. ${
-      time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`
-    }`,
+    `בחירת ${views[view]}. ${time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,
@@ -80,6 +82,19 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const heIL = getPickersLocalization(heILPickers);

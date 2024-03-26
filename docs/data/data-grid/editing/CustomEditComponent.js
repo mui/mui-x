@@ -11,7 +11,7 @@ function renderRating(params) {
 function RatingEditInputCell(props) {
   const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
-  const ref = React.useRef();
+  const ref = React.useRef(null);
 
   const handleChange = (event, newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
@@ -58,6 +58,7 @@ const columns = [
   {
     field: 'rating',
     headerName: 'Rating',
+    display: 'flex',
     renderCell: renderRating,
     renderEditCell: renderRatingEditInputCell,
     editable: true,

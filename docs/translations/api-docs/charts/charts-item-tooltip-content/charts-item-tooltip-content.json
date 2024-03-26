@@ -1,0 +1,23 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "labelCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labelCell element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the markCell element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },
+    "valueCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the valueCell element"
+    }
+  }
+}

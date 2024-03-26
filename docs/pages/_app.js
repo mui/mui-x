@@ -1,6 +1,7 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -12,20 +13,23 @@ import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
+import { DocsProvider } from '@mui/docs/DocsProvider';
+import config from '../config';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch with latest for the master branch
+    // #default-branch-switch
+    // Use the "latest" npm tag for the master git branch
+    // Use the "next" npm tag for the next git branch
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
@@ -41,11 +45,6 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
-
-    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
-      newDeps.dayjs = versions.dayjs;
-    }
-
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
@@ -59,12 +58,11 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      'date-fns': 'latest',
-      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
   },
+  postProcessImport,
 };
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -217,7 +215,7 @@ function AppWrapper(props) {
           text: `v${process.env.LIB_VERSION}`,
           current: true,
         },
-        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -232,7 +230,7 @@ function AppWrapper(props) {
             text: `v${process.env.DATA_GRID_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
@@ -248,7 +246,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           {
             text: 'v5',
@@ -265,7 +263,7 @@ function AppWrapper(props) {
             text: `v${process.env.CHARTS_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-charts/` },
         ],
       };
     } else if (productId === 'x-tree-view') {
@@ -279,7 +277,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -308,7 +306,7 @@ function AppWrapper(props) {
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
+      <DocsProvider config={config} defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
@@ -321,7 +319,7 @@ function AppWrapper(props) {
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>
-      </UserLanguageProvider>
+      </DocsProvider>
     </React.Fragment>
   );
 }

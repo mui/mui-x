@@ -2,8 +2,7 @@ import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { FieldRef } from '@mui/x-date-pickers/models';
-import { RangePosition } from '../models/range';
-import { RangeFieldSection } from '../models/fields';
+import { RangePosition, RangeFieldSection } from '../../models';
 
 export interface UseRangePositionProps {
   /**
@@ -27,12 +26,12 @@ export interface UseRangePositionProps {
 export interface UseRangePositionResponse {
   rangePosition: RangePosition;
   onRangePositionChange: (newPosition: RangePosition) => void;
-  singleInputFieldRef: React.MutableRefObject<FieldRef<RangeFieldSection> | undefined>;
 }
 
-export const useRangePosition = (props: UseRangePositionProps): UseRangePositionResponse => {
-  const singleInputFieldRef = React.useRef<FieldRef<RangeFieldSection>>();
-
+export const useRangePosition = (
+  props: UseRangePositionProps,
+  singleInputFieldRef?: React.RefObject<FieldRef<RangeFieldSection>>,
+): UseRangePositionResponse => {
   const [rangePosition, setRangePosition] = useControlled({
     name: 'useRangePosition',
     state: 'rangePosition',
@@ -43,7 +42,7 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
   // When using a single input field,
   // we want to select the 1st section of the edited date when updating the range position.
   const syncRangePositionWithSingleInputField = (newRangePosition: RangePosition) => {
-    if (singleInputFieldRef.current == null) {
+    if (singleInputFieldRef?.current == null) {
       return;
     }
 
@@ -58,5 +57,5 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
     syncRangePositionWithSingleInputField(newRangePosition);
   });
 
-  return { rangePosition, onRangePositionChange: handleRangePositionChange, singleInputFieldRef };
+  return { rangePosition, onRangePositionChange: handleRangePositionChange };
 };

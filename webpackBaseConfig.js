@@ -7,22 +7,21 @@ module.exports = {
   resolve: {
     modules: [__dirname, 'node_modules'],
     alias: {
-      '@mui/x-data-grid': path.resolve(__dirname, './packages/grid/x-data-grid/src'),
-      '@mui/x-data-grid-generator': path.resolve(
-        __dirname,
-        './packages/grid/x-data-grid-generator/src',
-      ),
-      '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-data-grid-pro/src'),
-      '@mui/x-data-grid-premium': path.resolve(
-        __dirname,
-        './packages/grid/x-data-grid-premium/src',
-      ),
+      '@mui/docs': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/mui-docs/src'),
+      '@mui/x-data-grid': path.resolve(__dirname, './packages/x-data-grid/src'),
+      '@mui/x-data-grid-generator': path.resolve(__dirname, './packages/x-data-grid-generator/src'),
+      '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/x-data-grid-pro/src'),
+      '@mui/x-data-grid-premium': path.resolve(__dirname, './packages/x-data-grid-premium/src'),
       '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
-      '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
-      '@mui/markdown': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/markdown'),
+      '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
+      '@mui/material-nextjs': path.resolve(
+        __dirname,
+        './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
+      ),
+
       '@mui-internal/test-utils': path.resolve(
         __dirname,
         './node_modules/@mui/monorepo/packages/test-utils/src',

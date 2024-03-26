@@ -1,15 +1,17 @@
 import type { HighlightScope } from '../../context/HighlightProvider';
-import type { StackOffset, StackOrder } from '../../internals/stackSeries';
+import type { StackOffsetType, StackOrderType } from '../stacking';
+
+export type SeriesId = number | string;
 
 export type CommonSeriesType<TValue> = {
-  id?: string;
+  id?: SeriesId;
   color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.
    * @returns {string} The string to dispaly.
    */
-  valueFormatter?: (value: TValue) => string;
+  valueFormatter?: <V extends TValue>(value: V) => string;
   highlightScope?: Partial<HighlightScope>;
 };
 
@@ -38,11 +40,9 @@ export type StackableSeriesType = {
   stackOffset?: StackOffsetType;
   /**
    * The order in which series' of the same group are stacked together.
+   * @default 'none'
    */
   stackOrder?: StackOrderType;
 };
-
-export type StackOrderType = keyof typeof StackOrder;
-export type StackOffsetType = keyof typeof StackOffset;
 
 export type DefaultizedCartesianSeriesType = Required<CartesianSeriesType>;

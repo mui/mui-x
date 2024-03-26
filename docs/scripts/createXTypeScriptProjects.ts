@@ -3,7 +3,7 @@ import {
   createTypeScriptProject,
   CreateTypeScriptProjectOptions,
   TypeScriptProject,
-} from '@mui/monorepo/packages/api-docs-builder/utils/createTypeScriptProject';
+} from '@mui/internal-docs-utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
@@ -29,7 +29,7 @@ export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
 }
 
 export type XProjectNames =
-  | 'x-license-pro'
+  | 'x-license'
   | 'x-data-grid'
   | 'x-data-grid-pro'
   | 'x-data-grid-premium'
@@ -117,10 +117,10 @@ export const createXTypeScriptProjects = () => {
   const projects: XTypeScriptProjects = new Map();
 
   projects.set(
-    'x-license-pro',
+    'x-license',
     createXTypeScriptProject({
-      name: 'x-license-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      name: 'x-license',
+      rootPath: path.join(workspaceRoot, 'packages/x-license'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'license',
     }),
@@ -130,7 +130,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid',
     createXTypeScriptProject({
       name: 'x-data-grid',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -152,7 +152,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-pro',
     createXTypeScriptProject({
       name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-pro'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -169,7 +169,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-premium',
     createXTypeScriptProject({
       name: 'x-data-grid-premium',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-premium'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -186,7 +186,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-generator',
     createXTypeScriptProject({
       name: 'x-data-grid-generator',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-generator'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
     }),

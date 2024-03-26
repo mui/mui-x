@@ -4,12 +4,13 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
+import { getPercentageValue } from '../internals/utils';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
 export interface PiePlotSlotProps extends PieArcPlotSlotProps, PieArcLabelPlotSlotProps {}
 
-export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onClick'> {
+export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onItemClick'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -20,12 +21,6 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
    * @default {}
    */
   slotProps?: PiePlotSlotProps;
-  /**
-   * Callback fired when a pie item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
-   */
 }
 
 /**
@@ -39,7 +34,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { skipAnimation, slots, slotProps, onClick } = props;
+  const { skipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
@@ -48,37 +43,36 @@ function PiePlot(props: PiePlotProps) {
   }
   const availableRadius = Math.min(width, height) / 2;
 
-  const center = {
-    x: left + width / 2,
-    y: top + height / 2,
-  };
   const { series, seriesOrder } = seriesData;
 
   return (
     <g>
       {seriesOrder.map((seriesId) => {
         const {
-          innerRadius,
-          outerRadius,
+          innerRadius: innerRadiusParam,
+          outerRadius: outerRadiusParam,
           cornerRadius,
           paddingAngle,
           data,
-          cx,
-          cy,
+          cx: cxParam,
+          cy: cyParam,
           highlighted,
           faded,
           highlightScope,
         } = series[seriesId];
+
+        const outerRadius = getPercentageValue(
+          outerRadiusParam ?? availableRadius,
+          availableRadius,
+        );
+        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+        const cx = getPercentageValue(cxParam ?? '50%', width);
+        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
-          <g
-            key={seriesId}
-            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
-              cy === undefined ? center.y : top + cy
-            })`}
-          >
+          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcPlot
               innerRadius={innerRadius}
-              outerRadius={outerRadius ?? availableRadius}
+              outerRadius={outerRadius}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
               id={seriesId}
@@ -87,7 +81,7 @@ function PiePlot(props: PiePlotProps) {
               highlightScope={highlightScope}
               highlighted={highlighted}
               faded={faded}
-              onClick={onClick}
+              onItemClick={onItemClick}
               slots={slots}
               slotProps={slotProps}
             />
@@ -96,27 +90,37 @@ function PiePlot(props: PiePlotProps) {
       })}
       {seriesOrder.map((seriesId) => {
         const {
-          innerRadius,
-          outerRadius,
+          innerRadius: innerRadiusParam,
+          outerRadius: outerRadiusParam,
+          arcLabelRadius: arcLabelRadiusParam,
           cornerRadius,
           paddingAngle,
           arcLabel,
           arcLabelMinAngle,
           data,
-          cx,
-          cy,
+          cx: cxParam,
+          cy: cyParam,
           highlightScope,
         } = series[seriesId];
+        const outerRadius = getPercentageValue(
+          outerRadiusParam ?? availableRadius,
+          availableRadius,
+        );
+        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+
+        const arcLabelRadius =
+          arcLabelRadiusParam === undefined
+            ? (outerRadius + innerRadius) / 2
+            : getPercentageValue(arcLabelRadiusParam, availableRadius);
+
+        const cx = getPercentageValue(cxParam ?? '50%', width);
+        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
-          <g
-            key={seriesId}
-            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
-              cy === undefined ? center.y : top + cy
-            })`}
-          >
+          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcLabelPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}
+              arcLabelRadius={arcLabelRadius}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
               id={seriesId}
@@ -144,9 +148,9 @@ PiePlot.propTypes = {
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
-  onClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   /**
-   * If `true`, animations are skiped.
+   * If `true`, animations are skipped.
    * @default false
    */
   skipAnimation: PropTypes.bool,

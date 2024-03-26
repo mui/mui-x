@@ -4,6 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
+  AxisId,
   ChartsAxisSlotProps,
   ChartsAxisSlots,
   ChartsXAxisProps,
@@ -49,7 +50,7 @@ export interface ChartsAxisProps {
 
 const getAxisId = (
   propsValue: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
-): string | null => {
+): AxisId | null => {
   if (propsValue == null) {
     return null;
   }
@@ -95,16 +96,36 @@ function ChartsAxis(props: ChartsAxisProps) {
   const rightId = getAxisId(rightAxis);
 
   if (topId !== null && !xAxis[topId]) {
-    throw Error(`MUI: id used for top axis "${topId}" is not defined`);
+    throw Error(
+      [
+        `MUI X Charts: id used for top axis "${topId}" is not defined.`,
+        `Available ids are: ${xAxisIds.join(', ')}.`,
+      ].join('\n'),
+    );
   }
   if (leftId !== null && !yAxis[leftId]) {
-    throw Error(`MUI: id used for left axis "${leftId}" is not defined`);
+    throw Error(
+      [
+        `MUI X Charts: id used for left axis "${leftId}" is not defined.`,
+        `Available ids are: ${yAxisIds.join(', ')}.`,
+      ].join('\n'),
+    );
   }
   if (rightId !== null && !yAxis[rightId]) {
-    throw Error(`MUI: id used for right axis "${rightId}" is not defined`);
+    throw Error(
+      [
+        `MUI X Charts: id used for right axis "${rightId}" is not defined.`,
+        `Available ids are: ${yAxisIds.join(', ')}.`,
+      ].join('\n'),
+    );
   }
   if (bottomId !== null && !xAxis[bottomId]) {
-    throw Error(`MUI: id used for bottom axis "${bottomId}" is not defined`);
+    throw Error(
+      [
+        `MUI X Charts: id used for bottom axis "${bottomId}" is not defined.`,
+        `Available ids are: ${xAxisIds.join(', ')}.`,
+      ].join('\n'),
+    );
   }
   const topAxisProps = mergeProps(topAxis, slots, slotProps);
   const bottomAxisProps = mergeProps(bottomAxis, slots, slotProps);
@@ -133,7 +154,7 @@ ChartsAxis.propTypes = {
    */
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -152,10 +173,12 @@ ChartsAxis.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -167,7 +190,7 @@ ChartsAxis.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -186,10 +209,12 @@ ChartsAxis.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -201,7 +226,7 @@ ChartsAxis.propTypes = {
    */
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -220,10 +245,12 @@ ChartsAxis.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -245,7 +272,7 @@ ChartsAxis.propTypes = {
    */
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
@@ -264,10 +291,12 @@ ChartsAxis.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
     }),
     PropTypes.string,

@@ -1,1 +1,4 @@
-<DateRangePicker slots={{ field: SingleInputDateRangeField }} />
+<DateRangePicker
+  slots={{ field: SingleInputDateRangeField }}
+  name="allowedRange"
+/>

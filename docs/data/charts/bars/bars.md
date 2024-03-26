@@ -1,5 +1,7 @@
 ---
 title: React Bar chart
+productId: x-charts
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
 ---
 
 # Charts - Bars
@@ -57,10 +59,73 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ## Layout
 
+### Bar direction
+
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
 If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+### Tick placement
+
+When using a `"band"` scale, the axis has some additional customization properties about the tick position.
+
+- `tickPlacement` for the position of ticks
+- `tickLabelPlacement` for the position of the label associated with the tick
+
+You can test all configuration options in the following demo:
+
+{{"demo": "TickPlacementBars.js"}}
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
+
+## Click event
+
+Bar charts provides two click handlers:
+
+- `onItemClick` for click on a specific bar.
+- `onAxisClick` for a click anywhere in the chart
+
+They both provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "BarClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+
+:::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <BarPlot onItemClick={onItemClick} />
+</ChartContainer>;
+```
 
 ## Animation
 

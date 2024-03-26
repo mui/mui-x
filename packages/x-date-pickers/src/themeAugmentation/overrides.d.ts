@@ -29,6 +29,14 @@ import {
   MultiSectionDigitalClockClassKey,
   MultiSectionDigitalClockSectionClassKey,
 } from '../MultiSectionDigitalClock';
+import {
+  PickersTextFieldClassKey,
+  PickersInputClassKey,
+  PickersOutlinedInputClassKey,
+  PickersFilledInputClassKey,
+  PickersInputBaseClassKey,
+} from '../PickersTextField';
+import { PickersSectionListClassKey } from '../PickersSectionList';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -60,6 +68,14 @@ export interface PickersComponentNameToClassKey {
   MuiTimeClock: TimeClockClassKey;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
+
+  // V7 Picker's TextField
+  MuiPickersTextField: PickersTextFieldClassKey;
+  MuiPickersInputBase: PickersInputBaseClassKey
+  MuiPickersInput: PickersInputClassKey
+  MuiPickersFilledInput: PickersFilledInputClassKey
+  MuiPickersOutlinedInput: PickersOutlinedInputClassKey
+  MuiPickersSectionList: PickersSectionListClassKey
 }
 
 declare module '@mui/material/styles' {

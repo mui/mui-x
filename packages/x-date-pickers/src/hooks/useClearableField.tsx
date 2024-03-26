@@ -7,8 +7,15 @@ import { ClearIcon } from '../icons';
 import { useLocaleText } from '../internals/hooks/useUtils';
 
 export interface ExportedUseClearableFieldProps {
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
   clearable?: boolean;
-  onClear?: React.MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
 }
 
 export interface UseClearableFieldSlots {
@@ -36,9 +43,14 @@ interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
   slotProps?: UseClearableFieldSlotProps;
 }
 
+export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps> = Omit<
+  TFieldProps,
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
+>;
+
 export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
-): Omit<TFieldProps, 'clearable' | 'onClear' | 'slots' | 'slotProps'> => {
+): UseClearableFieldResponse<TFieldProps> => {
   const localeText = useLocaleText();
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
@@ -65,17 +77,21 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
     ...other,
     InputProps: {
       ...InputProps,
-      endAdornment: clearable ? (
+      endAdornment: (
         <React.Fragment>
-          <InputAdornment position="end" sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}>
-            <IconButton {...iconButtonProps} onClick={onClear}>
-              <EndClearIcon fontSize="small" {...endClearIconProps} />
-            </IconButton>
-          </InputAdornment>
+          {clearable && (
+            <InputAdornment
+              position="end"
+              sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}
+            >
+              <IconButton {...iconButtonProps} onClick={onClear}>
+                <EndClearIcon fontSize="small" {...endClearIconProps} />
+              </IconButton>
+            </InputAdornment>
+          )}
+
           {InputProps?.endAdornment}
         </React.Fragment>
-      ) : (
-        InputProps?.endAdornment
       ),
     },
     sx: [

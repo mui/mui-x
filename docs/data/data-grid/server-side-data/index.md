@@ -2,9 +2,9 @@
 title: React Data Grid - Server-side data
 ---
 
-# Data Grid - Server-side data
+# Data Grid - Server-side data 🚧
 
-<p class="description">The data grid server-side data</p>
+<p class="description">The data grid server-side data.</p>
 
 ## Overview
 
@@ -26,9 +26,7 @@ const [paginationModel, setPaginationModel] = React.useState({
   page: 0,
   pageSize: 10,
 });
-const [filterModel, setFilterModel] = React.useState({
-  items: [],
-});
+const [filterModel, setFilterModel] = React.useState({ items: [] });
 const [sortModel, setSortModel] = React.useState([]);
 
 React.useEffect(() => {
@@ -65,7 +63,7 @@ This example only scratches the surface with a lot of problems still unsolved li
 - Performance optimization
 - Caching data/deduping requests
 - More complex use-cases on the server like grouping, tree data, etc.
-- Server side row editing
+- Server-side row editing
 - Lazy loading of data
 - Handling updates to the data like row editing, row deletion, etc.
 - Refetching data on-demand
@@ -98,7 +96,7 @@ interface DataSource {
     Fetcher Functions:
     - `getRows` is required
     - `updateRow` is optional
-    
+
     `getRows` will be used by the grid to fetch data for the current page or children for the current parent group
     It may return a `rowCount` to update the total count of rows in the grid
   */
@@ -184,7 +182,7 @@ interface GetRowsResponse {
   rows: GridRowModel[];
   /**
    * To reflect updates in total `rowCount` (optional)
-   * Useful when the `rowCount` is inaccurate (e.g. when filtering) or not available upfront
+   * Useful when the `rowCount` is inaccurate (for example when filtering) or not available upfront
    */
   rowCount?: number;
   /**

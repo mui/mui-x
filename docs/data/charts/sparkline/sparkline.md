@@ -1,5 +1,7 @@
 ---
 title: React Sparkline chart
+productId: x-charts
+components: SparkLineChart
 ---
 
 # Charts - Sparkline
@@ -23,7 +25,7 @@ To modify the curve interpolation, use the `curve` prop. Read the full documenta
 
 ## Interaction
 
-Compared to line and bar charts, the sparkline chart has some additional props to simplify interaction configuration.
+Compared to line and bar charts, the sparkline has some additional props to simplify interaction configuration.
 You can use `showTooltip` and `showHighlight` to display the default tooltip and highlight in your sparkline.
 
 Those are helpers.

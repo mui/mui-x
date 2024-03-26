@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 
 // eliminate rounding errors in aggregation row
-const valueFormatter = ({ value }) => `${Math.floor(value * 1000) / 1000} °C`;
+const valueFormatter = (value) => `${Math.floor(value * 1000) / 1000} °C`;
 
 const columns = [
   { field: 'city' },

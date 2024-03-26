@@ -1,5 +1,6 @@
 ---
 title: Charts - Styling
+productId: x-charts
 ---
 
 # Charts - Styling
@@ -63,7 +64,7 @@ You might want to modify those values to leave more space for your axis ticks or
 
 ### CSS
 
-Since the library relies on SVG for rendering, you can customize them as you do with other MUI components with CSS overriding.
+Since the library relies on SVG for rendering, you can customize them as you do with other MUI System components with CSS overriding.
 
 Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.

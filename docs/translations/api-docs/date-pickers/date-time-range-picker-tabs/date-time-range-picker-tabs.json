@@ -1,0 +1,33 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "dateIcon": { "description": "Date tab icon." },
+    "hidden": { "description": "Toggles visibility of the tabs allowing view switching." },
+    "onViewChange": {
+      "description": "Callback called when a tab is clicked.",
+      "typeDescriptions": { "view": "The view to open" }
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "timeIcon": { "description": "Time tab icon." },
+    "view": { "description": "Currently visible picker view." }
+  },
+  "classDescriptions": {
+    "filler": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.",
+      "nodeName": "the filler element",
+      "conditions": "shown instead of a navigation arrow"
+    },
+    "navigationButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the tab navigation button elements"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "tabButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the tab button element"
+    }
+  }
+}

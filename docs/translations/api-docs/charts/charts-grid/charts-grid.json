@@ -1,0 +1,14 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "horizontal": { "description": "Displays horizontal grid." },
+    "vertical": { "description": "Displays vertical grid." }
+  },
+  "classDescriptions": {
+    "horizontalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every line element" },
+    "root": { "description": "Styles applied to the root element." },
+    "verticalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" }
+  }
+}
