@@ -17,7 +17,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
 ) {
   const { series, itemData, sx, classes } = props;
 
-  if (itemData.dataIndex === undefined) {
+  if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
   }
   const { displayedLabel, color } =
