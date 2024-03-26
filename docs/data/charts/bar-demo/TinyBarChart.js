@@ -22,18 +22,6 @@ export default function TinyBarChart() {
         {
           scaleType: 'band',
           data: xLabels,
-          colorMap: {
-            type: 'ordinal',
-            colors: [
-              '#ffff00',
-              '#ffff00',
-              '#f0f',
-              '#ffff00',
-              '#ffff00',
-              '#ffff00',
-              '#ffff00',
-            ],
-          },
         },
       ]}
     >

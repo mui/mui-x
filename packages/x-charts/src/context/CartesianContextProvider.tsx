@@ -208,7 +208,10 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
           colorScale:
-            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -217,7 +220,10 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           scale: scalePoint(axis.data!, range),
           tickNumber: axis.data!.length,
           colorScale:
-            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -269,7 +275,10 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
           colorScale:
-            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -278,7 +287,10 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           scale: scalePoint(axis.data!, [range[1], range[0]]),
           tickNumber: axis.data!.length,
           colorScale:
-            axis.colorMap && getOrdinalColorScale({ values: axis.data, ...axis.colorMap }),
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {

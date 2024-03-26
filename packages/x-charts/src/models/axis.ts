@@ -175,12 +175,12 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
-    colorMap?: OrdinalColorConfig;
+    colorMap?: OrdinalColorConfig | ContinuouseColorConfig | PiecewiseColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
-    colorMap?: OrdinalColorConfig;
+    colorMap?: OrdinalColorConfig | ContinuouseColorConfig | PiecewiseColorConfig;
   };
   log: {
     scaleType: 'log';
@@ -218,12 +218,16 @@ interface AxisScaleComputedConfig {
   band: {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
-      | ScaleOrdinal<number, string, string | null>;
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   point: {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
-      | ScaleOrdinal<number, string, string | null>;
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
@@ -235,10 +239,10 @@ interface AxisScaleComputedConfig {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
   time: {
-    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
-    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
