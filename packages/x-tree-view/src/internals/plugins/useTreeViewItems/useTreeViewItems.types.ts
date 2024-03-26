@@ -1,4 +1,4 @@
-import { TreeViewItem, DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { TreeViewNode, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
@@ -9,7 +9,7 @@ interface TreeViewItemProps {
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> {
-  getNode: (itemId: string) => TreeViewItem;
+  getNode: (itemId: string) => TreeViewNode;
   getItem: (itemId: string) => R;
   getItemsToRender: () => TreeViewItemProps[];
   getChildrenIds: (itemId: string | null) => string[];
@@ -102,6 +102,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewNodeMap = { [itemId: string]: TreeViewItem };
+export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
