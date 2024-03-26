@@ -1,6 +1,5 @@
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
-import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewItemsReorderingInstance {
   startDraggingItem: (itemId: string) => void;

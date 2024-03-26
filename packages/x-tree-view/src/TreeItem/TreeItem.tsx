@@ -39,12 +39,12 @@ const TreeItemRoot = styled('li', {
   name: 'MuiTreeItem',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
+})<{ ownerState: TreeItemOwnerState }>({
   listStyle: 'none',
   margin: 0,
   padding: 0,
   outline: 0,
-}));
+});
 
 const StyledTreeItemContent = styled(TreeItemContent, {
   name: 'MuiTreeItem',
