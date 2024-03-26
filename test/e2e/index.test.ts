@@ -639,6 +639,22 @@ async function initializeEnvironment(
       });
     });
 
+    describe('<DateCalendarWithTimezone />', () => {
+      it('should render the correct days in a DST month and timezone', async () => {
+        await renderFixture('DatePicker/DateCalendarWithTimezone');
+
+        const gridCells = page.getByRole('gridcell');
+        const numberOfDayCells = await gridCells.count();
+        const numberOfButtonDayCells = await gridCells.and(page.locator('button')).count();
+        expect(numberOfDayCells).to.equal(35);
+        expect(numberOfButtonDayCells).to.equal(31);
+
+        // assert that there are only 5 rows of days
+        expect(await page.locator('[aria-rowindex="5"]').count()).to.equal(1);
+        expect(await page.locator('[aria-rowindex="6"]').count()).to.equal(0);
+      });
+    });
+
     describe('<DesktopDateTimePicker />', () => {
       it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicDesktopDateTimePicker');
