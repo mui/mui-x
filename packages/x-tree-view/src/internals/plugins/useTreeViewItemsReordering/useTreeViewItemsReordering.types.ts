@@ -5,7 +5,7 @@ import { TreeViewItemId } from '../../../models';
 export interface UseTreeViewItemsReorderingInstance {
   startDraggingItem: (itemId: string) => void;
   stopDraggingItem: (itemId: string) => void;
-  setDragTargetItem: (itemId: string) => void;
+  setDragTargetItem: (itemId: string, action: TreeViewItemsReorderingAction) => void;
 }
 
 export interface UseTreeViewItemsReorderingParameters {
@@ -25,17 +25,14 @@ export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
     draggedItemId: string;
     targetItemId: string;
+    action: TreeViewItemsReorderingAction;
   } | null;
 }
 
 interface UseTreeViewItemsReorderingContextValue {
   itemsReordering: {
     enabled: boolean;
-    currentDrag: {
-      draggedItemId: TreeViewItemId;
-      targetItemId: TreeViewItemId;
-      direction: 1 | -1 | 0;
-    } | null;
+    currentDrag: UseTreeViewItemsReorderingState['itemsReordering'];
   };
 }
 
@@ -47,3 +44,6 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewItemsReorderingContextValue;
   dependantPlugins: [UseTreeViewNodesSignature];
 }>;
+
+// TODO: Add support for "re-parent to level X"
+export type TreeViewItemsReorderingAction = 'reorder-above' | 'reorder-below' | 'make-child';

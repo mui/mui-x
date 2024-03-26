@@ -126,17 +126,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       }
     };
 
-  const createContentHandleDragOver =
-    (otherHandlers: EventHandlers) => (event: React.DragEvent & MuiCancellableEvent) => {
-      otherHandlers.onDragOver?.(event);
-
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-
-      instance.setDragTargetItem(itemId);
-    };
-
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2RootSlotProps<ExternalProps> => {
@@ -195,11 +184,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
-      ...(itemsReordering?.enabled
-        ? {
-            onDragOver: createContentHandleDragOver(externalEventHandlers),
-          }
-        : {}),
       status,
     };
   };

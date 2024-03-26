@@ -3,4 +3,5 @@ export type {
   UseTreeViewItemsReorderingSignature,
   UseTreeViewItemsReorderingParameters,
   UseTreeViewItemsReorderingDefaultizedParameters,
+  TreeViewItemsReorderingAction,
 } from './useTreeViewItemsReordering.types';

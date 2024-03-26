@@ -55,9 +55,6 @@ export interface UseTreeItem2ContentSlotOwnProps {
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
-
-  // Drag & drop props
-  onDragOver?: MuiCancellableEventHandler<React.DragEvent>;
 }
 
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
