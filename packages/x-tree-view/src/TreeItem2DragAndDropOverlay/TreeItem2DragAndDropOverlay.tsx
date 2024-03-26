@@ -13,7 +13,7 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'action' && prop !== 'isTarget',
-})(({ theme }) => ({
+})<{ action: TreeViewItemsReorderingAction; isTarget: boolean }>(({ theme }) => ({
   position: 'absolute',
   top: 0,
   bottom: 0,
@@ -48,7 +48,7 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
 
   // TODO: Support props.onDragOver and `defaultMuiPrevented`
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    const rect = event.target.getBoundingClientRect();
+    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
     // const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
