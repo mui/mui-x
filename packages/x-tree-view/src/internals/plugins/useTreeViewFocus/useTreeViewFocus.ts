@@ -13,8 +13,8 @@ const useTabbableItemId = (
   selectedItems: string | string[] | null,
 ) => {
   const isItemVisible = (itemId: string) => {
-    const item = instance.getNode(itemId);
-    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
+    const node = instance.getNode(itemId);
+    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
   };
 
   let tabbableItemId: string | null | undefined;
@@ -62,13 +62,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isItemVisible = (itemId: string) => {
-    const item = instance.getNode(itemId);
-    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
+    const node = instance.getNode(itemId);
+    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const item = instance.getNode(itemId);
-    const itemElement = document.getElementById(instance.getTreeItemId(itemId, item.idAttribute));
+    const node = instance.getNode(itemId);
+    const itemElement = document.getElementById(instance.getTreeItemId(itemId, node.idAttribute));
     if (itemElement) {
       itemElement.focus();
     }

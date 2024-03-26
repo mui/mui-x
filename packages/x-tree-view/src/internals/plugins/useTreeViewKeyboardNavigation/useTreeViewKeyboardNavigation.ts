@@ -52,9 +52,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       newFirstCharMap[node.id] = node.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.nodes.nodeMap).forEach(processItem);
+    Object.values(state.items.nodeMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.nodes.nodeMap, params.getItemId, instance]);
+  }, [state.items.nodeMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, firstChar: string) => {
     let start: number;
