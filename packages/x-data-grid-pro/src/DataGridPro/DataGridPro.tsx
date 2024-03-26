@@ -786,10 +786,10 @@ DataGridProRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * The milliseconds debounce delay for resizing the grid.
+   * The milliseconds throttle delay for resizing the grid.
    * @default 60
    */
-  resizeDebounceMs: PropTypes.number,
+  resizeThrottleMs: PropTypes.number,
   /**
    * Row region in pixels to render before/after the viewport
    * @default 150

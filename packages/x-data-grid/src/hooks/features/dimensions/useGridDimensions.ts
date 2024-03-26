@@ -40,7 +40,7 @@ type RootProps = Pick<
   | 'autoHeight'
   | 'getRowHeight'
   | 'rowHeight'
-  | 'resizeDebounceMs'
+  | 'resizeThrottleMs'
   | 'columnHeaderHeight'
 >;
 
@@ -97,8 +97,8 @@ export function useGridDimensions(
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(
-    () => throttle(setSavedSize, props.resizeDebounceMs),
-    [props.resizeDebounceMs],
+    () => throttle(setSavedSize, props.resizeThrottleMs),
+    [props.resizeThrottleMs],
   );
   const previousSize = React.useRef<ElementSize>();
 
