@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const ITEMS: TreeViewBaseItem[] = [
   {
@@ -26,7 +27,7 @@ const ITEMS: TreeViewBaseItem[] = [
 export default function DragAndDrop() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView items={ITEMS} itemsReordering />
+      <RichTreeView items={ITEMS} slots={{ item: TreeItem2 }} itemsReordering />
     </Box>
   );
 }

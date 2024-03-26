@@ -24,14 +24,16 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     disabledItemsFocusable,
     instance,
     publicAPI,
+    itemsReordering,
   } = useTreeViewContext<TPlugins>();
 
   const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
+  const rootRefObject = React.useRef<HTMLLIElement>(null);
   const idAttribute = instance.getTreeItemId(itemId, id);
-  const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
+  const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -72,6 +74,32 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       instance.handleItemKeyDown(event, itemId);
     };
 
+  const createRootHandleDragStart =
+    (otherHandlers: EventHandlers) => (event: React.DragEvent & MuiCancellableEvent) => {
+      otherHandlers.onDragStart?.(event);
+
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      if (event.target !== rootRefObject.current) {
+        return;
+      }
+
+      instance.startDraggingItem(itemId);
+    };
+
+  const createRootHandleDragEnd =
+    (otherHandlers: EventHandlers) => (event: React.DragEvent & MuiCancellableEvent) => {
+      otherHandlers.onDragEnd?.(event);
+
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      instance.stopDraggingItem(itemId);
+    };
+
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
@@ -96,6 +124,17 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       if (event.shiftKey || event.ctrlKey || event.metaKey || status.disabled) {
         event.preventDefault();
       }
+    };
+
+  const createContentHandleDragOver =
+    (otherHandlers: EventHandlers) => (event: React.DragEvent & MuiCancellableEvent) => {
+      otherHandlers.onDragOver?.(event);
+
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      instance.setDragTargetItem(itemId);
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -132,6 +171,13 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
+      ...(itemsReordering?.enabled
+        ? {
+            draggable: true,
+            onDragStart: createRootHandleDragStart(externalEventHandlers),
+            onDragEnd: createRootHandleDragEnd(externalEventHandlers),
+          }
+        : {}),
     };
   };
 
@@ -149,6 +195,11 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
+      ...(itemsReordering?.enabled
+        ? {
+            onDragOver: createContentHandleDragOver(externalEventHandlers),
+          }
+        : {}),
       status,
     };
   };

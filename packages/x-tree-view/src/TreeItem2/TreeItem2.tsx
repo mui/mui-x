@@ -14,6 +14,7 @@ import {
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass, treeItemClasses } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
+import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 
 export const TreeItem2Root = styled('li', {
@@ -41,6 +42,7 @@ export const TreeItem2Content = styled('div', {
   alignItems: 'center',
   gap: theme.spacing(1),
   cursor: 'pointer',
+  position: 'relative',
   WebkitTapHighlightColor: 'transparent',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
@@ -259,6 +261,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Label {...labelProps} />
+          <TreeItem2DragAndDropOverlay itemId={itemId} />
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

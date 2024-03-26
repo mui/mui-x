@@ -20,10 +20,6 @@ export interface TreeItemClasses {
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
-  /** Styles applied to the root element when it is the target of a drag event and the dragged element comes from below */
-  dragTargetTop: string;
-  /** Styles applied to the root element when it is the target of a drag event and the dragged element comes from above */
-  dragTargetBottom: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;

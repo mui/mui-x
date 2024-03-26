@@ -3,6 +3,7 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 import { isAncestor } from './useTreeViewItemsReordering.utils';
 import { compareNodePositionsInTree } from '../../utils/tree';
+import { populateInstance } from '../../useTreeView/useTreeView.utils';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -10,23 +11,40 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   state,
   setState,
 }) => {
-  const handleDragStart = React.useCallback(
-    (nodeId: string) => {
+  const startDraggingItem = React.useCallback(
+    (itemId: string) => {
       setState((prevState) => ({
         ...prevState,
-        itemsReordering: { targetNodeId: nodeId, draggedNodeId: nodeId },
+        itemsReordering: { targetItemId: itemId, draggedItemId: itemId },
       }));
     },
     [setState],
   );
 
-  const handleDragOver = React.useCallback(
-    (nodeId: string) => {
+  const stopDraggingItem = React.useCallback(
+    (itemId: string) => {
+      if (state.itemsReordering == null || state.itemsReordering.draggedItemId !== itemId) {
+        return;
+      }
+
+      setState((prevState) => ({ ...prevState, itemsReordering: null }));
+      if (state.itemsReordering.draggedItemId === state.itemsReordering.targetItemId) {
+        return;
+      }
+
+      const targetNode = instance.getNode(state.itemsReordering.targetItemId);
+      instance.moveItem(itemId, targetNode.parentId, targetNode.index);
+    },
+    [setState, state.itemsReordering, instance],
+  );
+
+  const setDragTargetItem = React.useCallback(
+    (itemId: string) => {
       setState((prevState) => {
         if (
           prevState.itemsReordering == null ||
-          prevState.itemsReordering.targetNodeId === nodeId ||
-          isAncestor(instance, nodeId, prevState.itemsReordering.draggedNodeId)
+          prevState.itemsReordering.targetItemId === itemId ||
+          isAncestor(instance, itemId, prevState.itemsReordering.draggedItemId)
         ) {
           return prevState;
         }
@@ -35,7 +53,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           ...prevState,
           itemsReordering: {
             ...prevState.itemsReordering,
-            targetNodeId: nodeId,
+            targetItemId: itemId,
           },
         };
       });
@@ -43,39 +61,22 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [instance, setState],
   );
 
-  const handleDragEnd = React.useCallback(
-    (nodeId: string) => {
-      if (state.itemsReordering == null || state.itemsReordering.draggedNodeId !== nodeId) {
-        return;
-      }
-
-      setState((prevState) => ({ ...prevState, itemsReordering: null }));
-      if (state.itemsReordering.draggedNodeId === state.itemsReordering.targetNodeId) {
-        return;
-      }
-
-      const targetNode = instance.getNode(state.itemsReordering.targetNodeId);
-      instance.moveItem(nodeId, targetNode.parentId, targetNode.index);
-    },
-    [setState, state.itemsReordering, instance],
-  );
+  populateInstance(instance, { startDraggingItem, stopDraggingItem, setDragTargetItem });
 
   return {
     contextValue: {
       itemsReordering: {
         enabled: params.itemsReordering ?? false,
-        handleDragStart,
-        handleDragOver,
-        handleDragEnd,
         currentDrag:
           state.itemsReordering == null
             ? null
             : {
-                targetNodeId: state.itemsReordering.targetNodeId,
+                draggedItemId: state.itemsReordering.draggedItemId,
+                targetItemId: state.itemsReordering.targetItemId,
                 direction: compareNodePositionsInTree(
                   instance,
-                  state.itemsReordering.draggedNodeId,
-                  state.itemsReordering.targetNodeId,
+                  state.itemsReordering.draggedItemId,
+                  state.itemsReordering.targetItemId,
                 ),
               },
       },

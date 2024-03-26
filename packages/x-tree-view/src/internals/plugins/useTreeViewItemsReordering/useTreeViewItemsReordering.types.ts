@@ -2,7 +2,11 @@ import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { TreeViewItemId } from '../../../models';
 
-export interface UseTreeViewItemsReorderingInstance {}
+export interface UseTreeViewItemsReorderingInstance {
+  startDraggingItem: (itemId: string) => void;
+  stopDraggingItem: (itemId: string) => void;
+  setDragTargetItem: (itemId: string) => void;
+}
 
 export interface UseTreeViewItemsReorderingParameters {
   /**
@@ -19,19 +23,17 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
 
 export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
-    draggedNodeId: string;
-    targetNodeId: string;
+    draggedItemId: string;
+    targetItemId: string;
   } | null;
 }
 
 interface UseTreeViewItemsReorderingContextValue {
   itemsReordering: {
     enabled: boolean;
-    handleDragStart: (nodeId: string) => void;
-    handleDragOver: (nodeId: string) => void;
-    handleDragEnd: (nodeId: string) => void;
     currentDrag: {
-      targetNodeId: TreeViewItemId;
+      draggedItemId: TreeViewItemId;
+      targetItemId: TreeViewItemId;
       direction: 1 | -1 | 0;
     } | null;
   };

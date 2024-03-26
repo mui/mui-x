@@ -16,7 +16,6 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
-import { useTreeItemReorder } from './useTreeItemReorder';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -31,8 +30,6 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     label: ['label'],
     groupTransition: ['groupTransition'],
-    dragTargetTop: ['dragTargetTop'],
-    dragTargetBottom: ['dragTargetBottom'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -319,8 +316,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, itemId);
   };
 
-  const reorderResponse = useTreeItemReorder(itemId, rootRefObject);
-
   const idAttribute = instance.getTreeItemId(itemId, id);
   const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
@@ -340,7 +335,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         ref={handleRootRef}
-        {...reorderResponse.rootProps}
       >
         <StyledTreeItemContent
           as={ContentComponent}
