@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.0.0-beta.7",
+  "version": "7.0.0",
   "description": "The community edition of the tree view components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
