@@ -58,12 +58,15 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
   overridesResolver: (props, styles) => styles.daySkeleton,
-})<{ ownerState: { day: number } }>(({ ownerState }) => ({
+})<{ ownerState: { day: number } }>({
   margin: `0 ${DAY_MARGIN}px`,
-  ...(ownerState.day === 0 && {
-    visibility: 'hidden',
-  }),
-}));
+  variants: [
+    {
+      props: { day: 0 },
+      style: { visibility: 'hidden' },
+    },
+  ],
+});
 
 DayCalendarSkeletonDay.propTypes = {
   // ----------------------------- Warning --------------------------------

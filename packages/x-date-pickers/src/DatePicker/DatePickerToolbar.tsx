@@ -45,11 +45,16 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
-  ...(ownerState.isLandscape && {
-    margin: 'auto 16px auto auto',
-  }),
-}));
+})<{ ownerState: DatePickerToolbarProps<any> }>({
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: 'auto 16px auto auto',
+      },
+    },
+  ],
+});
 
 type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,

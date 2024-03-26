@@ -44,46 +44,57 @@ const OutlineLabel = styled('span')(({ theme }) => ({
   fontSize: 'inherit',
 }));
 
-const OutlineLegend = styled('legend')<{ ownerState: any }>(({ ownerState, theme }) => ({
+const OutlineLegend = styled('legend')<{ ownerState: any }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap
   width: 'auto', // Fix conflict with bootstrap
   overflow: 'hidden', // Fix Horizontal scroll when label too long
-  ...(!ownerState.withLabel && {
-    padding: 0,
-    lineHeight: '11px', // sync with `height` in `legend` styles
-    transition: theme.transitions.create('width', {
-      duration: 150,
-      easing: theme.transitions.easing.easeOut,
-    }),
-  }),
-  ...(ownerState.withLabel && {
-    display: 'block', // Fix conflict with normalize.css and sanitize.css
-    padding: 0,
-    height: 11, // sync with `lineHeight` in `legend` styles
-    fontSize: '0.75em',
-    visibility: 'hidden',
-    maxWidth: 0.01,
-    transition: theme.transitions.create('max-width', {
-      duration: 50,
-      easing: theme.transitions.easing.easeOut,
-    }),
-    whiteSpace: 'nowrap',
-    '& > span': {
-      paddingLeft: 5,
-      paddingRight: 5,
-      display: 'inline-block',
-      opacity: 0,
-      visibility: 'visible',
+  variants: [
+    {
+      props: { withLabel: false },
+      style: {
+        padding: 0,
+        lineHeight: '11px', // sync with `height` in `legend` styles
+        transition: theme.transitions.create('width', {
+          duration: 150,
+          easing: theme.transitions.easing.easeOut,
+        }),
+      },
     },
-    ...(ownerState.notched && {
-      maxWidth: '100%',
-      transition: theme.transitions.create('max-width', {
-        duration: 100,
-        easing: theme.transitions.easing.easeOut,
-        delay: 50,
-      }),
-    }),
-  }),
+    {
+      props: { withLabel: true },
+      style: {
+        display: 'block', // Fix conflict with normalize.css and sanitize.css
+        padding: 0,
+        height: 11, // sync with `lineHeight` in `legend` styles
+        fontSize: '0.75em',
+        visibility: 'hidden',
+        maxWidth: 0.01,
+        transition: theme.transitions.create('max-width', {
+          duration: 50,
+          easing: theme.transitions.easing.easeOut,
+        }),
+        whiteSpace: 'nowrap',
+        '& > span': {
+          paddingLeft: 5,
+          paddingRight: 5,
+          display: 'inline-block',
+          opacity: 0,
+          visibility: 'visible',
+        },
+      },
+    },
+    {
+      props: { withLabel: true, notched: true },
+      style: {
+        maxWidth: '100%',
+        transition: theme.transitions.create('max-width', {
+          duration: 100,
+          easing: theme.transitions.easing.easeOut,
+          delay: 50,
+        }),
+      },
+    },
+  ],
 }));
 
 /**

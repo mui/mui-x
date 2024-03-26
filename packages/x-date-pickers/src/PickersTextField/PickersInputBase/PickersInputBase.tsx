@@ -6,6 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
+import { useSlotProps } from '@mui/base/utils';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import {
   pickersInputBaseClasses,
@@ -26,7 +27,7 @@ export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerStateType }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
@@ -37,16 +38,19 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
-  ...(ownerState.fullWidth && {
-    width: '100%',
-  }),
+  variants: [
+    {
+      props: { fullWidth: true },
+      style: { width: '100%' },
+    },
+  ],
 }));
 
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerStateType }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -59,22 +63,34 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   letterSpacing: 'inherit',
   // Baseline behavior
   width: '182px',
-  ...(ownerState.size === 'small' && {
-    paddingTop: 1,
-  }),
   ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
-  ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
-    color: 'currentColor',
-    ...(ownerState.label == null &&
-      (theme.vars
+  variants: [
+    {
+      props: { size: 'small' },
+      style: {
+        paddingTop: 1,
+      },
+    },
+    {
+      props: { adornedStart: false, focused: false, filled: false },
+      style: {
+        color: 'currentColor',
+        opacity: 0,
+      },
+    },
+    {
+      // Can't use the object notation because label can be null or undefined
+      props: ({ adornedStart, focused, filled, label }: OwnerStateType) =>
+        !adornedStart && !focused && !filled && label == null,
+      style: theme.vars
         ? {
             opacity: theme.vars.opacity.inputPlaceholder,
           }
         : {
             opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          })),
-    ...(ownerState.label != null && { opacity: 0 }),
-  }),
+          },
+    },
+  ],
 }));
 
 const PickersInputBaseSection = styled(PickersSectionListSection, {
@@ -185,6 +201,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     startAdornment,
     renderSuffix,
     slots,
+    slotProps,
     contentEditable,
     tabIndex,
     onInput,
@@ -247,16 +264,22 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const classes = useUtilityClasses(ownerState);
 
   const InputRoot = slots?.root || PickersInputBaseRoot;
+  const inputRootProps = useSlotProps({
+    elementType: InputRoot,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      'aria-invalid': muiFormControl.error,
+      ref: handleRootRef,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
   return (
-    <InputRoot
-      {...other}
-      className={classes.root}
-      ownerState={ownerState}
-      aria-invalid={muiFormControl.error}
-      ref={handleRootRef}
-    >
+    <InputRoot {...inputRootProps}>
       {startAdornment}
       <PickersSectionList
         sectionListRef={sectionListRef}
@@ -373,6 +396,11 @@ PickersInputBase.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

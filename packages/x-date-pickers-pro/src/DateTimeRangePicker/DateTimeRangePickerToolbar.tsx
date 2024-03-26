@@ -76,24 +76,43 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
   borderBottom: 'none',
-  ...(ownerState?.toolbarVariant !== 'desktop'
-    ? {
+  variants: [
+    {
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+        toolbarVariant !== 'desktop',
+      style: {
         padding: '12px 8px 0 12px',
-      }
-    : {
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
         paddingBottom: 0,
-      }),
-})) as DateTimeRangePickerStartOrEndToolbarComponent;
+      },
+    },
+  ],
+}) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
-  padding: ownerState?.toolbarVariant !== 'desktop' ? '12px 8px 12px 12px' : undefined,
-})) as DateTimeRangePickerStartOrEndToolbarComponent;
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+  variants: [
+    {
+      props: ({
+        ownerState: { toolbarVariant },
+      }: {
+        ownerState: DateTimeRangePickerStartOrEndToolbarProps<any>;
+      }) => toolbarVariant !== 'desktop',
+      style: {
+        padding: '12px 8px 12px 12px',
+      },
+    },
+  ],
+}) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
   TDate extends PickerValidDate,

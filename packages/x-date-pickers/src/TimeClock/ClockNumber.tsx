@@ -40,7 +40,7 @@ const ClockNumberRoot = styled('span', {
     { [`&.${clockNumberClasses.disabled}`]: styles.disabled },
     { [`&.${clockNumberClasses.selected}`]: styles.selected },
   ],
-})<{ ownerState: ClockNumberProps }>(({ theme, ownerState }) => ({
+})<{ ownerState: ClockNumberProps }>(({ theme }) => ({
   height: CLOCK_HOUR_WIDTH,
   width: CLOCK_HOUR_WIDTH,
   position: 'absolute',
@@ -61,10 +61,15 @@ const ClockNumberRoot = styled('span', {
     pointerEvents: 'none',
     color: (theme.vars || theme).palette.text.disabled,
   },
-  ...(ownerState.inner && {
-    ...theme.typography.body2,
-    color: (theme.vars || theme).palette.text.secondary,
-  }),
+  variants: [
+    {
+      props: { inner: true },
+      style: {
+        ...theme.typography.body2,
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+  ],
 }));
 
 /**
