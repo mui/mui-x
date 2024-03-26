@@ -1,4 +1,4 @@
-import { isNumber } from '@mui/x-data-grid/utils/utils';
+import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
