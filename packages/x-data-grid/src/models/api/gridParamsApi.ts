@@ -41,6 +41,23 @@ export interface GridParamsApi {
    */
   getCellElement: (id: GridRowId, field: string) => HTMLDivElement | null;
   /**
+   * Gets the [[GridCellParams]] object, without invoking `valueGetter` and `valueFormatter`, nor asserting
+   * if cell is editable.
+   * Here, the `value` and `formattedValue` properties are always the raw value.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridCellParams} The cell params.
+   */
+  getCellParamsRaw: <
+    R extends GridValidRowModel = any,
+    V = unknown,
+    F = V,
+    N extends GridTreeNode = GridTreeNode,
+  >(
+    id: GridRowId,
+    field: string,
+  ) => GridCellParams<R, V, F, N>;
+  /**
    * Gets the [[GridCellParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
