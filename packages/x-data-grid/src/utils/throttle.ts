@@ -8,7 +8,7 @@ export function throttle<T extends (...args: any[]) => any>(func: T, wait = 166)
 
   const later = () => {
     timeout = undefined;
-    func(lastArgs);
+    func(...lastArgs);
   };
 
   function throttled(...args: Parameters<T>) {
