@@ -19,6 +19,12 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "dragTargetBottom": {
+      "description": "Styles applied to the root element when it is the target of a drag event and the dragged element comes from above"
+    },
+    "dragTargetTop": {
+      "description": "Styles applied to the root element when it is the target of a drag event and the dragged element comes from below"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
