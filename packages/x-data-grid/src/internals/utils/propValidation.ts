@@ -1,5 +1,6 @@
 import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
@@ -15,17 +16,18 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
       ].join('\n')) ||
     undefined,
   (props) =>
-    (props.paginationMode === 'client' &&
+    (props.signature === GridSignature.DataGrid &&
+      props.paginationMode === 'client' &&
       isNumber(props.rowCount) &&
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
     undefined,
 ];
 
-const warnedOnceMap = new Set();
+const warnedOnceCache = new Set();
 const warnOnce = (message: string) => {
-  if (!warnedOnceMap.has(message)) {
+  if (!warnedOnceCache.has(message)) {
     console.error(message);
-    warnedOnceMap.add(message);
+    warnedOnceCache.add(message);
   }
 };
 
@@ -39,4 +41,8 @@ export const validateProps = <TProps>(props: TProps, validators: PropValidator<T
       warnOnce(warning);
     }
   });
+};
+
+export const clearWarningsCache = () => {
+  warnedOnceCache.clear();
 };
