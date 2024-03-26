@@ -67,18 +67,6 @@
       "isGlobal": true
     },
     {
-      "key": "dragTargetBottom",
-      "className": "MuiTreeItem2-dragTargetBottom",
-      "description": "Styles applied to the root element when it is the target of a drag event and the dragged element comes from above",
-      "isGlobal": false
-    },
-    {
-      "key": "dragTargetTop",
-      "className": "MuiTreeItem2-dragTargetTop",
-      "description": "Styles applied to the root element when it is the target of a drag event and the dragged element comes from below",
-      "isGlobal": false
-    },
-    {
       "key": "expanded",
       "className": "Mui-expanded",
       "description": "State class applied to the content element when expanded.",

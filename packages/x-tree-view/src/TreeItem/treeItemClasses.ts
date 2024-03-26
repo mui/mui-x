@@ -38,6 +38,4 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'disabled',
   'iconContainer',
   'label',
-  'dragTargetTop',
-  'dragTargetBottom',
 ]);

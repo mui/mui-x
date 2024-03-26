@@ -44,14 +44,6 @@ const TreeItemRoot = styled('li', {
   margin: 0,
   padding: 0,
   outline: 0,
-  [`&.${treeItemClasses.dragTargetTop}`]: {
-    borderTop: `2px solid ${theme.palette.primary.main}`,
-    marginTop: -2,
-  },
-  [`&.${treeItemClasses.dragTargetBottom}`]: {
-    borderBottom: `2px solid ${theme.palette.primary.main}`,
-    marginBottom: -2,
-  },
 }));
 
 const StyledTreeItemContent = styled(TreeItemContent, {
