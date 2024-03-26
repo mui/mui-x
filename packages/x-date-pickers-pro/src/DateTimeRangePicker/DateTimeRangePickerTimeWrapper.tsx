@@ -6,9 +6,9 @@ import {
   useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
+  DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { isRangeValid } from '../internals/utils/date-utils';
@@ -16,10 +16,10 @@ import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
 export type DateTimeRangePickerTimeWrapperProps<
   TDate extends PickerValidDate,
-  TView extends DateTimeRangePickerView,
-  TComponentProps extends Omit<
-    BaseClockProps<TDate, TimeViewWithMeridiem>,
-    'value' | 'defaultValue' | 'onChange'
+  TView extends TimeViewWithMeridiem,
+  TComponentProps extends DefaultizedProps<
+    Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
+    'views'
   >,
 > = Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> &
   Omit<
@@ -36,7 +36,7 @@ export type DateTimeRangePickerTimeWrapperProps<
       selectionState: PickerSelectionState,
       selectedView: TView,
     ) => void;
-    viewRenderer?: PickerViewRenderer<DateRange<TDate>, TView, any, TComponentProps> | null;
+    viewRenderer?: PickerViewRenderer<DateRange<TDate>, TView, TComponentProps, any> | null;
     openTo?: TView;
   };
 
@@ -45,10 +45,10 @@ export type DateTimeRangePickerTimeWrapperProps<
  */
 function DateTimeRangePickerTimeWrapper<
   TDate extends PickerValidDate,
-  TView extends DateTimeRangePickerView,
-  TComponentProps extends Omit<
-    BaseClockProps<TDate, TimeViewWithMeridiem>,
-    'value' | 'defaultValue' | 'onChange'
+  TView extends TimeViewWithMeridiem,
+  TComponentProps extends DefaultizedProps<
+    Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
+    'views'
   >,
 >(
   props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,

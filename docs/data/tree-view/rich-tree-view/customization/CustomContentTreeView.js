@@ -40,7 +40,7 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { id, nodeId, label, disabled, children, ...other } = props;
+  const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
     getRootProps,
@@ -49,10 +49,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem2({ id, nodeId, children, label, disabled, rootRef: ref });
+  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
   return (
-    <TreeItem2Provider nodeId={nodeId}>
+    <TreeItem2Provider itemId={itemId}>
       <TreeItem2Root {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()}>
           <TreeItem2IconContainer {...getIconContainerProps()}>

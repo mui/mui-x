@@ -4,26 +4,25 @@ productId: x-tree-view
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Tree View from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-tree-view` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
-## Start using the alpha release
+## Start using the new release
 
-In `package.json`, change the version of the tree view package to `next`.
+In `package.json`, change the version of the tree view package to `^7.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "6.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
@@ -41,6 +40,36 @@ The `legacy` bundle that used to support old browsers like IE11 is no longer inc
 If you need support for IE11, you will need to keep using the latest version of the `v6` release.
 :::
 
+### ✅ Rename `nodeId` to `itemId`
+
+The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-    <TreeItem label='Item 1' nodeId='one'>
++    <TreeItem label='Item 1' itemId='one'>
+ </TreeView>
+```
+
+The same change has been applied to the and `ContentComponent` prop:
+
+```diff
+  const CustomContent = React.forwardRef((props, ref) => {
+-  const id = props.nodeId;
++  const id = props.itemId;
+
+     // Render some UI
+   });
+
+   function App() {
+     return (
+       <SimpleTreeView>
+         <TreeItem ContentComponent={CustomContent} />
+       </SimpleTreeView>
+     )
+   }
+```
+
 ### ✅ Use `SimpleTreeView` instead of `TreeView`
 
 The `TreeView` component has been deprecated and will be removed in the next major.
@@ -56,7 +85,7 @@ You can start replacing it with the new `SimpleTreeView` component which has exa
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -131,7 +160,7 @@ you need to use the new `expandIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Item 1"
 -     expandIcon={<MyCustomExpandIcon />}
 +     slots={{ expandIcon: MyCustomExpandIcon }}
@@ -179,7 +208,7 @@ you need to use the new `collapseIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Item 1"
 -     collapseIcon={<MyCustomCollapseIcon />}
 +     slots={{ collapseIcon: MyCustomCollapseIcon }}
@@ -231,7 +260,7 @@ you need to use the new `endIcon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Item 1"
 -     endIcon={<MyCustomEndIcon />}
 +     slots={{ endIcon: MyCustomEndIcon }}
@@ -250,7 +279,7 @@ you need to use the new `icon` slot on this component:
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
+      itemId="1"
       label="Item 1"
 -     icon={<MyCustomIcon />}
 +     slots={{ icon: MyCustomIcon }}
@@ -273,7 +302,7 @@ you need to use the new `groupTransition` slot on this component:
 ```diff
  <SimpleTreeView>
    <TreeItem
-     nodeId="1"
+     itemId="1"
      label="Item 1"
 -    TransitionComponent={Fade}
 +    slots={{ groupTransition: Fade }}
@@ -372,6 +401,38 @@ you can use the new `onItemSelectionToggle` prop which is called whenever an ite
 
 :::
 
+### Focus the Tree Item instead of the Tree View
+
+The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+This change will allow new features that require the focus to be on the Tree Item,
+like the drag and drop reordering of items.
+It also solves several issues with focus management,
+like the inability to scroll to the focused item when a lot of items are rendered.
+
+This will mostly impact how you write tests to interact with the Tree View:
+
+For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
+
+```diff
+ it('test example on first item', () => {
+   const { getByRole } = render(
+     <SimpleTreeView>
+       <TreeItem itemId="one">One</TreeItem>
+       <TreeItem itemId="two">Two</TreeItem>
+    </SimpleTreeView>
+   );
+-  const tree = getByRole('tree');
++  const treeItem = getByRole('treeitem', { name: 'One' });
+   act(() => {
+-    tree.focus();
++    treeItem.focus();
+   });
+-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
++  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
+ })
+```
+
 ### ✅ Use `useTreeItemState` instead of `useTreeItem`
 
 The `useTreeItem` hook has been renamed `useTreeItemState`.
@@ -382,8 +443,8 @@ This will help create a new headless version of the `TreeItem` component based o
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });

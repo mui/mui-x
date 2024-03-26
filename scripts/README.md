@@ -23,7 +23,7 @@ yarn release:changelog
    --release       The branch to release (default: master)
 ```
 
-You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
+You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 
@@ -49,7 +49,7 @@ Push the working branch on the documentation release branch to deploy the docume
 <!-- #default-branch-switch -->
 
 ```bash
-git push -f upstream next:docs-next
+git push -f upstream master:docs-v7
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-next)

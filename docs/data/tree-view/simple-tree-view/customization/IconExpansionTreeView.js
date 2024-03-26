@@ -7,7 +7,7 @@ import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
   const { interactions } = useTreeItem2Utils({
-    nodeId: props.nodeId,
+    itemId: props.itemId,
     children: props.children,
   });
 
@@ -36,13 +36,13 @@ export default function IconExpansionTreeView() {
   return (
     <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
       <SimpleTreeView aria-label="icon expansion">
-        <CustomTreeItem nodeId="1" label="Applications">
-          <CustomTreeItem nodeId="2" label="Calendar" />
+        <CustomTreeItem itemId="1" label="Applications">
+          <CustomTreeItem itemId="2" label="Calendar" />
         </CustomTreeItem>
-        <CustomTreeItem nodeId="5" label="Documents">
-          <CustomTreeItem nodeId="10" label="OSS" />
-          <CustomTreeItem nodeId="6" label="MUI">
-            <CustomTreeItem nodeId="8" label="index.js" />
+        <CustomTreeItem itemId="5" label="Documents">
+          <CustomTreeItem itemId="10" label="OSS" />
+          <CustomTreeItem itemId="6" label="MUI">
+            <CustomTreeItem itemId="8" label="index.js" />
           </CustomTreeItem>
         </CustomTreeItem>
       </SimpleTreeView>
