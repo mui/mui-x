@@ -17,7 +17,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     (itemId: string) => {
       setState((prevState) => ({
         ...prevState,
-        itemsReordering: { targetItemId: itemId, draggedItemId: itemId },
+        itemsReordering: { targetItemId: itemId, draggedItemId: itemId, action: 'reorder-below' },
       }));
     },
     [setState],
