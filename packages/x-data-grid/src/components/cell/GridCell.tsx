@@ -180,17 +180,31 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const field = column.field;
 
-  const cellParamsWithAPI = useGridSelector(
+  // [1] We use the selector just as a sentinel on the state, to signal if this GridCell
+  // has changed computed state
+  useGridSelector(
     apiRef,
     () => {
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       try {
-        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        let cellParams = apiRef.current.getCellParamsRaw<any, any, any, GridTreeNodeWithRender>(
           rowId,
           field,
         );
+
+        const { colDef } = cellParams;
+        if (
+          !colDef ||
+          (!colDef.valueGetter && !colDef.valueFormatter) ||
+          colDef.type === 'custom'
+        ) {
+          cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+            rowId,
+            field,
+          );
+        }
 
         const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
@@ -204,6 +218,20 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     },
     objectShallowCompare,
   );
+
+  // [2] Then we get the latest params (with valueGetter/valueFormatter/isEditable computation)
+  let cellParamsWithAPI = EMPTY_CELL_PARAMS;
+  try {
+    cellParamsWithAPI = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+      rowId,
+      field,
+    ) as CellParamsWithAPI;
+    cellParamsWithAPI.api = apiRef.current;
+  } catch (e) {
+    if (!(e instanceof MissingRowIdError)) {
+      throw e;
+    }
+  }
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
