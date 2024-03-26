@@ -1,1 +1,1 @@
-<RichTreeView items={ITEMS} itemsReordering />
+<RichTreeView items={ITEMS} slots={{ item: TreeItem2 }} itemsReordering />
