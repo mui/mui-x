@@ -81,16 +81,21 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
   ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
-}>(({ theme, ownerState }) => ({
+}>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-end',
-  ...(ownerState.isLandscape && {
-    marginTop: 'auto',
-  }),
   ...(theme.direction === 'rtl' && {
     flexDirection: 'row-reverse',
   }),
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        marginTop: 'auto',
+      },
+    },
+  ],
 }));
 
 TimePickerToolbarHourMinuteLabel.propTypes = {
@@ -117,21 +122,26 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
-  ...(ownerState.isLandscape && {
-    margin: '4px 0 auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    flexBasis: '100%',
-  }),
   [`& .${timePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
   },
-}));
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: '4px 0 auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        flexBasis: '100%',
+      },
+    },
+  ],
+});
 
 TimePickerToolbarAmPmSelection.propTypes = {
   // ----------------------------- Warning --------------------------------

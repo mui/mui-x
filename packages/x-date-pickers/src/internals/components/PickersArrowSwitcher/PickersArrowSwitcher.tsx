@@ -38,11 +38,14 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   overridesResolver: (props, styles) => styles.button,
 })<{
   ownerState: PickersArrowSwitcherProps;
-}>(({ ownerState }) => ({
-  ...(ownerState.hidden && {
-    visibility: 'hidden',
-  }),
-}));
+}>({
+  variants: [
+    {
+      props: { hidden: true },
+      style: { visibility: 'hidden' },
+    },
+  ],
+});
 
 const useUtilityClasses = (ownerState: PickersArrowSwitcherOwnerState) => {
   const { classes } = ownerState;

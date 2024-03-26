@@ -59,4 +59,11 @@ export interface PickersInputBaseProps
     root?: React.ElementType;
     input?: React.ElementType;
   };
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: {
+    root?: any;
+  };
 }
