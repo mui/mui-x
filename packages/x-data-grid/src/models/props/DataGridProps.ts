@@ -143,6 +143,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSelection: boolean;
   /**
+   * The milliseconds throttle delay for resizing the grid.
+   * @default 60
+   */
+  resizeThrottleMs: number;
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
