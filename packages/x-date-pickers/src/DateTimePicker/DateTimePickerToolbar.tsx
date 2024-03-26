@@ -60,25 +60,36 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
-  paddingLeft: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 24 : 16,
-  paddingRight: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
-  borderBottom:
-    ownerState.toolbarVariant === 'desktop'
-      ? `1px solid ${(theme.vars || theme).palette.divider}`
-      : undefined,
-  borderRight:
-    ownerState.toolbarVariant === 'desktop' && ownerState.isLandscape
-      ? `1px solid ${(theme.vars || theme).palette.divider}`
-      : undefined,
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
+  paddingLeft: 16,
+  paddingRight: 16,
   justifyContent: 'space-around',
   position: 'relative',
-  ...(ownerState.toolbarVariant === 'desktop' && {
-    [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
-      color: (theme.vars || theme).palette.primary.main,
-      fontWeight: theme.typography.fontWeightBold,
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
+          color: (theme.vars || theme).palette.primary.main,
+          fontWeight: theme.typography.fontWeightBold,
+        },
+      },
     },
-  }),
+    {
+      props: { toolbarVariant: 'desktop', isLandscape: true },
+      style: {
+        borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop', isLandscape: false },
+      style: {
+        paddingLeft: 24,
+        paddingRight: 0,
+      },
+    },
+  ],
 }));
 
 DateTimePickerToolbarRoot.propTypes = {
@@ -117,22 +128,33 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => {
-  const direction =
-    ownerState.isLandscape && ownerState.toolbarVariant !== 'desktop' ? 'column' : 'row';
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => {
   return {
     display: 'flex',
-    flexDirection: direction,
-    ...(ownerState.toolbarVariant === 'desktop' && {
-      ...(!ownerState.isLandscape && {
-        gap: 9,
-        marginRight: 4,
-        alignSelf: 'flex-end',
-      }),
-    }),
+    flexDirection: 'row',
     ...(theme.direction === 'rtl' && {
-      flexDirection: `${direction}-reverse`,
+      flexDirection: 'row-reverse',
     }),
+    variants: [
+      {
+        props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarProps<any>) =>
+          isLandscape && toolbarVariant !== 'desktop',
+        style: {
+          flexDirection: 'column',
+          ...(theme.direction === 'rtl' && {
+            flexDirection: 'column-reverse',
+          }),
+        },
+      },
+      {
+        props: { toolbarVariant: 'desktop', isLandscape: false },
+        style: {
+          gap: 9,
+          marginRight: 4,
+          alignSelf: 'flex-end',
+        },
+      },
+    ],
   };
 });
 
@@ -140,12 +162,17 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
   overridesResolver: (props, styles) => styles.timeDigitsContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
   display: 'flex',
-  ...(ownerState.toolbarVariant === 'desktop' && { gap: 1.5 }),
   ...(theme.direction === 'rtl' && {
     flexDirection: 'row-reverse',
   }),
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: { gap: 1.5 },
+    },
+  ],
 }));
 
 DateTimePickerToolbarTimeContainer.propTypes = {
@@ -168,10 +195,18 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   overridesResolver: (props, styles) => styles.separator,
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
-  margin: ownerState.toolbarVariant === 'desktop' ? 0 : '0 4px 0 2px',
+}>({
+  margin: '0 4px 0 2px',
   cursor: 'default',
-}));
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        margin: 0,
+      },
+    },
+  ],
+});
 
 // Taken from TimePickerToolbar
 const DateTimePickerToolbarAmPmSelection = styled('div', {
@@ -184,21 +219,26 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   ],
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
-  ...(ownerState.isLandscape && {
-    margin: '4px 0 auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  }),
   [`& .${dateTimePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
   },
-}));
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: '4px 0 auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+      },
+    },
+  ],
+});
 
 /**
  * Demos:
