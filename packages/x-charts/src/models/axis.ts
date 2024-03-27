@@ -239,10 +239,14 @@ interface AxisScaleComputedConfig {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
   time: {
-    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
+    colorScale?:
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
-    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
+    colorScale?:
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;

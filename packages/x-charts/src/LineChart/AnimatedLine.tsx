@@ -48,7 +48,6 @@ function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
   const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
 
-  console.log(ownerState);
   const path = useAnimatedPath(d, skipAnimation);
 
   const { animatedWidth } = useSpring({

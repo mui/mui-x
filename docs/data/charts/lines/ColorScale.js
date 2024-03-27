@@ -5,11 +5,9 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
-const series = [{ data: [-2, -9, 12, 11, 6, -4] }];
-
 export default function ColorScale() {
-  const [colorX, setColorX] = React.useState('piecewise');
-  const [colorY, setColorY] = React.useState('None');
+  const [colorX, setColorX] = React.useState('None');
+  const [colorY, setColorY] = React.useState('piecewise');
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -41,7 +39,12 @@ export default function ColorScale() {
       <LineChart
         height={300}
         grid={{ horizontal: true }}
-        series={series}
+        series={[
+          {
+            data: [-2, -9, 12, 11, 6, -4],
+            area: true,
+          },
+        ]}
         margin={{
           top: 10,
           bottom: 20,
@@ -57,8 +60,8 @@ export default function ColorScale() {
               }) ||
               (colorY === 'piecewise' && {
                 type: 'piecewise',
-                thresholds: [0],
-                colors: ['red', 'green'],
+                thresholds: [0, 10],
+                colors: ['red', 'green', 'blue'],
               }) ||
               undefined,
           },
@@ -67,12 +70,12 @@ export default function ColorScale() {
           {
             scaleType: 'time',
             data: [
-              new Date(2019, 1, 1),
-              new Date(2020, 1, 1),
-              new Date(2021, 1, 1),
-              new Date(2022, 1, 1),
-              new Date(2023, 1, 1),
-              new Date(2024, 1, 1),
+              new Date(2019, 0, 1),
+              new Date(2020, 0, 1),
+              new Date(2021, 0, 1),
+              new Date(2022, 0, 1),
+              new Date(2023, 0, 1),
+              new Date(2024, 0, 1),
             ],
             valueFormatter: (value) => value.getFullYear().toString(),
             colorMap:

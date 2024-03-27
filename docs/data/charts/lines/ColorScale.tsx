@@ -5,13 +5,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
-const series = [
-  {
-    data: [-2, -9, 12, 11, 6, -4],
-    area: true
-  },
-];
-
 export default function ColorScale() {
   const [colorX, setColorX] = React.useState<
     'None' | 'piecewise' | 'continuous' | 'ordinal'
@@ -54,14 +47,18 @@ export default function ColorScale() {
       <LineChart
         height={300}
         grid={{ horizontal: true }}
-        series={series}
+        series={[
+          {
+            data: [-2, -9, 12, 11, 6, -4],
+            area: true,
+          },
+        ]}
         margin={{
           top: 10,
           bottom: 20,
         }}
         yAxis={[
           {
-            // reverse: true,
             colorMap:
               (colorY === 'continuous' && {
                 type: 'continuous',
@@ -78,7 +75,7 @@ export default function ColorScale() {
           },
         ]}
         xAxis={[
-          {reverse: true,
+          {
             scaleType: 'time',
             data: [
               new Date(2019, 0, 1),

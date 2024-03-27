@@ -14,6 +14,7 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 import { HighlightProvider } from '../context/HighlightProvider';
+import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
@@ -61,6 +62,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 desc={desc}
                 disableAxisListener={disableAxisListener}
               >
+                <ChartsAxesGradients />
                 {children}
               </ChartsSurface>
             </HighlightProvider>
