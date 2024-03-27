@@ -93,7 +93,10 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
     <TreeItem2DragAndDropOverlayRoot
       onDragOver={handleDragOver}
       action={itemsReordering.currentDrag.action}
-      isTarget={itemsReordering.currentDrag.targetItemId === itemId}
+      isTarget={
+        itemsReordering.currentDrag.targetItemId === itemId &&
+        itemsReordering.currentDrag.draggedItemId !== itemId
+      }
     />
   );
 }
