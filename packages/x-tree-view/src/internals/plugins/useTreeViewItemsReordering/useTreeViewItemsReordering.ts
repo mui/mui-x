@@ -46,17 +46,17 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       const targetNode = instance.getNode(state.itemsReordering.targetItemId);
-      const draggedItem = instance.getNode(state.itemsReordering.draggedItemId);
+      const draggedNode = instance.getNode(state.itemsReordering.draggedItemId);
       const oldPosition: TreeViewItemReorderPosition = {
-        parentId: draggedItem.parentId,
-        index: draggedItem.index,
+        parentId: draggedNode.parentId,
+        index: draggedNode.index,
       };
 
       const checkAction = (action: TreeViewItemsReorderingAction) =>
         canMoveItemToNewPosition({
           itemId,
           oldPosition,
-          newPosition: getNewPositionFromAction(targetNode, action),
+          newPosition: getNewPositionFromAction({ draggedNode, targetNode, action }),
         });
 
       return {
@@ -85,20 +85,28 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       setState((prevState) => ({ ...prevState, itemsReordering: null }));
-      if (state.itemsReordering.draggedItemId === state.itemsReordering.targetItemId) {
+      if (
+        state.itemsReordering.draggedItemId === state.itemsReordering.targetItemId ||
+        state.itemsReordering.action == null
+      ) {
         return;
       }
 
+      const draggedNode = instance.getNode(state.itemsReordering.draggedItemId);
       const targetNode = instance.getNode(state.itemsReordering.targetItemId);
 
-      const newPosition = getNewPositionFromAction(targetNode, state.itemsReordering.action);
+      const newPosition = getNewPositionFromAction({
+        draggedNode,
+        targetNode,
+        action: state.itemsReordering.action,
+      });
       instance.moveItem(itemId, newPosition.parentId, newPosition.index);
     },
     [setState, state.itemsReordering, instance],
   );
 
   const setDragTargetItem = React.useCallback(
-    (itemId: string, action: TreeViewItemsReorderingAction) => {
+    (itemId: string, action: TreeViewItemsReorderingAction | null) => {
       setState((prevState) => {
         if (
           prevState.itemsReordering == null ||

@@ -6,7 +6,7 @@ export interface UseTreeViewItemsReorderingInstance {
   getItemTargetValidActions: (itemId: string) => Record<TreeViewItemsReorderingAction, boolean>;
   startDraggingItem: (itemId: string) => void;
   stopDraggingItem: (itemId: string) => void;
-  setDragTargetItem: (itemId: string, action: TreeViewItemsReorderingAction) => void;
+  setDragTargetItem: (itemId: string, action: TreeViewItemsReorderingAction | null) => void;
 }
 
 export interface TreeViewItemReorderPosition {
@@ -51,7 +51,7 @@ export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
     draggedItemId: string;
     targetItemId: string;
-    action: TreeViewItemsReorderingAction;
+    action: TreeViewItemsReorderingAction | null;
   } | null;
 }
 

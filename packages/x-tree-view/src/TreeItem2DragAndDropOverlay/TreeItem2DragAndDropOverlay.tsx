@@ -13,7 +13,7 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'action' && prop !== 'isTarget',
-})<{ action: TreeViewItemsReorderingAction; isTarget: boolean }>(({ theme }) => ({
+})<{ action: TreeViewItemsReorderingAction | null; isTarget: boolean }>(({ theme }) => ({
   position: 'absolute',
   top: 0,
   bottom: 0,
@@ -32,6 +32,12 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       props: { isTarget: true, action: 'reorder-above' },
       style: {
         borderTop: `2px dashed ${(theme.vars || theme).palette.primary.main}`,
+      },
+    },
+    {
+      props: { isTarget: true, action: 'reorder-below' },
+      style: {
+        borderBottom: `2px dashed ${(theme.vars || theme).palette.primary.main}`,
       },
     },
   ],
@@ -80,9 +86,7 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
       }
     }
 
-    if (action != null) {
-      instance.setDragTargetItem(itemId, action);
-    }
+    instance.setDragTargetItem(itemId, action);
   };
 
   return (

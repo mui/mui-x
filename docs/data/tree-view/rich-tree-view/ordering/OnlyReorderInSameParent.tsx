@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { RichTreeView, RichTreeViewProps } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const ITEMS: TreeViewBaseItem[] = [
@@ -25,12 +25,6 @@ const ITEMS: TreeViewBaseItem[] = [
 ];
 
 export default function OnlyReorderInSameParent() {
-  const canMoveItemToNewPosition: NonNullable<
-    RichTreeViewProps<any, any>['canMoveItemToNewPosition']
-  > = ({ oldPosition, newPosition }) => {
-    return oldPosition.parentId === newPosition.parentId;
-  };
-
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView
@@ -38,7 +32,9 @@ export default function OnlyReorderInSameParent() {
         slots={{ item: TreeItem2 }}
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
-        canMoveItemToNewPosition={canMoveItemToNewPosition}
+        canMoveItemToNewPosition={(params) =>
+          params.oldPosition.parentId === params.newPosition.parentId
+        }
       />
     </Box>
   );

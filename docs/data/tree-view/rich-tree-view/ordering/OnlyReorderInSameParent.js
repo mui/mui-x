@@ -25,10 +25,6 @@ const ITEMS = [
 ];
 
 export default function OnlyReorderInSameParent() {
-  const canMoveItemToNewPosition = ({ oldPosition, newPosition }) => {
-    return oldPosition.parentId === newPosition.parentId;
-  };
-
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView
@@ -36,7 +32,9 @@ export default function OnlyReorderInSameParent() {
         slots={{ item: TreeItem2 }}
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
-        canMoveItemToNewPosition={canMoveItemToNewPosition}
+        canMoveItemToNewPosition={(params) =>
+          params.oldPosition.parentId === params.newPosition.parentId
+        }
       />
     </Box>
   );
