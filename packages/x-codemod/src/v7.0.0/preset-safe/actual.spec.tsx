@@ -8,11 +8,11 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const theme = createTheme({});
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 90 } satisfies GridColDef,
-];
-
+// prettier-ignore
 function App() {
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 } satisfies GridColDef,
+  ];
   return (
     <ThemeProvider theme={theme}>
       <DataGrid
