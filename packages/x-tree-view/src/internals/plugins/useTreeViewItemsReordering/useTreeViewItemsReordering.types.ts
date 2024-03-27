@@ -1,7 +1,8 @@
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps, TreeViewNode, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewItemsReorderingInstance {
+  canItemBeDragged: (itemId: string) => boolean;
   startDraggingItem: (itemId: string) => void;
   stopDraggingItem: (itemId: string) => void;
   setDragTargetItem: (itemId: string, action: TreeViewItemsReorderingAction) => void;
@@ -13,6 +14,13 @@ export interface UseTreeViewItemsReorderingParameters {
    * @default false
    */
   itemsReordering?: boolean;
+  /**
+   * Used to determine if a given item can be reordered.
+   * @param {string} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item can be reordered.
+   * @default () => true
+   */
+  isItemReorderable?: (itemId: string) => boolean;
 }
 
 export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<

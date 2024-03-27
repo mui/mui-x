@@ -32,8 +32,10 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
+  const contentRefObject = React.useRef<HTMLDivElement>(null);
   const idAttribute = instance.getTreeItemId(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
+  const handleContentRef = useForkRef(contentRef, contentRefObject)!;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -85,6 +87,11 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       if (event.target !== rootRefObject.current) {
         return;
       }
+
+      // Comment to show the children in the drag preview
+      // TODO: Improve the customization of the drag preview
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setDragImage(contentRefObject.current!, 0, 0);
 
       instance.startDraggingItem(itemId);
     };
@@ -162,7 +169,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
       ...(itemsReordering?.enabled
         ? {
-            draggable: true,
+            draggable: instance.canItemBeDragged(itemId),
             onDragStart: createRootHandleDragStart(externalEventHandlers),
             onDragEnd: createRootHandleDragEnd(externalEventHandlers),
           }
@@ -181,7 +188,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     return {
       ...externalEventHandlers,
       ...externalProps,
-      ref: contentRef,
+      ref: handleContentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,

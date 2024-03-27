@@ -53,7 +53,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   const expandAllSiblings = (event: React.KeyboardEvent, itemId: string) => {
     const node = instance.getNode(itemId);
-    const siblings = instance.getChildrenIds(node.parentId);
+    const siblings = instance.getItemChildren(node.parentId);
 
     const diff = siblings.filter(
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),

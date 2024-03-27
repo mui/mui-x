@@ -27,7 +27,12 @@ const ITEMS: TreeViewBaseItem[] = [
 export default function DragAndDrop() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-      <RichTreeView items={ITEMS} slots={{ item: TreeItem2 }} itemsReordering />
+      <RichTreeView
+        items={ITEMS}
+        slots={{ item: TreeItem2 }}
+        itemsReordering
+        defaultExpandedItems={['grid', 'pickers']}
+      />
     </Box>
   );
 }

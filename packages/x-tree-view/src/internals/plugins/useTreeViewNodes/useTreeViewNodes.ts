@@ -134,7 +134,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = React.useCallback(
+  const getItemChildren = React.useCallback(
     (itemId: string | null) =>
       Object.values(state.nodes.nodeMap)
         .filter((item) => item.parentId === itemId)
@@ -154,7 +154,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   );
 
   const getNavigableChildrenIds = (itemId: string | null) => {
-    let childrenIds = instance.getChildrenIds(itemId);
+    let childrenIds = instance.getItemChildren(itemId);
 
     if (!params.disabledItemsFocusable) {
       childrenIds = childrenIds.filter((item) => !instance.isNodeDisabled(item));
@@ -219,7 +219,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getNode,
     getItem,
     getNodesToRender,
-    getChildrenIds,
+    getItemChildren,
     getNavigableChildrenIds,
     isNodeDisabled,
     moveItem,
@@ -229,6 +229,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
 
   populatePublicAPI<UseTreeViewNodesSignature>(publicAPI, {
     getItem,
+    getItemChildren,
   });
 
   return {

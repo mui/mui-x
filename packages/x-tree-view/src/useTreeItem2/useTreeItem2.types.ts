@@ -42,7 +42,7 @@ export interface UseTreeItem2RootSlotOwnProps {
   ref: React.RefCallback<HTMLLIElement>;
 
   // Drag & drop props
-  draggable?: true;
+  draggable?: boolean;
   onDragStart?: MuiCancellableEventHandler<React.DragEvent>;
   onDragEnd?: MuiCancellableEventHandler<React.DragEvent>;
 }

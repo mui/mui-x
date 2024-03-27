@@ -12,7 +12,7 @@ export interface UseTreeViewNodesInstance<R extends {}> {
   getNode: (itemId: string) => TreeViewNode;
   getItem: (itemId: string) => R;
   getNodesToRender: () => TreeViewNodeProps[];
-  getChildrenIds: (itemId: string | null) => string[];
+  getItemChildren: (itemId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
   isNodeDisabled: (itemId: string | null) => itemId is string;
   moveItem: (nodeId: TreeViewItemId, newParent: string | null, newIndex: number) => void;
@@ -30,7 +30,7 @@ export interface UseTreeViewNodesInstance<R extends {}> {
 }
 
 export interface UseTreeViewNodesPublicAPI<R extends {}>
-  extends Pick<UseTreeViewNodesInstance<R>, 'getItem'> {}
+  extends Pick<UseTreeViewNodesInstance<R>, 'getItem' | 'getItemChildren'> {}
 
 export interface UseTreeViewNodesParameters<R extends { children?: R[] }> {
   /**

@@ -13,6 +13,22 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   state,
   setState,
 }) => {
+  const canItemBeDragged = React.useCallback(
+    (itemId: string) => {
+      if (!params.itemsReordering) {
+        return false;
+      }
+
+      const isItemReorderable = params.isItemReorderable;
+      if (isItemReorderable) {
+        return isItemReorderable(itemId);
+      }
+
+      return true;
+    },
+    [params.itemsReordering, params.isItemReorderable],
+  );
+
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
       setState((prevState) => ({
@@ -87,7 +103,12 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [instance, setState],
   );
 
-  populateInstance(instance, { startDraggingItem, stopDraggingItem, setDragTargetItem });
+  populateInstance<UseTreeViewItemsReorderingSignature>(instance, {
+    startDraggingItem,
+    stopDraggingItem,
+    setDragTargetItem,
+    canItemBeDragged,
+  });
 
   return {
     contextValue: {
@@ -108,4 +129,5 @@ useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
 
 useTreeViewItemsReordering.params = {
   itemsReordering: true,
+  isItemReorderable: true,
 };
