@@ -10,6 +10,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
+import { ChartsAxisGradients } from './ChartsAxisGradient';
 
 export interface ChartsAxisProps {
   /**
@@ -134,6 +135,7 @@ function ChartsAxis(props: ChartsAxisProps) {
 
   return (
     <React.Fragment>
+      <ChartsAxisGradients />
       {topId && <ChartsXAxis {...topAxisProps} position="top" axisId={topId} />}
       {bottomId && <ChartsXAxis {...bottomAxisProps} position="bottom" axisId={bottomId} />}
       {leftId && <ChartsYAxis {...leftAxisProps} position="left" axisId={leftId} />}

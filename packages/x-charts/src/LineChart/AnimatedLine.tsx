@@ -16,9 +16,10 @@ export const LineElementPath = styled(animated.path, {
   strokeWidth: 2,
   strokeLinejoin: 'round',
   fill: 'none',
-  stroke: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
-    : ownerState.color,
+  stroke:
+    (ownerState.gradientId && `url(#${ownerState.gradientId})`) ||
+    (ownerState.isHighlighted && d3Color(ownerState.color)!.brighter(0.5).formatHex()) ||
+    ownerState.color,
   transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
@@ -47,6 +48,7 @@ function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
   const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
 
+  console.log(ownerState);
   const path = useAnimatedPath(d, skipAnimation);
 
   const { animatedWidth } = useSpring({
@@ -78,6 +80,7 @@ AnimatedLine.propTypes = {
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    gradientId: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,

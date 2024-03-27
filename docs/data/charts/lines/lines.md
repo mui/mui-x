@@ -146,6 +146,10 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
+### Color
+
+{{"demo": "ColorScale.js"}}
+
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
