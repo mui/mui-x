@@ -354,7 +354,7 @@ MyApp.propTypes = {
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   let pageProps = {};
 
-  const req = require.context('../translations', false, /translations.*\.json$/);
+  const req = require.context('../translations', false, /\.\/translations.*\.json$/);
   const translations = mapTranslations(req);
 
   if (Component.getInitialProps) {
