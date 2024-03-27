@@ -51,17 +51,38 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
     const rect = (event.target as HTMLDivElement).getBoundingClientRect();
     // const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+    const validActions = instance.getItemTargetValidActions(itemId);
 
-    let action: TreeViewItemsReorderingAction;
-    if (y < (1 / 4) * rect.height) {
-      action = 'reorder-above';
-    } else if (y > (3 / 4) * rect.height) {
-      action = 'reorder-below';
-    } else {
-      action = 'make-child';
+    let action: TreeViewItemsReorderingAction | null;
+
+    // If we can move the item inside the target,
+    // Then the upper quarter of the target moves it above,
+    // the lower quarter moves it below and the rest makes a child.
+    if (validActions['make-child']) {
+      if (validActions['reorder-above'] && y < (1 / 4) * rect.height) {
+        action = 'reorder-above';
+      } else if (validActions['reorder-below'] && y > (3 / 4) * rect.height) {
+        action = 'reorder-below';
+      } else {
+        action = 'make-child';
+      }
+    }
+    // If we can't move the item inside the target,
+    // Then the upper half of the target moves it above, and the lower half moves it below.
+    else {
+      // eslint-disable-next-line no-lonely-if
+      if (validActions['reorder-above'] && y < (1 / 2) * rect.height) {
+        action = 'reorder-above';
+      } else if (validActions['reorder-below'] && y >= (1 / 2) * rect.height) {
+        action = 'reorder-below';
+      } else {
+        action = null;
+      }
     }
 
-    instance.setDragTargetItem(itemId, action);
+    if (action != null) {
+      instance.setDragTargetItem(itemId, action);
+    }
   };
 
   return (

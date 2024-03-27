@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
 import {
+  TreeViewItemReorderPosition,
   TreeViewItemsReorderingAction,
   UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
-import { isAncestor } from './useTreeViewItemsReordering.utils';
+import { getNewPositionFromAction, isAncestor } from './useTreeViewItemsReordering.utils';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
@@ -27,6 +28,44 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       return true;
     },
     [params.itemsReordering, params.isItemReorderable],
+  );
+
+  const getItemTargetValidActions = React.useCallback(
+    (itemId: string): Record<TreeViewItemsReorderingAction, boolean> => {
+      if (!state.itemsReordering) {
+        throw new Error('There is no ongoing reordering.');
+      }
+
+      const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
+      if (!canMoveItemToNewPosition) {
+        return {
+          'make-child': true,
+          'reorder-above': true,
+          'reorder-below': true,
+        };
+      }
+
+      const targetNode = instance.getNode(state.itemsReordering.targetItemId);
+      const draggedItem = instance.getNode(state.itemsReordering.draggedItemId);
+      const oldPosition: TreeViewItemReorderPosition = {
+        parentId: draggedItem.parentId,
+        index: draggedItem.index,
+      };
+
+      const checkAction = (action: TreeViewItemsReorderingAction) =>
+        canMoveItemToNewPosition({
+          itemId,
+          oldPosition,
+          newPosition: getNewPositionFromAction(targetNode, action),
+        });
+
+      return {
+        'make-child': checkAction('make-child'),
+        'reorder-above': checkAction('reorder-above'),
+        'reorder-below': checkAction('reorder-below'),
+      };
+    },
+    [params.canMoveItemToNewPosition, instance, state.itemsReordering],
   );
 
   const startDraggingItem = React.useCallback(
@@ -52,23 +91,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       const targetNode = instance.getNode(state.itemsReordering.targetItemId);
 
-      // eslint-disable-next-line default-case
-      switch (state.itemsReordering.action) {
-        case 'make-child': {
-          instance.moveItem(itemId, targetNode.id, 0);
-          break;
-        }
-
-        case 'reorder-above': {
-          instance.moveItem(itemId, targetNode.parentId, targetNode.index);
-          break;
-        }
-
-        case 'reorder-below': {
-          instance.moveItem(itemId, targetNode.parentId, targetNode.index + 1);
-          break;
-        }
-      }
+      const newPosition = getNewPositionFromAction(targetNode, state.itemsReordering.action);
+      instance.moveItem(itemId, newPosition.parentId, newPosition.index);
     },
     [setState, state.itemsReordering, instance],
   );
@@ -104,10 +128,11 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   );
 
   populateInstance<UseTreeViewItemsReorderingSignature>(instance, {
+    canItemBeDragged,
+    getItemTargetValidActions,
     startDraggingItem,
     stopDraggingItem,
     setDragTargetItem,
-    canItemBeDragged,
   });
 
   return {
@@ -130,4 +155,5 @@ useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
 useTreeViewItemsReordering.params = {
   itemsReordering: true,
   isItemReorderable: true,
+  canMoveItemToNewPosition: true,
 };

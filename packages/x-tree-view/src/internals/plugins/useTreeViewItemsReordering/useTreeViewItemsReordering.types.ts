@@ -1,11 +1,17 @@
-import { DefaultizedProps, TreeViewNode, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewItemsReorderingInstance {
   canItemBeDragged: (itemId: string) => boolean;
+  getItemTargetValidActions: (itemId: string) => Record<TreeViewItemsReorderingAction, boolean>;
   startDraggingItem: (itemId: string) => void;
   stopDraggingItem: (itemId: string) => void;
   setDragTargetItem: (itemId: string, action: TreeViewItemsReorderingAction) => void;
+}
+
+export interface TreeViewItemReorderPosition {
+  parentId: string | null;
+  index: number;
 }
 
 export interface UseTreeViewItemsReorderingParameters {
@@ -21,6 +27,19 @@ export interface UseTreeViewItemsReorderingParameters {
    * @default () => true
    */
   isItemReorderable?: (itemId: string) => boolean;
+  /**
+   * Used to determine if a given item can move to some new position.
+   * @param {object} params The params describing the item re-ordering.
+   * @param {string} params.itemId The id of the item to check.
+   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @returns {boolean} `true` if the item can move to the new position.
+   */
+  canMoveItemToNewPosition?: (params: {
+    itemId: string;
+    oldPosition: TreeViewItemReorderPosition;
+    newPosition: TreeViewItemReorderPosition;
+  }) => boolean;
 }
 
 export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<

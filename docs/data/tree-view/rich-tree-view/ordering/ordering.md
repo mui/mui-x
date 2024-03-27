@@ -21,8 +21,15 @@ You can enable the drag & drop re-ordering of items by setting the `itemsReorder
 
 By default, all the items are reorderable.
 You can prevent the re-ordering of some items using the `isItemReorderable` prop.
-The following example demonstrates how to only allow re-ordering of the leaves:
+The following example shows how to only allow re-ordering of the leaves:
 
 {{"demo": "OnlyReorderLeaves.js"}}
 
-You can also limit the items in which an item can be dropped:
+You can also limit the items in which an item can be dropped using the `canMoveItemToNewPosition` prop.
+The following example shows how to only allow re-ordering inside the same parent:
+
+:::warning
+Buggy
+:::
+
+{{"demo": "OnlyReorderInSameParent.js"}}
