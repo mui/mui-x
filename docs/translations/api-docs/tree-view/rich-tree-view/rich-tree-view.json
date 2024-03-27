@@ -4,6 +4,16 @@
     "apiRef": {
       "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
     },
+    "canMoveItemToNewPosition": {
+      "description": "Used to determine if a given item can move to some new position.",
+      "typeDescriptions": {
+        "params": "The params describing the item re-ordering.",
+        "params.itemId": "The id of the item to check.",
+        "params.oldPosition": "The old position of the item.",
+        "params.newPosition": "The new position of the item.",
+        "boolean": "<code>true</code> if the item can move to the new position."
+      }
+    },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
@@ -34,6 +44,13 @@
       "typeDescriptions": {
         "item": "The item to check.",
         "boolean": "<code>true</code> if the item should be disabled."
+      }
+    },
+    "isItemReorderable": {
+      "description": "Used to determine if a given item can be reordered.",
+      "typeDescriptions": {
+        "itemId": "The id of the item to check.",
+        "boolean": "<code>true</code> if the item can be reordered."
       }
     },
     "itemsReordering": {
