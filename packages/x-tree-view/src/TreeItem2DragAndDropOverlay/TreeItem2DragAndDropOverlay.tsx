@@ -48,7 +48,7 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
 
   const { itemsReordering, instance } = useTreeViewContext<[UseTreeViewItemsReorderingSignature]>();
 
-  if (!itemsReordering?.currentDrag || itemsReordering.currentDrag.draggedItemId === itemId) {
+  if (!itemsReordering?.currentDrag) {
     return null;
   }
 

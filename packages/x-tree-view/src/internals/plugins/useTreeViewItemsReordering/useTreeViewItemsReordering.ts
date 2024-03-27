@@ -37,32 +37,39 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
-      if (!canMoveItemToNewPosition) {
-        return {
-          'make-child': true,
-          'reorder-above': true,
-          'reorder-below': true,
-        };
-      }
-
-      const targetNode = instance.getNode(state.itemsReordering.targetItemId);
+      const targetNode = instance.getNode(itemId);
       const draggedNode = instance.getNode(state.itemsReordering.draggedItemId);
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedNode.parentId,
         index: draggedNode.index,
       };
 
-      const checkAction = (action: TreeViewItemsReorderingAction) =>
-        canMoveItemToNewPosition({
-          itemId,
-          oldPosition,
-          newPosition: getNewPositionFromAction({ draggedNode, targetNode, action }),
-        });
+      const checkAction = (action: TreeViewItemsReorderingAction) => {
+        const newPosition = getNewPositionFromAction({ draggedNode, targetNode, action });
+
+        // If the new position is equal to the old one, we don't want to show any dropping UI.
+        if (
+          newPosition.parentId === oldPosition.parentId &&
+          newPosition.index === oldPosition.index
+        ) {
+          return false;
+        }
+
+        if (canMoveItemToNewPosition) {
+          canMoveItemToNewPosition({
+            itemId,
+            oldPosition,
+            newPosition: getNewPositionFromAction({ draggedNode, targetNode, action }),
+          });
+        }
+
+        return true;
+      };
 
       return {
         'make-child': checkAction('make-child'),
         'reorder-above': checkAction('reorder-above'),
-        'reorder-below': checkAction('reorder-below'),
+        'reorder-below': !targetNode.expandable && checkAction('reorder-below'),
       };
     },
     [params.canMoveItemToNewPosition, instance, state.itemsReordering],
