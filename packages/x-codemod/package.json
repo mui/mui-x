@@ -35,7 +35,7 @@
     "@babel/core": "^7.24.0",
     "@babel/runtime": "^7.24.0",
     "@babel/traverse": "^7.24.0",
-    "jscodeshift": "0.13.1",
+    "jscodeshift": "0.15.2",
     "jscodeshift-add-imports": "^1.0.10",
     "yargs": "^17.7.2"
   },
