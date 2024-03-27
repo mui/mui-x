@@ -971,6 +971,26 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
       });
 
+      it(`should not publish 'rowEditStop' if field has error`, async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        expect(listener.callCount).to.equal(0);
+
+        userEvent.mousePress(getCell(1, 1));
+        clock.runToLast();
+        expect(listener.callCount).to.equal(0);
+      });
+
       it('should call stopRowEditMode with ignoreModifications=false and no cellToFocusAfter', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
@@ -1014,6 +1034,25 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
+      it(`should publish 'rowEditStop' even if field has error`, async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        expect(listener.callCount).to.equal(0);
+
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
+        expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
+      });
+
       it('should call stopRowEditMode with ignoreModifications=true', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
@@ -1042,6 +1081,25 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+      });
+
+      it(`should not publish 'rowEditStop' if field has error`, async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        expect(listener.callCount).to.equal(0);
+
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        expect(listener.callCount).to.equal(0);
       });
 
       it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {

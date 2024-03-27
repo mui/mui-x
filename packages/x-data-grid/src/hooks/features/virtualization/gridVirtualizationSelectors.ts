@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridRenderContext } from '../../../models/params/gridScrollParams';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
  * Get the columns state
@@ -37,16 +37,6 @@ export const gridRenderContextSelector = createSelector(
 );
 
 /**
- * Get the offsets
- * @category Virtualization
- * @ignore - do not document.
- */
-export const gridOffsetsSelector = createSelector(
-  gridVirtualizationSelector,
-  (state) => state.offsets,
-);
-
-/**
  * Get the render context, with only columns filled in.
  * This is cached, so it can be used to only re-render when the column interval changes.
  * @category Virtualization
@@ -55,9 +45,7 @@ export const gridOffsetsSelector = createSelector(
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
   (state: GridStateCommunity) => state.virtualization.renderContext.firstColumnIndex,
   (state: GridStateCommunity) => state.virtualization.renderContext.lastColumnIndex,
-  (firstColumnIndex, lastColumnIndex): GridRenderContext => ({
-    firstRowIndex: -1,
-    lastRowIndex: -1,
+  (firstColumnIndex, lastColumnIndex): GridColumnsRenderContext => ({
     firstColumnIndex,
     lastColumnIndex,
   }),

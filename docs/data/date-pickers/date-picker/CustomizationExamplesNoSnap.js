@@ -28,7 +28,7 @@ export default function CustomizationExamplesNoSnap() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ mb: 2, width: '100%' }}>
+      <Stack spacing={2} sx={{ mb: 2, width: '100%', px: { xs: 2, sm: 0 } }}>
         <BrandingProvider>
           <ToggleButtonGroup
             value={selectedPicker}

@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
-import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
+import {
+  DateTimePickerViewRenderers,
+  useDateTimePickerDefaultizedProps,
+} from '../DateTimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,7 +38,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+  const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeView, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -277,7 +279,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.

@@ -32,7 +32,7 @@ describe('<DataGridPremium /> - Columns', () => {
             columns={[{ field: 'brand' }]}
             initialState={{ aggregation: { model: { brand: 'size' } } }}
             showCellVerticalBorder
-            rowBuffer={1}
+            rowBufferPx={52}
           />
         </div>,
       );

@@ -30,11 +30,11 @@ export const expectFieldPlaceholderV6 = (
 };
 
 export function expectPickerChangeHandlerValue(
-  type: 'date' | 'date-time' | 'time' | 'date-range',
+  type: 'date' | 'date-time' | 'time' | 'date-range' | 'date-time-range',
   spyCallback: SinonSpy,
   expectedValue: any,
 ) {
-  if (type === 'date-range') {
+  if (['date-range', 'date-time-range'].includes(type)) {
     spyCallback.lastCall.firstArg.forEach((value, index) => {
       expect(value).to.deep.equal(expectedValue[index]);
     });

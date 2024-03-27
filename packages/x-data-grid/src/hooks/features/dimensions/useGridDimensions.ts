@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  unstable_debounce as debounce,
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
@@ -14,6 +13,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -40,6 +40,7 @@ type RootProps = Pick<
   | 'autoHeight'
   | 'getRowHeight'
   | 'rowHeight'
+  | 'resizeThrottleMs'
   | 'columnHeaderHeight'
 >;
 
@@ -89,17 +90,16 @@ export function useGridDimensions(
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
-  // XXX: The `props as any` below is not resilient to change.
-  const hasHeaderFilters = Boolean((props as any).headerFilters);
-  const headersTotalHeight =
-    getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
-    Number(hasHeaderFilters) * headerHeight;
+  const headersTotalHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
-  const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
+  const debouncedSetSavedSize = React.useMemo(
+    () => throttle(setSavedSize, props.resizeThrottleMs),
+    [props.resizeThrottleMs],
+  );
   const previousSize = React.useRef<ElementSize>();
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
@@ -165,8 +165,10 @@ export function useGridDimensions(
     const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
+    const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
+
     const contentSize = {
-      width: columnsTotalWidth,
+      width: nonPinnedColumnsTotalWidth,
       height: rowsMeta.currentPageTotalHeight,
     };
 
@@ -227,7 +229,7 @@ export function useGridDimensions(
     );
 
     const minimumSize = {
-      width: contentSize.width,
+      width: columnsTotalWidth,
       height: topContainerHeight + contentSize.height + bottomContainerHeight,
     };
 
@@ -316,6 +318,7 @@ export function useGridDimensions(
     set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
     set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+    set('--height', `${dimensions.rowHeight}px`);
   }, [root, dimensions]);
 
   const isFirstSizing = React.useRef(true);
