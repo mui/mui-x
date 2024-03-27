@@ -938,7 +938,7 @@ export function computeOffsetLeft(
     factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
 
-  return left;
+  return Math.abs(left);
 }
 
 function directionForDelta(dx: number, dy: number) {
