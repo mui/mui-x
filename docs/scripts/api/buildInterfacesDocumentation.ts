@@ -317,7 +317,15 @@ export default async function buildInterfacesDocumentation(
           planLevel: getPlanLevel(property),
           required: property.required,
         }))
-        .sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => {
+          if ((a.required && b.required) || (!a.required && !b.required)) {
+            return a.name.localeCompare(b.name);
+          }
+          if (a.required) {
+            return -1;
+          }
+          return 1;
+        })
         .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
           content.properties[name] = { type };
           if (defaultValue) {
