@@ -56,31 +56,50 @@ function excludeTest(suite, name) {
   });
 }
 
+const tests = [];
+
 // Also use some of the demos to avoid code duplication.
 const requireDocs = require.context('docsx/data', true, /\.js$/);
-const tests = requireDocs.keys().reduce((res, path) => {
+requireDocs.keys().forEach((path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
-    return res;
+    return;
   }
 
   // TODO: Why does webpack include a key for the absolute and relative path?
   // We just want the relative path
   if (!path.startsWith('./')) {
-    return res;
+    return;
   }
 
-  res.push({
+  tests.push({
     path,
     suite,
     name,
     case: requireDocs(path).default,
   });
+});
 
-  return res;
-}, []);
+const requireRegressions = require.context('./data-grid', true, /\.js$/);
+requireRegressions.keys().forEach((path) => {
+  // "./DataGridRTLVirtualization.js"
+  // "test/regressions/data-grid/DataGridRTLVirtualization.js"
+  if (!path.startsWith('./')) {
+    return;
+  }
+
+  const name = path.replace('./', '').replace('.js', '');
+  const suite = `test-regressions-data-grid`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: requireRegressions(path).default,
+  });
+});
 
 clock.restore();
 
@@ -130,7 +149,9 @@ function App() {
             return null;
           }
 
-          const isDataGridTest = path.indexOf('/docs-data-grid') === 0;
+          const isDataGridTest =
+            path.indexOf('/docs-data-grid') === 0 ||
+            path.indexOf('test-regressions-data-grid') !== -1;
 
           return (
             <Route

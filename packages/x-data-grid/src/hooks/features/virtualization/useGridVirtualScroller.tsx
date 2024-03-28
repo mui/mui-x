@@ -67,6 +67,7 @@ const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 const createScrollCache = (
+  mode: 'ltr' | 'rtl',
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
@@ -74,6 +75,7 @@ const createScrollCache = (
 ) => ({
   direction: ScrollDirection.NONE,
   buffer: bufferForDirection(
+    mode,
     ScrollDirection.NONE,
     rowBufferPx,
     columnBufferPx,
@@ -139,6 +141,7 @@ export const useGridVirtualScroller = () => {
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
     createScrollCache(
+      theme.direction,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
       dimensions.rowHeight * 15,
@@ -243,6 +246,7 @@ export const useGridVirtualScroller = () => {
 
     scrollCache.direction = direction;
     scrollCache.buffer = bufferForDirection(
+      theme.direction,
       direction,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
@@ -938,7 +942,7 @@ export function computeOffsetLeft(
     factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
 
-  return left;
+  return Math.abs(left);
 }
 
 function directionForDelta(dx: number, dy: number) {
@@ -963,12 +967,25 @@ function directionForDelta(dx: number, dy: number) {
 }
 
 function bufferForDirection(
+  mode: 'ltr' | 'rtl',
   direction: ScrollDirection,
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
 ) {
+  if (mode === 'rtl') {
+    switch (direction) {
+      case ScrollDirection.LEFT:
+        direction = ScrollDirection.RIGHT;
+        break;
+      case ScrollDirection.RIGHT:
+        direction = ScrollDirection.LEFT;
+        break;
+      default:
+    }
+  }
+
   switch (direction) {
     case ScrollDirection.NONE:
       return {
