@@ -11,3 +11,7 @@ export interface GridPaginationModel {
    */
   page: number;
 }
+
+export interface GridPaginationMeta {
+  hasNextPage?: boolean;
+}

@@ -33,6 +33,15 @@ export const gridPaginationRowCountSelector = createSelector(
 );
 
 /**
+ * Get the pagination meta
+ * @category Pagination
+ */
+export const gridPaginationMetaSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.meta,
+);
+
+/**
  * Get the index of the page to render if the pagination is enabled
  * @category Pagination
  */
@@ -55,9 +64,10 @@ export const gridPageSizeSelector = createSelector(
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPageSizeSelector,
+  gridPaginationModelSelector,
   gridPaginationRowCountSelector,
-  (pageSize, rowCount) => getPageCount(rowCount, pageSize),
+  (paginationModel, rowCount) =>
+    getPageCount(rowCount, paginationModel.pageSize, paginationModel.page),
 );
 
 /**

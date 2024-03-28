@@ -13,6 +13,14 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
         'Please remove one of these two props.',
       ].join('\n')) ||
     undefined,
+  (props) =>
+    (props.paginationMode === 'client' &&
+      props.paginationMeta != null &&
+      [
+        'MUI X: `paginationMeta` is not used when `paginationMode` is `client`.',
+        'Consider removing the `paginationMeta` prop or switching to `server` mode if your pagination is on server.',
+      ].join('\n')) ||
+    undefined,
 ];
 
 const warnedOnceMap = new Set();

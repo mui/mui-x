@@ -1,13 +1,15 @@
-import { GridPaginationModel } from '../../../models/gridPaginationProps';
+import { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
   rowCount: number;
+  meta: GridPaginationMeta;
 }
 
 export interface GridPaginationInitialState {
   paginationModel?: Partial<GridPaginationModel>;
   rowCount?: number;
+  meta?: GridPaginationMeta;
 }
 
 /**
@@ -43,6 +45,20 @@ export interface GridPaginationRowCountApi {
 }
 
 /**
+ * The pagination meta API interface that is available in the grid `apiRef`.
+ */
+export interface GridPaginationMetaApi {
+  /**
+   * Sets the `paginationMeta` to a new value.
+   * @param {GridPaginationMeta} paginationMeta The new pagination meta value.
+   */
+  setPaginationMeta: (paginationMeta: GridPaginationMeta) => void;
+}
+
+/**
  * The pagination API interface that is available in the grid `apiRef`.
  */
-export interface GridPaginationApi extends GridPaginationModelApi, GridPaginationRowCountApi {}
+export interface GridPaginationApi
+  extends GridPaginationModelApi,
+    GridPaginationRowCountApi,
+    GridPaginationMetaApi {}

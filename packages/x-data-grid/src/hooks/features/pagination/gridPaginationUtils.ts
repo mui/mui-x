@@ -6,9 +6,13 @@ const MAX_PAGE_SIZE = 100;
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
-export const getPageCount = (rowCount: number, pageSize: number): number => {
+export const getPageCount = (rowCount: number, pageSize: number, page: number): number => {
   if (pageSize > 0 && rowCount > 0) {
     return Math.ceil(rowCount / pageSize);
+  }
+
+  if (rowCount === -1) {
+    return page + 1;
   }
 
   return 0;

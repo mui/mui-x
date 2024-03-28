@@ -312,6 +312,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridPaginationMetaSelector",
+    "returnType": "GridPaginationMeta",
+    "category": "Pagination",
+    "description": "Get the pagination meta",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridPaginationModelSelector",
     "returnType": "GridPaginationModel",
     "category": "Pagination",
