@@ -52,12 +52,14 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
+<!-- #default-branch-switch -->
+
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
 // Target Data Grid as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -105,7 +107,7 @@ And are removed from the v7.
 If not already done, this modification can be handled by the codemod
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/ <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/ <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
