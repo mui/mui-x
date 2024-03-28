@@ -196,7 +196,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
-      setSelectedSections(null);
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;

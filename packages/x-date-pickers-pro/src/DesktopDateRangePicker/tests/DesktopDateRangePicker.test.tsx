@@ -5,12 +5,14 @@ import { screen, fireEvent, userEvent, act, getByRole } from '@mui-internal/test
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
   adapterToUse,
   AdapterClassToUse,
   openPicker,
   getFieldSectionsContainer,
+  getTextbox,
 } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -85,6 +87,33 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(screen.queryByText('Início')).not.to.equal(null);
     expect(screen.queryByText('Fim')).not.to.equal(null);
+  });
+
+  describe('Field slot: SingleInputDateRangeField', () => {
+    it('should add focused class to the field when it is focused', () => {
+      // test v7 behavior
+      const response = render(
+        <DesktopDateRangePicker
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+
+      const sectionsContainer = getFieldSectionsContainer();
+      act(() => sectionsContainer.focus());
+
+      expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
+
+      response.unmount();
+
+      // test v6 behavior
+      render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
+
+      const input = getTextbox();
+      act(() => input.focus());
+
+      expect(input.parentElement).to.have.class('Mui-focused');
+    });
   });
 
   describe('Component slot: Popper', () => {

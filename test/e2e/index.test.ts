@@ -803,6 +803,52 @@ async function initializeEnvironment(
 
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
+
+      it('should have the same selection process when "readOnly" with single input v7 field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV7');
+
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/11/2022 – 04/13/2022',
+        );
+      });
+
+      it('should have the same selection process when "readOnly" with single input v6 field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV6');
+
+        await page.getByRole('textbox').click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
+      });
     });
   });
 });
