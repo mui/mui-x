@@ -56,7 +56,7 @@
     "build:codesandbox": "yarn release:build",
     "install:codesandbox": "yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog.mjs",
-    "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private --ignore @mui/x-tree-view-pro",
+    "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
