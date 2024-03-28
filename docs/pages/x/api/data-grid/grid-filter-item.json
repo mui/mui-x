@@ -7,9 +7,9 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
   "properties": {
-    "field": { "type": { "description": "string" } },
-    "id": { "type": { "description": "number | string" }, "isOptional": true },
-    "operator": { "type": { "description": "string" } },
-    "value": { "type": { "description": "any" }, "isOptional": true }
+    "field": { "type": { "description": "string" }, "required": true },
+    "operator": { "type": { "description": "string" }, "required": true },
+    "id": { "type": { "description": "number | string" } },
+    "value": { "type": { "description": "any" } }
   }
 }

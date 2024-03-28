@@ -7,7 +7,7 @@
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
     "deleteFilterItem": {
-      "description": "Deletes a &lt;a href=&quot;/x/api/data-grid/grid-filter-item/&quot;&gt;GridFilterItem&lt;/a&gt;."
+      "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
     "exportDataAsCsv": { "description": "Downloads and exports a CSV of the grid&#39;s data." },
     "exportDataAsExcel": {
@@ -21,7 +21,7 @@
       "description": "Forces the grid to rerender. It&#39;s often used after a state update."
     },
     "getAllColumns": {
-      "description": "Returns an array of &lt;a href=&quot;/x/api/data-grid/grid-col-def/&quot;&gt;GridColDef&lt;/a&gt; containing all the column definitions."
+      "description": "Returns an array of <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> containing all the column definitions."
     },
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
@@ -30,7 +30,7 @@
     },
     "getCellMode": { "description": "Gets the mode of a cell." },
     "getCellParams": {
-      "description": "Gets the &lt;a href=&quot;/x/api/data-grid/grid-cell-params/&quot;&gt;GridCellParams&lt;/a&gt; object that is passed as argument in events."
+      "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events."
     },
     "getCellSelectionModel": {
       "description": "Returns an object containing the selection state of the cells.<br />The keys of the object correpond to the row IDs.<br />The value of each key is another object whose keys are the fields and values are the selection state."
@@ -39,7 +39,7 @@
       "description": "Gets the value of a cell at the given <code>id</code> and <code>field</code>."
     },
     "getColumn": {
-      "description": "Returns the &lt;a href=&quot;/x/api/data-grid/grid-col-def/&quot;&gt;GridColDef&lt;/a&gt; for the given <code>field</code>."
+      "description": "Returns the <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> for the given <code>field</code>."
     },
     "getColumnGroupPath": {
       "description": "Returns the id of the groups leading to the requested column.<br />The array is ordered by increasing depth (the last element is the direct parent of the column)."
@@ -89,7 +89,7 @@
     },
     "getRowNode": { "description": "Gets the row node from the internal tree structure." },
     "getRowParams": {
-      "description": "Gets the &lt;a href=&quot;/x/api/data-grid/grid-row-params/&quot;&gt;GridRowParams&lt;/a&gt; object that is passed as argument in events."
+      "description": "Gets the <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object that is passed as argument in events."
     },
     "getRowsCount": { "description": "Gets the total number of rows in the grid." },
     "getRowWithUpdatedValues": {
@@ -248,10 +248,10 @@
     },
     "updateRows": { "description": "Allows to update, insert and delete rows." },
     "upsertFilterItem": {
-      "description": "Updates or inserts a &lt;a href=&quot;/x/api/data-grid/grid-filter-item/&quot;&gt;GridFilterItem&lt;/a&gt;."
+      "description": "Updates or inserts a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
     "upsertFilterItems": {
-      "description": "Updates or inserts many &lt;a href=&quot;/x/api/data-grid/grid-filter-item/&quot;&gt;GridFilterItem&lt;/a&gt;."
+      "description": "Updates or inserts many <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     }
   }
 }

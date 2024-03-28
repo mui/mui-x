@@ -7,26 +7,18 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
   "properties": {
-    "getApplyFilterFn": { "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" } },
+    "getApplyFilterFn": {
+      "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" },
+      "required": true
+    },
+    "value": { "type": { "description": "string" }, "required": true },
     "getValueAsString": {
-      "type": { "description": "(value: GridFilterItem['value']) =&gt; string" },
-      "isOptional": true
+      "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
     },
-    "headerLabel": { "type": { "description": "string" }, "isOptional": true },
-    "InputComponent": {
-      "type": { "description": "React.JSXElementConstructor&lt;any&gt;" },
-      "isOptional": true
-    },
-    "InputComponentProps": {
-      "type": { "description": "Record&lt;string, any&gt;" },
-      "isOptional": true
-    },
-    "label": { "type": { "description": "string" }, "isOptional": true },
-    "requiresFilterValue": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isOptional": true
-    },
-    "value": { "type": { "description": "string" } }
+    "headerLabel": { "type": { "description": "string" } },
+    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;any&gt;" } },
+    "InputComponentProps": { "type": { "description": "Record&lt;string, any&gt;" } },
+    "label": { "type": { "description": "string" } },
+    "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
   }
 }

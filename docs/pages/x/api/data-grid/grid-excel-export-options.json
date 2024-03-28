@@ -6,61 +6,42 @@
     "allColumns": {
       "type": { "description": "boolean" },
       "default": "false",
-      "isOptional": true,
       "isPremiumPlan": true
     },
-    "columnsStyles": {
-      "type": { "description": "ColumnsStylesInterface" },
-      "isOptional": true,
-      "isPremiumPlan": true
-    },
+    "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
     "exceljsPostProcess": {
       "type": {
         "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
       },
-      "isOptional": true,
       "isPremiumPlan": true
     },
     "exceljsPreProcess": {
       "type": {
         "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
       },
-      "isOptional": true,
       "isPremiumPlan": true
     },
-    "fields": { "type": { "description": "string[]" }, "isOptional": true, "isPremiumPlan": true },
+    "fields": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "fileName": {
       "type": { "description": "string" },
       "default": "`document.title`",
-      "isOptional": true,
       "isPremiumPlan": true
     },
     "getRowsToExport": {
       "type": { "description": "(params: GridGetRowsToExportParams&lt;Api&gt;) =&gt; GridRowId[]" },
-      "isOptional": true,
       "isPremiumPlan": true
     },
     "includeColumnGroupsHeaders": {
       "type": { "description": "boolean" },
       "default": "true",
-      "isOptional": true,
       "isPremiumPlan": true
     },
     "includeHeaders": {
       "type": { "description": "boolean" },
       "default": "true",
-      "isOptional": true,
       "isPremiumPlan": true
     },
-    "valueOptionsSheetName": {
-      "type": { "description": "string" },
-      "isOptional": true,
-      "isPremiumPlan": true
-    },
-    "worker": {
-      "type": { "description": "() =&gt; Worker" },
-      "isOptional": true,
-      "isPremiumPlan": true
-    }
+    "valueOptionsSheetName": { "type": { "description": "string" }, "isPremiumPlan": true },
+    "worker": { "type": { "description": "() =&gt; Worker" }, "isPremiumPlan": true }
   }
 }

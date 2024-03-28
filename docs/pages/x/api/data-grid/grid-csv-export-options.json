@@ -7,28 +7,15 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/export/#csv-export\">CSV export</a></li></ul>",
   "properties": {
-    "allColumns": { "type": { "description": "boolean" }, "default": "false", "isOptional": true },
-    "delimiter": { "type": { "description": "string" }, "default": "','", "isOptional": true },
-    "fields": { "type": { "description": "string[]" }, "isOptional": true },
-    "fileName": {
-      "type": { "description": "string" },
-      "default": "`document.title`",
-      "isOptional": true
-    },
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "delimiter": { "type": { "description": "string" }, "default": "','" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "`document.title`" },
     "getRowsToExport": {
-      "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" },
-      "isOptional": true
+      "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" }
     },
-    "includeColumnGroupsHeaders": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isOptional": true
-    },
-    "includeHeaders": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isOptional": true
-    },
-    "utf8WithBom": { "type": { "description": "boolean" }, "default": "false", "isOptional": true }
+    "includeColumnGroupsHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "utf8WithBom": { "type": { "description": "boolean" }, "default": "false" }
   }
 }
