@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.1
+_Mar 28, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Fix tooltip causing PieChart to crash on data change (#12571) @Rishi556
+- 🌍 Improve Chinese (Hong Kong) (zh-HK) and Italian (it-IT) locale for the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.0.1`
+
+- [DataGrid] Add `resizeThrottleMs` prop (#12556) @romgrk
+- [DataGrid] Do not publish `rowEditStop` event if row has fields with errors (#11383) @cherniavskii
+- [DataGrid] Fix bug in suspense (#12553) @romgrk
+- [DataGrid] Fix missing class name in the `GridToolbarQuickFilter` component (#12484) @jhawkins11
+- [l10n] Improve Chinese (Hong Kong) (zh-HK) locale (#12547) @samchiu90
+- [l10n] Improve Italian (it-IT) locale (#12549) @antomanc
+
+#### `@mui/x-data-grid-pro@7.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.0.1`.
+
+#### `@mui/x-data-grid-premium@7.0.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.0.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.0.1`
+
+- [pickers] Prepare compatibility with `@mui/zero-runtime` (stop using `ownerState` in `styled`) (#12003) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.0.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.0.1`
+
+- [charts] Fix tooltip causing crash on data change (#12571) @Rishi556
+
+### Tree View
+
+#### `@mui/x-tree-view@7.0.1`
+
+- [TreeView] Do not use outdated version of the state to compute new label first char in `RichTreeView` (#12512) @flaviendelangle
+
+### Docs
+
+- [docs] Add example to add a second icon next to the field's opening button (#12524) @flaviendelangle
+- [docs] Add missing note to Data Grid migration guide (#12557) @romgrk
+- [docs] Chart title for SEO (#12545) @oliviertassinari
+- [docs] Fix small typo (#12558) @diogoparente
+- [docs] Reduce noise in migration docs side navigation (#12552) @cherniavskii
+- [docs] Sync static images from core repository (#12525) @LukasTy
+
+### Core
+
+- [core] Fix `l10n` script on Windows (#12550) @LukasTy
+- [core] Include `DateTimeRangePicker` tag in `releaseChangelog` (#12526) @LukasTy
+- [core] Upgrade monorepo (#12536) @cherniavskii
+
 ## v7.0.0
 
 _Mar 22, 2024_
