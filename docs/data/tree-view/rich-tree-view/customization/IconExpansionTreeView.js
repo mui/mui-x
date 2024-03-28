@@ -1,9 +1,9 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItemState } from '@mui/x-tree-view/TreeItem';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
+
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const ITEMS = [
   {
@@ -25,65 +25,30 @@ const ITEMS = [
   },
 ];
 
-const CustomContent = React.forwardRef(function CustomContent(props, ref) {
-  const {
-    classes,
-    className,
-    label,
-    itemId,
-    icon: iconProp,
-    expansionIcon,
-    displayIcon,
-  } = props;
+const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
+  const { interactions } = useTreeItem2Utils({
+    itemId: props.itemId,
+    children: props.children,
+  });
 
-  const {
-    disabled,
-    expanded,
-    selected,
-    focused,
-    handleExpansion,
-    handleSelection,
-    preventSelection,
-  } = useTreeItemState(itemId);
-
-  const icon = iconProp || expansionIcon || displayIcon;
-
-  const handleMouseDown = (event) => {
-    preventSelection(event);
+  const handleContentClick = (event) => {
+    event.defaultMuiPrevented = true;
+    interactions.handleSelection(event);
   };
 
-  const handleExpansionClick = (event) => {
-    handleExpansion(event);
-  };
-
-  const handleSelectionClick = (event) => {
-    handleSelection(event);
+  const handleIconContainerClick = (event) => {
+    interactions.handleExpansion(event);
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      className={clsx(className, classes.root, {
-        [classes.expanded]: expanded,
-        [classes.selected]: selected,
-        [classes.focused]: focused,
-        [classes.disabled]: disabled,
-      })}
-      onMouseDown={handleMouseDown}
+    <TreeItem2
+      {...props}
       ref={ref}
-    >
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div onClick={handleExpansionClick} className={classes.iconContainer}>
-        {icon}
-      </div>
-      <Typography
-        onClick={handleSelectionClick}
-        component="div"
-        className={classes.label}
-      >
-        {label}
-      </Typography>
-    </div>
+      slotProps={{
+        content: { onClick: handleContentClick },
+        iconContainer: { onClick: handleIconContainerClick },
+      }}
+    />
   );
 });
 
@@ -93,7 +58,7 @@ export default function IconExpansionTreeView() {
       <RichTreeView
         aria-label="icon expansion"
         items={ITEMS}
-        slotProps={{ item: { ContentComponent: CustomContent } }}
+        slots={{ item: CustomTreeItem }}
       />
     </Box>
   );
