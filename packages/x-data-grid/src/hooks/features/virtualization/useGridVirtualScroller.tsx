@@ -978,10 +978,10 @@ function bufferForDirection(
     switch (direction) {
       case ScrollDirection.LEFT:
         direction = ScrollDirection.RIGHT;
-        break
+        break;
       case ScrollDirection.RIGHT:
         direction = ScrollDirection.LEFT;
-        break
+        break;
       default:
     }
   }
