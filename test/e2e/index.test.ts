@@ -563,9 +563,9 @@ async function initializeEnvironment(
           await page.locator(`.${pickersSectionListClasses.root}`).click();
           await input.fill('02/12/2020');
 
-          expect(await page.getByRole('button', { name: /Choose date/ }).getAttribute('aria-label')).to.equal(
-            'Choose date, selected date is Feb 12, 2020',
-          );
+          expect(
+            await page.getByRole('button', { name: /Choose date/ }).getAttribute('aria-label'),
+          ).to.equal('Choose date, selected date is Feb 12, 2020');
         });
 
         it('should allow pasting a section', async () => {
