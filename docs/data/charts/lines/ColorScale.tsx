@@ -3,6 +3,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+// @ts-ignore
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 export default function ColorScale() {
