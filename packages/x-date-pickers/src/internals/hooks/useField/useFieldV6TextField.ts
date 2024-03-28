@@ -80,7 +80,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
-    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },
+    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp, autoComplete },
     internalProps: { readOnly = false },
     parsedSelectedSections,
     activeSectionIndex,
@@ -439,7 +439,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       enableAccessibleFieldDOMStructure: false,
       placeholder,
       inputMode,
-      autoComplete: 'off',
+      autoComplete: autoComplete ?? 'off',
       value: shouldShowPlaceholder ? '' : valueStr,
       onChange: handleInputChange,
     },

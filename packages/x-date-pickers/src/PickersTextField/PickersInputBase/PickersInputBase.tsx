@@ -213,6 +213,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     inputProps,
     inputRef,
     sectionListRef,
+    autoComplete,
     ...other
   } = props;
 
@@ -319,6 +320,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         : null}
       <PickersInputBaseInput
         name={name}
+        autoComplete={autoComplete}
         className={classes.input}
         value={value}
         onChange={onChange}

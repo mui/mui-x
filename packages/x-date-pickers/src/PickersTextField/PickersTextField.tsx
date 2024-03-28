@@ -64,6 +64,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     variant = 'outlined',
     required = false,
     // Props used by PickersInput
+    autoComplete,
     InputProps,
     inputProps,
     inputRef,
@@ -156,6 +157,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         name={name}
         role="group"
         aria-labelledby={inputLabelId}
+        autoComplete={autoComplete}
         {...InputProps}
       />
       {helperText && (
