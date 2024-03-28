@@ -170,6 +170,7 @@ export interface UseFieldV6ForwardedProps {
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  placeholder?: string;
 }
 
 interface UseFieldV6AdditionalProps

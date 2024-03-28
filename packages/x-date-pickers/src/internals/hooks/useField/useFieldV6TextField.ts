@@ -80,7 +80,14 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
-    forwardedProps: { onFocus, onClick, onPaste, onBlur, inputRef: inputRefProp },
+    forwardedProps: {
+      onFocus,
+      onClick,
+      onPaste,
+      onBlur,
+      inputRef: inputRefProp,
+      placeholder: inPlaceholder,
+    },
     internalProps: { readOnly = false },
     parsedSelectedSections,
     activeSectionIndex,
@@ -189,7 +196,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
-      setSelectedSections(null);
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
@@ -381,15 +387,24 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     applyCharacterEditing({ keyPressed, sectionIndex: activeSectionIndex });
   });
 
-  const placeholder = React.useMemo(
-    () =>
-      fieldValueManager.getV6InputValueFromSections(
-        getSectionsFromValue(valueManager.emptyValue),
-        localizedDigits,
-        isRTL,
-      ),
-    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, localizedDigits, isRTL],
-  );
+  const placeholder = React.useMemo(() => {
+    if (inPlaceholder) {
+      return inPlaceholder;
+    }
+
+    return fieldValueManager.getV6InputValueFromSections(
+      getSectionsFromValue(valueManager.emptyValue),
+      localizedDigits,
+      isRTL,
+    );
+  }, [
+    inPlaceholder,
+    fieldValueManager,
+    getSectionsFromValue,
+    valueManager.emptyValue,
+    localizedDigits,
+    isRTL,
+  ]);
 
   const valueStr = React.useMemo(
     () =>
