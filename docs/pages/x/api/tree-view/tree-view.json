@@ -64,8 +64,7 @@
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
-    "import { TreeView } from '@mui/x-tree-view';",
-    "import { TreeView } from '@mui/x-tree-view-pro';"
+    "import { TreeView } from '@mui/x-tree-view';"
   ],
   "slots": [
     {

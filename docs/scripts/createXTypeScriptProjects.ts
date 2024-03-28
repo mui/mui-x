@@ -265,23 +265,24 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  projects.set(
-    'x-tree-view-pro',
-    createXTypeScriptProject({
-      name: 'x-tree-view-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
-      entryPointPath: 'src/index.ts',
-      documentationFolderName: 'tree-view',
-      getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src'],
-        includeUnstableComponents: true,
-      }),
-      getComponentsWithApiDoc: getComponentPaths({
-        folders: ['src'],
-        includeUnstableComponents: true,
-      }),
-    }),
-  );
+  // TODO x-tree-view-pro uncomment when making the package public
+  // projects.set(
+  //   'x-tree-view-pro',
+  //   createXTypeScriptProject({
+  //     name: 'x-tree-view-pro',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
+  //     entryPointPath: 'src/index.ts',
+  //     documentationFolderName: 'tree-view',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //   }),
+  // );
 
   return projects;
 };
