@@ -158,6 +158,7 @@ export default function ApiPage(props) {
           titleHash="properties"
           defaultLayout={defaultLayout}
           layoutStorageKey={layoutStorageKey.props}
+          showOptionalAbbr
         />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
