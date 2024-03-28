@@ -1,4 +1,4 @@
-export interface ContinuouseColorConfig<V = number | Date> {
+export interface ContinuousColorConfig<V = number | Date> {
   type: 'continuous';
   /**
    * The minimal value of the color scale.

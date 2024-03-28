@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { interpolateDate, interpolateNumber } from 'd3-interpolate';
-import { ContinuouseColorConfig } from '../../../models/colorMapping';
+import { ContinuousColorConfig } from '../../../models/colorMapping';
 
 const PX_PRECISION = 10;
 
-type ChartsContinuouseGradientProps = {
+type ChartsContinuousGradientProps = {
   isReveresed?: boolean;
   gradientId: string;
   size: number;
   direction: 'x' | 'y';
   scale: (value: any) => number | undefined;
-  colorMap: ContinuouseColorConfig;
+  colorMap: ContinuousColorConfig;
   colorScale: (value: any) => string | null;
 };
 
-export default function ChartsContinuouseGradient(props: ChartsContinuouseGradientProps) {
+export default function ChartsContinuousGradient(props: ChartsContinuousGradientProps) {
   const { isReveresed, gradientId, size, direction, scale, colorScale, colorMap } = props;
 
   const extremValues = [colorMap.min ?? 0, colorMap.max ?? 100] as [number, number] | [Date, Date];

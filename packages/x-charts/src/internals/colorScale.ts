@@ -1,12 +1,12 @@
 import { scaleOrdinal, scaleThreshold, scaleSequential, ScaleOrdinal } from 'd3-scale';
 import {
-  ContinuouseColorConfig,
+  ContinuousColorConfig,
   PiecewiseColorConfig,
   OrdinalColorConfig,
 } from '../models/colorMapping';
 
 export function getSequentialColorScale<V extends number | Date>(
-  config: ContinuouseColorConfig<V> | PiecewiseColorConfig<V>,
+  config: ContinuousColorConfig<V> | PiecewiseColorConfig<V>,
 ) {
   if (config.type === 'piecewise') {
     return scaleThreshold(config.thresholds, config.colors);
@@ -28,7 +28,7 @@ export function getOrdinalColorScale<V extends number | Date | string>(
 }
 
 export function getColorScale(
-  config: ContinuouseColorConfig | PiecewiseColorConfig | OrdinalColorConfig,
+  config: ContinuousColorConfig | PiecewiseColorConfig | OrdinalColorConfig,
 ) {
   return config.type === 'ordinal' ? getOrdinalColorScale(config) : getSequentialColorScale(config);
 }

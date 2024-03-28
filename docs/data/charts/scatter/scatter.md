@@ -58,11 +58,13 @@ Otherwise, the click behavior will be the same as defined in the [interaction se
 Like other charts, you can modify the [series color](/x/react-charts/styling/#colors) by using series color, or some color palette.
 
 You can also modify color by using axes `colorMap` which maps values to colors.
-Scatter charts use by priority:
+The scatter charts use by priority:
 
 1. The y-axis color
 2. The x-axis color
 3. The series color
+
+You can find additional information about those `colorMap` properties in the [styling page](/x/react-charts/styling/#values-color).
 
 {{"demo": "ColorScale.js"}}
 

@@ -96,6 +96,8 @@ Scatter charts use by priority:
 2. The band axis color
 3. The series color
 
+You can find additional information about those `colorMap` properties in the [styling page](/x/react-charts/styling/#values-color).
+
 {{"demo": "ColorScale.js"}}
 
 ## Click event

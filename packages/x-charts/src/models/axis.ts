@@ -12,7 +12,7 @@ import type {
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
-import { ContinuouseColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export type AxisId = string | number;
 
@@ -28,7 +28,7 @@ export type D3Scale<
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
-export type D3ContinuouseScale<Range = number, Output = number> =
+export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
@@ -157,7 +157,7 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
 }
 
 export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
-export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 interface AxisScaleConfig {
   band: {
@@ -175,42 +175,42 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
-    colorMap?: OrdinalColorConfig | ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
-    colorMap?: OrdinalColorConfig | ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   };
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   pow: {
     scaleType: 'pow';
     scale: ScalePower<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
     scale: ScalePower<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
     scale: ScaleTime<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
     scale: ScaleTime<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
     scale: ScaleLinear<number, number>;
-    colorMap?: ContinuouseColorConfig | PiecewiseColorConfig;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
 }
 

@@ -42,6 +42,67 @@ Here is an example of the d3 Categorical color palette.
 
 {{"demo": "ColorTemplate.js"}}
 
+### Values color
+
+Colors can also be set according to item values.
+To do so, use the `colorMap` property of the corresponding axis.
+
+For demonstration, you can refer to the chart specific pages:
+
+- [bar chart](/x/react-charts/bars/#color-scale)
+- [line chart](/x/react-charts/lines/#color-scale)
+- [scatter chart](/x/react-charts/scatter/#color-scale)
+
+The `colorMap` property can accept three kind of objects defined bellow
+
+#### Piecewise color map
+
+The piecewise configuration takes an array of N `thresholds` values, and N+1 `colors`.
+
+```ts
+{
+  type: 'piecewise';
+  thresholds: V[];
+  colors: string[];
+}
+```
+
+#### Continuous color map
+
+The continuous configuration allows to map values from `min` to `max` properties, to it's color.
+
+The `color` property can either be an array of two colors to interpolate.
+Or directly an interpolation function that for a number `t` between 0 and 1 returns a color.
+The [d3-scale-chromatic](https://d3js.org/d3-scale-chromatic) offers a lot of those functions.
+
+```ts
+{
+  type: 'continuous';
+  min?: V;
+  max?: V;
+  color: [string, string] | ((t: number) => string);
+}
+```
+
+#### Ordinal color map
+
+This configuration takes two properties: `values` and `colors`.
+And will result in a mapping of those values to the colors.
+
+If a value is not defined, it will fall back to the `unknownColor`.
+Which fall back on the series color if undefined.
+
+This configuration can be used in bar charts to set colors according to string categories.
+
+```ts
+{
+  type: 'ordinal';
+  values: V[];
+  colors: string[];
+  unknownColor?: string;
+}
+```
+
 ## Styling
 
 ### Size

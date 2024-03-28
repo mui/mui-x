@@ -100,7 +100,7 @@ const useAggregatedData = (): CompletedBarData[] => {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
       let baseScaleConfig: AxisDefaultized<'band'>;
-      // let valueScaleConfig: AxisDefaultized<ContinuouseScaleName>;
+      // let valueScaleConfig: AxisDefaultized<ContinuousScaleName>;
       if (verticalLayout) {
         if (!isBandScaleConfig(xAxisConfig)) {
           throw new Error(
@@ -127,10 +127,10 @@ const useAggregatedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud be a continuouse type to display the bar series of id "${seriesId}".`,
+            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
           );
         }
-        // valueScaleConfig = yAxisConfig as AxisDefaultized<ContinuouseScaleName>;
+        // valueScaleConfig = yAxisConfig as AxisDefaultized<ContinuousScaleName>;
       } else {
         if (!isBandScaleConfig(yAxisConfig)) {
           throw new Error(
@@ -158,7 +158,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud be a continuouse type to display the bar series of id "${seriesId}".`,
+            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
           );
         }
       }

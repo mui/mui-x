@@ -3,7 +3,7 @@ import { CartesianContext } from '../../../context/CartesianContextProvider';
 import { DrawingContext } from '../../../context/DrawingProvider';
 import { useDrawingArea } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
-import ChartsContinuouseGradient from './ChartsContinuouseGradient';
+import ChartsContinuousGradient from './ChartsContinuousGradient';
 
 export function useChartGradient() {
   const { chartId } = React.useContext(DrawingContext);
@@ -42,7 +42,7 @@ export function ChartsAxesGradients() {
           }
           if (colorMap?.type === 'continuous') {
             return (
-              <ChartsContinuouseGradient
+              <ChartsContinuousGradient
                 isReveresed={!reverse}
                 scale={scale}
                 colorScale={colorScale!}
@@ -74,7 +74,7 @@ export function ChartsAxesGradients() {
           }
           if (colorMap?.type === 'continuous') {
             return (
-              <ChartsContinuouseGradient
+              <ChartsContinuousGradient
                 isReveresed={reverse}
                 scale={scale}
                 colorScale={colorScale!}

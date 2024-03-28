@@ -13,7 +13,7 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../ChartsAxis/ChartsAxisGradient';
+import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
