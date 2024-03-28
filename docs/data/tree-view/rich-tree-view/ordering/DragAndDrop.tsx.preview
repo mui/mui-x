@@ -1,0 +1,6 @@
+<RichTreeView
+  items={ITEMS}
+  slots={{ item: TreeItem2 }}
+  itemsReordering
+  defaultExpandedItems={['grid', 'pickers']}
+/>

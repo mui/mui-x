@@ -12,9 +12,10 @@ export interface UseTreeViewItemsInstance<R extends {}> {
   getNode: (itemId: string) => TreeViewNode;
   getItem: (itemId: string) => R;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (itemId: string | null) => string[];
+  getItemChildren: (itemId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
   isItemDisabled: (itemId: string | null) => itemId is string;
+  moveItem: (nodeId: TreeViewItemId, newParent: string | null, newIndex: number) => void;
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
@@ -29,9 +30,9 @@ export interface UseTreeViewItemsInstance<R extends {}> {
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}>
-  extends Pick<UseTreeViewItemsInstance<R>, 'getItem'> {}
+  extends Pick<UseTreeViewItemsInstance<R>, 'getItem' | 'getItemChildren'> {}
 
-export interface UseTreeViewItemsParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -65,7 +66,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   getItemId?: (item: R) => TreeViewItemId;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable'
 >;
@@ -83,7 +84,7 @@ export interface TreeViewItemIdAndChildren {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    nodeTree: TreeViewItemIdAndChildren[];
+    nodeTree: TreeViewNodeTree;
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
   };
@@ -103,5 +104,7 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
 }>;
 
 export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
+
+export type TreeViewNodeTree = { [nodeId: string]: TreeViewItemId[] };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };

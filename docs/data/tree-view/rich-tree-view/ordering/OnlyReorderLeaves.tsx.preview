@@ -1,0 +1,10 @@
+<RichTreeView
+  items={ITEMS}
+  slots={{ item: TreeItem2 }}
+  itemsReordering
+  apiRef={apiRef}
+  isItemReorderable={(itemId) =>
+    apiRef.current!.getItemChildren(itemId).length === 0
+  }
+  defaultExpandedItems={['grid', 'pickers']}
+/>

@@ -1,0 +1,9 @@
+<RichTreeView
+  items={ITEMS}
+  slots={{ item: TreeItem2 }}
+  itemsReordering
+  defaultExpandedItems={['grid', 'pickers']}
+  canMoveItemToNewPosition={(params) =>
+    params.oldPosition.parentId === params.newPosition.parentId
+  }
+/>

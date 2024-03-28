@@ -153,8 +153,18 @@ RichTreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      getItemChildren: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * Used to determine if a given item can move to some new position.
+   * @param {object} params The params describing the item re-ordering.
+   * @param {string} params.itemId The id of the item to check.
+   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @returns {boolean} `true` if the item can move to the new position.
+   */
+  canMoveItemToNewPosition: PropTypes.func,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -217,7 +227,19 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,
+  /**
+   * Used to determine if a given item can be reordered.
+   * @param {string} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item can be reordered.
+   * @default () => true
+   */
+  isItemReorderable: PropTypes.func,
   items: PropTypes.array.isRequired,
+  /**
+   * If `true`, the reordering of items is enabled.
+   * @default false
+   */
+  itemsReordering: PropTypes.bool,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false

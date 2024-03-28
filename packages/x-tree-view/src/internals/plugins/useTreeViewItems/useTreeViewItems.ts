@@ -5,12 +5,13 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   TreeViewNodeMap,
-  TreeViewItemIdAndChildren,
   UseTreeViewItemsState,
+  TreeViewNodeTree,
   TreeViewItemMap,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import { moveItemInTree, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
 const updateItemsState = ({
   items,
@@ -23,12 +24,9 @@ const updateItemsState = ({
 >): UseTreeViewItemsState<any>['items'] => {
   const nodeMap: TreeViewNodeMap = {};
   const itemMap: TreeViewItemMap<any> = {};
+  const nodeTree: TreeViewNodeTree = { [TREE_VIEW_ROOT_PARENT_ID]: [] };
 
-  const processItem = (
-    item: TreeViewBaseItem,
-    index: number,
-    parentId: string | null,
-  ): TreeViewItemIdAndChildren => {
+  const processItem = (item: TreeViewBaseItem, index: number, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -75,14 +73,13 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
+    nodeTree[parentId ?? TREE_VIEW_ROOT_PARENT_ID].push(id);
+    nodeTree[id] = [];
 
-    return {
-      id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
-    };
+    item.children?.forEach((child, childIndex) => processItem(child, childIndex, id));
   };
 
-  const nodeTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  items.forEach((item, itemIndex) => processItem(item, itemIndex, null));
 
   return {
     nodeMap,
@@ -137,7 +134,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = React.useCallback(
+  const getItemChildren = React.useCallback(
     (itemId: string | null) =>
       Object.values(state.items.nodeMap)
         .filter((item) => item.parentId === itemId)
@@ -146,8 +143,18 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [state.items.nodeMap],
   );
 
+  const moveItem = React.useCallback(
+    (nodeToMoveId: TreeViewItemId, newParentId: TreeViewItemId | null, newIndex: number) => {
+      setState((prevState) => ({
+        ...prevState,
+        items: moveItemInTree({ nodeToMoveId, prevState: prevState.items, newParentId, newIndex }),
+      }));
+    },
+    [setState],
+  );
+
   const getNavigableChildrenIds = (itemId: string | null) => {
-    let childrenIds = instance.getChildrenIds(itemId);
+    let childrenIds = instance.getItemChildren(itemId);
 
     if (!params.disabledItemsFocusable) {
       childrenIds = childrenIds.filter((item) => !instance.isItemDisabled(item));
@@ -192,36 +199,37 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getItemsToRender = () => {
-    const getPropsFromItemId = ({
-      id,
-      children,
-    }: TreeViewItemIdAndChildren): ReturnType<typeof instance.getItemsToRender>[number] => {
+  const getItemsToRender = React.useCallback(() => {
+    const getPropsFromItemId = (
+      id: TreeViewItemId,
+    ): ReturnType<typeof instance.getItemsToRender>[number] => {
       const item = state.items.nodeMap[id];
       return {
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: children?.map(getPropsFromItemId),
+        children: state.items.nodeTree[id].map(getPropsFromItemId),
       };
     };
 
-    return state.items.nodeTree.map(getPropsFromItemId);
-  };
+    return state.items.nodeTree[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
+  }, [instance, state.items.nodeMap, state.items.nodeTree]);
 
   populateInstance<UseTreeViewItemsSignature>(instance, {
     getNode,
     getItem,
     getItemsToRender,
-    getChildrenIds,
+    getItemChildren,
     getNavigableChildrenIds,
     isItemDisabled,
+    moveItem,
     preventItemUpdates,
     areItemUpdatesPrevented,
   });
 
   populatePublicAPI<UseTreeViewItemsSignature>(publicAPI, {
     getItem,
+    getItemChildren,
   });
 
   return {

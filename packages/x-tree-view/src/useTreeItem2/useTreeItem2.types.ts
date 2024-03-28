@@ -40,6 +40,11 @@ export interface UseTreeItem2RootSlotOwnProps {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
+
+  // Drag & drop props
+  draggable?: boolean;
+  onDragStart?: MuiCancellableEventHandler<React.DragEvent>;
+  onDragEnd?: MuiCancellableEventHandler<React.DragEvent>;
 }
 
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &

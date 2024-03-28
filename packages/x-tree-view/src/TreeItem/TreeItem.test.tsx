@@ -24,6 +24,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   publicAPI: {
     focusItem: () => {},
     getItem: () => ({}),
+    getItemChildren: () => [],
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
   wrapItem: ({ children }) => children,
