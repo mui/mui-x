@@ -67,7 +67,7 @@ export default function DataGridRTLVirtualization() {
       );
       scroller.scrollLeft = -Math.abs(scroller.scrollWidth - scroller.clientWidth);
     });
-  }, []);
+  }, [apiRef]);
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
