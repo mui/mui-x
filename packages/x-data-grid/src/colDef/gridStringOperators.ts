@@ -120,5 +120,6 @@ export const getGridStringOperators = (
           : false;
     },
     InputComponent: GridFilterInputMultipleValue,
+    InputComponentProps: { variant: 'standard' },
   },
 ];
