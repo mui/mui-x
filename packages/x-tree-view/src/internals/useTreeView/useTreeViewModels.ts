@@ -48,9 +48,7 @@ export const useTreeViewModels = <
 
   const models = Object.fromEntries(
     Object.entries(modelsRef.current).map(([modelName, model]) => {
-      const value = model.isControlled
-        ? props[modelName as keyof DefaultizedParams]
-        : modelsState[modelName];
+      const value = props[modelName as keyof DefaultizedParams] ?? modelsState[modelName];
 
       return [
         modelName,
