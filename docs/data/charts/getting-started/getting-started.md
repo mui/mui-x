@@ -109,6 +109,19 @@ Visit the [Composition page](/x/react-charts/composition/) for more details.
 
 {{"demo": "Combining.js"}}
 
+### Positions
+
+Charts are composed of two main area.
+The SVG defined by its `width` and `height` delimits the available space.
+
+In this SVG we define a "drawing area" which contains the data representation.
+For example, the lines, bars, area, ...
+It's defined thanks to the object `margin = {top, bottom, left, right}` defining the margin between the SVG and the drawing area.
+
+The space left by margins can be used to display axes, legend, title, or any other additional information.
+
+For more information about those position configuration, visit the [styling page](/x/react-charts/styling/#styling).
+
 ## Axis management
 
 MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
