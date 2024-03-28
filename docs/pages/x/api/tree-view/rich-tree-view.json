@@ -3,6 +3,7 @@
     "apiRef": {
       "type": { "name": "shape", "description": "{ current?: { focusItem: func, getItem: func } }" }
     },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },

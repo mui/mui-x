@@ -202,6 +202,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     contextValue: {
       selection: {
         multiSelect: params.multiSelect,
+        checkboxSelection: params.checkboxSelection,
+        disableSelection: params.disableSelection,
       },
     },
   };
@@ -219,6 +221,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
+  checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
 });
@@ -226,6 +229,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
 useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
+  checkboxSelection: true,
   defaultSelectedItems: true,
   selectedItems: true,
   onSelectedItemsChange: true,

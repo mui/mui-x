@@ -12,6 +12,8 @@ export interface TreeItemClasses {
   expanded: string;
   /** State class applied to the content element when selected. */
   selected: string;
+  /** State class applied to the content element when clicking it causes an action. */
+  interactive: string;
   /** State class applied to the content element when focused. */
   focused: string;
   /** State class applied to the element when disabled. */
@@ -20,6 +22,8 @@ export interface TreeItemClasses {
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
+  /** Styles applied to the checkbox element. */
+  checkbox: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -34,8 +38,10 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'content',
   'expanded',
   'selected',
+  'interactive',
   'focused',
   'disabled',
   'iconContainer',
   'label',
+  'checkbox',
 ]);

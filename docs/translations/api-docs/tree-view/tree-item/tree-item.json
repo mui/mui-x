@@ -21,6 +21,10 @@
     }
   },
   "classDescriptions": {
+    "checkbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the checkbox element"
+    },
     "content": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content element"
@@ -43,6 +47,11 @@
     "iconContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the tree item icon"
+    },
+    "interactive": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "clicking it causes an action"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
     "root": { "description": "Styles applied to the root element." },

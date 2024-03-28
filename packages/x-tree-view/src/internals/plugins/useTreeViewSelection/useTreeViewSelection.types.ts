@@ -33,10 +33,15 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   selectedItems?: TreeViewSelectionValue<Multiple>;
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect?: Multiple;
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection?: boolean;
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
@@ -62,11 +67,14 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelectedItems' | 'multiSelect'
+  'disableSelection' | 'defaultSelectedItems' | 'multiSelect' | 'checkboxSelection'
 >;
 
 interface UseTreeViewSelectionContextValue {
-  selection: Pick<UseTreeViewSelectionDefaultizedParameters<boolean>, 'multiSelect'>;
+  selection: Pick<
+    UseTreeViewSelectionDefaultizedParameters<boolean>,
+    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+  >;
 }
 
 export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{

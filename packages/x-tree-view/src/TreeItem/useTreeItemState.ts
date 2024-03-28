@@ -5,7 +5,7 @@ import { DefaultTreeViewPlugins } from '../internals/plugins';
 export function useTreeItemState(itemId: string) {
   const {
     instance,
-    selection: { multiSelect },
+    selection: { multiSelect, checkboxSelection, disableSelection },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
@@ -29,7 +29,7 @@ export function useTreeItemState(itemId: string) {
     }
   };
 
-  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelection = (event: React.MouseEvent) => {
     if (!disabled) {
       if (!focused) {
         instance.focusItem(event, itemId);
@@ -49,6 +49,18 @@ export function useTreeItemState(itemId: string) {
     }
   };
 
+  const handleCheckboxSelection = (event: React.ChangeEvent) => {
+    if (multiSelect) {
+      if ((event.nativeEvent as PointerEvent).shiftKey) {
+        instance.selectRange(event, { end: itemId });
+      } else {
+        instance.selectNode(event, itemId, true);
+      }
+    } else {
+      instance.selectNode(event, itemId);
+    }
+  };
+
   const preventSelection = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.shiftKey || event.ctrlKey || event.metaKey || disabled) {
       // Prevent text selection
@@ -57,12 +69,16 @@ export function useTreeItemState(itemId: string) {
   };
 
   return {
+    expandable,
     disabled,
     expanded,
     selected,
     focused,
+    disableSelection,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
   };
 }

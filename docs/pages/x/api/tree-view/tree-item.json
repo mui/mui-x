@@ -48,6 +48,12 @@
   ],
   "classes": [
     {
+      "key": "checkbox",
+      "className": "MuiTreeItem-checkbox",
+      "description": "Styles applied to the checkbox element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiTreeItem-content",
       "description": "Styles applied to the content element.",
@@ -75,6 +81,12 @@
       "key": "iconContainer",
       "className": "MuiTreeItem-iconContainer",
       "description": "Styles applied to the tree item icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "interactive",
+      "className": "MuiTreeItem-interactive",
+      "description": "State class applied to the content element when clicking it causes an action.",
       "isGlobal": false
     },
     {

@@ -26,10 +26,12 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     expanded: ['expanded'],
     selected: ['selected'],
     focused: ['focused'],
+    interactive: ['interactive'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    checkbox: ['checkbox'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -68,9 +70,11 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  cursor: 'pointer',
+  [`&.${treeItemClasses.interactive}`]: {
+    cursor: 'pointer',
+  },
   WebkitTapHighlightColor: 'transparent',
-  '&:hover': {
+  [`&.${treeItemClasses.interactive}:hover`]: {
     backgroundColor: (theme.vars || theme).palette.action.hover,
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
@@ -88,7 +92,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    '&:hover': {
+    [`&.${treeItemClasses.interactive}:hover`]: {
       backgroundColor: theme.vars
         ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
         : alpha(
@@ -127,6 +131,9 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     minWidth: 0,
     position: 'relative',
     ...theme.typography.body1,
+  },
+  [`& .${treeItemClasses.checkbox}`]: {
+    padding: 0,
   },
 }));
 
@@ -332,10 +339,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
             root: classes.content,
             expanded: classes.expanded,
             selected: classes.selected,
+            interactive: classes.interactive,
             focused: classes.focused,
             disabled: classes.disabled,
             iconContainer: classes.iconContainer,
             label: classes.label,
+            checkbox: classes.checkbox,
           }}
           label={label}
           itemId={itemId}
