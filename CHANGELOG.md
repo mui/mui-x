@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 7.0.1
+
 _Mar 28, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
