@@ -1,0 +1,152 @@
+{
+  "name": "GridActionsColDef",
+  "imports": [
+    "import { GridActionsColDef } from '@mui/x-data-grid-premium'",
+    "import { GridActionsColDef } from '@mui/x-data-grid-pro'",
+    "import { GridActionsColDef } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/column-definition/#special-properties\">Special column properties</a></li></ul>",
+  "properties": {
+    "aggregable": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isOptional": true,
+      "isPremiumPlan": true
+    },
+    "align": { "type": { "description": "GridAlignment" }, "isOptional": true },
+    "availableAggregationFunctions": {
+      "type": { "description": "string[]" },
+      "isOptional": true,
+      "isPremiumPlan": true
+    },
+    "cellClassName": {
+      "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" },
+      "isOptional": true
+    },
+    "colSpan": {
+      "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
+      "default": "1",
+      "isOptional": true
+    },
+    "description": { "type": { "description": "string" }, "isOptional": true },
+    "disableColumnMenu": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isOptional": true
+    },
+    "disableExport": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isOptional": true
+    },
+    "disableReorder": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isOptional": true
+    },
+    "display": { "type": { "description": "'text' | 'flex'" }, "isOptional": true },
+    "editable": { "type": { "description": "boolean" }, "default": "false", "isOptional": true },
+    "field": { "type": { "description": "string" } },
+    "filterable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "filterOperators": {
+      "type": { "description": "GridFilterOperator&lt;R, V, F&gt;[]" },
+      "isOptional": true
+    },
+    "flex": { "type": { "description": "number" }, "isOptional": true },
+    "getActions": {
+      "type": {
+        "description": "(params: GridRowParams&lt;R&gt;) =&gt; React.ReactElement&lt;GridActionsCellItemProps&gt;[]"
+      }
+    },
+    "getApplyQuickFilterFn": {
+      "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" },
+      "isOptional": true
+    },
+    "getSortComparator": {
+      "type": {
+        "description": "(sortDirection: GridSortDirection) =&gt; GridComparatorFn&lt;V&gt; | undefined"
+      },
+      "isOptional": true
+    },
+    "groupable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "groupingValueGetter": {
+      "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
+      "isOptional": true,
+      "isPremiumPlan": true
+    },
+    "headerAlign": { "type": { "description": "GridAlignment" }, "isOptional": true },
+    "headerClassName": {
+      "type": { "description": "GridColumnHeaderClassNamePropType" },
+      "isOptional": true
+    },
+    "headerName": { "type": { "description": "string" }, "isOptional": true },
+    "hideable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "hideSortIcons": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isOptional": true
+    },
+    "maxWidth": { "type": { "description": "number" }, "default": "Infinity", "isOptional": true },
+    "minWidth": { "type": { "description": "number" }, "default": "50", "isOptional": true },
+    "pastedValueParser": {
+      "type": { "description": "GridPastedValueParser&lt;R, V, F&gt;" },
+      "isOptional": true,
+      "isPremiumPlan": true
+    },
+    "pinnable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "preProcessEditCellProps": {
+      "type": {
+        "description": "(params: GridPreProcessEditCellProps) =&gt; GridEditCellProps | Promise&lt;GridEditCellProps&gt;"
+      },
+      "isOptional": true
+    },
+    "renderCell": {
+      "type": {
+        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      },
+      "isOptional": true
+    },
+    "renderEditCell": {
+      "type": {
+        "description": "(params: GridRenderEditCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      },
+      "isOptional": true
+    },
+    "renderHeader": {
+      "type": {
+        "description": "(params: GridColumnHeaderParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      },
+      "isOptional": true
+    },
+    "renderHeaderFilter": {
+      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" },
+      "isOptional": true,
+      "isProPlan": true
+    },
+    "resizable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "sortable": { "type": { "description": "boolean" }, "default": "true", "isOptional": true },
+    "sortComparator": {
+      "type": { "description": "GridComparatorFn&lt;V&gt;" },
+      "isOptional": true
+    },
+    "sortingOrder": { "type": { "description": "GridSortDirection[]" }, "isOptional": true },
+    "type": { "type": { "description": "'actions'" }, "default": "'actions'" },
+    "valueFormatter": {
+      "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" },
+      "isOptional": true
+    },
+    "valueGetter": {
+      "type": { "description": "GridValueGetter&lt;R, V, F&gt;" },
+      "isOptional": true
+    },
+    "valueParser": {
+      "type": { "description": "GridValueParser&lt;R, V, F&gt;" },
+      "isOptional": true
+    },
+    "valueSetter": {
+      "type": { "description": "GridValueSetter&lt;R, V, F&gt;" },
+      "isOptional": true
+    },
+    "width": { "type": { "description": "number" }, "default": "100", "isOptional": true }
+  }
+}
