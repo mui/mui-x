@@ -534,9 +534,8 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
-    const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
-    let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
+    const toDisplay = utils.getWeekArray(currentMonth);
+    let nextMonth = utils.addMonths(currentMonth, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -553,7 +552,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
       nextMonth = utils.addMonths(nextMonth, 1);
     }
     return toDisplay;
-  }, [currentMonth, fixedWeekNumber, utils, timezone]);
+  }, [currentMonth, fixedWeekNumber, utils]);
 
   return (
     <PickersCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>

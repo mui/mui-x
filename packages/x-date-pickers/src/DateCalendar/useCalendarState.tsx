@@ -148,7 +148,9 @@ export const useCalendarState = <TDate extends PickerValidDate>(
         granularity: SECTION_TYPE_GRANULARITY.day,
       });
     },
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+    // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [referenceDateProp, timezone],
   );
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
@@ -157,6 +159,17 @@ export const useCalendarState = <TDate extends PickerValidDate>(
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
+
+  // Ensure that `calendarState.currentMonth` is updated when `referenceDate` (or timezone changes)
+  // https://github.com/mui/mui-x/issues/10804
+  React.useEffect(() => {
+    dispatch({
+      type: 'changeMonth',
+      newMonth: utils.startOfMonth(referenceDate),
+      direction: calendarState.slideDirection,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [referenceDate, utils]);
 
   const handleChangeMonth = React.useCallback(
     (payload: ChangeMonthPayload<TDate>) => {

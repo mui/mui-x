@@ -76,7 +76,8 @@ async function attemptGoto(page: Page, url: string): Promise<boolean> {
 }
 
 // Pick the new/fake "now" for you test pages.
-const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
+// Choosing a date that falls within DST transition month.
+const fakeNow = new Date('2018-03-17T13:37:11').valueOf();
 
 let browser: Browser;
 let context: BrowserContext;
@@ -530,7 +531,7 @@ async function initializeEnvironment(
           // could run into race condition otherwise
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-            '04/11/2022',
+            '03/11/2018',
           );
         });
 
@@ -664,9 +665,25 @@ async function initializeEnvironment(
             );
           });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-            '04/11/2022',
+            '03/11/2018',
           );
         });
+      });
+    });
+
+    describe('<DateCalendarWithTimezone />', () => {
+      it('should render the correct days in a DST month and timezone', async () => {
+        await renderFixture('DatePicker/DateCalendarWithTimezone');
+
+        const gridCells = page.getByRole('gridcell');
+        const numberOfDayCells = await gridCells.count();
+        const numberOfButtonDayCells = await gridCells.and(page.locator('button')).count();
+        expect(numberOfDayCells).to.equal(35);
+        expect(numberOfButtonDayCells).to.equal(31);
+
+        // assert that there are only 5 rows of days
+        expect(await page.locator('[aria-rowindex="5"]').count()).to.equal(1);
+        expect(await page.locator('[aria-rowindex="6"]').count()).to.equal(0);
       });
     });
 
@@ -685,7 +702,7 @@ async function initializeEnvironment(
         // could run into race condition otherwise
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-          '04/11/2022 03:30 PM',
+          '03/11/2018 03:30 PM',
         );
       });
 
@@ -736,7 +753,7 @@ async function initializeEnvironment(
         // could run into race condition otherwise
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-          '04/21/2022 02:05 PM',
+          '03/21/2018 02:05 PM',
         );
       });
 
@@ -774,10 +791,10 @@ async function initializeEnvironment(
 
         expect(
           await page.getByRole('textbox', { name: 'Start', includeHidden: true }).inputValue(),
-        ).to.equal('04/11/2022');
+        ).to.equal('03/11/2018');
         expect(
           await page.getByRole('textbox', { name: 'End', includeHidden: true }).inputValue(),
-        ).to.equal('05/17/2022');
+        ).to.equal('04/17/2018');
       });
 
       it('should not close the tooltip when the focus switches between inputs', async () => {
@@ -874,16 +891,16 @@ describe('e2e: chromium on Android', () => {
     await page.getByRole('gridcell', { name: '11' }).first().tap();
     await page.getByRole('gridcell', { name: '17' }).first().tap();
 
-    const toolbarButtons = await page.getByRole('button', { name: /Apr/ }).all();
-    expect(await toolbarButtons[0].textContent()).to.equal('Apr 11');
-    expect(await toolbarButtons[1].textContent()).to.equal('Apr 17');
+    const toolbarButtons = await page.getByRole('button', { name: /Mar/ }).all();
+    expect(await toolbarButtons[0].textContent()).to.equal('Mar 11');
+    expect(await toolbarButtons[1].textContent()).to.equal('Mar 17');
 
     // tap twice on the same date to select a range within one day
-    const april11 = page.getByRole('gridcell', { name: '11' }).first();
-    await april11.tap();
-    await april11.tap();
+    const march11 = page.getByRole('gridcell', { name: '11' }).first();
+    await march11.tap();
+    await march11.tap();
 
-    expect(await toolbarButtons[0].textContent()).to.equal('Apr 11');
-    expect(await toolbarButtons[1].textContent()).to.equal('Apr 11');
+    expect(await toolbarButtons[0].textContent()).to.equal('Mar 11');
+    expect(await toolbarButtons[1].textContent()).to.equal('Mar 11');
   });
 });
