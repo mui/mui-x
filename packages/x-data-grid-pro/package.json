@@ -50,7 +50,7 @@
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.8"
+    "reselect": "^5.1.0"
   },
   "peerDependencies": {
     "@mui/material": "^5.15.14",
