@@ -48,7 +48,8 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridEditingApi',
   'GridExcelExportApi',
   'GridFilterApi',
-  'GridPaginationApi',
+  // TODO: Relook
+  'GridPaginationModelApi',
   'GridPrintExportApi',
   'GridRowGroupingApi',
   'GridRowMultiSelectionApi',

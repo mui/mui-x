@@ -14,10 +14,14 @@ import {
 import { GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
+interface GetDataGridProPropsDefaultValues extends DataGridProProps {}
+
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
-export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
+export const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
+  themedProps: GetDataGridProPropsDefaultValues,
+) => DataGridProPropsWithDefaultValue = (themedProps) => ({
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
   scrollEndThreshold: 80,
   treeData: false,
@@ -29,10 +33,16 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowReordering: false,
-  rowsLoadingMode: 'client',
+  rowsLoadingMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
   getDetailPanelHeight: () => 500,
   headerFilters: false,
-};
+  filterMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
+  sortingMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
+  paginationMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
+  filterDebounceMs: themedProps.unstable_dataSource?.getRows
+    ? 1000
+    : DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs,
+});
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
@@ -61,7 +71,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
 
   return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({
-      ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+      ...GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES(themedProps),
       ...themedProps,
       localeText,
       slots,

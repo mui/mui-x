@@ -122,7 +122,7 @@ const pages: MuiPage[] = [
         title: 'Server-side data',
         planned: true,
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', planned: true },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
             title: 'Lazy loading',
@@ -139,7 +139,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/server-side-data/tree-data',
             title: 'Tree data',
             plan: 'pro',
-            planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',

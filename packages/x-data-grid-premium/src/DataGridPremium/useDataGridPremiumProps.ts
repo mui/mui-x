@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
+import {
+  GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  GRID_DEFAULT_LOCALE_TEXT,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
 import { computeSlots, useProps } from '@mui/x-data-grid-pro/internals';
 import {
   DataGridPremiumProps,
@@ -11,11 +15,15 @@ import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 
+interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
+
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
-export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
-  ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+export const GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: (
+  themedProps: GetDataGridPremiumPropsDefaultValues,
+) => DataGridPremiumPropsWithDefaultValue = (themedProps) => ({
+  ...GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES(themedProps as DataGridProProps),
   cellSelection: false,
   disableAggregation: false,
   disableRowGrouping: false,
@@ -30,7 +38,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     const text = pastedText.replace(/\r?\n$/, '');
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
-};
+});
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
@@ -59,7 +67,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
-      ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
+      ...GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES(themedProps),
       ...themedProps,
       localeText,
       slots,

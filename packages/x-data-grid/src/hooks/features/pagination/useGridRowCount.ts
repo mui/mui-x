@@ -23,6 +23,8 @@ export const useGridRowCount = (
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
   const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  // @ts-expect-error To access Pro only prop
+  const isDataSourceAvailable = props.unstable_dataSource != null;
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
@@ -114,11 +116,11 @@ export const useGridRowCount = (
    */
   React.useEffect(() => {
     if (process.env.NODE_ENV !== 'production') {
-      if (props.paginationMode === 'server' && props.rowCount == null) {
+      if (props.paginationMode === 'server' && props.rowCount == null && !isDataSourceAvailable) {
         noRowCountInServerMode();
       }
     }
-  }, [props.rowCount, props.paginationMode]);
+  }, [props.rowCount, props.paginationMode, isDataSourceAvailable]);
 
   React.useEffect(() => {
     if (props.paginationMode === 'client') {

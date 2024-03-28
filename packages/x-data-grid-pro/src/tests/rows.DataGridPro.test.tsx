@@ -27,8 +27,12 @@ import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+interface BaselineProps extends DataGridProProps {
+  rows: GridValidRowModel[];
+}
+
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps & { rows: GridValidRowModel };
+  let baselineProps: BaselineProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 

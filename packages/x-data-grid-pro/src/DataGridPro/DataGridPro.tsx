@@ -307,6 +307,7 @@ DataGridProRaw.propTypes = {
    * @returns {string} The CSS class to apply to the cell.
    */
   getCellClassName: PropTypes.func,
+  getChildrenCount: PropTypes.func,
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -328,6 +329,7 @@ DataGridProRaw.propTypes = {
    * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
    */
   getEstimatedRowHeight: PropTypes.func,
+  getGroupKey: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
@@ -363,6 +365,7 @@ DataGridProRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  hasChildren: PropTypes.func,
   /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
@@ -767,6 +770,14 @@ DataGridProRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
+   * Server-side pagination could either be based on a page number or a cursor.
+   * Set it to 'index' if the pagination is based on a page number.
+   * Set it to 'cursor' if the pagination is based on a cursor.
+   * Only applicable when `paginationMode` is set to 'server'.
+   * @default "index"
+   */
+  paginationType: PropTypes.oneOf(['cursor', 'index']),
+  /**
    * The column fields to display pinned to left or right.
    */
   pinnedColumns: PropTypes.object,
@@ -918,4 +929,13 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  unstable_dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  unstable_dataSourceCache: PropTypes.shape({
+    get: PropTypes.func.isRequired,
+    invalidate: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
 } as any;

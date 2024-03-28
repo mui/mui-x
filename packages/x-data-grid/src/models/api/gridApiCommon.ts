@@ -28,7 +28,10 @@ import type {
   GridDimensionsApi,
   GridDimensionsPrivateApi,
 } from '../../hooks/features/dimensions/gridDimensionsApi';
-import type { GridPaginationApi } from '../../hooks/features/pagination';
+import type {
+  GridPaginationModelApi,
+  GridPaginationRowCountApi,
+} from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
@@ -50,7 +53,8 @@ export interface GridApiCommon<
     GridColumnApi,
     GridRowSelectionApi,
     GridSortApi,
-    GridPaginationApi,
+    GridPaginationModelApi,
+    GridPaginationRowCountApi,
     GridCsvExportApi,
     GridFocusApi,
     GridFilterApi,

@@ -6,7 +6,7 @@ import {
   GridPaginationModel,
 } from '@mui/x-data-grid';
 
-interface GetRowsParams {
+export interface GridGetRowsParams {
   sortModel: GridSortModel;
   filterModel: GridFilterModel;
   /**
@@ -26,14 +26,14 @@ interface GetRowsParams {
    * `getGroupKey` prop must be implemented to use this.
    * Useful for `treeData` and `rowGrouping` only.
    */
-  groupKeys: string[];
+  groupKeys?: string[];
   /**
    * List of grouped columns (only applicable with `rowGrouping`).
    */
-  groupFields: GridColDef['field'][];
+  groupFields?: GridColDef['field'][];
 }
 
-interface GetRowsResponse {
+export interface GridGetRowsResponse {
   rows: GridRowModel[];
   /**
    * To reflect updates in total `rowCount` (optional).
@@ -53,12 +53,13 @@ interface GetRowsResponse {
    *   Thus `hasNextPage` will come into play to check more rows are available to fetch after the number becomes >= provided `rowCount`
    */
   pageInfo?: {
+    nextCursor?: number | string;
     hasNextPage?: boolean;
     truncated?: number;
   };
 }
 
-export interface DataSource {
+export interface GridDataSource {
   /**
    * Fetcher Functions:
    * - `getRows` is required
@@ -67,6 +68,12 @@ export interface DataSource {
    * `getRows` will be used by the grid to fetch data for the current page or children for the current parent group.
    * It may return a `rowCount` to update the total count of rows in the grid along with the optional `pageInfo`.
    */
-  getRows(params: GetRowsParams): Promise<GetRowsResponse>;
+  getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
   updateRow?(rows: GridRowModel): Promise<any>;
+}
+
+export interface GridDataSourceCache {
+  set: (key: any[], value: unknown) => void;
+  get: (key: any[]) => unknown;
+  invalidate: (key?: any[]) => void;
 }

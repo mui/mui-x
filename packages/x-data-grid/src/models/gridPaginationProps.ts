@@ -11,3 +11,5 @@ export interface GridPaginationModel {
    */
   page: number;
 }
+
+export type GridPaginationType = 'index' | 'cursor';
