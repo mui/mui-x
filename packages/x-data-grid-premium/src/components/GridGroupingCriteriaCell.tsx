@@ -7,6 +7,7 @@ import {
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridGroupNode,
+  gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -41,6 +42,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     gridFilteredDescendantCountLookupSelector,
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
+  const pivotMode = rootProps.unstable_pivotMode;
+  const maxTreeDepth = gridRowMaximumTreeDepthSelector(apiRef);
+  const shouldShowToggleContainer = !pivotMode || maxTreeDepth > 2;
+  const shouldShowToggleButton = !pivotMode || rowNode.depth < maxTreeDepth - 2;
 
   const Icon = rowNode.childrenExpanded
     ? rootProps.slots.groupingCriteriaCollapseIcon
@@ -83,24 +88,26 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
                 `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
       }}
     >
-      <div className={classes.toggle}>
-        {filteredDescendantCount > 0 && (
-          <rootProps.slots.baseIconButton
-            size="small"
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            tabIndex={-1}
-            aria-label={
-              rowNode.childrenExpanded
-                ? apiRef.current.getLocaleText('treeDataCollapse')
-                : apiRef.current.getLocaleText('treeDataExpand')
-            }
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <Icon fontSize="inherit" />
-          </rootProps.slots.baseIconButton>
-        )}
-      </div>
+      {shouldShowToggleContainer ? (
+        <div className={classes.toggle}>
+          {shouldShowToggleButton && filteredDescendantCount > 0 && (
+            <rootProps.slots.baseIconButton
+              size="small"
+              onClick={handleClick}
+              onKeyDown={handleKeyDown}
+              tabIndex={-1}
+              aria-label={
+                rowNode.childrenExpanded
+                  ? apiRef.current.getLocaleText('treeDataCollapse')
+                  : apiRef.current.getLocaleText('treeDataExpand')
+              }
+              {...rootProps.slotProps?.baseIconButton}
+            >
+              <Icon fontSize="inherit" />
+            </rootProps.slots.baseIconButton>
+          )}
+        </div>
+      ) : null}
       {cellContent}
       {!hideDescendantCount && filteredDescendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>

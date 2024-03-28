@@ -36,6 +36,7 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
+  sidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
@@ -610,6 +611,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeaderLabel',
   'autoHeight',
   'autosizing',
+  'sidePanel',
   'booleanCell',
   'cell--editable',
   'cell--editing',
