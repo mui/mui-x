@@ -71,5 +71,8 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   dependantPlugins: [UseTreeViewItemsSignature];
 }>;
 
-// TODO: Add support for "re-parent to level X"
-export type TreeViewItemsReorderingAction = 'reorder-above' | 'reorder-below' | 'make-child';
+export type TreeViewItemsReorderingAction =
+  | 'reorder-above'
+  | 'reorder-below'
+  | 'make-child'
+  | 'move-to-parent';

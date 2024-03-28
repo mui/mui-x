@@ -44,8 +44,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         index: draggedNode.index,
       };
 
-      const checkAction = (action: TreeViewItemsReorderingAction) => {
-        const newPosition = getNewPositionFromAction({ draggedNode, targetNode, action });
+      const isNewPositionValid = (action: TreeViewItemsReorderingAction) => {
+        const newPosition = getNewPositionFromAction({ instance, draggedNode, targetNode, action });
 
         // If the new position is equal to the old one, we don't want to show any dropping UI.
         if (
@@ -59,7 +59,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           canMoveItemToNewPosition({
             itemId,
             oldPosition,
-            newPosition: getNewPositionFromAction({ draggedNode, targetNode, action }),
+            newPosition: getNewPositionFromAction({ instance, draggedNode, targetNode, action }),
           });
         }
 
@@ -67,9 +67,13 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       };
 
       return {
-        'make-child': checkAction('make-child'),
-        'reorder-above': checkAction('reorder-above'),
-        'reorder-below': !targetNode.expandable && checkAction('reorder-below'),
+        'make-child': isNewPositionValid('make-child'),
+        'reorder-above': targetNode.index === 0 && isNewPositionValid('reorder-above'),
+        'reorder-below': !targetNode.expandable && isNewPositionValid('reorder-below'),
+        'move-to-parent':
+          targetNode.parentId != null &&
+          targetNode.index === instance.getItemChildren(targetNode.parentId).length - 1 &&
+          isNewPositionValid('move-to-parent'),
       };
     },
     [params.canMoveItemToNewPosition, instance, state.itemsReordering],
@@ -103,6 +107,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       const targetNode = instance.getNode(state.itemsReordering.targetItemId);
 
       const newPosition = getNewPositionFromAction({
+        instance,
         draggedNode,
         targetNode,
         action: state.itemsReordering.action,

@@ -63,7 +63,7 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
 
     // If we can move the item inside the target,
     // Then the upper quarter of the target moves it above,
-    // the lower quarter moves it below and the rest makes a child.
+    // the lower quarter moves it below and the rest makes it a child.
     if (validActions['make-child']) {
       if (validActions['reorder-above'] && y < (1 / 4) * rect.height) {
         action = 'reorder-above';

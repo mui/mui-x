@@ -27,10 +27,12 @@ export const isAncestor = (
 
 export const getNewPositionFromAction = (
   {
+    instance,
     draggedNode,
     targetNode,
     action,
   }: {
+    instance: TreeViewInstance<[UseTreeViewItemsSignature]>;
     draggedNode: TreeViewNode;
     targetNode: TreeViewNode;
     action: TreeViewItemsReorderingAction;
@@ -55,6 +57,11 @@ export const getNewPositionFromAction = (
 
     case 'reorder-below': {
       return { parentId: targetNode.parentId, index: targetNode.index + 1 };
+    }
+
+    case 'move-to-parent': {
+      const newParentId = instance.getNode(targetNode.parentId!).parentId;
+      return { parentId: newParentId, index: instance.getItemChildren(newParentId).length };
     }
   }
 };

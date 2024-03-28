@@ -38,11 +38,11 @@ export const TreeItem2Content = styled('div', {
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
   cursor: 'pointer',
-  position: 'relative',
   WebkitTapHighlightColor: 'transparent',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
