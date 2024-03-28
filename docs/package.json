@@ -93,7 +93,7 @@
     "@babel/plugin-transform-react-constant-elements": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@mui/internal-docs-utils": "^1.0.4",
-    "@mui/internal-scripts": "^1.0.1",
+    "@mui/internal-scripts": "^1.0.3",
     "@types/doctrine": "^0.0.9",
     "@types/stylis": "^4.2.5",
     "@types/webpack-bundle-analyzer": "^4.7.0",
