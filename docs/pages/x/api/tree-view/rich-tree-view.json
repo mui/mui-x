@@ -1,7 +1,10 @@
 {
   "props": {
     "apiRef": {
-      "type": { "name": "shape", "description": "{ current?: { focusItem: func, getItem: func } }" }
+      "type": {
+        "name": "shape",
+        "description": "{ current?: { focusItem: func, getItem: func, setItemExpansion: func } }"
+      }
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedItems": {
