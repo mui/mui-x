@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.0.1
+## 7.1.0
 
 _Mar 28, 2024_
 
@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.0.1`
+#### `@mui/x-data-grid@7.1.0`
 
 - [DataGrid] Add `resizeThrottleMs` prop (#12556) @romgrk
 - [DataGrid] Do not publish `rowEditStop` event if row has fields with errors (#11383) @cherniavskii
@@ -25,33 +25,33 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [l10n] Improve Chinese (Hong Kong) (zh-HK) locale (#12547) @samchiu90
 - [l10n] Improve Italian (it-IT) locale (#12549) @antomanc
 
-#### `@mui/x-data-grid-pro@7.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.0.1`.
+Same changes as in `@mui/x-data-grid@7.1.0`.
 
-#### `@mui/x-data-grid-premium@7.0.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.1.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.0.1`.
+Same changes as in `@mui/x-data-grid-pro@7.1.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.0.1`
+#### `@mui/x-date-pickers@7.1.0`
 
 - [pickers] Prepare compatibility with `@mui/zero-runtime` (stop using `ownerState` in `styled`) (#12003) @flaviendelangle
 
-#### `@mui/x-date-pickers-pro@7.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.0.1`.
+Same changes as in `@mui/x-date-pickers@7.1.0`.
 
 ### Charts
 
-#### `@mui/x-charts@7.0.1`
+#### `@mui/x-charts@7.1.0`
 
 - [charts] Fix tooltip causing crash on data change (#12571) @Rishi556
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.0.1`
+#### `@mui/x-tree-view@7.1.0`
 
 - [TreeView] Do not use outdated version of the state to compute new label first char in `RichTreeView` (#12512) @flaviendelangle
 
