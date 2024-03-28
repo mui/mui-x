@@ -147,7 +147,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (nodeToMoveId: TreeViewItemId, newParentId: TreeViewItemId | null, newIndex: number) => {
       setState((prevState) => ({
         ...prevState,
-        nodes: moveItemInTree({ nodeToMoveId, prevState: prevState.items, newParentId, newIndex }),
+        items: moveItemInTree({ nodeToMoveId, prevState: prevState.items, newParentId, newIndex }),
       }));
     },
     [setState],
