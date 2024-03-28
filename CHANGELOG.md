@@ -39,6 +39,7 @@ Same changes as in `@mui/x-data-grid-pro@7.1.0`.
 
 - [fields] Fix placeholder override (#12589) @flaviendelangle
 - [pickers] Prepare compatibility with `@mui/zero-runtime` (stop using `ownerState` in `styled`) (#12003) @flaviendelangle
+- [DateRangePicker] Fix selection behavior with single input field when `readonly` (#12593) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
