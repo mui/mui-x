@@ -301,7 +301,7 @@ export default async function buildInterfacesDocumentation(
 
       const translations = {
         interfaceDescription: renderMarkdown(
-          escapeCell(linkify(parsedInterface.description, documentedInterfaces, 'html')),
+          linkify(escapeCell(parsedInterface.description || ''), documentedInterfaces, 'html'),
         ),
         propertiesDescriptions: {},
       };
@@ -310,7 +310,7 @@ export default async function buildInterfacesDocumentation(
         .map((property) => ({
           name: property.name,
           description: renderMarkdown(
-            escapeCell(linkify(property.description, documentedInterfaces, 'html')),
+            linkify(escapeCell(property.description), documentedInterfaces, 'html'),
           ),
           type: { description: escapeCell(property.typeStr) },
           default: getDefaultValue(property),
