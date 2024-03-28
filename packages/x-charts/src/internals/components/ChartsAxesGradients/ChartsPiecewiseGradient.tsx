@@ -15,7 +15,6 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
 
   return (
     <linearGradient
-      key={gradientId}
       id={gradientId}
       x1="0"
       x2="0"
@@ -33,7 +32,7 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
         const offset = isReveresed ? 1 - x / size : x / size;
 
         return (
-          <React.Fragment>
+          <React.Fragment key={threshold.toString() + index}>
             <stop offset={offset} stopColor={colorMap.colors[index]} stopOpacity={1} />
             <stop offset={offset} stopColor={colorMap.colors[index + 1]} stopOpacity={1} />
           </React.Fragment>

@@ -31,6 +31,7 @@ export function ChartsAxesGradients() {
           if (colorMap?.type === 'piecewise') {
             return (
               <ChartsPiecewiseGradient
+                key={gradientId}
                 isReveresed={!reverse}
                 scale={scale}
                 colorMap={colorMap}
@@ -43,6 +44,7 @@ export function ChartsAxesGradients() {
           if (colorMap?.type === 'continuous') {
             return (
               <ChartsContinuousGradient
+                key={gradientId}
                 isReveresed={!reverse}
                 scale={scale}
                 colorScale={colorScale!}
@@ -63,6 +65,7 @@ export function ChartsAxesGradients() {
           if (colorMap?.type === 'piecewise') {
             return (
               <ChartsPiecewiseGradient
+                key={gradientId}
                 isReveresed={reverse}
                 scale={scale}
                 colorMap={colorMap}
@@ -75,6 +78,7 @@ export function ChartsAxesGradients() {
           if (colorMap?.type === 'continuous') {
             return (
               <ChartsContinuousGradient
+                key={gradientId}
                 isReveresed={reverse}
                 scale={scale}
                 colorScale={colorScale!}

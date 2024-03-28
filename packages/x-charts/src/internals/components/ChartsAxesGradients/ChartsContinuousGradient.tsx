@@ -35,7 +35,6 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
   const keyPrefix = `${extremValues[0]}-${extremValues[1]}-`;
   return (
     <linearGradient
-      key={gradientId}
       id={gradientId}
       x1="0"
       x2="0"
