@@ -18,7 +18,12 @@ export default function TinyBarChart() {
       width={500}
       height={300}
       series={[{ data: uData, label: 'uv', type: 'bar' }]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[
+        {
+          scaleType: 'band',
+          data: xLabels,
+        },
+      ]}
     >
       <BarPlot />
     </ChartContainer>

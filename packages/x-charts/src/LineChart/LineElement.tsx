@@ -28,6 +28,7 @@ export type LineElementClassKey = keyof LineElementClasses;
 export interface LineElementOwnerState {
   id: SeriesId;
   color: string;
+  gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<LineElementClasses>;
@@ -97,6 +98,7 @@ function LineElement(props: LineElementProps) {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     highlightScope,
     slots,
     slotProps,
@@ -115,6 +117,7 @@ function LineElement(props: LineElementProps) {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     isFaded,
     isHighlighted,
   };
@@ -145,6 +148,7 @@ LineElement.propTypes = {
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
+  gradientId: PropTypes.string,
   highlightScope: PropTypes.shape({
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),

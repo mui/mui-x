@@ -6,6 +6,7 @@ import { LineHighlightElement, LineHighlightElementProps } from './LineHighlight
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import getColor from './getColor';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -88,13 +89,16 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
               } should have data property to be able to display a line plot.`,
             );
           }
+
           const x = xScale(xData[highlightedIndex]);
           const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
           return (
             <Element
               key={`${seriesId}`}
               id={seriesId}
-              color={series[seriesId].color}
+              color={colorGetter(highlightedIndex)}
               x={x}
               y={y}
               {...slotProps?.lineHighlight}
