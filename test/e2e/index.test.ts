@@ -612,6 +612,38 @@ async function initializeEnvironment(
           await monthSection.press('2');
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
+
+        it('should focus the first field section after clearing a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const monthSection = page.getByRole('spinbutton', { name: 'Month' });
+          await monthSection.press('2');
+          await page.getByRole('button', { name: 'Clear value' }).click();
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
+        });
+
+        it('should focus the first field section after clearing a value in v6 input', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerV6');
+
+          await page.getByRole('textbox').fill('2');
+          await page.getByRole('button', { name: 'Clear value' }).click();
+
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(() => {
+                return (
+                  document.activeElement?.tagName === 'INPUT' &&
+                  // only focused input has value set
+                  (document.activeElement as HTMLInputElement)?.value === 'MM/DD/YYYY'
+                );
+              }),
+            ).to.equal(true);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
+          }
+        });
       });
 
       describe('<MobileDatePicker />', () => {
