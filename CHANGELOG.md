@@ -9,7 +9,7 @@ _Mar 28, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Fix tooltip causing PieChart to crash on data change (#12571) @Rishi556
+- 🚀 Add `resizeThrottleMs` prop (#12556) @romgrk
 - 🌍 Improve Chinese (Hong Kong) (zh-HK) and Italian (it-IT) locale for the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
