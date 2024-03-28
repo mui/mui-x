@@ -96,7 +96,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.12",
     "@types/chai-dom": "^1.11.3",
-    "@types/enzyme": "3.10.12",
+    "@types/enzyme": "3.10.18",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.19.23",
     "@types/prettier": "^2.7.3",
