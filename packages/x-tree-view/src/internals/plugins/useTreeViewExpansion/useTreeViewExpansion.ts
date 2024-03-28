@@ -14,7 +14,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     models.expandedItems.setControlledValue(value);
   };
 
-  const isNodeExpanded = React.useCallback(
+  const isItemExpanded = React.useCallback(
     (itemId: string) => {
       return Array.isArray(models.expandedItems.value)
         ? models.expandedItems.value.indexOf(itemId) !== -1
@@ -23,12 +23,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     [models.expandedItems.value],
   );
 
-  const isNodeExpandable = React.useCallback(
+  const isItemExpandable = React.useCallback(
     (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
-  const toggleNodeExpansion = useEventCallback(
+  const toggleItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: string | null) => {
       if (itemId == null) {
         return;
@@ -56,7 +56,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
+      (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
     );
 
     const newExpanded = models.expandedItems.value.concat(diff);
@@ -73,9 +73,9 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   populateInstance<UseTreeViewExpansionSignature>(instance, {
-    isNodeExpanded,
-    isNodeExpandable,
-    toggleNodeExpansion,
+    isItemExpanded,
+    isItemExpandable,
+    toggleItemExpansion,
     expandAllSiblings,
   });
 };
@@ -86,11 +86,11 @@ useTreeViewExpansion.models = {
   },
 };
 
-const DEFAULT_EXPANDED_NODES: string[] = [];
+const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_NODES,
+  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });
 
 useTreeViewExpansion.params = {

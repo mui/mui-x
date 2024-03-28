@@ -110,17 +110,17 @@
     },
     {
       "name": "collapseIcon",
-      "description": "The default icon used to collapse the node.",
+      "description": "The default icon used to collapse the item.",
       "class": null
     },
     {
       "name": "expandIcon",
-      "description": "The default icon used to expand the node.",
+      "description": "The default icon used to expand the item.",
       "class": null
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end node.\nThis is applied to all tree nodes and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
     }
   ],

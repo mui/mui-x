@@ -1,22 +1,22 @@
 import { TreeViewInstance } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 /**
  * This is used to determine the start and end of a selection range so
- * we can get the nodes between the two border nodes.
+ * we can get the items between the two border items.
  *
- * It finds the nodes' common ancestor using
+ * It finds the items' common ancestor using
  * a naive implementation of a lowest common ancestor algorithm
  * (https://en.wikipedia.org/wiki/Lowest_common_ancestor).
- * Then compares the ancestor's 2 children that are ancestors of nodeA and NodeB
- * so we can compare their indexes to work out which node comes first in a depth first search.
+ * Then compares the ancestor's 2 children that are ancestors of itemA and ItemB
+ * so we can compare their indexes to work out which item comes first in a depth first search.
  * (https://en.wikipedia.org/wiki/Depth-first_search)
  *
- * Another way to put it is which node is shallower in a trémaux tree
+ * Another way to put it is which item is shallower in a trémaux tree
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
 export const findOrderInTremauxTree = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature]>,
+  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
   nodeAId: string,
   nodeBId: string,
 ) => {

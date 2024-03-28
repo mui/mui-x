@@ -27,10 +27,10 @@ export const useTreeItem2Utils = ({
 
   const status: UseTreeItem2Status = {
     expandable: Boolean(Array.isArray(children) ? children.length : children),
-    expanded: instance.isNodeExpanded(itemId),
-    focused: instance.isNodeFocused(itemId),
-    selected: instance.isNodeSelected(itemId),
-    disabled: instance.isNodeDisabled(itemId),
+    expanded: instance.isItemExpanded(itemId),
+    focused: instance.isItemFocused(itemId),
+    selected: instance.isItemSelected(itemId),
+    disabled: instance.isItemDisabled(itemId),
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -45,8 +45,8 @@ export const useTreeItem2Utils = ({
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && instance.isNodeExpanded(itemId))) {
-      instance.toggleNodeExpansion(event, itemId);
+    if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+      instance.toggleItemExpansion(event, itemId);
     }
   };
 
@@ -65,10 +65,10 @@ export const useTreeItem2Utils = ({
       if (event.shiftKey) {
         instance.selectRange(event, { end: itemId });
       } else {
-        instance.selectNode(event, itemId, true);
+        instance.selectItem(event, itemId, true);
       }
     } else {
-      instance.selectNode(event, itemId);
+      instance.selectItem(event, itemId);
     }
   };
 

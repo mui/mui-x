@@ -104,15 +104,15 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     ownerState,
   });
 
-  const nodesToRender = instance.getNodesToRender();
+  const itemsToRender = instance.getItemsToRender();
 
-  const renderNode = ({
+  const renderItem = ({
     children: itemChildren,
     ...itemProps
-  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
+  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
     return (
       <TreeItem key={itemProps.itemId} {...itemProps}>
-        {itemChildren?.map(renderNode)}
+        {itemChildren?.map(renderItem)}
       </TreeItem>
     );
   };
@@ -120,7 +120,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   return (
     <TreeViewProvider value={contextValue}>
       <RichTreeViewRoot {...rootProps}>
-        {nodesToRender.map(renderNode)}
+        {itemsToRender.map(renderItem)}
       </RichTreeViewRoot>
     </TreeViewProvider>
   );

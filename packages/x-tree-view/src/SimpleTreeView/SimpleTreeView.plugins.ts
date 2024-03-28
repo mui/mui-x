@@ -4,12 +4,12 @@ import {
   DefaultTreeViewPluginSlotProps,
   DefaultTreeViewPluginSlots,
 } from '../internals/plugins/defaultPlugins';
-import { useTreeViewJSXNodes } from '../internals/plugins/useTreeViewJSXNodes';
+import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
 import { ConvertPluginsIntoSignatures } from '../internals/models';
 
 export const SIMPLE_TREE_VIEW_PLUGINS = [
   ...DEFAULT_TREE_VIEW_PLUGINS,
-  useTreeViewJSXNodes,
+  useTreeViewJSXItems,
 ] as const;
 
 export type SimpleTreeViewPlugins = ConvertPluginsIntoSignatures<typeof SIMPLE_TREE_VIEW_PLUGINS>;
