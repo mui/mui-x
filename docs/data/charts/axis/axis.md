@@ -205,6 +205,10 @@ To customize the text elements (ticks label and the axis label) use the `tickLab
 
 {{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
+### Text position
+
+TODO: explain hou to put some addiitonal margin and move the axis label
+
 ## Composition
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
