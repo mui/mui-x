@@ -64,6 +64,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 - [docs] Add missing note to Data Grid migration guide (#12557) @romgrk
 - [docs] Fix Charts title for SEO (#12545) @oliviertassinari
 - [docs] Fix small typo (#12558) @diogoparente
+- [docs] Improve codemod related documentation (#12582) @MBilalShafi
 - [docs] Reduce noise in migration docs side navigation (#12552) @cherniavskii
 - [docs] Sync static images from core repository (#12525) @LukasTy
 
