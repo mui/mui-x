@@ -32,12 +32,22 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 export enum PinnedPosition {
   NONE,
   LEFT,
   RIGHT,
+  VIRTUAL,
 }
+
+export const gridPinnedColumnPositionLookup = {
+  [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,
+  [PinnedPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
+  [PinnedPosition.NONE]: undefined,
+  [PinnedPosition.VIRTUAL]: undefined,
+};
 
 export type GridCellProps = {
   align: GridAlignment;
@@ -45,7 +55,6 @@ export type GridCellProps = {
   colIndex: number;
   column: GridColDef;
   rowId: GridRowId;
-  height: number | 'auto';
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
@@ -55,7 +64,6 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
-  gridHasScrollX: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -144,7 +152,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     align,
     children: childrenProp,
     colIndex,
-    height,
     width,
     className,
     style: styleProp,
@@ -253,14 +260,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const isSectionLastCell = sectionIndex === sectionLength - 1;
-
-  const showLeftBorder = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
-
-  const showRightBorder =
-    (rootProps.showCellVerticalBorder &&
-      (pinnedPosition !== PinnedPosition.LEFT ? !isSectionLastCell : true)) ||
-    (pinnedPosition === PinnedPosition.LEFT && isSectionLastCell);
+  const position = gridPinnedColumnPositionLookup[pinnedPosition];
+  const showLeftBorder = shouldCellShowLeftBorder(position, sectionIndex);
+  const showRightBorder = shouldCellShowRightBorder(
+    position,
+    sectionIndex,
+    sectionLength,
+    rootProps.showCellVerticalBorder,
+  );
 
   const ownerState = {
     align,
@@ -325,11 +332,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         border: 0,
       };
     }
-    const cellStyle = {
+
+    const cellStyle: React.CSSProperties = {
       '--width': `${width}px`,
-      '--height': typeof height === 'number' ? `${height}px` : height,
       ...styleProp,
-    } as React.CSSProperties;
+    };
 
     if (pinnedPosition === PinnedPosition.LEFT) {
       cellStyle.left = pinnedOffset;
@@ -340,7 +347,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -483,8 +490,6 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
-  gridHasScrollX: PropTypes.bool.isRequired,
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
@@ -494,7 +499,7 @@ GridCell.propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
-  pinnedPosition: PropTypes.oneOf([0, 1, 2]).isRequired,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   sectionIndex: PropTypes.number.isRequired,
   sectionLength: PropTypes.number.isRequired,

@@ -124,15 +124,9 @@
   },
   {
     "name": "gridDensitySelector",
-    "returnType": "GridDensityState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDensityValueSelector",
     "returnType": "GridDensity",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridDetailPanelExpandedRowIdsSelector",
@@ -265,6 +259,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridHeaderFilteringEnabledSelector",
+    "returnType": "boolean",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridHeaderFilteringMenuSelector",
     "returnType": "string | null",
     "description": "",
@@ -316,6 +316,13 @@
     "returnType": "GridPaginationModel",
     "category": "Pagination",
     "description": "Get the pagination model",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridPaginationRowCountSelector",
+    "returnType": "number",
+    "category": "Pagination",
+    "description": "Get the row count",
     "supportsApiRef": true
   },
   {

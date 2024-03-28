@@ -80,7 +80,7 @@ export const useGridSorting = (
       const existingIdx = sortModel.findIndex((c) => c.field === field);
       let newSortModel = [...sortModel];
       if (existingIdx > -1) {
-        if (!sortItem) {
+        if (sortItem?.sort == null) {
           newSortModel.splice(existingIdx, 1);
         } else {
           newSortModel.splice(existingIdx, 1, sortItem);
@@ -191,7 +191,7 @@ export const useGridSorting = (
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortItem[];
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
-        sortModel = !sortItem ? [] : [sortItem];
+        sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {
         sortModel = upsertSortModel(column.field, sortItem);
       }
