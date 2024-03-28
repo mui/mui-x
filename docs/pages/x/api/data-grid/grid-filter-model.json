@@ -1,0 +1,32 @@
+{
+  "name": "GridFilterModel",
+  "imports": [
+    "import { GridFilterModel } from '@mui/x-data-grid-premium'",
+    "import { GridFilterModel } from '@mui/x-data-grid-pro'",
+    "import { GridFilterModel } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/#pass-filters-to-the-data-grid\">Pass filters to the grid</a></li></ul>",
+  "properties": {
+    "items": { "type": { "description": "GridFilterItem[]" }, "default": "[]" },
+    "logicOperator": {
+      "type": { "description": "GridLogicOperator" },
+      "default": "`GridLogicOperator.And`",
+      "isOptional": true
+    },
+    "quickFilterExcludeHiddenColumns": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isOptional": true
+    },
+    "quickFilterLogicOperator": {
+      "type": { "description": "GridLogicOperator" },
+      "default": "`GridLogicOperator.And`",
+      "isOptional": true
+    },
+    "quickFilterValues": {
+      "type": { "description": "any[]" },
+      "default": "`[]`",
+      "isOptional": true
+    }
+  }
+}

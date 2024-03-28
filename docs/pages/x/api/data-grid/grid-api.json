@@ -1,0 +1,321 @@
+{
+  "name": "GridApi",
+  "imports": [
+    "import { GridApi } from '@mui/x-data-grid-premium'",
+    "import { GridApi } from '@mui/x-data-grid-pro'",
+    "import { GridApi } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/api-object/\">API object</a></li></ul>",
+  "properties": {
+    "addRowGroupingCriteria": {
+      "type": {
+        "description": "(groupingCriteriaField: string, groupingIndex?: number) =&gt; void"
+      },
+      "isPremiumPlan": true
+    },
+    "applySorting": { "type": { "description": "() =&gt; void" } },
+    "autosizeColumns": {
+      "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" }
+    },
+    "deleteFilterItem": { "type": { "description": "(item: GridFilterItem) =&gt; void" } },
+    "exportDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" } },
+    "exportDataAsExcel": {
+      "type": { "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;void&gt;" },
+      "isPremiumPlan": true
+    },
+    "exportDataAsPrint": {
+      "type": { "description": "(options?: GridPrintExportOptions) =&gt; void" }
+    },
+    "exportState": {
+      "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" }
+    },
+    "forceUpdate": { "type": { "description": "() =&gt; void" } },
+    "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" } },
+    "getAllGroupDetails": { "type": { "description": "() =&gt; GridColumnGroupLookup" } },
+    "getAllRowIds": { "type": { "description": "() =&gt; GridRowId[]" } },
+    "getCellElement": {
+      "type": { "description": "(id: GridRowId, field: string) =&gt; HTMLDivElement | null" }
+    },
+    "getCellMode": {
+      "type": { "description": "(id: GridRowId, field: string) =&gt; GridCellMode" }
+    },
+    "getCellParams": {
+      "type": {
+        "description": "&lt;R extends GridValidRowModel = any, V = unknown, F = V, N extends GridTreeNode = GridTreeNode&gt;(id: GridRowId, field: string) =&gt; GridCellParams&lt;R, V, F, N&gt;"
+      }
+    },
+    "getCellSelectionModel": {
+      "type": { "description": "() =&gt; GridCellSelectionModel" },
+      "isPremiumPlan": true
+    },
+    "getCellValue": {
+      "type": { "description": "&lt;V extends any = any&gt;(id: GridRowId, field: string) =&gt; V" }
+    },
+    "getColumn": { "type": { "description": "(field: string) =&gt; GridStateColDef" } },
+    "getColumnGroupPath": {
+      "type": { "description": "(field: string) =&gt; GridColumnGroup['groupId'][]" }
+    },
+    "getColumnHeaderElement": {
+      "type": { "description": "(field: string) =&gt; HTMLDivElement | null" }
+    },
+    "getColumnHeaderParams": {
+      "type": { "description": "(field: string) =&gt; GridColumnHeaderParams" }
+    },
+    "getColumnIndex": {
+      "type": { "description": "(field: string, useVisibleColumns?: boolean) =&gt; number" }
+    },
+    "getColumnIndexRelativeToVisibleColumns": {
+      "type": { "description": "(field: string) =&gt; number" }
+    },
+    "getColumnPosition": { "type": { "description": "(field: string) =&gt; number" } },
+    "getDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; string" } },
+    "getDataAsExcel": {
+      "type": {
+        "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;Excel.Workbook&gt; | null"
+      },
+      "isPremiumPlan": true
+    },
+    "getExpandedDetailPanels": {
+      "type": { "description": "() =&gt; GridRowId[]" },
+      "isProPlan": true
+    },
+    "getLocaleText": {
+      "type": {
+        "description": "&lt;T extends GridTranslationKeys&gt;(key: T) =&gt; GridLocaleText[T]"
+      }
+    },
+    "getPinnedColumns": {
+      "type": { "description": "() =&gt; GridPinnedColumnFields" },
+      "isProPlan": true
+    },
+    "getRootDimensions": { "type": { "description": "() =&gt; GridDimensions" } },
+    "getRow": {
+      "type": {
+        "description": "&lt;R extends GridValidRowModel = any&gt;(id: GridRowId) =&gt; R | null"
+      }
+    },
+    "getRowElement": { "type": { "description": "(id: GridRowId) =&gt; HTMLDivElement | null" } },
+    "getRowGroupChildren": {
+      "type": { "description": "(params: GridRowGroupChildrenGetterParams) =&gt; GridRowId[]" },
+      "isProPlan": true
+    },
+    "getRowId": {
+      "type": { "description": "&lt;R extends GridValidRowModel = any&gt;(row: R) =&gt; GridRowId" }
+    },
+    "getRowIdFromRowIndex": { "type": { "description": "(index: number) =&gt; GridRowId" } },
+    "getRowIndexRelativeToVisibleRows": {
+      "type": { "description": "(id: GridRowId) =&gt; number" }
+    },
+    "getRowMode": { "type": { "description": "(id: GridRowId) =&gt; GridRowMode" } },
+    "getRowModels": { "type": { "description": "() =&gt; Map&lt;GridRowId, GridRowModel&gt;" } },
+    "getRowNode": {
+      "type": { "description": "&lt;N extends GridTreeNode&gt;(id: GridRowId) =&gt; N | null" }
+    },
+    "getRowParams": { "type": { "description": "(id: GridRowId) =&gt; GridRowParams" } },
+    "getRowsCount": { "type": { "description": "() =&gt; number" } },
+    "getRowWithUpdatedValues": {
+      "type": { "description": "(id: GridRowId, field: string) =&gt; GridRowModel" }
+    },
+    "getScrollPosition": { "type": { "description": "() =&gt; GridScrollParams" } },
+    "getSelectedCellsAsArray": {
+      "type": { "description": "() =&gt; GridCellCoordinates[]" },
+      "isPremiumPlan": true
+    },
+    "getSelectedRows": { "type": { "description": "() =&gt; Map&lt;GridRowId, GridRowModel&gt;" } },
+    "getSortedRowIds": { "type": { "description": "() =&gt; GridRowId[]" } },
+    "getSortedRows": { "type": { "description": "() =&gt; GridRowModel[]" } },
+    "getSortModel": { "type": { "description": "() =&gt; GridSortModel" } },
+    "getVisibleColumns": { "type": { "description": "() =&gt; GridStateColDef[]" } },
+    "hideColumnMenu": { "type": { "description": "() =&gt; void" } },
+    "hideFilterPanel": { "type": { "description": "() =&gt; void" } },
+    "hideHeaderFilterMenu": { "type": { "description": "() =&gt; void" } },
+    "hidePreferences": { "type": { "description": "() =&gt; void" } },
+    "ignoreDiacritics": { "type": { "description": "DataGridProcessedProps['ignoreDiacritics']" } },
+    "isCellEditable": { "type": { "description": "(params: GridCellParams) =&gt; boolean" } },
+    "isCellSelected": {
+      "type": { "description": "(id: GridRowId, field: GridColDef['field']) =&gt; boolean" },
+      "isPremiumPlan": true
+    },
+    "isColumnPinned": {
+      "type": { "description": "(field: string) =&gt; GridPinnedColumnPosition | false" },
+      "isProPlan": true
+    },
+    "isRowSelectable": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
+    "isRowSelected": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
+    "pinColumn": {
+      "type": { "description": "(field: string, side: GridPinnedColumnPosition) =&gt; void" },
+      "isProPlan": true
+    },
+    "publishEvent": { "type": { "description": "GridEventPublisher" } },
+    "removeRowGroupingCriteria": {
+      "type": { "description": "(groupingCriteriaField: string) =&gt; void" },
+      "isPremiumPlan": true
+    },
+    "resetRowHeights": { "type": { "description": "() =&gt; void" } },
+    "resize": { "type": { "description": "() =&gt; void" } },
+    "restoreState": { "type": { "description": "(stateToRestore: InitialState) =&gt; void" } },
+    "scroll": { "type": { "description": "(params: Partial&lt;GridScrollParams&gt;) =&gt; void" } },
+    "scrollToIndexes": {
+      "type": { "description": "(params: Partial&lt;GridCellIndexCoordinates&gt;) =&gt; boolean" }
+    },
+    "selectCellRange": {
+      "type": {
+        "description": "(start: GridCellCoordinates, end: GridCellCoordinates, keepOtherSelected?: boolean) =&gt; void"
+      },
+      "isPremiumPlan": true
+    },
+    "selectRow": {
+      "type": {
+        "description": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
+      }
+    },
+    "selectRowRange": {
+      "type": {
+        "description": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
+      },
+      "isProPlan": true
+    },
+    "selectRows": {
+      "type": {
+        "description": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) =&gt; void"
+      },
+      "isProPlan": true
+    },
+    "setAggregationModel": {
+      "type": { "description": "(model: GridAggregationModel) =&gt; void" },
+      "isPremiumPlan": true
+    },
+    "setCellFocus": { "type": { "description": "(id: GridRowId, field: string) =&gt; void" } },
+    "setCellSelectionModel": {
+      "type": { "description": "(newModel: GridCellSelectionModel) =&gt; void" },
+      "isPremiumPlan": true
+    },
+    "setColumnHeaderFilterFocus": {
+      "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" }
+    },
+    "setColumnHeaderFocus": {
+      "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" }
+    },
+    "setColumnIndex": {
+      "type": { "description": "(field: string, targetIndexPosition: number) =&gt; void" },
+      "isProPlan": true
+    },
+    "setColumnVisibility": {
+      "type": { "description": "(field: string, isVisible: boolean) =&gt; void" }
+    },
+    "setColumnVisibilityModel": {
+      "type": { "description": "(model: GridColumnVisibilityModel) =&gt; void" }
+    },
+    "setColumnWidth": { "type": { "description": "(field: string, width: number) =&gt; void" } },
+    "setDensity": { "type": { "description": "(density: GridDensity) =&gt; void" } },
+    "setEditCellValue": {
+      "type": {
+        "description": "(params: GridEditCellValueParams, event?: MuiBaseEvent) =&gt; Promise&lt;boolean&gt; | void"
+      }
+    },
+    "setExpandedDetailPanels": {
+      "type": { "description": "(ids: GridRowId[]) =&gt; void" },
+      "isProPlan": true
+    },
+    "setFilterLogicOperator": {
+      "type": { "description": "(operator: GridLogicOperator) =&gt; void" }
+    },
+    "setFilterModel": {
+      "type": {
+        "description": "(model: GridFilterModel, reason?: GridControlledStateReasonLookup['filter']) =&gt; void"
+      }
+    },
+    "setPage": { "type": { "description": "(page: number) =&gt; void" } },
+    "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" } },
+    "setPaginationModel": { "type": { "description": "(model: GridPaginationModel) =&gt; void" } },
+    "setPinnedColumns": {
+      "type": { "description": "(pinnedColumns: GridPinnedColumnFields) =&gt; void" },
+      "isProPlan": true
+    },
+    "setQuickFilterValues": { "type": { "description": "(values: any[]) =&gt; void" } },
+    "setRowChildrenExpansion": {
+      "type": { "description": "(id: GridRowId, isExpanded: boolean) =&gt; void" },
+      "isProPlan": true
+    },
+    "setRowCount": { "type": { "description": "(rowCount: number) =&gt; void" } },
+    "setRowGroupingCriteriaIndex": {
+      "type": {
+        "description": "(groupingCriteriaField: string, groupingIndex: number) =&gt; void"
+      },
+      "isPremiumPlan": true
+    },
+    "setRowGroupingModel": {
+      "type": { "description": "(model: GridRowGroupingModel) =&gt; void" },
+      "isPremiumPlan": true
+    },
+    "setRowIndex": {
+      "type": { "description": "(rowId: GridRowId, targetIndex: number) =&gt; void" },
+      "isProPlan": true
+    },
+    "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" } },
+    "setRowSelectionModel": { "type": { "description": "(rowIds: GridRowId[]) =&gt; void" } },
+    "setSortModel": { "type": { "description": "(model: GridSortModel) =&gt; void" } },
+    "showColumnMenu": { "type": { "description": "(field: string) =&gt; void" } },
+    "showFilterPanel": {
+      "type": {
+        "description": "(targetColumnField?: string, panelId?: string, labelId?: string) =&gt; void"
+      }
+    },
+    "showHeaderFilterMenu": {
+      "type": { "description": "(field: GridColDef['field']) =&gt; void" }
+    },
+    "showPreferences": {
+      "type": {
+        "description": "(newValue: GridPreferencePanelsValue, panelId?: string, labelId?: string) =&gt; void"
+      }
+    },
+    "sortColumn": {
+      "type": {
+        "description": "(field: GridColDef['field'], direction?: GridSortDirection, allowMultipleSorting?: boolean) =&gt; void"
+      }
+    },
+    "startCellEditMode": {
+      "type": { "description": "(params: GridStartCellEditModeParams) =&gt; void" }
+    },
+    "startHeaderFilterEditMode": {
+      "type": { "description": "(field: GridColDef['field']) =&gt; void" }
+    },
+    "startRowEditMode": {
+      "type": { "description": "(params: GridStartRowEditModeParams) =&gt; void" }
+    },
+    "state": { "type": { "description": "State" } },
+    "stopCellEditMode": {
+      "type": { "description": "(params: GridStopCellEditModeParams) =&gt; void" }
+    },
+    "stopHeaderFilterEditMode": { "type": { "description": "() =&gt; void" } },
+    "stopRowEditMode": {
+      "type": { "description": "(params: GridStopRowEditModeParams) =&gt; void" }
+    },
+    "subscribeEvent": {
+      "type": {
+        "description": "&lt;E extends GridEvents&gt;(event: E, handler: GridEventListener&lt;E&gt;, options?: EventListenerOptions) =&gt; () =&gt; void"
+      }
+    },
+    "toggleColumnMenu": { "type": { "description": "(field: string) =&gt; void" } },
+    "toggleDetailPanel": {
+      "type": { "description": "(id: GridRowId) =&gt; void" },
+      "isProPlan": true
+    },
+    "unpinColumn": { "type": { "description": "(field: string) =&gt; void" }, "isProPlan": true },
+    "unstable_replaceRows": {
+      "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" }
+    },
+    "unstable_setColumnVirtualization": {
+      "type": { "description": "(enabled: boolean) =&gt; void" }
+    },
+    "unstable_setPinnedRows": {
+      "type": { "description": "(pinnedRows?: GridPinnedRowsProp) =&gt; void" },
+      "isProPlan": true
+    },
+    "unstable_setVirtualization": { "type": { "description": "(enabled: boolean) =&gt; void" } },
+    "updateColumns": { "type": { "description": "(cols: GridColDef[]) =&gt; void" } },
+    "updateRows": { "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" } },
+    "upsertFilterItem": { "type": { "description": "(item: GridFilterItem) =&gt; void" } },
+    "upsertFilterItems": { "type": { "description": "(items: GridFilterItem[]) =&gt; void" } }
+  }
+}
