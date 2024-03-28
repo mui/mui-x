@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
-import { UseTreeViewJSXNodesSignature } from './useTreeViewJSXNodes.types';
+import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
 import {
@@ -14,52 +14,52 @@ import {
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
 
-export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> = ({
+export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
   setState,
 }) => {
   instance.preventItemUpdates();
 
-  const insertJSXNode = useEventCallback((node: TreeViewNode) => {
+  const insertJSXItem = useEventCallback((item: TreeViewNode) => {
     setState((prevState) => {
-      if (prevState.nodes.nodeMap[node.id] != null) {
+      if (prevState.items.nodeMap[item.id] != null) {
         throw new Error(
           [
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
             'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-            `Tow items were provided with the same id in the \`items\` prop: "${node.id}"`,
+            `Tow items were provided with the same id in the \`items\` prop: "${item.id}"`,
           ].join('\n'),
         );
       }
 
       return {
         ...prevState,
-        nodes: {
-          ...prevState.nodes,
-          nodeMap: { ...prevState.nodes.nodeMap, [node.id]: node },
+        items: {
+          ...prevState.items,
+          nodeMap: { ...prevState.items.nodeMap, [item.id]: item },
           // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
-          itemMap: { ...prevState.nodes.itemMap, [node.id]: { id: node.id, label: node.label } },
+          itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
         },
       };
     });
   });
 
-  const removeJSXNode = useEventCallback((itemId: string) => {
+  const removeJSXItem = useEventCallback((itemId: string) => {
     setState((prevState) => {
-      const newNodeMap = { ...prevState.nodes.nodeMap };
-      const newItemMap = { ...prevState.nodes.itemMap };
+      const newNodeMap = { ...prevState.items.nodeMap };
+      const newItemMap = { ...prevState.items.itemMap };
       delete newNodeMap[itemId];
       delete newItemMap[itemId];
       return {
         ...prevState,
-        nodes: {
-          ...prevState.nodes,
+        items: {
+          ...prevState.items,
           nodeMap: newNodeMap,
           itemMap: newItemMap,
         },
       };
     });
-    publishTreeViewEvent(instance, 'removeNode', { id: itemId });
+    publishTreeViewEvent(instance, 'removeItem', { id: itemId });
   });
 
   const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
@@ -77,21 +77,21 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
     };
   });
 
-  populateInstance<UseTreeViewJSXNodesSignature>(instance, {
-    insertJSXNode,
-    removeJSXNode,
+  populateInstance<UseTreeViewJSXItemsSignature>(instance, {
+    insertJSXItem,
+    removeJSXItem,
     mapFirstCharFromJSX,
   });
 };
 
-const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
+const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
   props,
   rootRef,
   contentRef,
 }) => {
   const { children, disabled = false, label, itemId, id } = props;
 
-  const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
+  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
@@ -119,9 +119,9 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   const { index, parentId } = useDescendant(descendant);
 
   React.useEffect(() => {
-    // On the first render a node's index will be -1. We want to wait for the real index.
+    // On the first render a item's index will be -1. We want to wait for the real index.
     if (index !== -1) {
-      instance.insertJSXNode({
+      instance.insertJSXItem({
         id: itemId,
         idAttribute: id,
         index,
@@ -130,7 +130,7 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
         disabled,
       });
 
-      return () => instance.removeJSXNode(itemId);
+      return () => instance.removeJSXItem(itemId);
     }
 
     return undefined;
@@ -152,10 +152,10 @@ const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   };
 };
 
-useTreeViewJSXNodes.itemPlugin = useTreeViewJSXNodesItemPlugin;
+useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXNodes.wrapItem = ({ children, itemId }) => (
+useTreeViewJSXItems.wrapItem = ({ children, itemId }) => (
   <DescendantProvider id={itemId}>{children}</DescendantProvider>
 );
 
-useTreeViewJSXNodes.params = {};
+useTreeViewJSXItems.params = {};

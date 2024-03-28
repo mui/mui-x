@@ -16,7 +16,7 @@ export type { UseTreeViewFocusSignature } from './plugins/useTreeViewFocus';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewIdSignature } from './plugins/useTreeViewId';
 export type { UseTreeViewIconsSignature } from './plugins/useTreeViewIcons';
-export type { UseTreeViewNodesSignature } from './plugins/useTreeViewNodes';
-export type { UseTreeViewJSXNodesSignature } from './plugins/useTreeViewJSXNodes';
+export type { UseTreeViewItemsSignature } from './plugins/useTreeViewItems';
+export type { UseTreeViewJSXItemsSignature } from './plugins/useTreeViewJSXItems';
 
 export { extractPluginParamsFromProps } from './utils/extractPluginParamsFromProps';

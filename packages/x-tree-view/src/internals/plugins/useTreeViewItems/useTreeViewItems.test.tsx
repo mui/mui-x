@@ -5,7 +5,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-describe('useTreeViewNodes', () => {
+describe('useTreeViewItems', () => {
   const { render } = createRenderer();
 
   it('should throw an error when two items have the same ID (items prop approach)', function test() {
