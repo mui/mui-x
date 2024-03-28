@@ -20,6 +20,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
+    getJSXItemsChildrenIndexes: () => {},
+    setJSXItemsChildrenIndexes: () => {},
   } as any,
   publicAPI: {
     focusItem: () => {},
@@ -27,6 +29,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
   wrapItem: ({ children }) => children,
+  wrapRoot: ({ children }) => children,
   disabledItemsFocusable: false,
   icons: {
     slots: {},
@@ -35,6 +38,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   selection: {
     multiSelect: false,
   },
+  rootRef: { current: null },
 };
 
 describe('<TreeItem />', () => {

@@ -8,6 +8,7 @@ import {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
   TreeItemWrapper,
+  TreeRootWrapper,
   TreeViewPublicAPI,
 } from '../models';
 import {
@@ -145,6 +146,18 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     let finalChildren: React.ReactNode = children;
     itemWrappers.forEach((itemWrapper) => {
       finalChildren = itemWrapper({ itemId, children: finalChildren });
+    });
+
+    return finalChildren;
+  };
+
+  const rootWrappers = plugins
+    .map((plugin) => plugin.wrapRoot)
+    .filter((wrapRoot): wrapRoot is TreeRootWrapper => !!wrapRoot);
+  contextValue.wrapRoot = ({ children }) => {
+    let finalChildren: React.ReactNode = children;
+    rootWrappers.forEach((rootWrapper) => {
+      finalChildren = rootWrapper({ children: finalChildren, rootRef: innerRootRef });
     });
 
     return finalChildren;

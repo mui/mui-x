@@ -86,6 +86,7 @@ export interface UseTreeViewNodesState<R extends {}> {
     nodeTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
+    itemIndexes: { [parentItemId: string]: TreeViewItemChildrenIndexes };
   };
 }
 
@@ -105,3 +106,5 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<{
 export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
+
+export type TreeViewItemChildrenIndexes = { [itemId: string]: number };
