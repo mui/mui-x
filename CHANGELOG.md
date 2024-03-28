@@ -10,7 +10,7 @@ _Mar 28, 2024_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Add `resizeThrottleMs` prop (#12556) @romgrk
-- 🌍 Improve Chinese (Hong Kong) (zh-HK) and Italian (it-IT) locale for the Data Grid
+- 🌍 Improve Chinese (Hong Kong) (zh-HK) and Italian (it-IT) locale on the Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -22,8 +22,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Do not publish `rowEditStop` event if row has fields with errors (#11383) @cherniavskii
 - [DataGrid] Fix bug in suspense (#12553) @romgrk
 - [DataGrid] Fix missing class name in the `GridToolbarQuickFilter` component (#12484) @jhawkins11
-- [l10n] Improve Chinese (Hong Kong) (zh-HK) locale (#12547) @samchiu90
-- [l10n] Improve Italian (it-IT) locale (#12549) @antomanc
 
 #### `@mui/x-data-grid-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -41,7 +39,6 @@ Same changes as in `@mui/x-data-grid-pro@7.1.0`.
 - [l10n] Improve Chinese (Hong Kong) (zh-HK) locale (#12547) @samchiu90
 - [l10n] Improve Italian (it-IT) locale (#12549) @antomanc
 - [pickers] Prepare compatibility with `@mui/zero-runtime` (stop using `ownerState` in `styled`) (#12003) @flaviendelangle
-- [DateRangePicker] Fix selection behavior with single input field when `readonly` (#12593) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -65,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 
 - [docs] Add example to add a second icon next to the field's opening button (#12524) @flaviendelangle
 - [docs] Add missing note to Data Grid migration guide (#12557) @romgrk
-- [docs] Chart title for SEO (#12545) @oliviertassinari
+- [docs] Fix Charts title for SEO (#12545) @oliviertassinari
 - [docs] Fix small typo (#12558) @diogoparente
 - [docs] Reduce noise in migration docs side navigation (#12552) @cherniavskii
 - [docs] Sync static images from core repository (#12525) @LukasTy
