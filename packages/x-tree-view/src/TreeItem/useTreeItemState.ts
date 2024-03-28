@@ -8,11 +8,11 @@ export function useTreeItemState(itemId: string) {
     selection: { multiSelect },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
-  const expandable = instance.isNodeExpandable(itemId);
-  const expanded = instance.isNodeExpanded(itemId);
-  const focused = instance.isNodeFocused(itemId);
-  const selected = instance.isNodeSelected(itemId);
-  const disabled = instance.isNodeDisabled(itemId);
+  const expandable = instance.isItemExpandable(itemId);
+  const expanded = instance.isItemExpanded(itemId);
+  const focused = instance.isItemFocused(itemId);
+  const selected = instance.isItemSelected(itemId);
+  const disabled = instance.isItemDisabled(itemId);
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
@@ -23,8 +23,8 @@ export function useTreeItemState(itemId: string) {
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       // If already expanded and trying to toggle selection don't close
-      if (expandable && !(multiple && instance.isNodeExpanded(itemId))) {
-        instance.toggleNodeExpansion(event, itemId);
+      if (expandable && !(multiple && instance.isItemExpanded(itemId))) {
+        instance.toggleItemExpansion(event, itemId);
       }
     }
   };
@@ -41,10 +41,10 @@ export function useTreeItemState(itemId: string) {
         if (event.shiftKey) {
           instance.selectRange(event, { end: itemId });
         } else {
-          instance.selectNode(event, itemId, true);
+          instance.selectItem(event, itemId, true);
         }
       } else {
-        instance.selectNode(event, itemId);
+        instance.selectItem(event, itemId);
       }
     }
   };

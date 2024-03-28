@@ -1,5 +1,5 @@
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 export interface UseTreeViewItemsReorderingInstance {
   canItemBeDragged: (itemId: string) => boolean;
@@ -68,7 +68,7 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
   contextValue: UseTreeViewItemsReorderingContextValue;
-  dependantPlugins: [UseTreeViewNodesSignature];
+  dependantPlugins: [UseTreeViewItemsSignature];
 }>;
 
 // TODO: Add support for "re-parent to level X"

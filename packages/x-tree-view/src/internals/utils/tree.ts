@@ -1,23 +1,23 @@
 import { TreeViewInstance } from '../models';
-import { UseTreeViewNodesSignature } from '../plugins/useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
 /**
- * This is used to determine if a node is before or after another node in the tree.
+ * This is used to determine if an item is before or after another item in the tree.
  *
- * It finds the nodes' common ancestor using
+ * It finds the items' common ancestor using
  * a naive implementation of a lowest common ancestor algorithm
  * (https://en.wikipedia.org/wiki/Lowest_common_ancestor).
- * Then compares the ancestor's 2 children that are ancestors of nodeA and NodeB
- * so we can compare their indexes to work out which node comes first in a depth first search.
+ * Then compares the ancestor's 2 children that are ancestors of itemA and ItemB
+ * so we can compare their indexes to work out which item comes first in a depth first search.
  * (https://en.wikipedia.org/wiki/Depth-first_search)
  *
- * Another way to put it is which node is shallower in a trémaux tree
+ * Another way to put it is which item is shallower in a trémaux tree
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  *
  * @returns 0 if both nodes are equal, -1 if nodeA is after nodeB, 1 if nodeB is after nodeA.
  */
 export const compareNodePositionsInTree = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature]>,
+  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
   nodeAId: string,
   nodeBId: string,
 ): -1 | 0 | 1 => {

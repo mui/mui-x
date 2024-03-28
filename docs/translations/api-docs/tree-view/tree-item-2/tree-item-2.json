@@ -36,12 +36,12 @@
     }
   },
   "slotDescriptions": {
-    "collapseIcon": "The icon used to collapse the node.",
+    "collapseIcon": "The icon used to collapse the item.",
     "content": "The component that renders the content of the item. (e.g.: everything related to this item, not to its children).",
-    "endIcon": "The icon displayed next to an end node.",
-    "expandIcon": "The icon used to expand the node.",
+    "endIcon": "The icon displayed next to an end item.",
+    "expandIcon": "The icon used to expand the item.",
     "groupTransition": "The component that renders the children of the item.",
-    "icon": "The icon to display next to the tree node&#39;s label.",
+    "icon": "The icon to display next to the tree item&#39;s label.",
     "iconContainer": "The component that renders the icon.",
     "label": "The component that renders the item label.",
     "root": "The component that renders the root."

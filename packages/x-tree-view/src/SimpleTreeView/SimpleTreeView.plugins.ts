@@ -2,13 +2,13 @@ import {
   DefaultTreeViewPluginSlotProps,
   DefaultTreeViewPluginSlots,
 } from '../internals/plugins/defaultPlugins';
-import { useTreeViewJSXNodes } from '../internals/plugins/useTreeViewJSXNodes';
+import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
 import { ConvertPluginsIntoSignatures } from '../internals/models';
 import { useTreeViewId, UseTreeViewIdParameters } from '../internals/plugins/useTreeViewId';
 import {
-  useTreeViewNodes,
-  UseTreeViewNodesParameters,
-} from '../internals/plugins/useTreeViewNodes';
+  useTreeViewItems,
+  UseTreeViewItemsParameters,
+} from '../internals/plugins/useTreeViewItems';
 import {
   useTreeViewExpansion,
   UseTreeViewExpansionParameters,
@@ -29,13 +29,13 @@ import {
 
 export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewId,
-  useTreeViewNodes,
+  useTreeViewItems,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
-  useTreeViewJSXNodes,
+  useTreeViewJSXItems,
 ] as const;
 
 export type SimpleTreeViewPlugins = ConvertPluginsIntoSignatures<typeof SIMPLE_TREE_VIEW_PLUGINS>;
@@ -48,7 +48,7 @@ export type SimpleTreeViewPluginSlotProps = DefaultTreeViewPluginSlotProps;
 export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
   extends UseTreeViewIdParameters,
     Omit<
-      UseTreeViewNodesParameters<any>,
+      UseTreeViewItemsParameters<any>,
       'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
     >,
     UseTreeViewExpansionParameters,

@@ -1,20 +1,20 @@
 import { TreeViewInstance, TreeViewNode } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import {
   TreeViewItemReorderPosition,
   TreeViewItemsReorderingAction,
 } from './useTreeViewItemsReordering.types';
 
 /**
- * Checks if the node with the id nodeIdB is an ancestor of the node with the id nodeIdA
+ * Checks if the item with the id itemIdB is an ancestor of the item with the id itemIdA.
  */
 export const isAncestor = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature]>,
-  nodeIdA: string,
-  nodeIdB: string,
+  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
+  itemIdA: string,
+  itemIdB: string,
 ): boolean => {
-  const nodeA = instance.getNode(nodeIdA);
-  if (nodeA.parentId === nodeIdB) {
+  const nodeA = instance.getNode(itemIdA);
+  if (nodeA.parentId === itemIdB) {
     return true;
   }
 
@@ -22,7 +22,7 @@ export const isAncestor = (
     return false;
   }
 
-  return isAncestor(instance, nodeA.parentId, nodeIdB);
+  return isAncestor(instance, nodeA.parentId, itemIdB);
 };
 
 export const getNewPositionFromAction = (

@@ -1,5 +1,5 @@
 import { TreeViewItemId } from '../../../models';
-import { TreeViewNodeMap, UseTreeViewNodesState } from './useTreeViewNodes.types';
+import { TreeViewNodeMap, UseTreeViewItemsState } from './useTreeViewItems.types';
 
 export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
 
@@ -10,10 +10,10 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   newIndex,
 }: {
   nodeToMoveId: TreeViewItemId;
-  prevState: UseTreeViewNodesState<R>['nodes'];
+  prevState: UseTreeViewItemsState<R>['items'];
   newParentId: TreeViewItemId | null;
   newIndex: number;
-}): UseTreeViewNodesState<R>['nodes'] => {
+}): UseTreeViewItemsState<R>['items'] => {
   const nodeToMove = prevState.nodeMap[nodeToMoveId];
 
   // 1. Update the `nodeMap`.

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 export interface UseTreeViewExpansionInstance {
-  isNodeExpanded: (itemId: string) => boolean;
-  isNodeExpandable: (itemId: string) => boolean;
-  toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
+  isItemExpanded: (itemId: string) => boolean;
+  isItemExpandable: (itemId: string) => boolean;
+  toggleItemExpansion: (event: React.SyntheticEvent, value: string) => void;
   expandAllSiblings: (event: React.KeyboardEvent, itemId: string) => void;
 }
 
@@ -50,5 +50,5 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
   modelNames: 'expandedItems';
-  dependantPlugins: [UseTreeViewNodesSignature];
+  dependantPlugins: [UseTreeViewItemsSignature];
 }>;
