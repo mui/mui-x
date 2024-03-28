@@ -491,6 +491,7 @@
         "returned": "Promise<R> | R"
       }
     },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },

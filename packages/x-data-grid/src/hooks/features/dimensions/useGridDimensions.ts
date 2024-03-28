@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  unstable_debounce as debounce,
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
@@ -14,6 +13,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -40,6 +40,7 @@ type RootProps = Pick<
   | 'autoHeight'
   | 'getRowHeight'
   | 'rowHeight'
+  | 'resizeThrottleMs'
   | 'columnHeaderHeight'
 >;
 
@@ -95,7 +96,10 @@ export function useGridDimensions(
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
-  const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
+  const debouncedSetSavedSize = React.useMemo(
+    () => throttle(setSavedSize, props.resizeThrottleMs),
+    [props.resizeThrottleMs],
+  );
   const previousSize = React.useRef<ElementSize>();
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
