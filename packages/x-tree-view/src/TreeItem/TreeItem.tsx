@@ -80,7 +80,6 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   [`&.${treeItemClasses.disabled}`]: {
     opacity: (theme.vars || theme).palette.action.disabledOpacity,
     backgroundColor: 'transparent',
-    pointerEvents: 'none',
   },
   [`&.${treeItemClasses.focused}`]: {
     backgroundColor: (theme.vars || theme).palette.action.focus,
@@ -184,8 +183,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   } = props;
 
   const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
-  const rootRefObject = React.useRef<HTMLLIElement>(null);
-  const handleRootRef = useForkRef(inRef, rootRef, rootRefObject);
+  const handleRootRef = useForkRef(inRef, rootRef);
   const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
 
   const slots = {

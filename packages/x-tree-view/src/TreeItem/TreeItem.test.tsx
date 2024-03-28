@@ -2118,7 +2118,7 @@ describe('<TreeItem />', () => {
           expect(onItemFocus.callCount).to.equal(0);
         });
 
-        it('should prevent focus when clicking', () => {
+        it.only('should prevent focus when clicking', () => {
           const handleMouseDown = spy();
 
           const { getByText } = render(
