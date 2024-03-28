@@ -100,6 +100,59 @@ describe('<DesktopDatePicker /> - Field', () => {
     });
   });
 
+  describe('slots: field', () => {
+    const { render, clock } = createPickerRenderer({
+      clock: 'fake',
+      clockConfig: new Date('2018-01-01T10:05:05.000'),
+    });
+    const { renderWithProps } = buildFieldInteractions({
+      clock,
+      render,
+      Component: DesktopDatePicker,
+    });
+
+    it('should allow to override the placeholder (v6 only)', () => {
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        slotProps: {
+          field: {
+            // @ts-ignore
+            placeholder: 'Custom placeholder',
+          },
+        },
+      });
+
+      const input = getTextbox();
+      expectFieldPlaceholderV6(input, 'Custom placeholder');
+    });
+  });
+
+  describe('slots: textField', () => {
+    const { render, clock } = createPickerRenderer({
+      clock: 'fake',
+      clockConfig: new Date('2018-01-01T10:05:05.000'),
+    });
+    const { renderWithProps } = buildFieldInteractions({
+      clock,
+      render,
+      Component: DesktopDatePicker,
+    });
+
+    it('should allow to override the placeholder (v6 only)', () => {
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        slotProps: {
+          textField: {
+            placeholder: 'Custom placeholder',
+          },
+        },
+      });
+
+      const input = getTextbox();
+      expectFieldPlaceholderV6(input, 'Custom placeholder');
+    });
+  });
+
   describeAdapters('Timezone', DesktopDatePicker, ({ adapter, renderWithProps }) => {
     it('should clear the selected section when all sections are completed when using timezones', () => {
       const v7Response = renderWithProps(
