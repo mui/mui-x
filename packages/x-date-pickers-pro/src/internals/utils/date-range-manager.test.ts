@@ -73,6 +73,13 @@ describe('date-range-manager', () => {
       expectedNextSelection: 'start' as const,
     },
     {
+      range: [null, mid2018],
+      rangePosition: 'start' as const,
+      newDate: end2019,
+      expectedRange: [null, end2019],
+      expectedNextSelection: 'start' as const,
+    },
+    {
       range: [start2018, mid2018],
       rangePosition: 'start' as const,
       newDate: end2019,

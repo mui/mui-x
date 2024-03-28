@@ -57,5 +57,8 @@ export const useRangePosition = (
     syncRangePositionWithSingleInputField(newRangePosition);
   });
 
-  return { rangePosition, onRangePositionChange: handleRangePositionChange };
+  return {
+    rangePosition,
+    onRangePositionChange: handleRangePositionChange,
+  };
 };

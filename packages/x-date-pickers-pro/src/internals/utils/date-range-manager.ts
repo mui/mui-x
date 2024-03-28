@@ -41,21 +41,47 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
     }
   }
 
-  if (rangePosition === 'start') {
-    const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
-      : { nextSelection: 'end', newRange: [selectedDate, null] };
-    return Boolean(end) && utils.isAfter(selectedDate!, end!)
-      ? truthyResult
-      : { nextSelection: 'end', newRange: [selectedDate, end] };
+  let response: CalculateRangeChangeResponse<TDate> = {
+    nextSelection: rangePosition,
+    newRange: range,
+  };
+
+  if (!selectedDate) {
+    response = {
+      nextSelection: rangePosition,
+      newRange: rangePosition === 'start' ? [null, end] : [start, null],
+    };
+  } else if (rangePosition === 'start') {
+    // If we try to set a start date after the already selected end date,
+    // Then we either flip the range, or replace the end date.
+    if (end && utils.isAfter(selectedDate, end)) {
+      if (allowRangeFlip) {
+        response = { nextSelection: 'start', newRange: [end!, selectedDate] };
+      } else {
+        response = { nextSelection: 'start', newRange: [null, selectedDate] };
+      }
+    }
+    // Otherwise, we update the start date
+    else {
+      response = { nextSelection: 'end', newRange: [selectedDate, end] };
+    }
+  } else if (rangePosition === 'end') {
+    // If we try to set a end date before the already selected start date,
+    // Then we either flip the range, or replace the start date.
+    if (start && utils.isBefore(selectedDate, start)) {
+      if (allowRangeFlip) {
+        response = { nextSelection: 'end', newRange: [selectedDate, start!] };
+      } else {
+        response = { nextSelection: 'end', newRange: [selectedDate, null] };
+      }
+    }
+    // Otherwise, we update the end date
+    else {
+      response = { nextSelection: 'start', newRange: [start, selectedDate] };
+    }
   }
 
-  const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
-    : { nextSelection: 'end', newRange: [selectedDate, null] };
-  return Boolean(start) && utils.isBefore(selectedDate!, start!)
-    ? truthyResult
-    : { nextSelection: 'start', newRange: [start, selectedDate] };
+  return response;
 }
 
 export function calculateRangePreview<TDate extends PickerValidDate>(
