@@ -515,7 +515,8 @@ export const useField = <
     getActiveSectionIndex: () => {
       const browserStartIndex = inputRef.current!.selectionStart ?? 0;
       const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
-      if ((browserStartIndex === 0 && browserEndIndex === 0) || !!inputRef.current?.readOnly) {
+      const isInputReadOnly = !!inputRef.current?.readOnly;
+      if ((browserStartIndex === 0 && browserEndIndex === 0) || isInputReadOnly) {
         return null;
       }
 
