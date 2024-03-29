@@ -31,6 +31,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const idAttribute = instance.getTreeItemId(itemId, id);
+  const parentId = instance.getNode(itemId)?.parentId ?? undefined;
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
 
   const createRootHandleFocus =
@@ -128,6 +129,8 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
+      'data-parentid': parentId,
+      'data-id': itemId,
       ...externalProps,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
