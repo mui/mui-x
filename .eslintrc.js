@@ -163,6 +163,8 @@ module.exports = {
     buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
     buildPackageRestrictedImports('@mui/x-pickers', 'x-pickers'),
     buildPackageRestrictedImports('@mui/x-pickers-pro', 'x-pickers-pro'),
+    buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view'),
+    buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro'),
     buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ],
 };

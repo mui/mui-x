@@ -75,7 +75,7 @@ export function getComponentImports(name: string, filename: string) {
 
   const reExportPackage = [rootImportPath];
 
-  // TODO: uncomment when releasing the pro package
+  // TODO x-tree-view-pro uncomment when making the package public
   // if (rootImportPath === '@mui/x-tree-view') {
   //   reExportPackage.push('@mui/x-tree-view-pro');
   // }
