@@ -63,7 +63,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     // This is not sufficient to get the new order because this includes grand-children, not only direct children.
     if (element) {
       const newDescendantIds = Array.from(element.querySelectorAll('[role="treeitem"]'))
-        .map((child) => child.id)
+        .map((child) => (child as HTMLElement).dataset.id!)
         .join('\n');
       if (newDescendantIds === cachedDescendantIds.current) {
         return;

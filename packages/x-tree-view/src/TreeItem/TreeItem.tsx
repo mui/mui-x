@@ -163,6 +163,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+  const parentId = instance.getNode(itemId)?.parentId ?? undefined;
 
   const {
     children,
@@ -317,6 +318,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
         aria-expanded={expandable ? expanded : undefined}
         aria-selected={ariaSelected}
         aria-disabled={disabled || undefined}
+        data-id={itemId}
         id={idAttribute}
         tabIndex={tabIndex}
         {...other}
