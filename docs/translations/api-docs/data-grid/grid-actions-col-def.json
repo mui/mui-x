@@ -1,6 +1,11 @@
 {
   "interfaceDescription": "Column Definition interface used for columns with the <code>actions</code> type.",
   "propertiesDescriptions": {
+    "field": {
+      "description": "The column identifier. It&#39;s used to map with GridRowModel values."
+    },
+    "getActions": { "description": "Function that returns the actions to be shown." },
+    "type": { "description": "The type of the column." },
     "aggregable": {
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
     },
@@ -24,13 +29,9 @@
       "description": "Display mode for the cell:<br /> - &#39;text&#39;: For text-based cells (default)<br /> - &#39;flex&#39;: For cells with HTMLElement children"
     },
     "editable": { "description": "If <code>true</code>, the cells of the column are editable." },
-    "field": {
-      "description": "The column identifier. It&#39;s used to map with GridRowModel values."
-    },
     "filterable": { "description": "If <code>true</code>, the column is filterable." },
     "filterOperators": { "description": "Allows setting the filter operators for this column." },
     "flex": { "description": "If set, it indicates that a column has fluid width. Range [0, ∞)." },
-    "getActions": { "description": "Function that returns the actions to be shown." },
     "getApplyQuickFilterFn": {
       "description": "The callback that generates a filtering function for a given quick filter value.<br />This function can return <code>null</code> to skip filtering for this value and column."
     },
@@ -77,7 +78,6 @@
     "sortable": { "description": "If <code>true</code>, the column is sortable." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
-    "type": { "description": "The type of the column." },
     "valueFormatter": {
       "description": "Function that allows to apply a formatter before rendering its value."
     },

@@ -7,8 +7,8 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/master-detail/\">Master detail</a></li></ul>",
   "properties": {
-    "columns": { "type": { "description": "GridColDef[]" } },
-    "id": { "type": { "description": "GridRowId" } },
-    "row": { "type": { "description": "R" } }
+    "columns": { "type": { "description": "GridColDef[]" }, "required": true },
+    "id": { "type": { "description": "GridRowId" }, "required": true },
+    "row": { "type": { "description": "R" }, "required": true }
   }
 }

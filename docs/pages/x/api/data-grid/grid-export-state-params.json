@@ -7,10 +7,6 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/state/#restore-the-state-with-apiref\">Restore state with `apiRef`</a></li></ul>",
   "properties": {
-    "exportOnlyDirtyModels": {
-      "type": { "description": "boolean" },
-      "default": "false",
-      "isOptional": true
-    }
+    "exportOnlyDirtyModels": { "type": { "description": "boolean" }, "default": "false" }
   }
 }

@@ -4,6 +4,9 @@
     "getApplyFilterFn": {
       "description": "The callback that generates a filtering function for a given filter item and column.<br />This function can return <code>null</code> to skip filtering for this item and column."
     },
+    "value": {
+      "description": "The name of the filter operator.<br />It will be matched with the <code>operator</code> property of the filter items."
+    },
     "getValueAsString": {
       "description": "Converts the value of a filter item to a human-readable form."
     },
@@ -17,9 +20,6 @@
     "label": { "description": "The label of the filter operator." },
     "requiresFilterValue": {
       "description": "If <code>false</code>, filter operator doesn&#39;t require user-entered value to work.<br />Usually should be set to <code>false</code> for filter operators that don&#39;t have <code>InputComponent</code> (for example <code>isEmpty</code>)"
-    },
-    "value": {
-      "description": "The name of the filter operator.<br />It will be matched with the <code>operator</code> property of the filter items."
     }
   }
 }

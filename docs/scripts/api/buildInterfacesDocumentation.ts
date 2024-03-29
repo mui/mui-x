@@ -31,7 +31,7 @@ interface ParsedProperty {
   name: string;
   description: string;
   tags: { [tagName: string]: ts.JSDocTagInfo };
-  isOptional: boolean;
+  required: boolean;
   typeStr: string;
   /**
    * Name of the projects on which the interface has this property
@@ -97,7 +97,7 @@ const parseProperty = async (
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
-  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  required: !propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
   typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
@@ -301,7 +301,7 @@ export default async function buildInterfacesDocumentation(
 
       const translations = {
         interfaceDescription: renderMarkdown(
-          escapeCell(linkify(parsedInterface.description, documentedInterfaces, 'html')),
+          linkify(escapeCell(parsedInterface.description || ''), documentedInterfaces, 'html'),
         ),
         propertiesDescriptions: {},
       };
@@ -310,21 +310,29 @@ export default async function buildInterfacesDocumentation(
         .map((property) => ({
           name: property.name,
           description: renderMarkdown(
-            escapeCell(linkify(property.description, documentedInterfaces, 'html')),
+            linkify(escapeCell(property.description), documentedInterfaces, 'html'),
           ),
           type: { description: escapeCell(property.typeStr) },
           default: getDefaultValue(property),
           planLevel: getPlanLevel(property),
-          isOptional: property.isOptional,
+          required: property.required,
         }))
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .forEach(({ name, description, type, default: defaultValue, isOptional, planLevel }) => {
+        .sort((a, b) => {
+          if ((a.required && b.required) || (!a.required && !b.required)) {
+            return a.name.localeCompare(b.name);
+          }
+          if (a.required) {
+            return -1;
+          }
+          return 1;
+        })
+        .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
           content.properties[name] = { type };
           if (defaultValue) {
             content.properties[name].default = defaultValue;
           }
-          if (isOptional) {
-            content.properties[name].isOptional = isOptional;
+          if (required) {
+            content.properties[name].required = required;
           }
           if (planLevel === 'pro') {
             content.properties[name].isProPlan = true;

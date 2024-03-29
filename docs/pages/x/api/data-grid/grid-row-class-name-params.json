@@ -7,11 +7,11 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/style/#styling-rows\">Styling rows</a></li></ul>",
   "properties": {
-    "columns": { "type": { "description": "GridColDef[]" } },
-    "id": { "type": { "description": "GridRowId" } },
-    "indexRelativeToCurrentPage": { "type": { "description": "number" } },
-    "isFirstVisible": { "type": { "description": "boolean" } },
-    "isLastVisible": { "type": { "description": "boolean" } },
-    "row": { "type": { "description": "R" } }
+    "columns": { "type": { "description": "GridColDef[]" }, "required": true },
+    "id": { "type": { "description": "GridRowId" }, "required": true },
+    "indexRelativeToCurrentPage": { "type": { "description": "number" }, "required": true },
+    "isFirstVisible": { "type": { "description": "boolean" }, "required": true },
+    "isLastVisible": { "type": { "description": "boolean" }, "required": true },
+    "row": { "type": { "description": "R" }, "required": true }
   }
 }
