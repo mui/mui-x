@@ -1,0 +1,23 @@
+{
+  "name": "GridPrintExportOptions",
+  "imports": [
+    "import { GridPrintExportOptions } from '@mui/x-data-grid-premium'",
+    "import { GridPrintExportOptions } from '@mui/x-data-grid-pro'",
+    "import { GridPrintExportOptions } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/export/#print-export\">Print export</a></li></ul>",
+  "properties": {
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "bodyClassName": { "type": { "description": "string" } },
+    "copyStyles": { "type": { "description": "boolean" }, "default": "true" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "The title of the page." },
+    "getRowsToExport": {
+      "type": { "description": "(params: GridPrintGetRowsToExportParams) =&gt; GridRowId[]" }
+    },
+    "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
+    "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },
+    "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
+    "pageStyle": { "type": { "description": "string | Function" } }
+  }
+}

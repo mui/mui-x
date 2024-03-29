@@ -88,9 +88,9 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "collapseIcon": "The default icon used to collapse the node.",
-    "endIcon": "The default icon displayed next to an end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> slot prop.",
-    "expandIcon": "The default icon used to expand the node.",
+    "collapseIcon": "The default icon used to collapse the item.",
+    "endIcon": "The default icon displayed next to an end item. This is applied to all tree items and can be overridden by the TreeItem <code>icon</code> slot prop.",
+    "expandIcon": "The default icon used to expand the item.",
     "item": "Custom component for the item.",
     "root": "Element rendered at the root."
   }

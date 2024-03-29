@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './useTreeViewContext';
-import type { UseTreeViewJSXNodesSignature } from '../plugins/useTreeViewJSXNodes';
-import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewNodes/useTreeViewNodes.types';
+import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
+import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewItems/useTreeViewItems.types';
 
 function binaryFindPosition(
   otherDescendants: { id: string; element: HTMLLIElement }[],
@@ -44,7 +44,7 @@ interface TreeViewChildrenItemProviderProps {
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
   const { children, rootRef, id = null } = props;
 
-  const { instance } = useTreeViewContext<[UseTreeViewJSXNodesSignature]>();
+  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   const childrenElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map());
   const cachedDescendantIds = React.useRef('');
