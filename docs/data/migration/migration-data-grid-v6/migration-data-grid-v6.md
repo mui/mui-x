@@ -99,11 +99,11 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Drop the legacy bundle
 
-The support for IE11 has been removed from all MUI X packages.
-The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 :::info
-If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
 ### DOM changes
