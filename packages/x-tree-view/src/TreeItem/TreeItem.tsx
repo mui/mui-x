@@ -163,7 +163,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
-  const parentId = instance.getNode(itemId)?.parentId ?? undefined;
 
   const {
     children,
@@ -206,6 +205,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const focused = instance.isItemFocused(itemId);
   const selected = instance.isItemSelected(itemId);
   const disabled = instance.isItemDisabled(itemId);
+  const parentId = instance.getNode(itemId)?.parentId ?? undefined;
 
   const ownerState: TreeItemOwnerState = {
     ...props,
