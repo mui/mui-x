@@ -347,7 +347,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
       ref: anchorRef,
       ...fieldProps?.InputProps,
     },
-    focused: open,
+    focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(wrapperVariant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
