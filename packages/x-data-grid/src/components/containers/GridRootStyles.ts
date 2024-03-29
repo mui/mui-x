@@ -46,7 +46,7 @@ declare module '@mui/material' {
     DataGrid: {
       containerBackground?: string;
       pinnedBackground?: string;
-    }
+    };
   }
 }
 
@@ -135,7 +135,7 @@ export const GridRootStyles = styled('div', {
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
-    : (t.mixins.DataGrid?.containerBackground ?? t.palette.background.default);
+    : t.mixins.DataGrid?.containerBackground ?? t.palette.background.default;
 
   const pinnedBackground = t.mixins.DataGrid?.pinnedBackground ?? containerBackground;
 
