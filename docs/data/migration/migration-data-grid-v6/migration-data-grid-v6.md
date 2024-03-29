@@ -57,12 +57,14 @@ You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/p
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
+<!-- #default-branch-switch -->
+
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path>
 
 // Target other MUI X components as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -510,6 +512,8 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
 - The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
   The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
+- The column headers and pinned section now require an explicit color. By default, the MUI `theme.palette.background.default` color will be used. To customize it, see https://mui.com/material-ui/customization/palette/#customization
+  We will be adding a new color name to the palette for additional customization, read [#12443](https://github.com/mui/mui-x/issues/12443) for more details.
 
 ### Changes to the public API
 

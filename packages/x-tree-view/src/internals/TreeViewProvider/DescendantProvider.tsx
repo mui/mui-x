@@ -50,7 +50,7 @@ const noop = () => {};
  * We use this for focus management, keyboard navigation, and typeahead
  * functionality for some components.
  *
- * The hook accepts the element node
+ * The hook accepts the element item
  *
  * Our main goals with this are:
  *   1) maximum composability,

@@ -68,7 +68,7 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
   } else if (rangePosition === 'end') {
     // If we try to set a end date before the already selected start date,
     // Then we either flip the range, or replace the start date.
-    if (start && utils.isBefore(selectedDate, start)) {
+    if (start && utils.isBeforeDay(selectedDate, start)) {
       if (allowRangeFlip) {
         response = { nextSelection: 'end', newRange: [selectedDate, start!] };
       } else {

@@ -2018,7 +2018,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.15.14"
-  resolved "https://github.com/mui/material-ui.git#9585d28317c90f2c71ab88dd5ae37638bb64ad82"
+  resolved "https://github.com/mui/material-ui.git#39fe215ce8bb1ed215e9a274f63b979714876e61"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@netlify/functions" "^2.6.0"
@@ -7280,7 +7280,7 @@ exponential-backoff@^3.1.1:
   resolved "https://registry.yarnpkg.com/exponential-backoff/-/exponential-backoff-3.1.1.tgz#64ac7526fe341ab18a39016cd22c787d01e00bf6"
   integrity sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==
 
-express@^4.16.4, express@^4.18.3:
+express@^4.16.4:
   version "4.18.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.18.3.tgz#6870746f3ff904dee1819b82e4b51509afffb0d4"
   integrity sha512-6VyCijWQ+9O7WuVMTRBTl+cjNNIzD5cY5mQ1WM8r/LEkI2u8EYpOotESNwzNlyCn3g+dmjKYI6BmNneSr/FSRw==
