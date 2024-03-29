@@ -86,6 +86,7 @@ export const useField = <
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
+      setSelectedSections(null);
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
