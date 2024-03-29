@@ -41,6 +41,15 @@ const columnHeaderStyles = {
   },
 };
 
+declare module '@mui/material' {
+  interface Mixins {
+    DataGrid: {
+      containerBackground?: string;
+      pinnedBackground?: string;
+    }
+  }
+}
+
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
@@ -126,9 +135,9 @@ export const GridRootStyles = styled('div', {
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
-    : t.palette.background.default;
+    : (t.mixins.DataGrid?.containerBackground ?? t.palette.background.default);
 
-  const pinnedBackground = containerBackground;
+  const pinnedBackground = t.mixins.DataGrid?.pinnedBackground ?? containerBackground;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
