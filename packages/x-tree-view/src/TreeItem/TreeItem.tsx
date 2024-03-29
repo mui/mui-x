@@ -205,6 +205,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const focused = instance.isItemFocused(itemId);
   const selected = instance.isItemSelected(itemId);
   const disabled = instance.isItemDisabled(itemId);
+  const parentId = instance.getNode(itemId)?.parentId ?? undefined;
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -317,6 +318,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
         aria-expanded={expandable ? expanded : undefined}
         aria-selected={ariaSelected}
         aria-disabled={disabled || undefined}
+        data-parentid={parentId}
+        data-id={itemId}
         id={idAttribute}
         tabIndex={tabIndex}
         {...other}

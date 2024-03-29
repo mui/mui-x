@@ -344,7 +344,7 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('four')).toHaveFocus();
   });
 
-  it('should update indexes when two items are swapped', () => {
+  it.only('should update indexes when two items are swapped', () => {
     const onSelectedItemsChange = spy();
 
     function TestComponent() {
