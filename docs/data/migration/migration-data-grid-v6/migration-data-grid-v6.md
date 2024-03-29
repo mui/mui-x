@@ -18,8 +18,10 @@ In `package.json`, change the version of the data grid package to `^7.0.0`.
 ```diff
 -"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "^7.0.0",
+
 -"@mui/x-data-grid-pro": "6.x.x",
 +"@mui/x-data-grid-pro": "^7.0.0",
+
 -"@mui/x-data-grid-premium": "6.x.x",
 +"@mui/x-data-grid-premium": "^7.0.0",
 ```
@@ -166,8 +168,8 @@ Here's the list of affected features, column definition flags and props to disab
 Some selectors now require passing `instanceId` as a second argument:
 
 ```diff
-- gridColumnFieldsSelector(apiRef.current.state);
-+ gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+-gridColumnFieldsSelector(apiRef.current.state);
++gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
 ```
 
 However, it's preferable to pass the `apiRef` as the first argument instead:
@@ -205,9 +207,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 - The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
 
-- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are no longer prefixed with `unstable_`.
 
-- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are no longer prefixed with `unstable_`.
 
 - The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](/material-ui/react-popper/) component under the hood.
 
@@ -228,83 +230,83 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The signature of `GridColDef['valueGetter']` has been changed for performance reasons:
 
   ```diff
-  - valueGetter: ({ value, row }) => value,
-  + valueGetter: (value, row, column, apiRef) => value,
+  -valueGetter: ({ value, row }) => value,
+  +valueGetter: (value, row, column, apiRef) => value,
   ```
 
   The `GridValueGetterParams` interface has been removed:
 
   ```diff
-  - const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
-  + const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
+  -const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
+  +const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
   ```
 
 - The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
 
   ```diff
-  - valueFormatter: ({ value }) => value,
-  + valueFormatter: (value, row, column, apiRef) => value,
+  -valueFormatter: ({ value }) => value,
+  + alueFormatter: (value, row, column, apiRef) => value,
   ```
 
   The `GridValueFormatterParams` interface has been removed:
 
   ```diff
-  - const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
-  + const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
+  -const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
+  +const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
   ```
 
 - The signature of `GridColDef['valueSetter']` has been changed for performance reasons:
 
   ```diff
-  - valueSetter: (params) => {
-  -   const [firstName, lastName] = params.value!.toString().split(' ');
-  -   return { ...params.row, firstName, lastName };
-  - }
-  + valueSetter: (value, row) => {
-  +   const [firstName, lastName] = value!.toString().split(' ');
-  +   return { ...row, firstName, lastName };
+  -valueSetter: (params) => {
+  -  const [firstName, lastName] = params.value!.toString().split(' ');
+  -  return { ...params.row, firstName, lastName };
+  -}
+  +valueSetter: (value, row) => {
+  +  const [firstName, lastName] = value!.toString().split(' ');
+  +  return { ...row, firstName, lastName };
   +}
   ```
 
   The `GridValueSetterParams` interface has been removed:
 
   ```diff
-  - const setFullName = (params: GridValueSetterParams) => {
-  -   const [firstName, lastName] = params.value!.toString().split(' ');
-  -   return { ...params.row, firstName, lastName };
-  - };
-  + const setFullName: GridValueSetter<Row> = (value, row) => {
-  +   const [firstName, lastName] = value!.toString().split(' ');
-  +   return { ...row, firstName, lastName };
-  + }
+  -const setFullName = (params: GridValueSetterParams) => {
+  -  const [firstName, lastName] = params.value!.toString().split(' ');
+  -  return { ...params.row, firstName, lastName };
+  -};
+  +const setFullName: GridValueSetter<Row> = (value, row) => {
+  +  const [firstName, lastName] = value!.toString().split(' ');
+  +  return { ...row, firstName, lastName };
+  +}
   ```
 
 - The signature of `GridColDef['valueParser']` has been changed for performance reasons:
 
   ```diff
-  - valueParser: (value, params: GridCellParams) => value.toLowerCase(),
-  + valueParser: (value, row, column, apiRef) => value.toLowerCase(),
+  -valueParser: (value, params: GridCellParams) => value.toLowerCase(),
+  +valueParser: (value, row, column, apiRef) => value.toLowerCase(),
   ```
 
 - The signature of `GridColDef['colSpan']` has been changed for performance reasons:
 
   ```diff
-  - colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
-  + colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
+  -colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
+  +colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
   ```
 
 - The signature of `GridColDef['pastedValueParser']` has been changed for performance reasons:
 
   ```diff
-  - pastedValueParser: (value, params) => new Date(value),
-  + pastedValueParser: (value, row, column, apiRef) => new Date(value),
+  -pastedValueParser: (value, params) => new Date(value),
+  +pastedValueParser: (value, row, column, apiRef) => new Date(value),
   ```
 
 - The signature of `GridColDef['groupingValueGetter']` has been changed for performance reasons:
 
   ```diff
-  - groupingValueGetter: (params) => params.value.name,
-  + groupingValueGetter: (value: { name: string }) => value.name,
+  -groupingValueGetter: (params) => params.value.name,
+  +groupingValueGetter: (value: { name: string }) => value.name,
   ```
 
 ### Density
