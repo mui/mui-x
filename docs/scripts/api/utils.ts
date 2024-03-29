@@ -26,11 +26,7 @@ export function getJsdocDefaultValue(jsdoc: Annotation) {
 }
 
 export function escapeCell(value: string) {
-  return value
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\|/g, '\\|')
-    .replace(/\r?\n/g, '<br />');
+  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r?\n/g, '<br />');
 }
 
 export const formatType = async (rawType: string) => {

@@ -1,0 +1,24 @@
+{
+  "name": "GridFilterOperator",
+  "imports": [
+    "import { GridFilterOperator } from '@mui/x-data-grid-premium'",
+    "import { GridFilterOperator } from '@mui/x-data-grid-pro'",
+    "import { GridFilterOperator } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
+  "properties": {
+    "getApplyFilterFn": {
+      "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" },
+      "required": true
+    },
+    "value": { "type": { "description": "string" }, "required": true },
+    "getValueAsString": {
+      "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
+    },
+    "headerLabel": { "type": { "description": "string" } },
+    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;any&gt;" } },
+    "InputComponentProps": { "type": { "description": "Record&lt;string, any&gt;" } },
+    "label": { "type": { "description": "string" } },
+    "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
+  }
+}

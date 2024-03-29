@@ -1,0 +1,101 @@
+{
+  "interfaceDescription": "Column Definition interface used for columns with the <code>singleSelect</code> type.",
+  "propertiesDescriptions": {
+    "field": {
+      "description": "The column identifier. It&#39;s used to map with GridRowModel values."
+    },
+    "type": { "description": "The type of the column." },
+    "aggregable": {
+      "description": "If <code>true</code>, the cells of the column can be aggregated based."
+    },
+    "align": { "description": "Allows to align the column values in cells." },
+    "availableAggregationFunctions": {
+      "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
+    },
+    "cellClassName": { "description": "Class name that will be added in cells for that column." },
+    "colSpan": { "description": "Number of columns a cell should span." },
+    "description": {
+      "description": "The description of the column rendered as tooltip if the column header name is not fully displayed."
+    },
+    "disableColumnMenu": {
+      "description": "If <code>true</code>, the column menu is disabled for this column."
+    },
+    "disableExport": {
+      "description": "If <code>true</code>, this column will not be included in exports."
+    },
+    "disableReorder": { "description": "If <code>true</code>, this column cannot be reordered." },
+    "display": {
+      "description": "Display mode for the cell:<br /> - &#39;text&#39;: For text-based cells (default)<br /> - &#39;flex&#39;: For cells with HTMLElement children"
+    },
+    "editable": { "description": "If <code>true</code>, the cells of the column are editable." },
+    "filterable": { "description": "If <code>true</code>, the column is filterable." },
+    "filterOperators": { "description": "Allows setting the filter operators for this column." },
+    "flex": { "description": "If set, it indicates that a column has fluid width. Range [0, ∞)." },
+    "getApplyQuickFilterFn": {
+      "description": "The callback that generates a filtering function for a given quick filter value.<br />This function can return <code>null</code> to skip filtering for this value and column."
+    },
+    "getOptionLabel": {
+      "description": "Used to determine the label displayed for a given value option."
+    },
+    "getOptionValue": { "description": "Used to determine the value used for a value option." },
+    "getSortComparator": {
+      "description": "Allows to use a different comparator function depending on the sort direction.<br />Takes precedence over <code>sortComparator</code>."
+    },
+    "groupable": {
+      "description": "If <code>true</code>, the rows can be grouped based on this column values (pro-plan only).<br />Only available in DataGridPremium."
+    },
+    "groupingValueGetter": {
+      "description": "Function that transforms a complex cell value into a key that be used for grouping the rows."
+    },
+    "headerAlign": { "description": "Header cell element alignment." },
+    "headerClassName": {
+      "description": "Class name that will be added in the column header cell."
+    },
+    "headerName": { "description": "The title of the column rendered in the column header cell." },
+    "hideable": {
+      "description": "If <code>false</code>, removes the buttons for hiding this column."
+    },
+    "hideSortIcons": { "description": "Toggle the visibility of the sort icons." },
+    "maxWidth": { "description": "Sets the maximum width of a column." },
+    "minWidth": { "description": "Sets the minimum width of a column." },
+    "pastedValueParser": {
+      "description": "Function that takes the clipboard-pasted value and converts it to a value used internally."
+    },
+    "pinnable": {
+      "description": "If <code>false</code>, the menu items for column pinning menu will not be rendered.<br />Only available in DataGridPro."
+    },
+    "preProcessEditCellProps": {
+      "description": "Callback fired when the edit props of the cell changes.<br />It allows to process the props that saved into the state."
+    },
+    "renderCell": {
+      "description": "Allows to override the component rendered as cell for this column."
+    },
+    "renderEditCell": {
+      "description": "Allows to override the component rendered in edit cell mode for this column."
+    },
+    "renderHeader": { "description": "Allows to render a component in the column header cell." },
+    "renderHeaderFilter": {
+      "description": "Allows to render a component in the column header filter cell."
+    },
+    "resizable": { "description": "If <code>true</code>, the column is resizable." },
+    "sortable": { "description": "If <code>true</code>, the column is sortable." },
+    "sortComparator": { "description": "A comparator function used to sort rows." },
+    "sortingOrder": { "description": "The order of the sorting sequence." },
+    "valueFormatter": {
+      "description": "Function that allows to apply a formatter before rendering its value."
+    },
+    "valueGetter": {
+      "description": "Function that allows to get a specific data instead of field to render in the cell."
+    },
+    "valueOptions": {
+      "description": "To be used in combination with <code>type: &#39;singleSelect&#39;</code>. This is an array (or a function returning an array) of the possible cell values and labels."
+    },
+    "valueParser": {
+      "description": "Function that takes the user-entered value and converts it to a value used internally."
+    },
+    "valueSetter": {
+      "description": "Function that allows to customize how the entered value is stored in the row.<br />It only works with cell/row editing."
+    },
+    "width": { "description": "Set the width of the column." }
+  }
+}
