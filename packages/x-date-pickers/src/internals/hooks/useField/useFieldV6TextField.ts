@@ -171,7 +171,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       getActiveSectionIndexFromDOM: () => {
         const browserStartIndex = inputRef.current!.selectionStart ?? 0;
         const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
-        if (browserStartIndex === 0 && browserEndIndex === 0) {
+        if ((browserStartIndex === 0 && browserEndIndex === 0) || !!inputRef.current?.readOnly) {
           return null;
         }
 
@@ -196,6 +196,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
+      setSelectedSections(null);
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
