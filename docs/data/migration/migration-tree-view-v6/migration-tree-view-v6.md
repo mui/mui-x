@@ -46,28 +46,27 @@ The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` f
 
 ```diff
  <TreeView>
--    <TreeItem label='Item 1' nodeId='one'>
-+    <TreeItem label='Item 1' itemId='one'>
+-  <TreeItem label='Item 1' nodeId='one'>
++  <TreeItem label='Item 1' itemId='one'>
  </TreeView>
 ```
 
 The same change has been applied to the and `ContentComponent` prop:
 
 ```diff
-  const CustomContent = React.forwardRef((props, ref) => {
+ const CustomContent = React.forwardRef((props, ref) => {
 -  const id = props.nodeId;
 +  const id = props.itemId;
+   // Render some UI
+ });
 
-     // Render some UI
-   });
-
-   function App() {
-     return (
-       <SimpleTreeView>
-         <TreeItem ContentComponent={CustomContent} />
-       </SimpleTreeView>
-     )
-   }
+ function App() {
+   return (
+     <SimpleTreeView>
+       <TreeItem ContentComponent={CustomContent} />
+     </SimpleTreeView>
+   )
+ }
 ```
 
 ### ✅ Use `SimpleTreeView` instead of `TreeView`
@@ -305,8 +304,8 @@ you need to use the new `groupTransition` slot on this component:
      itemId="1"
      label="Item 1"
 -    TransitionComponent={Fade}
-+    slots={{ groupTransition: Fade }}
 -    TransitionProps={{ timeout: 600 }}
++    slots={{ groupTransition: Fade }}
 +    slotProps={{ groupTransition: { timeout: 600 } }}
    />
  </SimpleTreeView>
