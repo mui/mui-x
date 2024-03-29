@@ -530,13 +530,13 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 🎁 Introduce a new DOM structure for the field components that provides a better accessibility
 - 🚀 Simplify Data Grid DOM structure for improved performance (#12013) @romgrk
-- 🕥 The support for IE11 has been removed (#12151) @flaviendelangle
+- 🕥 The support for IE 11 has been removed (#12151) @flaviendelangle
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 ### Breaking changes
 
-- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+- The support for IE 11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 ### Data Grid
 
@@ -641,7 +641,7 @@ These components are no longer exported from `@mui/x-charts`:
 
 ### Tree View / `@mui/x-tree-view@7.0.0-beta.4`
 
-- [TreeView] Stop using custom `findIndex` to support IE11 (#12129) @flaviendelangle
+- [TreeView] Stop using custom `findIndex` to support IE 11 (#12129) @flaviendelangle
 
 ### Docs
 
