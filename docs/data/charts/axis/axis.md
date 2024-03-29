@@ -175,6 +175,21 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 You can further customize the axis rendering besides the axis definition.
 
+### Fixing overflow issues
+
+If your tick labels are too long, they can either overflow the the SVG or overlap with the axis label.
+To fix that issue, you have two main tools:
+
+- Increase the space between the SVG border and the axis by setting the [margin props](http://localhost:3001/x/react-charts/styling/#placement).
+- Modify the axis label position by:
+  - Using the axis configuration `labelStyle.transform`.
+  - Applying CSS transform to the class name `axisClasses.label`.
+
+In the next demo, the margin got modify to provide more space to x and y axes.
+The x label is placed thanks to the axis configuration, and the y axis is placed by using CSS selectors.
+
+{{"demo": "MarginAndLabelPosition.js"}}
+
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
@@ -204,10 +219,6 @@ Axes rendering can be further customized. Below is an interactive demonstration 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
 {{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
-
-### Text position
-
-TODO: explain hou to put some addiitonal margin and move the axis label
 
 ## Composition
 
