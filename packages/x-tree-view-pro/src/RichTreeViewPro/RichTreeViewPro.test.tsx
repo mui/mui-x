@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui-internal/test-utils';
 import {
   RichTreeViewPro,
-  richTreeViewClasses as classes,
+  richTreeViewProClasses as classes,
 } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { describeConformance } from 'test/utils/describeConformance';
 
