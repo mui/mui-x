@@ -14,6 +14,7 @@ import {
 import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems/useTreeViewItems.utils';
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
+import { UseTreeViewIdSignature } from '../useTreeViewId';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -112,8 +113,8 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
+  const { instance } = useTreeViewContext<[UseTreeViewIdSignature, UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
-  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   if (parentContext == null) {
@@ -144,12 +145,13 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    registerChild(itemId, pluginRootRef.current!);
+    const idAttributeWithDefault = instance.getTreeItemId(itemId, id);
+    registerChild(itemId, pluginRootRef.current!, idAttributeWithDefault);
 
     return () => {
-      unregisterChild(itemId);
+      unregisterChild(itemId, idAttributeWithDefault);
     };
-  }, [registerChild, unregisterChild, itemId]);
+  }, [instance, registerChild, unregisterChild, itemId, id]);
 
   React.useEffect(() => {
     instance.insertJSXItem({
@@ -182,7 +184,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
 useTreeViewJSXItems.wrapItem = ({ children, itemId }) => (
-  <TreeViewChildrenItemProvider id={itemId}>{children}</TreeViewChildrenItemProvider>
+  <TreeViewChildrenItemProvider itemId={itemId}>{children}</TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXItems.wrapRoot = ({ children, rootRef }) => (

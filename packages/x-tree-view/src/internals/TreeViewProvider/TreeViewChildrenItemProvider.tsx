@@ -36,34 +36,35 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 interface TreeViewChildrenItemProviderProps {
-  id?: string;
+  itemId?: string;
   rootRef?: React.RefObject<HTMLElement>;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
-  const { children, rootRef, id = null } = props;
+  const { children, rootRef, itemId = null } = props;
 
   const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   const childrenElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map());
+  const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
   const cachedDescendantIds = React.useRef('');
 
   React.useEffect(() => {
     let element: HTMLElement | null | undefined;
     if (rootRef) {
       element = rootRef.current;
-    } else if (id && parentContext) {
+    } else if (itemId && parentContext) {
       // The TreeViewChildrenItemProvider is not aware of the ref of its own item,
       // but its parent can give him this information.
-      element = parentContext.getChild(id);
+      element = parentContext.getChild(itemId);
     }
 
     // Weak but quick way to check if the descendants have changed and avoid the expensive DOM operations.
     // This is not sufficient to get the new order because this includes grand-children, not only direct children.
     if (element) {
       const newDescendantIds = Array.from(element.querySelectorAll('[role="treeitem"]'))
-        .map((child) => (child as HTMLElement).dataset.id!)
+        .map((child) => childrenIdAttrToIdRef.current.get(child.id))
         .join('\n');
       if (newDescendantIds === cachedDescendantIds.current) {
         return;
@@ -82,7 +83,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       }
     });
 
-    const previousIndexes = instance.getJSXItemsChildrenIndexes(id ?? null);
+    const previousIndexes = instance.getJSXItemsChildrenIndexes(itemId ?? null);
     const hasChanges =
       Object.keys(previousIndexes).length !== orderedChildren.length ||
       orderedChildren.some((child, index) => index !== previousIndexes[child.id]);
@@ -91,18 +92,24 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       orderedChildren.forEach((child, index) => {
         newIndexes[child.id] = index;
       });
-      instance.setJSXItemsChildrenIndexes(id ?? null, newIndexes);
+      instance.setJSXItemsChildrenIndexes(itemId ?? null, newIndexes);
     }
   });
 
   const value = React.useMemo<TreeViewChildrenItemContextValue>(
     () => ({
-      registerChild: (itemId, element) => childrenElementRef.current.set(itemId, element),
-      unregisterChild: (itemId) => childrenElementRef.current.delete(itemId),
-      getChild: (itemId) => childrenElementRef.current.get(itemId),
-      parentId: id,
+      registerChild: (childId, element, childIdAttribute) => {
+        childrenElementRef.current.set(childId, element);
+        childrenIdAttrToIdRef.current.set(childIdAttribute, childId);
+      },
+      unregisterChild: (childId, childIdAttribute) => {
+        childrenElementRef.current.delete(childId);
+        childrenIdAttrToIdRef.current.delete(childIdAttribute);
+      },
+      getChild: (childId) => childrenElementRef.current.get(childId),
+      parentId: itemId,
     }),
-    [id],
+    [itemId],
   );
 
   return (
@@ -118,8 +125,8 @@ TreeViewChildrenItemProvider.propTypes = {
 } as any;
 
 interface TreeViewChildrenItemContextValue {
-  registerChild: (itemId: string, element: HTMLLIElement) => void;
-  unregisterChild: (itemId: string) => void;
+  registerChild: (itemId: string, element: HTMLLIElement, idAttribute: string) => void;
+  unregisterChild: (itemId: string, idAttribute: string) => void;
   getChild: (itemId: string) => HTMLLIElement | undefined;
   parentId: string | null;
 }
