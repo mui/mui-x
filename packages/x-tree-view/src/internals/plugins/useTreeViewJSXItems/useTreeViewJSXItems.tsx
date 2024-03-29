@@ -52,7 +52,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   ) => {
     setState((prevState) => ({
       ...prevState,
-      nodes: {
+      items: {
         ...prevState.items,
         itemIndexes: {
           ...prevState.items.itemIndexes,
