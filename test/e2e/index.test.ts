@@ -587,6 +587,7 @@ async function initializeEnvironment(
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
       });
+
       describe('<MobileDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
@@ -604,6 +605,7 @@ async function initializeEnvironment(
         });
       });
     });
+
     describe('<DesktopDateTimePicker />', () => {
       it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicDesktopDateTimePicker');
@@ -693,6 +695,7 @@ async function initializeEnvironment(
         });
       });
     });
+
     describe('<DateRangePicker />', () => {
       it('should allow selecting a range value', async () => {
         // firefox in CI is not happy with this test
@@ -737,6 +740,28 @@ async function initializeEnvironment(
         await page.keyboard.press('Escape');
 
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+      });
+
+      it('should have the same selection process when "readOnly" with single input field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
+
+        await page.getByRole('textbox').click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
     });
   });
