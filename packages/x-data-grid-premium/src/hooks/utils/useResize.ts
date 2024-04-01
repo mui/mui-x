@@ -30,29 +30,27 @@ export const useResize = <TElement extends HTMLElement>(options: {
       onWidthChange(newWidth, handle);
     };
 
-    const handlePointerUp = () => {
+    const handlePointerUp = (event: PointerEvent) => {
       startX = null;
       startWidth = null;
-
-      document.removeEventListener('pointermove', handlePointerMove);
-      document.removeEventListener('pointerup', handlePointerUp);
+      handle.removeEventListener('pointermove', handlePointerMove);
+      handle.releasePointerCapture(event.pointerId);
     };
 
     const handlePointerDown = (event: PointerEvent) => {
-      event.preventDefault();
       startX = event.clientX;
       startWidth = getInitialWidth(handle);
-
-      document.addEventListener('pointermove', handlePointerMove);
-      document.addEventListener('pointerup', handlePointerUp);
+      handle.addEventListener('pointermove', handlePointerMove);
+      handle.setPointerCapture(event.pointerId);
     };
 
     handle.addEventListener('pointerdown', handlePointerDown);
+    handle.addEventListener('pointerup', handlePointerUp);
 
     return () => {
       handle.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('pointermove', handlePointerMove);
-      document.removeEventListener('pointerup', handlePointerUp);
+      handle.removeEventListener('pointerup', handlePointerUp);
+      handle.removeEventListener('pointermove', handlePointerMove);
     };
   }, []);
 

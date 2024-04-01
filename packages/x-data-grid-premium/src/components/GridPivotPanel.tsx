@@ -26,6 +26,8 @@ const ResizeHandle = styled('div')(({ theme }) => ({
   cursor: 'ew-resize',
   borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
   transition: 'border-left 0.2s',
+  userSelect: 'none',
+  touchAction: 'pan-x',
   '&:hover': {
     borderLeft: `1px solid ${theme.palette.action.active}`,
   },
