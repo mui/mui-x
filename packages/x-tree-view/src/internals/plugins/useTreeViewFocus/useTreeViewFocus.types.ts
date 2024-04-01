@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
-import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
-  isNodeFocused: (itemId: string) => boolean;
+  isItemFocused: (itemId: string) => boolean;
   canItemBeTabbed: (itemId: string) => boolean;
-  focusItem: (event: React.SyntheticEvent, nodeId: string) => void;
-  focusDefaultNode: (event: React.SyntheticEvent | null) => void;
+  focusItem: (event: React.SyntheticEvent, itemId: string) => void;
+  focusDefaultItem: (event: React.SyntheticEvent | null) => void;
   removeFocusedItem: () => void;
 }
 
@@ -28,7 +28,7 @@ export interface UseTreeViewFocusParameters {
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
-  focusedNodeId: string | null;
+  focusedItemId: string | null;
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
@@ -39,7 +39,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   state: UseTreeViewFocusState;
   dependantPlugins: [
     UseTreeViewIdSignature,
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
   ];
