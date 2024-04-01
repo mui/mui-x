@@ -21,7 +21,8 @@ export const useResize = <TElement extends HTMLElement>(options: {
     let startX: null | number = null;
     let startWidth: null | number = null;
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handlePointerMove = (event: PointerEvent) => {
+      event.preventDefault();
       if (startX === null || startWidth === null) {
         return;
       }
@@ -29,29 +30,29 @@ export const useResize = <TElement extends HTMLElement>(options: {
       onWidthChange(newWidth, handle);
     };
 
-    const handleMouseUp = () => {
+    const handlePointerUp = () => {
       startX = null;
       startWidth = null;
 
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
     };
 
-    const handleMouseDown = (event: MouseEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       event.preventDefault();
       startX = event.clientX;
       startWidth = getInitialWidth(handle);
 
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('pointermove', handlePointerMove);
+      document.addEventListener('pointerup', handlePointerUp);
     };
 
-    handle.addEventListener('mousedown', handleMouseDown);
+    handle.addEventListener('pointerdown', handlePointerDown);
 
     return () => {
-      handle.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      handle.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
     };
   }, []);
 
