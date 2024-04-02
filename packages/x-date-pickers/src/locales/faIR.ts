@@ -84,13 +84,13 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
+  year: 'سال',
+  month: 'ماه',
+  day: 'روز',
   // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
+  hours: 'ساعت ها',
+  minutes: 'دقیقه ها',
+  seconds: 'ثانیه ها',
   // meridiem: 'Meridiem',
 
   // Common
