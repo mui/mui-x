@@ -42,6 +42,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   const setItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => {
+      const isExpandedBefore = instance.isItemExpanded(itemId);
+      if (isExpandedBefore === isExpanded) {
+        return;
+      }
+
       let newExpanded: string[];
       if (isExpanded) {
         newExpanded = [itemId].concat(models.expandedItems.value);
