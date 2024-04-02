@@ -319,7 +319,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         aria-selected={ariaSelected}
         aria-disabled={disabled || undefined}
         data-parentid={parentId}
-        data-id={itemId}
         id={idAttribute}
         tabIndex={tabIndex}
         {...other}

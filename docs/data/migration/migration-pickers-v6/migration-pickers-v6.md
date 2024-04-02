@@ -88,11 +88,11 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Drop the legacy bundle
 
-The support for IE11 has been removed from all MUI X packages.
-The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 :::info
-If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
 ## Component slots
@@ -294,7 +294,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impacts you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -304,9 +304,9 @@ If you are just using the regular field components, then you can safely skip thi
 The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
 
 ```diff
-- const { inputRef, ...otherProps } = props
-- const fieldResponse = useDateField({ props: otherProps, inputRef });
-+ const fieldResponse = useDateField(props);
+-const { inputRef, ...otherProps } = props
+-const fieldResponse = useDateField({ props: otherProps, inputRef });
++const fieldResponse = useDateField(props);
 ```
 
 If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
@@ -408,7 +408,8 @@ When building a custom UI, you are most-likely only supporting one DOM structure
   function MyCustomField(props) {
     const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...props,
-+     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     // If you only support one DOM structure, we advise you to hardcode it
++     // here to avoid unwanted switches in your application.
 +     enableAccessibleFieldDOMStructure: false,
     });
 

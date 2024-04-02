@@ -130,7 +130,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       'data-parentid': parentId,
-      'data-id': itemId,
       ...externalProps,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
