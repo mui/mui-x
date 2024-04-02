@@ -25,10 +25,10 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Початок',
   end: 'Кінець',
-   startDate: 'День початку',
-   startTime: 'Час початку',
-   endDate: 'День закінчення',
-   endTime: 'Час закінчення',
+  startDate: 'День початку',
+  startTime: 'Час початку',
+  endDate: 'День закінчення',
+  endTime: 'Час закінчення',
 
   // Action bar
   cancelButtonLabel: 'Відміна',
@@ -84,17 +84,17 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-   year: 'Рік',
-   month: 'Місяць',
-   day: 'День',
-   weekDay: 'День тижня',
-   hours: 'Годин',
-   minutes: 'Хвилин',
-   seconds: 'Секунд',
-   meridiem: 'Меридіем',
+  year: 'Рік',
+  month: 'Місяць',
+  day: 'День',
+  weekDay: 'День тижня',
+  hours: 'Годин',
+  minutes: 'Хвилин',
+  seconds: 'Секунд',
+  meridiem: 'Меридіем',
 
   // Common
-   empty: 'Порожній',
+  empty: 'Порожній',
 };
 
 export const ukUA = getPickersLocalization(ukUAPickers);
