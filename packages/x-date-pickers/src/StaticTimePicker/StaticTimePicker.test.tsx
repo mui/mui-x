@@ -45,7 +45,7 @@ describe('<StaticTimePicker />', () => {
     ],
   }));
 
-  it('should allows view modification, but not update value when `readOnly` prop is passed', function test() {
+  it('should allow view modification, but not update value when `readOnly` prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
       this.skip();

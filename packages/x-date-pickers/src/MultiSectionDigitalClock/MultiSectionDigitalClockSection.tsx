@@ -53,13 +53,13 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
-  ({ theme, ownerState }) => ({
+  ({ theme }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
     width: 56,
     padding: 0,
     overflow: 'hidden',
     '@media (prefers-reduced-motion: no-preference)': {
-      scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+      scrollBehavior: 'auto',
     },
     '@media (pointer: fine)': {
       '&:hover': {
@@ -78,6 +78,16 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct
       height: 'calc(100% - 40px - 6px)',
     },
+    variants: [
+      {
+        props: { alreadyRendered: true },
+        style: {
+          '@media (prefers-reduced-motion: no-preference)': {
+            scrollBehavior: 'smooth',
+          },
+        },
+      },
+    ],
   }),
 );
 
@@ -187,7 +197,9 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         {...other}
       >
         {items.map((option, index) => {
-          if (skipDisabled && option.isDisabled?.(option.value)) {
+          const isItemDisabled = option.isDisabled?.(option.value);
+          const isDisabled = disabled || isItemDisabled;
+          if (skipDisabled && isDisabled) {
             return null;
           }
           const isSelected = option.isSelected(option.value);
@@ -198,11 +210,11 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               key={option.label}
               onClick={() => !readOnly && onChange(option.value)}
               selected={isSelected}
-              disabled={disabled || option.isDisabled?.(option.value)}
+              disabled={isDisabled}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect
-              aria-disabled={readOnly}
+              aria-disabled={readOnly || isDisabled || undefined}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
               tabIndex={tabIndex}

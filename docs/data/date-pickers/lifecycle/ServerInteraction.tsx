@@ -40,7 +40,7 @@ function DisplayEvents(props: DisplayEventsProps) {
 
 // debounce function
 function debounce(func: (...arg: any) => void, wait = 500) {
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
   function debounced(...args: any) {
     const later = () => {
       func(...args);

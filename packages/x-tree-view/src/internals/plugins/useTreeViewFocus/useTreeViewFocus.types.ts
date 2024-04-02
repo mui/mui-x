@@ -1,40 +1,45 @@
 import * as React from 'react';
 import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
-import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewFocusInstance {
-  isNodeFocused: (nodeId: string) => boolean;
-  focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
-  focusRoot: () => void;
+  isItemFocused: (itemId: string) => boolean;
+  canItemBeTabbed: (itemId: string) => boolean;
+  focusItem: (event: React.SyntheticEvent, itemId: string) => void;
+  focusDefaultItem: (event: React.SyntheticEvent | null) => void;
+  removeFocusedItem: () => void;
 }
+
+export interface UseTreeViewFocusPublicAPI extends Pick<UseTreeViewFocusInstance, 'focusItem'> {}
 
 export interface UseTreeViewFocusParameters {
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * @param {string} itemId The id of the focused item.
+   * @param {string} value of the focused item.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
-  focusedNodeId: string | null;
+  focusedItemId: string | null;
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
   defaultizedParams: UseTreeViewFocusDefaultizedParameters;
   instance: UseTreeViewFocusInstance;
+  publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
   dependantPlugins: [
     UseTreeViewIdSignature,
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
   ];

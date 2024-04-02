@@ -3,7 +3,7 @@ import {
   createTypeScriptProject,
   CreateTypeScriptProjectOptions,
   TypeScriptProject,
-} from '@mui-internal/docs-utils';
+} from '@mui/internal-docs-utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
@@ -37,7 +37,8 @@ export type XProjectNames =
   | 'x-date-pickers'
   | 'x-date-pickers-pro'
   | 'x-charts'
-  | 'x-tree-view';
+  | 'x-tree-view'
+  | 'x-tree-view-pro';
 
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
@@ -263,6 +264,25 @@ export const createXTypeScriptProjects = () => {
       }),
     }),
   );
+
+  // TODO x-tree-view-pro uncomment when making the package public
+  // projects.set(
+  //   'x-tree-view-pro',
+  //   createXTypeScriptProject({
+  //     name: 'x-tree-view-pro',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
+  //     entryPointPath: 'src/index.ts',
+  //     documentationFolderName: 'tree-view',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //   }),
+  // );
 
   return projects;
 };

@@ -1,14 +1,13 @@
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
+  expectFieldValueV7,
   openPicker,
-  getTextbox,
   describeValidation,
   describeValue,
   describePicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
@@ -33,14 +32,13 @@ describe('<MobileDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, 'MM/DD/YYYY');
-      }
-      expectInputValue(
-        input,
-        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-      );
+      const fieldRoot = getFieldInputRoot();
+
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, 'keyboardDate')
+        : 'MM/DD/YYYY';
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
@@ -54,7 +52,8 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
 

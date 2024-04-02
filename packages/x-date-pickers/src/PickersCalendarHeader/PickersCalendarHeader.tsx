@@ -87,14 +87,19 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
-}>(({ ownerState }) => ({
+}>({
   marginRight: 'auto',
-  ...(ownerState.view === 'year' && {
-    [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
-      transform: 'rotate(180deg)',
+  variants: [
+    {
+      props: { view: 'year' },
+      style: {
+        [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
+          transform: 'rotate(180deg)',
+        },
+      },
     },
-  }),
-}));
+  ],
+});
 
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
@@ -107,7 +112,7 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
 }));
 
 type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**

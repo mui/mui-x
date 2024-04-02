@@ -6,7 +6,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 describe('<SingleInputDateTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<SingleInputDateTimeRangeField />, () => ({
+  describeConformance(<SingleInputDateTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

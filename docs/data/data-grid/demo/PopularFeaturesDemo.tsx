@@ -383,6 +383,7 @@ const columns: GridColDef[] = [
     flex: 0.2,
     minWidth: 100,
     groupable: false,
+    display: 'flex',
     renderCell: (params) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
@@ -445,6 +446,7 @@ const columns: GridColDef[] = [
     flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
+    display: 'flex',
     renderCell: (params: GridRenderCellParams<any, string>) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
@@ -540,7 +542,8 @@ export default function PopularFeaturesDemo() {
         }}
         sx={{
           fontFamily: 'IBM Plex Sans',
-          [`& .${gridClasses.cell}`]: {
+          // Do not target cells in nested grids
+          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
             py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {

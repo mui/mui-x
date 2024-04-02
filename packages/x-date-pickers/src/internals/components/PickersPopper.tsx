@@ -112,13 +112,19 @@ const PickersPopperPaper = styled(MuiPaper, {
   overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickersPopperOwnerState;
-}>(({ ownerState }) => ({
+}>({
   outline: 0,
   transformOrigin: 'top center',
-  ...(ownerState.placement.includes('top') && {
-    transformOrigin: 'bottom center',
-  }),
-}));
+  variants: [
+    {
+      props: ({ placement }: PickersPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(placement),
+      style: {
+        transformOrigin: 'bottom center',
+      },
+    },
+  ],
+});
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   return (
@@ -246,7 +252,7 @@ function useClickAwayListener(
     // TODO This behavior is not tested automatically
     // It's unclear whether this is due to different update semantics in test (batched in act() vs discrete on click).
     // Or if this is a timing related issues due to different Transition components
-    // Once we get rid of all the manual scheduling (e.g. setTimeout(update, 0)) we can revisit this code+test.
+    // Once we get rid of all the manual scheduling (for example setTimeout(update, 0)) we can revisit this code+test.
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 

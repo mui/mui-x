@@ -6,6 +6,7 @@ import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersL
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { MakeOptional } from '../helpers';
 import { DateOrTimeViewWithMeridiem } from '../common';
+import { UseFieldInternalProps } from '../../hooks/useField';
 import { PickerValidDate } from '../../../models';
 
 /**
@@ -44,22 +45,24 @@ export interface BasePickerInputProps<
     'viewRenderers'
   > {}
 
+// We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
 /**
  * Props common to all non-static pickers.
  * These props are handled by the headless wrappers.
  */
-export interface BaseNonStaticPickerProps {
+export interface BaseNonStaticPickerProps
+  extends Pick<
+    UseFieldInternalProps<any, any, any, any, any>,
+    | 'formatDensity'
+    | 'enableAccessibleFieldDOMStructure'
+    | 'selectedSections'
+    | 'onSelectedSectionsChange'
+  > {
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
   format?: string;
-  /**
-   * Density of the format when rendered in the input.
-   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
-   * @default "dense"
-   */
-  formatDensity?: 'dense' | 'spacious';
 }
 
 /**

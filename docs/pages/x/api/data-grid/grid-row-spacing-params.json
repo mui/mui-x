@@ -1,0 +1,16 @@
+{
+  "name": "GridRowSpacingParams",
+  "imports": [
+    "import { GridRowSpacingParams } from '@mui/x-data-grid-premium'",
+    "import { GridRowSpacingParams } from '@mui/x-data-grid-pro'",
+    "import { GridRowSpacingParams } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/row-height/#row-spacing\">Row spacing</a></li></ul>",
+  "properties": {
+    "id": { "type": { "description": "GridRowId" }, "required": true },
+    "indexRelativeToCurrentPage": { "type": { "description": "number" }, "required": true },
+    "isFirstVisible": { "type": { "description": "boolean" }, "required": true },
+    "isLastVisible": { "type": { "description": "boolean" }, "required": true },
+    "model": { "type": { "description": "R" }, "required": true }
+  }
+}

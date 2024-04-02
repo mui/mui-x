@@ -76,6 +76,64 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
+  describe('api method: `upsertFilterItems`', () => {
+    it('should be able to add multiple filters', () => {
+      render(<TestCase getRowId={(row) => row.brand} />);
+
+      act(() =>
+        apiRef.current.upsertFilterItems([
+          {
+            field: 'brand',
+            value: 'i',
+            operator: 'contains',
+            id: 1,
+          },
+          {
+            field: 'brand',
+            value: 'as',
+            operator: 'contains',
+            id: 2,
+          },
+        ]),
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    // See https://github.com/mui/mui-x/issues/11793
+    it('should not remove filters which are not passed to `upsertFilterItems`', () => {
+      render(<TestCase getRowId={(row) => row.brand} />);
+
+      act(() =>
+        apiRef.current.upsertFilterItems([
+          {
+            field: 'brand',
+            value: 'i',
+            operator: 'contains',
+            id: 1,
+          },
+          {
+            field: 'brand',
+            value: 'as',
+            operator: 'contains',
+            id: 2,
+          },
+        ]),
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      act(() =>
+        apiRef.current.upsertFilterItems([
+          {
+            field: 'brand',
+            value: '',
+            operator: 'contains',
+            id: 2,
+          },
+        ]),
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+    });
+  });
+
   it('slotProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns

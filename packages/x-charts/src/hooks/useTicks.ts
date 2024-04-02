@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { D3Scale } from '../models/axis';
+import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 
 export interface TickParams {
@@ -10,7 +10,7 @@ export interface TickParams {
    */
   tickMaxStep?: number;
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
@@ -28,6 +28,18 @@ export interface TickParams {
    * @default 'auto'
    */
   tickInterval?: 'auto' | ((value: any, index: number) => boolean) | any[];
+  /**
+   * The placement of ticks in regard to the band interval.
+   * Only used if scale is 'band'.
+   * @default 'extremities'
+   */
+  tickPlacement?: 'start' | 'end' | 'middle' | 'extremities';
+  /**
+   * The placement of ticks label. Can be the middle of the band, or the tick position.
+   * Only used if scale is 'band'.
+   * @default 'middle'
+   */
+  tickLabelPlacement?: 'middle' | 'tick';
 }
 
 export function getTickNumber(
@@ -48,6 +60,13 @@ export function getTickNumber(
   return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }
 
+const offsetRatio = {
+  start: 0,
+  extremities: 0,
+  end: 1,
+  middle: 0.5,
+} as const;
+
 export type TickItemType = {
   /**
    * This property is undefined only if it's the tick closing the last band
@@ -61,10 +80,17 @@ export type TickItemType = {
 export function useTicks(
   options: {
     scale: D3Scale;
-    valueFormatter?: (value: any) => string;
-  } & Pick<TickParams, 'tickNumber' | 'tickInterval'>,
+    valueFormatter?: AxisConfig['valueFormatter'];
+  } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): TickItemType[] {
-  const { scale, tickNumber, valueFormatter, tickInterval } = options;
+  const {
+    scale,
+    tickNumber,
+    valueFormatter,
+    tickInterval,
+    tickPlacement = 'extremities',
+    tickLabelPlacement = 'middle',
+  } = options;
 
   return React.useMemo(() => {
     // band scale
@@ -76,16 +102,26 @@ export function useTicks(
         return [
           ...domain.map((value) => ({
             value,
-            formattedValue: valueFormatter?.(value) ?? `${value}`,
-            offset: scale(value)! - (scale.step() - scale.bandwidth()) / 2,
-            labelOffset: scale.step() / 2,
+            formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+            offset:
+              scale(value)! -
+              (scale.step() - scale.bandwidth()) / 2 +
+              offsetRatio[tickPlacement] * scale.step(),
+            labelOffset:
+              tickLabelPlacement === 'tick'
+                ? 0
+                : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
           })),
 
-          {
-            formattedValue: undefined,
-            offset: scale.range()[1],
-            labelOffset: 0,
-          },
+          ...(tickPlacement === 'extremities'
+            ? [
+                {
+                  formattedValue: undefined,
+                  offset: scale.range()[1],
+                  labelOffset: 0,
+                },
+              ]
+            : []),
         ];
       }
 
@@ -97,7 +133,7 @@ export function useTicks(
 
       return filteredDomain.map((value) => ({
         value,
-        formattedValue: valueFormatter?.(value) ?? `${value}`,
+        formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
@@ -106,9 +142,10 @@ export function useTicks(
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
     return ticks.map((value: any) => ({
       value,
-      formattedValue: valueFormatter?.(value) ?? scale.tickFormat(tickNumber)(value),
+      formattedValue:
+        valueFormatter?.(value, { location: 'tick' }) ?? scale.tickFormat(tickNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));
-  }, [tickNumber, scale, valueFormatter, tickInterval]);
+  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
 }

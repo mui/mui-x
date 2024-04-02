@@ -27,29 +27,36 @@ We require bug reports to be accompanied by a **minimal reproduction**.
 It significantly increases the odds of fixing the problem.
 You have a few possible options to provide it:
 
-- You can browse the documentation, find an example close to your use case, and then open it in a live editor:
-  <a href="/x/react-date-pickers/getting-started/#render-your-first-component">
-  <span class="only-light-mode">
-  <img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
-  </span>
-  <span class="only-dark-mode">
-  <img src="/static/docs-infra/forking-an-example-dark.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
-  </span>
-  </a>
+#### Use the live editors
 
-  - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
-  - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-  - [Charts](/x/react-charts/getting-started/#single-charts)
-  - [Tree View](/x/react-tree-view/#simple-tree-view)
+You can browse the documentation, find an example close to your use case, and then open it in a live editor:
 
-- You can use a starter template to build a reproduction case with:
-  <!-- #default-branch-switch -->
-  - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
-  - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
+<a href="/x/react-date-pickers/getting-started/#render-your-first-component">
+<span class="only-light-mode">
+<img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
+</span>
+<span class="only-dark-mode">
+<img src="/static/docs-infra/forking-an-example-dark.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
+</span>
+</a>
 
-## Stack Overflow
+- [Data Grid](/x/react-data-grid/#mit-version-free-forever)
+- [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
+- [Charts](/x/react-charts/getting-started/#single-charts)
+- [Tree View](/x/react-tree-view/#simple-tree-view)
 
-We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+#### Use starter templates
+
+You can use a starter template to build a reproduction case with:
+
+<!-- #default-branch-switch -->
+
+- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
+- A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
+
+## Stack Overflow
+
+We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
 
 You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x+or+mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker):
 
@@ -87,9 +94,9 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
-- MUI X v6: ✅ Stable major (Continuous support)
-- MUI X v5: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v7: ✅ Stable major (Continuous support).
+- MUI X v6: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v5: 🅧 No longer supported.
 - MUI X v4: 🅧 No longer supported.
 - MUI X v3: 🅧 Never existed.
 - MUI X v2: 🅧 Never existed.
@@ -110,7 +117,7 @@ Our tools are used by thousands of developers and teams all around the world, ma
 You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
 
 :::warning
-How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
+How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
 :::
 
 ## Custom work

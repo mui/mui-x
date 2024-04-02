@@ -383,7 +383,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
-          { pathname: '/x/react-date-pickers/playground', title: 'Customziation playground' },
+          { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
         ],
       },
     ],
@@ -459,12 +459,17 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/heat-map', title: 'Heatmap', planned: true },
               { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
               { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              {
+                pathname: '/x/react-charts/heat-map',
+                title: 'Heatmap',
+                plan: 'pro',
+                planned: true,
+              },
               { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', title: 'Sankey', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
             ],
           },
         ],
@@ -486,6 +491,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/simple-tree-view/selection' },
           { pathname: '/x/react-tree-view/simple-tree-view/expansion' },
           { pathname: '/x/react-tree-view/simple-tree-view/customization' },
+          { pathname: '/x/react-tree-view/simple-tree-view/focus' },
         ],
       },
       {
@@ -495,6 +501,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/items' },
           { pathname: '/x/react-tree-view/rich-tree-view/selection' },
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/rich-tree-view/customization' },
+          { pathname: '/x/react-tree-view/rich-tree-view/focus' },
         ],
       },
       {
@@ -529,7 +537,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-v6',
-        subheader: 'Upgrade to v6',
+        title: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
           {
@@ -544,7 +552,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-earlier',
-        subheader: 'Earlier versions',
+        title: 'Earlier versions',
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',

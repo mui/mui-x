@@ -4,10 +4,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS"
@@ -36,9 +32,8 @@
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
-    "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -79,10 +74,7 @@
       "default": "\"cell\""
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -235,6 +227,10 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onBeforeClipboardPasteStart": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
+    },
     "onCellClick": {
       "type": { "name": "func" },
       "signature": {
@@ -360,6 +356,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDensityChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(density: GridDensity) => void",
+        "describedArgs": ["density"]
+      }
+    },
     "onDetailPanelExpandedRowIdsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -447,6 +450,10 @@
         "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
       }
+    },
+    "onRowCountChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(count: number) => void", "describedArgs": ["count"] }
     },
     "onRowDoubleClick": {
       "type": { "name": "func" },
@@ -541,7 +548,8 @@
         "returned": "Promise<R> | R"
       }
     },
-    "rowBuffer": { "type": { "name": "number" }, "default": "3" },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
+    "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
       "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
@@ -552,6 +560,10 @@
     "rowModesModel": { "type": { "name": "object" } },
     "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
+    "rows": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "default": "[]"
+    },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
@@ -566,7 +578,6 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
-    "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -761,12 +772,6 @@
       "name": "baseSelect",
       "description": "The custom Select component used in the grid.",
       "default": "Select",
-      "class": null
-    },
-    {
-      "name": "baseSwitch",
-      "description": "The custom Switch component used in the grid.",
-      "default": "Switch",
       "class": null
     },
     {
@@ -1114,6 +1119,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--flex",
+      "className": "MuiDataGridPremium-cell--flex",
+      "description": "Styles applied to the cell element in flex display mode.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--pinnedLeft",
       "className": "MuiDataGridPremium-cell--pinnedLeft",
       "description": "Styles applied to the cell element if it is pinned to the left.",
@@ -1180,12 +1191,6 @@
       "isGlobal": false
     },
     {
-      "key": "cell--withRenderer",
-      "className": "MuiDataGridPremium-cell--withRenderer",
-      "description": "Styles applied to the cell element if the cell has a custom renderer.",
-      "isGlobal": false
-    },
-    {
       "key": "cell--withRightBorder",
       "className": "MuiDataGridPremium-cell--withRightBorder",
       "description": "Styles applied the cell if `showColumnVerticalBorder={true}`.",
@@ -1195,12 +1200,6 @@
       "key": "cellCheckbox",
       "className": "MuiDataGridPremium-cellCheckbox",
       "description": "Styles applied to the cell checkbox element.",
-      "isGlobal": false
-    },
-    {
-      "key": "cellContent",
-      "className": "MuiDataGridPremium-cellContent",
-      "description": "Styles applied to the element that wraps the cell content.",
       "isGlobal": false
     },
     {
@@ -1219,12 +1218,6 @@
       "key": "checkboxInput",
       "className": "MuiDataGridPremium-checkboxInput",
       "description": "Styles applied to the selection checkbox element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnGroupHeader",
-      "className": "MuiDataGridPremium-columnGroupHeader",
-      "description": "Styles applied to the column group header element.",
       "isGlobal": false
     },
     {
@@ -1288,9 +1281,15 @@
       "isGlobal": false
     },
     {
-      "key": "columnHeader--showColumnBorder",
-      "className": "MuiDataGridPremium-columnHeader--showColumnBorder",
-      "description": "Styles applied to the column group header cell when show column border.",
+      "key": "columnHeader--pinnedLeft",
+      "className": "MuiDataGridPremium-columnHeader--pinnedLeft",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--pinnedRight",
+      "className": "MuiDataGridPremium-columnHeader--pinnedRight",
+      "description": "",
       "isGlobal": false
     },
     {
@@ -1303,6 +1302,12 @@
       "key": "columnHeader--sorted",
       "className": "MuiDataGridPremium-columnHeader--sorted",
       "description": "Styles applied to the column header if the column is sorted.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--withLeftBorder",
+      "className": "MuiDataGridPremium-columnHeader--withLeftBorder",
+      "description": "",
       "isGlobal": false
     },
     {
@@ -1321,24 +1326,6 @@
       "key": "columnHeaderDraggableContainer",
       "className": "MuiDataGridPremium-columnHeaderDraggableContainer",
       "description": "Styles applied to the column header's draggable container element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeaderDropZone",
-      "className": "MuiDataGridPremium-columnHeaderDropZone",
-      "description": "Styles applied to the column headers wrapper if a column is being dragged.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner",
-      "className": "MuiDataGridPremium-columnHeadersInner",
-      "description": "Styles applied to the column headers's inner element.",
-      "isGlobal": false
-    },
-    {
-      "key": "columnHeadersInner--scrollable",
-      "className": "MuiDataGridPremium-columnHeadersInner--scrollable",
-      "description": "Styles applied to the column headers's inner element if there is a horizontal scrollbar.",
       "isGlobal": false
     },
     {
@@ -1447,24 +1434,6 @@
       "key": "editInputCell",
       "className": "MuiDataGridPremium-editInputCell",
       "description": "Styles applied to the root of the input component.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler",
-      "className": "MuiDataGridPremium-filler",
-      "description": "Styles applied to the filler row.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler--pinnedLeft",
-      "className": "MuiDataGridPremium-filler--pinnedLeft",
-      "description": "Styles applied to the filler row pinned left section.",
-      "isGlobal": false
-    },
-    {
-      "key": "filler--pinnedRight",
-      "className": "MuiDataGridPremium-filler--pinnedRight",
-      "description": "Styles applied to the filler row pinned right section.",
       "isGlobal": false
     },
     {
@@ -1639,24 +1608,6 @@
       "key": "paper",
       "className": "MuiDataGridPremium-paper",
       "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders",
-      "description": "Styles applied to the pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--left",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders--left",
-      "description": "Styles applied to the left pinned column headers.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumnHeaders--right",
-      "className": "MuiDataGridPremium-pinnedColumnHeaders--right",
-      "description": "Styles applied to the right pinned column headers.",
       "isGlobal": false
     },
     {

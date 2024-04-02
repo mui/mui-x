@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { refType } from '@mui/utils';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
   extractValidationProps,
   isInternalTimeView,
-  PickerViewRendererLookup,
   isDatePickerView,
   PickerViewRenderer,
   DefaultizedProps,
+  PickerViewsRendererProps,
+  TimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
@@ -31,20 +33,37 @@ import {
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
-import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
+import {
+  DateTimeRangePickerRenderers,
+  useDateTimeRangePickerDefaultizedProps,
+} from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
-const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
-  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
-  rendererProps: DefaultizedProps<
-    Omit<UseMobileRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
-    'rangePosition' | 'onRangePositionChange' | 'openTo'
+  rendererProps: PickerViewsRendererProps<
+    DateRange<TDate>,
+    DateTimeRangePickerView,
+    DefaultizedProps<
+      UseMobileRangePickerProps<
+        TDate,
+        DateTimeRangePickerView,
+        TEnableAccessibleFieldDOMStructure,
+        any,
+        any
+      >,
+      'rangePosition' | 'onRangePositionChange' | 'openTo'
+    >,
+    {}
   >,
 ) {
-  const { view, openTo, rangePosition, sx, ...otherRendererProps } = rendererProps;
+  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
   const finalProps = {
     ...otherRendererProps,
     rangePosition,
@@ -71,7 +90,6 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
             maxHeight: RANGE_VIEW_HEIGHT - 1,
           },
       },
-      ...(Array.isArray(sx) ? sx : [sx]),
     ],
   };
   const isTimeView = isInternalTimeView(popperView);
@@ -84,15 +102,16 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
         viewRenderer={
-          viewRenderer as PickerViewRenderer<DateRange<TDate>, DateTimeRangePickerView, any, {}>
+          viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
         }
         view={view && isInternalTimeView(view) ? view : 'hours'}
+        views={finalProps.views as TimeViewWithMeridiem[]}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
       />
     );
   }
   // avoiding problem of `props: never`
-  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange<TDate>, 'day', any, {}>;
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange<TDate>, 'day', any, any>;
 
   return typedViewRenderer({
     ...finalProps,
@@ -103,29 +122,42 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
   });
 };
 
-type MobileDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeRangePicker](https://mui.com/x/react-date-pickers/date-time-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [MobileDateTimeRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-range-picker/)
+ */
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
   TDate extends PickerValidDate,
->(inProps: MobileDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
-    MobileDateTimeRangePickerProps<TDate>
+    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: PickerViewRendererLookup<
-    DateRange<TDate>,
-    DateTimeRangePickerView,
-    any,
-    {}
-  > = {
+  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -164,7 +196,12 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<TDate, DateTimeRangePickerView, typeof props>({
+  const { renderPicker } = useMobileRangePicker<
+    TDate,
+    DateTimeRangePickerView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -266,6 +303,10 @@ MobileDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
@@ -285,12 +326,7 @@ MobileDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.
@@ -434,11 +470,11 @@ MobileDateTimeRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -455,15 +491,11 @@ MobileDateTimeRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.

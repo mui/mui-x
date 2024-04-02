@@ -19,3 +19,9 @@ export type DefaultizedProps<
 > = Omit<P, RequiredProps | keyof AdditionalProps> &
   Required<Pick<P, RequiredProps>> &
   AdditionalProps;
+
+export type SlotComponentPropsFromProps<
+  TProps extends {},
+  TOverrides extends {},
+  TOwnerState extends {},
+> = (Partial<TProps> & TOverrides) | ((ownerState: TOwnerState) => Partial<TProps> & TOverrides);

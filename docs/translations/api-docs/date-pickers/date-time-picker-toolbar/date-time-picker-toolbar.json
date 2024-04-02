@@ -17,7 +17,8 @@
     "toolbarTitle": {
       "description": "If provided, it will be used instead of <code>dateTimePickerToolbarTitle</code> from localization."
     },
-    "view": { "description": "Currently visible picker view." }
+    "view": { "description": "Currently visible picker view." },
+    "views": { "description": "Available views." }
   },
   "classDescriptions": {
     "ampmLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "am/pm labels" },
