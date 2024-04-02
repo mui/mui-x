@@ -104,7 +104,7 @@ export const useTreeViewModels = <
             ].join('\n'),
           );
         }
-      }, [JSON.stringify(defaultValue)]);
+      }, [JSON.stringify(newDefaultValue)]);
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
