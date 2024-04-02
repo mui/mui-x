@@ -30,7 +30,7 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   },
 })) as typeof TablePagination;
 
-type WrappedLabelDisplayedRows = (
+export type WrappedLabelDisplayedRows = (
   args: LabelDisplayedRowsArgs & { estimated?: number },
 ) => React.ReactNode;
 
@@ -39,7 +39,7 @@ const wrapLabelDisplayedRows = (
   estimated?: number,
 ): TablePaginationProps['labelDisplayedRows'] => {
   return ({ from, to, count, page }: LabelDisplayedRowsArgs) =>
-    labelDisplayedRows!({ from, to, count, page, estimated });
+    labelDisplayedRows({ from, to, count, page, estimated });
 };
 
 const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count, estimated }) => {
