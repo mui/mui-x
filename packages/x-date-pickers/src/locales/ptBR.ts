@@ -28,7 +28,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   startDate: 'Data de início',
   startTime: 'Hora de início',
   endDate: 'Data de Término',
-  endTime: 'Hoora de Término',
+  endTime: 'Hora de Término',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -90,7 +90,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
    weekDay: 'Dia da Semana',
    hours: 'Horas',
    minutes: 'Minutos',
-   seconds: 'Segundoos',
+   seconds: 'Segundos',
    meridiem: 'Meio dia',
 
   // Common
