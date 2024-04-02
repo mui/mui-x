@@ -18,31 +18,47 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
-    title: 'MUI X v7.0.0-beta.0',
+    title: 'MUI X v7.0.0',
     description:
       'Featuring new components and multiple enhancements for both developers and end-users.',
-    date: new Date(2024, 0, 29),
-    url: 'https://mui.com/blog/mui-x-v7-beta/',
+    date: new Date(2024, 2, 21),
+    url: 'https://mui.com/blog/mui-x-v7/',
     highlightList: [
       {
-        title: 'Data Grid - Sticky headers',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#sticky-headers',
+        title: 'Data Grid – Column resizing on the Community plan',
+        url: 'https://mui.com/blog/mui-x-v7/#column-resizing-on-the-community-plan',
       },
       {
-        title: 'Data Grid - Columns management panel',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#improved-columns-panel-design',
+        title: 'Data Grid – Sticky headers and improved scrolling performance',
+        url: 'https://mui.com/blog/mui-x-v7/#sticky-headers-and-improved-scrolling-performance',
+      },
+      {
+        title: 'Data Grid – Improved columns panel design',
+        url: 'https://mui.com/blog/mui-x-v7/#improved-columns-panel-design',
+      },
+      {
+        title: 'Data Grid – New stable features',
+        url: 'https://mui.com/blog/mui-x-v7/#new-stable-features',
       },
       {
         title: 'Rich Tree View',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#richtreeview',
+        url: 'https://mui.com/blog/mui-x-v7/#rich-tree-view',
+      },
+      {
+        title: 'Charts - Gauge charts',
+        url: 'https://mui.com/blog/mui-x-v7/#gauge-charts',
+      },
+      {
+        title: 'Charts - Reference line',
+        url: 'https://mui.com/blog/mui-x-v7/#reference-line',
       },
       {
         title: 'Date Time Range Picker',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#date-time-range-picker',
+        url: 'https://mui.com/blog/mui-x-v7/#date-time-range-picker',
       },
       {
-        title: 'Charts - Reference line ',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#reference-line',
+        title: 'Support for date-fns v3',
+        url: 'https://mui.com/blog/mui-x-v7/#support-for-date-fns-v3',
       },
     ],
   },
