@@ -84,17 +84,17 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-   year: 'Ano',
-   month: 'Mês',
-   day: 'Dia',
-   weekDay: 'Dia da Semana',
-   hours: 'Horas',
-   minutes: 'Minutos',
-   seconds: 'Segundos',
-   meridiem: 'Meio dia',
+  year: 'Ano',
+  month: 'Mês',
+  day: 'Dia',
+  weekDay: 'Dia da Semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meio dia',
 
   // Common
-   empty: 'Vazio',
+  empty: 'Vazio',
 };
 
 export const ptBR = getPickersLocalization(ptBRPickers);
