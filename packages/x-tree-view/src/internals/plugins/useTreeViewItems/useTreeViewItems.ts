@@ -47,7 +47,7 @@ const updateItemsState = ({
         [
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
           'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-          `Tow items were provided with the same id in the \`items\` prop: "${id}"`,
+          `Two items were provided with the same id in the \`items\` prop: "${id}"`,
         ].join('\n'),
       );
     }
