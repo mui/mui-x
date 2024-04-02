@@ -19,7 +19,7 @@
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
     "getItemId": {
-      "description": "Used to determine the string label for a given item.",
+      "description": "Used to determine the id of a given item.",
       "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
     },
     "getItemLabel": {
