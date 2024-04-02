@@ -188,7 +188,7 @@ RichTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the id of a given item.
    *
    * @template R
    * @param {R} item The item to check.
