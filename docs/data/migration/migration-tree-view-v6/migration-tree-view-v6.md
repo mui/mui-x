@@ -51,7 +51,7 @@ The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` f
  </TreeView>
 ```
 
-The same change has been applied to the and `ContentComponent` prop:
+The same change has been applied to the `ContentComponent` prop:
 
 ```diff
  const CustomContent = React.forwardRef((props, ref) => {
