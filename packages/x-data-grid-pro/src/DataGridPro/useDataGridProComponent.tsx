@@ -79,6 +79,7 @@ import {
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 import { useGridDataSource } from '../hooks/features/serverSideData/useGridDataSource';
+import { useGridServerSideCache } from '../hooks/features/serverSideData/useGridServerSideCache';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -161,6 +162,7 @@ export const useDataGridProComponent = (
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
   useGridDataSource(apiRef, props);
+  useGridServerSideCache(apiRef, props);
 
   return apiRef;
 };

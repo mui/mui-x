@@ -1,6 +1,5 @@
 [
   { "name": "ColumnsOptions", "kind": "Interface" },
-  { "name": "createDummyDataSource", "kind": "Variable" },
   { "name": "createFakeServer", "kind": "Variable" },
   { "name": "currencyPairs", "kind": "Variable" },
   { "name": "DemoDataReturnType", "kind": "TypeAlias" },
@@ -78,5 +77,6 @@
   { "name": "useBasicDemoData", "kind": "Variable" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
+  { "name": "useDemoDataSource", "kind": "Variable" },
   { "name": "useMovieData", "kind": "Variable" }
 ]

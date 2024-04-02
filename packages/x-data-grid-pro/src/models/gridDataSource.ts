@@ -75,5 +75,5 @@ export interface GridDataSource {
 export interface GridDataSourceCache {
   set: (key: any[], value: unknown) => void;
   get: (key: any[]) => unknown;
-  invalidate: (key?: any[]) => void;
+  clear: () => void;
 }

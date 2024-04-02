@@ -37,6 +37,8 @@ export {
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
+export { useGridDataSource } from '../hooks/features/serverSideData/useGridDataSource';
+export { useGridServerSideCache } from '../hooks/features/serverSideData/useGridServerSideCache';
 
 export type {
   GridExperimentalProFeatures,

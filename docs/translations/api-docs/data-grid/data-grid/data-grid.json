@@ -416,9 +416,6 @@
     "paginationModel": {
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
-    "paginationType": {
-      "description": "Server-side pagination could either be based on a page number or a cursor. Set it to &#39;index&#39; if the pagination is based on a page number. Set it to &#39;cursor&#39; if the pagination is based on a cursor. Only applicable when <code>paginationMode</code> is set to &#39;server&#39;."
-    },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {

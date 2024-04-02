@@ -152,7 +152,7 @@ export const useGridServerSideTreeDataPreProcessors = (
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
           [
-            'MUI X: The values returned by `getGroupKey` for all the siblings should be unique.',
+            'MUI X: The values returned by `getGroupKey` for all the sibling rows should be unique.',
             `The rows with id #${firstId} and #${secondId} have the same.`,
             `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
           ].join('\n'),

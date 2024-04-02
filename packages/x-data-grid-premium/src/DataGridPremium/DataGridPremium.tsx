@@ -289,6 +289,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableRowSelectionOnClick: PropTypes.bool,
   /**
+   * If `true`, the server-side cache will be disabled.
+   * @default false
+   */
+  disableServerSideCache: PropTypes.bool,
+  /**
    * If `true`, the virtualization is disabled.
    * @default false
    */
@@ -853,14 +858,6 @@ DataGridPremiumRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
-   * Server-side pagination could either be based on a page number or a cursor.
-   * Set it to 'index' if the pagination is based on a page number.
-   * Set it to 'cursor' if the pagination is based on a cursor.
-   * Only applicable when `paginationMode` is set to 'server'.
-   * @default "index"
-   */
-  paginationType: PropTypes.oneOf(['cursor', 'index']),
-  /**
    * The column fields to display pinned to left or right.
    */
   pinnedColumns: PropTypes.object,
@@ -1029,8 +1026,8 @@ DataGridPremiumRaw.propTypes = {
     updateRow: PropTypes.func,
   }),
   unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
-    invalidate: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
 } as any;

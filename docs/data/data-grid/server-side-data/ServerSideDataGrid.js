@@ -1,20 +1,29 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { createDummyDataSource } from '@mui/x-data-grid-generator';
-
-const [dataSource, { initialState, columns }] = createDummyDataSource(
-  {},
-  { useCursorPagination: false },
-);
-
-const initialStateWithPagination = {
-  ...initialState,
-  pagination: {
-    paginationModel: { pageSize: 10, page: 0 },
-  },
-};
+import { useDemoDataSource } from '@mui/x-data-grid-generator';
 
 function ServerSideDataGrid() {
+  const { getRows, columns, initialState } = useDemoDataSource(
+    {},
+    { useCursorPagination: false },
+  );
+
+  const initialStateWithPagination = React.useMemo(
+    () => ({
+      ...initialState,
+      pagination: {
+        paginationModel: { pageSize: 10, page: 0 },
+      },
+    }),
+    [initialState],
+  );
+
+  const dataSource = React.useMemo(() => {
+    return {
+      getRows,
+    };
+  }, [getRows]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro

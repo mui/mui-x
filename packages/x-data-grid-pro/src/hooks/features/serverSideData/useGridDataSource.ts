@@ -15,27 +15,13 @@ import {
   GridGetRowsParams,
   GridGetRowsResponse,
   GridDataSource,
-  GridDataSourceCache,
 } from '../../../models/gridDataSource';
-import { GridDataSourceApi } from './dataSourceApi';
+import { GridDataSourceApi } from './serverSideInterfaces';
 
 const computeStartEnd = (paginationModel: GridPaginationModel) => {
   const start = paginationModel.page * paginationModel.pageSize;
   const end = start + paginationModel.pageSize - 1;
   return { start, end };
-};
-
-const noop = () => undefined;
-
-const defaultCache: GridDataSourceCache = {
-  // TODO: Implement an internal cache
-  set: noop,
-  get: noop,
-  invalidate: noop,
-};
-
-const getQueryKey = (params: GridGetRowsParams) => {
-  return [params.paginationModel, params.sortModel, params.filterModel, params.groupKeys];
 };
 
 const fetchRowsWithError = async (
@@ -62,18 +48,9 @@ export const useGridDataSource = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'unstable_dataSource'
-    | 'sortingMode'
-    | 'filterMode'
-    | 'paginationMode'
-    | 'treeData'
-    | 'unstable_dataSourceCache'
+    'unstable_dataSource' | 'sortingMode' | 'filterMode' | 'paginationMode' | 'treeData'
   >,
 ): void => {
-  const cache = React.useRef<GridDataSourceCache>(
-    props.unstable_dataSourceCache || defaultCache,
-  ).current;
-
   const getInputParams = React.useCallback(
     (additionalParams?: Partial<GridGetRowsParams>): GridGetRowsParams => {
       const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -96,9 +73,12 @@ export const useGridDataSource = (
     if (!getRows) {
       return;
     }
+
     const inputParams = getInputParams();
-    const cachedData = cache.get(getQueryKey(inputParams)) as GridGetRowsResponse | undefined;
-    if (cachedData) {
+    const cachedData = privateApiRef.current.getCacheData(inputParams) as
+      | GridGetRowsResponse
+      | undefined;
+    if (cachedData != null) {
       const rows = cachedData.rows;
       privateApiRef.current.caches.groupKeys = [];
       privateApiRef.current.setRows(rows);
@@ -118,8 +98,7 @@ export const useGridDataSource = (
         params: inputParams,
         response: getRowsResponse,
       });
-      const queryKey = getQueryKey(inputParams);
-      cache.set(queryKey, getRowsResponse);
+      privateApiRef.current.setCacheData(inputParams, getRowsResponse);
       if (getRowsResponse.rowCount) {
         privateApiRef.current.setRowCount(getRowsResponse.rowCount);
       }
@@ -128,7 +107,7 @@ export const useGridDataSource = (
       privateApiRef.current.setLoading(false);
       // TODO: handle cursor based pagination
     }
-  }, [cache, getInputParams, privateApiRef, props.unstable_dataSource?.getRows]);
+  }, [getInputParams, privateApiRef, props.unstable_dataSource]);
 
   const fetchRowChildren = React.useCallback<GridDataSourceApi['fetchRowChildren']>(
     async (id) => {
@@ -146,9 +125,11 @@ export const useGridDataSource = (
       }
       const inputParams = getInputParams({ groupKeys: rowNode.path });
 
-      const cachedData = cache.get(getQueryKey(inputParams)) as GridGetRowsResponse | undefined;
+      const cachedData = privateApiRef.current.getCacheData(inputParams) as
+        | GridGetRowsResponse
+        | undefined;
 
-      if (cachedData) {
+      if (cachedData != null) {
         const rows = cachedData.rows;
         privateApiRef.current.caches.groupKeys = rowNode.path;
         privateApiRef.current.updateRows(rows);
@@ -163,8 +144,7 @@ export const useGridDataSource = (
           privateApiRef.current.setRowLoading(id, true);
         }
         const getRowsResponse = await fetchRowsWithError(getRows, inputParams);
-        const queryKey = getQueryKey(inputParams);
-        cache.set(queryKey, getRowsResponse);
+        privateApiRef.current.setCacheData(inputParams, getRowsResponse);
         if (getRowsResponse.rowCount) {
           privateApiRef.current.setRowCount(getRowsResponse.rowCount);
         }
@@ -175,7 +155,7 @@ export const useGridDataSource = (
         privateApiRef.current.setRowLoading(id, false);
       }
     },
-    [cache, getInputParams, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
+    [getInputParams, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
 
   const setRowLoading = React.useCallback<GridDataSourceApi['setRowLoading']>(
@@ -224,6 +204,7 @@ export const useGridDataSource = (
     fetchRowChildren,
     setRowLoading,
     setChildrenFetched,
+    fetchTopLevelRows,
   };
 
   useGridApiMethod(privateApiRef, dataSourceApi, 'public');
@@ -251,6 +232,9 @@ export const useGridDataSource = (
    * EFFECTS
    */
   React.useEffect(() => {
-    fetchTopLevelRows();
-  }, [props.unstable_dataSource, privateApiRef, fetchTopLevelRows]);
+    if (props.unstable_dataSource) {
+      privateApiRef.current.clearCache();
+      privateApiRef.current.fetchTopLevelRows();
+    }
+  }, [privateApiRef, props.unstable_dataSource]);
 };

@@ -68,6 +68,7 @@
     },
     "disableRowGrouping": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
+    "disableServerSideCache": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
@@ -532,10 +533,6 @@
     },
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
-    },
-    "paginationType": {
-      "type": { "name": "enum", "description": "'cursor'<br>&#124;&nbsp;'index'" },
-      "default": "\"index\""
     },
     "pinnedColumns": { "type": { "name": "object" } },
     "pinnedRows": {

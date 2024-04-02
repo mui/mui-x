@@ -5,4 +5,4 @@ export * from './rowReorder';
 export * from './treeData';
 export * from './detailPanel';
 export * from './rowPinning';
-export * from './serverSideData/dataSourceApi';
+export * from './serverSideData/serverSideInterfaces';

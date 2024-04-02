@@ -23,6 +23,7 @@ export const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
   themedProps: GetDataGridProPropsDefaultValues,
 ) => DataGridProPropsWithDefaultValue = (themedProps) => ({
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
+  disableServerSideCache: false,
   scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
@@ -33,7 +34,7 @@ export const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowReordering: false,
-  rowsLoadingMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
+  rowsLoadingMode: 'client',
   getDetailPanelHeight: () => 500,
   headerFilters: false,
   filterMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
