@@ -85,8 +85,8 @@ type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
   ...TSignature['dependantPlugins'],
 ];
 
-type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> = TSignature['params'] &
-  MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'params'>;
+export type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> =
+  TSignature['params'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'params'>;
 
 type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['defaultizedParams'] &

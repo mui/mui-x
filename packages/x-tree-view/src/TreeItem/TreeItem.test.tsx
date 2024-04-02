@@ -301,18 +301,6 @@ describe('<TreeItem />', () => {
         expect(getByTestId('test')).to.have.attribute('aria-expanded', 'false');
       });
 
-      it('should have the attribute `aria-expanded={true}` if expanded', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView defaultExpandedItems={['test']}>
-            <TreeItem itemId="test" label="test" data-testid="test">
-              <TreeItem itemId="test2" label="test2" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('test')).to.have.attribute('aria-expanded', 'true');
-      });
-
       it('should not have the attribute `aria-expanded` if no children are present', () => {
         const { getByTestId } = render(
           <SimpleTreeView>

@@ -22,20 +22,6 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the expandedItems prop', () => {
-      const { setProps } = render(
-        <SimpleTreeView expandedItems={[]}>
-          <TreeItem itemId="1" label="one" />
-        </SimpleTreeView>,
-      );
-
-      expect(() => {
-        setProps({ expandedItems: undefined });
-      }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedItems state of TreeView to be uncontrolled.',
-      );
-    });
-
     it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
       const { setProps } = render(
         <SimpleTreeView selectedItems={null}>
@@ -157,41 +143,6 @@ describe('<SimpleTreeView />', () => {
     fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
 
     expect(getByTestId('one')).to.have.attribute('aria-selected');
-  });
-
-  it('should be able to be controlled with the expandedItems prop', () => {
-    function MyComponent() {
-      const [expandedState, setExpandedState] = React.useState([]);
-      const onExpandedItemsChange = (event, items) => {
-        setExpandedState(items);
-      };
-      return (
-        <SimpleTreeView expandedItems={expandedState} onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem itemId="one" label="one" data-testid="one">
-            <TreeItem itemId="two" />
-          </TreeItem>
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-
-    fireEvent.click(getByText('one'));
-    act(() => {
-      getByTestId('one').focus();
-    });
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-
-    fireEvent.keyDown(getByTestId('one'), { key: '*' });
-
-    expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
   });
 
   it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
@@ -359,42 +310,6 @@ describe('<SimpleTreeView />', () => {
 
       expect(onFocus.callCount).to.equal(1);
       expect(onFocus.args[0][1]).to.equal('one');
-    });
-  });
-
-  describe('onExpandedItemsChange', () => {
-    it('should be called when a parent item label is clicked', () => {
-      const onExpandedItemsChange = spy();
-
-      const { getByText } = render(
-        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem itemId="1" label="outer">
-            <TreeItem itemId="2" label="inner" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      fireEvent.click(getByText('outer'));
-
-      expect(onExpandedItemsChange.callCount).to.equal(1);
-      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
-    });
-
-    it('should be called when a parent item icon is clicked', () => {
-      const onExpandedItemsChange = spy();
-
-      const { getByTestId } = render(
-        <SimpleTreeView onExpandedItemsChange={onExpandedItemsChange}>
-          <TreeItem slots={{ icon: () => <div data-testid="icon" /> }} itemId="1" label="outer">
-            <TreeItem itemId="2" label="inner" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      fireEvent.click(getByTestId('icon'));
-
-      expect(onExpandedItemsChange.callCount).to.equal(1);
-      expect(onExpandedItemsChange.args[0][1]).to.deep.equal(['1']);
     });
   });
 
