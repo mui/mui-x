@@ -10,13 +10,13 @@
     "items": { "type": { "description": "GridFilterItem[]" }, "default": "[]", "required": true },
     "logicOperator": {
       "type": { "description": "GridLogicOperator" },
-      "default": "`GridLogicOperator.And`"
+      "default": "GridLogicOperator.And"
     },
     "quickFilterExcludeHiddenColumns": { "type": { "description": "boolean" }, "default": "true" },
     "quickFilterLogicOperator": {
       "type": { "description": "GridLogicOperator" },
-      "default": "`GridLogicOperator.And`"
+      "default": "GridLogicOperator.And"
     },
-    "quickFilterValues": { "type": { "description": "any[]" }, "default": "`[]`" }
+    "quickFilterValues": { "type": { "description": "any[]" }, "default": "[]" }
   }
 }
