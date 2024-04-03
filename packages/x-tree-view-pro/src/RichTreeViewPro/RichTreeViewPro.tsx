@@ -80,11 +80,11 @@ const childrenWarning = buildWarning([
  *
  * - [RichTreeView API](https://mui.com/x/api/tree-view/rich-tree-view/)
  */
-const RichTreeViewPro = React.forwardRef(function RichTreeView<
+const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   R extends {},
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
