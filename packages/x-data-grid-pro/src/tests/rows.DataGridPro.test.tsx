@@ -960,7 +960,7 @@ describe('<DataGridPro /> - Rows', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length;
       render(
-        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode={'server'} />,
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
       );
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
@@ -971,7 +971,7 @@ describe('<DataGridPro /> - Rows', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length + 10;
       render(
-        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode={'server'} />,
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
       );
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
@@ -982,7 +982,7 @@ describe('<DataGridPro /> - Rows', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       let rowCount = rows.length;
       const { setProps } = render(
-        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode={'server'} />,
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
       );
       rowCount += 1;
       setProps({ rowCount });
