@@ -10,7 +10,7 @@
     "allColumns": { "type": { "description": "boolean" }, "default": "false" },
     "delimiter": { "type": { "description": "string" }, "default": "','" },
     "fields": { "type": { "description": "string[]" } },
-    "fileName": { "type": { "description": "string" }, "default": "`document.title`" },
+    "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
       "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" }
     },

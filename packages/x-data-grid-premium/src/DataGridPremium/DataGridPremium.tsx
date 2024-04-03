@@ -357,7 +357,7 @@ DataGridPremiumRaw.propTypes = {
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   * @default (groupNode) => groupNode == null ? 'footer' : 'inline'
    */
   getAggregationPosition: PropTypes.func,
   /**
@@ -1011,7 +1011,7 @@ DataGridPremiumRaw.propTypes = {
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: PropTypes.func,
   /**
