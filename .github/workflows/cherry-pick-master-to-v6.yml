@@ -15,7 +15,7 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'needs cherry-pick') && contains(github.event.pull_request.labels.*.name, 'v6.x') && github.event.pull_request.merged == true }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'needs cherry-pick') && github.event.pull_request.merged == true }}
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
