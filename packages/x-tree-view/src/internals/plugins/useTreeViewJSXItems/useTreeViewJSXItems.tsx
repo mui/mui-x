@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
+import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
@@ -20,7 +20,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 }) => {
   instance.preventItemUpdates();
 
-  const insertJSXItem = useEventCallback((item: TreeViewNode) => {
+  const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
     setState((prevState) => {
       if (prevState.items.nodeMap[item.id] != null) {
         throw new Error(
