@@ -39,9 +39,9 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'دانلود به صورت اکسل',
 
   // Columns management text
-   columnsManagementSearchTitle: 'جستجو',
-   columnsManagementNoColumns: 'بدون سطر',
-   columnsManagementShowHideAllText: 'نمایش/مخفی کردن همه',
+  columnsManagementSearchTitle: 'جستجو',
+  columnsManagementNoColumns: 'بدون سطر',
+  columnsManagementShowHideAllText: 'نمایش/مخفی کردن همه',
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
