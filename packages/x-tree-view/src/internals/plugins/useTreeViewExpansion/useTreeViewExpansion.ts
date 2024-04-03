@@ -1,26 +1,33 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
+import { TreeViewItemId } from '../../../models';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
+  publicAPI,
   params,
   models,
 }) => {
+  const expandedItemsMap = React.useMemo(() => {
+    const temp = new Map<TreeViewItemId, boolean>();
+    models.expandedItems.value.forEach((id) => {
+      temp.set(id, true);
+    });
+
+    return temp;
+  }, [models.expandedItems.value]);
+
   const setExpandedItems = (event: React.SyntheticEvent, value: string[]) => {
     params.onExpandedItemsChange?.(event, value);
     models.expandedItems.setControlledValue(value);
   };
 
   const isItemExpanded = React.useCallback(
-    (itemId: string) => {
-      return Array.isArray(models.expandedItems.value)
-        ? models.expandedItems.value.indexOf(itemId) !== -1
-        : false;
-    },
-    [models.expandedItems.value],
+    (itemId: string) => expandedItemsMap.has(itemId),
+    [expandedItemsMap],
   );
 
   const isItemExpandable = React.useCallback(
@@ -28,23 +35,27 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     [instance],
   );
 
-  const toggleItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: string | null) => {
-      if (itemId == null) {
+  const toggleItemExpansion = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+    const isExpandedBefore = instance.isItemExpanded(itemId);
+    instance.setItemExpansion(event, itemId, !isExpandedBefore);
+  });
+
+  const setItemExpansion = useEventCallback(
+    (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => {
+      const isExpandedBefore = instance.isItemExpanded(itemId);
+      if (isExpandedBefore === isExpanded) {
         return;
       }
 
-      const isExpandedBefore = models.expandedItems.value.indexOf(itemId!) !== -1;
-
       let newExpanded: string[];
-      if (isExpandedBefore) {
-        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
-      } else {
+      if (isExpanded) {
         newExpanded = [itemId].concat(models.expandedItems.value);
+      } else {
+        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
       }
 
       if (params.onItemExpansionToggle) {
-        params.onItemExpansionToggle(event, itemId, !isExpandedBefore);
+        params.onItemExpansionToggle(event, itemId, isExpanded);
       }
 
       setExpandedItems(event, newExpanded);
@@ -75,9 +86,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   populateInstance<UseTreeViewExpansionSignature>(instance, {
     isItemExpanded,
     isItemExpandable,
+    setItemExpansion,
     toggleItemExpansion,
     expandAllSiblings,
   });
+
+  populatePublicAPI<UseTreeViewExpansionSignature>(publicAPI, { setItemExpansion });
 };
 
 useTreeViewExpansion.models = {

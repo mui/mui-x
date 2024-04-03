@@ -2,10 +2,20 @@ import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
-export interface UseTreeViewExpansionInstance {
+export interface UseTreeViewExpansionPublicAPI {
+  /**
+   * Change the expansion status of a given item.
+   * @param {React.SyntheticEvent} event The UI event that triggered the change.
+   * @param {string} itemId The id of the item to modify.
+   * @param {boolean} isExpanded The new expansion status of the given item.
+   */
+  setItemExpansion: (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => void;
+}
+
+export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
   isItemExpanded: (itemId: string) => boolean;
   isItemExpandable: (itemId: string) => boolean;
-  toggleItemExpansion: (event: React.SyntheticEvent, value: string) => void;
+  toggleItemExpansion: (event: React.SyntheticEvent, itemId: string) => void;
   expandAllSiblings: (event: React.KeyboardEvent, itemId: string) => void;
 }
 
@@ -49,6 +59,7 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
+  publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';
   dependantPlugins: [UseTreeViewItemsSignature];
 }>;

@@ -300,5 +300,77 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
       });
     });
+
+    describe('setItemExpansion api method', () => {
+      it('should expand a collapsed item when calling the setItemExpansion method with `isExpanded=true`', () => {
+        const onItemExpansionToggle = spy();
+
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          onItemExpansionToggle,
+        });
+
+        act(() => {
+          response.apiRef.current.setItemExpansion({} as any, '1', true);
+        });
+
+        expect(response.isItemExpanded('1')).to.equal(true);
+        expect(onItemExpansionToggle.callCount).to.equal(1);
+        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
+        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+      });
+
+      it('should collapse an expanded item when calling the setItemExpansion method with `isExpanded=false`', () => {
+        const onItemExpansionToggle = spy();
+
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemExpansionToggle,
+        });
+
+        act(() => {
+          response.apiRef.current.setItemExpansion({} as any, '1', false);
+        });
+
+        expect(response.isItemExpanded('1')).to.equal(false);
+        expect(onItemExpansionToggle.callCount).to.equal(1);
+        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
+        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
+      });
+
+      it('should do nothing when calling the setItemExpansion method with `isExpanded=true` on an already expanded item', () => {
+        const onItemExpansionToggle = spy();
+
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemExpansionToggle,
+        });
+
+        act(() => {
+          response.apiRef.current.setItemExpansion({} as any, '1', true);
+        });
+
+        expect(response.isItemExpanded('1')).to.equal(true);
+        expect(onItemExpansionToggle.callCount).to.equal(0);
+      });
+
+      it('should do nothing when calling the setItemExpansion method with `isExpanded=false` on an already collapsed item', () => {
+        const onItemExpansionToggle = spy();
+
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          onItemExpansionToggle,
+        });
+
+        act(() => {
+          response.apiRef.current.setItemExpansion({} as any, '1', false);
+        });
+
+        expect(response.isItemExpanded('1')).to.equal(false);
+        expect(onItemExpansionToggle.callCount).to.equal(0);
+      });
+    });
   },
 );

@@ -32,3 +32,9 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 Use the `onItemExpansionToggle` prop if you want to react to an item expansion change:
 
 {{"demo": "TrackItemExpansionToggle.js"}}
+
+## Change item expansion
+
+You can use the `setItemExpansion` API method to imperatively change the expansion of an item:
+
+{{"demo": "ChangeItemExpansion.js"}}

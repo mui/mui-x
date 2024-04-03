@@ -93,6 +93,7 @@ TreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
   /**
