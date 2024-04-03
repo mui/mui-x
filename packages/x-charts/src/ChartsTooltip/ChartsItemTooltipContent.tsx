@@ -63,7 +63,7 @@ ChartsItemTooltipContent.propTypes = {
     classes: PropTypes.object,
     itemData: PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
     }),
     series: PropTypes.object,
@@ -75,7 +75,7 @@ ChartsItemTooltipContent.propTypes = {
   }),
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([

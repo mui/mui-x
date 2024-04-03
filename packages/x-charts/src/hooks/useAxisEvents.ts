@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { SVGContext, DrawingContext } from '../context/DrawingProvider';
+import { SvgContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/utils';
@@ -10,7 +10,7 @@ function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
 }
 export const useAxisEvents = (disableAxisListener: boolean) => {
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = React.useContext(SvgContext);
   const { width, height, top, left } = React.useContext(DrawingContext);
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
@@ -34,7 +34,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       if (usedXAxis === null) {
         return null;
       }
-      const { scale, data: axisData } = axisConfig;
+      const { scale, data: axisData, reverse } = axisConfig;
 
       if (!isBandScale(scale)) {
         const value = scale.invert(mouseValue);
@@ -80,6 +80,13 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
       if (dataIndex < 0 || dataIndex >= axisData!.length) {
         return null;
+      }
+      if (reverse) {
+        const reverseIndex = axisData!.length - 1 - dataIndex;
+        return {
+          index: reverseIndex,
+          value: axisData![reverseIndex],
+        };
       }
       return {
         index: dataIndex,

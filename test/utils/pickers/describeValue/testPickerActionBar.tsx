@@ -27,6 +27,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     return;
   }
 
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+
   describe('Picker action bar', () => {
     describe('clear action', () => {
       it('should call onClose, onChange with empty value and onAccept with empty value', () => {
@@ -36,6 +38,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -61,6 +64,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -84,7 +88,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -95,14 +100,14 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
-        if (pickerParams.type === 'date-range') {
+        if (isRangeType) {
           values[0].forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
           });
@@ -120,6 +125,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -144,7 +150,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -155,7 +162,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));
@@ -173,6 +180,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -197,6 +205,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -223,6 +232,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
+            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -237,7 +247,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         let startOfToday: any;
         if (pickerParams.type === 'date') {
           startOfToday = adapterToUse.startOfDay(adapterToUse.date());
-        } else if (pickerParams.type === 'date-range') {
+        } else if (isRangeType) {
           startOfToday = [adapterToUse.date(), adapterToUse.date()];
         } else {
           startOfToday = adapterToUse.date();

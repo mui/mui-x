@@ -7,7 +7,7 @@ import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { TimezoneProps } from '../../../models';
+import { FieldRef, FieldSection, PickerValidDate, TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -17,13 +17,15 @@ export type PickerViewsRendererProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
-> = TExternalProps &
+> = Omit<TExternalProps, 'className' | 'sx'> &
   TAdditionalProps &
   UsePickerValueViewsResponse<TValue> & {
     view: TView;
     views: readonly TView[];
     focusedView: TView | null;
     onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
+    showViewSwitcher: boolean;
+    timeViewsCount: number;
   };
 
 export type PickerViewRenderer<
@@ -49,7 +51,7 @@ export type PickerViewRendererLookup<
  */
 export interface UsePickerViewsBaseProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
@@ -93,7 +95,7 @@ export interface UsePickerViewsNonStaticProps {
  */
 export interface UsePickerViewsProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
@@ -105,8 +107,9 @@ export interface UsePickerViewsProps<
 
 export interface UsePickerViewParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TSection extends FieldSection,
   TExternalProps extends UsePickerViewsProps<
     TValue,
     TDate,
@@ -119,8 +122,8 @@ export interface UsePickerViewParams<
   props: TExternalProps;
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
   additionalViewProps: TAdditionalProps;
-  inputRef?: React.RefObject<HTMLInputElement>;
   autoFocusView: boolean;
+  fieldRef: React.RefObject<FieldRef<TSection>> | undefined;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
@@ -132,9 +135,7 @@ export interface UsePickerViewParams<
   rendererInterceptor?: (
     viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
     popperView: TView,
-    rendererProps: Omit<TExternalProps, 'className' | 'sx'> &
-      TAdditionalProps &
-      UsePickerValueViewsResponse<TValue>,
+    rendererProps: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
   ) => React.ReactNode;
 }
 
@@ -163,25 +164,27 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMe
  */
 export const usePickerViews = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TSection extends FieldSection,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   propsFromPickerValue,
   additionalViewProps,
-  inputRef,
   autoFocusView,
   rendererInterceptor,
+  fieldRef,
 }: UsePickerViewParams<
   TValue,
   TDate,
   TView,
+  TSection,
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
+  const { onChange, open, onClose } = propsFromPickerValue;
   const { views, openTo, onViewChange, disableOpenPicker, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
@@ -247,9 +250,8 @@ export const usePickerViews = <
       onClose();
       setTimeout(() => {
         // focusing the input before the range selection is done
-        // calling `onSelectedSectionsChange` outside of timeout results in an inconsistent behavior between Safari And Chrome
-        inputRef?.current!.focus();
-        onSelectedSectionsChange(view);
+        // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
+        fieldRef?.current?.focusField(view);
       });
     }
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -301,7 +303,12 @@ export const usePickerViews = <
         return null;
       }
 
-      const rendererProps = {
+      const rendererProps: PickerViewsRendererProps<
+        TValue,
+        TView,
+        TExternalProps,
+        TAdditionalProps
+      > = {
         ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,

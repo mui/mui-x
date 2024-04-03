@@ -59,6 +59,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  dayOfMonthFull: 'Do',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -87,6 +88,12 @@ const MISSING_TIMEZONE_PLUGIN = [
   'To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`',
   'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
 ].join('\n');
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    moment: Moment;
+  }
+}
 
 /**
  * Based on `@date-io/moment`
@@ -531,6 +538,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public getWeekNumber = (value: Moment) => {
     return value.week();
+  };
+
+  public getDayOfWeek = (value: Moment) => {
+    return value.day() + 1;
   };
 
   public getYearRange([start, end]: [Moment, Moment]) {

@@ -20,24 +20,25 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals';
+import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
-  ampm?: boolean;
-  ampmInClock?: boolean;
-}
-
-export interface DateTimePickerToolbarProps<TDate>
-  extends ExportedDateTimePickerToolbarProps,
-    MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
+}
+
+export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
+  extends ExportedDateTimePickerToolbarProps,
+    MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
   toolbarVariant?: WrapperVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
   toolbarTitle?: React.ReactNode;
+  ampm?: boolean;
+  ampmInClock?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -209,7 +210,9 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  *
  * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
  */
-function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
+function DateTimePickerToolbar<TDate extends PickerValidDate>(
+  inProps: DateTimePickerToolbarProps<TDate>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
@@ -405,6 +408,9 @@ DateTimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -425,11 +431,14 @@ DateTimePickerToolbar.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,

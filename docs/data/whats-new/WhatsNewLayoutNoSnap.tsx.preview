@@ -1,7 +1,0 @@
-<Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
-  {blogs.map((blog) => (
-    <Grid item xs={12} sm={6} md={4} sx={{ flexGrow: 1 }} key={blog.title}>
-      <BlogCard blog={blog} />
-    </Grid>
-  ))}
-</Grid>

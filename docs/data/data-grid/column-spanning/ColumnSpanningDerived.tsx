@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro, GridColDef, GridCellParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 const slotTimesLookup = {
   0: '09:00 - 10:00',
@@ -22,7 +22,9 @@ type Subject =
   | 'Music'
   | 'Dance';
 
-const rows: Array<{ id: number; day: string; slots: Array<Subject | ''> }> = [
+type Row = { id: number; day: string; slots: Array<Subject | ''> };
+
+const rows: Array<Row> = [
   {
     id: 1,
     day: 'Monday',
@@ -75,8 +77,8 @@ const slotColumnCommonFields: Partial<GridColDef> = {
   hideable: false,
   minWidth: 140,
   cellClassName: (params) => params.value,
-  colSpan: ({ row, field, value }: GridCellParams) => {
-    const index = Number(field);
+  colSpan: (value, row, column) => {
+    const index = Number(column.field);
     let colSpan = 1;
     for (let i = index + 1; i < row.slots.length; i += 1) {
       const nextValue = row.slots[i];
@@ -90,7 +92,7 @@ const slotColumnCommonFields: Partial<GridColDef> = {
   },
 };
 
-const columns: GridColDef[] = [
+const columns: GridColDef<Row>[] = [
   {
     field: 'day',
     headerName: 'Day',
@@ -98,49 +100,49 @@ const columns: GridColDef[] = [
   {
     field: '0',
     headerName: slotTimesLookup[0],
-    valueGetter: ({ row }) => row.slots[0],
+    valueGetter: (value, row) => row.slots[0],
     ...slotColumnCommonFields,
   },
   {
     field: '1',
     headerName: slotTimesLookup[1],
-    valueGetter: ({ row }) => row.slots[1],
+    valueGetter: (value, row) => row.slots[1],
     ...slotColumnCommonFields,
   },
   {
     field: '2',
     headerName: slotTimesLookup[2],
-    valueGetter: ({ row }) => row.slots[2],
+    valueGetter: (value, row) => row.slots[2],
     ...slotColumnCommonFields,
   },
   {
     field: '3',
     headerName: slotTimesLookup[3],
-    valueGetter: ({ row }) => row.slots[3],
+    valueGetter: (value, row) => row.slots[3],
     ...slotColumnCommonFields,
   },
   {
     field: '4',
     headerName: slotTimesLookup[4],
-    valueGetter: ({ row }) => row.slots[4],
+    valueGetter: (value, row) => row.slots[4],
     ...slotColumnCommonFields,
   },
   {
     field: '5',
     headerName: slotTimesLookup[5],
-    valueGetter: ({ row }) => row.slots[5],
+    valueGetter: (value, row) => row.slots[5],
     ...slotColumnCommonFields,
   },
   {
     field: '6',
     headerName: slotTimesLookup[6],
-    valueGetter: ({ row }) => row.slots[6],
+    valueGetter: (value, row) => row.slots[6],
     ...slotColumnCommonFields,
   },
   {
     field: '7',
     headerName: slotTimesLookup[7],
-    valueGetter: ({ row }) => row.slots[7],
+    valueGetter: (value, row) => row.slots[7],
     ...slotColumnCommonFields,
   },
 ];

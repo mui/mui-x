@@ -25,7 +25,7 @@ type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
     }
   | {
       type: 'leaveItem';
-      data: ItemInteractionData<T>;
+      data: Partial<ItemInteractionData<T>>;
     }
   | {
       type: 'exitChart';
@@ -62,6 +62,10 @@ export const InteractionContext = React.createContext<InteractionState>({
   useVoronoiInteraction: false,
   dispatch: () => null,
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  InteractionContext.displayName = 'InteractionContext';
+}
 
 const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, InteractionActions> = (
   prevState,

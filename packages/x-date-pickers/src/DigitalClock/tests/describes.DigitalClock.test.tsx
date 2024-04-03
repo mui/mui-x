@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, describeConformance } from '@mui-internal/test-utils';
+import { screen } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -11,6 +11,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

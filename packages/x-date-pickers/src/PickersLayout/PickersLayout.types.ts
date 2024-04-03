@@ -9,10 +9,11 @@ import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 import { ExportedPickersShortcutProps } from '../PickersShortcuts/PickersShortcuts';
+import { PickerValidDate } from '../models';
 
 export interface ExportedPickersLayoutSlots<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 > {
   /**
@@ -34,8 +35,11 @@ export interface ExportedPickersLayoutSlots<
   >;
 }
 
-interface PickersLayoutActionBarOwnerState<TValue, TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersLayoutProps<TValue, TDate, TView> {
+interface PickersLayoutActionBarOwnerState<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersLayoutProps<TValue, TDate, TView> {
   wrapperVariant: WrapperVariant;
 }
 
@@ -45,7 +49,7 @@ interface PickersShortcutsOwnerState<TValue> extends PickersShortcutsProps<TValu
 
 export interface ExportedPickersLayoutSlotProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 > {
   /**
@@ -72,8 +76,11 @@ export interface ExportedPickersLayoutSlotProps<
   layout?: Partial<PickersLayoutProps<TValue, TDate, TView>>;
 }
 
-export interface PickersLayoutSlots<TValue, TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<TValue, TDate, TView> {
+export interface PickersLayoutSlots<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlots<TValue, TDate, TView> {
   /**
    * Tabs enabling toggling between views.
    */
@@ -85,8 +92,11 @@ export interface PickersLayoutSlots<TValue, TDate, TView extends DateOrTimeViewW
   toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
-export interface PickersLayoutSlotProps<TValue, TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<TValue, TDate, TView> {
+export interface PickersLayoutSlotProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlotProps<TValue, TDate, TView> {
   /**
    * Props passed down to the tabs component.
    */
@@ -97,16 +107,25 @@ export interface PickersLayoutSlotProps<TValue, TDate, TView extends DateOrTimeV
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
+export interface PickersLayoutProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
   value?: TValue;
   className?: string;
   children?: React.ReactNode;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * Ref to pass to the root element
    */
   ref?: React.Ref<HTMLDivElement>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersLayoutClasses>;
   /**
    * Overridable component slots.

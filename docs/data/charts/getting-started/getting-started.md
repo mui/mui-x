@@ -13,25 +13,22 @@ packageName: '@mui/x-charts'
 
 Run one of the following commands to add the MUI X Charts to your project:
 
+<!-- #default-branch-switch -->
+
 <codeblock storageKey="package-manager">
 ```bash npm
-npm install @mui/x-charts@next
+npm install @mui/x-charts
 ```
 
 ```bash yarn
-yarn add @mui/x-charts@next
+yarn add @mui/x-charts
 ```
 
 ```bash pnpm
-pnpm add @mui/x-charts@next
+pnpm add @mui/x-charts
 ```
 
 </codeblock>
-
-:::info
-The `next` tag is used to download the latest, **pre-release**, v7 version.
-Remove it to get the current stable version.
-:::
 
 The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
@@ -78,7 +75,7 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ### Usage with Next.js
 

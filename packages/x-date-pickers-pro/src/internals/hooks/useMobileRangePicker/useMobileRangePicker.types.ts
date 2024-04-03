@@ -4,6 +4,7 @@ import {
   UsePickerViewsProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   RangeOnlyPickerProps,
   RangePickerAdditionalViewProps,
@@ -13,19 +14,25 @@ import {
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TDate, TView>,
+export interface UseMobileRangePickerSlots<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends UseRangePickerSlots<TDate, TView>,
     PickersModalDialogSlots {}
 
-export interface UseMobileRangePickerSlotProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlotProps<TDate, TView>,
+export interface UseMobileRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends UseRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     PickersModalDialogSlotProps {}
 
-export interface MobileRangeOnlyPickerProps<TDate> extends RangeOnlyPickerProps<TDate> {}
+export interface MobileRangeOnlyPickerProps extends RangeOnlyPickerProps {}
 
 export interface UseMobileRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends UseRangePickerProps<
@@ -44,15 +51,22 @@ export interface UseMobileRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobileRangePickerSlotProps<TDate, TView>;
+  slotProps?: UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface MobileRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseMobileRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseMobileRangePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 > extends UseRangePickerParams<
     TDate,
     TView,

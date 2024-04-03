@@ -10,7 +10,7 @@ export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
 export interface PiePlotSlotProps extends PieArcPlotSlotProps, PieArcLabelPlotSlotProps {}
 
-export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onClick'> {
+export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onItemClick'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -21,12 +21,6 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
    * @default {}
    */
   slotProps?: PiePlotSlotProps;
-  /**
-   * Callback fired when a pie item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
-   * @param {DefaultizedPieValueType} item The pie item.
-   */
 }
 
 /**
@@ -40,7 +34,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { skipAnimation, slots, slotProps, onClick } = props;
+  const { skipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = React.useContext(SeriesContext).pie;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
@@ -87,7 +81,7 @@ function PiePlot(props: PiePlotProps) {
               highlightScope={highlightScope}
               highlighted={highlighted}
               faded={faded}
-              onClick={onClick}
+              onItemClick={onItemClick}
               slots={slots}
               slotProps={slotProps}
             />
@@ -154,7 +148,7 @@ PiePlot.propTypes = {
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
-  onClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
    * @default false

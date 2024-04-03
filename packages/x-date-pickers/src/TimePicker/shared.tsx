@@ -11,14 +11,14 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { TimeValidationError } from '../models';
+import { PickerValidDate, TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseTimePickerSlots<TDate> extends TimeClockSlots {
+export interface BaseTimePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -30,8 +30,21 @@ export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
-  extends BasePickerInputProps<TDate | null, TDate, TView, TimeValidationError>,
+export type TimePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
+  TAdditionalProps
+>;
+
+export interface BaseTimePickerProps<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem,
+> extends BasePickerInputProps<TDate | null, TDate, TView, TimeValidationError>,
     ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
@@ -53,18 +66,11 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      TDate | null,
-      TView,
-      TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
-      {}
-    >
-  >;
+  viewRenderers?: Partial<TimePickerViewRenderers<TDate, TView>>;
 }
 
 type UseTimePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
@@ -73,7 +79,7 @@ type UseTimePickerDefaultizedProps<
 >;
 
 export function useTimePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 >(props: Props, name: string): UseTimePickerDefaultizedProps<TDate, TView, Props> {
