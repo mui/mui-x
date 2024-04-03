@@ -89,7 +89,7 @@ export interface TreeViewItemIdAndChildren {
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
     itemTree: TreeViewItemIdAndChildren[];
-    nodeMap: TreeViewNodeMap;
+    itemMetaMap: TreeViewItemMetaMap;
     itemMap: TreeViewItemMap<R>;
   };
 }
@@ -107,6 +107,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewNodeMap = { [itemId: string]: TreeViewItemMeta };
+export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
