@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
-import {
-  populateInstance,
-  getNextItem,
-  getFirstItem,
-  getLastItem,
-} from '../../useTreeView/useTreeView.utils';
+import { getNextItem, getFirstItem, getLastItem } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 

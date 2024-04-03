@@ -300,8 +300,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     instance: {
       updateFirstCharMap,
       handleItemKeyDown,
-    }
-  }
+    },
+  };
 };
 
 useTreeViewKeyboardNavigation.params = {};
