@@ -40,7 +40,7 @@ export const RichTreeViewProRoot = styled('ul', {
   outline: 0,
 });
 
-type TreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
+type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -144,6 +144,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
     </TreeViewProvider>
   );
-}) as TreeViewComponent;
+}) as RichTreeViewProComponent;
 
 export { RichTreeViewPro };
