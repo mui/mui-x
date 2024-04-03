@@ -22,7 +22,7 @@ interface RichTreeViewItemProSlotOwnerState {
 export interface RichTreeViewProSlots extends DefaultTreeViewProPluginSlots {
   /**
    * Element rendered at the root.
-   * @default RichTreeViewRoot
+   * @default RichTreeViewProRoot
    */
   root?: React.ElementType;
   /**
