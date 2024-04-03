@@ -33,6 +33,7 @@ async function addLicense(packageData) {
   await Promise.all(
     [
       './index.js',
+      './legacy/index.js',
       './modern/index.js',
       './node/index.js',
       './umd/material-ui.development.js',
