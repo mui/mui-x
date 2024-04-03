@@ -5,15 +5,24 @@ import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
-export interface UseTreeViewFocusInstance {
+export interface UseTreeViewFocusPublicAPI {
+  /**
+   * Focuses the item with the given id.
+   *
+   * If the item is the child of a collapsed item, then this method will do nothing.
+   * Make sure to expand the ancestors of the item before calling this method if needed.
+   * @param {React.SyntheticEvent} event The event source of the action.
+   * @param {string} itemId The id of the item to focus.
+   */
+  focusItem: (event: React.SyntheticEvent, itemId: string) => void;
+}
+
+export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
   isItemFocused: (itemId: string) => boolean;
   canItemBeTabbed: (itemId: string) => boolean;
-  focusItem: (event: React.SyntheticEvent, itemId: string) => void;
   focusDefaultItem: (event: React.SyntheticEvent | null) => void;
   removeFocusedItem: () => void;
 }
-
-export interface UseTreeViewFocusPublicAPI extends Pick<UseTreeViewFocusInstance, 'focusItem'> {}
 
 export interface UseTreeViewFocusParameters {
   /**
