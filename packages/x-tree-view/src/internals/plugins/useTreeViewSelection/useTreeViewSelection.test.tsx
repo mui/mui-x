@@ -27,7 +27,7 @@ describeTreeView<UseTreeViewSelectionSignature>('useTreeViewSelection plugin', (
       expect(response.isItemSelected('1')).to.equal(true);
     });
 
-    it('should use the control state when defined', () => {
+    it('should use the controlled state when defined', () => {
       const response = render({
         items: [{ id: '1' }, { id: '2' }],
         selectedItems: ['1'],
@@ -36,7 +36,7 @@ describeTreeView<UseTreeViewSelectionSignature>('useTreeViewSelection plugin', (
       expect(response.isItemSelected('1')).to.equal(true);
     });
 
-    it('should use the control state upon the default state when both are defined', () => {
+    it('should use the controlled state instead of the default state when both are defined', () => {
       const response = render({
         items: [{ id: '1' }, { id: '2' }],
         selectedItems: ['1'],
@@ -46,7 +46,7 @@ describeTreeView<UseTreeViewSelectionSignature>('useTreeViewSelection plugin', (
       expect(response.isItemSelected('1')).to.equal(true);
     });
 
-    it('should react to control state update', () => {
+    it('should react to controlled state update', () => {
       const response = render({
         items: [{ id: '1' }, { id: '2' }],
         selectedItems: [],
@@ -441,7 +441,7 @@ describeTreeView<UseTreeViewSelectionSignature>('useTreeViewSelection plugin', (
         expect(response.isItemSelected('4')).to.equal(false);
       });
 
-      it('should not select disabled item that are part of the selected range', () => {
+      it('should not select disabled items that are part of the selected range', () => {
         const response = render({
           multiSelect: true,
           items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],

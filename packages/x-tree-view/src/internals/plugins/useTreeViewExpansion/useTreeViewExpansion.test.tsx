@@ -35,7 +35,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.getAllItemRoots()).to.have.length(3);
       });
 
-      it('should use the control state when defined', () => {
+      it('should use the controlled state when defined', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           expandedItems: ['1'],
@@ -45,7 +45,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.getItemRoot('1.1')).toBeVisible();
       });
 
-      it('should use the control state upon the default state when both are defined', () => {
+      it('should use the controlled state instead of the default state when both are defined', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           expandedItems: ['1'],
@@ -55,7 +55,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should react to control state update', () => {
+      it('should react to controlled state update', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           expandedItems: [],
