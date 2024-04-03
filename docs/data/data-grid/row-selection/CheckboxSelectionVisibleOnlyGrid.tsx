@@ -33,6 +33,12 @@ export default function CheckboxSelectionVisibleOnlyGrid() {
       <div style={{ height: 400 }}>
         <DataGridPro
           {...data}
+          initialState={{
+            ...data.initialState,
+            pagination: { paginationModel: { pageSize: 50 } },
+          }}
+          pageSizeOptions={[5, 10, 25, 50, 100]}
+          pagination
           checkboxSelection
           checkboxSelectionVisibleOnly={checkboxSelectionVisibleOnly}
         />
