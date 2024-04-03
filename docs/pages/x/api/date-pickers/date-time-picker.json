@@ -9,7 +9,7 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
         "type": "function(date: TDate) => string",
         "describedArgs": ["date"],
