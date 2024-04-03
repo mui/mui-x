@@ -40,6 +40,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
     const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
 
+    const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-selected') === 'true';
+
     return {
       getRoot,
       getAllItemRoots,
@@ -48,6 +50,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       getItemLabel,
       getItemIconContainer,
       isItemExpanded,
+      isItemSelected,
     };
   };
 

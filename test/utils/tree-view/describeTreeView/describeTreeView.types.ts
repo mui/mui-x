@@ -62,6 +62,13 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    * @returns {boolean} `true` if the item is expanded, `false` otherwise.
    */
   isItemExpanded: (id: string) => boolean;
+  /**
+   * Checks if an item is selected.
+   * Uses the `aria-selected` attribute to check the selected.
+   * @param {string} id The id of the item to check.
+   * @returns {boolean} `true` if the item is selected, `false` otherwise.
+   */
+  isItemSelected: (id: string) => boolean;
 }
 
 export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature> = <

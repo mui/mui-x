@@ -22,20 +22,6 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
-      const { setProps } = render(
-        <SimpleTreeView selectedItems={null}>
-          <TreeItem itemId="1" label="one" />
-        </SimpleTreeView>,
-      );
-
-      expect(() => {
-        setProps({ selectedItems: undefined });
-      }).toErrorDev(
-        'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
-      );
-    });
-
     it('should not crash when shift clicking a clean tree', () => {
       render(
         <SimpleTreeView multiSelect>
@@ -143,70 +129,6 @@ describe('<SimpleTreeView />', () => {
     fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
 
     expect(getByTestId('one')).to.have.attribute('aria-selected');
-  });
-
-  it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
-    function MyComponent() {
-      const [selectedState, setSelectedState] = React.useState(null);
-      const onSelectedItemsChange = (event, items) => {
-        setSelectedState(items);
-      };
-      return (
-        <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
-          <TreeItem itemId="1" label="one" data-testid="one" />
-          <TreeItem itemId="2" label="two" data-testid="two" />
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-    expect(getByTestId('two')).not.to.have.attribute('aria-selected');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).not.to.have.attribute('aria-selected');
-
-    fireEvent.click(getByText('two'));
-
-    expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-  });
-
-  it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
-    function MyComponent() {
-      const [selectedState, setSelectedState] = React.useState([]);
-      const onSelectedItemsChange = (event, items) => {
-        setSelectedState(items);
-      };
-      return (
-        <SimpleTreeView
-          selectedItems={selectedState}
-          onSelectedItemsChange={onSelectedItemsChange}
-          multiSelect
-        >
-          <TreeItem itemId="1" label="one" data-testid="one" />
-          <TreeItem itemId="2" label="two" data-testid="two" />
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-    fireEvent.click(getByText('two'), { ctrlKey: true });
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
   });
 
   it('should not error when component state changes', () => {
@@ -437,18 +359,6 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<SimpleTreeView />);
 
       expect(getByRole('tree')).not.to.equal(null);
-    });
-
-    it('(TreeView) should have the attribute `aria-multiselectable=false if using single select`', () => {
-      const { getByRole } = render(<SimpleTreeView />);
-
-      expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'false');
-    });
-
-    it('(TreeView) should have the attribute `aria-multiselectable=true if using multi select`', () => {
-      const { getByRole } = render(<SimpleTreeView multiSelect />);
-
-      expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'true');
     });
   });
 });
