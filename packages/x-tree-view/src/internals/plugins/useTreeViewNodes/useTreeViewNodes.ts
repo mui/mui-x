@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import {
   UseTreeViewNodesSignature,
   UseTreeViewNodesDefaultizedParameters,
@@ -93,7 +92,6 @@ const updateNodesState = ({
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
-  publicAPI,
   params,
   state,
   setState,
@@ -198,6 +196,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     return state.nodes.nodeTree.map(getPropsFromItemId);
   };
 
+<<<<<<< Updated upstream:packages/x-tree-view/src/internals/plugins/useTreeViewNodes/useTreeViewNodes.ts
   populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
     getItem,
@@ -211,7 +210,22 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
     getItem,
   });
 
+=======
+>>>>>>> Stashed changes:packages/x-tree-view/src/internals/plugins/useTreeViewItems/useTreeViewItems.ts
   return {
+    publicAPI: {
+      getItem,
+    },
+    instance: {
+      getNode,
+      getItem,
+      getItemsToRender,
+      getChildrenIds,
+      getNavigableChildrenIds,
+      isItemDisabled,
+      preventItemUpdates,
+      areItemUpdatesPrevented,
+    },
     contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
   };
 };

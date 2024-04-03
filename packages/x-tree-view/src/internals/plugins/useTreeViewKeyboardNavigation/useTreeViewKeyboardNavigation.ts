@@ -3,11 +3,18 @@ import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
+<<<<<<< Updated upstream
   getFirstNode,
   getLastNode,
   getNextNode,
   getPreviousNode,
   populateInstance,
+=======
+  getFirstItem,
+  getLastItem,
+  getNextItem,
+  getPreviousItem,
+>>>>>>> Stashed changes
 } from '../../useTreeView/useTreeView.utils';
 import {
   TreeViewFirstCharMap,
@@ -303,10 +310,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     }
   };
 
-  populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    updateFirstCharMap,
-    handleItemKeyDown,
-  });
+  return {
+    instance: {
+      updateFirstCharMap,
+      handleItemKeyDown,
+    },
+  };
 };
 
 useTreeViewKeyboardNavigation.params = {};

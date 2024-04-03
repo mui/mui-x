@@ -2,8 +2,12 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
+<<<<<<< Updated upstream:packages/x-tree-view/src/internals/plugins/useTreeViewJSXNodes/useTreeViewJSXNodes.tsx
 import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXNodesSignature } from './useTreeViewJSXNodes.types';
+=======
+import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
+>>>>>>> Stashed changes:packages/x-tree-view/src/internals/plugins/useTreeViewJSXItems/useTreeViewJSXItems.tsx
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
 import {
@@ -75,11 +79,21 @@ export const useTreeViewJSXNodes: TreeViewPlugin<UseTreeViewJSXNodesSignature> =
     };
   });
 
+<<<<<<< Updated upstream:packages/x-tree-view/src/internals/plugins/useTreeViewJSXNodes/useTreeViewJSXNodes.tsx
   populateInstance<UseTreeViewJSXNodesSignature>(instance, {
     insertJSXNode,
     removeJSXNode,
     mapFirstCharFromJSX,
   });
+=======
+  return {
+    instance: {
+      insertJSXItem,
+      removeJSXItem,
+      mapFirstCharFromJSX,
+    },
+  };
+>>>>>>> Stashed changes:packages/x-tree-view/src/internals/plugins/useTreeViewJSXItems/useTreeViewJSXItems.tsx
 };
 
 const useTreeViewJSXNodesItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({

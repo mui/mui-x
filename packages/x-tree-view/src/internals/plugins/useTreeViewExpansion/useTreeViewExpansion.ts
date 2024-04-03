@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
@@ -72,12 +71,23 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+<<<<<<< Updated upstream
   populateInstance<UseTreeViewExpansionSignature>(instance, {
     isNodeExpanded,
     isNodeExpandable,
     toggleNodeExpansion,
     expandAllSiblings,
   });
+=======
+  return {
+    instance: {
+      isItemExpanded,
+      isItemExpandable,
+      toggleItemExpansion,
+      expandAllSiblings,
+    },
+  };
+>>>>>>> Stashed changes
 };
 
 useTreeViewExpansion.models = {
