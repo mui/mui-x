@@ -42,6 +42,23 @@ async function findLatestTaggedVersion(octokit) {
   return data[0].name.trim();
 }
 
+function resolvePackageByLabels(labels) {
+  let resolvedPackage = null;
+  labels.forEach((label) => {
+    switch (label.name) {
+      case 'component: data grid':
+        resolvedPackage = 'DataGrid';
+        break;
+      case 'component: pickers':
+        resolvedPackage = 'pickers';
+        break;
+      default:
+        break;
+    }
+  });
+  return resolvedPackage;
+}
+
 async function main(argv) {
   const { githubToken, lastRelease: lastReleaseInput, release } = argv;
 
@@ -89,6 +106,7 @@ async function main(argv) {
   // Fetch all the pull Request and check if there is a section named changelog
 
   const changeLogMessages = [];
+  const prsLabelsMap = {};
   await Promise.all(
     commitsItems.map(async (commitsItem) => {
       const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
@@ -97,12 +115,14 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage },
+        data: { body: bodyMessage, labels },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
+
+      prsLabelsMap[commitsItem.sha] = labels;
 
       if (!bodyMessage) {
         return;
@@ -146,8 +166,6 @@ async function main(argv) {
     const tag = parseTags(commitItem.commit.message);
     switch (tag) {
       case 'DataGrid':
-      case 'l10n':
-      case '118n':
         dataGridCommits.push(commitItem);
         break;
       case 'DataGridPro':
@@ -182,6 +200,25 @@ async function main(argv) {
       case 'codemod':
         codemodCommits.push(commitItem);
         break;
+      case 'l10n':
+      case '118n': {
+        const prLabels = prsLabelsMap[commitItem.sha];
+        const resolvedPackage = resolvePackageByLabels(prLabels);
+        if (resolvedPackage) {
+          switch (resolvedPackage) {
+            case 'DataGrid':
+              dataGridCommits.push(commitItem);
+              break;
+            case 'pickers':
+              pickersCommits.push(commitItem);
+              break;
+            default:
+              coreCommits.push(commitItem);
+              break;
+          }
+        }
+        break;
+      }
       default:
         otherCommits.push(commitItem);
         break;
