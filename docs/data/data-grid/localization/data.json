@@ -187,7 +187,7 @@
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 3,
+    "missingKeysCount": 0,
     "totalKeysCount": 117,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ptBR.ts"
   },
