@@ -150,7 +150,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
         {itemsToRender.map(renderItem)}
-        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </Root>
     </TreeViewProvider>
   );
