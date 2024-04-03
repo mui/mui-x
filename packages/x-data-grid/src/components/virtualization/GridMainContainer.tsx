@@ -2,7 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
-const Element = styled('div')({
+const Element = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'Main',
+  overridesResolver: (props, styles) => styles.main,
+})({
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
