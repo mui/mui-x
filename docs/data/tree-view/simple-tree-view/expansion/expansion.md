@@ -34,6 +34,6 @@ Use the `onItemExpansionToggle` prop to trigger an action upon an item being exp
 
 ## Change item expansion
 
-You can use the `setItemExpansion` api method to imperatively change the expansion of an item:
+You can use the `setItemExpansion` API method to imperatively change the expansion of an item:
 
 {{"demo": "ChangeItemExpansion.js"}}
