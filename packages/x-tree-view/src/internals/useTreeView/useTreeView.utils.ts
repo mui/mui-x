@@ -1,4 +1,4 @@
-import { TreeViewAnyPluginSignature, TreeViewInstance, TreeViewUsedPublicAPI } from '../models';
+import { TreeViewInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
