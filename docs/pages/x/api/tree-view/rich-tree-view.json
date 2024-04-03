@@ -14,7 +14,7 @@
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "getItemId": {
       "type": { "name": "func" },
-      "default": "`(item) => item.id`",
+      "default": "(item) => item.id",
       "signature": {
         "type": "function(item: R) => string",
         "describedArgs": ["item"],
@@ -23,7 +23,7 @@
     },
     "getItemLabel": {
       "type": { "name": "func" },
-      "default": "`(item) => item.label`",
+      "default": "(item) => item.label",
       "signature": {
         "type": "function(item: R) => string",
         "describedArgs": ["item"],

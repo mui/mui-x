@@ -89,7 +89,7 @@
     },
     "getAggregationPosition": {
       "type": { "name": "func" },
-      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`",
+      "default": "(groupNode) => groupNode == null ? 'footer' : 'inline'",
       "signature": {
         "type": "function(groupNode: GridGroupNode) => GridAggregationPosition | null",
         "describedArgs": ["groupNode"],

@@ -17,12 +17,12 @@
     },
     "hasCellUnit": {
       "type": { "description": "boolean" },
-      "default": "`true`",
+      "default": "true",
       "isPremiumPlan": true
     },
     "label": {
       "type": { "description": "string" },
-      "default": "`apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})`",
+      "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
     "valueFormatter": {

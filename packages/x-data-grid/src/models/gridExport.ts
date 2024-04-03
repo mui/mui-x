@@ -26,7 +26,7 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
   extends GridExportOptions {
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -68,7 +68,7 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
   delimiter?: string;
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
