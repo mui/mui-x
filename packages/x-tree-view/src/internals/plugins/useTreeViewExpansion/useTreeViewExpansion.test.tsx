@@ -1,15 +1,12 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
-import { act, fireEvent } from '@mui-internal/test-utils';
-import {
-  TreeItem2,
-  TreeItem2Props,
-  UseTreeItem2ContentSlotOwnProps,
-  useTreeItem2Utils,
-} from '@mui/x-tree-view';
-import * as React from 'react';
+import { fireEvent } from '@mui-internal/test-utils';
+import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
+import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 /**
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
@@ -38,7 +35,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.getAllItemRoots()).to.have.length(3);
       });
 
-      it('should use the control state when defined', () => {
+      it('should use the controlled state when defined', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           expandedItems: ['1'],
@@ -48,7 +45,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.getItemRoot('1.1')).toBeVisible();
       });
 
-      it('should use the control state upon the default state when both are defined', () => {
+      it('should use the controlled state instead of the default state when both are defined', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           expandedItems: ['1'],
@@ -58,7 +55,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should react to control state update', () => {
+      it('should react to controlled state update', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           expandedItems: [],
@@ -77,15 +74,12 @@ describeTreeView<UseTreeViewExpansionSignature>(
         });
 
         fireEvent.click(response.getItemContent('1'));
-        act(() => {
-          response.getRoot().focus();
-        });
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
       });
 
-      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item no non-empty list)', () => {
+      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to non-empty list)', () => {
         const onExpandedItemsChange = spy();
 
         const response = render({
@@ -98,9 +92,6 @@ describeTreeView<UseTreeViewExpansionSignature>(
         });
 
         fireEvent.click(response.getItemContent('2'));
-        act(() => {
-          response.getRoot().focus();
-        });
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
@@ -119,9 +110,6 @@ describeTreeView<UseTreeViewExpansionSignature>(
         });
 
         fireEvent.click(response.getItemContent('1'));
-        act(() => {
-          response.getRoot().focus();
-        });
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal([]);
@@ -156,7 +144,7 @@ describeTreeView<UseTreeViewExpansionSignature>(
       });
     });
 
-    describe('click interactions', () => {
+    describe('item click interaction', () => {
       it('should expand collapsed item when clicking on an item content', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -267,6 +255,35 @@ describeTreeView<UseTreeViewExpansionSignature>(
         expect(response.isItemExpanded('1')).to.equal(false);
         fireEvent.click(response.getItemIconContainer('1'));
         expect(response.isItemExpanded('1')).to.equal(true);
+      });
+    });
+
+    // The `aria-expanded` attribute is used by the `response.isItemExpanded` method.
+    // This `describe` only tests basics scenarios, more complex scenarios are tested in this file's other `describe`.
+    describe('aria-expanded item attribute', () => {
+      it('should have the attribute `aria-expanded=false` if collapsed', () => {
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+        });
+
+        expect(response.getItemRoot('1')).to.have.attribute('aria-expanded', 'false');
+      });
+
+      it('should have the attribute `aria-expanded=true` if expanded', () => {
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(response.getItemRoot('1')).to.have.attribute('aria-expanded', 'true');
+      });
+
+      it('should not have the attribute `aria-expanded` if no children are present', () => {
+        const response = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(response.getItemRoot('1')).not.to.have.attribute('aria-expanded');
       });
     });
 
