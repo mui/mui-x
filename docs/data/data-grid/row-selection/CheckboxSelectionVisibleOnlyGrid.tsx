@@ -19,7 +19,7 @@ export default function CheckboxSelectionVisibleOnlyGrid() {
     <div style={{ width: '100%' }}>
       <Box sx={{ mb: 1 }}>
         <FormControlLabel
-          label="disableMultipleRowSelection"
+          label="checkboxSelectionVisibleOnly"
           control={
             <Switch
               checked={checkboxSelectionVisibleOnly}
@@ -33,6 +33,7 @@ export default function CheckboxSelectionVisibleOnlyGrid() {
       <div style={{ height: 400 }}>
         <DataGridPro
           {...data}
+          checkboxSelection
           checkboxSelectionVisibleOnly={checkboxSelectionVisibleOnly}
         />
       </div>
