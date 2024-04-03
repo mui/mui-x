@@ -8,9 +8,17 @@ interface TreeViewItemProps {
   children?: TreeViewItemProps[];
 }
 
-export interface UseTreeViewItemsInstance<R extends {}> {
-  getNode: (itemId: string) => TreeViewNode;
+export interface UseTreeViewItemsPublicAPI<R extends {}> {
+  /**
+   * Get the item with the given id.
+   * @param {string} itemId The id of the item to return.
+   * @returns {R} The item with the given id.
+   */
   getItem: (itemId: string) => R;
+}
+
+export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
+  getNode: (itemId: string) => TreeViewNode;
   getItemsToRender: () => TreeViewItemProps[];
   getChildrenIds: (itemId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
@@ -27,9 +35,6 @@ export interface UseTreeViewItemsInstance<R extends {}> {
    */
   areItemUpdatesPrevented: () => boolean;
 }
-
-export interface UseTreeViewItemsPublicAPI<R extends {}>
-  extends Pick<UseTreeViewItemsInstance<R>, 'getItem'> {}
 
 export interface UseTreeViewItemsParameters<R extends {}> {
   /**
