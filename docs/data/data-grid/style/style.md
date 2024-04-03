@@ -125,7 +125,7 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   mixins: {
-    DataGrid: {
+    MuiDataGrid: {
       // Pinned columns sections
       pinnedBackground: '#340606',
       // Headers, and top & bottom fixed rows
