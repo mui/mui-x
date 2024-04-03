@@ -120,10 +120,17 @@ const specialAPIs: { folder: string; packages: XProjectNames[]; documentedInterf
         'GridAggregationFunction',
       ],
     },
-    // {
-    //   folder: 'charts',
-    //   packages: ['x-charts'],
-    // },
+    {
+      folder: 'charts',
+      packages: ['x-charts'],
+      documentedInterfaces: [
+        'BarSeriesType',
+        'LineSeriesType',
+        'PieSeriesType',
+        'ScatterSeriesType',
+        'AxisConfig',
+      ],
+    },
   ];
 async function run() {
   const projects = createXTypeScriptProjects();

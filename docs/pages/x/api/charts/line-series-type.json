@@ -1,0 +1,26 @@
+{
+  "name": "LineSeriesType",
+  "imports": ["import { LineSeriesType } from '@mui/x-charts'"],
+  "properties": {
+    "type": { "type": { "description": "'line'" }, "required": true },
+    "area": { "type": { "description": "boolean" } },
+    "color": { "type": { "description": "string" } },
+    "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
+    "curve": { "type": { "description": "CurveType" } },
+    "data": { "type": { "description": "(number | null)[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "label": { "type": { "description": "string" } },
+    "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
+    "stack": { "type": { "description": "string" } },
+    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
+    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "valueFormatter": {
+      "type": { "description": "&lt;V extends TValue&gt;(value: V) =&gt; string" }
+    },
+    "xAxisKey": { "type": { "description": "string" } },
+    "yAxisKey": { "type": { "description": "string" } }
+  }
+}
