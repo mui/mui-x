@@ -162,7 +162,6 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
-          rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
@@ -187,7 +186,6 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
-          rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
