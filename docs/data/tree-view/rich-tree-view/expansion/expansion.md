@@ -35,6 +35,6 @@ Use the `onItemExpansionToggle` prop if you want to react to an item expansion c
 
 ## Change item expansion
 
-You can use the `setItemExpansion` api method to imperatively change the expansion of an item:
+You can use the `setItemExpansion` API method to imperatively change the expansion of an item:
 
 {{"demo": "ChangeItemExpansion.js"}}
