@@ -118,7 +118,7 @@ The following demo illustrates how this can be achieved.
 
 ## Theme header & pinned sections
 
-The Data Grid will use by default the MUI `theme.palette.background.default` color for the background of its header and pinned sections, which require a solid color to hide the scrollable content behind them. You can override that color with the following configuration:
+By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background of its header and pinned sections. These elements require a solid color to hide the scrollable content behind them. You can override that color with the following configuration:
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
