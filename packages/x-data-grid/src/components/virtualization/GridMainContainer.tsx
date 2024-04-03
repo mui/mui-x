@@ -26,7 +26,13 @@ export const GridMainContainer = React.forwardRef<
   const rootProps = useGridRootProps();
 
   return (
-    <Element ref={ref} ownerState={rootProps} className={props.className} tabIndex={-1} {...ariaAttributes}>
+    <Element
+      ref={ref}
+      ownerState={rootProps}
+      className={props.className}
+      tabIndex={-1}
+      {...ariaAttributes}
+    >
       {props.children}
     </Element>
   );
