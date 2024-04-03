@@ -64,7 +64,7 @@ export interface ExportedDayCalendarProps<TDate extends PickerValidDate>
    * Formats the day of week displayed in the calendar header.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter?: (date: TDate) => string;
   /**
