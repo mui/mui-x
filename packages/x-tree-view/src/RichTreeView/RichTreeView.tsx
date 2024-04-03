@@ -33,6 +33,7 @@ export const RichTreeViewRoot = styled('ul', {
   margin: 0,
   listStyle: 'none',
   outline: 0,
+  position: 'relative',
 });
 
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(

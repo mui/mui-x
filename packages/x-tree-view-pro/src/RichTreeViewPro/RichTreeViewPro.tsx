@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { useSlotProps } from '@mui/base/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import {
@@ -16,6 +17,7 @@ import {
   RichTreeViewProSlots,
 } from './RichTreeViewPro.types';
 import { DEFAULT_TREE_VIEW_PRO_PLUGINS } from '../internals/plugins';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProProps<R, Multiple>,
@@ -38,6 +40,7 @@ export const RichTreeViewProRoot = styled('ul', {
   margin: 0,
   listStyle: 'none',
   outline: 0,
+  position: 'relative',
 });
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
@@ -64,6 +67,8 @@ function WrappedTreeItem<R extends {}>({
   return <Item {...itemProps}>{children}</Item>;
 }
 
+const releaseInfo = getReleaseInfo();
+
 const childrenWarning = buildWarning([
   'MUI X: The `RichTreeViewPro` component does not support JSX children.',
   'If you want to add items, you need to use the `items` prop',
@@ -85,6 +90,8 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
+
+  useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -141,7 +148,10 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
+      <Root {...rootProps}>
+        {itemsToRender.map(renderItem)}
+        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+      </Root>
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
