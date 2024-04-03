@@ -98,7 +98,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   state,
   setState,
 }) => {
-  const getNode = React.useCallback(
+  const getItemMeta = React.useCallback(
     (itemId: string) => state.items.nodeMap[itemId],
     [state.items.nodeMap],
   );
@@ -114,20 +114,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return false;
       }
 
-      let node = instance.getNode(itemId);
+      let item = instance.getItemMeta(itemId);
 
       // This can be called before the item has been added to the item map.
-      if (!node) {
+      if (!item) {
         return false;
       }
 
-      if (node.disabled) {
+      if (item.disabled) {
         return true;
       }
 
-      while (node.parentId != null) {
-        node = instance.getNode(node.parentId);
-        if (node.disabled) {
+      while (item.parentId != null) {
+        item = instance.getItemMeta(item.parentId);
+        if (item.disabled) {
           return true;
         }
       }
@@ -210,7 +210,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   };
 
   populateInstance<UseTreeViewItemsSignature>(instance, {
-    getNode,
+    getItemMeta,
     getItem,
     getItemsToRender,
     getChildrenIds,

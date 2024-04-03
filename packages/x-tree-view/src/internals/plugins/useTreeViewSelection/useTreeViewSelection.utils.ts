@@ -17,25 +17,25 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
  */
 export const findOrderInTremauxTree = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
-  nodeAId: string,
-  nodeBId: string,
+  itemAId: string,
+  itemBId: string,
 ) => {
-  if (nodeAId === nodeBId) {
-    return [nodeAId, nodeBId];
+  if (itemAId === itemBId) {
+    return [itemAId, itemBId];
   }
 
-  const nodeA = instance.getNode(nodeAId);
-  const nodeB = instance.getNode(nodeBId);
+  const itemA = instance.getItemMeta(itemAId);
+  const itemB = instance.getItemMeta(itemBId);
 
-  if (nodeA.parentId === nodeB.id || nodeB.parentId === nodeA.id) {
-    return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
+  if (itemA.parentId === itemB.id || itemB.parentId === itemA.id) {
+    return itemB.parentId === itemA.id ? [itemA.id, itemB.id] : [itemB.id, itemA.id];
   }
 
-  const aFamily: (string | null)[] = [nodeA.id];
-  const bFamily: (string | null)[] = [nodeB.id];
+  const aFamily: (string | null)[] = [itemA.id];
+  const bFamily: (string | null)[] = [itemB.id];
 
-  let aAncestor = nodeA.parentId;
-  let bAncestor = nodeB.parentId;
+  let aAncestor = itemA.parentId;
+  let bAncestor = itemB.parentId;
 
   let aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
   let bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
@@ -49,7 +49,7 @@ export const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = instance.getNode(aAncestor!).parentId;
+        aAncestor = instance.getItemMeta(aAncestor!).parentId;
       }
     }
 
@@ -58,7 +58,7 @@ export const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = instance.getNode(bAncestor!).parentId;
+        bAncestor = instance.getItemMeta(bAncestor!).parentId;
       }
     }
   }
@@ -70,6 +70,6 @@ export const findOrderInTremauxTree = (
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
 
   return ancestorFamily.indexOf(aSide!) < ancestorFamily.indexOf(bSide!)
-    ? [nodeAId, nodeBId]
-    : [nodeBId, nodeAId];
+    ? [itemAId, itemBId]
+    : [itemBId, itemAId];
 };

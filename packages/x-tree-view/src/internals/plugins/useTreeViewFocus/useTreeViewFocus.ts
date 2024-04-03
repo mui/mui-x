@@ -13,8 +13,8 @@ const useTabbableItemId = (
   selectedItems: string | string[] | null,
 ) => {
   const isItemVisible = (itemId: string) => {
-    const node = instance.getNode(itemId);
-    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
+    const item = instance.getItemMeta(itemId);
+    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
   };
 
   let tabbableItemId: string | null | undefined;
@@ -62,13 +62,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isItemVisible = (itemId: string) => {
-    const node = instance.getNode(itemId);
-    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
+    const item = instance.getItemMeta(itemId);
+    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const node = instance.getNode(itemId);
-    const itemElement = document.getElementById(instance.getTreeItemId(itemId, node.idAttribute));
+    const item = instance.getItemMeta(itemId);
+    const itemElement = document.getElementById(instance.getTreeItemId(itemId, item.idAttribute));
     if (itemElement) {
       itemElement.focus();
     }
@@ -106,10 +106,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       return;
     }
 
-    const node = instance.getNode(state.focusedItemId);
-    if (node) {
+    const item = instance.getItemMeta(state.focusedItemId);
+    if (item) {
       const itemElement = document.getElementById(
-        instance.getTreeItemId(state.focusedItemId, node.idAttribute),
+        instance.getTreeItemId(state.focusedItemId, item.idAttribute),
       );
       if (itemElement) {
         itemElement.blur();
@@ -148,7 +148,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
     };
 
-  const focusedItem = instance.getNode(state.focusedItemId!);
+  const focusedItem = instance.getItemMeta(state.focusedItemId!);
   const activeDescendant = focusedItem
     ? instance.getTreeItemId(focusedItem.id, focusedItem.idAttribute)
     : null;

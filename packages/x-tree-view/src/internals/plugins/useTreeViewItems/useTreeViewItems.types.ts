@@ -18,7 +18,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  getNode: (itemId: string) => TreeViewNode;
+  getItemMeta: (itemId: string) => TreeViewNode;
   getItemsToRender: () => TreeViewItemProps[];
   getChildrenIds: (itemId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
