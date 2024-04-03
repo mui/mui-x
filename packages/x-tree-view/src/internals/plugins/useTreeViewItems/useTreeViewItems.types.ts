@@ -88,7 +88,7 @@ export interface TreeViewItemIdAndChildren {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    nodeTree: TreeViewItemIdAndChildren[];
+    itemTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
   };

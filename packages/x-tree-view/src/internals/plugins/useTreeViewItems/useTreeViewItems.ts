@@ -82,11 +82,11 @@ const updateItemsState = ({
     };
   };
 
-  const nodeTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
 
   return {
     nodeMap,
-    nodeTree,
+    itemTree,
     itemMap,
   };
 };
@@ -206,7 +206,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       };
     };
 
-    return state.items.nodeTree.map(getPropsFromItemId);
+    return state.items.itemTree.map(getPropsFromItemId);
   };
 
   populateInstance<UseTreeViewItemsSignature>(instance, {
