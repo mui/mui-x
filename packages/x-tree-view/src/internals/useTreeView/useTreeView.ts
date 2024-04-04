@@ -61,7 +61,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
 
-  const innerRootRef = React.useRef(null);
+  const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
   const [state, setState] = React.useState(() => {
@@ -84,6 +84,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const contextValue = {
     publicAPI,
     instance: instance as TreeViewInstance<any>,
+    rootRef: innerRootRef,
   } as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
@@ -157,7 +158,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   contextValue.wrapRoot = ({ children }) => {
     let finalChildren: React.ReactNode = children;
     rootWrappers.forEach((rootWrapper) => {
-      finalChildren = rootWrapper({ children: finalChildren, rootRef: innerRootRef });
+      finalChildren = rootWrapper({ children: finalChildren });
     });
 
     return finalChildren;

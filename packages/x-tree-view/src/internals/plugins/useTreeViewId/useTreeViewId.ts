@@ -7,13 +7,13 @@ import { UseTreeViewIdSignature } from './useTreeViewId.types';
 export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ instance, params }) => {
   const treeId = useId(params.id);
 
-  const getTreeItemId = React.useCallback(
+  const getTreeItemIdAttribute = React.useCallback(
     (itemId: string, idAttribute: string | undefined) => idAttribute ?? `${treeId}-${itemId}`,
     [treeId],
   );
 
   populateInstance<UseTreeViewIdSignature>(instance, {
-    getTreeItemId,
+    getTreeItemIdAttribute,
   });
 
   return {

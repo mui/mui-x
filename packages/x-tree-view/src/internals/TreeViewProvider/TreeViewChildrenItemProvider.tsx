@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './useTreeViewContext';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
-import { TreeViewItemChildrenIndexes } from '../plugins/useTreeViewItems/useTreeViewItems.types';
+import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
+import type { UseTreeViewIdSignature } from '../plugins/useTreeViewId';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -13,60 +14,59 @@ if (process.env.NODE_ENV !== 'production') {
 
 interface TreeViewChildrenItemProviderProps {
   itemId?: string;
-  rootRef?: React.RefObject<HTMLElement>;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
-  const { children, rootRef, itemId = null } = props;
+  const { children, itemId = null } = props;
 
-  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
-  const parentContext = React.useContext(TreeViewChildrenItemContext);
-  const childrenElementRef = React.useRef<Map<string, HTMLLIElement>>(new Map());
+  const { instance, rootRef } =
+    useTreeViewContext<
+      [UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature, UseTreeViewIdSignature]
+    >();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
   React.useEffect(() => {
-    let element: HTMLElement | null | undefined;
-    if (rootRef) {
-      element = rootRef.current;
-    } else if (itemId && parentContext) {
-      // The TreeViewChildrenItemProvider is not aware of the ref of its own item,
-      // but its parent can give him this information.
-      element = parentContext.getChild(itemId);
+    if (!rootRef.current) {
+      return;
     }
 
-    if (element) {
-      const childrenIds = Array.from(
-        element.querySelectorAll(
-          `[role="treeitem"]${itemId == null ? '' : `[data-parentid="${itemId}"]`}`,
-        ),
-      ).map((child) => childrenIdAttrToIdRef.current.get(child.id)!);
-
-      const previousIndexes = instance.getJSXItemsChildrenIndexes(itemId ?? null);
-      const hasChanges =
-        Object.keys(previousIndexes).length !== childrenIds.length ||
-        childrenIds.some((childId, index) => index !== previousIndexes[childId]);
-      if (hasChanges) {
-        const newIndexes: TreeViewItemChildrenIndexes = {};
-        childrenIds.forEach((childId, index) => {
-          newIndexes[childId] = index;
-        });
-        instance.setJSXItemsChildrenIndexes(itemId ?? null, newIndexes);
+    let idAttr: string | null = null;
+    if (itemId == null) {
+      idAttr = rootRef.current.id;
+    } else {
+      // Undefined during 1st render
+      const itemMeta = instance.getNode(itemId);
+      if (itemMeta !== undefined) {
+        idAttr = instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute);
       }
+    }
+
+    if (idAttr == null) {
+      return;
+    }
+
+    const previousChildrenIds = instance.getItemOrderedChildrenIds(itemId ?? null) ?? [];
+    const childrenElements = rootRef.current.querySelectorAll(
+      `${itemId == null ? '' : `*[id="${idAttr}"] `}[role="treeitem"]:not(*[id="${idAttr}"] [role="treeitem"] [role="treeitem"])`,
+    );
+    const childrenIds = Array.from(childrenElements).map(
+      (child) => childrenIdAttrToIdRef.current.get(child.id)!,
+    );
+
+    const hasChanged =
+      childrenIds.length !== previousChildrenIds.length ||
+      childrenIds.some((childId, index) => childId !== previousChildrenIds[index]);
+    if (hasChanged) {
+      instance.setJSXItemsOrderedChildrenIds(itemId ?? null, childrenIds);
     }
   });
 
   const value = React.useMemo<TreeViewChildrenItemContextValue>(
     () => ({
-      registerChild: (childId, element, childIdAttribute) => {
-        childrenElementRef.current.set(childId, element);
-        childrenIdAttrToIdRef.current.set(childIdAttribute, childId);
-      },
-      unregisterChild: (childId, childIdAttribute) => {
-        childrenElementRef.current.delete(childId);
-        childrenIdAttrToIdRef.current.delete(childIdAttribute);
-      },
-      getChild: (childId) => childrenElementRef.current.get(childId),
+      registerChild: (childIdAttribute, childItemId) =>
+        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId),
+      unregisterChild: (childIdAttribute) => childrenIdAttrToIdRef.current.delete(childIdAttribute),
       parentId: itemId,
     }),
     [itemId],
@@ -85,8 +85,7 @@ TreeViewChildrenItemProvider.propTypes = {
 } as any;
 
 interface TreeViewChildrenItemContextValue {
-  registerChild: (itemId: string, element: HTMLLIElement, idAttribute: string) => void;
-  unregisterChild: (itemId: string, idAttribute: string) => void;
-  getChild: (itemId: string) => HTMLLIElement | undefined;
+  registerChild: (idAttribute: string, itemId: string) => void;
+  unregisterChild: (idAttribute: string) => void;
   parentId: string | null;
 }

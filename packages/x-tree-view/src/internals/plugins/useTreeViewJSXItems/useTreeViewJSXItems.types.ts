@@ -1,14 +1,12 @@
 import { TreeViewNode, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { TreeViewItemChildrenIndexes } from '../useTreeViewItems/useTreeViewItems.types';
 import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewItemsInstance {
   insertJSXItem: (item: TreeViewNode) => void;
   removeJSXItem: (itemId: string) => void;
   mapFirstCharFromJSX: (itemId: string, firstChar: string) => () => void;
-  setJSXItemsChildrenIndexes: (itemId: string | null, indexes: TreeViewItemChildrenIndexes) => void;
-  getJSXItemsChildrenIndexes: (itemId: string | null) => TreeViewItemChildrenIndexes;
+  setJSXItemsOrderedChildrenIds: (parentId: string | null, orderedChildrenIds: string[]) => void;
 }
 
 export interface UseTreeViewItemsParameters {}

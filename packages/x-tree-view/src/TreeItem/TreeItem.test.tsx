@@ -17,11 +17,18 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     isItemFocused: () => false,
     isItemSelected: () => false,
     isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
-    getTreeItemId: () => '',
+    getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
     getJSXItemsChildrenIndexes: () => {},
     setJSXItemsChildrenIndexes: () => {},
+    getNode: () => ({
+      parentId: null,
+      id: 'one',
+      idAttribute: undefined,
+      disabled: false,
+      expandable: false,
+    }),
   } as any,
   publicAPI: {
     focusItem: () => {},
@@ -39,7 +46,9 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   selection: {
     multiSelect: false,
   },
-  rootRef: { current: null },
+  rootRef: {
+    current: null,
+  },
 };
 
 describe('<TreeItem />', () => {

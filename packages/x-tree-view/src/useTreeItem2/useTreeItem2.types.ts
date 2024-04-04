@@ -36,7 +36,6 @@ export interface UseTreeItem2RootSlotOwnProps {
   'aria-expanded': React.AriaAttributes['aria-expanded'];
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
-  'data-parentid': string | undefined;
   onFocus: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;

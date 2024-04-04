@@ -20,7 +20,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
   getNode: (itemId: string) => TreeViewNode;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (itemId: string | null) => string[];
+  getItemOrderedChildrenIds: (parentId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
   isItemDisabled: (itemId: string | null) => itemId is string;
   /**
@@ -91,7 +91,7 @@ export interface UseTreeViewItemsState<R extends {}> {
     nodeTree: TreeViewItemIdAndChildren[];
     nodeMap: TreeViewNodeMap;
     itemMap: TreeViewItemMap<R>;
-    itemIndexes: { [parentItemId: string]: TreeViewItemChildrenIndexes };
+    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
   };
 }
 
@@ -111,5 +111,3 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
 export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
-
-export type TreeViewItemChildrenIndexes = { [itemId: string]: number };
