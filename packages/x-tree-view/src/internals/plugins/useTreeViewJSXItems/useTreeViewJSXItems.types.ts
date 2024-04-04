@@ -8,12 +8,12 @@ export interface UseTreeViewItemsInstance {
   mapFirstCharFromJSX: (itemId: string, firstChar: string) => () => void;
 }
 
-export interface UseTreeViewItemsParameters {}
+export interface UseTreeViewJSXItemsParameters {}
 
 export interface UseTreeViewItemsDefaultizedParameters {}
 
 export type UseTreeViewJSXItemsSignature = TreeViewPluginSignature<{
-  params: UseTreeViewItemsParameters;
+  params: UseTreeViewJSXItemsParameters;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters;
   instance: UseTreeViewItemsInstance;
   dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewKeyboardNavigationSignature];
