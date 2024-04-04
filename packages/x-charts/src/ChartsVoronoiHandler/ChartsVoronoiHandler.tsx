@@ -26,7 +26,7 @@ export type ChartsVoronoiHandlerProps = {
 };
 
 type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
-export const isSeries = (obj: any): obj is VoronoiSeries => 'seriesId' in obj;
+const isSeries = (obj: any): obj is VoronoiSeries => 'seriesId' in obj;
 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
