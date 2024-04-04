@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.2.0
+
+_Apr 4, 2024_
+
+We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow higher Data Grid packages' props to be used in MIT (#12365) @MBilalShafi
+- 🚀 Add `setItemExpansion` Tree View API method (#12595) @flaviendelangle
+- 🌍 Improve Persian (fa-IR), Portuguese (pt-BR), and Spanish (es-ES) locale on the Data Grid
+- 🌍 Improve Persian (fa-IR), Portuguese (pt-BR), and Ukrainian (uk-UA) locale on the Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.2.0`
+
+- [DataGrid] Allow higher packages' props to be used in MIT (#12365) @MBilalShafi
+- [DataGrid] Fix RTL mode (#12583) @romgrk
+- [DataGrid] Fix `ColDefChangesGridNoSnap` demo crash (#12663) @MBilalShafi
+- [DataGrid] Fix server-side filter demo not working (#12662) @MBilalShafi
+- [DataGrid] Log error if `rowCount` is used with client-side pagination (#12448) @michelengelen
+- [DataGrid] Remove GridFormatterParams completely (#12660) @romgrk
+- [l10n] Improve Persian (fa-IR) locale (#12630) @amirhosseinzf
+- [l10n] Improve Portuguese (pt-BR) locale (#12618) @hugoalkimim
+- [l10n] Improve Spanish (es-ES) locale (#12606) @aitor40
+
+#### `@mui/x-data-grid-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.2.0`.
+
+#### `@mui/x-data-grid-premium@7.2.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.2.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.2.0`
+
+- [fields] Fix `readOnly` behavior (#12609) @LukasTy
+- [l10n] Improve Persian (fa-IR) locale (#12632) @misafari
+- [l10n] Improve Portuguese (pt-BR) locale (#12613) @cnHealth
+- [l10n] Improve Ukrainian (uk-UA) locale (#12627) @alexkobylansky
+
+#### `@mui/x-date-pickers-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
+
+- [DateTimeRangePicker] Fix selection on same day (#12604) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.2.0`
+
+- [charts] Fix `tickInterval` usage for y-axis (#12592) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.2.0`
+
+- [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
+- [TreeView] Create `RichTreeViewPro` component (#12610) @flaviendelangle
+- [TreeView] Create pro package (#12240) @flaviendelangle
+- [TreeView] Fix typo in errors (#12623) @alissa-tung
+- [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
+
+### Docs
+
+- [docs] Adds a recipe for the `checkboxSelectionVisibleOnly` prop (#12646) @michelengelen
+- [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12670) @michelengelen
+- [docs] Fix formatting and typo on migration guide @oliviertassinari
+- [docs] Fix formatting in changelog @oliviertassinari
+- [docs] Fix grammar in TreeView migration doc (#12615) @joshkel
+- [docs] Fix missing closing props in `PieShapeNoSnap` demo (#12636) @alp-ex
+- [docs] Fix type arguments in Custom Field page (#12619) @Juneezee
+- [docs] Fix typo in getItemId prop description (#12637) @flaviendelangle
+- [docs] Make the Charts `margin` usage more visible (#12591) @alexfauquette
+- [docs] Match IE 11 spacing with Material UI @oliviertassinari
+- [docs] Move data grid interfaces to standard API page layout (#12016) @alexfauquette
+- [docs] Remove ` around @default values (#12158) @alexfauquette
+- [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
+- [docs] Use `TreeItem2` for icon expansion example on `RichTreeView` (#12563) @flaviendelangle
+
+### Core
+
+- [core] Add cherry-pick `master` to `v6` action (#12648) @LukasTy
+- [core] Bump monorepo (#12608) @LukasTy
+- [core] Fix typo in `@mui/x-tree-view-pro/themeAugmentation` (#12674) @flaviendelangle
+- [core] Introduce `describeTreeView` to run test on `SimpleTreeView` and `RichTreeView`, using `TreeItem` and `TreeItem2` + migrate expansion tests (#12428) @flaviendelangle
+- [core] Limit `test-types` CI step allowed memory (#12651) @LukasTy
+- [core] Remove explicit `express` package (#12602) @LukasTy
+- [core] Update to new embedded translations in the docs package (#12232) @Janpot
+- [core] Use PR labels to identify the package a `l10n` PR belongs to (#12639) @LukasTy
+- [core] Use `describeTreeView` for selection tests (#12647) @flaviendelangle
+- [docs-infra] Adjust the links to search for issues (#11995) @michelengelen
+- [infra] Polish support survey experience (#12624) @oliviertassinari
+- [support-infra] Replace author association with a permission check in survey action (#12068) @michelengelen
+- [support-infra] Fix user permission check (#12669) @michelengelen
+- [test] Fix TreeView test import (#12668) @LukasTy
+
 ## 7.1.0
 
 _Mar 28, 2024_
