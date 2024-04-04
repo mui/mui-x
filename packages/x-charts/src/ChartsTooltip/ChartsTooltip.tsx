@@ -1,11 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import { Popper, PopperProps as BasePopperProps } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
-import { SxProps, Theme } from '@mui/system';
 import {
   AxisInteractionData,
   InteractionContext,
