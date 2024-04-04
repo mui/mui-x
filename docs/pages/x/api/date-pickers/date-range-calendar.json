@@ -9,13 +9,14 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
         "type": "function(date: TDate) => string",
         "describedArgs": ["date"],
@@ -34,7 +35,7 @@
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "focusedView": { "type": { "name": "enum", "description": "'day'" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "maxDate": { "type": { "name": "object" } },

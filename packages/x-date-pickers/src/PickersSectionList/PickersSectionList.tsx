@@ -1,10 +1,9 @@
 import * as React from 'react';
-import styled from '@mui/system/styled';
 import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
-import { useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,

@@ -26,7 +26,7 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
   extends GridExportOptions {
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -68,7 +68,7 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
   delimiter?: string;
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -95,6 +95,12 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
+  /**
+   * @ignore
+   * If `false`, the quotes will not be appended to the cell value.
+   * @default true
+   */
+  shouldAppendQuotes?: boolean;
 }
 
 /**

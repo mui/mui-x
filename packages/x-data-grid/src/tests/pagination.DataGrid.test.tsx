@@ -524,12 +524,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  it('should react to an update of rowCount', () => {
+  it('should react to an update of rowCount when `paginationMode = server`', () => {
     const { setProps } = render(
       <BaselineTestCase
         rowCount={5}
         paginationModel={{ page: 0, pageSize: 1 }}
         pageSizeOptions={[1]}
+        paginationMode="server"
       />,
     );
     expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1–1 of 5'); // "–" is not a hyphen, it's an "en dash"
@@ -684,5 +685,27 @@ describe('<DataGrid /> - Pagination', () => {
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/11247
+  it('should not throw on deleting the last row of a page > 0', () => {
+    const columns = [{ field: 'name' }];
+    const rows = [
+      { id: 0, name: 'a' },
+      { id: 1, name: 'b' },
+      { id: 2, name: 'c' },
+      { id: 3, name: 'd' },
+    ];
+    expect(() => {
+      const { setProps } = render(
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
+          pageSizeOptions={[2]}
+        />,
+      );
+      setProps({ rows: rows.slice(0, 2) });
+    }).not.to.throw();
   });
 });

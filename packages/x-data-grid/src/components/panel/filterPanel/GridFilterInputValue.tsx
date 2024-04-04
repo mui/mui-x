@@ -13,7 +13,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
+     * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
   };
@@ -32,6 +32,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     isFilterActive,
     clearButton,
     InputProps,
+    variant = 'standard',
     ...others
   } = props;
   const filterTimeout = useTimeout();
@@ -69,7 +70,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
+      variant={variant}
       type={type || 'text'}
       InputProps={{
         ...(applying || clearButton
@@ -114,7 +115,7 @@ GridFilterInputValue.propTypes = {
   ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
+   * required is selected (for example `isEmpty`)
    */
   isFilterActive: PropTypes.bool,
   item: PropTypes.shape({

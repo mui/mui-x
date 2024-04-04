@@ -24,6 +24,7 @@ const sparklineColumnType = {
   sortable: false,
   editable: false,
   groupable: false,
+  display: 'flex',
   renderCell: (params) => <GridSparklineCell {...params} />,
 };
 

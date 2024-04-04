@@ -49,16 +49,15 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * @default Time
    */
   timeIcon?: React.ReactNode;
-}
-
-export interface DateTimePickerTabsProps
-  extends ExportedDateTimePickerTabsProps,
-    BaseTabsProps<DateOrTimeViewWithMeridiem> {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerTabsClasses>;
 }
+
+export interface DateTimePickerTabsProps
+  extends ExportedDateTimePickerTabsProps,
+    BaseTabsProps<DateOrTimeViewWithMeridiem> {}
 
 const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
   const { classes } = ownerState;
@@ -103,6 +102,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
     className,
+    sx,
   } = props;
 
   const localeText = useLocaleText();
@@ -123,6 +123,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
       value={viewToTab(view)}
       onChange={handleChange}
       className={clsx(className, classes.root)}
+      sx={sx}
     >
       <Tab
         value="date"
@@ -164,6 +165,14 @@ DateTimePickerTabs.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Time tab icon.
    * @default Time

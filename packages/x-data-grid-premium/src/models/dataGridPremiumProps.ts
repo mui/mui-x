@@ -38,7 +38,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridPremiumPropsWithDefaultValue> &
+    Partial<DataGridPremiumPropsWithDefaultValue<R>> &
       DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
       DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
@@ -64,7 +64,8 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface.
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
-export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
+export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridProPropsWithDefaultValue<R> {
   /**
    * If `true`, the cell selection mode is enabled.
    * @default false
@@ -102,7 +103,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   * @default (groupNode) => groupNode == null ? 'footer' : 'inline'
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
   /**
@@ -114,7 +115,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
 }
@@ -169,6 +170,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {string} inProgress Indicates if the task is in progress.
    */
   onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
+  /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart?: (params: { data: string[][] }) => Promise<any>;
   /**
    * Callback fired when the clipboard paste operation starts.
    */

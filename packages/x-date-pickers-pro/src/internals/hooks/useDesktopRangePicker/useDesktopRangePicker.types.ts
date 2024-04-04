@@ -23,11 +23,11 @@ export interface UseDesktopRangePickerSlots<
 export interface UseDesktopRangePickerSlotProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends UseRangePickerSlotProps<TDate, TView>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends UseRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     PickersPopperSlotProps {}
 
-export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
-  extends RangeOnlyPickerProps<TDate> {
+export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -37,6 +37,7 @@ export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
 export interface UseDesktopRangePickerProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends UseRangePickerProps<
@@ -55,7 +56,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
@@ -63,7 +64,14 @@ export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditi
 export interface UseDesktopRangePickerParams<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 > extends UseRangePickerParams<
     TDate,
     TView,

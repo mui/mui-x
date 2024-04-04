@@ -16,7 +16,7 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
-  '@mui/markdown': '@mui/monorepo/packages/markdown',
+  '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
@@ -34,7 +34,7 @@ const productionPlugins = [
 ];
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
+  const useESModules = api.env(['modern', 'stable', 'rollup']);
 
   const presets = [
     [
@@ -153,12 +153,6 @@ module.exports = function getBabelConfig(api) {
               root: ['./'],
             },
           ],
-        ],
-      },
-      legacy: {
-        plugins: [
-          // IE11 support
-          '@babel/plugin-transform-object-assign',
         ],
       },
       test: {

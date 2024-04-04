@@ -25,6 +25,11 @@ export interface AdapterFormats {
    */
   dayOfMonth: string;
   /**
+   * The day of the month with letters.
+   * @example "2nd"
+   */
+  dayOfMonthFull: string;
+  /**
    * The name of the day of the week.
    * @example "Wednesday"
    */
@@ -604,6 +609,14 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    * @returns {number} The number of the week of the given date.
    */
   getWeekNumber(value: TDate): number;
+  /**
+   * Get the number of the day of the week of the given date.
+   * The value is 1-based, 1 - first day of the week, 7 - last day of the week.
+   * @template TDate
+   * @param {TDate} value The given date.
+   * @returns {number} The number of the day of the week of the given date.
+   */
+  getDayOfWeek(value: TDate): number;
   /**
    * Create a list with all the years between the start and the end date.
    * @template TDate

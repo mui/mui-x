@@ -23,23 +23,33 @@ const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean } }>(({ theme, ownerState }) => ({
+})<{ ownerState: { isLandscape: boolean } }>(({ theme }) => ({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
-  [`& .${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
-    ? {
-        gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '2 / 3',
-      }
-    : { gridColumn: '2 / 4', gridRow: 1 },
-  [`.${pickersLayoutClasses.shortcuts}`]: ownerState.isLandscape
-    ? { gridColumn: '2 / 4', gridRow: 1 }
-    : {
-        gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '2 / 3',
-      },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridRow: '2 / 3',
+        },
+        [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
+      },
+    },
+    {
+      props: { isLandscape: false },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridRow: '2 / 3',
+        },
+      },
+    },
+  ],
 }));
 
 PickersLayoutRoot.propTypes = {
@@ -126,6 +136,9 @@ PickersLayout.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
@@ -156,6 +169,9 @@ PickersLayout.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

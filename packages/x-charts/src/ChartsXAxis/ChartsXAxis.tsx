@@ -5,7 +5,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
-import useTicks, { TickItemType } from '../hooks/useTicks';
+import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
@@ -124,6 +124,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     slotProps,
     tickInterval,
     tickLabelInterval,
+    tickPlacement,
+    tickLabelPlacement,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -156,7 +158,14 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
-  const xTicks = useTicks({ scale: xScale, tickNumber, valueFormatter, tickInterval });
+  const xTicks = useTicks({
+    scale: xScale,
+    tickNumber,
+    valueFormatter,
+    tickInterval,
+    tickPlacement,
+    tickLabelPlacement,
+  });
 
   const xTicksWithDimension = addLabelDimension(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
@@ -316,6 +325,12 @@ ChartsXAxis.propTypes = {
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
+   * The placement of ticks label. Can be the middle of the band, or the tick position.
+   * Only used if scale is 'band'.
+   * @default 'middle'
+   */
+  tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+  /**
    * The style applied to ticks text.
    */
   tickLabelStyle: PropTypes.object,
@@ -326,7 +341,7 @@ ChartsXAxis.propTypes = {
    */
   tickMaxStep: PropTypes.number,
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
@@ -336,6 +351,12 @@ ChartsXAxis.propTypes = {
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,
+  /**
+   * The placement of ticks in regard to the band interval.
+   * Only used if scale is 'band'.
+   * @default 'extremities'
+   */
+  tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
   /**
    * The size of the ticks.
    * @default 6

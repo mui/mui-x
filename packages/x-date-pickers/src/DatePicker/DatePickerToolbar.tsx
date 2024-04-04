@@ -1,7 +1,8 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -14,12 +15,15 @@ import {
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
 export interface DatePickerToolbarProps<TDate extends PickerValidDate>
-  extends BaseToolbarProps<TDate | null, DateView> {
-  classes?: Partial<DatePickerToolbarClasses>;
-  sx?: SxProps<Theme>;
-}
+  extends BaseToolbarProps<TDate | null, DateView>,
+    ExportedDatePickerToolbarProps {}
 
-export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
+export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DatePickerToolbarClasses>;
+}
 
 const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;
@@ -41,11 +45,16 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
-  ...(ownerState.isLandscape && {
-    margin: 'auto 16px auto auto',
-  }),
-}));
+})<{ ownerState: DatePickerToolbarProps<any> }>({
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: 'auto 16px auto auto',
+      },
+    },
+  ],
+});
 
 type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -72,6 +81,9 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
+    className,
+    onViewChange,
+    view,
     ...other
   } = props;
   const utils = useUtils<TDate>();
@@ -95,7 +107,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
       ref={ref}
       toolbarTitle={localeText.datePickerToolbarTitle}
       isLandscape={isLandscape}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       {...other}
     >
       <DatePickerToolbarTitle
@@ -116,6 +128,9 @@ DatePickerToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
@@ -133,6 +148,9 @@ DatePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -153,5 +171,8 @@ DatePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;

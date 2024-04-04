@@ -41,6 +41,7 @@ Those demonstrations use the defaultized values.
 The axis type is specified by its property `scaleType` which expect one of the following values:
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
+- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
 - `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
 
@@ -51,12 +52,24 @@ Which expects an array of value coherent with the `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` it can contain `string`, or numerical values
+- For `'band'` or `'point'` it can contain `string`, or numerical values
 
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
 - bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+
+### Axis formatter
+
+Axis data can be displayed in the axes ticks and the tooltip.
+To modify how data is displayed use the `valueFormatter` property.
+
+The second argument of `valueFormatter` provides some rendering context for advanced use cases.
+
+In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
+To distinguish tick and tooltip, it uses the `context.location`.
+
+{{"demo": "FormatterDemoNoSnap.js"}}
 
 ### Axis sub domain
 
@@ -80,6 +93,25 @@ By default, the axes' directions are left to right and bottom to top.
 You can change this behavior with the property `reverse`.
 
 {{"demo": "ReverseExampleNoSnap.js"}}
+
+## Grid
+
+You can add a grid in the background of the cartesian chart with the `grid` prop.
+
+It accepts an object with `vertical` and `horizontal` properties.
+Setting those properties to `true` will display the grid lines.
+
+If you use composition you can pass those properties to the `<ChartsGrid />` component.
+
+```jsx
+<BarChart grid={{ vertical: true }}>
+
+<ChartContainer>
+  <ChartsGrid vertical >
+</ChartContainer>
+```
+
+{{"demo": "GridDemo.js"}}
 
 ## Tick position
 

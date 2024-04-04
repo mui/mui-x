@@ -8,7 +8,12 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // @ts-expect-error This expected error should be gone once we update the monorepo
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra.js';
 import { findPages } from './src/modules/utils/find.mjs';
-import { LANGUAGES, LANGUAGES_SSR } from './config.js';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from './config.js';
 import constants from './constants.js';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
@@ -31,7 +36,16 @@ const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
+let localSettings = {};
+try {
+  localSettings = require('./next.config.local.js');
+} catch (_) {}
+
 export default withDocsInfra({
+  experimental: {
+    workerThreads: true,
+    cpus: 3,
+  },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -72,6 +86,10 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
+          '@mui/docs': path.resolve(
+            currentDirectory,
+            '../node_modules/@mui/monorepo/packages/mui-docs/src',
+          ),
           docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
@@ -84,12 +102,15 @@ export default withDocsInfra({
             test: /\.md$/,
             oneOf: [
               {
-                resourceQuery: /@mui\/markdown/,
+                resourceQuery: /muiMarkdown/,
                 use: [
                   options.defaultLoaders.babel,
                   {
-                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    loader: require.resolve('@mui/internal-markdown/loader'),
                     options: {
+                      workspaceRoot,
+                      ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
+                      languagesInProgress: LANGUAGES_IN_PROGRESS,
                       env: {
                         SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
                         LIB_VERSION: options.config.env.LIB_VERSION,
@@ -192,4 +213,5 @@ export default withDocsInfra({
           },
         ],
       }),
+  ...localSettings,
 });

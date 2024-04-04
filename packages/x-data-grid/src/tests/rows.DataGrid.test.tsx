@@ -26,7 +26,7 @@ import {
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
   grid,
-  gridVar,
+  gridOffsetTop,
   getColumnValues,
   getRow,
   getActiveCell,
@@ -35,7 +35,7 @@ import {
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
 
-import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
+import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -572,7 +572,7 @@ describe('<DataGrid /> - Rows', () => {
       function ResizeObserverMock(
         callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
       ) {
-        let timeout: NodeJS.Timeout;
+        let timeout: ReturnType<typeof setTimeout>;
 
         return {
           observe: (element: HTMLElement) => {
@@ -663,7 +663,7 @@ describe('<DataGrid /> - Rows', () => {
             height={columnHeaderHeight + 20 + border * 2} // Force to only measure the first row
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
+            rowBufferPx={0}
           />,
         );
         const virtualScrollerContent = document.querySelector(
@@ -693,7 +693,7 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={() => measuredRowHeight}
             getEstimatedRowHeight={() => estimatedRowHeight}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
+            rowBufferPx={0}
           />,
         );
         const virtualScrollerContent = document.querySelector(
@@ -716,7 +716,7 @@ describe('<DataGrid /> - Rows', () => {
             getBioContentHeight={(row) => (row.expanded ? 200 : 100)}
             rows={[{ clientId: 'c1', expanded: false }]}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
+            rowBufferPx={0}
           />,
         );
         const virtualScrollerContent = document.querySelector(
@@ -742,7 +742,7 @@ describe('<DataGrid /> - Rows', () => {
           <TestCase
             getBioContentHeight={() => 50}
             getRowHeight={({ id }) => (id === 'c3' ? 100 : 'auto')}
-            rowBuffer={0}
+            rowBufferPx={0}
           />,
         );
         expect(getRow(0)).toHaveInlineStyle({ minHeight: 'auto' });
@@ -756,8 +756,7 @@ describe('<DataGrid /> - Rows', () => {
             rows={baselineProps.rows.slice(0, 1)}
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
-            columnBuffer={0}
-            columnThreshold={0}
+            columnBufferPx={0}
             width={100}
           />,
         );
@@ -771,8 +770,7 @@ describe('<DataGrid /> - Rows', () => {
           <TestCase
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
+            rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
             height={columnHeaderHeight + 52 + border * 2}
           />,
@@ -807,8 +805,7 @@ describe('<DataGrid /> - Rows', () => {
             getRowHeight={({ id }) => (id === 'c1' ? 'auto' : null)}
             density="comfortable"
             rows={baselineProps.rows.slice(0, 2)}
-            rowBuffer={0}
-            rowThreshold={0}
+            rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
           />,
         );
@@ -835,8 +832,7 @@ describe('<DataGrid /> - Rows', () => {
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
+            rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
@@ -850,7 +846,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+          expect(gridOffsetTop()).to.equal(0);
         });
       });
 
@@ -863,8 +859,7 @@ describe('<DataGrid /> - Rows', () => {
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
+            rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
@@ -874,9 +869,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
         setProps({ pageSize: 5 });
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
@@ -892,8 +887,7 @@ describe('<DataGrid /> - Rows', () => {
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
+            rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
@@ -904,7 +898,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
 
-        expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+        expect(gridOffsetTop()).to.equal(0);
 
         const virtualScroller = grid('virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
@@ -914,7 +908,7 @@ describe('<DataGrid /> - Rows', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
         await waitFor(() => {
-          expect(gridVar('--DataGrid-offsetTop')).to.equal('0px');
+          expect(gridOffsetTop()).to.equal(0);
         });
       });
     });

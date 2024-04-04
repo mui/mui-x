@@ -4,7 +4,9 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
   $,
+  $$,
   grid,
+  gridOffsetTop,
   getCell,
   getRow,
   getColumnValues,
@@ -19,13 +21,14 @@ import {
   GridApi,
   gridFocusCellSelector,
   gridClasses,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps;
+  let baselineProps: DataGridProProps & { rows: GridValidRowModel };
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
@@ -417,7 +420,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should compute rows correctly on height change', async () => {
       const { setProps } = render(
-        <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBuffer={0} />,
+        <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBufferPx={0} />,
       );
       expect(getRows()).to.have.length(1);
       setProps({
@@ -428,9 +431,10 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getRows()).to.have.length(3);
     });
 
-    it('should render last row when scrolling to the bottom', () => {
+    it('should render last row when scrolling to the bottom', async () => {
+      const n = 4;
       const rowHeight = 50;
-      const rowBuffer = 4;
+      const rowBufferPx = n * rowHeight;
       const nbRows = 996;
       const height = 600;
       render(
@@ -438,28 +442,25 @@ describe('<DataGridPro /> - Rows', () => {
           nbRows={nbRows}
           columnHeaderHeight={0}
           rowHeight={rowHeight}
-          rowBuffer={rowBuffer}
+          rowBufferPx={rowBufferPx}
           hideFooter
           height={height}
         />,
       );
 
-      const root = grid('root')!;
       const virtualScroller = grid('virtualScroller')!;
       const renderingZone = grid('virtualScrollerRenderZone')!;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
-      const lastCell = $('[role="row"]:last-child [role="gridcell"]:first-child')!;
+      clock.runToLast();
+
+      const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(
-        Math.floor((height - 1) / rowHeight) + rowBuffer,
-      ); // Subtracting 1 is needed because of the column header borders
+      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + n);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
-      const styles = getComputedStyle(root);
-      const offsetTop = parseInt(styles.getPropertyValue('--DataGrid-offsetTop'), 10);
-      expect(offsetTop).to.equal(distanceToFirstRow);
+      expect(gridOffsetTop()).to.equal(distanceToFirstRow);
       expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
     });
 
@@ -476,57 +477,56 @@ describe('<DataGridPro /> - Rows', () => {
     it('should render extra columns when the columnBuffer prop is present', () => {
       const border = 1;
       const width = 300;
-      const columnBuffer = 2;
+      const n = 2;
       const columnWidth = 100;
+      const columnBufferPx = n * columnWidth;
       render(
         <TestCaseVirtualization
           width={width + border * 2}
           nbRows={1}
-          columnBuffer={columnBuffer}
+          columnBufferPx={columnBufferPx}
         />,
       );
       const firstRow = getRow(0);
-      expect(firstRow.children).to.have.length(Math.floor(width / columnWidth) + columnBuffer);
+      expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       virtualScroller.scrollLeft = 301;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      expect(firstRow.children).to.have.length(
-        columnBuffer + 1 + Math.floor(width / columnWidth) + columnBuffer,
+      clock.runToLast();
+      expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+        n + 1 + Math.floor(width / columnWidth) + n,
       );
     });
 
-    it('should render new rows when scrolling past the rowThreshold value', () => {
-      const rowThreshold = 3;
+    it('should render new rows when scrolling past the threshold value', () => {
       const rowHeight = 50;
-      render(
-        <TestCaseVirtualization rowHeight={rowHeight} rowBuffer={0} rowThreshold={rowThreshold} />,
-      );
+      const rowThresholdPx = 1 * rowHeight;
+      render(<TestCaseVirtualization rowHeight={rowHeight} rowBufferPx={0} />);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
       let firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
-      virtualScroller.scrollTop = rowThreshold * rowHeight;
+      virtualScroller.scrollTop = rowThresholdPx;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      clock.runToLast();
       firstRow = renderingZone.firstChild;
-      expect(firstRow).to.have.attr('data-rowindex', '3');
+      expect(firstRow).to.have.attr('data-rowindex', '1');
     });
 
-    it('should render new columns when scrolling past the columnThreshold value', () => {
-      const columnThreshold = 3;
+    it('should render new columns when scrolling past the threshold value', () => {
       const columnWidth = 100;
-      render(
-        <TestCaseVirtualization nbRows={1} columnBuffer={0} columnThreshold={columnThreshold} />,
-      );
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
-      let firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
-      let firstColumn = firstRow.firstChild!;
+      const columnThresholdPx = 1 * columnWidth;
+      render(<TestCaseVirtualization nbRows={1} columnBufferPx={0} />);
+      const virtualScroller = grid('virtualScroller')!;
+      const renderingZone = grid('virtualScrollerRenderZone')!;
+      const firstRow = $(renderingZone, '[role="row"]:first-child')!;
+      let firstColumn = $$(firstRow, '[role="gridcell"]')[0];
       expect(firstColumn).to.have.attr('data-colindex', '0');
-      virtualScroller.scrollLeft = columnThreshold * columnWidth;
+      virtualScroller.scrollLeft = columnThresholdPx;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
-      firstColumn = firstRow.firstChild!;
-      expect(firstColumn).to.have.attr('data-colindex', '3');
+      clock.runToLast();
+      firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
+      expect(firstColumn).to.have.attr('data-colindex', '1');
     });
 
     describe('Pagination', () => {
@@ -546,16 +546,14 @@ describe('<DataGridPro /> - Rows', () => {
         act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
         const dimensions = apiRef.current.state.dimensions;
-        const lastCell = document.querySelector(
-          '[role="row"]:last-child [role="gridcell"]:first-child',
-        )!;
+        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('31');
         expect(virtualScroller.scrollHeight).to.equal(
           dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize,
         );
       });
 
-      it('should not virtualized the last page if smaller than viewport', () => {
+      it('should not virtualize the last page if smaller than viewport', () => {
         render(
           <TestCaseVirtualization
             pagination
@@ -564,19 +562,15 @@ describe('<DataGridPro /> - Rows', () => {
             height={500}
           />,
         );
-        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        const virtualScroller = grid('virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // scroll to the bottom
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        const lastCell = document.querySelector(
-          '[role="row"]:last-child [role="gridcell"]:first-child',
-        )!;
+        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('99');
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(
-          document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!.children,
-        ).to.have.length(4);
+        expect(grid('virtualScrollerRenderZone')!.children).to.have.length(4);
       });
 
       it('should paginate small dataset in auto page-size #1492', () => {
@@ -585,18 +579,14 @@ describe('<DataGridPro /> - Rows', () => {
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-        const lastCell = document.querySelector(
-          '[role="row"]:last-child [role="gridcell"]:first-child',
-        )!;
+        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('6');
         const rows = document.querySelectorAll('.MuiDataGrid-row[role="row"]')!;
         expect(rows.length).to.equal(7);
 
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(
-          document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!.children,
-        ).to.have.length(7);
+        expect(grid('virtualScrollerRenderZone')!.children).to.have.length(7);
       });
     });
 

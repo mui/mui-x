@@ -19,12 +19,13 @@ import type { GridSortModel } from '../gridSortModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridGroupNode, GridRowId } from '../gridRows';
+import type { GridGroupNode } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridPaginationModel } from '../gridPaginationProps';
+import { GridDensity } from '../gridDensity';
 
 export interface GridRowEventLookup {
   /**
@@ -358,6 +359,14 @@ export interface GridControlledStateEventLookup {
    * Fired when the column visibility model changes.
    */
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
+  /**
+   * Fired when the row count change.
+   */
+  rowCountChange: { params: number };
+  /**
+   * Fired when the density changes.
+   */
+  densityChange: { params: GridDensity };
 }
 
 export interface GridControlledStateReasonLookup {
@@ -507,10 +516,6 @@ export interface GridEventLookup
     params: GridRowEditStopParams;
     event: MuiBaseEvent;
   };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
   /**

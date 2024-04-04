@@ -44,16 +44,16 @@ function WrappedTreeItem<R extends {}>({
   slotProps,
   label,
   id,
-  nodeId,
+  itemId,
   children,
 }: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'nodeId' | 'children'> & { label: string }) {
+  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
-    additionalProps: { nodeId, id, label },
-    ownerState: { nodeId, label },
+    additionalProps: { itemId, id, label },
+    ownerState: { itemId, label },
   });
 
   return <Item {...itemProps}>{children}</Item>;
@@ -62,7 +62,7 @@ function WrappedTreeItem<R extends {}>({
 const childrenWarning = buildWarning([
   'MUI X: The `RichTreeView` component does not support JSX children.',
   'If you want to add items, you need to use the `items` prop',
-  'Check the documentation for more details: https://next.mui.com/x/react-tree-view/rich-tree-view/items/',
+  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
 ]);
 
 /**
@@ -112,31 +112,31 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const nodesToRender = instance.getNodesToRender();
+  const itemsToRender = instance.getItemsToRender();
 
-  const renderNode = ({
+  const renderItem = ({
     label,
-    nodeId,
+    itemId,
     id,
     children,
-  }: ReturnType<typeof instance.getNodesToRender>[number]) => {
+  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
     return (
       <WrappedTreeItem
         slots={slots}
         slotProps={slotProps}
-        key={nodeId}
+        key={itemId}
         label={label}
         id={id}
-        nodeId={nodeId}
+        itemId={itemId}
       >
-        {children?.map(renderNode)}
+        {children?.map(renderItem)}
       </WrappedTreeItem>
     );
   };
 
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{nodesToRender.map(renderNode)}</Root>
+      <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;
@@ -147,22 +147,32 @@ RichTreeView.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      focusItem: PropTypes.func.isRequired,
+      getItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
+    }),
+  }),
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Selected node ids. (Uncontrolled)
+   * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedNodes: PropTypes.any,
+  defaultSelectedItems: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -174,17 +184,17 @@ RichTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the id of a given item.
    *
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The id of the item.
-   * @default `(item) => item.id`
+   * @default (item) => item.id
    */
   getItemId: PropTypes.func,
   /**
@@ -193,7 +203,7 @@ RichTreeView.propTypes = {
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The label of the item.
-   * @default `(item) => item.label`
+   * @default (item) => item.label
    */
   getItemLabel: PropTypes.func,
   /**
@@ -217,42 +227,42 @@ RichTreeView.propTypes = {
   /**
    * Callback fired when tree items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onExpandedNodesChange: PropTypes.func,
+  onExpandedItemsChange: PropTypes.func,
   /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
-  onNodeExpansionToggle: PropTypes.func,
+  onItemExpansionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * @param {string} itemId The id of the focused item.
+   * @param {string} value of the focused item.
    */
-  onNodeFocus: PropTypes.func,
+  onItemFocus: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelectionToggle: PropTypes.func,
+  onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onSelectedNodesChange: PropTypes.func,
+  onSelectedItemsChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedNodes: PropTypes.any,
+  selectedItems: PropTypes.any,
   /**
    * The props used for each component slot.
    * @default {}

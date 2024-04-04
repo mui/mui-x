@@ -1,15 +1,13 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { userEvent } from '@mui-internal/test-utils';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { fireEvent } from '@mui-internal/test-utils';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
   getTextbox,
   createPickerRenderer,
-  expectInputValue,
+  expectFieldValueV7,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
@@ -57,10 +55,6 @@ const adapterToTest = [
   'moment-jalaali',
 ] as const;
 
-const theme = createTheme({
-  direction: 'rtl',
-});
-
 describe(`RTL - test arrows navigation`, () => {
   const { render, clock, adapter } = createPickerRenderer({
     clock: 'fake',
@@ -75,75 +69,151 @@ describe(`RTL - test arrows navigation`, () => {
     moment.locale('en');
   });
 
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
   it('should move selected section to the next section respecting RTL order in empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 24);
-
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
+    // Test with v7 input
+    const v7Response = renderWithProps(
+      { enableAccessibleFieldDOMStructure: true },
+      { direction: 'rtl' },
+    );
+
+    v7Response.selectSection('hours');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
+
+    v7Response.unmount();
+
+    // Test with v6 input
+    const v6Response = renderWithProps(
+      { enableAccessibleFieldDOMStructure: false },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    v6Response.selectSection('hours');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
     });
   });
 
   it('should move selected section to the previous section respecting RTL order in empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 18);
-
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
+    // Test with v7 input
+    const v7Response = renderWithProps(
+      { enableAccessibleFieldDOMStructure: true },
+      { direction: 'rtl' },
+    );
+
+    v7Response.selectSection('day');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
+
+    v7Response.unmount();
+
+    // Test with v6 input
+    const v6Response = renderWithProps(
+      { enableAccessibleFieldDOMStructure: false },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    v6Response.selectSection('day');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
     });
   });
 
   it('should move selected section to the next section respecting RTL order in non-empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField defaultValue={adapter.date('2018-04-25T11:54:00')} />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 24);
-
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
+    // Test with v7 input
+    const v7Response = renderWithProps(
+      {
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+      },
+      { direction: 'rtl' },
+    );
+
+    v7Response.selectSection('hours');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
+
+    v7Response.unmount();
+
+    // Test with v6 input
+    const v6Response = renderWithProps(
+      {
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+        enableAccessibleFieldDOMStructure: false,
+      },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    v6Response.selectSection('hours');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
     });
   });
 
   it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField defaultValue={adapter.date('2018-04-25T11:54:00')} />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 18);
-
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
+    // Test with v7 input
+    const v7Response = renderWithProps(
+      {
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+      },
+      { direction: 'rtl' },
+    );
+
+    v7Response.selectSection('day');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
+
+    v7Response.unmount();
+
+    // Test with v6 input
+    const v6Response = renderWithProps(
+      {
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+        enableAccessibleFieldDOMStructure: false,
+      },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    v6Response.selectSection('day');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
     });
   });
 });
@@ -169,7 +239,7 @@ adapterToTest.forEach((adapterName) => {
       }
     });
 
-    const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+    const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
     const cleanValueStr = (
       valueStr: string,
@@ -195,13 +265,16 @@ adapterToTest.forEach((adapterName) => {
       expectedValue: TDate;
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
-      render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = getTextbox();
-      clickOnInput(input, 1);
-      userEvent.keyPress(input, { key });
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: initialValue,
+        format,
+      });
+      v7Response.selectSection(sectionConfig.type);
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key });
 
-      expectInputValue(
-        input,
+      expectFieldValueV7(
+        v7Response.getSectionsContainer(),
         cleanValueStr(adapter.formatByString(expectedValue, format), sectionConfig),
       );
     };

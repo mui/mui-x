@@ -15,13 +15,17 @@ export interface MobileDatePickerSlots<TDate extends PickerValidDate>
   extends BaseDatePickerSlots<TDate>,
     MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDatePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, DateView> {}
+export interface MobileDatePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
 
-export interface MobileDatePickerProps<TDate extends PickerValidDate>
-  extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate> {
+export interface MobileDatePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseDatePickerProps<TDate>,
+    MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -31,5 +35,5 @@ export interface MobileDatePickerProps<TDate extends PickerValidDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotProps<TDate>;
+  slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

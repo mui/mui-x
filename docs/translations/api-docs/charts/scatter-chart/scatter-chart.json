@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
@@ -14,6 +18,7 @@
     "disableVoronoi": {
       "description": "If true, the interaction will not use the Voronoi cell and fall back to hover events."
     },
+    "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -33,8 +38,13 @@
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
+    "series": { "description": "The series to display in the scatter chart." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
@@ -53,14 +63,14 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "",
-    "axisLabel": "",
-    "axisLine": "",
-    "axisTick": "",
-    "axisTickLabel": "",
-    "itemContent": "",
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
-    "popper": "",
+    "popper": "Custom component for the tooltip popper.",
     "scatter": ""
   }
 }

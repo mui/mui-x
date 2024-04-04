@@ -6,10 +6,11 @@ import {
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
-  PickerViewRendererLookup,
+  PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
+import { refType } from '@mui/utils';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -21,6 +22,7 @@ import {
 import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -31,35 +33,54 @@ import {
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
-import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
+import {
+  DateTimeRangePickerRenderers,
+  useDateTimeRangePickerDefaultizedProps,
+} from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DesktopDateTimeRangePickerLayout } from './DesktopDateTimeRangePickerLayout';
 
-const rendererInterceptor = function rendererInterceptor<TDate extends PickerValidDate>(
-  inViewRenderers: PickerViewRendererLookup<DateRange<TDate>, DateTimeRangePickerView, any, any>,
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
-  rendererProps: DefaultizedProps<
-    Omit<UseDesktopRangePickerProps<TDate, DateTimeRangePickerView, any, any>, 'onChange'>,
-    'rangePosition' | 'onRangePositionChange' | 'openTo'
+  rendererProps: PickerViewsRendererProps<
+    DateRange<TDate>,
+    DateTimeRangePickerView,
+    DefaultizedProps<
+      Omit<
+        UseDesktopRangePickerProps<
+          TDate,
+          DateTimeRangePickerView,
+          TEnableAccessibleFieldDOMStructure,
+          any,
+          any
+        >,
+        'onChange' | 'sx' | 'className'
+      >,
+      'rangePosition' | 'onRangePositionChange' | 'openTo'
+    >,
+    {}
   >,
 ) {
-  const { openTo, rangePosition, sx, ...otherProps } = rendererProps;
+  const { openTo, rangePosition, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
     rangePosition,
     focusedView: null,
     sx: [
       {
-        borderBottom: 0,
-        width: 'auto',
+        [`&.${multiSectionDigitalClockClasses.root}`]: {
+          borderBottom: 0,
+        },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
             maxHeight: RANGE_VIEW_HEIGHT,
           },
       },
-      ...(Array.isArray(sx) ? sx : [sx]),
     ],
   };
   const isTimeViewActive = isInternalTimeView(popperView);
@@ -75,6 +96,7 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
         view={isTimeViewActive ? popperView : 'hours'}
+        views={finalProps.views.filter(isInternalTimeView)}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
           inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
@@ -89,29 +111,42 @@ const rendererInterceptor = function rendererInterceptor<TDate extends PickerVal
   );
 };
 
-type DesktopDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [DateTimeRangePicker](https://mui.com/x/react-date-pickers/date-time-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
+ */
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
   TDate extends PickerValidDate,
->(inProps: DesktopDateTimeRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
-    DesktopDateTimeRangePickerProps<TDate>
+    DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: PickerViewRendererLookup<
-    DateRange<TDate>,
-    DateTimeRangePickerView,
-    any,
-    {}
-  > = {
+  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -138,7 +173,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     calendars: defaultizedProps.calendars ?? 1,
     slots: {
       field: MultiInputDateTimeRangeField,
-      layout: DesktopDateTimeRangePickerLayout,
+      layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -164,7 +199,12 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerView, typeof props>({
+  const { renderPicker } = useDesktopRangePicker<
+    TDate,
+    DateTimeRangePickerView,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -182,7 +222,7 @@ DesktopDateTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -212,7 +252,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * Formats the day of week displayed in the calendar header.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -271,9 +311,12 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -291,12 +334,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   /**
    * The label content.
    * Ignored if the field has several inputs.
@@ -440,11 +478,11 @@ DesktopDateTimeRangePicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
@@ -461,15 +499,11 @@ DesktopDateTimeRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.

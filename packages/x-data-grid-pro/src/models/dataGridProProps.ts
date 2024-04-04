@@ -25,14 +25,8 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import type { GridAutosizeOptions } from '../hooks';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Enables the data grid to lazy load rows while scrolling.
-   */
-  lazyLoading: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
@@ -47,7 +41,7 @@ interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridProPropsWithDefaultValue> &
+    Partial<DataGridProPropsWithDefaultValue<R>> &
       DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
@@ -62,7 +56,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue,
+  extends DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
     Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
@@ -73,7 +67,8 @@ export type DataGridProForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
-export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
+export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridPropsWithDefaultValues<R> {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
@@ -97,16 +92,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
-  /**
-   * If `true`, columns are autosized after the datagrid is mounted.
-   * @default false
-   */
-  autosizeOnMount: boolean;
-  /**
-   * If `true`, column autosizing on header separator double-click is disabled.
-   * @default false
-   */
-  disableAutosize: boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
@@ -164,10 +149,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**
-   * The options for autosize when user-initiated.
-   */
-  autosizeOptions?: GridAutosizeOptions;
-  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -187,20 +168,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath?: (row: R) => string[];
-  /**
-   * Callback fired while a column is being resized.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnResize?: GridEventListener<'columnResize'>;
-  /**
-   * Callback fired when the width of a column is changed.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].

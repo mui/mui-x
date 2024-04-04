@@ -64,7 +64,7 @@ export interface ExportedDayCalendarProps<TDate extends PickerValidDate>
    * Formats the day of week displayed in the calendar header.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter?: (date: TDate) => string;
   /**
@@ -74,7 +74,6 @@ export interface ExportedDayCalendarProps<TDate extends PickerValidDate>
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber?: number;
 }
@@ -103,6 +102,9 @@ export interface DayCalendarProps<TDate extends PickerValidDate>
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DayCalendarClasses>;
   /**
    * Overridable component slots.
@@ -489,13 +491,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   });
 
   const currentMonthNumber = utils.getMonth(currentMonth);
+  const currentYearNumber = utils.getYear(currentMonth);
   const validSelectedDays = React.useMemo(
     () => selectedDays.filter((day): day is TDate => !!day).map((day) => utils.startOfDay(day)),
     [utils, selectedDays],
   );
 
-  // need a new ref whenever the `key` of the transition changes: http://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
-  const transitionKey = currentMonthNumber;
+  // need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
+  const transitionKey = `${currentYearNumber}-${currentMonthNumber}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
   const startOfCurrentWeek = utils.startOfWeek(now);
