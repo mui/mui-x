@@ -19,8 +19,8 @@ export type ChartsVoronoiHandlerProps = {
   voronoiMaxRadius?: number | undefined;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
 };
@@ -85,7 +85,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       return undefined;
     }
 
-    // TODO: A perf optimisation of voronoi could be to use the last point as the intial point for the next search.
+    // TODO: A perf optimisation of voronoi could be to use the last point as the initial point for the next search.
     function getClosestPoint(
       event: MouseEvent,
     ):
@@ -191,8 +191,8 @@ ChartsVoronoiHandler.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
   /**
