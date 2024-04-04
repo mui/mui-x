@@ -49,13 +49,6 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 {{"demo": "CheckboxSelectionGrid.js", "bg": "inline"}}
 
-### Select only visible rows [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-By default, when you click the "Select All" checkbox, all rows in the data grid are selected.
-If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
-
-{{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
-
 ### Custom checkbox column
 
 If you provide a custom checkbox column to the data grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the data grid will not add its own.
@@ -70,6 +63,13 @@ In the following demo, the checkbox column has been moved to the right and its w
 Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
 Otherwise, the data grid might remove your column.
 :::
+
+### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+By default, when you click the "Select All" checkbox, all rows in the data grid are selected.
+If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
+
+{{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
 
 ## Usage with server-side pagination
 
