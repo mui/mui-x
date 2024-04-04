@@ -1,0 +1,15 @@
+{
+  "name": "GridFilterItem",
+  "imports": [
+    "import { GridFilterItem } from '@mui/x-data-grid-premium'",
+    "import { GridFilterItem } from '@mui/x-data-grid-pro'",
+    "import { GridFilterItem } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
+  "properties": {
+    "field": { "type": { "description": "string" }, "required": true },
+    "operator": { "type": { "description": "string" }, "required": true },
+    "id": { "type": { "description": "number | string" } },
+    "value": { "type": { "description": "any" } }
+  }
+}

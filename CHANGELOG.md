@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.1.0
+
+_Mar 28, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Add `resizeThrottleMs` prop (#12556) @romgrk
+- 🌍 Improve Chinese (Hong Kong) (zh-HK) and Italian (it-IT) locale on the Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.1.0`
+
+- [DataGrid] Add `resizeThrottleMs` prop (#12556) @romgrk
+- [DataGrid] Do not publish `rowEditStop` event if row has fields with errors (#11383) @cherniavskii
+- [DataGrid] Fix bug in suspense (#12553) @romgrk
+- [DataGrid] Fix missing class name in the `GridToolbarQuickFilter` component (#12484) @jhawkins11
+
+#### `@mui/x-data-grid-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.1.0`.
+
+#### `@mui/x-data-grid-premium@7.1.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.1.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.1.0`
+
+- [fields] Fix placeholder override (#12589) @flaviendelangle
+- [l10n] Improve Chinese (Hong Kong) (zh-HK) locale (#12547) @samchiu90
+- [l10n] Improve Italian (it-IT) locale (#12549) @antomanc
+- [pickers] Prepare compatibility with `@mui/zero-runtime` (stop using `ownerState` in `styled`) (#12003) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
+
+- [DateRangePicker] Fix selection behavior with single input field when `readOnly` (#12593) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.1.0`
+
+- [charts] Fix tooltip causing crash on data change (#12571) @Rishi556
+
+### Tree View
+
+#### `@mui/x-tree-view@7.1.0`
+
+- [TreeView] Do not use outdated version of the state to compute new label first char in `RichTreeView` (#12512) @flaviendelangle
+
+### Docs
+
+- [docs] Add example to add a second icon next to the field's opening button (#12524) @flaviendelangle
+- [docs] Add missing note to Data Grid migration guide (#12557) @romgrk
+- [docs] Fix Charts title for SEO (#12545) @oliviertassinari
+- [docs] Fix small typo (#12558) @diogoparente
+- [docs] Improve codemod related documentation (#12582) @MBilalShafi
+- [docs] Reduce noise in migration docs side navigation (#12552) @cherniavskii
+- [docs] Sync static images from core repository (#12525) @LukasTy
+
+### Core
+
+- [core] Fix `l10n` script on Windows (#12550) @LukasTy
+- [core] Include `DateTimeRangePicker` tag in `releaseChangelog` (#12526) @LukasTy
+- [core] Upgrade monorepo (#12536) @cherniavskii
+
 ## v7.0.0
 
 _Mar 22, 2024_
@@ -459,13 +530,13 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 🎁 Introduce a new DOM structure for the field components that provides a better accessibility
 - 🚀 Simplify Data Grid DOM structure for improved performance (#12013) @romgrk
-- 🕥 The support for IE11 has been removed (#12151) @flaviendelangle
+- 🕥 The support for IE 11 has been removed (#12151) @flaviendelangle
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 ### Breaking changes
 
-- The support for IE11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+- The support for IE 11 has been removed from all MUI X packages. The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 ### Data Grid
 
@@ -570,7 +641,7 @@ These components are no longer exported from `@mui/x-charts`:
 
 ### Tree View / `@mui/x-tree-view@7.0.0-beta.4`
 
-- [TreeView] Stop using custom `findIndex` to support IE11 (#12129) @flaviendelangle
+- [TreeView] Stop using custom `findIndex` to support IE 11 (#12129) @flaviendelangle
 
 ### Docs
 

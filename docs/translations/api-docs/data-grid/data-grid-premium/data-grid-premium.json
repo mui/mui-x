@@ -575,6 +575,7 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
+    "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
       "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."

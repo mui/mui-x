@@ -1,6 +1,6 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "color": {
@@ -84,7 +84,7 @@
         "returned": "boolean"
       }
     },
-    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
