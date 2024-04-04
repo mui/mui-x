@@ -189,7 +189,7 @@ It is a more performant way to delete a row as compared to updating the [`rows` 
 />
 ```
 
-In the example above, `shouldDeleteRow` is a function that determines whether a row should be deleted based on the updated row data. 
+In the example above, `shouldDeleteRow` is a function that determines whether a row should be deleted based on the updated row data.
 If `shouldDeleteRow` returns `true`, the row will be deleted from the Data Grid's internal state.
 
 ### Server-side validation
