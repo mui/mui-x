@@ -74,7 +74,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 - [core] Include `DateTimeRangePicker` tag in `releaseChangelog` (#12526) @LukasTy
 - [core] Upgrade monorepo (#12536) @cherniavskii
 
-## v7.0.0
+## 7.0.0
 
 _Mar 22, 2024_
 
