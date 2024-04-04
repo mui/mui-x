@@ -115,6 +115,7 @@ export default function ColDefChangesGridNoSnap() {
     <div style={{ width: '100%' }}>
       <DataGridPremium
         hideFooter
+        disableColumnMenu
         autoHeight
         columns={columns}
         rows={rows}
