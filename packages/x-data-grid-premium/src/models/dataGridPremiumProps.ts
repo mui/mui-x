@@ -11,6 +11,7 @@ import {
   DataGridProPropsWithoutDefaultValue,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
@@ -65,12 +66,8 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
 export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue<R> {
-  /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  cellSelection: boolean;
+  extends DataGridProPropsWithDefaultValue<R>,
+    DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, aggregation is disabled.
    * @default false
