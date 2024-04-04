@@ -31,7 +31,10 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type {
+  DataGridProcessedProps,
+  DataGridProcessedPropsWithShared,
+} from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
@@ -77,6 +80,7 @@ export type GridCellProps = {
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
   api: GridApiCommunity;
 };
+
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
   field: '__unset__',
@@ -176,7 +180,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const rootProps = useGridRootProps() as DataGridProcessedPropsWithShared;
 
   const field = column.field;
 
@@ -257,7 +261,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const position = gridPinnedColumnPositionLookup[pinnedPosition];

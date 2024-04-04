@@ -130,6 +130,8 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type {
+  DataGridProSharedPropsWithDefaultValue,
+  DataGridPremiumSharedPropsWithDefaultValue,
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,

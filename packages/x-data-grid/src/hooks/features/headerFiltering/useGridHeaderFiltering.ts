@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { DataGridProcessedPropsWithShared } from '../../../models/props/DataGridProps';
 import { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -15,19 +15,19 @@ import {
   GridHeaderFilteringPrivateApi,
 } from '../../../models/api/gridHeaderFilteringApi';
 
-export const headerFilteringStateInitializer: GridStateInitializer = (state, props) => ({
+export const headerFilteringStateInitializer: GridStateInitializer = (
+  state,
+  props: DataGridProcessedPropsWithShared,
+) => ({
   ...state,
-  // @ts-expect-error Access `Pro` prop in MIT
   headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
 });
 
 export const useGridHeaderFiltering = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'signature'>,
+  props: Pick<DataGridProcessedPropsWithShared, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
-  // @ts-expect-error Access `Pro` prop in MIT
-  const isHeaderFilteringEnabled = props.headerFilters ?? false;
   const setHeaderFilterState = React.useCallback(
     (headerFilterState: Partial<GridHeaderFilteringState>) => {
       apiRef.current.setState((state) => {
@@ -39,7 +39,7 @@ export const useGridHeaderFiltering = (
         return {
           ...state,
           headerFiltering: {
-            enabled: isHeaderFilteringEnabled ?? false,
+            enabled: props.headerFilters ?? false,
             editing: headerFilterState.editing ?? null,
             menuOpen: headerFilterState.menuOpen ?? null,
           },
@@ -47,7 +47,7 @@ export const useGridHeaderFiltering = (
       });
       apiRef.current.forceUpdate();
     },
-    [apiRef, props.signature, isHeaderFilteringEnabled],
+    [apiRef, props.signature, props.headerFilters],
   );
 
   const startHeaderFilterEditMode = React.useCallback<
@@ -129,7 +129,7 @@ export const useGridHeaderFiltering = (
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      apiRef.current.setHeaderFilterState({ enabled: isHeaderFilteringEnabled });
+      apiRef.current.setHeaderFilterState({ enabled: props.headerFilters ?? false });
     }
-  }, [apiRef, isHeaderFilteringEnabled]);
+  }, [apiRef, props.headerFilters]);
 };
