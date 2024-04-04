@@ -29,9 +29,10 @@ jobs:
         id: checkUser
         with:
           require: 'write'
+          username: ${{ github.event.issue.user.login }}
       - name: Add comment for outside contributors
-        if: steps.checkUser.outputs.check-result == 'false'
+        if: steps.checkUser.outputs.check-result == false
         run: gh issue comment "$NUMBER" --body "$BODY $APPENDIX"
       - name: Add comment for maintainers
-        if: steps.checkUser.outputs.check-result == 'true'
+        if: steps.checkUser.outputs.check-result == true
         run: gh issue comment "$NUMBER" --body "$BODY"
