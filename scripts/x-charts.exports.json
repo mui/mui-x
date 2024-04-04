@@ -227,6 +227,7 @@
   { "name": "PiePlotSlots", "kind": "Interface" },
   { "name": "PieSeriesType", "kind": "Interface" },
   { "name": "PieValueType", "kind": "TypeAlias" },
+  { "name": "PopperProps", "kind": "TypeAlias" },
   { "name": "referenceLineClasses", "kind": "Variable" },
   { "name": "ResponsiveChartContainer", "kind": "Variable" },
   { "name": "ResponsiveChartContainerProps", "kind": "Interface" },
