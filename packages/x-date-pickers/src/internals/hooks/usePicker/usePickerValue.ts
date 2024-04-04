@@ -357,9 +357,15 @@ export const usePickerValue = <
     });
   });
 
-  const handleOpen = useEventCallback(() => setIsOpen(true));
+  const handleOpen = useEventCallback((event: React.UIEvent) => {
+    event.preventDefault();
+    setIsOpen(true);
+  });
 
-  const handleClose = useEventCallback(() => setIsOpen(false));
+  const handleClose = useEventCallback((event?: React.UIEvent) => {
+    event?.preventDefault();
+    setIsOpen(false);
+  });
 
   const handleChange = useEventCallback(
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') =>
