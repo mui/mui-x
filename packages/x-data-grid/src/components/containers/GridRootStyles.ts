@@ -460,7 +460,6 @@ export const GridRootStyles = styled('div', {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
-      overflow: 'initial',
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
