@@ -105,6 +105,40 @@ The order of elements in composition is the only way to define how they overlap.
 
 To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
 
+### Clipping
+
+To force components to strictly stay inside the drawing area, use the `<ChartsClipPath id={clipPathId} />`.
+This component defines the rectangle of the drawing area.
+
+Then you can clip any part of the chart by wrapping it into ``<g clipPath={`url(#${clipPathId})`}>``.
+
+```jsx
+<ChartContainer>
+  <g clipPath={`url(#${clipPathId})`}>
+    // The ploting to clip in the drawing area.
+    <ScatterPlot />
+    <LinePlot />
+  </g>
+  <ChartsClipPath id={clipPathId} /> // Defines the clip path of the drawing area.
+</ChartContainer>
+```
+
+In the following demo you can clip or not scatter and line plots.
+Notice that the mark elements of the line are placed outside of the clip, and are rendered on top of the axes.
+
+{{"demo": "LimitOverflow.js" }}
+
+:::warning
+Notice how the id is generated in the demo.
+
+```js
+const id = useId();
+const clipPathId = `${id}-clip-path`;
+```
+
+If the id was simply `const clipPathId = "my-id";` a page with two charts would have two components with the same `id`, leading to unexpected behavior.
+:::
+
 ### Axis
 
 To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
