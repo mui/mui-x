@@ -153,6 +153,7 @@ RichTreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -188,12 +189,12 @@ RichTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the id of a given item.
    *
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The id of the item.
-   * @default `(item) => item.id`
+   * @default (item) => item.id
    */
   getItemId: PropTypes.func,
   /**
@@ -202,7 +203,7 @@ RichTreeView.propTypes = {
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The label of the item.
-   * @default `(item) => item.label`
+   * @default (item) => item.label
    */
   getItemLabel: PropTypes.func,
   /**
