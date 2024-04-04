@@ -42,7 +42,7 @@ type RootProps = Pick<
   | 'rowHeight'
   | 'resizeThrottleMs'
   | 'columnHeaderHeight'
-  | 'filterHeaderHeight'
+  | 'headerFilterHeight'
 >;
 
 export type GridDimensionsState = GridDimensions;
@@ -59,7 +59,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
-  filterHeaderHeight: 0,
+  headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
   columnsTotalWidth: 0,
@@ -91,8 +91,8 @@ export function useGridDimensions(
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
-  const filterHeaderHeight = Math.floor(
-    (props.filterHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  const headerFilterHeight = Math.floor(
+    (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
   const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
@@ -249,7 +249,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
-      filterHeaderHeight,
+      headerFilterHeight,
       rowWidth,
       rowHeight,
       columnsTotalWidth,
@@ -279,7 +279,7 @@ export function useGridDimensions(
     rowsMeta.currentPageTotalHeight,
     rowHeight,
     headerHeight,
-    filterHeaderHeight,
+    headerFilterHeight,
     columnsTotalWidth,
     headersTotalHeight,
     leftPinnedWidth,

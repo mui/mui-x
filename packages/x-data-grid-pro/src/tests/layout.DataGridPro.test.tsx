@@ -143,7 +143,7 @@ describe('<DataGridPro /> - Layout', () => {
     });
   });
 
-  it('should work with filterHeaderHeight', () => {
+  it('should work with headerFilterHeight', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -151,7 +151,7 @@ describe('<DataGridPro /> - Layout', () => {
           autoHeight
           headerFilters
           columnHeaderHeight={20}
-          filterHeaderHeight={32}
+          headerFilterHeight={32}
           rowHeight={20}
         />
       </div>,

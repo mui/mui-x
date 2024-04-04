@@ -541,7 +541,7 @@ GridRow.propTypes = {
       height: PropTypes.number.isRequired,
       width: PropTypes.number.isRequired,
     }).isRequired,
-    filterHeaderHeight: PropTypes.number.isRequired,
+    headerFilterHeight: PropTypes.number.isRequired,
     hasScrollX: PropTypes.bool.isRequired,
     hasScrollY: PropTypes.bool.isRequired,
     headerHeight: PropTypes.number.isRequired,

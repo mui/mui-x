@@ -432,7 +432,7 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'filterHeaderHeight'>,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
@@ -440,7 +440,7 @@ export function getTotalHeaderHeight(
 
   const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const filterHeadersHeight = isHeaderFilteringEnabled
-    ? Math.floor((props.filterHeaderHeight ?? props.columnHeaderHeight) * densityFactor)
+    ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
     : 0;
 
   return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;

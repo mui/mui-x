@@ -65,7 +65,7 @@ export interface GridDimensions {
   /**
    * Height of header filters.
    */
-  filterHeaderHeight: number;
+  headerFilterHeight: number;
   /**
    * Height of all the column headers.
    */
