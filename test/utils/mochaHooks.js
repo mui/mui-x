@@ -3,6 +3,7 @@ import { LicenseInfo } from '@mui/x-license';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
+import { clearWarningsCache } from '@mui/x-data-grid/internals';
 
 export function createXMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
@@ -29,6 +30,8 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     // See https://github.com/sinonjs/sinon/issues/1866
     sinon.restore();
   });
+
+  mochaHooks.afterEach.push(clearWarningsCache);
 
   return mochaHooks;
 }
