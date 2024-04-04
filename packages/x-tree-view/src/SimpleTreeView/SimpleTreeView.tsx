@@ -36,6 +36,7 @@ export const SimpleTreeViewRoot = styled('ul', {
   margin: 0,
   listStyle: 'none',
   outline: 0,
+  position: 'relative',
 });
 
 type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
