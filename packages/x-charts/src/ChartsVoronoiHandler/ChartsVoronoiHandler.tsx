@@ -26,7 +26,6 @@ export type ChartsVoronoiHandlerProps = {
 };
 
 type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
-const isSeries = (obj: any): obj is VoronoiSeries => 'seriesId' in obj;
 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
@@ -36,11 +35,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { dispatch } = React.useContext(InteractionContext);
 
   const { series, seriesOrder } = React.useContext(SeriesContext).scatter ?? {};
-  const voronoiRef = React.useRef<
-    Record<string, VoronoiSeries> & {
-      delauney?: Delaunay<any>;
-    }
-  >({});
+  const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
+  const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -80,7 +76,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       points = points.concat(seriesPoints);
     });
 
-    voronoiRef.current.delauney = new Delaunay(points);
+    delauneyRef.current = new Delaunay(points);
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis]);
 
   React.useEffect(() => {
@@ -106,26 +102,18 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return 'outside-chart';
       }
 
-      if (!voronoiRef.current.delauney) {
+      if (!delauneyRef.current) {
         return 'no-point-found';
       }
 
-      const closestPointIndex = voronoiRef.current.delauney?.find(svgPoint.x, svgPoint.y);
+      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y);
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
 
-      const closestSeries = Object.values(voronoiRef.current).find(
-        (value): value is VoronoiSeries => {
-          if (!isSeries(value)) {
-            return false;
-          }
-
-          return (
-            2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex
-          );
-        },
-      );
+      const closestSeries = Object.values(voronoiRef.current).find((value) => {
+        return 2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex;
+      });
 
       if (closestSeries === undefined) {
         return 'no-point-found';
@@ -135,8 +123,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
 
       if (voronoiMaxRadius !== undefined) {
-        const pointX = voronoiRef.current.delauney.points[2 * closestPointIndex];
-        const pointY = voronoiRef.current.delauney.points[2 * closestPointIndex + 1];
+        const pointX = delauneyRef.current.points[2 * closestPointIndex];
+        const pointY = delauneyRef.current.points[2 * closestPointIndex + 1];
         const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
         if (dist2 > voronoiMaxRadius ** 2) {
           // The closest point is too far to be considered.
