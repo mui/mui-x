@@ -25,6 +25,9 @@ export type ChartsVoronoiHandlerProps = {
   onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
 };
 
+type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
+export const isSeries = (obj: any): obj is VoronoiSeries => 'seriesId' in obj;
+
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = React.useContext(SvgContext);
@@ -34,7 +37,9 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
   const { series, seriesOrder } = React.useContext(SeriesContext).scatter ?? {};
   const voronoiRef = React.useRef<
-    Record<string, { startIndex: number; endIndex: number }> & { delauney?: Delaunay<any> }
+    Record<string, VoronoiSeries> & {
+      delauney?: Delaunay<any>;
+    }
   >({});
 
   const defaultXAxisId = xAxisIds[0];
@@ -68,6 +73,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
       const seriesPoints = data.flatMap(({ x, y }) => [getXPosition(x), getYPosition(y)]);
       voronoiRef.current[seriesId] = {
+        seriesId,
         startIndex: points.length,
         endIndex: points.length + seriesPoints.length,
       };
@@ -109,20 +115,24 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return 'no-point-found';
       }
 
-      const seriesId = Object.keys(voronoiRef.current).find((id) => {
-        if (id === 'delauney') {
-          return false;
-        }
-        return (
-          2 * closestPointIndex >= voronoiRef.current[id].startIndex &&
-          2 * closestPointIndex < voronoiRef.current[id].endIndex
-        );
-      });
-      if (seriesId === undefined) {
+      const closestSeries = Object.values(voronoiRef.current).find(
+        (value): value is VoronoiSeries => {
+          if (!isSeries(value)) {
+            return false;
+          }
+
+          return (
+            2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex
+          );
+        },
+      );
+
+      if (closestSeries === undefined) {
         return 'no-point-found';
       }
 
-      const dataIndex = (2 * closestPointIndex - voronoiRef.current[seriesId].startIndex) / 2;
+      const dataIndex =
+        (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
 
       if (voronoiMaxRadius !== undefined) {
         const pointX = voronoiRef.current.delauney.points[2 * closestPointIndex];
@@ -133,7 +143,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
           return 'outside-voronoi-max-radius';
         }
       }
-      return { seriesId, dataIndex };
+      return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
     const handleMouseOut = () => {
