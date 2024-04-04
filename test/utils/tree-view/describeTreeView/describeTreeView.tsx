@@ -14,15 +14,15 @@ import {
   DescribeTreeViewItem,
 } from './describeTreeView.types';
 
-const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
+const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
   message: string,
-  testRunner: DescribeTreeViewTestRunner<TPlugin>,
+  testRunner: DescribeTreeViewTestRunner<TPlugins>,
 ): void => {
   const { render } = createRenderer();
 
   const getUtils = (
     result: MuiRenderResult,
-  ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps' | 'apiRef'> => {
+  ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllItemRoots = () => result.queryAllByRole('treeitem');
@@ -56,7 +56,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
   describe(message, () => {
     describe('RichTreeView + TreeItem', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slotProps,
         ...other
@@ -83,7 +83,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
@@ -92,7 +92,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('RichTreeView + TreeItem2', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderRichTreeView: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slots,
         slotProps,
@@ -121,7 +121,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
@@ -130,9 +130,10 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('SimpleTreeView + TreeItem', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slots,
+        slotProps,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
@@ -146,20 +147,21 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
             disabled={item.disabled}
             data-testid={item.id}
             key={item.id}
+            {...slotProps?.item}
           >
             {item.children?.map(renderItem)}
           </Item>
         );
 
         const result = render(
-          <SimpleTreeView slots={slots} apiRef={apiRef} {...other}>
+          <SimpleTreeView slots={slots} slotProps={slotProps} apiRef={apiRef} {...other}>
             {items.map(renderItem)}
           </SimpleTreeView>,
         );
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
@@ -168,9 +170,10 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     });
 
     describe('SimpleTreeView + TreeItem2', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slots,
+        slotProps,
         ...other
       }) => {
         const items = rawItems as readonly DescribeTreeViewItem[];
@@ -184,20 +187,21 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
             disabled={item.disabled}
             data-testid={item.id}
             key={item.id}
+            {...slotProps?.item}
           >
             {item.children?.map(renderItem)}
           </Item>
         );
 
         const result = render(
-          <SimpleTreeView slots={slots} apiRef={apiRef} {...other}>
+          <SimpleTreeView slots={slots} slotProps={slotProps} apiRef={apiRef} {...other}>
             {items.map(renderItem)}
           </SimpleTreeView>,
         );
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
@@ -207,15 +211,15 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
   });
 };
 
-type Params<TPlugin extends TreeViewAnyPluginSignature> = [
+type Params<TPlugins extends TreeViewAnyPluginSignature[]> = [
   string,
-  DescribeTreeViewTestRunner<TPlugin>,
+  DescribeTreeViewTestRunner<TPlugins>,
 ];
 
 type DescribeTreeView = {
-  <P extends TreeViewAnyPluginSignature>(...args: Params<P>): void;
-  skip: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
-  only: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
+  <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>): void;
+  skip: <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>) => void;
+  only: <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>) => void;
 };
 
 /**

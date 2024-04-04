@@ -157,6 +157,10 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
   return composeClasses(slots, getTreeItemUtilityClass, classes);
 };
 
+type TreeItem2Component = ((
+  props: TreeItem2Props & React.RefAttributes<HTMLLIElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
  *
  * Demos:
@@ -264,7 +268,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
       </Root>
     </TreeItem2Provider>
   );
-});
+}) as TreeItem2Component;
 
 TreeItem2.propTypes = {
   // ----------------------------- Warning --------------------------------
