@@ -174,6 +174,27 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
 />
 ```
 
+If you want to delete a row from the internal state of the Data Grid, you can return an additional property 
+`_action: 'delete'` in the row object from the processRowUpdate callback.
+This will remove the row from the internal state of the Data Grid.
+
+```tsx
+<DataGrid
+  rows={rows}
+  columns={columns}
+  processRowUpdate={(updatedRow, originalRow) => {
+    if (shouldDeleteRow(updatedRow)) {
+      return { ...updatedRow, _action: 'delete' };
+    }
+    return updatedRow;
+  }}
+  onProcessRowUpdateError={handleProcessRowUpdateError}
+/>
+```
+
+In the example above, shouldDeleteRow is a function that determines whether a row should be deleted based on the
+updated row data. If shouldDeleteRow returns true, the row will be deleted from the Data Grid's internal state.
+
 ### Server-side validation
 
 If you need to cancel the save process on `processRowUpdate`—for instance, when a database validation fails, or the user wants to reject the changes—there are two options:
