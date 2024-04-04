@@ -1,12 +1,12 @@
 import * as React from 'react';
 import type { DefaultizedProps, TreeViewItemRange, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
-  isNodeSelected: (itemId: string) => boolean;
-  selectNode: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
-  selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
+  isItemSelected: (itemId: string) => boolean;
+  selectItem: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
+  selectRange: (event: React.SyntheticEvent, items: TreeViewItemRange, stacked?: boolean) => void;
   rangeSelectToFirst: (event: React.KeyboardEvent, itemId: string) => void;
   rangeSelectToLast: (event: React.KeyboardEvent, itemId: string) => void;
 }
@@ -76,8 +76,8 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
   dependantPlugins: [
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,
-    UseTreeViewNodesSignature,
+    UseTreeViewItemsSignature,
   ];
 }>;

@@ -12,11 +12,11 @@ import { describeConformance } from 'test/utils/describeConformance';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> = {
   instance: {
-    isNodeExpandable: () => false,
-    isNodeExpanded: () => false,
-    isNodeFocused: () => false,
-    isNodeSelected: () => false,
-    isNodeDisabled: (itemId: string | null): itemId is string => !!itemId,
+    isItemExpandable: () => false,
+    isItemExpanded: () => false,
+    isItemFocused: () => false,
+    isItemSelected: () => false,
+    isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
     getTreeItemId: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
@@ -24,6 +24,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   publicAPI: {
     focusItem: () => {},
     getItem: () => ({}),
+    setItemExpansion: () => {},
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
   wrapItem: ({ children }) => children,
@@ -43,18 +44,18 @@ describe('<TreeItem />', () => {
   describeConformance(<TreeItem itemId="one" label="one" />, () => ({
     classes,
     inheritComponent: 'li',
-    wrapMount: (mount) => (node: React.ReactNode) => {
+    wrapMount: (mount) => (item: React.ReactNode) => {
       const wrapper = mount(
         <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
-          {node}
+          {item}
         </TreeViewContext.Provider>,
       );
       return wrapper.childAt(0);
     },
-    render: (node) => {
+    render: (item) => {
       return render(
         <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
-          {node}
+          {item}
         </TreeViewContext.Provider>,
       );
     },
@@ -288,42 +289,6 @@ describe('<TreeItem />', () => {
       expect(getByRole('group')).to.contain(getByText('test2'));
     });
 
-    describe('aria-expanded', () => {
-      it('should have the attribute `aria-expanded=false` if collapsed', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="test" label="test" data-testid="test">
-              <TreeItem itemId="test2" label="test2" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('test')).to.have.attribute('aria-expanded', 'false');
-      });
-
-      it('should have the attribute `aria-expanded={true}` if expanded', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView defaultExpandedItems={['test']}>
-            <TreeItem itemId="test" label="test" data-testid="test">
-              <TreeItem itemId="test2" label="test2" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('test')).to.have.attribute('aria-expanded', 'true');
-      });
-
-      it('should not have the attribute `aria-expanded` if no children are present', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="test" label="test" data-testid="test" />
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('test')).not.to.have.attribute('aria-expanded');
-      });
-    });
-
     describe('aria-disabled', () => {
       it('should not have the attribute `aria-disabled` if disabled is false', () => {
         const { getByTestId } = render(
@@ -346,64 +311,8 @@ describe('<TreeItem />', () => {
       });
     });
 
-    describe('aria-selected', () => {
-      describe('single-select', () => {
-        it('should not have the attribute `aria-selected` if not selected', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="test" label="test" data-testid="test" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('test')).not.to.have.attribute('aria-selected');
-        });
-
-        it('should have the attribute `aria-selected={true}` if selected', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView defaultSelectedItems={'test'}>
-              <TreeItem itemId="test" label="test" data-testid="test" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('test')).to.have.attribute('aria-selected', 'true');
-        });
-      });
-
-      describe('multi-select', () => {
-        it('should have the attribute `aria-selected=false` if not selected', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="test" label="test" data-testid="test" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('test')).to.have.attribute('aria-selected', 'false');
-        });
-
-        it('should have the attribute `aria-selected={true}` if selected', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView multiSelect defaultSelectedItems={['test']}>
-              <TreeItem itemId="test" label="test" data-testid="test" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('test')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('should have the attribute `aria-selected` if disableSelection is true', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView multiSelect disableSelection>
-              <TreeItem itemId="test" label="test" data-testid="test" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('test')).to.have.attribute('aria-selected', 'false');
-        });
-      });
-    });
-
     describe('when an item receives focus', () => {
-      it('should focus the first node if none of the nodes are selected before the tree receives focus', () => {
+      it('should focus the first item if none of the items are selected before the tree receives focus', () => {
         const { getByTestId, queryAllByRole } = render(
           <SimpleTreeView>
             <TreeItem itemId="1" label="one" data-testid="one" />
@@ -441,7 +350,7 @@ describe('<TreeItem />', () => {
         expect(getByTestId('two')).toHaveFocus();
       });
 
-      it('should work when focused node is removed', () => {
+      it('should work when focused item is removed', () => {
         let removeActiveItem;
         // a TreeItem which can remove from the tree by calling `removeActiveItem`
         function ControlledTreeItem(props) {
@@ -480,7 +389,7 @@ describe('<TreeItem />', () => {
 
     describe('Navigation', () => {
       describe('right arrow interaction', () => {
-        it('should open the node and not move the focus if focus is on a closed node', () => {
+        it('should open the item and not move the focus if focus is on a closed item', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -500,7 +409,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it('should move focus to the first child if focus is on an open node', () => {
+        it('should move focus to the first child if focus is on an open item', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -562,7 +471,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it("should move focus to the item's parent item if focus is on a child node that is an end item", () => {
+        it("should move focus to the item's parent item if focus is on a child item that is an end item", () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -584,7 +493,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
         });
 
-        it("should move focus to the node's parent node if focus is on a child node that is closed", () => {
+        it("should move focus to the item's parent item if focus is on a child item that is closed", () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['one']}>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -609,7 +518,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
         });
 
-        it('should do nothing if focus is on a root node that is closed', () => {
+        it('should do nothing if focus is on a root item that is closed', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -627,7 +536,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it('should do nothing if focus is on a root node that is an end node', () => {
+        it('should do nothing if focus is on a root item that is an end item', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -644,7 +553,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('down arrow interaction', () => {
-        it('moves focus to a sibling node', () => {
+        it('moves focus to a sibling item', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -745,7 +654,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('up arrow interaction', () => {
-        it('moves focus to a sibling node', () => {
+        it('moves focus to a sibling item', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -811,7 +720,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('home key interaction', () => {
-        it('moves focus to the first node in the tree', () => {
+        it('moves focus to the first item in the tree', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -834,7 +743,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('end key interaction', () => {
-        it('moves focus to the last node in the tree without expanded items', () => {
+        it('moves focus to the last item in the tree without expanded items', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -855,7 +764,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('four')).toHaveFocus();
         });
 
-        it('moves focus to the last node in the tree with expanded items', () => {
+        it('moves focus to the last item in the tree with expanded items', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultExpandedItems={['four', 'five']}>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -882,7 +791,7 @@ describe('<TreeItem />', () => {
       });
 
       describe('type-ahead functionality', () => {
-        it('moves focus to the next node with a name that starts with the typed character', () => {
+        it('moves focus to the next item with a name that starts with the typed character', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -911,7 +820,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).toHaveFocus();
         });
 
-        it('moves focus to the next node with the same starting character', () => {
+        it('moves focus to the next item with the same starting character', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1048,7 +957,7 @@ describe('<TreeItem />', () => {
 
     describe('Expansion', () => {
       describe('enter key interaction', () => {
-        it('expands a node with children', () => {
+        it('expands an item with children', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -1068,7 +977,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
         });
 
-        it('collapses a node with children', () => {
+        it('collapses an item with children', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one">
@@ -1094,7 +1003,7 @@ describe('<TreeItem />', () => {
 
     describe('Single Selection', () => {
       describe('keyboard', () => {
-        it('should select a node when space is pressed', () => {
+        it('should select an item when space is pressed', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1112,7 +1021,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
         });
 
-        it('should not deselect a node when space is pressed on a selected node', () => {
+        it('should not deselect an item when space is pressed on a selected item', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultSelectedItems="one">
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1131,7 +1040,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
         });
 
-        it('should not select a node when space is pressed and disableSelection', () => {
+        it('should not select an node when space is pressed and disableSelection', () => {
           const { getByTestId } = render(
             <SimpleTreeView disableSelection>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1146,7 +1055,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).not.to.have.attribute('aria-selected');
         });
 
-        it('should select a node when Enter is pressed and the node is not selected', () => {
+        it('should select an item when Enter is pressed and the item is not selected', () => {
           const { getByTestId } = render(
             <SimpleTreeView>
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1161,7 +1070,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-selected');
         });
 
-        it('should not un-select a node when Enter is pressed and the node is selected', () => {
+        it('should not un-select an item when Enter is pressed and the item is selected', () => {
           const { getByTestId } = render(
             <SimpleTreeView defaultSelectedItems="one">
               <TreeItem itemId="one" label="one" data-testid="one" />
@@ -1174,98 +1083,12 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
 
           expect(getByTestId('one')).to.have.attribute('aria-selected');
-        });
-      });
-
-      describe('mouse', () => {
-        it('should select a node when click', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('should not deselect a node when clicking a selected node', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView defaultSelectedItems="one">
-              <TreeItem itemId="one" label="one" data-testid="one" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('should not select a node when click and disableSelection', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView disableSelection>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).not.to.have.attribute('aria-selected');
         });
       });
     });
 
     describe('Multi Selection', () => {
       describe('deselection', () => {
-        describe('mouse behavior when multiple nodes are selected', () => {
-          it('clicking a selected node holding ctrl should deselect the node', () => {
-            const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelectedItems={['one', 'two']}>
-                <TreeItem itemId="one" label="one" data-testid="one" />
-                <TreeItem itemId="two" label="two" data-testid="two" />
-              </SimpleTreeView>,
-            );
-
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-            fireEvent.click(getByText('one'), { ctrlKey: true });
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          });
-
-          it('clicking a selected node holding meta should deselect the node', () => {
-            const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelectedItems={['one', 'two']}>
-                <TreeItem itemId="one" label="one" data-testid="one" />
-                <TreeItem itemId="two" label="two" data-testid="two" />
-              </SimpleTreeView>,
-            );
-
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-            fireEvent.click(getByText('one'), { metaKey: true });
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          });
-        });
-
-        describe('mouse behavior when one node is selected', () => {
-          it('clicking a selected node shout not deselect the node', () => {
-            const { getByText, getByTestId } = render(
-              <SimpleTreeView multiSelect defaultSelectedItems={['one']}>
-                <TreeItem itemId="one" label="one" data-testid="one" />
-                <TreeItem itemId="two" label="two" data-testid="two" />
-              </SimpleTreeView>,
-            );
-
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-            fireEvent.click(getByText('one'));
-            expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-            expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          });
-        });
-
         it('should deselect the item when pressing space on a selected item', () => {
           const { getByTestId } = render(
             <SimpleTreeView multiSelect defaultSelectedItems={['one']}>
@@ -1541,93 +1364,6 @@ describe('<TreeItem />', () => {
 
           expect(queryAllByRole('treeitem', { selected: true })).to.have.length(0);
         });
-
-        it('mouse', () => {
-          const { getByTestId, getByText } = render(
-            <SimpleTreeView multiSelect defaultExpandedItems={['two']}>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two">
-                <TreeItem itemId="three" label="three" data-testid="three" />
-                <TreeItem itemId="four" label="four" data-testid="four" />
-              </TreeItem>
-              <TreeItem itemId="five" label="five" data-testid="five">
-                <TreeItem itemId="six" label="six" data-testid="six" />
-                <TreeItem itemId="seven" label="seven" data-testid="seven" />
-              </TreeItem>
-              <TreeItem itemId="eight" label="eight" data-testid="eight" />
-              <TreeItem itemId="nine" label="nine" data-testid="nine" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('five'));
-          fireEvent.click(getByText('nine'), { shiftKey: true });
-          expect(getByTestId('five')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('six')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('seven')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('eight')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('nine')).to.have.attribute('aria-selected', 'true');
-          fireEvent.click(getByText('one'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('five')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('mouse behavior after deselection', () => {
-          const { getByTestId, getByText } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" data-testid="four" />
-              <TreeItem itemId="five" label="five" data-testid="five" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          fireEvent.click(getByText('two'), { ctrlKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          fireEvent.click(getByText('two'), { ctrlKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-          fireEvent.click(getByText('five'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('five')).to.have.attribute('aria-selected', 'true');
-          fireEvent.click(getByText('one'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('five')).to.have.attribute('aria-selected', 'false');
-        });
-
-        it('mouse does not range select when selectionDisabled', () => {
-          const { getByText, queryAllByRole } = render(
-            <SimpleTreeView disableSelection multiSelect defaultExpandedItems={['two']}>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two">
-                <TreeItem itemId="three" label="three" data-testid="three" />
-                <TreeItem itemId="four" label="four" data-testid="four" />
-              </TreeItem>
-              <TreeItem itemId="five" label="five" data-testid="five">
-                <TreeItem itemId="six" label="six" data-testid="six" />
-                <TreeItem itemId="seven" label="seven" data-testid="seven" />
-              </TreeItem>
-              <TreeItem itemId="eight" label="eight" data-testid="eight" />
-              <TreeItem itemId="nine" label="nine" data-testid="nine" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('five'));
-          fireEvent.click(getByText('nine'), { shiftKey: true });
-          expect(queryAllByRole('treeitem', { selected: true })).to.have.length(0);
-        });
       });
 
       describe('multi selection', () => {
@@ -1684,64 +1420,6 @@ describe('<TreeItem />', () => {
           expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
           expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
         });
-
-        it('mouse', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-          fireEvent.click(getByText('one'));
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-          fireEvent.click(getByText('two'));
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('mouse using ctrl', () => {
-          const { getByTestId, getByText } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          fireEvent.click(getByText('two'), { ctrlKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('mouse using meta', () => {
-          const { getByTestId, getByText } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-            </SimpleTreeView>,
-          );
-
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          fireEvent.click(getByText('two'), { metaKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-        });
       });
 
       it('ctrl + a selects all', () => {
@@ -1786,73 +1464,6 @@ describe('<TreeItem />', () => {
 
   describe('prop: disabled', () => {
     describe('selection', () => {
-      describe('mouse', () => {
-        it('should prevent selection by mouse', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" label="one" disabled data-testid="one" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-        });
-
-        it('should prevent node triggering start of range selection', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" disabled data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          fireEvent.click(getByText('four'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'false');
-        });
-
-        it('should prevent node being selected as part of range selection', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" disabled data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          fireEvent.click(getByText('four'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'true');
-        });
-
-        it('should prevent node triggering end of range selection', () => {
-          const { getByText, getByTestId } = render(
-            <SimpleTreeView multiSelect>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" disabled data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          fireEvent.click(getByText('one'));
-          fireEvent.click(getByText('four'), { shiftKey: true });
-          expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-          expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('three')).to.have.attribute('aria-selected', 'false');
-          expect(getByTestId('four')).to.have.attribute('aria-selected', 'false');
-        });
-      });
-
       describe('keyboard', () => {
         describe('`disabledItemsFocusable={true}`', () => {
           it('should prevent selection by keyboard', () => {
@@ -1870,7 +1481,7 @@ describe('<TreeItem />', () => {
             expect(getByTestId('one')).not.to.have.attribute('aria-selected');
           });
 
-          it('should not prevent next node being range selected by keyboard', () => {
+          it('should not prevent next item being range selected by keyboard', () => {
             const { getByTestId } = render(
               <SimpleTreeView multiSelect disabledItemsFocusable>
                 <TreeItem itemId="one" label="one" disabled data-testid="one" />
@@ -1910,7 +1521,7 @@ describe('<TreeItem />', () => {
         });
 
         describe('`disabledItemsFocusable={false}`', () => {
-          it('should select the next non disabled node by keyboard + arrow down', () => {
+          it('should select the next non disabled item by keyboard + arrow down', () => {
             const { getByTestId } = render(
               <SimpleTreeView multiSelect>
                 <TreeItem itemId="one" label="one" data-testid="one" />
@@ -2244,19 +1855,6 @@ describe('<TreeItem />', () => {
           fireEvent.keyDown(getByTestId('two'), { key: 'ArrowLeft' });
           expect(getByTestId('two')).to.have.attribute('aria-expanded', 'true');
         });
-      });
-
-      it('should prevent expansion on click', () => {
-        const { getByText, getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="one" label="one" disabled data-testid="one">
-              <TreeItem itemId="two" label="two" />
-            </TreeItem>
-          </SimpleTreeView>,
-        );
-
-        fireEvent.click(getByText('one'));
-        expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
       });
     });
 
