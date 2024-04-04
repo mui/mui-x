@@ -131,7 +131,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     });
 
     describe('RichTreeViewPro + TreeItem', () => {
-      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slotProps,
         ...other
@@ -158,7 +158,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
@@ -167,7 +167,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     });
 
     describe('RichTreeViewPro + TreeItem2', () => {
-      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugin> = ({
+      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugins> = ({
         items: rawItems,
         slots,
         slotProps,
@@ -196,7 +196,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
         return {
           setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
           ...getUtils(result),
         };
       };
