@@ -174,8 +174,7 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
 />
 ```
 
-If you want to delete a row from the internal state of the Data Grid, you can return an additional property 
-`_action: 'delete'` in the row object from the `processRowUpdate` callback.
+If you want to delete a row from the internal state of the Data Grid, you can return an additional property `_action: 'delete'` in the row object from the `processRowUpdate` callback.
 This will remove the row from the internal state of the Data Grid.
 
 ```tsx
