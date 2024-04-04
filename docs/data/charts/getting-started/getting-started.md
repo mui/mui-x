@@ -111,16 +111,16 @@ Visit the [Composition page](/x/react-charts/composition/) for more details.
 
 ### Positions
 
-Charts are composed of two main area.
+Charts are composed of two main areas.
 The SVG defined by its `width` and `height` delimits the available space.
 
-In this SVG we define a "drawing area" which contains the data representation.
-For example, the lines, bars, area, ...
-It's defined thanks to the object `margin = {top, bottom, left, right}` defining the margin between the SVG and the drawing area.
+Within this SVG, a dedicated "drawing area" (aka "plot area") serves as the canvas for data representation.
+Here, elements like lines, bars, and areas visually depict the information.
+It's controlled by the `margin = {top, bottom, left, right}` object defining the margin between the SVG and the drawing area.
 
-The space left by margins can be used to display axes, legend, title, or any other additional information.
+The space left by margins can display axes, titles, a legend, or any other additional information.
 
-For more information about those position configuration, visit the [styling page](/x/react-charts/styling/#styling).
+For more information about the position configuration, visit the [styling page](/x/react-charts/styling/#styling).
 
 ## Axis management
 
