@@ -39,9 +39,9 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Descargar como Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Buscar',
+  columnsManagementNoColumns: 'Sin columnas',
+  columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
