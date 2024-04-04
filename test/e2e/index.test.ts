@@ -534,6 +534,23 @@ async function initializeEnvironment(
           );
         });
 
+        // assertion for: https://github.com/mui/mui-x/issues/12652
+        it('should allow field editing after opening and closing the picker', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerV6');
+          // open picker
+          await page.getByRole('button').click();
+          await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+          // close picker
+          await page.getByRole('button', { name: 'Choose date' }).click();
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+          // click on the input to focus it
+          await page.getByRole('textbox').click();
+
+          // test that the input value is set after focus
+          expect(await page.getByRole('textbox').inputValue()).to.equal('MM/DD/YYYY');
+        });
+
         it('should allow filling in a value and clearing a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
 
