@@ -277,3 +277,80 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+## Custom start of week
+
+The Date and Time Pickers are using the week settings provided by your date libraries.
+Each adapter uses its locale to define the start of the week.
+
+If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following examples.
+
+:::warning
+If you want to update the start of the week after the first render of a component,
+you will have to manually remount your component to apply the new locale configuration.
+
+:::
+
+### With `dayjs`
+
+For `dayjs`, use the `updateLocale` plugin:
+
+```ts
+import updateLocale from 'dayjs/plugin/updateLocale';
+
+dayjs.extend(updateLocale);
+
+// Replace "en" with the name of the locale you want to update.
+dayjs.updateLocale('en', {
+  // Sunday = 0, Monday = 1.
+  weekStart: 1,
+});
+```
+
+### With `date-fns`
+
+For `date-fns`, override the `options.weekStartsOn` of the used locale:
+
+```ts
+import { Locale } from 'date-fns';
+// with date-fns v2.x
+import enUS from 'date-fns/locale/en-US';
+// with date-fns v3.x
+import { enUS } from 'date-fns/locale/en-US';
+
+const customEnLocale: Locale = {
+  ...enUS,
+  options: {
+    ...enUS.options,
+    // Sunday = 0, Monday = 1.
+    weekStartsOn: 1,
+  },
+};
+
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={customEnLocale}>
+```
+
+### With `luxon`
+
+:::warning
+For `luxon`, breaking changes were required to enable the configuration of the week start.
+The necessary changes have been shipped only on the `7.0.0-alpha.3` release.
+
+If you need the customizable `Luxon` week start control, please consider using the latest v7 package version.
+:::
+
+### With `moment`
+
+For `moment`, use the `moment.updateLocale` method:
+
+```ts
+import moment from 'moment';
+
+// Replace "en" with the name of the locale you want to update.
+moment.updateLocale('en', {
+  week: {
+    // Sunday = 0, Monday = 1.
+    dow: 1,
+  },
+});
+```

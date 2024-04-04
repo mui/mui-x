@@ -12,6 +12,7 @@ import {
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
+  useGridLogger,
 } from '@mui/x-data-grid';
 import {
   buildWarning,
@@ -324,6 +325,7 @@ export const useGridClipboardImport = (
     | 'experimentalFeatures'
     | 'unstable_splitClipboardPastedText'
     | 'disableClipboardPaste'
+    | 'onBeforeClipboardPasteStart'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -332,8 +334,11 @@ export const useGridClipboardImport = (
   const enableClipboardPaste =
     (!props.disableClipboardPaste && props.experimentalFeatures?.clipboardPaste) ?? false;
   const rootEl = apiRef.current.rootElementRef?.current;
+  const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.unstable_splitClipboardPastedText;
+
+  const { pagination, onBeforeClipboardPasteStart } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -367,6 +372,15 @@ export const useGridClipboardImport = (
         return;
       }
 
+      if (onBeforeClipboardPasteStart) {
+        try {
+          await onBeforeClipboardPasteStart({ data: pastedData });
+        } catch (error) {
+          logger.debug('Clipboard paste operation cancelled');
+          return;
+        }
+      }
+
       const cellUpdater = new CellValueUpdater({
         apiRef,
         processRowUpdate,
@@ -384,7 +398,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
-        pagination: props.pagination,
+        pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -397,7 +411,9 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
-      props.pagination,
+      pagination,
+      onBeforeClipboardPasteStart,
+      logger,
     ],
   );
 
