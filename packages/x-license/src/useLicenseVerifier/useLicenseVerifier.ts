@@ -16,7 +16,8 @@ import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInf
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
   | 'x-data-grid-premium'
-  | 'x-date-pickers-pro';
+  | 'x-date-pickers-pro'
+  | 'x-tree-view-pro';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {

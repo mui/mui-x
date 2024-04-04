@@ -58,6 +58,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
+      '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       exceljs: 'latest',
     };
     return output;

@@ -1,6 +1,6 @@
 export { useTreeViewJSXItems } from './useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
-  UseTreeViewItemsParameters,
+  UseTreeViewJSXItemsParameters,
   UseTreeViewItemsDefaultizedParameters,
 } from './useTreeViewJSXItems.types';
