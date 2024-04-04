@@ -8,9 +8,17 @@ interface TreeViewItemProps {
   children?: TreeViewItemProps[];
 }
 
-export interface UseTreeViewItemsInstance<R extends {}> {
-  getNode: (itemId: string) => TreeViewNode;
+export interface UseTreeViewItemsPublicAPI<R extends {}> {
+  /**
+   * Get the item with the given id.
+   * @param {string} itemId The id of the item to return.
+   * @returns {R} The item with the given id.
+   */
   getItem: (itemId: string) => R;
+}
+
+export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
+  getNode: (itemId: string) => TreeViewNode;
   getItemsToRender: () => TreeViewItemProps[];
   getChildrenIds: (itemId: string | null) => string[];
   getNavigableChildrenIds: (itemId: string | null) => string[];
@@ -27,9 +35,6 @@ export interface UseTreeViewItemsInstance<R extends {}> {
    */
   areItemUpdatesPrevented: () => boolean;
 }
-
-export interface UseTreeViewItemsPublicAPI<R extends {}>
-  extends Pick<UseTreeViewItemsInstance<R>, 'getItem'> {}
 
 export interface UseTreeViewItemsParameters<R extends {}> {
   /**
@@ -51,16 +56,16 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The label of the item.
-   * @default `(item) => item.label`
+   * @default (item) => item.label
    */
   getItemLabel?: (item: R) => string;
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the id of a given item.
    *
    * @template R
    * @param {R} item The item to check.
    * @returns {string} The id of the item.
-   * @default `(item) => item.id`
+   * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
 }
