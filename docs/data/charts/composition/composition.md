@@ -107,10 +107,11 @@ To display data, you have components named `<XxxPlot />` such as `<LinePlot />`,
 
 ### Clipping
 
-To force components to strictly stay inside the drawing area, use the `<ChartsClipPath id={clipPathId} />`.
-This component defines the rectangle of the drawing area.
+To ensure chart elements stay confined to the designated drawing area, leverage the `ChartsClipPath` component.
+This component defines a rectangular clip path that acts as a boundary.
 
-Then you can clip any part of the chart by wrapping it into ``<g clipPath={`url(#${clipPathId})`}>``.
+1. **Define the Clip Path**: Use `<ChartsClipPath id={clipPathId} />` to establish the clip path for the drawing area. `clipPathId` must be a unique identifier.
+2. **Wrap the Chart**: Enclose the chart elements you want to clip within a `<g>` element. Set the `clipPath` attribute to `url(#${clipPathId})` to reference the previously defined clip path. Example: ``<g clipPath={`url(#${clipPathId})`}>``
 
 ```jsx
 <ChartContainer>
@@ -123,8 +124,8 @@ Then you can clip any part of the chart by wrapping it into ``<g clipPath={`url(
 </ChartContainer>
 ```
 
-In the following demo you can clip or not scatter and line plots.
-Notice that the mark elements of the line are placed outside of the clip, and are rendered on top of the axes.
+The following demo allows you to toggle clipping for scatter and line plots.
+Observe how line markers extend beyond the clip area, rendering on top of the axes.
 
 {{"demo": "LimitOverflow.js" }}
 
