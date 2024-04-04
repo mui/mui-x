@@ -89,7 +89,7 @@
     },
     "getAggregationPosition": {
       "type": { "name": "func" },
-      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`",
+      "default": "(groupNode) => groupNode == null ? 'footer' : 'inline'",
       "signature": {
         "type": "function(groupNode: GridGroupNode) => GridAggregationPosition | null",
         "describedArgs": ["groupNode"],
@@ -548,6 +548,7 @@
         "returned": "Promise<R> | R"
       }
     },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
