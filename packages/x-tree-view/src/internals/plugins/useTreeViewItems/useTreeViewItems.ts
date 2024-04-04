@@ -114,20 +114,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return false;
       }
 
-      let item = instance.getItemMeta(itemId);
+      let itemMeta = instance.getItemMeta(itemId);
 
       // This can be called before the item has been added to the item map.
-      if (!item) {
+      if (!itemMeta) {
         return false;
       }
 
-      if (item.disabled) {
+      if (itemMeta.disabled) {
         return true;
       }
 
-      while (item.parentId != null) {
-        item = instance.getItemMeta(item.parentId);
-        if (item.disabled) {
+      while (itemMeta.parentId != null) {
+        itemMeta = instance.getItemMeta(itemMeta.parentId);
+        if (itemMeta.disabled) {
           return true;
         }
       }

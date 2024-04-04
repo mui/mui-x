@@ -13,8 +13,8 @@ const useTabbableItemId = (
   selectedItems: string | string[] | null,
 ) => {
   const isItemVisible = (itemId: string) => {
-    const item = instance.getItemMeta(itemId);
-    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
   };
 
   let tabbableItemId: string | null | undefined;
@@ -62,13 +62,15 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isItemVisible = (itemId: string) => {
-    const item = instance.getItemMeta(itemId);
-    return item && (item.parentId == null || instance.isItemExpanded(item.parentId));
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const item = instance.getItemMeta(itemId);
-    const itemElement = document.getElementById(instance.getTreeItemId(itemId, item.idAttribute));
+    const itemMeta = instance.getItemMeta(itemId);
+    const itemElement = document.getElementById(
+      instance.getTreeItemId(itemId, itemMeta.idAttribute),
+    );
     if (itemElement) {
       itemElement.focus();
     }
@@ -106,10 +108,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       return;
     }
 
-    const item = instance.getItemMeta(state.focusedItemId);
-    if (item) {
+    const itemMeta = instance.getItemMeta(state.focusedItemId);
+    if (itemMeta) {
       const itemElement = document.getElementById(
-        instance.getTreeItemId(state.focusedItemId, item.idAttribute),
+        instance.getTreeItemId(state.focusedItemId, itemMeta.idAttribute),
       );
       if (itemElement) {
         itemElement.blur();
