@@ -708,4 +708,12 @@ describe('<DataGrid /> - Pagination', () => {
       setProps({ rows: rows.slice(0, 2) });
     }).not.to.throw();
   });
+
+  it('should log an error if rowCount is used with client-side pagination', () => {
+    expect(() => {
+      render(<BaselineTestCase paginationMode="client" rowCount={100} />);
+    }).toErrorDev([
+      'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.',
+    ]);
+  });
 });

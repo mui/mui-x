@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { TreeViewAnyPluginSignature, TreeViewUsedParams } from '@mui/x-tree-view/internals/models';
+import {
+  TreeViewAnyPluginSignature,
+  TreeViewPublicAPI,
+  TreeViewUsedParams,
+} from '@mui/x-tree-view/internals/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
@@ -13,6 +17,10 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    * @param {Partial<TreeViewUsedParams<TPlugin>>} props A subset of the props accepted by the Tree View.
    */
   setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
+  /**
+   * The ref object that allows Tree View manipulation.
+   */
+  apiRef: { current: TreeViewPublicAPI<[TPlugin]> };
   /**
    * Returns the `root` slot of the Tree View.
    * @returns {HTMLElement} `root` slot of the Tree View.
@@ -54,6 +62,13 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    * @returns {boolean} `true` if the item is expanded, `false` otherwise.
    */
   isItemExpanded: (id: string) => boolean;
+  /**
+   * Checks if an item is selected.
+   * Uses the `aria-selected` attribute to check the selected.
+   * @param {string} id The id of the item to check.
+   * @returns {boolean} `true` if the item is selected, `false` otherwise.
+   */
+  isItemSelected: (id: string) => boolean;
 }
 
 export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature> = <
