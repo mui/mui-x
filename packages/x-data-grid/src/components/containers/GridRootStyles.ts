@@ -8,6 +8,7 @@ import {
   recomposeColor,
   Theme,
 } from '@mui/material/styles';
+import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
