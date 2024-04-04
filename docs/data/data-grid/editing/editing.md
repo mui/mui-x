@@ -179,7 +179,7 @@ It is a more performant way to delete a row as compared to updating the [`rows` 
 
 ```tsx
 <DataGrid
-  // ...
+  {...otherProps}
   processRowUpdate={(updatedRow, originalRow) => {
     if (shouldDeleteRow(updatedRow)) {
       return { ...updatedRow, _action: 'delete' };
