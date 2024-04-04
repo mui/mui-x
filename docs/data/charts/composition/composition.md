@@ -130,14 +130,14 @@ Observe how line markers extend beyond the clip area, rendering on top of the ax
 {{"demo": "LimitOverflow.js" }}
 
 :::warning
-Notice how the id is generated in the demo.
+The provided demo is generating a unique ID with `useId()`.
 
 ```js
 const id = useId();
 const clipPathId = `${id}-clip-path`;
 ```
 
-If the id was simply `const clipPathId = "my-id";` a page with two charts would have two components with the same `id`, leading to unexpected behavior.
+It's important to generate unique IDs for clip paths, especially when dealing with multiple charts on a page. Assigning a static ID like `"my-id"` would lead to conflicts.
 :::
 
 ### Axis
