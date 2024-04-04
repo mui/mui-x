@@ -1,47 +1,85 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function MarginAndLabelPosition() {
+  const [fixMargin, setFixMargin] = React.useState(true);
+  const [fixLabel, setFixLabel] = React.useState(true);
+
   return (
-    <BarChart
-      height={300}
-      dataset={usAirportPassengers}
-      series={[
-        { dataKey: '2018', label: '2018' },
-        { dataKey: '2019', label: '2019' },
-        { dataKey: '2020', label: '2020' },
-        { dataKey: '2021', label: '2021' },
-        { dataKey: '2022', label: '2022' },
-      ]}
-      slotProps={{ legend: { hidden: true } }}
-      xAxis={[
-        {
-          scaleType: 'band',
-          dataKey: 'code',
-          valueFormatter: (value, context) =>
-            context.location === 'tick'
-              ? value.split('').join('\n')
-              : usAirportPassengers.find((item) => item.code === value)!.fullName,
-          label: 'airports',
-          labelStyle: {
-            transform: 'translateY(30px)',
+    <Box sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <FormControlLabel
+          checked={fixMargin}
+          control={
+            <Checkbox onChange={(event) => setFixMargin(event.target.checked)} />
+          }
+          label="fix chart margin"
+          labelPlacement="end"
+        />
+        <FormControlLabel
+          checked={fixLabel}
+          control={
+            <Checkbox onChange={(event) => setFixLabel(event.target.checked)} />
+          }
+          label="fix axis label position"
+          labelPlacement="end"
+        />
+      </Stack>
+
+      <BarChart
+        xAxis={[
+          {
+            scaleType: 'band',
+            dataKey: 'code',
+            valueFormatter: (value, context) =>
+              context.location === 'tick'
+                ? value.split('').join('\n')
+                : usAirportPassengers.find((item) => item.code === value)!.fullName,
+            label: 'airports',
+            labelStyle: fixLabel
+              ? {
+                  // Move the x-axis label with style
+                  transform: 'translateY(30px)',
+                }
+              : {},
           },
-        },
-      ]}
-      yAxis={[
-        {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          label: 'passengers',
-        },
-      ]}
-      margin={{ top: 5, right: 5, bottom: 80, left: 100 }}
-      sx={{
-        [`.${axisClasses.left} .${axisClasses.label}`]: {
-          transform: 'translateX(-35px)',
-        },
-      }}
-    />
+        ]}
+        // Modify the margin
+        margin={fixMargin ? { top: 5, right: 5, bottom: 80, left: 100 } : undefined}
+        sx={
+          fixLabel
+            ? {
+                [`.${axisClasses.left} .${axisClasses.label}`]: {
+                  // Move the y-axis label with CSS
+                  transform: 'translateX(-35px)',
+                },
+              }
+            : {}
+        }
+        // Other props
+        height={300}
+        dataset={usAirportPassengers}
+        series={[
+          { dataKey: '2018', label: '2018' },
+          { dataKey: '2019', label: '2019' },
+          { dataKey: '2020', label: '2020' },
+          { dataKey: '2021', label: '2021' },
+          { dataKey: '2022', label: '2022' },
+        ]}
+        slotProps={{ legend: { hidden: true } }}
+        yAxis={[
+          {
+            valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+            label: 'passengers',
+          },
+        ]}
+      />
+    </Box>
   );
 }
 
