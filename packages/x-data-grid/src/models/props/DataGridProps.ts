@@ -418,10 +418,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   scrollbarSize?: number;
   /**
-   * Override the height of the header filters.
-   */
-  headerFilterHeight?: number;
-  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
@@ -803,6 +799,13 @@ export interface DataGridProSharedPropsWithDefaultValue {
   headerFilters: boolean;
 }
 
+export interface DataGridProSharedPropsWithoutDefaultValue {
+  /**
+   * Override the height of the header filters.
+   */
+  headerFilterHeight?: number;
+}
+
 export interface DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, the cell selection mode is enabled.
@@ -816,5 +819,6 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
  */
 export interface DataGridProcessedPropsWithShared
   extends DataGridProcessedProps,
+    DataGridProSharedPropsWithoutDefaultValue,
     Partial<DataGridProSharedPropsWithDefaultValue>,
     Partial<DataGridPremiumSharedPropsWithDefaultValue> {}
