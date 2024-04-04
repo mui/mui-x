@@ -37,8 +37,10 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
     if (element) {
       const childrenIds = Array.from(
-        element.querySelectorAll(`[role="treeitem"]${id == null ? '' : `[data-parentid="${id}"]`}`),
-      ).map((child) => childrenIdAttrToIdRef.current.get(child.id));
+        element.querySelectorAll(
+          `[role="treeitem"]${itemId == null ? '' : `[data-parentid="${itemId}"]`}`,
+        ),
+      ).map((child) => childrenIdAttrToIdRef.current.get(child.id)!);
 
       const previousIndexes = instance.getJSXItemsChildrenIndexes(itemId ?? null);
       const hasChanges =
