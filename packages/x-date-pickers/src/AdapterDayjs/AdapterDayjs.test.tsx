@@ -155,5 +155,43 @@ describe('<AdapterDayjs />', () => {
         });
       });
     });
+
+    describe('French locale edge-cases', () => {
+      const { render, clock } = createPickerRenderer({
+        clock: 'fake',
+        adapterName: 'dayjs',
+        locale: { code: 'fr' },
+      });
+
+      const { renderWithProps } = buildFieldInteractions({
+        render,
+        clock,
+        Component: DateTimeField,
+      });
+
+      it('should allow to edit when the ordinal can be empty', () => {
+        const v7Response = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          format: 'Do MM YYYY',
+        });
+
+        expectFieldValueV7(v7Response.getSectionsContainer(), 'DD MM YYYY');
+        v7Response.selectSection('day');
+
+        v7Response.pressKey(0, '1');
+        expectFieldValueV7(v7Response.getSectionsContainer(), '1er MM YYYY');
+
+        v7Response.pressKey(0, '1');
+        expectFieldValueV7(v7Response.getSectionsContainer(), '11 MM YYYY');
+
+        v7Response.selectSection('day');
+
+        v7Response.pressKey(0, '2');
+        expectFieldValueV7(v7Response.getSectionsContainer(), '02 MM YYYY');
+
+        v7Response.pressKey(0, '2');
+        expectFieldValueV7(v7Response.getSectionsContainer(), '22 MM YYYY');
+      });
+    });
   });
 });
