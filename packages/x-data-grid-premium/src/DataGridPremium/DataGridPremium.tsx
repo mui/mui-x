@@ -316,7 +316,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Use if the actual rowCount is not known upfront, but an estimation is available.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
-   * Applicable only with the server-side data and when `rowCount="-1"`
+   * Applicable only with `paginationMode="server"` and when `rowCount="-1"`
    */
   estimatedRowCount: PropTypes.number,
   /**
@@ -914,7 +914,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
-   * Works only with the server-side data. Ignored when `paginationMode === 'client'`
+   * Only works with `paginationMode="server"`, ignored when `paginationMode="client"`.
    */
   rowCount: PropTypes.number,
   /**

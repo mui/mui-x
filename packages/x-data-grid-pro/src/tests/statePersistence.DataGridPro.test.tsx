@@ -202,7 +202,6 @@ describe('<DataGridPro /> - State persistence', () => {
             },
             preferencePanel: FULL_INITIAL_STATE.preferencePanel,
           }}
-          paginationMode="server"
         />,
       );
       expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal(

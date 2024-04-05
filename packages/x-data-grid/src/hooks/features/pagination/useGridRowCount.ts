@@ -17,7 +17,6 @@ import {
   gridPaginationMetaSelector,
   gridPaginationModelSelector,
 } from './gridPaginationSelector';
-import { noRowCountInServerMode } from './gridPaginationUtils';
 
 export const useGridRowCount = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -129,9 +128,8 @@ export const useGridRowCount = (
         return;
       }
       if (model.pageSize !== previousPageSize.current) {
-        // The page size has changed
         previousPageSize.current = model.pageSize;
-        if (rowCountState !== -1) {
+        if (rowCountState === -1) {
           // Row count unknown and page size changed, reset the page
           apiRef.current.setPage(0);
           return;
@@ -150,14 +148,6 @@ export const useGridRowCount = (
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
-      if (props.paginationMode === 'server' && props.rowCount == null) {
-        noRowCountInServerMode();
-      }
-    }
-  }, [props.rowCount, props.paginationMode]);
-
   React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(visibleTopLevelRowCount);

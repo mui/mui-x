@@ -93,7 +93,7 @@
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
     "estimatedRowCount": {
-      "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with the server-side data and when <code>rowCount=&quot;-1&quot;</code>"
+      "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
     },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
@@ -534,7 +534,7 @@
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
-      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Works only with the server-side data. Ignored when <code>paginationMode === &#39;client&#39;</code>"
+      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Only works with <code>paginationMode=&quot;server&quot;</code>, ignored when <code>paginationMode=&quot;client&quot;</code>."
     },
     "rowHeight": { "description": "Sets the height in pixel of a row in the Data Grid." },
     "rowModesModel": { "description": "Controls the modes of the rows." },

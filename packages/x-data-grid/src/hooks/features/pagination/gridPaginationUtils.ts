@@ -18,14 +18,6 @@ export const getPageCount = (rowCount: number, pageSize: number, page: number): 
   return 0;
 };
 
-export const noRowCountInServerMode = buildWarning(
-  [
-    "MUI X: the 'rowCount' prop is undefined while using paginationMode='server'",
-    'For more detail, see http://mui.com/components/data-grid/pagination/#basic-implementation',
-  ],
-  'error',
-);
-
 export const getDefaultGridPaginationModel = (autoPageSize: boolean) => ({
   page: 0,
   pageSize: autoPageSize ? 0 : 100,
