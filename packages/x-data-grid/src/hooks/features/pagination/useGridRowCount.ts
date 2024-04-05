@@ -33,6 +33,7 @@ export const useGridRowCount = (
   const paginationMeta = useGridSelector(apiRef, gridPaginationMetaSelector);
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
+  const prevRowCountProp = React.useRef(props.rowCount);
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
@@ -122,21 +123,6 @@ export const useGridRowCount = (
   /**
    * EVENTS
    */
-  const handlePaginationMetaChange = React.useCallback(
-    (meta: GridPaginationState['meta']) => {
-      if (props.paginationMode === 'client') {
-        return;
-      }
-
-      if (!meta.hasNextPage && rowCountState === -1) {
-        apiRef.current.setRowCount(
-          paginationModel.pageSize * paginationModel.page + paginationModel.pageSize,
-        );
-      }
-    },
-    [apiRef, props.paginationMode, rowCountState, paginationModel],
-  );
-
   const handlePaginationModelChange = React.useCallback(
     (model: GridPaginationState['paginationModel']) => {
       if (props.paginationMode === 'client' || !previousPageSize.current) {
@@ -160,7 +146,6 @@ export const useGridRowCount = (
   );
 
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
-  useGridApiEventHandler(apiRef, 'paginationMetaChange', handlePaginationMetaChange);
 
   /**
    * EFFECTS
@@ -179,15 +164,32 @@ export const useGridRowCount = (
       return;
     }
 
-    if (isNumber(props.rowCount)) {
+    if (isNumber(props.rowCount) && prevRowCountProp.current !== props.rowCount) {
+      prevRowCountProp.current = props.rowCount;
       apiRef.current.setRowCount(props.rowCount);
+      return;
+    }
+
+    const isLastPage = paginationMeta.hasNextPage === false;
+    if (
+      isLastPage &&
+      (rowCountState === -1 || rowCountState % paginationModel.pageSize === 0) &&
+      visibleTopLevelRowCount < paginationModel.pageSize
+    ) {
+      // Actual count of the rows is less than the page size, reflect the value
+      apiRef.current.setRowCount(
+        (rowCountState !== -1
+          ? rowCountState - paginationModel.pageSize
+          : paginationModel.pageSize * paginationModel.page) + visibleTopLevelRowCount,
+      );
     }
   }, [
     apiRef,
     visibleTopLevelRowCount,
     props.paginationMode,
     props.rowCount,
-    paginationMeta,
+    paginationMeta.hasNextPage,
     paginationModel,
+    rowCountState,
   ]);
 };
