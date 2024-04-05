@@ -107,7 +107,7 @@ To display data, you have components named `<XxxPlot />` such as `<LinePlot />`,
 
 ### Clipping
 
-To ensure chart elements stay confined to the designated drawing area, leverage the `ChartsClipPath` component.
+To ensure chart elements stay confined to the designated drawing area, use the `ChartsClipPath` component.
 This component defines a rectangular clip path that acts as a boundary.
 
 1. **Define the Clip Path**: Use `<ChartsClipPath id={clipPathId} />` to establish the clip path for the drawing area. `clipPathId` must be a unique identifier.
