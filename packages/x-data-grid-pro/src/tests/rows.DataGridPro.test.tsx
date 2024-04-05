@@ -963,7 +963,9 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not show total row count in footer if `rowCount === rows.length`', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length;
-      render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+      render(
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
+      );
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length}`);
@@ -972,7 +974,9 @@ describe('<DataGridPro /> - Rows', () => {
     it('should show total row count in footer if `rowCount !== rows.length`', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length + 10;
-      render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+      render(
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
+      );
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
@@ -981,7 +985,9 @@ describe('<DataGridPro /> - Rows', () => {
     it('should update total row count in footer on `rowCount` prop change', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       let rowCount = rows.length;
-      const { setProps } = render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+      const { setProps } = render(
+        <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
+      );
       rowCount += 1;
       setProps({ rowCount });
 

@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0-beta.7",
+  "version": "7.1.1",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -86,7 +86,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
-    "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
+    "@mui/monorepo": "https://github.com/mui/material-ui.git#next",
     "@mui/utils": "^5.15.14",
     "@next/eslint-plugin-next": "14.0.4",
     "@octokit/plugin-retry": "^6.0.1",

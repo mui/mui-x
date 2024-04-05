@@ -1,4 +1,9 @@
-import { PropValidator, propValidatorsDataGrid } from '@mui/x-data-grid/internals';
+import {
+  GridSignature,
+  PropValidator,
+  isNumber,
+  propValidatorsDataGrid,
+} from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>[] = [
@@ -20,13 +25,15 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
       'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.') ||
     undefined,
   (props) =>
-    (!props.unstable_dataSource &&
-      !props.rows &&
-      'MUI X: One of `rows` prop or `unstable_dataSource` prop must be passed for the Grid to work as expected.') ||
-    undefined,
-  (props) =>
     (props.unstable_dataSource &&
       props.rows &&
       'MUI X: The `rows` prop has no effect when the `unstable_dataSource` prop is passed.') ||
+    undefined,
+  (props) =>
+    (props.signature !== GridSignature.DataGrid &&
+      props.paginationMode === 'client' &&
+      props.rowsLoadingMode !== 'server' &&
+      isNumber(props.rowCount) &&
+      'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
     undefined,
 ];

@@ -143,6 +143,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSelection: boolean;
   /**
+   * The milliseconds throttle delay for resizing the grid.
+   * @default 60
+   */
+  resizeThrottleMs: number;
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -785,3 +790,27 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
 }
+
+export interface DataGridProSharedPropsWithDefaultValue {
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  headerFilters: boolean;
+}
+
+export interface DataGridPremiumSharedPropsWithDefaultValue {
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: boolean;
+}
+
+/**
+ * Contains the commercial packages' props shared in the MIT version.
+ */
+export interface DataGridProcessedPropsWithShared
+  extends DataGridProcessedProps,
+    Partial<DataGridProSharedPropsWithDefaultValue>,
+    Partial<DataGridPremiumSharedPropsWithDefaultValue> {}
