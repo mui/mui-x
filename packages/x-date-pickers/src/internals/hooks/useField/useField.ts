@@ -57,6 +57,7 @@ export const useField = <
       enableAccessibleFieldDOMStructure = false,
       disabled = false,
       readOnly = false,
+      shouldRespectLeadingZeros = false,
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
@@ -86,6 +87,7 @@ export const useField = <
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
+    shouldRespectLeadingZeros,
     localizedDigits,
     setTempAndroidValueStr,
     timezone,
@@ -204,16 +206,19 @@ export const useField = <
           activeSection,
         );
 
-        const newSectionValue = adjustSectionValue(
+        const newSectionValue = adjustSectionValue({
           utils,
           timezone,
-          activeSection,
-          event.key as AvailableAdjustKeyCode,
+          section: activeSection,
+          keyCode: event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           localizedDigits,
-          activeDateManager.date,
-          { minutesStep },
-        );
+          shouldRespectLeadingZeros,
+          activeDate: activeDateManager.date,
+          stepsAttributes: {
+            minutesStep,
+          },
+        });
 
         updateSectionValue({
           activeSection,

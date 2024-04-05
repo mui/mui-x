@@ -307,16 +307,19 @@ export interface FieldValueManager<
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
-   * @param {TSection[]} sections The current section list.
-   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
-   * @param {boolean} isRTL `true` if the current orientation is "right to left"
+   * @param {Object} params The parameters to generate the input value.
+   * @param {TSection[]} params.sections The current section list.
+   * @param {string} params.localizedDigits The conversion table from localized to 0-9 digits.
+   * @param {string} params.shouldRespectLeadingZeros `true` if the input value should respect the leading zeros from the format.
+   * @param {boolean} params.isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getV6InputValueFromSections: (
-    sections: TSection[],
-    localizedDigits: string[],
-    isRTL: boolean,
-  ) => string;
+  getV6InputValueFromSections: (params: {
+    sections: TSection[];
+    localizedDigits: string[];
+    shouldRespectLeadingZeros: boolean;
+    isRTL: boolean;
+  }) => string;
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection

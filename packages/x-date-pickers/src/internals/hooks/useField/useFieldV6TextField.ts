@@ -30,22 +30,29 @@ type FieldSectionWithPositions<TSection> = TSection & {
 
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
-export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: TSection[],
-  localizedDigits: string[],
-  isRTL: boolean,
-): FieldSectionWithPositions<TSection>[] => {
+export const addPositionPropertiesToSections = <TSection extends FieldSection>({
+  sections,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+  isRTL,
+}: {
+  sections: TSection[];
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
+  isRTL: boolean;
+}): FieldSectionWithPositions<TSection>[] => {
   let position = 0;
   let positionInInput = isRTL ? 1 : 0;
   const newSections: FieldSectionWithPositions<TSection>[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    const renderedValue = getSectionVisibleValue(
+    const renderedValue = getSectionVisibleValue({
       section,
-      isRTL ? 'input-rtl' : 'input-ltr',
+      target: isRTL ? 'input-rtl' : 'input-ltr',
       localizedDigits,
-    );
+      shouldRespectLeadingZeros,
+    });
     const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
 
     const sectionLength = cleanString(sectionStr).length;
@@ -88,7 +95,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, shouldRespectLeadingZeros = false },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -111,8 +118,14 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const handleRef = useForkRef(inputRefProp, inputRef);
 
   const sections = React.useMemo(
-    () => addPositionPropertiesToSections(state.sections, localizedDigits, isRTL),
-    [state.sections, localizedDigits, isRTL],
+    () =>
+      addPositionPropertiesToSections({
+        sections: state.sections,
+        localizedDigits,
+        shouldRespectLeadingZeros,
+        isRTL,
+      }),
+    [state.sections, localizedDigits, shouldRespectLeadingZeros, isRTL],
   );
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
@@ -333,7 +346,12 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       keyPressed = cleanValueStr;
     } else {
       const prevValueStr = cleanString(
-        fieldValueManager.getV6InputValueFromSections(sections, localizedDigits, isRTL),
+        fieldValueManager.getV6InputValueFromSections({
+          sections,
+          localizedDigits,
+          shouldRespectLeadingZeros,
+          isRTL,
+        }),
       );
 
       let startOfDiffIndex = -1;
@@ -394,25 +412,39 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       return inPlaceholder;
     }
 
-    return fieldValueManager.getV6InputValueFromSections(
-      getSectionsFromValue(valueManager.emptyValue),
+    return fieldValueManager.getV6InputValueFromSections({
+      sections: getSectionsFromValue(valueManager.emptyValue),
       localizedDigits,
+      shouldRespectLeadingZeros,
       isRTL,
-    );
+    });
   }, [
     inPlaceholder,
     fieldValueManager,
     getSectionsFromValue,
     valueManager.emptyValue,
     localizedDigits,
+    shouldRespectLeadingZeros,
     isRTL,
   ]);
 
   const valueStr = React.useMemo(
     () =>
       state.tempValueStrAndroid ??
-      fieldValueManager.getV6InputValueFromSections(state.sections, localizedDigits, isRTL),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRTL],
+      fieldValueManager.getV6InputValueFromSections({
+        sections: state.sections,
+        localizedDigits,
+        shouldRespectLeadingZeros,
+        isRTL,
+      }),
+    [
+      state.sections,
+      fieldValueManager,
+      state.tempValueStrAndroid,
+      localizedDigits,
+      shouldRespectLeadingZeros,
+      isRTL,
+    ],
   );
 
   React.useEffect(() => {
