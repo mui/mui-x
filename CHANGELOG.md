@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 5, 2024_
 
-We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Add `setItemExpansion` Tree View API method (#12595) @flaviendelangle
 - 🌍 Improve Persian (fa-IR), Portuguese (pt-BR), and Spanish (es-ES) locale on the Data Grid
@@ -25,6 +25,7 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 - [DataGrid] Fix server-side filter demo not working (#12662) @MBilalShafi
 - [DataGrid] Log error if `rowCount` is used with client-side pagination (#12448) @michelengelen
 - [DataGrid] Remove `GridFormatterParams` completely (#12660) @romgrk
+- [DataGrid] Restore main slot (#12657) @romgrk
 - [l10n] Improve Persian (fa-IR) locale (#12630) @amirhosseinzf
 - [l10n] Improve Portuguese (pt-BR) locale (#12618) @hugoalkimim
 - [l10n] Improve Spanish (es-ES) locale (#12606) @aitor40
@@ -57,6 +58,8 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 #### `@mui/x-charts@7.1.1`
 
 - [charts] Fix `tickInterval` usage for y-axis (#12592) @alexfauquette
+- [charts] Fix Scatter series highlight when id is a number (#12677) @JCQuintas
+- [charts] Fix TS error when using `sx` property on ChartsTooltip (#12659) @JCQuintas
 
 ### Tree View
 
