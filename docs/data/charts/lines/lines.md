@@ -146,6 +146,25 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
+### Color scale
+
+Like other charts, you can modify the [series color](/x/react-charts/styling/#colors) by using series color, or some color palette.
+
+You can also modify color by using axes `colorMap` which maps values to colors.
+The line charts use by priority:
+
+1. The y-axis color
+2. The x-axis color
+3. The series color
+
+You can find additional information about those `colorMap` properties in the [styling page](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScale.js"}}
+
+:::warning
+For now, ordinal config is not supported for line chart.
+:::
+
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
