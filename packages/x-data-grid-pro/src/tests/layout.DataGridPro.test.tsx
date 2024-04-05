@@ -143,7 +143,7 @@ describe('<DataGridPro /> - Layout', () => {
     });
   });
 
-  it('should work with headerFilterHeight', () => {
+  it('should work with `headerFilterHeight` prop', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
