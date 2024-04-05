@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.2.0
+## 7.1.1
 
 _Apr 5, 2024_
 
@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.2.0`
+#### `@mui/x-data-grid@7.1.1`
 
 - [DataGrid] Allow higher packages' props to be used in MIT (#12365) @MBilalShafi
 - [DataGrid] Fix RTL mode (#12583) @romgrk
@@ -29,38 +29,38 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 - [l10n] Improve Portuguese (pt-BR) locale (#12618) @hugoalkimim
 - [l10n] Improve Spanish (es-ES) locale (#12606) @aitor40
 
-#### `@mui/x-data-grid-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.1.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.2.0`.
+Same changes as in `@mui/x-data-grid@7.1.1`.
 
-#### `@mui/x-data-grid-premium@7.2.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.1.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.2.0`.
+Same changes as in `@mui/x-data-grid-pro@7.1.1`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.2.0`
+#### `@mui/x-date-pickers@7.1.1`
 
 - [fields] Fix `readOnly` behavior (#12609) @LukasTy
 - [l10n] Improve Persian (fa-IR) locale (#12632) @misafari
 - [l10n] Improve Portuguese (pt-BR) locale (#12613) @cnHealth
 - [l10n] Improve Ukrainian (uk-UA) locale (#12627) @alexkobylansky
 
-#### `@mui/x-date-pickers-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.1.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
+Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 
 - [DateTimeRangePicker] Fix selection on same day (#12604) @LukasTy
 
 ### Charts
 
-#### `@mui/x-charts@7.2.0`
+#### `@mui/x-charts@7.1.1`
 
 - [charts] Fix `tickInterval` usage for y-axis (#12592) @alexfauquette
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.2.0`
+#### `@mui/x-tree-view@7.1.1`
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
 - [TreeView] Create `RichTreeViewPro` component (not released yet) (#12610) @flaviendelangle
