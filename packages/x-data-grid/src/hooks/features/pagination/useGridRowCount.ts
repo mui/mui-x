@@ -151,35 +151,17 @@ export const useGridRowCount = (
   React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(visibleTopLevelRowCount);
-      return;
-    }
-
-    if (isNumber(props.rowCount) && prevRowCountProp.current !== props.rowCount) {
-      prevRowCountProp.current = props.rowCount;
+    } else if (props.rowCount != null) {
       apiRef.current.setRowCount(props.rowCount);
-      return;
     }
+  }, [apiRef, props.paginationMode, visibleTopLevelRowCount, props.rowCount]);
 
-    const isLastPage = paginationMeta.hasNextPage === false;
-    if (
-      isLastPage &&
-      (rowCountState === -1 || rowCountState % paginationModel.pageSize === 0) &&
-      visibleTopLevelRowCount < paginationModel.pageSize
-    ) {
-      // Actual count of the rows is less than the page size, reflect the value
+  const isLastPage = paginationMeta.hasNextPage === false;
+  React.useEffect(() => {
+    if (isLastPage && rowCountState === -1) {
       apiRef.current.setRowCount(
-        (rowCountState !== -1
-          ? rowCountState - paginationModel.pageSize
-          : paginationModel.pageSize * paginationModel.page) + visibleTopLevelRowCount,
+        paginationModel.pageSize * paginationModel.page + visibleTopLevelRowCount,
       );
     }
-  }, [
-    apiRef,
-    visibleTopLevelRowCount,
-    props.paginationMode,
-    props.rowCount,
-    paginationMeta.hasNextPage,
-    paginationModel,
-    rowCountState,
-  ]);
+  }, [apiRef, visibleTopLevelRowCount, isLastPage, rowCountState, paginationModel]);
 };
