@@ -7,6 +7,7 @@ settings:
 overrides:
   react-is: ^18.2.0
   '@types/node': ^18.19.23
+  '@types/react-dom': 18.2.19
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -138,8 +139,8 @@ importers:
         specifier: ^18.2.60
         version: 18.2.74
       '@types/react-dom':
-        specifier: ^18.2.19
-        version: 18.2.24
+        specifier: 18.2.19
+        version: 18.2.19
       '@types/react-test-renderer':
         specifier: ^18.0.7
         version: 18.0.7
@@ -622,8 +623,8 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4
       '@types/react-dom':
-        specifier: ^18.2.18
-        version: 18.2.18
+        specifier: 18.2.19
+        version: 18.2.19
       '@types/react-router-dom':
         specifier: ^5.3.3
         version: 5.3.3
@@ -5090,7 +5091,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.4
       '@testing-library/dom': 9.3.4
-      '@types/react-dom': 18.2.24
+      '@types/react-dom': 18.2.19
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: true
@@ -5432,14 +5433,8 @@ packages:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
     dev: true
 
-  /@types/react-dom@18.2.18:
-    resolution: {integrity: sha512-TJxDm6OfAX2KJWJdMEVTwWke5Sc/E/RlnPGvGfS0W7+6ocy2xhDVQVh/KvC2Uf7kACs+gDytdusDSdWfWkaNzw==}
-    dependencies:
-      '@types/react': 18.2.48
-    dev: true
-
-  /@types/react-dom@18.2.24:
-    resolution: {integrity: sha512-cN6upcKd8zkGy4HU9F1+/s98Hrp6D4MOcippK4PoE8OZRngohHZpbJn1GsaDLz87MqvHNoT13nHvNqM9ocRHZg==}
+  /@types/react-dom@18.2.19:
+    resolution: {integrity: sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==}
     dependencies:
       '@types/react': 18.2.74
     dev: true
