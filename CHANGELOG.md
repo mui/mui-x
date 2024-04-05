@@ -5,11 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.2.0
 
-_Apr 4, 2024_
+_Apr 5, 2024_
 
 We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Allow higher Data Grid packages' props to be used in MIT (#12365) @MBilalShafi
 - 🚀 Add `setItemExpansion` Tree View API method (#12595) @flaviendelangle
 - 🌍 Improve Persian (fa-IR), Portuguese (pt-BR), and Spanish (es-ES) locale on the Data Grid
 - 🌍 Improve Persian (fa-IR), Portuguese (pt-BR), and Ukrainian (uk-UA) locale on the Pickers
@@ -25,7 +24,7 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 - [DataGrid] Fix `ColDefChangesGridNoSnap` demo crash (#12663) @MBilalShafi
 - [DataGrid] Fix server-side filter demo not working (#12662) @MBilalShafi
 - [DataGrid] Log error if `rowCount` is used with client-side pagination (#12448) @michelengelen
-- [DataGrid] Remove GridFormatterParams completely (#12660) @romgrk
+- [DataGrid] Remove `GridFormatterParams` completely (#12660) @romgrk
 - [l10n] Improve Persian (fa-IR) locale (#12630) @amirhosseinzf
 - [l10n] Improve Portuguese (pt-BR) locale (#12618) @hugoalkimim
 - [l10n] Improve Spanish (es-ES) locale (#12606) @aitor40
@@ -64,8 +63,8 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 #### `@mui/x-tree-view@7.2.0`
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
-- [TreeView] Create `RichTreeViewPro` component (#12610) @flaviendelangle
-- [TreeView] Create pro package (#12240) @flaviendelangle
+- [TreeView] Create `RichTreeViewPro` component (not released yet) (#12610) @flaviendelangle
+- [TreeView] Create pro package (not released yet) (#12240) @flaviendelangle
 - [TreeView] Fix typo in errors (#12623) @alissa-tung
 - [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
 
@@ -78,7 +77,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 - [docs] Fix grammar in TreeView migration doc (#12615) @joshkel
 - [docs] Fix missing closing props in `PieShapeNoSnap` demo (#12636) @alp-ex
 - [docs] Fix type arguments in Custom Field page (#12619) @Juneezee
-- [docs] Fix typo in getItemId prop description (#12637) @flaviendelangle
+- [docs] Fix typo in `getItemId` prop description (#12637) @flaviendelangle
 - [docs] Make the Charts `margin` usage more visible (#12591) @alexfauquette
 - [docs] Match IE 11 spacing with Material UI @oliviertassinari
 - [docs] Move data grid interfaces to standard API page layout (#12016) @alexfauquette
@@ -101,7 +100,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 - [infra] Polish support survey experience (#12624) @oliviertassinari
 - [support-infra] Replace author association with a permission check in survey action (#12068) @michelengelen
 - [support-infra] Fix user permission check (#12669) @michelengelen
-- [test] Fix TreeView test import (#12668) @LukasTy
+- [test] Fix Tree View test import (#12668) @LukasTy
 
 ## 7.1.0
 
@@ -2973,7 +2972,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 ## 6.19.9
 
-_Apr 4, 2024_
+_Apr 5, 2024_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
