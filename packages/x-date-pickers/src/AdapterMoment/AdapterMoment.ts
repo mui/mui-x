@@ -25,7 +25,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Day of the month
   D: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   DD: 'day',
-  Do: { sectionType: 'day', contentType: 'digit-with-letter' },
+  Do: { sectionType: 'day', contentType: 'digit-with-letter', maxLength: 2 },
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
