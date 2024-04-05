@@ -36,7 +36,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
-- `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
+- `filterItem.operator`: name of the operator method to use (for example _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')): required when multiple filter items are used.
 
 :::info
@@ -119,7 +119,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
 
-In the example below, the _rating_ column can not be filtered.
+In the example below, the _rating_ column cannot be filtered.
 
 ```js
 <DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />

@@ -91,14 +91,14 @@ You can select the whole week using the `day` component slot:
 ## Dynamic data
 
 Sometimes it may be necessary to display additional info right in the calendar.
-The following demo shows how to add a badge on some day based on server side data:
+The following demo shows how to add a badge on some day based on server-side data:
 
 {{"demo": "DateCalendarServerRequest.js"}}
 
-## Validation
-
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
-
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+## Validation
+
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

@@ -8,7 +8,7 @@ import {
 } from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { DateValidationError, DateView } from '../models';
+import { DateValidationError, DateView, PickerValidDate } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps } from '../internals/models/validation';
@@ -21,7 +21,8 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 
-export interface BaseDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
+export interface BaseDatePickerSlots<TDate extends PickerValidDate>
+  extends DateCalendarSlots<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
@@ -29,11 +30,23 @@ export interface BaseDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
   toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDatePickerSlotProps<TDate> extends DateCalendarSlotProps<TDate> {
+export interface BaseDatePickerSlotProps<TDate extends PickerValidDate>
+  extends DateCalendarSlotProps<TDate> {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
-export interface BaseDatePickerProps<TDate>
+export type DatePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateView,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  DateViewRendererProps<TDate, TView>,
+  TAdditionalProps
+>;
+
+export interface BaseDatePickerProps<TDate extends PickerValidDate>
   extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
     ExportedDateCalendarProps<TDate> {
   /**
@@ -51,23 +64,21 @@ export interface BaseDatePickerProps<TDate>
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<TDate | null, DateView, DateViewRendererProps<TDate, DateView>, {}>
-  >;
+  viewRenderers?: Partial<DatePickerViewRenderers<TDate, DateView>>;
 }
 
 type UseDatePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends BaseDatePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
   DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
 >;
 
-export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
-  props: Props,
-  name: string,
-): UseDatePickerDefaultizedProps<TDate, Props> {
+export function useDatePickerDefaultizedProps<
+  TDate extends PickerValidDate,
+  Props extends BaseDatePickerProps<TDate>,
+>(props: Props, name: string): UseDatePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({

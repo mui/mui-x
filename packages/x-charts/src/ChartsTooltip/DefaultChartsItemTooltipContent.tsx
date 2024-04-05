@@ -17,7 +17,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
 ) {
   const { series, itemData, sx, classes } = props;
 
-  if (itemData.dataIndex === undefined) {
+  if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
   }
   const { displayedLabel, color } =
@@ -72,7 +72,7 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   /**

@@ -2,12 +2,11 @@ import { screen, userEvent } from '@mui-internal/test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
-  getTextbox,
+  expectFieldValueV7,
   describeValidation,
   describeValue,
   describePicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
@@ -33,16 +32,15 @@ describe('<DesktopDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, 'MM/DD/YYYY');
-      }
-      expectInputValue(
-        input,
-        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-      );
+      const fieldRoot = getFieldInputRoot();
+
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, 'keyboardDate')
+        : 'MM/DD/YYYY';
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
@@ -51,8 +49,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
         );
       } else {
         selectSection('day');
-        const input = getTextbox();
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        pressKey(undefined, 'ArrowUp');
       }
 
       return newValue;

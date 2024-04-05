@@ -26,10 +26,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: '開始',
   end: '終了',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: '開始日',
+  startTime: '開始時間',
+  endDate: '終了日',
+  endTime: '終了時間',
 
   // Action bar
   cancelButtonLabel: 'キャンセル',
@@ -68,7 +68,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `時間を選択してください。選択した時間は ${utils.format(value, 'fullTime')} です`
       : '時間を選択してください',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'クリア',
 
   // Table labels
   timeTableLabel: '時間を選択',
@@ -83,6 +83,19 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: '年',
+  month: '月',
+  day: '日',
+  weekDay: '平日',
+  hours: '時間',
+  minutes: '分',
+  seconds: '秒',
+  meridiem: 'メリディム',
+
+  // Common
+  empty: '空',
 };
 
 export const jaJP = getPickersLocalization(jaJPPickers);

@@ -1,0 +1,11 @@
+<GaugeContainer
+  width={200}
+  height={200}
+  startAngle={-110}
+  endAngle={110}
+  value={30}
+>
+  <GaugeReferenceArc />
+  <GaugeValueArc />
+  <GaugePointer />
+</GaugeContainer>

@@ -82,6 +82,19 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'سال',
+  month: 'ماه',
+  day: 'روز',
+  // weekDay: 'Week day',
+  hours: 'ساعت ها',
+  minutes: 'دقیقه ها',
+  seconds: 'ثانیه ها',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const faIR = getPickersLocalization(faIRPickers);

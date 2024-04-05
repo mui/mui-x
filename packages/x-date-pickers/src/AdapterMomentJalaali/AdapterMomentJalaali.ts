@@ -49,6 +49,9 @@ const defaultFormats: AdapterFormats = {
   month: 'jMMMM',
   monthShort: 'jMMM',
   dayOfMonth: 'jD',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'jD',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -84,6 +87,12 @@ const NUMBER_SYMBOL_MAP = {
   '9': '۹',
   '0': '۰',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'moment-jalaali': Moment;
+  }
+}
 
 /**
  * Based on `@date-io/jalaali`

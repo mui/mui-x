@@ -9,26 +9,31 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Expansion
 
-<p class="description">Handle how users can expand items.</p>
+<p class="description">Learn how to handle expanding and collapsing Tree View items.</p>
 
 ## Controlled expansion
 
-Use the `expandedNodes` prop to control the expanded items.
-
-You can use the `onExpandedNodesChange` prop to listen to changes in the expanded items and update the prop accordingly.
+Use the `expandedItems` prop to control the expanded items.
+You can also use the `onExpandedItemsChange` prop to listen to changes in the expanded items and update the prop accordingly.
 
 {{"demo": "ControlledExpansion.js"}}
 
 :::info
 
-- The expansion is **controlled** when its parent manages it by providing a `expandedNodes` prop.
-- The expansion is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultExpandedNodes` prop.
+- The expansion is **controlled** when its parent manages it by providing a `expandedItems` prop.
+- The expansion is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultExpandedItems` prop.
 
 Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
 
-## Track node expansion change
+## Track item expansion change
 
-Use the `onNodeExpansionToggle` prop if you want to react to a node expansion change:
+Use the `onItemExpansionToggle` prop to trigger an action upon an item being expanded.
 
-{{"demo": "TrackNodeExpansionToggle.js"}}
+{{"demo": "TrackItemExpansionToggle.js"}}
+
+## Change item expansion
+
+You can use the `setItemExpansion` API method to imperatively change the expansion of an item:
+
+{{"demo": "ChangeItemExpansion.js"}}

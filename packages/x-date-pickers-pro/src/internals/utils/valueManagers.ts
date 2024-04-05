@@ -2,25 +2,26 @@ import {
   PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
-  addPositionPropertiesToSections,
-  createDateStrForInputFromSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
   areDatesEqual,
   getTodayDate,
   getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
+  RangeFieldSection,
   DateRange,
   RangePosition,
 } from '../../models';
-import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
   TValue = [any, any],
-  TDate = any,
+  TDate extends PickerValidDate = any,
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
@@ -73,7 +74,11 @@ export const rangeValueManager: RangePickerValueManager = {
   ],
 };
 
-export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {
+export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
+  dateSeparator = '–',
+}: {
+  dateSeparator: string | undefined;
+}): FieldValueManager<DateRange<TDate>, TDate, RangeFieldSection> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
@@ -92,14 +97,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (
-    utils,
-    [start, end],
-    fallbackSections,
-    localizedDigits,
-    isRTL,
-    getSectionsFromDate,
-  ) => {
+  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -122,7 +120,8 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
+            // TODO: Check if RTL still works
+            endSeparator: `${section.endSeparator} ${dateSeparator} `,
           };
         }
 
@@ -133,44 +132,47 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       });
     };
 
-    return addPositionPropertiesToSections<RangeFieldSection>(
-      [
-        ...getSections(start, separatedFallbackSections.startDate, 'start'),
-        ...getSections(end, separatedFallbackSections.endDate, 'end'),
-      ],
-      localizedDigits,
-      isRTL,
-    );
+    return [
+      ...getSections(start, separatedFallbackSections.startDate, 'start'),
+      ...getSections(end, separatedFallbackSections.endDate, 'end'),
+    ];
   },
-  getValueStrFromSections: (sections, localizedDigits, isRTL) => {
+  getV7HiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForInputFromSections(
+    return createDateStrForV7HiddenInputFromSections([
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate,
+    ]);
+  },
+  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    return createDateStrForV6InputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
       localizedDigits,
       isRTL,
     );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
-    // TODO: Improve because it would not work if the date format has `–` as a separator.
-    const [startStr, endStr] = valueStr.split('–');
+    // TODO: Improve because it would not work if some section have the same separator as the dateSeparator.
+    const [startStr, endStr] = valueStr.split(dateSeparator);
 
     return [startStr, endStr].map((dateStr, index) => {
       if (dateStr == null) {
         return null;
       }
 
-      return parseDate(dateStr.trim(), referenceValue[index]);
+      return parseDate(dateStr.trim(), referenceValue[index]!);
     }) as DateRange<any>;
   },
   getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
-    const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
-      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
+    const updateDateInRange = (newDate: TDate | null, prevDateRange: DateRange<TDate>) =>
+      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<TDate>;
 
     return {
       date: state.value[index],
-      referenceDate: state.referenceValue[index],
+      referenceDate: state.referenceValue[index]!,
       getSections: (sections) => {
         const dateRangeSections = splitDateRangeSections(sections);
         if (index === 0) {
@@ -188,4 +190,4 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
       }),
     };
   },
-};
+});

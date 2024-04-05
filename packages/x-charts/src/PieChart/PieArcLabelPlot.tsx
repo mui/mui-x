@@ -83,21 +83,21 @@ export interface PieArcLabelPlotProps
 
 function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
-    slots,
-    slotProps,
-    innerRadius,
-    outerRadius,
-    arcLabelRadius,
-    cornerRadius = 0,
-    paddingAngle = 0,
-    id,
-    highlightScope,
-    highlighted,
-    faded = { additionalRadius: -5 },
-    data,
     arcLabel,
     arcLabelMinAngle = 0,
+    arcLabelRadius,
+    cornerRadius = 0,
+    data,
+    faded = { additionalRadius: -5 },
+    highlighted,
+    highlightScope,
+    id,
+    innerRadius,
+    outerRadius,
+    paddingAngle = 0,
     skipAnimation,
+    slotProps,
+    slots,
     ...other
   } = props;
 
@@ -233,7 +233,7 @@ PieArcLabelPlot.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The radius between circle center and the begining of the arc.
    * @default 0

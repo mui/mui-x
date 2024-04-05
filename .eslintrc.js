@@ -98,11 +98,16 @@ module.exports = {
       },
     },
     {
-      files: ['packages/grid/**/*.ts', 'packages/grid/**/*.js', 'docs/src/pages/**/*.tsx'],
+      files: [
+        'packages/x-data-grid/**/*{.tsx,.ts,.js}',
+        'packages/x-data-grid-pro/**/*{.tsx,.ts,.js}',
+        'packages/x-data-grid-premium/**/*{.tsx,.ts,.js}',
+        'docs/src/pages/**/*.tsx',
+      ],
       excludedFiles: [
-        'packages/grid/x-data-grid/src/themeAugmentation/index.js', // TypeScript ignores JS files with the same name as the TS file
-        'packages/grid/x-data-grid-pro/src/themeAugmentation/index.js',
-        'packages/grid/x-data-grid-premium/src/themeAugmentation/index.js',
+        'packages/x-data-grid/src/themeAugmentation/index.js', // TypeScript ignores JS files with the same name as the TS file
+        'packages/x-data-grid-pro/src/themeAugmentation/index.js',
+        'packages/x-data-grid-premium/src/themeAugmentation/index.js',
       ],
       rules: {
         'material-ui/no-direct-state-access': 'error',
@@ -120,6 +125,12 @@ module.exports = {
       files: ['docs/data/**/*.js', 'docs/data/**/*.tsx'],
       rules: {
         'filenames/match-exported': ['error'],
+      },
+    },
+    {
+      files: ['**/*.mjs'],
+      rules: {
+        'import/extensions': ['error', 'ignorePackages'],
       },
     },
     {
@@ -146,12 +157,14 @@ module.exports = {
       },
     },
     buildPackageRestrictedImports('@mui/x-charts', 'x-charts'),
-    buildPackageRestrictedImports('@mui/x-data-grid', 'grid/x-data-grid'),
-    buildPackageRestrictedImports('@mui/x-data-grid-pro', 'grid/x-data-grid-pro'),
-    buildPackageRestrictedImports('@mui/x-data-grid-premium', 'grid/x-data-grid-premium'),
-    buildPackageRestrictedImports('@mui/x-data-grid-generator', 'grid/x-data-grid-generator'),
+    buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
+    buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
+    buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
+    buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
     buildPackageRestrictedImports('@mui/x-pickers', 'x-pickers'),
     buildPackageRestrictedImports('@mui/x-pickers-pro', 'x-pickers-pro'),
-    buildPackageRestrictedImports('@mui/x-license-pro', 'x-license-pro'),
+    buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view'),
+    buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro'),
+    buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ],
 };

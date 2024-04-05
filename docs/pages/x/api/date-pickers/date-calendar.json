@@ -1,22 +1,23 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
         "type": "function(date: TDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
     },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "focusedView": {
       "type": {
         "name": "enum",
@@ -24,8 +25,8 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" } },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -68,7 +69,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
     },
     "renderLoading": {
@@ -126,7 +127,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "object" } },
     "view": {
       "type": {
         "name": "enum",

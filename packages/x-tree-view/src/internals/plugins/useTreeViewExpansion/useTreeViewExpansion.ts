@@ -1,101 +1,115 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
+import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
+import { TreeViewItemId } from '../../../models';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
+  publicAPI,
   params,
   models,
 }) => {
-  const setExpandedNodes = (event: React.SyntheticEvent, value: string[]) => {
-    params.onExpandedNodesChange?.(event, value);
-    models.expandedNodes.setControlledValue(value);
+  const expandedItemsMap = React.useMemo(() => {
+    const temp = new Map<TreeViewItemId, boolean>();
+    models.expandedItems.value.forEach((id) => {
+      temp.set(id, true);
+    });
+
+    return temp;
+  }, [models.expandedItems.value]);
+
+  const setExpandedItems = (event: React.SyntheticEvent, value: string[]) => {
+    params.onExpandedItemsChange?.(event, value);
+    models.expandedItems.setControlledValue(value);
   };
 
-  const isNodeExpanded = React.useCallback(
-    (nodeId: string) => {
-      return Array.isArray(models.expandedNodes.value)
-        ? models.expandedNodes.value.indexOf(nodeId) !== -1
-        : false;
-    },
-    [models.expandedNodes.value],
+  const isItemExpanded = React.useCallback(
+    (itemId: string) => expandedItemsMap.has(itemId),
+    [expandedItemsMap],
   );
 
-  const isNodeExpandable = React.useCallback(
-    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
+  const isItemExpandable = React.useCallback(
+    (itemId: string) => !!instance.getNode(itemId)?.expandable,
     [instance],
   );
 
-  const toggleNodeExpansion = useEventCallback(
-    (event: React.SyntheticEvent, nodeId: string | null) => {
-      if (nodeId == null) {
+  const toggleItemExpansion = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+    const isExpandedBefore = instance.isItemExpanded(itemId);
+    instance.setItemExpansion(event, itemId, !isExpandedBefore);
+  });
+
+  const setItemExpansion = useEventCallback(
+    (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => {
+      const isExpandedBefore = instance.isItemExpanded(itemId);
+      if (isExpandedBefore === isExpanded) {
         return;
       }
 
-      const isExpandedBefore = models.expandedNodes.value.indexOf(nodeId!) !== -1;
-
       let newExpanded: string[];
-      if (isExpandedBefore) {
-        newExpanded = models.expandedNodes.value.filter((id) => id !== nodeId);
+      if (isExpanded) {
+        newExpanded = [itemId].concat(models.expandedItems.value);
       } else {
-        newExpanded = [nodeId].concat(models.expandedNodes.value);
+        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
       }
 
-      if (params.onNodeExpansionToggle) {
-        params.onNodeExpansionToggle(event, nodeId, !isExpandedBefore);
+      if (params.onItemExpansionToggle) {
+        params.onItemExpansionToggle(event, itemId, isExpanded);
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const node = instance.getNode(nodeId);
+  const expandAllSiblings = (event: React.KeyboardEvent, itemId: string) => {
+    const node = instance.getNode(itemId);
     const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
+      (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
     );
 
-    const newExpanded = models.expandedNodes.value.concat(diff);
+    const newExpanded = models.expandedItems.value.concat(diff);
 
     if (diff.length > 0) {
-      if (params.onNodeExpansionToggle) {
-        diff.forEach((newlyExpandedNodeId) => {
-          params.onNodeExpansionToggle!(event, newlyExpandedNodeId, true);
+      if (params.onItemExpansionToggle) {
+        diff.forEach((newlyExpandedItemId) => {
+          params.onItemExpansionToggle!(event, newlyExpandedItemId, true);
         });
       }
 
-      setExpandedNodes(event, newExpanded);
+      setExpandedItems(event, newExpanded);
     }
   };
 
   populateInstance<UseTreeViewExpansionSignature>(instance, {
-    isNodeExpanded,
-    isNodeExpandable,
-    toggleNodeExpansion,
+    isItemExpanded,
+    isItemExpandable,
+    setItemExpansion,
+    toggleItemExpansion,
     expandAllSiblings,
   });
+
+  populatePublicAPI<UseTreeViewExpansionSignature>(publicAPI, { setItemExpansion });
 };
 
 useTreeViewExpansion.models = {
-  expandedNodes: {
-    getDefaultValue: (params) => params.defaultExpandedNodes,
+  expandedItems: {
+    getDefaultValue: (params) => params.defaultExpandedItems,
   },
 };
 
-const DEFAULT_EXPANDED_NODES: string[] = [];
+const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
-  defaultExpandedNodes: params.defaultExpandedNodes ?? DEFAULT_EXPANDED_NODES,
+  defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });
 
 useTreeViewExpansion.params = {
-  expandedNodes: true,
-  defaultExpandedNodes: true,
-  onExpandedNodesChange: true,
-  onNodeExpansionToggle: true,
+  expandedItems: true,
+  defaultExpandedItems: true,
+  onExpandedItemsChange: true,
+  onItemExpansionToggle: true,
 };

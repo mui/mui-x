@@ -1,6 +1,6 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
@@ -12,7 +12,7 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
         "type": "function(date: TDate) => string",
         "describedArgs": ["date"],
@@ -23,7 +23,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -33,24 +33,22 @@
     "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "fixedWeekNumber": { "type": { "name": "number" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "any" } },
-    "maxDateTime": { "type": { "name": "any" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
-    "minDateTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" } },
+    "maxDateTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" } },
+    "minDateTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
@@ -108,7 +106,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
@@ -123,7 +121,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -173,7 +171,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "view": {
       "type": {
         "name": "enum",
@@ -272,6 +270,12 @@
       "class": null
     },
     {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -300,8 +304,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as `@mui/material/TextField`.",
-      "default": "TextField from '@mui/material'",
+      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
       "class": null
     },
     {
@@ -314,12 +318,6 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
       "class": null
     },
     {
@@ -337,9 +335,12 @@
     { "name": "field", "description": "", "class": null }
   ],
   "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiMobileDateTimeRangePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateTimeRangePicker/MobileDateTimeRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
   "cssComponent": false
 }

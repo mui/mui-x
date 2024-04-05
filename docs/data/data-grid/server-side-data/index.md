@@ -63,7 +63,7 @@ This example only scratches the surface with a lot of problems still unsolved li
 - Performance optimization
 - Caching data/deduping requests
 - More complex use-cases on the server like grouping, tree data, etc.
-- Server side row editing
+- Server-side row editing
 - Lazy loading of data
 - Handling updates to the data like row editing, row deletion, etc.
 - Refetching data on-demand
@@ -182,7 +182,7 @@ interface GetRowsResponse {
   rows: GridRowModel[];
   /**
    * To reflect updates in total `rowCount` (optional)
-   * Useful when the `rowCount` is inaccurate (e.g. when filtering) or not available upfront
+   * Useful when the `rowCount` is inaccurate (for example when filtering) or not available upfront
    */
   rowCount?: number;
   /**

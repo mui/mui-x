@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 import {
@@ -20,7 +20,7 @@ export type TimeViewRendererProps<
   views: readonly TView[];
 };
 
-export const renderTimeViewClock = <TDate extends unknown>({
+export const renderTimeViewClock = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -82,7 +82,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   />
 );
 
-export const renderDigitalClockTimeView = <TDate extends unknown>({
+export const renderDigitalClockTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -147,7 +147,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   />
 );
 
-export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
+export const renderMultiSectionDigitalClockTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,

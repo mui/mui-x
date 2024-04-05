@@ -65,6 +65,7 @@ const columns: GridColDef[] = [
   {
     field: 'rating',
     headerName: 'Rating',
+    display: 'flex',
     renderCell: renderRating,
     renderEditCell: renderRatingEditInputCell,
     editable: true,

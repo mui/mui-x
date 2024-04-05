@@ -12,6 +12,7 @@ import {
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -25,7 +26,7 @@ export interface LineElementClasses {
 export type LineElementClassKey = keyof LineElementClasses;
 
 export interface LineElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -65,7 +66,8 @@ export interface LineElementSlotProps {
 
 export interface LineElementProps
   extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
-    Pick<AnimatedLineProps, 'skipAnimation'> {
+    Pick<AnimatedLineProps, 'skipAnimation'>,
+    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
@@ -91,7 +93,16 @@ export interface LineElementProps
  * - [LineElement API](https://mui.com/x/api/charts/line-element/)
  */
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
+  const {
+    id,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    slots,
+    slotProps,
+    onClick,
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -117,6 +128,8 @@ function LineElement(props: LineElementProps) {
       ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
+      onClick,
+      cursor: onClick ? 'pointer' : 'unset',
     },
     ownerState,
   });
@@ -136,7 +149,7 @@ LineElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

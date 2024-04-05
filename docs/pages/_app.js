@@ -13,13 +13,15 @@ import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-license-pro';
+import { LicenseInfo } from '@mui/x-license';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
+import { DocsProvider } from '@mui/docs/DocsProvider';
+import { mapTranslations } from '@mui/docs/i18n';
+import config from '../config';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
@@ -29,7 +31,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #default-branch-switch
     // Use the "latest" npm tag for the master git branch
     // Use the "next" npm tag for the next git branch
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -57,6 +59,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
+      '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       exceljs: 'latest',
     };
     return output;
@@ -214,7 +217,7 @@ function AppWrapper(props) {
           text: `v${process.env.LIB_VERSION}`,
           current: true,
         },
-        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
@@ -229,7 +232,7 @@ function AppWrapper(props) {
             text: `v${process.env.DATA_GRID_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
@@ -245,7 +248,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           {
             text: 'v5',
@@ -262,7 +265,7 @@ function AppWrapper(props) {
             text: `v${process.env.CHARTS_VERSION}`,
             current: true,
           },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
+          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-charts/` },
         ],
       };
     } else if (productId === 'x-tree-view') {
@@ -276,7 +279,7 @@ function AppWrapper(props) {
           },
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -305,7 +308,11 @@ function AppWrapper(props) {
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
+      <DocsProvider
+        config={config}
+        defaultUserLanguage={pageProps.userLanguage}
+        translations={pageProps.translations}
+      >
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
@@ -318,7 +325,7 @@ function AppWrapper(props) {
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>
-      </UserLanguageProvider>
+      </DocsProvider>
     </React.Fragment>
   );
 }
@@ -348,6 +355,9 @@ MyApp.propTypes = {
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   let pageProps = {};
 
+  const req = require.context('../translations', false, /\.\/translations.*\.json$/);
+  const translations = mapTranslations(req);
+
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
@@ -355,6 +365,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
   return {
     pageProps: {
       userLanguage: ctx.query.userLanguage || 'en',
+      translations,
       ...pageProps,
     },
   };

@@ -42,12 +42,12 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'taxRate',
-       valueGetter: (params) => {
-         if (!params.value) {
-           return params.value;
+       valueGetter: (value) => {
+         if (!value) {
+           return value;
          }
          // Convert the decimal value to a percentage
-         return params.value * 100;
+         return value * 100;
        },
      },
    ];
@@ -59,8 +59,8 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'fullName',
-       valueGetter: (params) => {
-         return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+       valueGetter: (value, row) => {
+         return `${row.firstName || ''} ${row.lastName || ''}`;
        },
      },
    ];
@@ -72,7 +72,7 @@ You can use the `valueGetter` attribute of `GridColDef` to:
    const columns: GridColDef[] = [
      {
        field: 'profit',
-       valueGetter: ({ row }) => {
+       valueGetter: (value, row) => {
          if (!row.gross || !row.costs) {
            return null;
          }
@@ -93,13 +93,13 @@ The value returned by `valueGetter` is used for:
 ### Value formatter
 
 The value formatter allows you to convert the value before displaying it.
-Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
+Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
 
 Note, that the value returned by `valueFormatter` is only used for rendering purposes.
 Filtering and sorting are based on the raw value (`row[field]`) or the value returned by [`valueGetter`](/x/react-data-grid/column-definition/#value-getter).
 
-In the following demo, `valueGetter` is used to convert the tax rate (e.g. `0.2`) to a decimal value (e.g. `20`),
-and `valueFormatter` is used to display it as a percentage (e.g. `20%`).
+In the following demo, `valueGetter` is used to convert the tax rate (for example `0.2`) to a decimal value (for example `20`),
+and `valueFormatter` is used to display it as a percentage (for example `20%`).
 
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
 
@@ -230,6 +230,8 @@ The following are the native column types with their required value types:
 | `'singleSelect'`     | A value in `.valueOptions` |
 | `'actions'`          | Not applicable             |
 
+{{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+
 ### Converting types
 
 Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type`.
@@ -240,7 +242,7 @@ If for any reason, your data type is not the correct one, you can use `valueGett
 {
   field: 'lastLogin',
   type: 'dateTime',
-  valueGetter: ({ value }) => value && new Date(value),
+  valueGetter: (value) => value && new Date(value),
 }
 ```
 
@@ -249,57 +251,67 @@ If for any reason, your data type is not the correct one, you can use `valueGett
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
-- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
+#### Single select
 
-  ```tsx
-  {
-    field: 'country',
-    type: 'singleSelect',
-    valueOptions: ['United Kingdom', 'Spain', 'Brazil']
-  }
-  ```
+If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
 
-  :::warning
-  When using objects values for `valueOptions` you need to provide the `value` and `label` attributes for each option.
-  However, you can customize which attribute is used as value and label by using `getOptionValue` and `getOptionLabel`, respectively.
+```tsx
+{
+  field: 'country',
+  type: 'singleSelect',
+  valueOptions: ['United Kingdom', 'Spain', 'Brazil']
+}
+```
 
-  ```tsx
-  // Without getOptionValue and getOptionLabel
-  {
-    valueOptions: [
-      { value: 'BR', label: 'Brazil' },
-      { value: 'FR', label: 'France' }
-    ]
-  }
+:::warning
+When using objects values for `valueOptions` you need to provide the `value` and `label` attributes for each option.
+However, you can customize which attribute is used as value and label by using `getOptionValue` and `getOptionLabel`, respectively.
 
-  // With getOptionValue and getOptionLabel
-  {
-    getOptionValue: (value: any) => value.code,
-    getOptionLabel: (value: any) => value.name,
-    valueOptions: [
-      { code: 'BR', name: 'Brazil' },
-      { code: 'FR', name: 'France' }
-    ]
-  }
-  ```
+```tsx
+// Without getOptionValue and getOptionLabel
+{
+  valueOptions: [
+    { value: 'BR', label: 'Brazil' },
+    { value: 'FR', label: 'France' }
+  ]
+}
 
-  :::
+// With getOptionValue and getOptionLabel
+{
+  getOptionValue: (value: any) => value.code,
+  getOptionLabel: (value: any) => value.name,
+  valueOptions: [
+    { code: 'BR', name: 'Brazil' },
+    { code: 'FR', name: 'France' }
+  ]
+}
+```
 
-- If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-  You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+:::
 
-  ```tsx
-  {
-    field: 'actions',
-    type: 'actions',
-    getActions: (params: GridRowParams) => [
-      <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
-      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
-    ]
-  }
-  ```
+#### Actions
 
-{{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
+You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+
+```tsx
+{
+  field: 'actions',
+  type: 'actions',
+  getActions: (params: GridRowParams) => [
+    <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+    <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+  ]
+}
+```
+
+By default, actions shown in the menu will close the menu on click.
+But in some cases, you might want to keep the menu open after clicking an action.
+You can achieve this by setting the `closeMenuOnClick` prop to `false`.
+
+In the following example, the "Delete" action opens a confirmation dialog and therefore needs to keep the menu mounted:
+
+{{"demo": "ActionsWithModalGrid.js", "bg": "inline"}}
 
 ### Custom column types
 

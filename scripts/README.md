@@ -2,7 +2,7 @@
 
 ## Release
 
-> Tip: For people who are doing the release for the first time, make sure you sign in to NPM from the command line using security-key flow as well as have two-factor authentication enabled.
+> Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
 > You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
 
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
@@ -23,7 +23,7 @@ pnpm release:changelog
    --release       The branch to release (default: master)
 ```
 
-You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
+You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 
@@ -49,11 +49,11 @@ Push the working branch on the documentation release branch to deploy the docume
 <!-- #default-branch-switch -->
 
 ```bash
-git push -f upstream next:docs-next
+git push -f upstream master:docs-v7
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-next)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-next` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v7` deployment.
 
 ### Publish GitHub release
 

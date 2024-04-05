@@ -4,7 +4,7 @@ import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { InferError } from '../useValidation';
 import { buildWarning } from '../../utils/warning';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 const warnRenderInputIsDefined = buildWarning([
@@ -15,21 +15,21 @@ const warnRenderInputIsDefined = buildWarning([
 
 export const usePicker = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, TSection, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   valueManager,
   valueType,
   wrapperVariant,
-  inputRef,
   additionalViewProps,
   validator,
   autoFocusView,
   rendererInterceptor,
+  fieldRef,
 }: UsePickerParams<
   TValue,
   TDate,
@@ -55,13 +55,14 @@ export const usePicker = <
     TValue,
     TDate,
     TView,
+    TSection,
     TExternalProps,
     TAdditionalProps
   >({
     props,
-    inputRef,
     additionalViewProps,
     autoFocusView,
+    fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,
     rendererInterceptor,
   });

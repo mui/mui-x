@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { Popper, PopperProps } from '@mui/base/Popper';
+import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
+import { Popper, PopperProps as BasePopperProps } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
 import {
@@ -21,9 +21,28 @@ import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTo
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
 
+export type PopperProps = BasePopperProps & {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+};
+
 export interface ChartsTooltipSlots {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
   popper?: React.ElementType<PopperProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by axis event.
+   * @default DefaultChartsAxisTooltipContent
+   */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by item event.
+   * @default DefaultChartsItemTooltipContent
+   */
   itemContent?: React.ElementType<ChartsItemContentProps>;
 }
 

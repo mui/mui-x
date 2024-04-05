@@ -20,10 +20,6 @@ Using your favorite package manager, install:
 
 <!-- #default-branch-switch -->
 
-:::warning
-The `next` tag is used to download the latest v7 **pre-release** version.
-:::
-
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info
@@ -76,7 +72,7 @@ pnpm add @mui/styled-engine-sc styled-components
 
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Setup your date library adapter
 

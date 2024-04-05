@@ -1,105 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import ownerWindow from '@mui/utils/ownerWindow';
 import { styled } from '@mui/material/styles';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-
-const useChartDimensions = (
-  inWidth?: number,
-  inHeight?: number,
-): [React.RefObject<HTMLDivElement>, number, number] => {
-  const rootRef = React.useRef<HTMLDivElement>(null);
-  const displayError = React.useRef<boolean>(false);
-
-  const [width, setWidth] = React.useState(0);
-  const [height, setHeight] = React.useState(0);
-
-  // Adaptation of the `computeSizeAndPublishResizeEvent` from the grid.
-  const computeSize = React.useCallback(() => {
-    const mainEl = rootRef?.current;
-
-    if (!mainEl) {
-      return;
-    }
-
-    const win = ownerWindow(mainEl);
-    const computedStyle = win.getComputedStyle(mainEl);
-
-    const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
-    const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
-
-    setWidth(newWidth);
-    setHeight(newHeight);
-  }, []);
-
-  React.useEffect(() => {
-    // Ensure the error detection occurs after the first rendering.
-    displayError.current = true;
-  }, []);
-
-  useEnhancedEffect(() => {
-    if (inWidth !== undefined && inHeight !== undefined) {
-      return () => {};
-    }
-    computeSize();
-
-    const elementToObserve = rootRef.current;
-    if (typeof ResizeObserver === 'undefined') {
-      return () => {};
-    }
-
-    let animationFrame: number;
-    const observer = new ResizeObserver(() => {
-      // See https://github.com/mui/mui-x/issues/8733
-      animationFrame = requestAnimationFrame(() => {
-        computeSize();
-      });
-    });
-
-    if (elementToObserve) {
-      observer.observe(elementToObserve);
-    }
-
-    return () => {
-      if (animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
-      }
-
-      if (elementToObserve) {
-        observer.unobserve(elementToObserve);
-      }
-    };
-  }, [computeSize, inHeight, inWidth]);
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (displayError.current && inWidth === undefined && width === 0) {
-      console.error(
-        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
-      );
-      displayError.current = false;
-    }
-    if (displayError.current && inHeight === undefined && height === 0) {
-      console.error(
-        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
-      );
-      displayError.current = false;
-    }
-  }
-
-  return [rootRef, inWidth ?? width, inHeight ?? height];
-};
+import { useChartContainerDimensions } from './useChartContainerDimensions';
 
 export interface ResponsiveChartContainerProps
   extends Omit<ChartContainerProps, 'width' | 'height'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width?: number;
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height?: number;
 }
@@ -128,7 +40,7 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   ref,
 ) {
   const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartDimensions(inWidth, inHeight);
+  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
 
   return (
     <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
@@ -164,7 +76,6 @@ ResponsiveChartContainer.propTypes = {
   disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
-   * @default undefined
    */
   height: PropTypes.number,
   /**
@@ -199,7 +110,6 @@ ResponsiveChartContainer.propTypes = {
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
-   * @default undefined
    */
   width: PropTypes.number,
   /**
@@ -208,7 +118,7 @@ ResponsiveChartContainer.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -216,13 +126,14 @@ ResponsiveChartContainer.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -234,10 +145,12 @@ ResponsiveChartContainer.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
@@ -248,7 +161,7 @@ ResponsiveChartContainer.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.string,
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -256,13 +169,14 @@ ResponsiveChartContainer.propTypes = {
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
@@ -274,10 +188,12 @@ ResponsiveChartContainer.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
       tickMinStep: PropTypes.number,
       tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),

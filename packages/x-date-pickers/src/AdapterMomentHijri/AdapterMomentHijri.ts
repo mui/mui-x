@@ -50,6 +50,9 @@ const defaultFormats: AdapterFormats = {
   month: 'iMMMM',
   monthShort: 'iMMM',
   dayOfMonth: 'iD',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'iD',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -85,6 +88,12 @@ const NUMBER_SYMBOL_MAP = {
   '9': '٩',
   '0': '٠',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'moment-hijri': Moment;
+  }
+}
 
 /**
  * Based on `@date-io/hijri`

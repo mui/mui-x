@@ -4,7 +4,6 @@ pnpm-lock.yaml
 /docs/export
 /docs/pages/playground/
 /lerna.json
-/packages/grid/x-data-grid/src/lib
 /packages/x-codemod/src/**/*.spec.js
 build
 CHANGELOG.md

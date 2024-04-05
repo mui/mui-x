@@ -16,7 +16,9 @@ import {
   resolveTimeViewsResponse,
   UseViewsOptions,
   DateTimeValidationProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
 import {
@@ -42,7 +44,7 @@ import {
   ExportedDateTimeRangePickerTabsProps,
 } from './DateTimeRangePickerTabs';
 
-export interface BaseDateTimeRangePickerSlots<TDate>
+export interface BaseDateTimeRangePickerSlots<TDate extends PickerValidDate>
   extends DateRangeCalendarSlots<TDate>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {
@@ -58,7 +60,7 @@ export interface BaseDateTimeRangePickerSlots<TDate>
   toolbar?: React.JSXElementConstructor<DateTimeRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateTimeRangePickerSlotProps<TDate>
+export interface BaseDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
   extends DateRangeCalendarSlotProps<TDate>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {
@@ -72,7 +74,22 @@ export interface BaseDateTimeRangePickerSlotProps<TDate>
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
-export interface BaseDateTimeRangePickerProps<TDate>
+export type DateTimeRangePickerRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  DateRange<TDate>,
+  TView,
+  Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view' | 'slots' | 'slotProps'> &
+    Omit<
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      'view' | 'slots' | 'slotProps'
+    > & { view: TView },
+  TAdditionalProps
+>;
+
+export interface BaseDateTimeRangePickerProps<TDate extends PickerValidDate>
   extends Omit<
       BasePickerInputProps<
         DateRange<TDate>,
@@ -104,22 +121,11 @@ export interface BaseDateTimeRangePickerProps<TDate>
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      DateRange<TDate>,
-      DateTimeRangePickerView,
-      Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view' | 'slots' | 'slotProps'> &
-        Omit<
-          TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
-          'view' | 'slots' | 'slotProps'
-        > & { view: DateTimeRangePickerView },
-      {}
-    >
-  >;
+  viewRenderers?: Partial<DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView>>;
 }
 
 type UseDateTimeRangePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends BaseDateTimeRangePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
@@ -130,7 +136,7 @@ type UseDateTimeRangePickerDefaultizedProps<
 };
 
 export function useDateTimeRangePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends BaseDateTimeRangePickerProps<TDate>,
 >(props: Props, name: string): UseDateTimeRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
@@ -169,8 +175,27 @@ export function useDateTimeRangePickerDefaultizedProps<
     ampm,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: applyDefaultDate(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    disableIgnoringDatePartForTimeValidation:
+      themeProps.disableIgnoringDatePartForTimeValidation ??
+      Boolean(
+        themeProps.minDateTime ||
+          themeProps.maxDateTime ||
+          // allow digital clocks to correctly check time validity: https://github.com/mui/mui-x/issues/12048
+          themeProps.disablePast ||
+          themeProps.disableFuture,
+      ),
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,
