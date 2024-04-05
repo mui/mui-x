@@ -58,8 +58,8 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 #### `@mui/x-charts@7.1.1`
 
 - [charts] Fix `tickInterval` usage for y-axis (#12592) @alexfauquette
-- [charts] Fix Scatter series highlight when id is a number (#12677) @JCQuintas
-- [charts] Fix TS error when using `sx` property on ChartsTooltip (#12659) @JCQuintas
+- [charts] Fix Scatter series highlight when `id` is a `number` (#12677) @JCQuintas
+- [charts] Fix TS error when using `sx` property on `ChartsTooltip` (#12659) @JCQuintas
 
 ### Tree View
 
@@ -73,7 +73,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 
 ### Docs
 
-- [docs] Adds a recipe for the `checkboxSelectionVisibleOnly` prop (#12646) @michelengelen
+- [docs] Add a recipe for the `checkboxSelectionVisibleOnly` prop (#12646) @michelengelen
 - [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12670) @michelengelen
 - [docs] Fix formatting and typo on migration guide @oliviertassinari
 - [docs] Fix formatting in changelog @oliviertassinari
@@ -91,7 +91,6 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 ### Core
 
 - [core] Add cherry-pick `master` to `v6` action (#12648) @LukasTy
-- [core] Bump monorepo (#12608) @LukasTy
 - [core] Fix typo in `@mui/x-tree-view-pro/themeAugmentation` (#12674) @flaviendelangle
 - [core] Introduce `describeTreeView` to run test on `SimpleTreeView` and `RichTreeView`, using `TreeItem` and `TreeItem2` + migrate expansion tests (#12428) @flaviendelangle
 - [core] Limit `test-types` CI step allowed memory (#12651) @LukasTy
@@ -3008,7 +3007,7 @@ No changes.
 
 ### Docs
 
-- [docs] Adds a recipe for the `checkboxSelectionVisibleOnly` prop (#12667) @michelengelen
+- [docs] Add a recipe for the `checkboxSelectionVisibleOnly` prop (#12667) @michelengelen
 - [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12673) @michelengelen
 
 ### Core
