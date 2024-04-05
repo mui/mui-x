@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.9
+
+_Apr 5, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.9`
+
+- [DataGrid] Remove legacy editing API event: `rowEditCommit` (#12087) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.19.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.9`.
+
+#### `@mui/x-data-grid-premium@6.19.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.9`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.9`
+
+No changes.
+
+#### `@mui/x-date-pickers-pro@6.19.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [DateRangePicker] Fix selection behavior with single input field when `readOnly` (#12605) @LukasTy
+
+### Docs
+
+- [docs] Adds a recipe for the `checkboxSelectionVisibleOnly` prop (#12667) @michelengelen
+- [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12673) @michelengelen
+
+### Core
+
+- [core] Use Circle CI context (#12607) @cherniavskii
+
 ## 6.19.8
 
 _Mar 20, 2024_
