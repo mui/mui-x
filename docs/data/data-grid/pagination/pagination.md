@@ -109,7 +109,12 @@ Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row
 
 The index-based pagination is the most common type of pagination. It follows the same pattern as the client-side pagination (page, pageSize), but the data is fetched from the server.
 
-It can be further categorized into sub-types based on the availability of the total number of rows or `rowCount`.
+To enable server-side pagination, you need to:
+
+- Set the `paginationMode` prop to `server`
+- Use the `onPaginationModelChange` prop to react to the page changes and load the data from the server
+
+The server-side pagination can be further categorized into sub-types based on the availability of the total number of rows or `rowCount`.
 
 The Grid uses the `rowCount` to calculate the number of pages and to show the information about the current state of the pagination in the footer.
 You can provide the `rowCount` in one of the following ways:
@@ -124,15 +129,22 @@ There can be three different possibilities regarding the availability of the `ro
 2. Row count is not available (unknown)
 3. Row count is available but is not accurate and may update later on (estimated)
 
-The following sections will guide you through the implementation of each of these possibilities.
+:::warning
+The `rowCount` prop is used in server-side pagination mode to inform the DataGrid about the total number of rows in your dataset.
+This prop is ignored when the `paginationMode` is set to `client`, i.e. when the pagination is handled on the client-side.
+:::
+
+You can achieve each of these use-cases by setting the values of `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props. The following table summarizes the use of these props in these scenarios:
+
+|                              | Known row count | Unknown row count | Estimated row count |
+| :--------------------------- | :-------------- | :---------------- | :------------------ |
+| `rowCount`                   | `number`        | `-1`              | `-1`                |
+| `paginationMeta.hasNextPage` | —               | `boolean`         | `boolean`           |
+| `estimatedRowCount`          | —               | —                 | `number`            |
+
+The following examples demonstrate how to handle each of these scenarios:
 
 #### Known row count
-
-When the row count is available from the beginning, you can use the following steps to enable server-side pagination:
-
-- Set the prop `paginationMode` to `server`
-- Provide the `rowCount` value using one of the above mentioned ways
-- Use the `onPaginationModelChange` prop to react to the page changes and load the data from the server
 
 Since the `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading resets the page to zero.
 To avoid this problem, you can keep the previous value of `rowCount` while loading as follows:
@@ -148,21 +160,9 @@ React.useEffect(() => {
 <DataGrid rowCount={rowCountState} />;
 ```
 
-:::warning
-The `rowCount` prop is used in server-side pagination mode to inform the DataGrid about the total number of rows in your dataset.
-This prop is ignored when the `paginationMode` is set to `client`, i.e. when the pagination is handled on the client-side.
-:::
-
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 
 #### Unknown row count
-
-When the row count is not available, you can use the following steps to enable server-side pagination:
-
-- Set the prop `paginationMode` to `server`
-- Set the `rowCount` as `-1` using one of the above mentioned ways to let the Grid know that the row count is not available
-- Since the `rowCount` is unknown, the Grid needs to know whether more records are available on the server. Pass the `paginationMeta.hasNextPage` boolean property to indicate whether more records are available.
-- Use the `onPaginationModelChange` prop to react to the `paginationModel` changes
 
 The `hasNextPage` must not be set to `false` until there are _actually_ no records left to fetch, because when `hasNextPage` becomes `false`, the Grid considers this as the last page and tries to set the `rowCount` value to a finite value.
 
@@ -197,14 +197,7 @@ There could be possibilities when the accurate row count is not initially availa
 
 In such scenarios, some backends provide an estimated row count initially which could be used to estimate the number of pages until the actual row count is available. In some cases, this estimate value could also be more than the actual row count. Therefore, the Grid uses it only to show the user an estimated number of rows, and uses `paginationMeta.hasNextPage` as a single source of truth to check whether more records are available on the server.
 
-Here are the steps to achieve it:
-
-- Set the prop `paginationMode` to `server`
-- Pass the estimated row count using the `estimatedRowCount` prop and set the `rowCount` to `-1` to indicate that the actual row count is not (yet) available.
-- Pass the `paginationMeta.hasNextPage` to let the Grid check on-demand whether more records are available on the server, the Grid will keep fetching the next page until `hasNextPage` is `false`
-- Use the `onPaginationModelChange` prop to react to the `paginationModel` changes
-
-There could be two further possibilities:
+There could be two possibilities after providing the initial props:
 
 1. The actual row count is fetched from the server lazily and provided to the Grid using the `rowCount` prop. The `estimatedRowCount` prop will be ignored once the `rowCount` prop is set to a positive value.
 2. The user has already reached the estimated last page and the actual row count is still not available, in that case, the Grid could take the help of the `hasNextPage=false` to know that the last page is fetched and try to set a value like in the unknown row count use case. Option 1 should be the preferred way to solve this though.

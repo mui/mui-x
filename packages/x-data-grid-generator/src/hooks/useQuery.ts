@@ -146,7 +146,7 @@ export const loadServerRows = (
     firstRowIndex = page * pageSize;
     lastRowIndex = (page + 1) * pageSize;
   }
-  const hasNextPage = lastRowIndex < filteredRows.length;
+  const hasNextPage = lastRowIndex < filteredRows.length - 1;
   const response: FakeServerResponse = {
     returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
     nextCursor,
