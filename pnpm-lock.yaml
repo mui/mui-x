@@ -471,6 +471,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: ^0.4.24
         version: 0.4.24
+      chance:
+        specifier: ^1.1.11
+        version: 1.1.11
       clean-css:
         specifier: ^5.3.3
         version: 5.3.3
