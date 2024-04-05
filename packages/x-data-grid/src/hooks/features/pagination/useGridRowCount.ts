@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { isNumber } from '../../../utils/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -32,7 +31,6 @@ export const useGridRowCount = (
   const paginationMeta = useGridSelector(apiRef, gridPaginationMetaSelector);
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
-  const prevRowCountProp = React.useRef(props.rowCount);
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
