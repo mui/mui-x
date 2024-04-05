@@ -1,5 +1,4 @@
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { buildWarning } from '../../../utils/warning';
 import { GridSignature } from '../../utils';
 
 const MAX_PAGE_SIZE = 100;
