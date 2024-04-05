@@ -209,7 +209,7 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
       }
 
       const project = projects.get(packagesWithThisInterface[0])!;
-      // eslint-disable-next-line no-await-in-loop
+
       const parsedInterface = await parseInterfaceSymbol(
         interfaceName,
         packagesWithThisInterface,
@@ -237,7 +237,7 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
           type: property.typeStr,
         })),
       };
-      // eslint-disable-next-line no-await-in-loop
+
       await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
