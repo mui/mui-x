@@ -116,7 +116,7 @@ This component defines a rectangular clip path that acts as a boundary.
 ```jsx
 <ChartContainer>
   <g clipPath={`url(#${clipPathId})`}>
-    // The ploting to clip in the drawing area.
+    // The plotting to clip in the drawing area.
     <ScatterPlot />
     <LinePlot />
   </g>
