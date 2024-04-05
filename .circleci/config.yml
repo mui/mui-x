@@ -136,7 +136,7 @@ jobs:
       - install_js
       - run:
           name: Tests charts
-          command: yarn test:charts:unit # Run special test for charts due to ESM compatibility issue
+          command: pnpm test:charts:unit # Run special test for charts due to ESM compatibility issue
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
