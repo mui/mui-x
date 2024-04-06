@@ -4,11 +4,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import { GridColDef } from '@mui/x-data-grid';
-import DragHandleIcon from '@mui/icons-material/DragIndicator';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import { useResize } from '../hooks/utils/useResize';
+import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { useGridRootProps } from '../typeOverloads/reexports';
 
 const GridPivotPanelContainerStyled = styled('div')({
   width: 250,
@@ -79,9 +80,12 @@ const Placeholder = styled('div')(({ theme }) => {
   };
 });
 
-const GridFieldItemContainer = styled('div')<{ dropPosition: DropPosition }>(({ theme }) => ({
+const GridFieldItemContainer = styled('div')<{
+  dropPosition: DropPosition;
+  section: FieldTransferObject['modelKey'];
+}>(({ theme }) => ({
   width: '100%',
-  padding: '4px',
+  padding: '0 4px',
   display: 'flex',
   alignItems: 'center',
 
@@ -97,6 +101,10 @@ const GridFieldItemContainer = styled('div')<{ dropPosition: DropPosition }>(({ 
     {
       props: { dropPosition: 'bottom' },
       style: { borderBottomColor: theme.palette.primary.main },
+    },
+    {
+      props: { section: null },
+      style: { padding: '4px' },
     },
   ],
 
@@ -131,12 +139,16 @@ function GridFieldItem({
   field,
   modelKey,
   updatePivotModel,
+  slots,
+  slotProps,
   ...props
 }: {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   modelKey: FieldTransferObject['modelKey'];
   updatePivotModel: UpdatePivotModel;
+  slots: DataGridPremiumProcessedProps['slots'];
+  slotProps: DataGridPremiumProcessedProps['slotProps'];
 }) {
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
 
@@ -202,6 +214,14 @@ function GridFieldItem({
     [field, updatePivotModel, modelKey, getDropPosition],
   );
 
+  const handleDeleteClick = React.useCallback(() => {
+    updatePivotModel({
+      field,
+      targetSection: null,
+      originSection: modelKey,
+    });
+  }, [field, modelKey, updatePivotModel]);
+
   return (
     <GridFieldItemContainer
       {...props}
@@ -209,11 +229,22 @@ function GridFieldItem({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       dropPosition={dropPosition}
+      section={modelKey}
     >
       <DragHandle draggable="true" onDragStart={handleDragStart}>
-        <DragHandleIcon fontSize="small" />
+        <slots.columnReorderIcon fontSize="small" />
       </DragHandle>
       {children}
+      {modelKey && (
+        <slots.baseIconButton
+          onClick={handleDeleteClick}
+          size="small"
+          edge="end"
+          sx={{ marginLeft: 'auto' }}
+        >
+          <slots.filterPanelDeleteIcon fontSize="inherit" />
+        </slots.baseIconButton>
+      )}
     </GridFieldItemContainer>
   );
 }
@@ -228,6 +259,7 @@ function GridPivotPanelContent({
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
   const [fields] = React.useState(() => columns.map((col) => col.field));
+  const rootProps = useGridRootProps();
 
   const initialColumnsLookup = useLazyRef(() => {
     return columns.reduce(
@@ -378,6 +410,8 @@ function GridPivotPanelContent({
                 modelKey="rows"
                 data-field={field}
                 updatePivotModel={updatePivotModel}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
               >
                 {getColumnName(field)}
               </GridFieldItem>
@@ -403,6 +437,8 @@ function GridPivotPanelContent({
                 field={field}
                 modelKey="columns"
                 updatePivotModel={updatePivotModel}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
               >
                 {getColumnName(field)} {sort}
               </GridFieldItem>
@@ -428,6 +464,8 @@ function GridPivotPanelContent({
                 field={field}
                 modelKey="values"
                 updatePivotModel={updatePivotModel}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
               >
                 {getColumnName(field)} {aggFunc}
               </GridFieldItem>
@@ -451,6 +489,8 @@ function GridPivotPanelContent({
               field={field}
               modelKey={null}
               updatePivotModel={updatePivotModel}
+              slots={rootProps.slots}
+              slotProps={rootProps.slotProps}
             >
               {getColumnName(field)}
             </GridFieldItem>
