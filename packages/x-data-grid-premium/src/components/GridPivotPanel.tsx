@@ -5,7 +5,7 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import { GridColDef } from '@mui/x-data-grid';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
-import { useLazyRef } from '@mui/x-data-grid/hooks/utils/useLazyRef';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import { useResize } from '../hooks/utils/useResize';
