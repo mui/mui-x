@@ -24,7 +24,7 @@
     "fields": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "fileName": {
       "type": { "description": "string" },
-      "default": "`document.title`",
+      "default": "document.title",
       "isPremiumPlan": true
     },
     "getRowsToExport": {

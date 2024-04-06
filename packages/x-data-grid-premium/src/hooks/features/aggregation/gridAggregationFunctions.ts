@@ -1,4 +1,3 @@
-import { GridValueFormatterParams } from '@mui/x-data-grid-pro';
 import { isNumber } from '@mui/x-data-grid-pro/internals';
 import { GridAggregationFunction } from './gridAggregationInterfaces';
 
@@ -84,12 +83,12 @@ const sizeAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
     return values.filter((value) => typeof value !== 'undefined').length;
   },
-  valueFormatter: (params: GridValueFormatterParams) => {
-    if (params.value == null || !isNumber(params.value)) {
-      return params.value;
+  valueFormatter: (value: number | string | null) => {
+    if (value == null || !isNumber(value)) {
+      return value;
     }
 
-    return params.value.toLocaleString();
+    return value.toLocaleString();
   },
   hasCellUnit: false,
 };

@@ -48,9 +48,7 @@ export const useTreeViewModels = <
 
   const models = Object.fromEntries(
     Object.entries(modelsRef.current).map(([modelName, model]) => {
-      const value = model.isControlled
-        ? props[modelName as keyof DefaultizedParams]
-        : modelsState[modelName];
+      const value = props[modelName as keyof DefaultizedParams] ?? modelsState[modelName];
 
       return [
         modelName,
@@ -106,7 +104,7 @@ export const useTreeViewModels = <
             ].join('\n'),
           );
         }
-      }, [JSON.stringify(defaultValue)]);
+      }, [JSON.stringify(newDefaultValue)]);
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
