@@ -1,13 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
-  publicAPI,
   params,
   models,
 }) => {
@@ -83,15 +81,18 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
-  populateInstance<UseTreeViewExpansionSignature>(instance, {
-    isItemExpanded,
-    isItemExpandable,
-    setItemExpansion,
-    toggleItemExpansion,
-    expandAllSiblings,
-  });
-
-  populatePublicAPI<UseTreeViewExpansionSignature>(publicAPI, { setItemExpansion });
+  return {
+    publicAPI: {
+      setItemExpansion,
+    },
+    instance: {
+      isItemExpanded,
+      isItemExpandable,
+      setItemExpansion,
+      toggleItemExpansion,
+      expandAllSiblings,
+    },
+  };
 };
 
 useTreeViewExpansion.models = {

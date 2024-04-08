@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { EventManager } from '../../utils/EventManager';
 import type { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewInstanceEventsSignature } from './useTreeViewInstanceEvents.types';
 import type { TreeViewEventListener } from '../../models/events';
 
@@ -9,9 +8,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEventsSignature> = ({
-  instance,
-}) => {
+export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEventsSignature> = () => {
   const [eventManager] = React.useState(() => new EventManager());
 
   const publishEvent = React.useCallback(
@@ -38,10 +35,12 @@ export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEvents
     [eventManager],
   );
 
-  populateInstance<UseTreeViewInstanceEventsSignature>(instance, {
-    $$publishEvent: publishEvent,
-    $$subscribeEvent: subscribeEvent,
-  });
+  return {
+    instance: {
+      $$publishEvent: publishEvent,
+      $$subscribeEvent: subscribeEvent,
+    },
+  };
 };
 
 useTreeViewInstanceEvents.params = {};
