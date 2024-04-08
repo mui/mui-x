@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
-import { getNextItem, getFirstItem, getLastItem } from '../../useTreeView/useTreeView.utils';
+import {
+  getNextNavigableItem,
+  getFirstNavigableItem,
+  getLastNavigableItem,
+} from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { convertSelectedItemsToArray, findOrderInTremauxTree } from './useTreeViewSelection.utils';
 import { TreeViewItemId } from '../../../models';
@@ -96,7 +100,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     let current = first;
 
     while (current !== last) {
-      current = getNextItem(instance, current)!;
+      current = getNextNavigableItem(instance, current)!;
       items.push(current);
     }
 
@@ -174,7 +178,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getFirstItem(instance),
+      end: getFirstNavigableItem(instance),
     });
   };
 
@@ -187,8 +191,16 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getLastItem(instance),
+      end: getLastNavigableItem(instance),
     });
+  };
+
+  const selectAll = (event: React.SyntheticEvent) => {
+    if (params.disableSelection) {
+      return;
+    }
+
+    const allItems = getItemsInRange();
   };
 
   return {

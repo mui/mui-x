@@ -38,7 +38,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
 };
 
-describe.only('<TreeItem />', () => {
+describe('<TreeItem />', () => {
   const { render } = createRenderer();
 
   describeConformance(<TreeItem itemId="one" label="one" />, () => ({

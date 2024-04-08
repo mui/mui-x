@@ -2,65 +2,106 @@ import { TreeViewInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
-export const getPreviousItem = (
+const getLastNavigableItemInArray = (
+  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
+  items: string[],
+) => {
+  // Equivalent to Array.prototype.findLastIndex
+  let itemIndex = items.length - 1;
+  while (itemIndex >= 0 && !instance.isItemNavigable(items[itemIndex])) {
+    itemIndex -= 1;
+  }
+
+  if (itemIndex === -1) {
+    return undefined;
+  }
+
+  return items[itemIndex];
+};
+
+export const getPreviousNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
-  const node = instance.getNode(itemId);
-  const siblings = instance.getNavigableChildrenIds(node.parentId);
+  const itemMeta = instance.getNode(itemId);
+  const siblings = instance.getChildrenIds(itemMeta.parentId);
   const itemIndex = siblings.indexOf(itemId);
 
+  // TODO: What should we do if the parent is not navigable?
   if (itemIndex === 0) {
-    return node.parentId;
+    return itemMeta.parentId;
   }
 
-  let currentItem: string = siblings[itemIndex - 1];
-  while (
-    instance.isItemExpanded(currentItem) &&
-    instance.getNavigableChildrenIds(currentItem).length > 0
-  ) {
-    currentItem = instance.getNavigableChildrenIds(currentItem).pop()!;
+  let currentItemId: string = siblings[itemIndex - 1];
+  let lastNavigableChild = getLastNavigableItemInArray(
+    instance,
+    instance.getChildrenIds(currentItemId),
+  );
+  while (instance.isItemExpanded(currentItemId) && lastNavigableChild != null) {
+    currentItemId = lastNavigableChild;
+    lastNavigableChild = instance.getChildrenIds(currentItemId).find(instance.isItemNavigable);
   }
 
-  return currentItem;
+  return currentItemId;
 };
 
-export const getNextItem = (
+export const getNextNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
   itemId: string,
 ) => {
-  // If expanded get first child
-  if (instance.isItemExpanded(itemId) && instance.getNavigableChildrenIds(itemId).length > 0) {
-    return instance.getNavigableChildrenIds(itemId)[0];
+  // If the item is expanded and has some navigable children, return the first of them.
+  if (instance.isItemExpanded(itemId)) {
+    const firstNavigableChild = instance.getChildrenIds(itemId).find(instance.isItemNavigable);
+    if (firstNavigableChild != null) {
+      return firstNavigableChild;
+    }
   }
 
-  let node = instance.getNode(itemId);
-  while (node != null) {
-    // Try to get next sibling
-    const siblings = instance.getNavigableChildrenIds(node.parentId);
-    const nextSibling = siblings[siblings.indexOf(node.id) + 1];
+  let itemMeta = instance.getNode(itemId);
+  while (itemMeta != null) {
+    // Try to find the first navigable sibling after the current item.
+    const siblings = instance.getChildrenIds(itemMeta.parentId);
+    const currentItemIndex = siblings.indexOf(itemMeta.id);
 
-    if (nextSibling) {
-      return nextSibling;
+    if (currentItemIndex < siblings.length - 1) {
+      let nextItemIndex = currentItemIndex + 1;
+      while (
+        !instance.isItemNavigable(siblings[nextItemIndex]) &&
+        nextItemIndex < siblings.length - 1
+      ) {
+        nextItemIndex += 1;
+      }
+
+      if (instance.isItemNavigable(siblings[nextItemIndex])) {
+        return siblings[nextItemIndex];
+      }
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    node = instance.getNode(node.parentId!);
+    itemMeta = instance.getNode(itemMeta.parentId!);
   }
 
   return null;
 };
 
-export const getLastItem = (
+export const getLastNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) => {
-  let lastItem = instance.getNavigableChildrenIds(null).pop()!;
+  let itemId: string | null = null;
+  while (itemId == null || instance.isItemExpanded(itemId)) {
+    const children = instance.getChildrenIds(itemId);
+    const lastNavigableChild = getLastNavigableItemInArray(instance, children);
 
-  while (instance.isItemExpanded(lastItem)) {
-    lastItem = instance.getNavigableChildrenIds(lastItem).pop()!;
+    // The item has no navigable children.
+    if (lastNavigableChild == null) {
+      return itemId!;
+    }
+
+    itemId = lastNavigableChild;
   }
-  return lastItem;
+
+  return itemId!;
 };
 
-export const getFirstItem = (instance: TreeViewInstance<[UseTreeViewItemsSignature]>) =>
-  instance.getNavigableChildrenIds(null)[0];
+export const getFirstNavigableItem = (instance: TreeViewInstance<[UseTreeViewItemsSignature]>) =>
+  instance.getChildrenIds(null).find(instance.isItemNavigable)!;
