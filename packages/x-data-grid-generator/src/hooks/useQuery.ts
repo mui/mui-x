@@ -100,7 +100,7 @@ const getFilteredRows = (
   return rows.filter((row: GridRowModel) =>
     filterModel.items.every((_, index) => {
       const value = valueGetters[index](row);
-      return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
+      return filterFunctions[index] === null ? true : filterFunctions[index](value);
     }),
   );
 };

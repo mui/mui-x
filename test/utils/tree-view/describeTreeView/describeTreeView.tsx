@@ -2,6 +2,7 @@ import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
 import { createRenderer } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
@@ -40,6 +41,8 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
     const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
 
+    const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-selected') === 'true';
+
     return {
       getRoot,
       getAllItemRoots,
@@ -48,6 +51,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       getItemLabel,
       getItemIconContainer,
       isItemExpanded,
+      isItemSelected,
     };
   };
 
@@ -124,6 +128,80 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
       };
 
       testRunner({ render: renderRichTreeView, setup: 'RichTreeView + TreeItem2' });
+    });
+
+    describe('RichTreeViewPro + TreeItem', () => {
+      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        slotProps,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
+        const apiRef = { current: undefined };
+        const result = render(
+          <RichTreeViewPro
+            items={items}
+            apiRef={apiRef}
+            slotProps={{
+              ...slotProps,
+              item: (ownerState) =>
+                ({
+                  ...slotProps?.item,
+                  'data-testid': ownerState.itemId,
+                }) as any,
+            }}
+            getItemLabel={(item) => item.label ?? item.id}
+            isItemDisabled={(item) => !!item.disabled}
+            {...other}
+          />,
+        );
+
+        return {
+          setProps: result.setProps,
+          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeView + TreeItem' });
+    });
+
+    describe('RichTreeViewPro + TreeItem2', () => {
+      const renderRichTreeViewPro: DescribeTreeViewRenderer<TPlugin> = ({
+        items: rawItems,
+        slots,
+        slotProps,
+        ...other
+      }) => {
+        const items = rawItems as readonly DescribeTreeViewItem[];
+        const apiRef = { current: undefined };
+        const result = render(
+          <RichTreeViewPro
+            items={items}
+            apiRef={apiRef}
+            slots={{ item: TreeItem2, ...slots }}
+            slotProps={{
+              ...slotProps,
+              item: (ownerState) =>
+                ({
+                  ...slotProps?.item,
+                  'data-testid': ownerState.itemId,
+                }) as any,
+            }}
+            getItemLabel={(item) => item.label ?? item.id}
+            isItemDisabled={(item) => !!item.disabled}
+            {...other}
+          />,
+        );
+
+        return {
+          setProps: result.setProps,
+          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
+          ...getUtils(result),
+        };
+      };
+
+      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeView + TreeItem2' });
     });
 
     describe('SimpleTreeView + TreeItem', () => {
