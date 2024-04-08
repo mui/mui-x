@@ -69,3 +69,4 @@ The demo below shows how to add an avatar and custom typography elements.
 The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "FileExplorer.js", "defaultCodeOpen": false}}

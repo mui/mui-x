@@ -1,0 +1,8 @@
+<RichTreeView
+  items={ITEMS}
+  aria-label="file explorer"
+  defaultExpandedItems={['2']}
+  defaultSelectedItems="2"
+  sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+  slots={{ item: CustomTreeItem }}
+/>
