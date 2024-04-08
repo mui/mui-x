@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["react", "mocha", "node"]
+  },
+  "include": [
+    "e2e/**/*",
+    "e2e-website/**/*",
+    "regressions/**/*",
+    "@mui-internal/test-utils/initMatchers.ts",
+    "./node_modules/@mui/material/themeCssVarsAugmentation",
+    "./node_modules/dayjs/plugin/utc.d.ts",
+    "./node_modules/dayjs/plugin/timezone.d.ts"
+  ],
+  "exclude": ["regressions/build/**/*", "regressions/screenshots/**/*"]
+}

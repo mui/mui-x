@@ -693,7 +693,7 @@ importers:
         version: 5.15.15(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@mui/system':
         specifier: ^5.15.14
-        version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.74)(react@18.2.0)
+        version: 5.15.15(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.74)(react@18.2.0)
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.74)(react@18.2.0)
@@ -1217,6 +1217,69 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+
+  test:
+    devDependencies:
+      '@emotion/cache':
+        specifier: ^11.11.0
+        version: 11.11.0
+      '@emotion/react':
+        specifier: ^11.11.4
+        version: 11.11.4(@types/react@18.2.74)(react@18.2.0)
+      '@mui/material':
+        specifier: ^5.15.14
+        version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/x-data-grid':
+        specifier: workspace:*
+        version: link:../packages/x-data-grid/build
+      '@mui/x-data-grid-pro':
+        specifier: workspace:*
+        version: link:../packages/x-data-grid-pro/build
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:*
+        version: link:../packages/x-date-pickers-pro/build
+      '@playwright/test':
+        specifier: 1.41.2
+        version: 1.41.2
+      '@react-spring/web':
+        specifier: ^9.7.3
+        version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
+      '@types/chai':
+        specifier: ^4.3.12
+        version: 4.3.14
+      '@types/prop-types':
+        specifier: ^15.7.11
+        version: 15.7.11
+      '@types/react':
+        specifier: ^18.2.60
+        version: 18.2.74
+      chai:
+        specifier: ^4.4.1
+        version: 4.4.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-router-dom:
+        specifier: ^6.22.3
+        version: 6.22.3(react-dom@18.2.0)(react@18.2.0)
+      stylis:
+        specifier: ^4.3.1
+        version: 4.3.1
+      stylis-plugin-rtl:
+        specifier: ^2.1.1
+        version: 2.1.1(stylis@4.3.1)
 
 packages:
 
@@ -4801,7 +4864,6 @@ packages:
       '@react-spring/shared': 9.7.3(react@18.2.0)
       '@react-spring/types': 9.7.3
       react: 18.2.0
-    dev: false
 
   /@react-spring/core@9.7.3(react@18.2.0):
     resolution: {integrity: sha512-IqFdPVf3ZOC1Cx7+M0cXf4odNLxDC+n7IN3MDcVCTIOSBfqEcBebSv+vlY5AhM0zw05PDbjKrNmBpzv/AqpjnQ==}
@@ -4812,7 +4874,6 @@ packages:
       '@react-spring/shared': 9.7.3(react@18.2.0)
       '@react-spring/types': 9.7.3
       react: 18.2.0
-    dev: false
 
   /@react-spring/rafz@9.7.3:
     resolution: {integrity: sha512-9vzW1zJPcC4nS3aCV+GgcsK/WLaB520Iyvm55ARHfM5AuyBqycjvh1wbmWmgCyJuX4VPoWigzemq1CaaeRSHhQ==}
@@ -4825,11 +4886,9 @@ packages:
     dependencies:
       '@react-spring/types': 9.7.3
       react: 18.2.0
-    dev: false
 
   /@react-spring/types@9.7.3:
     resolution: {integrity: sha512-Kpx/fQ/ZFX31OtlqVEFfgaD1ACzul4NksrvIgYfIFq9JpDHFwQkMVZ10tbo0FU/grje4rcL4EIrjekl3kYwgWw==}
-    dev: false
 
   /@react-spring/web@9.7.3(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-BXt6BpS9aJL/QdVqEIX9YoUy8CE6TJrU0mNCqSoxdXlIeNcEBWOfIyE6B14ENNsyQKS3wOWkiJfco0tCr/9tUg==}
@@ -4843,12 +4902,10 @@ packages:
       '@react-spring/types': 9.7.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /@remix-run/router@1.15.3:
     resolution: {integrity: sha512-Oy8rmScVrVxWZVOpEF57ovlnhpZ8CCPlnIIumVcV9nFdiSIrus99+Lw78ekXyGvVDlIsFJbSfmSovJUhCWYV3w==}
     engines: {node: '>=14.0.0'}
-    dev: false
 
   /@sigstore/bundle@1.1.0:
     resolution: {integrity: sha512-PFutXEy0SmQxYI4texPw3dd2KewuNqv7OuK1ZFtY2fM754yhvG2KdgwIhRnoEE2uHdtdGNQ8s0lb94dW9sELog==}
@@ -8322,7 +8379,6 @@ packages:
   /cssjanus@2.1.0:
     resolution: {integrity: sha512-kAijbny3GmdOi9k+QT6DGIXqFvL96aksNlGr4Rhk9qXDZYWUojU4bRc3IHWxdaLNOqgEZHuXoe5Wl2l7dxLW5g==}
     engines: {node: '>=10.0.0'}
-    dev: false
 
   /cssstyle@4.0.1:
     resolution: {integrity: sha512-8ZYiJ3A/3OkDd093CBT/0UKDWry7ak4BdPTFP2+QEP7cmhouyq/Up709ASSj2cK02BbZiMgk7kYjZNS4QP5qrQ==}
@@ -15332,7 +15388,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-router: 6.22.3(react@18.2.0)
-    dev: false
 
   /react-router@6.22.3(react@18.2.0):
     resolution: {integrity: sha512-dr2eb3Mj5zK2YISHK++foM9w4eBnO23eKnZEDs7c880P6oKbrjz/Svg9+nxqtHQK+oMW4OtjZca0RqPglXxguQ==}
@@ -15342,7 +15397,6 @@ packages:
     dependencies:
       '@remix-run/router': 1.15.3
       react: 18.2.0
-    dev: false
 
   /react-runner@1.0.3(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-KyAzNzSVdrBc4A7aGW3FD0wVuujfgcBlyIGF0QVicJu0ucMpLYyTHE+PgBu82Iq698TPKRH+eEi6Mrq/e7OffA==}
@@ -16823,14 +16877,12 @@ packages:
     dependencies:
       cssjanus: 2.1.0
       stylis: 4.3.1
-    dev: false
 
   /stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
 
   /stylis@4.3.1:
     resolution: {integrity: sha512-EQepAV+wMsIaGVGX1RECzgrcqRRU/0sYOHkeLsZ3fzHaHXZy4DaOOX0vOlGQdlsjkh3mFHAIlVimpwAs4dslyQ==}
-    dev: false
 
   /sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
