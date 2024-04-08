@@ -1,22 +1,24 @@
 import * as React from 'react';
 import {
+  MergePluginsProperty,
   TreeViewAnyPluginSignature,
   TreeViewPublicAPI,
-  TreeViewUsedParams,
 } from '@mui/x-tree-view/internals/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
-export type DescribeTreeViewTestRunner<TPlugin extends TreeViewAnyPluginSignature> = (
-  params: DescribeTreeViewTestRunnerParams<TPlugin>,
+export type DescribeTreeViewTestRunner<TPlugins extends TreeViewAnyPluginSignature[]> = (
+  params: DescribeTreeViewTestRunnerParams<TPlugins>,
 ) => void;
 
-export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAnyPluginSignature> {
+export interface DescribeTreeViewRendererReturnValue<
+  TPlugins extends TreeViewAnyPluginSignature[],
+> {
   /**
    * Passes new props to the Tree View.
    * @param {Partial<TreeViewUsedParams<TPlugin>>} props A subset of the props accepted by the Tree View.
    */
-  setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
+  setProps: (props: Partial<MergePluginsProperty<TPlugins, 'params'>>) => void;
   /**
    * Passes new items to the Tree View.
    * @param {readyonly DescribeTreeViewItem[]} items The new items.
@@ -25,7 +27,7 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
   /**
    * The ref object that allows Tree View manipulation.
    */
-  apiRef: { current: TreeViewPublicAPI<[TPlugin]> };
+  apiRef: { current: TreeViewPublicAPI<TPlugins> };
   /**
    * Returns the `root` slot of the Tree View.
    * @returns {HTMLElement} `root` slot of the Tree View.
@@ -82,19 +84,23 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
   isItemSelected: (id: string) => boolean;
 }
 
-export type DescribeTreeViewRenderer<TPlugin extends TreeViewAnyPluginSignature> = <
+export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature[]> = <
   R extends DescribeTreeViewItem,
 >(
   params: {
     items: readonly R[];
-  } & Omit<TreeViewUsedParams<TPlugin>, 'slots' | 'slotProps'> & {
-      slots?: TreeViewUsedParams<TPlugin>['slots'] & { item?: React.ElementType };
-      slotProps?: TreeViewUsedParams<TPlugin>['slots'] & { item?: TreeItemProps | TreeItem2Props };
+  } & Omit<MergePluginsProperty<TPlugins, 'params'>, 'slots' | 'slotProps'> & {
+      slots?: MergePluginsProperty<TPlugins, 'slots'> & {
+        item?: React.ElementType<TreeItemProps | TreeItem2Props>;
+      };
+      slotProps?: MergePluginsProperty<TPlugins, 'slotProps'> & {
+        item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
+      };
     },
-) => DescribeTreeViewRendererReturnValue<TPlugin>;
+) => DescribeTreeViewRendererReturnValue<TPlugins>;
 
-interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSignature> {
-  render: DescribeTreeViewRenderer<TPlugin>;
+interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSignature[]> {
+  render: DescribeTreeViewRenderer<TPlugins>;
   setup:
     | 'SimpleTreeView + TreeItem'
     | 'SimpleTreeView + TreeItem2'

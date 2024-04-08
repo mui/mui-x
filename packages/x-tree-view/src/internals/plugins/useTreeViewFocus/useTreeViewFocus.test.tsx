@@ -2,13 +2,19 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui-internal/test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { UseTreeViewFocusSignature } from '@mui/x-tree-view/internals';
+import {
+  UseTreeViewFocusSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewSelectionSignature,
+} from '@mui/x-tree-view/internals';
 
 /**
  * All tests related to keyboard navigation (e.g.: type-ahead when using `props.disabledItemsFocusable`)
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<UseTreeViewFocusSignature>('useTreeViewFocus plugin', ({ render }) => {
+describeTreeView<
+  [UseTreeViewFocusSignature, UseTreeViewSelectionSignature, UseTreeViewItemsSignature]
+>('useTreeViewFocus plugin', ({ render }) => {
   describe('basic behavior', () => {
     it('should allow to focus an item', () => {
       const response = render({
