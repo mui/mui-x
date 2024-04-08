@@ -6,6 +6,6 @@
   "include": [
     "src/**/*",
     "../../test/utils/addChaiAssertions.ts",
-    "@mui-internal/test-utils/initMatchers.ts",
+    "@mui-internal/test-utils/initMatchers.ts"
   ]
 }
