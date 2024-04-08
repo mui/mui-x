@@ -8,7 +8,7 @@ import { UseTreeViewSelectionSignature } from '@mui/x-tree-view/internals';
  * All tests related to keyboard navigation (e.g.: selection using "Space")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<UseTreeViewSelectionSignature>('useTreeViewSelection plugin', ({ render }) => {
+describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin', ({ render }) => {
   describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
     it('should not select items when no default state and no control state are defined', () => {
       const response = render({

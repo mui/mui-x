@@ -9,12 +9,12 @@ export interface UseTreeViewItemsInstance {
   setJSXItemsOrderedChildrenIds: (parentId: string | null, orderedChildrenIds: string[]) => void;
 }
 
-export interface UseTreeViewItemsParameters {}
+export interface UseTreeViewJSXItemsParameters {}
 
 export interface UseTreeViewItemsDefaultizedParameters {}
 
 export type UseTreeViewJSXItemsSignature = TreeViewPluginSignature<{
-  params: UseTreeViewItemsParameters;
+  params: UseTreeViewJSXItemsParameters;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters;
   instance: UseTreeViewItemsInstance;
   dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewKeyboardNavigationSignature];

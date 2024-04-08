@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
@@ -106,7 +105,6 @@ const updateItemsState = ({
 
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
-  publicAPI,
   params,
   state,
   setState,
@@ -219,22 +217,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return state.items.nodeTree.map(getPropsFromItemId);
   };
 
-  populateInstance<UseTreeViewItemsSignature>(instance, {
-    getNode,
-    getItem,
-    getItemsToRender,
-    getItemOrderedChildrenIds,
-    getNavigableChildrenIds,
-    isItemDisabled,
-    preventItemUpdates,
-    areItemUpdatesPrevented,
-  });
-
-  populatePublicAPI<UseTreeViewItemsSignature>(publicAPI, {
-    getItem,
-  });
-
   return {
+    publicAPI: {
+      getItem,
+    },
+    instance: {
+      getNode,
+      getItem,
+      getItemsToRender,
+      getItemOrderedChildrenIds,
+      getNavigableChildrenIds,
+      isItemDisabled,
+      preventItemUpdates,
+      areItemUpdatesPrevented,
+    },
     contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
   };
 };

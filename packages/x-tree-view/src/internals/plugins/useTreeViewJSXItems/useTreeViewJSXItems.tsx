@@ -3,7 +3,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
@@ -92,12 +91,14 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     };
   });
 
-  populateInstance<UseTreeViewJSXItemsSignature>(instance, {
-    insertJSXItem,
-    removeJSXItem,
-    setJSXItemsOrderedChildrenIds,
-    mapFirstCharFromJSX,
-  });
+  return {
+    instance: {
+      insertJSXItem,
+      removeJSXItem,
+      setJSXItemsOrderedChildrenIds,
+      mapFirstCharFromJSX,
+    },
+  };
 };
 
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({

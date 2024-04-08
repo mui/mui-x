@@ -3,7 +3,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/base/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
@@ -33,7 +32,6 @@ const useTabbableItemId = (
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
-  publicAPI,
   params,
   state,
   setState,
@@ -123,18 +121,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const canItemBeTabbed = (itemId: string) => itemId === tabbableItemId;
 
-  populateInstance<UseTreeViewFocusSignature>(instance, {
-    isItemFocused,
-    canItemBeTabbed,
-    focusItem,
-    focusDefaultItem,
-    removeFocusedItem,
-  });
-
-  populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
-    focusItem,
-  });
-
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
     if (state.focusedItemId === id) {
       instance.focusDefaultItem(null);
@@ -160,6 +146,16 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       onFocus: createHandleFocus(otherHandlers),
       'aria-activedescendant': activeDescendant ?? undefined,
     }),
+    publicAPI: {
+      focusItem,
+    },
+    instance: {
+      isItemFocused,
+      canItemBeTabbed,
+      focusItem,
+      focusDefaultItem,
+      removeFocusedItem,
+    },
   };
 };
 
