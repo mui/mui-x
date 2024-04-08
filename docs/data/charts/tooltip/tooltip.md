@@ -73,7 +73,7 @@ Here is a demo with:
 
 To modify how data is displayed in the axis use the `valueFormatter` property.
 
-Its second argument is a context which provides a `location` property with one of `'tick' | 'tooltip'` which you can use to customize the formatting.
+Its second argument is a context that provides a `location` property with either `'tick'` or `'tooltip'`.
 
 In this demo, you can see:
 
