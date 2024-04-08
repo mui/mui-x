@@ -1,9 +1,4 @@
-import {
-  TreeViewAnyPluginSignature,
-  TreeViewInstance,
-  TreeViewUsedInstance,
-  TreeViewUsedPublicAPI,
-} from '../models';
+import { TreeViewInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
@@ -69,17 +64,3 @@ export const getLastItem = (
 
 export const getFirstItem = (instance: TreeViewInstance<[UseTreeViewItemsSignature]>) =>
   instance.getNavigableChildrenIds(null)[0];
-
-export const populateInstance = <T extends TreeViewAnyPluginSignature>(
-  instance: TreeViewUsedInstance<T>,
-  methods: T['instance'],
-) => {
-  Object.assign(instance, methods);
-};
-
-export const populatePublicAPI = <T extends TreeViewAnyPluginSignature>(
-  publicAPI: TreeViewUsedPublicAPI<T>,
-  methods: T['publicAPI'],
-) => {
-  Object.assign(publicAPI, methods);
-};

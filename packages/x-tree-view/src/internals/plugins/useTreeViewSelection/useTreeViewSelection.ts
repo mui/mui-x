@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
-import {
-  populateInstance,
-  getNextItem,
-  getFirstItem,
-  getLastItem,
-} from '../../useTreeView/useTreeView.utils';
+import { getNextItem, getFirstItem, getLastItem } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { convertSelectedItemsToArray, findOrderInTremauxTree } from './useTreeViewSelection.utils';
 import { TreeViewItemId } from '../../../models';
@@ -196,18 +191,17 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     });
   };
 
-  populateInstance<UseTreeViewSelectionSignature>(instance, {
-    isItemSelected,
-    selectItem,
-    selectRange,
-    rangeSelectToLast,
-    rangeSelectToFirst,
-  });
-
   return {
     getRootProps: () => ({
       'aria-multiselectable': params.multiSelect,
     }),
+    instance: {
+      isItemSelected,
+      selectItem,
+      selectRange,
+      rangeSelectToLast,
+      rangeSelectToFirst,
+    },
     contextValue: {
       selection: {
         multiSelect: params.multiSelect,

@@ -7,7 +7,6 @@ import {
   getLastItem,
   getNextItem,
   getPreviousItem,
-  populateInstance,
 } from '../../useTreeView/useTreeView.utils';
 import {
   TreeViewFirstCharMap,
@@ -297,10 +296,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     }
   };
 
-  populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    updateFirstCharMap,
-    handleItemKeyDown,
-  });
+  return {
+    instance: {
+      updateFirstCharMap,
+      handleItemKeyDown,
+    },
+  };
 };
 
 useTreeViewKeyboardNavigation.params = {};
