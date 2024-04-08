@@ -23,8 +23,8 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    let intervalId: NodeJS.Timer | null = null;
-    let timeoutId: NodeJS.Timer | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
     let lastError: any = null;
 
     function handleTimeout() {
