@@ -16,7 +16,7 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
       const getIconTestId = (response: DescribeTreeViewRendererReturnValue<[]>, itemId: string) =>
         response.getItemIconContainer(itemId).querySelector(`div`)?.dataset.testid;
 
-      it('should render the expandIcon slot defined on the tree if no icon is defined on the item and the item is collapsed', () => {
+      it('should render the expandIcon slot defined on the tree if no icon slot is defined on the item and the item is collapsed', () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
