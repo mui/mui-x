@@ -17,7 +17,7 @@
     "@playwright/test": "1.41.2",
     "@types/chai": "^4.3.12",
     "@types/prop-types": "^15.7.11",
-    "@types/react": "^18.2.60",
+    "@types/react": "18.2.60",
     "chai": "^4.4.1",
     "dayjs": "^1.11.10",
     "prop-types": "^15.8.1",
