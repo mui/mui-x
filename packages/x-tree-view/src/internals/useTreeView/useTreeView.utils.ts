@@ -6,12 +6,12 @@ export const getPreviousItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
-  const node = instance.getNode(itemId);
-  const siblings = instance.getNavigableChildrenIds(node.parentId);
+  const itemMeta = instance.getItemMeta(itemId);
+  const siblings = instance.getNavigableChildrenIds(itemMeta.parentId);
   const itemIndex = siblings.indexOf(itemId);
 
   if (itemIndex === 0) {
-    return node.parentId;
+    return itemMeta.parentId;
   }
 
   let currentItem: string = siblings[itemIndex - 1];
@@ -34,18 +34,18 @@ export const getNextItem = (
     return instance.getNavigableChildrenIds(itemId)[0];
   }
 
-  let node = instance.getNode(itemId);
-  while (node != null) {
+  let itemMeta = instance.getItemMeta(itemId);
+  while (itemMeta != null) {
     // Try to get next sibling
-    const siblings = instance.getNavigableChildrenIds(node.parentId);
-    const nextSibling = siblings[siblings.indexOf(node.id) + 1];
+    const siblings = instance.getNavigableChildrenIds(itemMeta.parentId);
+    const nextSibling = siblings[siblings.indexOf(itemMeta.id) + 1];
 
     if (nextSibling) {
       return nextSibling;
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    node = instance.getNode(node.parentId!);
+    itemMeta = instance.getItemMeta(itemMeta.parentId!);
   }
 
   return null;

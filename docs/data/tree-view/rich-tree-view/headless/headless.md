@@ -138,7 +138,7 @@ We probably need a new abstraction here so that a plugin is always responsible f
 TODO
 
 :::warning
-Once `focusedNodeId` becomes a model, we could consider removing the notion of state and just let each plugin define its state and provide methods in the instance to access / update it.
+Once `focusedItemId` becomes a model, we could consider removing the notion of state and just let each plugin define its state and provide methods in the instance to access / update it.
 :::
 
 ### Populate the Tree View instance
