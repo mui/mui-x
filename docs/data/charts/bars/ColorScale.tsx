@@ -119,10 +119,10 @@ export default function ColorScale() {
           `<ScatterChart`,
           '  /* ... */',
           // ColorX
-          ...(colorX === 'None' ? ['  yAxis={[{}]}'] : []),
+          ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'ordinal'
             ? [
-                '  yAxis={[',
+                '  xAxis={[',
                 `    {`,
                 `      type: 'ordinal',`,
                 `      colors: ['#ccebc5', '#a8ddb5', '#7bccc4', '#4eb3d3', '#2b8cbe', '#08589e']`,
@@ -132,7 +132,7 @@ export default function ColorScale() {
             : []),
           ...(colorX === 'continuous'
             ? [
-                '  yAxis={[',
+                '  xAxis={[',
                 `    {`,
                 `      type: 'continuous',`,
                 `      min: new Date(2019, 1, 1),`,
@@ -144,7 +144,7 @@ export default function ColorScale() {
             : []),
           ...(colorX === 'piecewise'
             ? [
-                '  yAxis={[{',
+                '  xAxis={[{',
                 `    type: 'piecewise',`,
                 `    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],`,
                 `    colors: ['blue', 'red', 'blue'],`,

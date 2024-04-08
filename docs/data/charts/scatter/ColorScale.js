@@ -96,10 +96,10 @@ export default function ColorScale() {
           `<ScatterChart`,
           '  /* ... */',
           // ColorX
-          ...(colorX === 'None' ? ['  yAxis={[{}]}'] : []),
+          ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
             ? [
-                '  yAxis={[',
+                '  xAxis={[',
                 `    {`,
                 `      type: 'continuous',`,
                 `      min: -2,`,
@@ -111,7 +111,7 @@ export default function ColorScale() {
             : []),
           ...(colorX === 'piecewise'
             ? [
-                '  yAxis={[{',
+                '  xAxis={[{',
                 `    type: 'piecewise',`,
                 `    thresholds: [-1.5, 0, 1.5],`,
                 `    colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
