@@ -7,7 +7,8 @@ import {
   getLastItem,
 } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
-import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
+import { convertSelectedItemsToArray, findOrderInTremauxTree } from './useTreeViewSelection.utils';
+import { TreeViewItemId } from '../../../models';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -17,6 +18,19 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectedItem = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
+
+  const selectedItemsMap = React.useMemo(() => {
+    const temp = new Map<TreeViewItemId, boolean>();
+    if (Array.isArray(models.selectedItems.value)) {
+      models.selectedItems.value.forEach((id) => {
+        temp.set(id, true);
+      });
+    } else if (models.selectedItems.value != null) {
+      temp.set(models.selectedItems.value, true);
+    }
+
+    return temp;
+  }, [models.selectedItems.value]);
 
   const setSelectedItems = (
     event: React.SyntheticEvent,
@@ -55,31 +69,26 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     models.selectedItems.setControlledValue(newSelectedItems);
   };
 
-  const isItemSelected = (itemId: string) =>
-    Array.isArray(models.selectedItems.value)
-      ? models.selectedItems.value.indexOf(itemId) !== -1
-      : models.selectedItems.value === itemId;
+  const isItemSelected = (itemId: string) => selectedItemsMap.has(itemId);
 
   const selectItem = (event: React.SyntheticEvent, itemId: string, multiple = false) => {
     if (params.disableSelection) {
       return;
     }
 
+    let newSelected: typeof models.selectedItems.value;
     if (multiple) {
-      if (Array.isArray(models.selectedItems.value)) {
-        let newSelected: string[];
-        if (models.selectedItems.value.indexOf(itemId) !== -1) {
-          newSelected = models.selectedItems.value.filter((id) => id !== itemId);
-        } else {
-          newSelected = [itemId].concat(models.selectedItems.value);
-        }
-
-        setSelectedItems(event, newSelected);
+      const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
+      if (instance.isItemSelected(itemId)) {
+        newSelected = cleanSelectedItems.filter((id) => id !== itemId);
+      } else {
+        newSelected = [itemId].concat(cleanSelectedItems);
       }
     } else {
-      const newSelected = params.multiSelect ? [itemId] : itemId;
-      setSelectedItems(event, newSelected);
+      newSelected = params.multiSelect ? [itemId] : itemId;
     }
+
+    setSelectedItems(event, newSelected);
     lastSelectedItem.current = itemId;
     lastSelectionWasRange.current = false;
     currentRangeSelection.current = [];
@@ -100,10 +109,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const handleRangeArrowSelect = (event: React.SyntheticEvent, items: TreeViewItemRange) => {
-    let base = (models.selectedItems.value as string[]).slice();
-    const { start, next, current } = items;
+    let base = convertSelectedItemsToArray(models.selectedItems.value).slice();
+    const { start, end, current } = items;
 
-    if (!next || !current) {
+    if (!end || !current) {
       return;
     }
 
@@ -112,18 +121,18 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     }
 
     if (lastSelectionWasRange.current) {
-      if (currentRangeSelection.current.indexOf(next) !== -1) {
+      if (currentRangeSelection.current.indexOf(end) !== -1) {
         base = base.filter((id) => id === start || id !== current);
         currentRangeSelection.current = currentRangeSelection.current.filter(
           (id) => id === start || id !== current,
         );
       } else {
-        base.push(next);
-        currentRangeSelection.current.push(next);
+        base.push(end);
+        currentRangeSelection.current.push(end);
       }
     } else {
-      base.push(next);
-      currentRangeSelection.current.push(current, next);
+      base.push(end);
+      currentRangeSelection.current.push(current, end);
     }
     setSelectedItems(event, base);
   };
@@ -132,7 +141,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     event: React.SyntheticEvent,
     items: { start: string; end: string },
   ) => {
-    let base = (models.selectedItems.value as string[]).slice();
+    let base = convertSelectedItemsToArray(models.selectedItems.value).slice();
     const { start, end } = items;
     // If last selection was a range selection ignore items that were selected.
     if (lastSelectionWasRange.current) {
@@ -154,7 +163,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     const { start = lastSelectedItem.current, end, current } = items;
     if (stacked) {
-      handleRangeArrowSelect(event, { start, next: end, current });
+      handleRangeArrowSelect(event, { start, end, current });
     } else if (start != null && end != null) {
       handleRangeSelect(event, { start, end });
     }

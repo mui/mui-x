@@ -9,7 +9,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { useTreeViewApiRef } from '../hooks';
 import { SimpleTreeViewApiRef } from './SimpleTreeView.types';
 
-describe('<SimpleTreeView />', () => {
+describe.only('<SimpleTreeView />', () => {
   const { render } = createRenderer();
 
   describeConformance(<SimpleTreeView />, () => ({

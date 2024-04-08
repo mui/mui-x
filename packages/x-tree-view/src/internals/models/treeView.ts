@@ -17,7 +17,6 @@ export interface TreeViewNode {
 export interface TreeViewItemRange {
   start?: string | null;
   end?: string | null;
-  next?: string | null;
   current?: string;
 }
 
