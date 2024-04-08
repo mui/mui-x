@@ -9,10 +9,10 @@ import {
   DefaultTreeViewPluginSlots,
   DefaultTreeViewPlugins,
 } from '../internals/plugins/defaultPlugins';
-import { TreeItem, TreeItemProps } from '../TreeItem';
+import { TreeItemProps } from '../TreeItem';
 import { TreeItem2Props } from '../TreeItem2';
 import { TreeViewItemId } from '../models';
-import { TreeViewPublicAPI } from '../internals/models';
+import { SlotComponentPropsFromProps, TreeViewPublicAPI } from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
   itemId: TreeViewItemId;
@@ -35,7 +35,11 @@ export interface RichTreeViewSlots extends DefaultTreeViewPluginSlots {
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
   extends DefaultTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
-  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemSlotOwnerState>;
+  item?: SlotComponentPropsFromProps<
+    TreeItemProps | TreeItem2Props,
+    {},
+    RichTreeViewItemSlotOwnerState
+  >;
 }
 
 export type RichTreeViewApiRef = React.MutableRefObject<

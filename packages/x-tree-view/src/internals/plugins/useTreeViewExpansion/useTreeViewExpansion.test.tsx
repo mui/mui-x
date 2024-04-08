@@ -12,7 +12,7 @@ import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<UseTreeViewExpansionSignature>(
+describeTreeView<[UseTreeViewExpansionSignature]>(
   'useTreeViewExpansion plugin',
   ({ render, setup }) => {
     describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
