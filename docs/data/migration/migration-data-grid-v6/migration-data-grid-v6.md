@@ -108,6 +108,47 @@ The `legacy` bundle that used to support old browsers like IE 11 is no longer i
 If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
+### Drop webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by webpack 4, so if you are using webpack 4, you will need to transpile these features yourself or upgrade to webpack 5.
+
+Here is an example of how you can transpile these features for webpack 4 using `@babel/preset-env` plugin:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [
++              path.resolve(__dirname, 'node_modules/@mui/x-data-grid'),
++              path.resolve(__dirname, 'node_modules/@mui/x-license'),
++            ],
++          },
++        ],
+         use: [
+           {
+             loader: 'babel-loader',
+             options: {
+               presets: ['@babel/preset-env', '@babel/preset-react'],
+             },
+           },
+         ],
+       },
+     ],
+   },
+ });
+```
+
 ### DOM changes
 
 The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
