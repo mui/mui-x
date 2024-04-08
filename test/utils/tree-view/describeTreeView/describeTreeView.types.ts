@@ -18,6 +18,11 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    */
   setProps: (props: Partial<TreeViewUsedParams<TPlugin>>) => void;
   /**
+   * Passes new items to the Tree View.
+   * @param {readyonly DescribeTreeViewItem[]} items The new items.
+   */
+  setItems: (items: readonly DescribeTreeViewItem[]) => void;
+  /**
    * The ref object that allows Tree View manipulation.
    */
   apiRef: { current: TreeViewPublicAPI<[TPlugin]> };
@@ -26,6 +31,12 @@ export interface DescribeTreeViewRendererReturnValue<TPlugin extends TreeViewAny
    * @returns {HTMLElement} `root` slot of the Tree View.
    */
   getRoot: () => HTMLElement;
+  /**
+   * Returns the itemId of the focused item.
+   * If the focused element is not an item, returns `null`.
+   * @returns {string | null} The itemId of the focused item.
+   */
+  getFocusedItemId: () => string | null;
   /**
    * Returns the `root` slot of all the items.
    * @returns {HTMLElement[]} List of the `root` slot of all the items.
@@ -88,7 +99,9 @@ interface DescribeTreeViewTestRunnerParams<TPlugin extends TreeViewAnyPluginSign
     | 'SimpleTreeView + TreeItem'
     | 'SimpleTreeView + TreeItem2'
     | 'RichTreeView + TreeItem'
-    | 'RichTreeView + TreeItem2';
+    | 'RichTreeView + TreeItem2'
+    | 'RichTreeViewPro + TreeItem'
+    | 'RichTreeViewPro + TreeItem2';
 }
 
 export interface DescribeTreeViewItem {

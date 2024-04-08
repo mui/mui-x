@@ -23,10 +23,19 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
   const getUtils = (
     result: MuiRenderResult,
-  ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps' | 'apiRef'> => {
+  ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps' | 'setItems' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllItemRoots = () => result.queryAllByRole('treeitem');
+
+    const getFocusedItemId = () => {
+      const activeElement = document.activeElement;
+      if (!activeElement || !activeElement.classList.contains(treeItemClasses.root)) {
+        return null;
+      }
+
+      return (activeElement as HTMLElement).dataset.testid!;
+    };
 
     const getItemRoot = (id: string) => result.getByTestId(id);
 
@@ -46,6 +55,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     return {
       getRoot,
       getAllItemRoots,
+      getFocusedItemId,
       getItemRoot,
       getItemContent,
       getItemLabel,
@@ -84,6 +94,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ items: newItems }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
@@ -122,6 +133,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ items: newItems }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
@@ -158,12 +170,13 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ items: newItems }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
       };
 
-      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeView + TreeItem' });
+      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeViewPro + TreeItem' });
     });
 
     describe('RichTreeViewPro + TreeItem2', () => {
@@ -196,12 +209,13 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ items: newItems }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
       };
 
-      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeView + TreeItem2' });
+      testRunner({ render: renderRichTreeViewPro, setup: 'RichTreeViewPro + TreeItem2' });
     });
 
     describe('SimpleTreeView + TreeItem', () => {
@@ -234,6 +248,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
@@ -272,6 +287,7 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
 
         return {
           setProps: result.setProps,
+          setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
           apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
           ...getUtils(result),
         };
