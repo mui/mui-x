@@ -28,6 +28,8 @@ A custom plugins contains 2 required elements:
      React.useEffect(() => {
        console.log(params.customParam);
      });
+
+     return {};
    };
    ```
 
@@ -48,6 +50,8 @@ const useCustomPlugin = ({ params }) => {
   React.useEffect(() => {
     console.log(params.customParam);
   });
+
+  return {};
 };
 
 useCustomPlugin.params = { customParam: true };
@@ -100,6 +104,8 @@ const useCustomPlugin = ({ models }) => {
 
   const updateCustomModel = (newValue) =>
     models.customModel.setControlledValue(newValue);
+
+  return {};
 };
 ```
 
@@ -141,11 +147,15 @@ The Tree View instance is an object accessible in all the plugins and in the `Tr
 It is the main way a plugin can provide features to the rest of the component.
 
 ```ts
-const useCustomPlugin = ({ models, instance }) => {
+const useCustomPlugin = ({ models }) => {
   const toggleCustomModel = () =>
     models.customModel.setValue(!models.customModel.value);
 
-  populateInstance(instance, { toggleCustomModel });
+  return {
+    instance: {
+      toggleCustomModel,
+    },
+  };
 };
 ```
 
@@ -169,7 +179,11 @@ const useCustomPlugin = () => {
     publishTreeViewEvent(instance, 'toggleCustomModel', { value: newValue });
   };
 
-  populateInstance(instance, { toggleCustomModel });
+  return {
+    instance: {
+      toggleCustomModel,
+    },
+  };
 };
 ```
 

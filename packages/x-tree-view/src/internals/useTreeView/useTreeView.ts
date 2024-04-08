@@ -86,21 +86,27 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   } as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
-    const pluginResponse =
-      plugin({
-        instance,
-        publicAPI,
-        params,
-        slots: params.slots,
-        slotProps: params.slotProps,
-        state,
-        setState,
-        rootRef: innerRootRef,
-        models,
-      }) || {};
+    const pluginResponse = plugin({
+      instance,
+      params,
+      slots: params.slots,
+      slotProps: params.slotProps,
+      state,
+      setState,
+      rootRef: innerRootRef,
+      models,
+    });
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
+    }
+
+    if (pluginResponse.publicAPI) {
+      Object.assign(publicAPI, pluginResponse.publicAPI);
+    }
+
+    if (pluginResponse.instance) {
+      Object.assign(instance, pluginResponse.instance);
     }
 
     if (pluginResponse.contextValue) {

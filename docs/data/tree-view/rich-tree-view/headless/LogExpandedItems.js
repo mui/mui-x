@@ -21,6 +21,8 @@ const useTreeViewLogExpanded = ({ params, models }) => {
       params.logMessage(`Expanded items: ${expandedStr}`);
     }
   }, [expandedStr]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return {};
 };
 
 // Sets the default value of this plugin parameters.
