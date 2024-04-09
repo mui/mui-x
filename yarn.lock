@@ -1286,6 +1286,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.24.4":
+  version "7.24.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.4.tgz#de795accd698007a66ba44add6cc86542aff1edd"
+  integrity sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.22.15", "@babel/template@^7.24.0", "@babel/template@^7.6.0":
   version "7.24.0"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.24.0.tgz#c6a524aa93a4a05d66aaf31654258fae69d87d50"
@@ -1945,12 +1952,11 @@
     rimraf "^5.0.5"
     typescript "^5.3.3"
 
-"@mui/internal-markdown@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mui/internal-markdown/-/internal-markdown-1.0.0.tgz#e7c19efc9a8989dff410c99bfb7d09f491ed4738"
-  integrity sha512-jbj1XYQZN5Jqphq9K/Tyt42v/eRPmXEZzAYOHbsvHfFo9XnMC2OKJAsYOwpXGVmZQpvkg1z9vA55gOe6ceTW/w==
+"@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/91090344/@mui/internal-markdown":
+  version "1.0.2"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/91090344/@mui/internal-markdown#3e89e8f2f7f0caa3c53f21bb73300c0110b2d15f"
   dependencies:
-    "@babel/runtime" "^7.23.9"
+    "@babel/runtime" "^7.24.4"
     lodash "^4.17.21"
     marked "^5.1.2"
     prismjs "^1.29.0"
@@ -2016,9 +2022,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#next":
-  version "6.0.0-alpha.0"
-  resolved "https://github.com/mui/material-ui.git#e1d94d5ce097815bcd738352e69bb43ce03bd266"
+"@mui/monorepo@https://github.com/bharatkashyap/material-ui.git#support-code-tabs":
+  version "6.0.0-alpha.1"
+  resolved "https://github.com/bharatkashyap/material-ui.git#910903440a4f6e62704be948b7d612b5f63435e5"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@netlify/functions" "^2.6.0"
