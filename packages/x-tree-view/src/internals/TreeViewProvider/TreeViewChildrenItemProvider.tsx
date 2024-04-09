@@ -36,7 +36,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       idAttr = rootRef.current.id;
     } else {
       // Undefined during 1st render
-      const itemMeta = instance.getNode(itemId);
+      const itemMeta = instance.getItemMeta(itemId);
       if (itemMeta !== undefined) {
         idAttr = instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute);
       }

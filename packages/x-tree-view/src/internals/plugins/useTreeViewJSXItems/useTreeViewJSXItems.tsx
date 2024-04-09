@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { TreeViewItemPlugin, TreeViewNode, TreeViewPlugin } from '../../models';
+import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
@@ -21,9 +21,9 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 }) => {
   instance.preventItemUpdates();
 
-  const insertJSXItem = useEventCallback((item: TreeViewNode) => {
+  const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
     setState((prevState) => {
-      if (prevState.items.nodeMap[item.id] != null) {
+      if (prevState.items.itemMetaMap[item.id] != null) {
         throw new Error(
           [
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -37,7 +37,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         ...prevState,
         items: {
           ...prevState.items,
-          nodeMap: { ...prevState.items.nodeMap, [item.id]: { ...item, index: -1 } },
+          itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: { ...item, index: -1 } },
           // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
           itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
         },
@@ -60,15 +60,15 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 
   const removeJSXItem = useEventCallback((itemId: string) => {
     setState((prevState) => {
-      const newNodeMap = { ...prevState.items.nodeMap };
+      const newItemMetaMap = { ...prevState.items.itemMetaMap };
       const newItemMap = { ...prevState.items.itemMap };
-      delete newNodeMap[itemId];
+      delete newItemMetaMap[itemId];
       delete newItemMap[itemId];
       return {
         ...prevState,
         items: {
           ...prevState.items,
-          nodeMap: newNodeMap,
+          itemMetaMap: newItemMetaMap,
           itemMap: newItemMap,
         },
       };

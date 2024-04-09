@@ -3,7 +3,7 @@ import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
-  TreeViewNodeMap,
+  TreeViewItemMetaMap,
   TreeViewItemIdAndChildren,
   UseTreeViewItemsState,
   TreeViewItemMap,
@@ -24,7 +24,7 @@ const updateItemsState = ({
   getItemLabel,
   getItemId,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
-  const nodeMap: TreeViewNodeMap = {};
+  const itemMetaMap: TreeViewItemMetaMap = {};
   const itemMap: TreeViewItemMap<any> = {};
   const itemOrderedChildrenIds: { [parentId: string]: string[] } = {
     [TREE_VIEW_ROOT_PARENT_ID]: [],
@@ -48,7 +48,7 @@ const updateItemsState = ({
       );
     }
 
-    if (nodeMap[id] != null) {
+    if (itemMetaMap[id] != null) {
       throw new Error(
         [
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -70,7 +70,7 @@ const updateItemsState = ({
       );
     }
 
-    nodeMap[id] = {
+    itemMetaMap[id] = {
       id,
       label,
       parentId,
@@ -93,11 +93,11 @@ const updateItemsState = ({
     };
   };
 
-  const nodeTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
 
   return {
-    nodeMap,
-    nodeTree,
+    itemMetaMap,
+    itemTree,
     itemMap,
     itemOrderedChildrenIds,
   };
@@ -109,9 +109,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   state,
   setState,
 }) => {
-  const getNode = React.useCallback(
-    (itemId: string) => state.items.nodeMap[itemId],
-    [state.items.nodeMap],
+  const getItemMeta = React.useCallback(
+    (itemId: string) => state.items.itemMetaMap[itemId],
+    [state.items.itemMetaMap],
   );
 
   const getItem = React.useCallback(
@@ -125,20 +125,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return false;
       }
 
-      let node = instance.getNode(itemId);
+      let itemMeta = instance.getItemMeta(itemId);
 
       // This can be called before the item has been added to the item map.
-      if (!node) {
+      if (!itemMeta) {
         return false;
       }
 
-      if (node.disabled) {
+      if (itemMeta.disabled) {
         return true;
       }
 
-      while (node.parentId != null) {
-        node = instance.getNode(node.parentId);
-        if (node.disabled) {
+      while (itemMeta.parentId != null) {
+        itemMeta = instance.getItemMeta(itemMeta.parentId);
+        if (itemMeta.disabled) {
           return true;
         }
       }
@@ -183,8 +183,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         getItemLabel: params.getItemLabel,
       });
 
-      Object.values(prevState.items.nodeMap).forEach((item) => {
-        if (!newState.nodeMap[item.id]) {
+      Object.values(prevState.items.itemMetaMap).forEach((item) => {
+        if (!newState.itemMetaMap[item.id]) {
           publishTreeViewEvent(instance, 'removeItem', { id: item.id });
         }
       });
@@ -205,7 +205,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       id,
       children,
     }: TreeViewItemIdAndChildren): ReturnType<typeof instance.getItemsToRender>[number] => {
-      const item = state.items.nodeMap[id];
+      const item = state.items.itemMetaMap[id];
       return {
         label: item.label!,
         itemId: item.id,
@@ -214,7 +214,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       };
     };
 
-    return state.items.nodeTree.map(getPropsFromItemId);
+    return state.items.itemTree.map(getPropsFromItemId);
   };
 
   return {
@@ -222,7 +222,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItem,
     },
     instance: {
-      getNode,
+      getItemMeta,
       getItem,
       getItemsToRender,
       getItemOrderedChildrenIds,
