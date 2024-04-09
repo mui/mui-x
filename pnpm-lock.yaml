@@ -3524,7 +3524,7 @@ packages:
     resolution: {integrity: sha512-aZ70CqKohMZ/RS3V5Nl3FmBNVMKHNjtXachtkcWnxyQCi9DPuaGCz8l1Q0Iealjax+j08vT5vDO0JwWFImMsnA==}
     dependencies:
       rimraf: 5.0.5
-      typescript: 5.3.3
+      typescript: 5.4.4
     dev: true
 
   /@mui/internal-markdown@1.0.1:
@@ -3547,7 +3547,7 @@ packages:
       '@mui/internal-docs-utils': 1.0.4
       doctrine: 3.0.0
       lodash: 4.17.21
-      typescript: 5.3.3
+      typescript: 5.4.4
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -17070,12 +17070,6 @@ packages:
 
   /typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
-
-  /typescript@5.3.3:
-    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /typescript@5.4.4:
     resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
