@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   MergePluginsProperty,
   TreeItemWrapper,
+  TreeRootWrapper,
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewItemPluginResponse,
@@ -12,7 +13,9 @@ export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSign
   MergePluginsProperty<TPlugins, 'contextValue'> & {
     instance: TreeViewInstance<TPlugins>;
     publicAPI: TreeViewPublicAPI<TPlugins>;
+    rootRef: React.RefObject<HTMLUListElement>;
     wrapItem: TreeItemWrapper;
+    wrapRoot: TreeRootWrapper;
     runItemPlugins: <TProps extends {}>(props: TProps) => Required<TreeViewItemPluginResponse>;
   };
 

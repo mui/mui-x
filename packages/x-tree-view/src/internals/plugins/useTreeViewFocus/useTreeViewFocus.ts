@@ -67,7 +67,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
     const itemMeta = instance.getItemMeta(itemId);
     const itemElement = document.getElementById(
-      instance.getTreeItemId(itemId, itemMeta.idAttribute),
+      instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute),
     );
     if (itemElement) {
       itemElement.focus();
@@ -109,7 +109,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     const itemMeta = instance.getItemMeta(state.focusedItemId);
     if (itemMeta) {
       const itemElement = document.getElementById(
-        instance.getTreeItemId(state.focusedItemId, itemMeta.idAttribute),
+        instance.getTreeItemIdAttribute(state.focusedItemId, itemMeta.idAttribute),
       );
       if (itemElement) {
         itemElement.blur();
@@ -138,7 +138,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 
   const focusedItem = instance.getItemMeta(state.focusedItemId!);
   const activeDescendant = focusedItem
-    ? instance.getTreeItemId(focusedItem.id, focusedItem.idAttribute)
+    ? instance.getTreeItemIdAttribute(focusedItem.id, focusedItem.idAttribute)
     : null;
 
   return {

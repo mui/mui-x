@@ -64,7 +64,7 @@ export const findOrderInTremauxTree = (
   }
 
   const commonAncestor = aAncestorIsCommon ? aAncestor : bAncestor;
-  const ancestorFamily = instance.getChildrenIds(commonAncestor);
+  const ancestorFamily = instance.getItemOrderedChildrenIds(commonAncestor);
 
   const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];

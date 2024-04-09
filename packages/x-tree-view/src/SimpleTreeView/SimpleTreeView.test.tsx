@@ -217,6 +217,33 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('four')).toHaveFocus();
   });
 
+  it('should update indexes when two items are swapped', () => {
+    const onSelectedItemsChange = spy();
+
+    function TestComponent() {
+      const [items, setItems] = React.useState(['1', '2', '3']);
+
+      return (
+        <React.Fragment>
+          <button type="button" onClick={() => setItems(['1', '3', '2'])}>
+            Swap items
+          </button>
+          <SimpleTreeView onSelectedItemsChange={onSelectedItemsChange} multiSelect>
+            {items.map((itemId) => (
+              <TreeItem key={itemId} itemId={itemId} label={itemId} />
+            ))}
+          </SimpleTreeView>
+        </React.Fragment>
+      );
+    }
+
+    const { getByText } = render(<TestComponent />);
+    fireEvent.click(getByText('Swap items'));
+    fireEvent.click(getByText('1'));
+    fireEvent.click(getByText('3'), { shiftKey: true });
+    expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
+  });
+
   describe('onItemFocus', () => {
     it('should be called when an item is focused', () => {
       const onFocus = spy();
