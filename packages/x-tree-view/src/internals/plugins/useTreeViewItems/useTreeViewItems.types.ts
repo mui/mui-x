@@ -81,14 +81,8 @@ interface UseTreeViewItemsEventLookup {
   };
 }
 
-export interface TreeViewItemIdAndChildren {
-  id: TreeViewItemId;
-  children?: TreeViewItemIdAndChildren[];
-}
-
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    itemTree: TreeViewItemIdAndChildren[];
     itemMetaMap: TreeViewItemMetaMap;
     itemMap: TreeViewItemMap<R>;
     itemOrderedChildrenIds: { [parentItemId: string]: string[] };

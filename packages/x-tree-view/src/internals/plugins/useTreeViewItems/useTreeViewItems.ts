@@ -4,12 +4,11 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   TreeViewItemMetaMap,
-  TreeViewItemIdAndChildren,
   UseTreeViewItemsState,
   TreeViewItemMap,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
 interface UpdateNodesStateParameters
@@ -30,11 +29,7 @@ const updateItemsState = ({
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
-  const processItem = (
-    item: TreeViewBaseItem,
-    index: number,
-    parentId: string | null,
-  ): TreeViewItemIdAndChildren => {
+  const processItem = (item: TreeViewBaseItem, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -87,17 +82,13 @@ const updateItemsState = ({
     }
     itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
-    return {
-      id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
-    };
+    item.children?.forEach((child) => processItem(child, id));
   };
 
-  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  items.forEach((item) => processItem(item, null));
 
   return {
     itemMetaMap,
-    itemTree,
     itemMap,
     itemOrderedChildrenIds,
   };
@@ -200,22 +191,21 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getItemsToRender = () => {
-    const getPropsFromItemId = ({
-      id,
-      children,
-    }: TreeViewItemIdAndChildren): ReturnType<typeof instance.getItemsToRender>[number] => {
+  const getItemsToRender = React.useCallback(() => {
+    const getPropsFromItemId = (
+      id: TreeViewItemId,
+    ): ReturnType<typeof instance.getItemsToRender>[number] => {
       const item = state.items.itemMetaMap[id];
       return {
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: children?.map(getPropsFromItemId),
+        children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
       };
     };
 
-    return state.items.itemTree.map(getPropsFromItemId);
-  };
+    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
+  }, [instance, state.items.itemMetaMap, state.items.itemOrderedChildrenIds]);
 
   return {
     publicAPI: {
