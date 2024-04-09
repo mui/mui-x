@@ -13,7 +13,8 @@
   "include": [
     "src/**/*.ts*",
     "src/lib/**/*.js",
-    "./node_modules/@mui/material/themeCssVarsAugmentation"
+    "./node_modules/@mui/material/themeCssVarsAugmentation",
+    "typing.d.ts"
   ], // TODO: Remove JS files
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

@@ -821,6 +821,9 @@ importers:
       '@mui/joy':
         specifier: ^5.0.0-beta.24
         version: 5.0.0-beta.32(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/types':
+        specifier: ^7.2.14
+        version: 7.2.14(@types/react@18.2.60)
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
