@@ -1,9 +1,9 @@
-import { TreeViewNode, TreeViewPluginSignature } from '../../models';
+import { TreeViewItemMeta, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewKeyboardNavigationSignature } from '../useTreeViewKeyboardNavigation';
 
 export interface UseTreeViewItemsInstance {
-  insertJSXItem: (item: TreeViewNode) => void;
+  insertJSXItem: (item: TreeViewItemMeta) => void;
   removeJSXItem: (itemId: string) => void;
   mapFirstCharFromJSX: (itemId: string, firstChar: string) => () => void;
 }

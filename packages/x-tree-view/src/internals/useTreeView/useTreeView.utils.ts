@@ -23,7 +23,7 @@ export const getPreviousNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
-  const itemMeta = instance.getNode(itemId);
+  const itemMeta = instance.getItemMeta(itemId);
   const siblings = instance.getChildrenIds(itemMeta.parentId);
   const itemIndex = siblings.indexOf(itemId);
 
@@ -57,7 +57,7 @@ export const getNextNavigableItem = (
     }
   }
 
-  let itemMeta = instance.getNode(itemId);
+  let itemMeta = instance.getItemMeta(itemId);
   while (itemMeta != null) {
     // Try to find the first navigable sibling after the current item.
     const siblings = instance.getChildrenIds(itemMeta.parentId);
@@ -78,7 +78,7 @@ export const getNextNavigableItem = (
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    itemMeta = instance.getNode(itemMeta.parentId!);
+    itemMeta = instance.getItemMeta(itemMeta.parentId!);
   }
 
   return null;
@@ -122,25 +122,27 @@ export const getFirstNavigableItem = (instance: TreeViewInstance<[UseTreeViewIte
  */
 const findOrderInTremauxTree = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
-  nodeAId: string,
-  nodeBId: string,
+  itemAId: string,
+  itemBId: string,
 ) => {
-  if (nodeAId === nodeBId) {
-    return [nodeAId, nodeBId];
+  if (itemAId === itemBId) {
+    return [itemAId, itemBId];
   }
 
-  const nodeA = instance.getNode(nodeAId);
-  const nodeB = instance.getNode(nodeBId);
+  const itemMetaA = instance.getItemMeta(itemAId);
+  const itemMetaB = instance.getItemMeta(itemBId);
 
-  if (nodeA.parentId === nodeB.id || nodeB.parentId === nodeA.id) {
-    return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
+  if (itemMetaA.parentId === itemMetaB.id || itemMetaB.parentId === itemMetaA.id) {
+    return itemMetaB.parentId === itemMetaA.id
+      ? [itemMetaA.id, itemMetaB.id]
+      : [itemMetaB.id, itemMetaA.id];
   }
 
-  const aFamily: (string | null)[] = [nodeA.id];
-  const bFamily: (string | null)[] = [nodeB.id];
+  const aFamily: (string | null)[] = [itemMetaA.id];
+  const bFamily: (string | null)[] = [itemMetaB.id];
 
-  let aAncestor = nodeA.parentId;
-  let bAncestor = nodeB.parentId;
+  let aAncestor = itemMetaA.parentId;
+  let bAncestor = itemMetaB.parentId;
 
   let aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
   let bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
@@ -154,7 +156,7 @@ const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = instance.getNode(aAncestor!).parentId;
+        aAncestor = instance.getItemMeta(aAncestor!).parentId;
       }
     }
 
@@ -163,7 +165,7 @@ const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = instance.getNode(bAncestor!).parentId;
+        bAncestor = instance.getItemMeta(bAncestor!).parentId;
       }
     }
   }
@@ -175,8 +177,8 @@ const findOrderInTremauxTree = (
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
 
   return ancestorFamily.indexOf(aSide!) < ancestorFamily.indexOf(bSide!)
-    ? [nodeAId, nodeBId]
-    : [nodeBId, nodeAId];
+    ? [itemAId, itemBId]
+    : [itemBId, itemAId];
 };
 
 export const getNavigableItemsInRange = (
@@ -187,7 +189,7 @@ export const getNavigableItemsInRange = (
   const [firstItemId, lastItemId] = findOrderInTremauxTree(instance, itemAId, itemBId);
   const items = [firstItemId];
 
-  let currentItemSiblings = instance.getChildrenIds(instance.getNode(firstItemId).parentId);
+  let currentItemSiblings = instance.getChildrenIds(instance.getItemMeta(firstItemId).parentId);
   let currentItemIndex = currentItemSiblings.indexOf(firstItemId);
 
   while (currentItemSiblings[currentItemIndex] !== lastItemId) {
@@ -201,10 +203,16 @@ export const getNavigableItemsInRange = (
     else if (currentItemIndex < currentItemSiblings.length - 1) {
       currentItemIndex += 1;
     }
-    // If the item is the last of its siblings, get the next siblings of its parent
+    // If the item is the last of its siblings, get the first ancestor that has a next sibling and get this next sibling.
     else {
-      const parentId = instance.getNode(currentItemId).parentId!;
-      currentItemSiblings = instance.getChildrenIds(instance.getNode(parentId).parentId);
+      let parentId = instance.getItemMeta(currentItemId).parentId!;
+      let parentSiblings = instance.getChildrenIds(instance.getItemMeta(parentId).parentId);
+      while (parentId === parentSiblings[parentSiblings.length - 1]) {
+        parentId = instance.getItemMeta(parentId).parentId!;
+        parentSiblings = instance.getChildrenIds(instance.getItemMeta(parentId).parentId);
+      }
+
+      currentItemSiblings = parentSiblings;
       currentItemIndex = currentItemSiblings.indexOf(parentId) + 1;
     }
 
