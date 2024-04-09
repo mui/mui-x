@@ -20,7 +20,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
   getItemMeta: (itemId: string) => TreeViewItemMeta;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (itemId: string | null) => string[];
+  getItemOrderedChildrenIds: (parentId: string | null) => string[];
   isItemDisabled: (itemId: string) => itemId is string;
   isItemNavigable: (itemId: string) => boolean;
   /**
@@ -91,6 +91,7 @@ export interface UseTreeViewItemsState<R extends {}> {
     itemTree: TreeViewItemIdAndChildren[];
     itemMetaMap: TreeViewItemMetaMap;
     itemMap: TreeViewItemMap<R>;
+    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
   };
 }
 

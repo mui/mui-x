@@ -24,7 +24,7 @@ export const getPreviousNavigableItem = (
   itemId: string,
 ) => {
   const itemMeta = instance.getItemMeta(itemId);
-  const siblings = instance.getChildrenIds(itemMeta.parentId);
+  const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
   const itemIndex = siblings.indexOf(itemId);
 
   // TODO: What should we do if the parent is not navigable?
@@ -35,11 +35,13 @@ export const getPreviousNavigableItem = (
   let currentItemId: string = siblings[itemIndex - 1];
   let lastNavigableChild = getLastNavigableItemInArray(
     instance,
-    instance.getChildrenIds(currentItemId),
+    instance.getItemOrderedChildrenIds(currentItemId),
   );
   while (instance.isItemExpanded(currentItemId) && lastNavigableChild != null) {
     currentItemId = lastNavigableChild;
-    lastNavigableChild = instance.getChildrenIds(currentItemId).find(instance.isItemNavigable);
+    lastNavigableChild = instance
+      .getItemOrderedChildrenIds(currentItemId)
+      .find(instance.isItemNavigable);
   }
 
   return currentItemId;
@@ -51,7 +53,9 @@ export const getNextNavigableItem = (
 ) => {
   // If the item is expanded and has some navigable children, return the first of them.
   if (instance.isItemExpanded(itemId)) {
-    const firstNavigableChild = instance.getChildrenIds(itemId).find(instance.isItemNavigable);
+    const firstNavigableChild = instance
+      .getItemOrderedChildrenIds(itemId)
+      .find(instance.isItemNavigable);
     if (firstNavigableChild != null) {
       return firstNavigableChild;
     }
@@ -60,7 +64,7 @@ export const getNextNavigableItem = (
   let itemMeta = instance.getItemMeta(itemId);
   while (itemMeta != null) {
     // Try to find the first navigable sibling after the current item.
-    const siblings = instance.getChildrenIds(itemMeta.parentId);
+    const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
     const currentItemIndex = siblings.indexOf(itemMeta.id);
 
     if (currentItemIndex < siblings.length - 1) {
@@ -89,7 +93,7 @@ export const getLastNavigableItem = (
 ) => {
   let itemId: string | null = null;
   while (itemId == null || instance.isItemExpanded(itemId)) {
-    const children = instance.getChildrenIds(itemId);
+    const children = instance.getItemOrderedChildrenIds(itemId);
     const lastNavigableChild = getLastNavigableItemInArray(instance, children);
 
     // The item has no navigable children.
@@ -104,7 +108,7 @@ export const getLastNavigableItem = (
 };
 
 export const getFirstNavigableItem = (instance: TreeViewInstance<[UseTreeViewItemsSignature]>) =>
-  instance.getChildrenIds(null).find(instance.isItemNavigable)!;
+  instance.getItemOrderedChildrenIds(null).find(instance.isItemNavigable)!;
 
 /**
  * This is used to determine the start and end of a selection range so
@@ -171,7 +175,7 @@ const findOrderInTremauxTree = (
   }
 
   const commonAncestor = aAncestorIsCommon ? aAncestor : bAncestor;
-  const ancestorFamily = instance.getChildrenIds(commonAncestor);
+  const ancestorFamily = instance.getItemOrderedChildrenIds(commonAncestor);
 
   const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
@@ -189,14 +193,16 @@ export const getNavigableItemsInRange = (
   const [firstItemId, lastItemId] = findOrderInTremauxTree(instance, itemAId, itemBId);
   const items = [firstItemId];
 
-  let currentItemSiblings = instance.getChildrenIds(instance.getItemMeta(firstItemId).parentId);
+  let currentItemSiblings = instance.getItemOrderedChildrenIds(
+    instance.getItemMeta(firstItemId).parentId,
+  );
   let currentItemIndex = currentItemSiblings.indexOf(firstItemId);
 
   while (currentItemSiblings[currentItemIndex] !== lastItemId) {
     const currentItemId = currentItemSiblings[currentItemIndex];
     // If the item is expanded, get its first children.
     if (instance.isItemExpanded(currentItemId)) {
-      currentItemSiblings = instance.getChildrenIds(currentItemId);
+      currentItemSiblings = instance.getItemOrderedChildrenIds(currentItemId);
       currentItemIndex = 0;
     }
     // If the item is not the last of its siblings, get the next of them
@@ -206,10 +212,14 @@ export const getNavigableItemsInRange = (
     // If the item is the last of its siblings, get the first ancestor that has a next sibling and get this next sibling.
     else {
       let parentId = instance.getItemMeta(currentItemId).parentId!;
-      let parentSiblings = instance.getChildrenIds(instance.getItemMeta(parentId).parentId);
+      let parentSiblings = instance.getItemOrderedChildrenIds(
+        instance.getItemMeta(parentId).parentId,
+      );
       while (parentId === parentSiblings[parentSiblings.length - 1]) {
         parentId = instance.getItemMeta(parentId).parentId!;
-        parentSiblings = instance.getChildrenIds(instance.getItemMeta(parentId).parentId);
+        parentSiblings = instance.getItemOrderedChildrenIds(
+          instance.getItemMeta(parentId).parentId,
+        );
       }
 
       currentItemSiblings = parentSiblings;
