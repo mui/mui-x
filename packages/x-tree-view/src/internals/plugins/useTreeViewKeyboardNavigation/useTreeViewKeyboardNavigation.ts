@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewNode, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
   getFirstItem,
   getLastItem,
@@ -47,13 +47,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const newFirstCharMap: { [itemId: string]: string } = {};
 
-    const processItem = (node: TreeViewNode) => {
-      newFirstCharMap[node.id] = node.label!.substring(0, 1).toLowerCase();
+    const processItem = (item: TreeViewItemMeta) => {
+      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.items.nodeMap).forEach(processItem);
+    Object.values(state.items.itemMetaMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.items.nodeMap, params.getItemId, instance]);
+  }, [state.items.itemMetaMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, firstChar: string) => {
     let start: number;
@@ -64,7 +64,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const firstChars: string[] = [];
     // This really only works since the ids are strings
     Object.keys(firstCharMap.current).forEach((mapItemId) => {
-      const map = instance.getNode(mapItemId);
+      const map = instance.getItemMeta(mapItemId);
       const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
       const shouldBeSkipped = params.disabledItemsFocusable
         ? false
@@ -227,7 +227,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else {
-          const parent = instance.getNode(itemId).parentId;
+          const parent = instance.getItemMeta(itemId).parentId;
           if (parent) {
             instance.focusItem(event, parent);
             event.preventDefault();
