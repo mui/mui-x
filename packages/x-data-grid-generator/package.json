@@ -42,7 +42,8 @@
   },
   "devDependencies": {
     "@types/chance": "^1.1.6",
-    "@types/lru-cache": "^7.10.9"
+    "@types/lru-cache": "^7.10.9",
+    "rimraf": "^5.0.5"
   },
   "peerDependencies": {
     "@mui/icons-material": "^5.4.1",

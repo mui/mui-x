@@ -40,6 +40,9 @@
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
   },
+  "devDependencies": {
+    "rimraf": "^5.0.5"
+  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
