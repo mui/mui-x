@@ -186,6 +186,8 @@ jobs:
       - run:
           name: Generate the documentation
           command: pnpm docs:api
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
       - run:
           name: '`pnpm docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
