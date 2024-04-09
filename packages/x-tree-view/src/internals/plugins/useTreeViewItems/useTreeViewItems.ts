@@ -144,13 +144,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [state.items.itemMetaMap],
   );
 
-  const getNavigableChildrenIds = (itemId: string | null) => {
-    let childrenIds = instance.getChildrenIds(itemId);
-
-    if (!params.disabledItemsFocusable) {
-      childrenIds = childrenIds.filter((item) => !instance.isItemDisabled(item));
+  const isItemNavigable = (itemId: string) => {
+    if (params.disabledItemsFocusable) {
+      return true;
     }
-    return childrenIds;
+    return !instance.isItemDisabled(itemId);
   };
 
   const areItemUpdatesPreventedRef = React.useRef(false);
@@ -216,8 +214,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItem,
       getItemsToRender,
       getChildrenIds,
-      getNavigableChildrenIds,
       isItemDisabled,
+      isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
