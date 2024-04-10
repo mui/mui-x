@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 
-describeTreeView('useTreeViewItems plugin', ({ render, setup, treeViewComponent }) => {
+describeTreeView('useTreeViewItems plugin', ({ render, treeViewComponent }) => {
   it('should throw an error when two items have the same ID', function test() {
     // TODO is this fixed?
     if (!/jsdom/.test(window.navigator.userAgent)) {
