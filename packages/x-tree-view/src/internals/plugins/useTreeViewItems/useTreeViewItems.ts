@@ -191,7 +191,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.getItemLabel,
   ]);
 
-  const getItemsToRender = React.useCallback(() => {
+  const getItemsToRender = () => {
     const getPropsFromItemId = (
       id: TreeViewItemId,
     ): ReturnType<typeof instance.getItemsToRender>[number] => {
@@ -205,7 +205,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     };
 
     return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
-  }, [instance, state.items.itemMetaMap, state.items.itemOrderedChildrenIds]);
+  };
 
   return {
     publicAPI: {
