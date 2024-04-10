@@ -561,7 +561,7 @@ export const useGridCellSelection = (
             cellData = serializeCellValue(cellParams, {
               delimiterCharacter: clipboardCopyCellDelimiter,
               ignoreValueFormatter,
-              shouldAppendQuotes: true,
+              shouldAppendQuotes: false,
             });
           } else {
             cellData = '';
