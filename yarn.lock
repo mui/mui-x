@@ -1952,9 +1952,9 @@
     rimraf "^5.0.5"
     typescript "^5.3.3"
 
-"@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/91090344/@mui/internal-markdown":
+"@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/5c28a20a/@mui/internal-markdown":
   version "1.0.2"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/91090344/@mui/internal-markdown#3e89e8f2f7f0caa3c53f21bb73300c0110b2d15f"
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/5c28a20a/@mui/internal-markdown#391114ceaa1ae6039a7dca2dccef026e3a33bcee"
   dependencies:
     "@babel/runtime" "^7.24.4"
     lodash "^4.17.21"

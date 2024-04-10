@@ -27,7 +27,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",
-    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/91090344/@mui/internal-markdown",
+    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/5c28a20a/@mui/internal-markdown",
     "@mui/joy": "^5.0.0-beta.32",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
