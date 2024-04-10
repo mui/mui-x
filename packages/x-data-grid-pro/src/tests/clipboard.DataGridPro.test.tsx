@@ -28,18 +28,9 @@ describe('<DataGridPro /> - Clipboard', () => {
           apiRef={apiRef}
           columns={columns}
           rows={[
-            {
-              id: 0,
-              brand: 'Nike',
-            },
-            {
-              id: 1,
-              brand: 'Adidas',
-            },
-            {
-              id: 2,
-              brand: 'Puma',
-            },
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+            { id: 2, brand: 'Puma' },
           ]}
           {...props}
         />
@@ -47,7 +38,7 @@ describe('<DataGridPro /> - Clipboard', () => {
     );
   }
 
-  describe('copySelectedRowsToClipboard', () => {
+  describe('copy to clipboard', () => {
     let writeText: SinonStub;
     const originalClipboard = navigator.clipboard;
 
@@ -73,6 +64,42 @@ describe('<DataGridPro /> - Clipboard', () => {
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
+    });
+
+    it('should not escape double quotes when copying a single cell to clipboard', () => {
+      render(
+        <Test
+          columns={[{ field: 'value' }]}
+          rows={[{ id: 0, value: '1 " 1' }]}
+          disableRowSelectionOnClick
+        />,
+      );
+
+      const cell = getCell(0, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.lastCall.firstArg).to.equal('1 " 1');
+    });
+
+    it('should not escape double quotes when copying rows to clipboard', () => {
+      render(
+        <Test
+          columns={[{ field: 'value' }]}
+          rows={[
+            { id: 0, value: '1 " 1' },
+            { id: 1, value: '2' },
+          ]}
+          disableRowSelectionOnClick
+        />,
+      );
+
+      act(() => apiRef.current.selectRows([0, 1]));
+      const cell = getCell(0, 0);
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.firstCall.args[0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
   });
 });
