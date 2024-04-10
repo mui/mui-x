@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import { DrawingArea } from '../context/DrawingProvider';
 import { AnchorPosition, Direction } from './utils';
 import { FormattedSeries } from '../context/SeriesContextProvider';
@@ -35,7 +36,7 @@ export interface LegendRendererProps
   series: FormattedSeries;
   seriesToDisplay: LegendParams[];
   drawingArea: DrawingArea;
-  classes: Record<'mark' | 'series' | 'root', string>;
+  classes: Record<'mark' | 'series' | 'root' | 'seriesBackground', string>;
   /**
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
@@ -67,6 +68,7 @@ export interface LegendRendererProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
+  onClick?: (legend: LegendParams, index: number) => void;
 }
 
 /**
@@ -104,6 +106,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     itemGap = 10,
     padding: paddingProps = 10,
     labelStyle: inLabelStyle,
+    onClick,
   } = props;
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
@@ -266,28 +269,44 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
-          <g
-            key={id}
-            className={classes.series}
-            transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
-          >
-            <rect
-              className={classes.mark}
-              x={isRTL ? -itemMarkWidth : 0}
-              y={-itemMarkHeight / 2}
-              width={itemMarkWidth}
-              height={itemMarkHeight}
-              fill={color}
-            />
-            <ChartsText
-              style={labelStyle}
-              text={label}
-              x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
-              y={0}
-            />
-          </g>
-        ))}
+        {seriesWithPosition.map(
+          ({ id, label, color, positionX, positionY, innerHeight, innerWidth }, i) => (
+            <g
+              key={id}
+              className={clsx(classes.series, `${classes.series}-${id}`)}
+              transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
+            >
+              <rect
+                x={isRTL ? -(innerWidth + 2) : -2}
+                y={-itemMarkHeight / 2 - 2}
+                width={innerWidth + 4}
+                height={innerHeight + 4}
+                fill="transparent"
+                className={classes.seriesBackground}
+                onClick={onClick ? () => onClick({ id, label, color }, i) : undefined}
+                style={{
+                  pointerEvents: onClick ? 'all' : 'none',
+                  cursor: onClick ? 'pointer' : 'unset',
+                }}
+              />
+              <rect
+                className={classes.mark}
+                x={isRTL ? -itemMarkWidth : 0}
+                y={-itemMarkHeight / 2}
+                width={itemMarkWidth}
+                height={itemMarkHeight}
+                fill={color}
+                style={{ pointerEvents: 'none' }}
+              />
+              <ChartsText
+                style={{ ...labelStyle, pointerEvents: 'none' }}
+                text={label}
+                x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
+                y={0}
+              />
+            </g>
+          ),
+        )}
       </ChartsLegendRoot>
     </NoSsr>
   );
