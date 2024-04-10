@@ -4,7 +4,7 @@ import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNavigableItemsInRange,
-} from '../../useTreeView/useTreeView.utils';
+} from '../../utils/tree';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({

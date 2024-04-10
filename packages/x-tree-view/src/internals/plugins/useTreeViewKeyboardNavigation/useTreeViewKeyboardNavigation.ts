@@ -7,7 +7,7 @@ import {
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
-} from '../../useTreeView/useTreeView.utils';
+} from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,

@@ -6,7 +6,7 @@ import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
-import { getFirstNavigableItem } from '../../useTreeView/useTreeView.utils';
+import { getFirstNavigableItem } from '../../utils/tree';
 
 const useTabbableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
