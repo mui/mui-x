@@ -10,7 +10,10 @@ import {
   TreeViewChildrenItemContext,
   TreeViewChildrenItemProvider,
 } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
-import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems/useTreeViewItems.utils';
+import {
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from '../useTreeViewItems/useTreeViewItems.utils';
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
 import { UseTreeViewIdSignature } from '../useTreeViewId';
@@ -37,7 +40,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         ...prevState,
         items: {
           ...prevState.items,
-          itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: { ...item, index: -1 } },
+          itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: item },
           // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
           itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
         },
@@ -46,13 +49,19 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   });
 
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
+    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+
     setState((prevState) => ({
       ...prevState,
       items: {
         ...prevState.items,
         itemOrderedChildrenIds: {
           ...prevState.items.itemOrderedChildrenIds,
-          [parentId ?? TREE_VIEW_ROOT_PARENT_ID]: orderedChildrenIds,
+          [parentIdWithDefault]: orderedChildrenIds,
+        },
+        itemChildrenIndexes: {
+          ...prevState.items.itemChildrenIndexes,
+          [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
         },
       },
     }));
