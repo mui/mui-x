@@ -220,8 +220,9 @@ function defaultPasteResolver({
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
-  const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-  if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
+  const cellSelectionModel = apiRef.current.getCellSelectionModel();
+  const selectedCellsArray = apiRef.current.getSelectedCellsAsArray();
+  if (cellSelectionModel && selectedCellsArray.length > 1) {
     Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
       const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
       const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
@@ -276,7 +277,11 @@ function defaultPasteResolver({
     return;
   }
 
-  const selectedCell = gridFocusCellSelector(apiRef);
+  let selectedCell = gridFocusCellSelector(apiRef);
+  if (!selectedCell && selectedCellsArray.length === 1) {
+    selectedCell = selectedCellsArray[0];
+  }
+
   if (!selectedCell) {
     return;
   }
