@@ -230,7 +230,7 @@ Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pick
 
 ```diff
 -<DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+<DateCalendar referenceDate{dayjs('2022-04-01')} />
++<DateCalendar referenceDate={dayjs('2022-04-01')} />
 ```
 
 ## Modified props
