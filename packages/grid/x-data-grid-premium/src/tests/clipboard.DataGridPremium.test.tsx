@@ -143,7 +143,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             { id: 0, value: '1 " 1' },
             { id: 1, value: '2' },
           ]}
-          cellSelection
+          unstable_cellSelection
           disableRowSelectionOnClick
         />,
       );
