@@ -23,8 +23,8 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    let intervalId: NodeJS.Timer | null = null;
-    let timeoutId: NodeJS.Timer | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
     let lastError: any = null;
 
     function handleTimeout() {
@@ -536,7 +536,7 @@ async function initializeEnvironment(
 
         // assertion for: https://github.com/mui/mui-x/issues/12652
         it('should allow field editing after opening and closing the picker', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePickerV6');
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
           // open picker
           await page.getByRole('button').click();
           await page.waitForSelector('[role="dialog"]', { state: 'attached' });
@@ -641,7 +641,7 @@ async function initializeEnvironment(
         });
 
         it('should focus the first field section after clearing a value in v6 input', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePickerV6');
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
 
           await page.getByRole('textbox').fill('2');
           await page.getByRole('button', { name: 'Clear value' }).click();
