@@ -245,7 +245,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
   ```diff
   -valueFormatter: ({ value }) => value,
-  + alueFormatter: (value, row, column, apiRef) => value,
+  +valueFormatter: (value, row, column, apiRef) => value,
   ```
 
   The `GridValueFormatterParams` interface has been removed:
