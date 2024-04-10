@@ -25,7 +25,7 @@ export const getPreviousNavigableItem = (
 ) => {
   const itemMeta = instance.getItemMeta(itemId);
   const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
-  const itemIndex = siblings.indexOf(itemId);
+  const itemIndex = instance.getItemIndex(itemId);
 
   // TODO: What should we do if the parent is not navigable?
   if (itemIndex === 0) {
@@ -65,7 +65,7 @@ export const getNextNavigableItem = (
   while (itemMeta != null) {
     // Try to find the first navigable sibling after the current item.
     const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
-    const currentItemIndex = siblings.indexOf(itemMeta.id);
+    const currentItemIndex = instance.getItemIndex(itemMeta.id);
 
     if (currentItemIndex < siblings.length - 1) {
       let nextItemIndex = currentItemIndex + 1;
@@ -190,46 +190,15 @@ export const getNavigableItemsInRange = (
   itemAId: string,
   itemBId: string,
 ) => {
-  const [firstItemId, lastItemId] = findOrderInTremauxTree(instance, itemAId, itemBId);
-  const items = [firstItemId];
+  const [first, last] = findOrderInTremauxTree(instance, itemAId, itemBId);
+  const items = [first];
 
-  let currentItemSiblings = instance.getItemOrderedChildrenIds(
-    instance.getItemMeta(firstItemId).parentId,
-  );
-  let currentItemIndex = currentItemSiblings.indexOf(firstItemId);
+  let current = first;
 
-  while (currentItemSiblings[currentItemIndex] !== lastItemId) {
-    const currentItemId = currentItemSiblings[currentItemIndex];
-    // If the item is expanded, get its first children.
-    if (instance.isItemExpanded(currentItemId)) {
-      currentItemSiblings = instance.getItemOrderedChildrenIds(currentItemId);
-      currentItemIndex = 0;
-    }
-    // If the item is not the last of its siblings, get the next of them
-    else if (currentItemIndex < currentItemSiblings.length - 1) {
-      currentItemIndex += 1;
-    }
-    // If the item is the last of its siblings, get the first ancestor that has a next sibling and get this next sibling.
-    else {
-      let parentId = instance.getItemMeta(currentItemId).parentId!;
-      let parentSiblings = instance.getItemOrderedChildrenIds(
-        instance.getItemMeta(parentId).parentId,
-      );
-      while (parentId === parentSiblings[parentSiblings.length - 1]) {
-        parentId = instance.getItemMeta(parentId).parentId!;
-        parentSiblings = instance.getItemOrderedChildrenIds(
-          instance.getItemMeta(parentId).parentId,
-        );
-      }
-
-      currentItemSiblings = parentSiblings;
-      currentItemIndex = currentItemSiblings.indexOf(parentId) + 1;
-    }
-
-    items.push(currentItemId);
+  while (current !== last) {
+    current = getNextNavigableItem(instance, current)!;
+    items.push(current);
   }
 
-  items.push(lastItemId);
-
-  return items.filter(instance.isItemNavigable);
+  return items;
 };
