@@ -49,9 +49,9 @@ To do so, use the `colorMap` property of the corresponding axis.
 
 Learn more on how to use this feature with each chart component on their dedicated docs section:
 
-- [bar chart](/x/react-charts/bars/#color-scale)
-- [line chart](/x/react-charts/lines/#color-scale)
-- [scatter chart](/x/react-charts/scatter/#color-scale)
+- [bar charts](/x/react-charts/bars/#color-scale)
+- [line charts](/x/react-charts/lines/#color-scale)
+- [scatter charts](/x/react-charts/scatter/#color-scale)
 
 The `colorMap` property can accept three kind of objects defined below.
 
@@ -77,7 +77,7 @@ The [d3-scale-chromatic](https://d3js.org/d3-scale-chromatic) offers a lot of th
 
 Values lower than the `min` get the color of the `min` value.
 Same for values higher than the `max`.
-By default the `min`/`max` range is set to 0, 100.
+By default the `min`/`max` range is set to 0 / 100.
 
 ```ts
 {

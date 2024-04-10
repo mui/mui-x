@@ -87,10 +87,10 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### Color scale
 
-Like other charts, you can modify the [series color](/x/react-charts/styling/#colors) by using series color, or some color palette.
+Like on other charts, you can modify the [series color](/x/react-charts/styling/#colors) by using series color, or some color palette.
 
 You can also modify color by using axes `colorMap` which maps values to colors.
-Scatter charts use by priority:
+The bar charts use by priority:
 
 1. The value axis color
 2. The band axis color
