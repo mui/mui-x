@@ -98,7 +98,7 @@ Scatter charts use by priority:
 
 You can find additional information about those `colorMap` properties in the [styling page](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScale.js"}}
+{{"demo": "ColorScaleNoSnap.js"}}
 
 ## Click event
 

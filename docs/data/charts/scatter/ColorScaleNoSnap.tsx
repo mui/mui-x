@@ -1,16 +1,23 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterValueType } from '@mui/x-charts';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 // @ts-ignore
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
-const series = [{ data: [-2, -9, 12, 11, 6, -4] }];
+import { Chance } from 'chance';
 
-export default function ColorScale() {
-  const [colorX, setColorX] = React.useState('piecewise');
-  const [colorY, setColorY] = React.useState('None');
+const chance = new Chance(42);
+
+export default function ColorScaleNoSnap() {
+  const [colorX, setColorX] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'piecewise',
+  );
+  const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'None',
+  );
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -20,19 +27,22 @@ export default function ColorScale() {
           sx={{ minWidth: 150 }}
           label="x-axis colorMap"
           value={colorX}
-          onChange={(event) => setColorX(event.target.value)}
+          onChange={(event) =>
+            setColorX(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
           <MenuItem value="continuous">continuous</MenuItem>
-          <MenuItem value="ordinal">ordinal</MenuItem>
         </TextField>
         <TextField
           select
           sx={{ minWidth: 150 }}
           label="y-axis colorMap"
           value={colorY}
-          onChange={(event) => setColorY(event.target.value)}
+          onChange={(event) =>
+            setColorY(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -40,9 +50,9 @@ export default function ColorScale() {
         </TextField>
       </Stack>
 
-      <BarChart
+      <ScatterChart
         height={300}
-        grid={{ horizontal: true }}
+        grid={{ horizontal: true, vertical: true }}
         series={series}
         margin={{
           top: 10,
@@ -50,55 +60,40 @@ export default function ColorScale() {
         }}
         yAxis={[
           {
+            min: -3,
+            max: 3,
+            tickInterval: [-3, -1.5, 0, 1.5, 3],
             colorMap:
               (colorY === 'continuous' && {
                 type: 'continuous',
-                min: -10,
-                max: 10,
-                color: ['red', 'green'],
+                min: -2,
+                max: 2,
+                color: ['blue', 'red'],
               }) ||
               (colorY === 'piecewise' && {
                 type: 'piecewise',
-                thresholds: [0],
-                colors: ['red', 'green'],
+                thresholds: [-1.5, 0, 1.5],
+                colors: ['lightblue', 'blue', 'orange', 'red'],
               }) ||
               undefined,
           },
         ]}
         xAxis={[
           {
-            scaleType: 'band',
-            data: [
-              new Date(2019, 1, 1),
-              new Date(2020, 1, 1),
-              new Date(2021, 1, 1),
-              new Date(2022, 1, 1),
-              new Date(2023, 1, 1),
-              new Date(2024, 1, 1),
-            ],
-            valueFormatter: (value) => value.getFullYear().toString(),
+            min: -3,
+            max: 3,
+            tickInterval: [-3, -1.5, 0, 1.5, 3],
             colorMap:
-              (colorX === 'ordinal' && {
-                type: 'ordinal',
-                colors: [
-                  '#ccebc5',
-                  '#a8ddb5',
-                  '#7bccc4',
-                  '#4eb3d3',
-                  '#2b8cbe',
-                  '#08589e',
-                ],
-              }) ||
               (colorX === 'continuous' && {
                 type: 'continuous',
-                min: new Date(2019, 1, 1),
-                max: new Date(2024, 1, 1),
+                min: -2,
+                max: 2,
                 color: ['green', 'orange'],
               }) ||
               (colorX === 'piecewise' && {
                 type: 'piecewise',
-                thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                colors: ['blue', 'red', 'blue'],
+                thresholds: [-1.5, 0, 1.5],
+                colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],
               }) ||
               undefined,
           },
@@ -110,23 +105,13 @@ export default function ColorScale() {
           '  /* ... */',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
-          ...(colorX === 'ordinal'
-            ? [
-                '  xAxis={[',
-                `    {`,
-                `      type: 'ordinal',`,
-                `      colors: ['#ccebc5', '#a8ddb5', '#7bccc4', '#4eb3d3', '#2b8cbe', '#08589e']`,
-                `    }`,
-                '  ]}',
-              ]
-            : []),
           ...(colorX === 'continuous'
             ? [
                 '  xAxis={[',
                 `    {`,
                 `      type: 'continuous',`,
-                `      min: new Date(2019, 1, 1),`,
-                `      max: new Date(2024, 1, 1),`,
+                `      min: -2,`,
+                `      max: 2,`,
                 `      color: ['green', 'orange']`,
                 `    }`,
                 '  ]}',
@@ -136,11 +121,12 @@ export default function ColorScale() {
             ? [
                 '  xAxis={[{',
                 `    type: 'piecewise',`,
-                `    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],`,
-                `    colors: ['blue', 'red', 'blue'],`,
+                `    thresholds: [-1.5, 0, 1.5],`,
+                `    colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
                 '  }]}',
               ]
             : []),
+
           // ColorY
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'
@@ -148,9 +134,9 @@ export default function ColorScale() {
                 '  yAxis={[',
                 `    {`,
                 `      type: 'continuous',`,
-                `      min: -10,`,
-                `      max: 10,`,
-                `      color: ['red', 'green'],`,
+                `      min: -2,`,
+                `      max: 2,`,
+                `      color: ['blue', 'red']`,
                 `    }`,
                 '  ]}',
               ]
@@ -159,8 +145,8 @@ export default function ColorScale() {
             ? [
                 '  yAxis={[{',
                 `    type: 'piecewise',`,
-                `    thresholds: [0],`,
-                `    colors: ['red', 'green'],`,
+                `    thresholds: [-1.5, 0, 1.5],`,
+                `    colors: ['lightblue', 'blue', 'orange', 'red'],`,
                 '  }]}',
               ]
             : []),
@@ -171,4 +157,29 @@ export default function ColorScale() {
       />
     </Stack>
   );
+}
+
+const series = [{ data: getGaussianSeriesData([0, 0], [1, 1], 200) }].map((s) => ({
+  ...s,
+  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+}));
+
+function getGaussianSeriesData(
+  mean: [number, number],
+  stdev: [number, number] = [0.3, 0.4],
+  N: number = 50,
+) {
+  return [...Array(N)].map((_, i) => {
+    const x =
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
+        stdev[0] +
+      mean[0];
+    const y =
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
+        stdev[1] +
+      mean[1];
+    return { x, y, id: i };
+  });
 }
