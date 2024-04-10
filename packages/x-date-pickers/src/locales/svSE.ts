@@ -25,10 +25,10 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Start',
   end: 'Slut',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdatum',
+  startTime: 'Starttid',
+  endDate: 'Slutdatum',
+  endTime: 'Sluttid',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -67,34 +67,34 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
       : 'Välj tid',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Rensa värde',
 
   // Table labels
   timeTableLabel: 'välj tid',
   dateTableLabel: 'välj datum',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Å'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'tt',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'År',
+  month: 'Månad',
+  day: 'Dag',
+  weekDay: 'Veckodag',
+  hours: 'Timmar',
+  minutes: 'Minuter',
+  seconds: 'Sekunder',
+  meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Tom',
 };
 
 export const svSE = getPickersLocalization(svSEPickers);

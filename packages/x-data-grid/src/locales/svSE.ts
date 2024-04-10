@@ -39,9 +39,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Ladda ner som Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Sök',
+  columnsManagementNoColumns: 'Inga kolumner',
+  columnsManagementShowHideAllText: 'Visa/Dölj alla',
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
