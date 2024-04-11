@@ -10,6 +10,7 @@ import {
   devices,
   BrowserContextOptions,
   BrowserType,
+  WebError,
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
@@ -513,6 +514,29 @@ async function initializeEnvironment(
         expect(
           await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
         ).not.to.equal('v');
+      });
+
+      // https://github.com/mui/mui-x/issues/12705
+      it('should not crash if the date is invalid', async () => {
+        await renderFixture('DataGrid/KeyboardEditDate');
+
+        await page.hover('div[role="columnheader"][data-field="birthday"]');
+        await page.click(
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+        );
+        await page.click('"Filter"');
+        await page.keyboard.type('08/04/2024', { delay: 10 });
+
+        let thrownError: Error | null = null;
+        context.once('weberror', (webError: WebError) => {
+          thrownError = webError.error();
+          console.error(thrownError);
+        });
+
+        await page.keyboard.press('Backspace');
+
+        await sleep(200);
+        expect(thrownError).to.equal(null);
       });
     });
 
