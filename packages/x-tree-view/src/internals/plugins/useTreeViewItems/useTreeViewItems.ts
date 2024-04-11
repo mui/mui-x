@@ -31,7 +31,6 @@ const updateItemsState = ({
 
   const processItem = (
     item: TreeViewBaseItem,
-    index: number,
     parentId: string | null,
   ): TreeViewItemIdAndChildren => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
@@ -88,11 +87,11 @@ const updateItemsState = ({
 
     return {
       id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
+      children: item.children?.map((child) => processItem(child, id)),
     };
   };
 
-  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  const itemTree = items.map((item) => processItem(item, null));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
