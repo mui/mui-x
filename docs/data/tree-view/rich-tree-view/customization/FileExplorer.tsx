@@ -5,11 +5,14 @@ import { styled, alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import Label from '@mui/icons-material/Label';
 import Typography from '@mui/material/Typography';
-import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
+import ArticleIcon from '@mui/icons-material/Article';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import FolderRounded from '@mui/icons-material/FolderRounded';
+import ImageIcon from '@mui/icons-material/Image';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import {
@@ -26,8 +29,10 @@ import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
+type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
+
 type ExtendedTreeItemProps = {
-  icon?: React.ElementType;
+  fileType?: FileType;
   id: string;
   label: string;
 };
@@ -35,37 +40,36 @@ type ExtendedTreeItemProps = {
 const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   {
     id: '1',
-    label: 'All Documents',
+    label: 'Documents',
     children: [
       {
         id: '1.1',
         label: 'Company',
         children: [
-          { id: '1.1.1', label: 'Payments' },
-          { id: '1.1.2', label: 'Meeting notes' },
-          { id: '1.1.3', label: 'Tasks list' },
-          { id: '1.1.4', label: 'Equipment' },
+          { id: '1.1.1', label: 'Invoice', fileType: 'pdf' },
+          { id: '1.1.2', label: 'Meeting notes', fileType: 'doc' },
+          { id: '1.1.3', label: 'Tasks list', fileType: 'doc' },
+          { id: '1.1.4', label: 'Equipment', fileType: 'pdf' },
+          { id: '1.1.5', label: 'Video conference', fileType: 'video' },
         ],
-        icon: FolderRounded,
       },
-      { id: '1.2', label: 'Personal' },
-      { id: '1.3', label: 'Images' },
+      { id: '1.2', label: 'Personal', fileType: 'folder' },
+      { id: '1.3', label: 'Group photo', fileType: 'image' },
     ],
-    icon: FolderRounded,
   },
   {
     id: '2',
     label: 'Bookmarked',
-    icon: Label,
+    fileType: 'pinned',
     children: [
-      { id: '2.1', label: 'Learning materials' },
-      { id: '2.2', label: 'News' },
-      { id: '2.3', label: 'Forums' },
-      { id: '2.4', label: 'Travel documents', icon: AirplanemodeActiveIcon },
+      { id: '2.1', label: 'Learning materials', fileType: 'folder' },
+      { id: '2.2', label: 'News', fileType: 'folder' },
+      { id: '2.3', label: 'Forums', fileType: 'folder' },
+      { id: '2.4', label: 'Travel documents', fileType: 'pdf' },
     ],
   },
-  { id: '3', label: 'History', icon: FolderRounded },
-  { id: '4', label: 'Trash', icon: DeleteIcon },
+  { id: '3', label: 'History', fileType: 'folder' },
+  { id: '4', label: 'Trash', fileType: 'trash' },
 ];
 
 function DotIcon() {
@@ -79,12 +83,11 @@ function DotIcon() {
         display: 'inline-block',
         verticalAlign: 'middle',
         zIndex: 1,
-        mr: 1,
+        mx: 1,
       }}
     />
   );
 }
-
 declare module 'react' {
   interface CSSProperties {
     '--tree-view-color'?: string;
@@ -119,7 +122,7 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
       color:
         theme.palette.mode === 'light'
           ? theme.palette.primary.main
-          : theme.palette.secondary.dark,
+          : theme.palette.primary.dark,
     },
     '&::before': {
       content: '""',
@@ -143,8 +146,8 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === 'light'
         ? theme.palette.primary.main
-        : theme.palette.secondary.dark,
-    color: 'white',
+        : theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
   },
 }));
 
@@ -165,17 +168,18 @@ const StyledTreeItemLabelText = styled(Typography)({
   color: 'inherit',
   fontFamily: 'General Sans',
   fontWeight: 500,
-  flexGrow: 1,
 }) as unknown as typeof Typography;
 
 interface CustomLabelProps {
   children: string;
   className: string;
   icon?: React.ElementType;
+  expandable?: boolean;
 }
 
 function CustomLabel({
-  icon: Icon = DotIcon,
+  icon: Icon,
+  expandable,
   children,
   ...other
 }: CustomLabelProps) {
@@ -187,16 +191,48 @@ function CustomLabel({
         alignItems: 'center',
       }}
     >
-      <Box
-        component={Icon}
-        className="labelIcon"
-        color="inherit"
-        sx={{ mr: 1, fontSize: '1.2rem' }}
-      />
+      {Icon && (
+        <Box
+          component={Icon}
+          className="labelIcon"
+          color="inherit"
+          sx={{ mr: 1, fontSize: '1.2rem' }}
+        />
+      )}
+
       <StyledTreeItemLabelText variant="body2">{children}</StyledTreeItemLabelText>
+      {expandable && <DotIcon />}
     </TreeItem2Label>
   );
 }
+
+const isExpandable = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(isExpandable);
+  }
+  return Boolean(reactChildren);
+};
+
+const getIconFromFileType = (fileType: FileType) => {
+  switch (fileType) {
+    case 'image':
+      return ImageIcon;
+    case 'pdf':
+      return PictureAsPdfIcon;
+    case 'doc':
+      return ArticleIcon;
+    case 'video':
+      return VideoCameraBackIcon;
+    case 'folder':
+      return FolderRounded;
+    case 'pinned':
+      return FolderOpenIcon;
+    case 'trash':
+      return DeleteIcon;
+    default:
+      return ArticleIcon;
+  }
+};
 
 interface CustomTreeItemProps
   extends Omit<UseTreeItem2Parameters, 'rootRef'>,
@@ -219,8 +255,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
   const item = publicAPI.getItem(itemId);
-
-  const icon = item?.icon || DotIcon;
+  const expandable = isExpandable(children);
+  let icon;
+  if (expandable) {
+    icon = FolderRounded;
+  } else if (item.fileType) {
+    icon = getIconFromFileType(item.fileType);
+  }
 
   return (
     <TreeItem2Provider itemId={itemId}>
@@ -239,7 +280,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
 
-          <CustomLabel {...getLabelProps()} icon={icon} />
+          <CustomLabel
+            {...getLabelProps()}
+            icon={icon}
+            expandable={expandable && status.expanded}
+          />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
       </StyledTreeItemRoot>
@@ -252,8 +297,8 @@ export default function FileExplorer() {
     <RichTreeView
       items={ITEMS}
       aria-label="file explorer"
-      defaultExpandedItems={['2']}
-      defaultSelectedItems="2"
+      defaultExpandedItems={['1', '1.1']}
+      defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
     />
