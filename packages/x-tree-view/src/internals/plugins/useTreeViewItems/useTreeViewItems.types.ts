@@ -20,17 +20,18 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
   getItemMeta: (itemId: string) => TreeViewItemMeta;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (itemId: string | null) => string[];
+  getItemOrderedChildrenIds: (parentId: string | null) => string[];
   isItemDisabled: (itemId: string) => itemId is string;
   isItemNavigable: (itemId: string) => boolean;
+  getItemIndex: (itemId: string) => number;
   /**
    * Freeze any future update to the state based on the `items` prop.
-   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
    */
   preventItemUpdates: () => void;
   /**
    * Check if the updates to the state based on the `items` prop are prevented.
-   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
@@ -91,6 +92,8 @@ export interface UseTreeViewItemsState<R extends {}> {
     itemTree: TreeViewItemIdAndChildren[];
     itemMetaMap: TreeViewItemMetaMap;
     itemMap: TreeViewItemMap<R>;
+    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
+    itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
   };
 }
 

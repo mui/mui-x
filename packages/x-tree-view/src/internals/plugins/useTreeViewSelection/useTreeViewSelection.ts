@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
+import { TreeViewItemId } from '../../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNavigableItemsInRange,
-} from '../../useTreeView/useTreeView.utils';
+} from '../../utils/tree';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { convertSelectedItemsToArray } from './useTreeViewSelection.utils';
-import { TreeViewItemId } from '../../../models';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,

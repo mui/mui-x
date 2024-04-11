@@ -149,6 +149,8 @@ export type TreeItemWrapper = (params: {
   children: React.ReactNode;
 }) => React.ReactNode;
 
+export type TreeRootWrapper = (params: { children: React.ReactNode }) => React.ReactNode;
+
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
   getDefaultizedParams?: (
@@ -160,8 +162,14 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   itemPlugin?: TreeViewItemPlugin<any>;
   /**
    * Render function used to add React wrappers around the TreeItem.
-   * @param {TreeItemWrapperParams} params The params of the item.
-   * @returns {React.ReactNode} The wrapped items.
+   * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the item.
+   * @returns {React.ReactNode} The wrapped item.
    */
   wrapItem?: TreeItemWrapper;
+  /**
+   * Render function used to add React wrappers around the TreeView.
+   * @param {{ children: React.ReactNode; }} params The params of the root.
+   * @returns {React.ReactNode} The wrapped root.
+   */
+  wrapRoot?: TreeRootWrapper;
 };

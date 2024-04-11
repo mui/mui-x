@@ -1,17 +1,22 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
 import {
-  DescendantProvider,
-  TreeItemDescendant,
-  useDescendant,
-} from '../../TreeViewProvider/DescendantProvider';
+  TreeViewChildrenItemContext,
+  TreeViewChildrenItemProvider,
+} from '../../TreeViewProvider/TreeViewChildrenItemProvider';
+import {
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from '../useTreeViewItems/useTreeViewItems.utils';
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
+import { UseTreeViewIdSignature } from '../useTreeViewId';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -42,6 +47,25 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
       };
     });
   });
+
+  const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
+    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+
+    setState((prevState) => ({
+      ...prevState,
+      items: {
+        ...prevState.items,
+        itemOrderedChildrenIds: {
+          ...prevState.items.itemOrderedChildrenIds,
+          [parentIdWithDefault]: orderedChildrenIds,
+        },
+        itemChildrenIndexes: {
+          ...prevState.items.itemChildrenIndexes,
+          [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
+        },
+      },
+    }));
+  };
 
   const removeJSXItem = useEventCallback((itemId: string) => {
     setState((prevState) => {
@@ -80,6 +104,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     instance: {
       insertJSXItem,
       removeJSXItem,
+      setJSXItemsOrderedChildrenIds,
       mapFirstCharFromJSX,
     },
   };
@@ -90,9 +115,20 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
+  const { instance } = useTreeViewContext<[UseTreeViewIdSignature, UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
-  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+  const parentContext = React.useContext(TreeViewChildrenItemContext);
+  if (parentContext == null) {
+    throw new Error(
+      [
+        'MUI X: Could not find the Tree View Children Item context.',
+        'It looks like you rendered your component outside of a SimpleTreeView parent component.',
+        'This can also happen if you are bundling multiple versions of the Tree View.',
+      ].join('\n'),
+    );
+  }
+  const { registerChild, unregisterChild, parentId } = parentContext;
 
   const isExpandable = (reactChildren: React.ReactNode) => {
     if (Array.isArray(reactChildren)) {
@@ -103,39 +139,30 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   const expandable = isExpandable(children);
 
-  const [treeItemElement, setTreeItemElement] = React.useState<HTMLLIElement | null>(null);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
-
-  const handleRootRef = useForkRef(setTreeItemElement, rootRef);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
 
-  const descendant = React.useMemo<TreeItemDescendant>(
-    () => ({
-      element: treeItemElement!,
-      id: itemId,
-    }),
-    [itemId, treeItemElement],
-  );
+  // Prevent any flashing
+  useEnhancedEffect(() => {
+    const idAttributeWithDefault = instance.getTreeItemIdAttribute(itemId, id);
+    registerChild(idAttributeWithDefault, itemId);
 
-  const { index, parentId } = useDescendant(descendant);
+    return () => {
+      unregisterChild(idAttributeWithDefault);
+    };
+  }, [instance, registerChild, unregisterChild, itemId, id]);
 
   React.useEffect(() => {
-    // On the first render a item's index will be -1. We want to wait for the real index.
-    if (index !== -1) {
-      instance.insertJSXItem({
-        id: itemId,
-        idAttribute: id,
-        index,
-        parentId,
-        expandable,
-        disabled,
-      });
+    instance.insertJSXItem({
+      id: itemId,
+      idAttribute: id,
+      parentId,
+      expandable,
+      disabled,
+    });
 
-      return () => instance.removeJSXItem(itemId);
-    }
-
-    return undefined;
-  }, [instance, parentId, index, itemId, expandable, disabled, id]);
+    return () => instance.removeJSXItem(itemId);
+  }, [instance, parentId, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
@@ -149,14 +176,18 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   return {
     contentRef: handleContentRef,
-    rootRef: handleRootRef,
+    rootRef,
   };
 };
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
 useTreeViewJSXItems.wrapItem = ({ children, itemId }) => (
-  <DescendantProvider id={itemId}>{children}</DescendantProvider>
+  <TreeViewChildrenItemProvider itemId={itemId}>{children}</TreeViewChildrenItemProvider>
+);
+
+useTreeViewJSXItems.wrapRoot = ({ children }) => (
+  <TreeViewChildrenItemProvider>{children}</TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXItems.params = {};
