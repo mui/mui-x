@@ -39,9 +39,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Télécharger pour Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Chercher',
+  columnsManagementNoColumns: 'Pas de colonnes',
+  columnsManagementShowHideAllText: 'Aficher/Cacher tout',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
