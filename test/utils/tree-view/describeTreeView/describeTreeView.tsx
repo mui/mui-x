@@ -1,7 +1,8 @@
 import * as React from 'react';
 import createDescribe from '@mui-internal/test-utils/createDescribe';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer, ErrorBoundary } from '@mui-internal/test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
@@ -14,15 +15,15 @@ import {
   DescribeTreeViewItem,
 } from './describeTreeView.types';
 
-const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
+const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
   message: string,
-  testRunner: DescribeTreeViewTestRunner<TPlugin>,
+  testRunner: DescribeTreeViewTestRunner<TPlugins>,
 ): void => {
   const { render } = createRenderer();
 
   const getUtils = (
     result: MuiRenderResult,
-  ): Omit<DescribeTreeViewRendererReturnValue<TPlugin>, 'setProps' | 'apiRef'> => {
+  ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllItemRoots = () => result.queryAllByRole('treeitem');
@@ -54,174 +55,170 @@ const innerDescribeTreeView = <TPlugin extends TreeViewAnyPluginSignature>(
     };
   };
 
+  const createRendererForComponentWithItemsProp = (
+    TreeViewComponent: typeof RichTreeView,
+    TreeItemComponent: typeof TreeItem | typeof TreeItem2,
+  ) => {
+    const wrappedRenderer: DescribeTreeViewRenderer<TPlugins> = ({
+      items: rawItems,
+      withErrorBoundary,
+      slotProps,
+      ...other
+    }) => {
+      const items = rawItems as readonly DescribeTreeViewItem[];
+      const apiRef = { current: undefined };
+
+      const jsx = (
+        <TreeViewComponent
+          items={items}
+          apiRef={apiRef}
+          slots={{ item: TreeItemComponent }}
+          slotProps={{
+            ...slotProps,
+            item: (ownerState) =>
+              ({
+                ...slotProps?.item,
+                'data-testid': ownerState.itemId,
+              }) as any,
+          }}
+          getItemLabel={(item) => item.label ?? item.id}
+          isItemDisabled={(item) => !!item.disabled}
+          {...other}
+        />
+      );
+
+      const result = render(withErrorBoundary ? <ErrorBoundary>{jsx}</ErrorBoundary> : jsx);
+
+      return {
+        setProps: result.setProps,
+        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
+        ...getUtils(result),
+      };
+    };
+
+    return wrappedRenderer;
+  };
+
+  const createRendererForComponentWithJSXItems = (
+    TreeViewComponent: typeof SimpleTreeView,
+    TreeItemComponent: typeof TreeItem | typeof TreeItem2,
+  ) => {
+    const wrappedRenderer: DescribeTreeViewRenderer<TPlugins> = ({
+      items: rawItems,
+      withErrorBoundary,
+      slots,
+      slotProps,
+      ...other
+    }) => {
+      const items = rawItems as readonly DescribeTreeViewItem[];
+      const Item = slots?.item ?? TreeItemComponent;
+      const apiRef = { current: undefined };
+
+      const renderItem = (item: DescribeTreeViewItem) => (
+        <Item
+          itemId={item.id}
+          label={item.label ?? item.id}
+          disabled={item.disabled}
+          data-testid={item.id}
+          key={item.id}
+          {...slotProps?.item}
+        >
+          {item.children?.map(renderItem)}
+        </Item>
+      );
+
+      const jsx = (
+        <TreeViewComponent slots={slots} slotProps={slotProps} apiRef={apiRef} {...other}>
+          {items.map(renderItem)}
+        </TreeViewComponent>
+      );
+
+      const result = render(withErrorBoundary ? <ErrorBoundary>{jsx}</ErrorBoundary> : jsx);
+
+      return {
+        setProps: result.setProps,
+        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
+        ...getUtils(result),
+      };
+    };
+
+    return wrappedRenderer;
+  };
+
   describe(message, () => {
     describe('RichTreeView + TreeItem', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
-        items: rawItems,
-        slotProps,
-        ...other
-      }) => {
-        const items = rawItems as readonly DescribeTreeViewItem[];
-        const apiRef = { current: undefined };
-        const result = render(
-          <RichTreeView
-            items={items}
-            apiRef={apiRef}
-            slotProps={{
-              ...slotProps,
-              item: (ownerState) =>
-                ({
-                  ...slotProps?.item,
-                  'data-testid': ownerState.itemId,
-                }) as any,
-            }}
-            getItemLabel={(item) => item.label ?? item.id}
-            isItemDisabled={(item) => !!item.disabled}
-            {...other}
-          />,
-        );
-
-        return {
-          setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
-          ...getUtils(result),
-        };
-      };
-
-      testRunner({ render: renderRichTreeView, setup: 'RichTreeView + TreeItem' });
+      testRunner({
+        render: createRendererForComponentWithItemsProp(RichTreeView, TreeItem),
+        setup: 'RichTreeView + TreeItem',
+        treeViewComponent: 'RichTreeView',
+        treeItemComponent: 'TreeItem',
+      });
     });
 
     describe('RichTreeView + TreeItem2', () => {
-      const renderRichTreeView: DescribeTreeViewRenderer<TPlugin> = ({
-        items: rawItems,
-        slots,
-        slotProps,
-        ...other
-      }) => {
-        const items = rawItems as readonly DescribeTreeViewItem[];
-        const apiRef = { current: undefined };
-        const result = render(
-          <RichTreeView
-            items={items}
-            apiRef={apiRef}
-            slots={{ item: TreeItem2, ...slots }}
-            slotProps={{
-              ...slotProps,
-              item: (ownerState) =>
-                ({
-                  ...slotProps?.item,
-                  'data-testid': ownerState.itemId,
-                }) as any,
-            }}
-            getItemLabel={(item) => item.label ?? item.id}
-            isItemDisabled={(item) => !!item.disabled}
-            {...other}
-          />,
-        );
+      testRunner({
+        render: createRendererForComponentWithItemsProp(RichTreeView, TreeItem2),
+        setup: 'RichTreeView + TreeItem2',
+        treeViewComponent: 'RichTreeView',
+        treeItemComponent: 'TreeItem2',
+      });
+    });
 
-        return {
-          setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
-          ...getUtils(result),
-        };
-      };
+    describe('RichTreeViewPro + TreeItem', () => {
+      testRunner({
+        render: createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem),
+        setup: 'RichTreeViewPro + TreeItem',
+        treeViewComponent: 'RichTreeViewPro',
+        treeItemComponent: 'TreeItem',
+      });
+    });
 
-      testRunner({ render: renderRichTreeView, setup: 'RichTreeView + TreeItem2' });
+    describe('RichTreeViewPro + TreeItem2', () => {
+      testRunner({
+        render: createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem2),
+        setup: 'RichTreeViewPro + TreeItem2',
+        treeViewComponent: 'RichTreeViewPro',
+        treeItemComponent: 'TreeItem2',
+      });
     });
 
     describe('SimpleTreeView + TreeItem', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
-        items: rawItems,
-        slots,
-        ...other
-      }) => {
-        const items = rawItems as readonly DescribeTreeViewItem[];
-        const Item = slots?.item ?? TreeItem;
-        const apiRef = { current: undefined };
-
-        const renderItem = (item: DescribeTreeViewItem) => (
-          <Item
-            itemId={item.id}
-            label={item.label ?? item.id}
-            disabled={item.disabled}
-            data-testid={item.id}
-            key={item.id}
-          >
-            {item.children?.map(renderItem)}
-          </Item>
-        );
-
-        const result = render(
-          <SimpleTreeView slots={slots} apiRef={apiRef} {...other}>
-            {items.map(renderItem)}
-          </SimpleTreeView>,
-        );
-
-        return {
-          setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
-          ...getUtils(result),
-        };
-      };
-
-      testRunner({ render: renderSimpleTreeView, setup: 'SimpleTreeView + TreeItem' });
+      testRunner({
+        render: createRendererForComponentWithJSXItems(SimpleTreeView, TreeItem),
+        setup: 'SimpleTreeView + TreeItem',
+        treeViewComponent: 'SimpleTreeView',
+        treeItemComponent: 'TreeItem',
+      });
     });
 
     describe('SimpleTreeView + TreeItem2', () => {
-      const renderSimpleTreeView: DescribeTreeViewRenderer<TPlugin> = ({
-        items: rawItems,
-        slots,
-        ...other
-      }) => {
-        const items = rawItems as readonly DescribeTreeViewItem[];
-        const Item = slots?.item ?? TreeItem2;
-        const apiRef = { current: undefined };
-
-        const renderItem = (item: DescribeTreeViewItem) => (
-          <Item
-            itemId={item.id}
-            label={item.label ?? item.id}
-            disabled={item.disabled}
-            data-testid={item.id}
-            key={item.id}
-          >
-            {item.children?.map(renderItem)}
-          </Item>
-        );
-
-        const result = render(
-          <SimpleTreeView slots={slots} apiRef={apiRef} {...other}>
-            {items.map(renderItem)}
-          </SimpleTreeView>,
-        );
-
-        return {
-          setProps: result.setProps,
-          apiRef: apiRef as { current: TreeViewPublicAPI<[TPlugin]> },
-          ...getUtils(result),
-        };
-      };
-
-      testRunner({ render: renderSimpleTreeView, setup: 'SimpleTreeView + TreeItem2' });
+      testRunner({
+        render: createRendererForComponentWithJSXItems(SimpleTreeView, TreeItem2),
+        setup: 'SimpleTreeView + TreeItem2',
+        treeViewComponent: 'SimpleTreeView',
+        treeItemComponent: 'TreeItem2',
+      });
     });
   });
 };
 
-type Params<TPlugin extends TreeViewAnyPluginSignature> = [
+type Params<TPlugins extends TreeViewAnyPluginSignature[]> = [
   string,
-  DescribeTreeViewTestRunner<TPlugin>,
+  DescribeTreeViewTestRunner<TPlugins>,
 ];
 
 type DescribeTreeView = {
-  <P extends TreeViewAnyPluginSignature>(...args: Params<P>): void;
-  skip: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
-  only: <P extends TreeViewAnyPluginSignature>(...args: Params<P>) => void;
+  <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>): void;
+  skip: <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>) => void;
+  only: <TPlugins extends TreeViewAnyPluginSignature[]>(...args: Params<TPlugins>) => void;
 };
 
 /**
  * Describe tests for the Tree View that will be executed with the following setups:
  * - RichTreeView + TreeItem
  * - RichTreeView + TreeItem2
+ * - RichTreeViewPro + TreeItem
+ * - RichTreeViewPro + TreeItem2
  * - SimpleTreeView + TreeItem
  * - SimpleTreeView + TreeItem2
  *

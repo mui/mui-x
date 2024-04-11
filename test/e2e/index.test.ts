@@ -10,6 +10,7 @@ import {
   devices,
   BrowserContextOptions,
   BrowserType,
+  WebError,
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
@@ -23,8 +24,8 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    let intervalId: NodeJS.Timer | null = null;
-    let timeoutId: NodeJS.Timer | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
     let lastError: any = null;
 
     function handleTimeout() {
@@ -514,6 +515,29 @@ async function initializeEnvironment(
           await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
         ).not.to.equal('v');
       });
+
+      // https://github.com/mui/mui-x/issues/12705
+      it('should not crash if the date is invalid', async () => {
+        await renderFixture('DataGrid/KeyboardEditDate');
+
+        await page.hover('div[role="columnheader"][data-field="birthday"]');
+        await page.click(
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+        );
+        await page.click('"Filter"');
+        await page.keyboard.type('08/04/2024', { delay: 10 });
+
+        let thrownError: Error | null = null;
+        context.once('weberror', (webError: WebError) => {
+          thrownError = webError.error();
+          console.error(thrownError);
+        });
+
+        await page.keyboard.press('Backspace');
+
+        await sleep(200);
+        expect(thrownError).to.equal(null);
+      });
     });
 
     describe('<DatePicker />', () => {
@@ -532,6 +556,23 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
+        });
+
+        // assertion for: https://github.com/mui/mui-x/issues/12652
+        it('should allow field editing after opening and closing the picker', async () => {
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+          // open picker
+          await page.getByRole('button').click();
+          await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+          // close picker
+          await page.getByRole('button', { name: 'Choose date' }).click();
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+          // click on the input to focus it
+          await page.getByRole('textbox').click();
+
+          // test that the input value is set after focus
+          expect(await page.getByRole('textbox').inputValue()).to.equal('MM/DD/YYYY');
         });
 
         it('should allow filling in a value and clearing a value', async () => {
@@ -624,7 +665,7 @@ async function initializeEnvironment(
         });
 
         it('should focus the first field section after clearing a value in v6 input', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePickerV6');
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
 
           await page.getByRole('textbox').fill('2');
           await page.getByRole('button', { name: 'Clear value' }).click();

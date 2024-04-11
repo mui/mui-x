@@ -1,34 +1,34 @@
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
-  TreeViewNodeMap,
-  TreeViewItemIdAndChildren,
   UseTreeViewItemsState,
-  TreeViewItemMap,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
+interface UpdateNodesStateParameters
+  extends Pick<
+    UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+  > {}
+
+type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: Pick<
-  UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
-  'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
->): UseTreeViewItemsState<any>['items'] => {
-  const nodeMap: TreeViewNodeMap = {};
-  const itemMap: TreeViewItemMap<any> = {};
+}: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
+  const itemMetaMap: State['itemMetaMap'] = {};
+  const itemMap: State['itemMap'] = {};
+  const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
+    [TREE_VIEW_ROOT_PARENT_ID]: [],
+  };
 
-  const processItem = (
-    item: TreeViewBaseItem,
-    index: number,
-    parentId: string | null,
-  ): TreeViewItemIdAndChildren => {
+  const processItem = (item: TreeViewBaseItem, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -42,7 +42,7 @@ const updateItemsState = ({
       );
     }
 
-    if (nodeMap[id] != null) {
+    if (itemMetaMap[id] != null) {
       throw new Error(
         [
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -64,10 +64,9 @@ const updateItemsState = ({
       );
     }
 
-    nodeMap[id] = {
+    itemMetaMap[id] = {
       id,
       label,
-      index,
       parentId,
       idAttribute: undefined,
       expandable: !!item.children?.length,
@@ -75,32 +74,40 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
+    itemOrderedChildrenIds[id] = [];
+    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    if (!itemOrderedChildrenIds[parentIdWithDefault]) {
+      itemOrderedChildrenIds[parentIdWithDefault] = [];
+    }
+    itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
-    return {
-      id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
-    };
+    item.children?.forEach((child) => processItem(child, id));
   };
 
-  const nodeTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  items.forEach((item) => processItem(item, null));
+
+  const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
+  Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
+    itemChildrenIndexes[parentId] = buildSiblingIndexes(itemOrderedChildrenIds[parentId]);
+  });
 
   return {
-    nodeMap,
-    nodeTree,
+    itemMetaMap,
     itemMap,
+    itemOrderedChildrenIds,
+    itemChildrenIndexes,
   };
 };
 
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
-  publicAPI,
   params,
   state,
   setState,
 }) => {
-  const getNode = React.useCallback(
-    (itemId: string) => state.items.nodeMap[itemId],
-    [state.items.nodeMap],
+  const getItemMeta = React.useCallback(
+    (itemId: string) => state.items.itemMetaMap[itemId],
+    [state.items.itemMetaMap],
   );
 
   const getItem = React.useCallback(
@@ -114,20 +121,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return false;
       }
 
-      let node = instance.getNode(itemId);
+      let itemMeta = instance.getItemMeta(itemId);
 
       // This can be called before the item has been added to the item map.
-      if (!node) {
+      if (!itemMeta) {
         return false;
       }
 
-      if (node.disabled) {
+      if (itemMeta.disabled) {
         return true;
       }
 
-      while (node.parentId != null) {
-        node = instance.getNode(node.parentId);
-        if (node.disabled) {
+      while (itemMeta.parentId != null) {
+        itemMeta = instance.getItemMeta(itemMeta.parentId);
+        if (itemMeta.disabled) {
           return true;
         }
       }
@@ -137,22 +144,25 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [instance],
   );
 
-  const getChildrenIds = React.useCallback(
-    (itemId: string | null) =>
-      Object.values(state.items.nodeMap)
-        .filter((item) => item.parentId === itemId)
-        .sort((a, b) => a.index - b.index)
-        .map((child) => child.id),
-    [state.items.nodeMap],
+  const getItemIndex = React.useCallback(
+    (itemId: string) => {
+      const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      return state.items.itemChildrenIndexes[parentId][itemId];
+    },
+    [instance, state.items.itemChildrenIndexes],
   );
 
-  const getNavigableChildrenIds = (itemId: string | null) => {
-    let childrenIds = instance.getChildrenIds(itemId);
+  const getItemOrderedChildrenIds = React.useCallback(
+    (itemId: string | null) =>
+      state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
+    [state.items.itemOrderedChildrenIds],
+  );
 
-    if (!params.disabledItemsFocusable) {
-      childrenIds = childrenIds.filter((item) => !instance.isItemDisabled(item));
+  const isItemNavigable = (itemId: string) => {
+    if (params.disabledItemsFocusable) {
+      return true;
     }
-    return childrenIds;
+    return !instance.isItemDisabled(itemId);
   };
 
   const areItemUpdatesPreventedRef = React.useRef(false);
@@ -175,8 +185,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         getItemLabel: params.getItemLabel,
       });
 
-      Object.values(prevState.items.nodeMap).forEach((item) => {
-        if (!newState.nodeMap[item.id]) {
+      Object.values(prevState.items.itemMetaMap).forEach((item) => {
+        if (!newState.itemMetaMap[item.id]) {
           publishTreeViewEvent(instance, 'removeItem', { id: item.id });
         }
       });
@@ -193,38 +203,36 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   ]);
 
   const getItemsToRender = () => {
-    const getPropsFromItemId = ({
-      id,
-      children,
-    }: TreeViewItemIdAndChildren): ReturnType<typeof instance.getItemsToRender>[number] => {
-      const item = state.items.nodeMap[id];
+    const getPropsFromItemId = (
+      id: TreeViewItemId,
+    ): ReturnType<typeof instance.getItemsToRender>[number] => {
+      const item = state.items.itemMetaMap[id];
       return {
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: children?.map(getPropsFromItemId),
+        children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
       };
     };
 
-    return state.items.nodeTree.map(getPropsFromItemId);
+    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
   };
 
-  populateInstance<UseTreeViewItemsSignature>(instance, {
-    getNode,
-    getItem,
-    getItemsToRender,
-    getChildrenIds,
-    getNavigableChildrenIds,
-    isItemDisabled,
-    preventItemUpdates,
-    areItemUpdatesPrevented,
-  });
-
-  populatePublicAPI<UseTreeViewItemsSignature>(publicAPI, {
-    getItem,
-  });
-
   return {
+    publicAPI: {
+      getItem,
+    },
+    instance: {
+      getItemMeta,
+      getItem,
+      getItemsToRender,
+      getItemIndex,
+      getItemOrderedChildrenIds,
+      isItemDisabled,
+      isItemNavigable,
+      preventItemUpdates,
+      areItemUpdatesPrevented,
+    },
     contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
   };
 };
