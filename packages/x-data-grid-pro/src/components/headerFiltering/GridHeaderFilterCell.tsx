@@ -382,6 +382,41 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
+  dimensions: PropTypes.shape({
+    bottomContainerHeight: PropTypes.number.isRequired,
+    columnsTotalWidth: PropTypes.number.isRequired,
+    contentSize: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+    hasScrollX: PropTypes.bool.isRequired,
+    hasScrollY: PropTypes.bool.isRequired,
+    headerHeight: PropTypes.number.isRequired,
+    headersTotalHeight: PropTypes.number.isRequired,
+    isReady: PropTypes.bool.isRequired,
+    leftPinnedWidth: PropTypes.number.isRequired,
+    minimumSize: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+    rightPinnedWidth: PropTypes.number.isRequired,
+    root: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+    rowHeight: PropTypes.number.isRequired,
+    rowWidth: PropTypes.number.isRequired,
+    scrollbarSize: PropTypes.number.isRequired,
+    topContainerHeight: PropTypes.number.isRequired,
+    viewportInnerSize: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+    viewportOuterSize: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.
