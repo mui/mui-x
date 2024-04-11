@@ -12,5 +12,5 @@ export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLo
   /**
    * GridApi that let you manipulate the grid.
    */
-  api?: GridApiCommunity;
+  api: GridApiCommunity;
 }
