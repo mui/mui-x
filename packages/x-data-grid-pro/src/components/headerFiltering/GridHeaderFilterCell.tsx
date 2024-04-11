@@ -17,6 +17,7 @@ import {
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
+  GridDimensions,
 } from '@mui/x-data-grid';
 import {
   fastMemo,
@@ -53,6 +54,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  dimensions: GridDimensions;
 }
 
 type OwnerState = DataGridProProcessedProps & {
@@ -103,6 +105,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       style: styleProp,
       indexInSection,
       sectionLength,
+      dimensions,
       ...other
     } = props;
 
@@ -271,6 +274,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
+      dimensions,
     );
 
     const ownerState: OwnerState = {

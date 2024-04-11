@@ -4,6 +4,7 @@ import { unstable_composeClasses as composeClasses, unstable_useId as useId } fr
 import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
+import { GridDimensions } from '../../hooks/features/dimensions';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
@@ -36,6 +37,7 @@ interface GridColumnHeaderItemProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  dimensions: GridDimensions;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -104,6 +106,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
+    dimensions,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -129,6 +132,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    dimensions,
   );
 
   const ownerState = {

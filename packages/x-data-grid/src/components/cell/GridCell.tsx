@@ -31,6 +31,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
+import { GridDimensions } from '../../hooks/features/dimensions';
 import type {
   DataGridProcessedProps,
   DataGridProcessedPropsWithShared,
@@ -67,6 +68,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
+  dimensions: GridDimensions;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -167,6 +169,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
+    dimensions,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -270,6 +273,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     sectionIndex,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    dimensions,
   );
 
   const ownerState = {

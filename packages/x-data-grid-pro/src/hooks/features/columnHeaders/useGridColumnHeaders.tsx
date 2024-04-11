@@ -138,6 +138,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={i}
           sectionLength={renderedColumns.length}
+          dimensions={dimensions}
           {...rootProps.slotProps?.headerFilterCell}
         />,
       );
