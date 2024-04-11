@@ -130,11 +130,6 @@ export const useGridRowCount = (
         if (rowCountState === -1) {
           // Row count unknown and page size changed, reset the page
           apiRef.current.setPage(0);
-          return;
-        }
-        const lastPage = Math.max(0, Math.ceil(rowCountState / model.pageSize) - 1);
-        if (model.page > lastPage) {
-          apiRef.current.setPage(lastPage);
         }
       }
     },
