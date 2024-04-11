@@ -111,6 +111,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     theme.direction,
     pinnedColumns.left.length,
   );
+  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
@@ -281,7 +282,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={i}
           sectionLength={renderedColumns.length}
-          dimensions={dimensions}
+          gridHasFiller={gridHasFiller}
           {...other}
         />,
       );
@@ -442,7 +443,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={indexInSection}
           sectionLength={renderedColumns.length}
-          dimensions={dimensions}
+          gridHasFiller={gridHasFiller}
         />
       );
     });

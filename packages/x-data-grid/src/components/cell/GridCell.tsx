@@ -31,7 +31,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
-import { GridDimensions } from '../../hooks/features/dimensions';
 import type {
   DataGridProcessedProps,
   DataGridProcessedPropsWithShared,
@@ -68,7 +67,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
-  dimensions: GridDimensions;
+  gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -169,7 +168,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
-    dimensions,
+    gridHasFiller,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -273,7 +272,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     sectionIndex,
     sectionLength,
     rootProps.showCellVerticalBorder,
-    dimensions,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -490,41 +489,6 @@ GridCell.propTypes = {
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
-  dimensions: PropTypes.shape({
-    bottomContainerHeight: PropTypes.number.isRequired,
-    columnsTotalWidth: PropTypes.number.isRequired,
-    contentSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    hasScrollX: PropTypes.bool.isRequired,
-    hasScrollY: PropTypes.bool.isRequired,
-    headerHeight: PropTypes.number.isRequired,
-    headersTotalHeight: PropTypes.number.isRequired,
-    isReady: PropTypes.bool.isRequired,
-    leftPinnedWidth: PropTypes.number.isRequired,
-    minimumSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rightPinnedWidth: PropTypes.number.isRequired,
-    root: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    rowWidth: PropTypes.number.isRequired,
-    scrollbarSize: PropTypes.number.isRequired,
-    topContainerHeight: PropTypes.number.isRequired,
-    viewportInnerSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    viewportOuterSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
   disableDragEvents: PropTypes.bool,
   editCellState: PropTypes.shape({
     changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
@@ -532,6 +496,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

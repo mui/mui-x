@@ -5,7 +5,6 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridColumnGroupsLookupSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
-import { GridDimensions } from '../../hooks/features/dimensions';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
@@ -31,7 +30,7 @@ interface GridColumnGroupHeaderProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
-  dimensions: GridDimensions;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = {
@@ -93,7 +92,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     style,
     indexInSection,
     sectionLength,
-    dimensions,
+    gridHasFiller,
   } = props;
 
   const rootProps = useGridRootProps();
@@ -132,7 +131,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
-    dimensions,
+    gridHasFiller,
   );
 
   const ownerState = {

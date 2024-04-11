@@ -1,4 +1,3 @@
-import { GridDimensions } from '../hooks/features/dimensions';
 import { GridPinnedColumnPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 
 export const shouldCellShowRightBorder = (
@@ -6,7 +5,7 @@ export const shouldCellShowRightBorder = (
   indexInSection: number,
   sectionLength: number,
   showCellVerticalBorderRootProp: boolean,
-  dimensions: GridDimensions,
+  gridHasFiller: boolean,
 ) => {
   const isSectionLastCell = indexInSection === sectionLength - 1;
 
@@ -21,7 +20,7 @@ export const shouldCellShowRightBorder = (
       return !isSectionLastCell;
     }
     // pinnedPosition === undefined, middle section
-    return !isSectionLastCell || dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
+    return !isSectionLastCell || gridHasFiller;
   }
   return false;
 };

@@ -4,7 +4,6 @@ import { unstable_composeClasses as composeClasses, unstable_useId as useId } fr
 import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { GridDimensions } from '../../hooks/features/dimensions';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
@@ -37,7 +36,7 @@ interface GridColumnHeaderItemProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
-  dimensions: GridDimensions;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -106,7 +105,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
-    dimensions,
+    gridHasFiller,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -132,7 +131,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
-    dimensions,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -315,43 +314,9 @@ GridColumnHeaderItem.propTypes = {
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
-  dimensions: PropTypes.shape({
-    bottomContainerHeight: PropTypes.number.isRequired,
-    columnsTotalWidth: PropTypes.number.isRequired,
-    contentSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    hasScrollX: PropTypes.bool.isRequired,
-    hasScrollY: PropTypes.bool.isRequired,
-    headerHeight: PropTypes.number.isRequired,
-    headersTotalHeight: PropTypes.number.isRequired,
-    isReady: PropTypes.bool.isRequired,
-    leftPinnedWidth: PropTypes.number.isRequired,
-    minimumSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rightPinnedWidth: PropTypes.number.isRequired,
-    root: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    rowWidth: PropTypes.number.isRequired,
-    scrollbarSize: PropTypes.number.isRequired,
-    topContainerHeight: PropTypes.number.isRequired,
-    viewportInnerSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    viewportOuterSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
   disableReorder: PropTypes.bool,
   filterItemsCounter: PropTypes.number,
+  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   indexInSection: PropTypes.number.isRequired,
