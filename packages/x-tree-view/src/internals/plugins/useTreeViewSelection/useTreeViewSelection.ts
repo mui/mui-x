@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { TreeViewPlugin, TreeViewItemRange } from '../../models';
-import { getNextItem, getFirstItem, getLastItem } from '../../useTreeView/useTreeView.utils';
+import {
+  getFirstNavigableItem,
+  getLastNavigableItem,
+  getNavigableItemsInRange,
+} from '../../utils/tree';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
-import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -80,20 +83,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentRangeSelection.current = [];
   };
 
-  const getItemsInRange = (itemAId: string, itemBId: string) => {
-    const [first, last] = findOrderInTremauxTree(instance, itemAId, itemBId);
-    const items = [first];
-
-    let current = first;
-
-    while (current !== last) {
-      current = getNextItem(instance, current)!;
-      items.push(current);
-    }
-
-    return items;
-  };
-
   const handleRangeArrowSelect = (event: React.SyntheticEvent, items: TreeViewItemRange) => {
     let base = (models.selectedItems.value as string[]).slice();
     const { start, next, current } = items;
@@ -134,7 +123,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       base = base.filter((id) => currentRangeSelection.current.indexOf(id) === -1);
     }
 
-    let range = getItemsInRange(start, end);
+    let range = getNavigableItemsInRange(instance, start, end);
     range = range.filter((item) => !instance.isItemDisabled(item));
     currentRangeSelection.current = range;
     let newSelected = base.concat(range);
@@ -165,7 +154,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getFirstItem(instance),
+      end: getFirstNavigableItem(instance),
     });
   };
 
@@ -178,7 +167,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     instance.selectRange(event, {
       start,
-      end: getLastItem(instance),
+      end: getLastNavigableItem(instance),
     });
   };
 

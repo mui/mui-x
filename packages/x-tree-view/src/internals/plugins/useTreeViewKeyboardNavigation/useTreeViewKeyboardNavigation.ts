@@ -3,11 +3,11 @@ import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
-  getFirstItem,
-  getLastItem,
-  getNextItem,
-  getPreviousItem,
-} from '../../useTreeView/useTreeView.utils';
+  getFirstNavigableItem,
+  getLastNavigableItem,
+  getNextNavigableItem,
+  getPreviousNavigableItem,
+} from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
@@ -157,7 +157,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focus the next focusable item
       case key === 'ArrowDown': {
-        const nextItem = getNextItem(instance, itemId);
+        const nextItem = getNextNavigableItem(instance, itemId);
         if (nextItem) {
           event.preventDefault();
           instance.focusItem(event, nextItem);
@@ -181,7 +181,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the previous focusable item
       case key === 'ArrowUp': {
-        const previousItem = getPreviousItem(instance, itemId);
+        const previousItem = getPreviousNavigableItem(instance, itemId);
         if (previousItem) {
           event.preventDefault();
           instance.focusItem(event, previousItem);
@@ -207,7 +207,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
         if (instance.isItemExpanded(itemId)) {
-          const nextItemId = getNextItem(instance, itemId);
+          const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
             instance.focusItem(event, nextItemId);
             event.preventDefault();
@@ -239,7 +239,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the first item in the tree
       case key === 'Home': {
-        instance.focusItem(event, getFirstItem(instance));
+        instance.focusItem(event, getFirstNavigableItem(instance));
 
         // Multi select behavior when pressing Ctrl + Shift + Home
         // Selects the focused item and all items up to the first item.
@@ -253,7 +253,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the last item in the tree
       case key === 'End': {
-        instance.focusItem(event, getLastItem(instance));
+        instance.focusItem(event, getLastNavigableItem(instance));
 
         // Multi select behavior when pressing Ctrl + Shirt + End
         // Selects the focused item and all the items down to the last item.
@@ -276,8 +276,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // Selects all the items
       case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
         instance.selectRange(event, {
-          start: getFirstItem(instance),
-          end: getLastItem(instance),
+          start: getFirstNavigableItem(instance),
+          end: getLastNavigableItem(instance),
         });
         event.preventDefault();
         break;
