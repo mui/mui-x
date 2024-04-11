@@ -282,7 +282,7 @@ ChartsYAxis.propTypes = {
    */
   tickMinStep: PropTypes.number,
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,
