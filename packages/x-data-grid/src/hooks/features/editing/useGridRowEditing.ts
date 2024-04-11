@@ -349,7 +349,9 @@ export const useGridRowEditing = (
     const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
 
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
-      onRowModesModelChange(newModel, {});
+      onRowModesModelChange(newModel, {
+        api: apiRef.current,
+      });
     }
 
     if (props.rowModesModel && isNewModelDifferentFromProp) {
