@@ -4,7 +4,6 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DrawingContext } from '../context/DrawingProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -12,6 +11,7 @@ import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
@@ -130,8 +130,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
-
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 

@@ -4,9 +4,10 @@ import { animated, useSpring } from '@react-spring/web';
 import { color as d3Color } from 'd3-color';
 import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { DrawingContext } from '../context/DrawingProvider';
 import { cleanId } from '../internals/utils';
 import type { LineElementOwnerState } from './LineElement';
+import { useChartId } from '../hooks/useChartId';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
@@ -45,7 +46,8 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
+  const { left, top, bottom, width, height, right } = useDrawingArea();
+  const chartId = useChartId();
 
   const path = useAnimatedPath(d, skipAnimation);
 

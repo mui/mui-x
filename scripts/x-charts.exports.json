@@ -256,6 +256,7 @@
   { "name": "StackOffsetType", "kind": "TypeAlias" },
   { "name": "StackOrderType", "kind": "TypeAlias" },
   { "name": "unstable_useSeries", "kind": "Function" },
+  { "name": "useChartId", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
