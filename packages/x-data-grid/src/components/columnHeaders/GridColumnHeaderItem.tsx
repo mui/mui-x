@@ -36,6 +36,7 @@ interface GridColumnHeaderItemProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -104,6 +105,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
+    gridHasFiller,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -129,6 +131,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -313,6 +316,7 @@ GridColumnHeaderItem.propTypes = {
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
   filterItemsCounter: PropTypes.number,
+  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   indexInSection: PropTypes.number.isRequired,

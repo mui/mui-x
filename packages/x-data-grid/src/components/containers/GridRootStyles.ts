@@ -646,6 +646,9 @@ export const GridRootStyles = styled('div', {
     [`& .${c.filler}`]: {
       flex: 1,
     },
+    [`& .${c['filler--borderTop']}`]: {
+      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+    },
   };
 
   return gridStyle;
