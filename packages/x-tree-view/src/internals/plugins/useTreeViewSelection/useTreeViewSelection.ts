@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { TreeViewPlugin, TreeViewItemRange } from '../../models';
+import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import {
+  findOrderInTremauxTree,
+  getAllNavigableItems,
   getFirstNavigableItem,
   getLastNavigableItem,
-  getNavigableItemsInRange,
+  getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
-import { convertSelectedItemsToArray } from './useTreeViewSelection.utils';
+import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -15,8 +17,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   models,
 }) => {
   const lastSelectedItem = React.useRef<string | null>(null);
-  const lastSelectionWasRange = React.useRef(false);
-  const currentRangeSelection = React.useRef<string[]>([]);
+  const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
 
   const selectedItemsMap = React.useMemo(() => {
     const temp = new Map<TreeViewItemId, boolean>();
@@ -89,96 +90,87 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     setSelectedItems(event, newSelected);
     lastSelectedItem.current = itemId;
-    lastSelectionWasRange.current = false;
-    currentRangeSelection.current = [];
+    lastSelectedRange.current = {};
   };
 
-  const handleRangeArrowSelect = (event: React.SyntheticEvent, items: TreeViewItemRange) => {
-    let base = convertSelectedItemsToArray(models.selectedItems.value).slice();
-    const { start, end, current } = items;
-
-    if (!end || !current) {
+  const selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {
+    if (params.disableSelection || !params.multiSelect) {
       return;
     }
 
-    if (currentRangeSelection.current.indexOf(current) === -1) {
-      currentRangeSelection.current = [];
+    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+
+    // If the last selection was a range selection,
+    // remove the items that were part of the last range from the model
+    if (Object.keys(lastSelectedRange.current).length > 0) {
+      newSelectedItems = newSelectedItems.filter((id) => !lastSelectedRange.current[id]);
     }
 
-    if (lastSelectionWasRange.current) {
-      if (currentRangeSelection.current.indexOf(end) !== -1) {
-        base = base.filter((id) => id === start || id !== current);
-        currentRangeSelection.current = currentRangeSelection.current.filter(
-          (id) => id === start || id !== current,
-        );
-      } else {
-        base.push(end);
-        currentRangeSelection.current.push(end);
-      }
-    } else {
-      base.push(end);
-      currentRangeSelection.current.push(current, end);
-    }
-    setSelectedItems(event, base);
+    // Add to the model the items that are part of the new range and not already part of the model.
+    const selectedItemsLookup = getLookupFromArray(newSelectedItems);
+    const range = getNonDisabledItemsInRange(instance, start, end);
+    const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
+    newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
+
+    setSelectedItems(event, newSelectedItems);
+    lastSelectedRange.current = getLookupFromArray(range);
   };
 
-  const handleRangeSelect = (
+  const expandSelectionRange = (event: React.SyntheticEvent, itemId: string) => {
+    if (lastSelectedItem.current != null) {
+      const [start, end] = findOrderInTremauxTree(instance, itemId, lastSelectedItem.current);
+      selectRange(event, [start, end]);
+    }
+  };
+
+  const selectRangeFromStartToItem = (event: React.SyntheticEvent, itemId: string) => {
+    selectRange(event, [getFirstNavigableItem(instance), itemId]);
+  };
+
+  const selectRangeFromItemToEnd = (event: React.SyntheticEvent, itemId: string) => {
+    selectRange(event, [itemId, getLastNavigableItem(instance)]);
+  };
+
+  const selectAllNavigableItems = (event: React.SyntheticEvent) => {
+    if (params.disableSelection || !params.multiSelect) {
+      return;
+    }
+
+    const navigableItems = getAllNavigableItems(instance);
+    setSelectedItems(event, navigableItems);
+
+    lastSelectedRange.current = getLookupFromArray(navigableItems);
+  };
+
+  const selectItemFromArrowNavigation = (
     event: React.SyntheticEvent,
-    items: { start: string; end: string },
+    currentItem: string,
+    nextItem: string,
   ) => {
-    let base = convertSelectedItemsToArray(models.selectedItems.value).slice();
-    const { start, end } = items;
-    // If last selection was a range selection ignore items that were selected.
-    if (lastSelectionWasRange.current) {
-      base = base.filter((id) => currentRangeSelection.current.indexOf(id) === -1);
-    }
-
-    let range = getNavigableItemsInRange(instance, start, end);
-    range = range.filter((item) => !instance.isItemDisabled(item));
-    currentRangeSelection.current = range;
-    let newSelected = base.concat(range);
-    newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-    setSelectedItems(event, newSelected);
-  };
-
-  const selectRange = (event: React.SyntheticEvent, items: TreeViewItemRange, stacked = false) => {
-    if (params.disableSelection) {
+    if (params.disableSelection || !params.multiSelect) {
       return;
     }
 
-    const { start = lastSelectedItem.current, end, current } = items;
-    if (stacked) {
-      handleRangeArrowSelect(event, { start, end, current });
-    } else if (start != null && end != null) {
-      handleRangeSelect(event, { start, end });
-    }
-    lastSelectionWasRange.current = true;
-  };
+    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
 
-  const rangeSelectToFirst = (event: React.KeyboardEvent, itemId: string) => {
-    if (!lastSelectedItem.current) {
-      lastSelectedItem.current = itemId;
-    }
+    if (Object.keys(lastSelectedRange.current).length === 0) {
+      newSelectedItems.push(nextItem);
+      lastSelectedRange.current = { [currentItem]: true, [nextItem]: true };
+    } else {
+      if (!lastSelectedRange.current[currentItem]) {
+        lastSelectedRange.current = {};
+      }
 
-    const start = lastSelectionWasRange.current ? lastSelectedItem.current : itemId;
-
-    instance.selectRange(event, {
-      start,
-      end: getFirstNavigableItem(instance),
-    });
-  };
-
-  const rangeSelectToLast = (event: React.KeyboardEvent, itemId: string) => {
-    if (!lastSelectedItem.current) {
-      lastSelectedItem.current = itemId;
+      if (lastSelectedRange.current[nextItem]) {
+        newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
+        delete lastSelectedRange.current[currentItem];
+      } else {
+        newSelectedItems.push(nextItem);
+        lastSelectedRange.current[nextItem] = true;
+      }
     }
 
-    const start = lastSelectionWasRange.current ? lastSelectedItem.current : itemId;
-
-    instance.selectRange(event, {
-      start,
-      end: getLastNavigableItem(instance),
-    });
+    setSelectedItems(event, newSelectedItems);
   };
 
   return {
@@ -188,9 +180,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     instance: {
       isItemSelected,
       selectItem,
-      selectRange,
-      rangeSelectToLast,
-      rangeSelectToFirst,
+      selectAllNavigableItems,
+      expandSelectionRange,
+      selectRangeFromStartToItem,
+      selectRangeFromItemToEnd,
+      selectItemFromArrowNavigation,
     },
     contextValue: {
       selection: {

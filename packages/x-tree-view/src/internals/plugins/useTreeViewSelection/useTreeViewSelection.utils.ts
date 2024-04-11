@@ -14,3 +14,11 @@ export const convertSelectedItemsToArray = (model: string[] | string | null): st
 
   return [];
 };
+
+export const getLookupFromArray = (array: string[]) => {
+  const lookup: { [itemId: string]: boolean } = {};
+  array.forEach((itemId) => {
+    lookup[itemId] = true;
+  });
+  return lookup;
+};
