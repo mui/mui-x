@@ -52,7 +52,6 @@
       "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
-    "headerFilterHeight": { "type": { "name": "number" } },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

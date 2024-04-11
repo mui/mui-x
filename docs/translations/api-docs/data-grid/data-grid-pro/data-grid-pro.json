@@ -98,7 +98,6 @@
     "filterDebounceMs": {
       "description": "The milliseconds delay to wait after a keystroke before triggering filtering."
     },
-    "headerFilterHeight": { "description": "Override the height/width of the header filters." },
     "filterMode": {
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side."
     },
@@ -161,6 +160,7 @@
       }
     },
     "groupingColDef": { "description": "The grouping column used by the tree data." },
+    "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature."
     },

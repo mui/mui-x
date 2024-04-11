@@ -326,10 +326,6 @@ DataGridPremiumRaw.propTypes = {
    */
   filterDebounceMs: PropTypes.number,
   /**
-   * Override the height of the header filters.
-   */
-  headerFilterHeight: PropTypes.number,
-  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
@@ -426,6 +422,10 @@ DataGridPremiumRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
+   * Override the height of the header filters.
+   */
+  headerFilterHeight: PropTypes.number,
   /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false

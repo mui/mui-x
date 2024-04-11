@@ -233,10 +233,6 @@ DataGridRaw.propTypes = {
    */
   filterDebounceMs: PropTypes.number,
   /**
-   * Override the height of the header filters.
-   */
-  headerFilterHeight: PropTypes.number,
-  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
