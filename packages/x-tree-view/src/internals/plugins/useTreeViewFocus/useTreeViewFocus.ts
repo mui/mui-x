@@ -6,6 +6,7 @@ import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
+import { getFirstNavigableItem } from '../../utils/tree';
 
 const useTabbableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
@@ -24,7 +25,7 @@ const useTabbableItemId = (
   }
 
   if (tabbableItemId == null) {
-    tabbableItemId = instance.getNavigableChildrenIds(null)[0];
+    tabbableItemId = getFirstNavigableItem(instance);
   }
 
   return tabbableItemId;
@@ -95,7 +96,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
 
     if (itemToFocusId == null) {
-      itemToFocusId = instance.getNavigableChildrenIds(null)[0];
+      itemToFocusId = getFirstNavigableItem(instance);
     }
 
     innerFocusItem(event, itemToFocusId);

@@ -3,14 +3,12 @@ import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
-  TreeViewItemMetaMap,
   TreeViewItemIdAndChildren,
   UseTreeViewItemsState,
-  TreeViewItemMap,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem } from '../../../models';
-import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -18,21 +16,21 @@ interface UpdateNodesStateParameters
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
   > {}
 
+type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
-  const itemMetaMap: TreeViewItemMetaMap = {};
-  const itemMap: TreeViewItemMap<any> = {};
-  const itemOrderedChildrenIds: { [parentId: string]: string[] } = {
+  const itemMetaMap: State['itemMetaMap'] = {};
+  const itemMap: State['itemMap'] = {};
+  const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
   const processItem = (
     item: TreeViewBaseItem,
-    index: number,
     parentId: string | null,
   ): TreeViewItemIdAndChildren => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
@@ -89,17 +87,23 @@ const updateItemsState = ({
 
     return {
       id,
-      children: item.children?.map((child, childIndex) => processItem(child, childIndex, id)),
+      children: item.children?.map((child) => processItem(child, id)),
     };
   };
 
-  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  const itemTree = items.map((item) => processItem(item, null));
+
+  const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
+  Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
+    itemChildrenIndexes[parentId] = buildSiblingIndexes(itemOrderedChildrenIds[parentId]);
+  });
 
   return {
     itemMetaMap,
     itemTree,
     itemMap,
     itemOrderedChildrenIds,
+    itemChildrenIndexes,
   };
 };
 
@@ -148,19 +152,25 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [instance],
   );
 
+  const getItemIndex = React.useCallback(
+    (itemId: string) => {
+      const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      return state.items.itemChildrenIndexes[parentId][itemId];
+    },
+    [instance, state.items.itemChildrenIndexes],
+  );
+
   const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) =>
       state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
     [state.items.itemOrderedChildrenIds],
   );
 
-  const getNavigableChildrenIds = (itemId: string | null) => {
-    let childrenIds = instance.getItemOrderedChildrenIds(itemId);
-
-    if (!params.disabledItemsFocusable) {
-      childrenIds = childrenIds.filter((item) => !instance.isItemDisabled(item));
+  const isItemNavigable = (itemId: string) => {
+    if (params.disabledItemsFocusable) {
+      return true;
     }
-    return childrenIds;
+    return !instance.isItemDisabled(itemId);
   };
 
   const areItemUpdatesPreventedRef = React.useRef(false);
@@ -225,9 +235,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemMeta,
       getItem,
       getItemsToRender,
+      getItemIndex,
       getItemOrderedChildrenIds,
-      getNavigableChildrenIds,
       isItemDisabled,
+      isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
