@@ -91,7 +91,7 @@ const updateItemsState = ({
     };
   };
 
-  const itemTree = items.map((item, itemIndex) => processItem(item, itemIndex, null));
+  const itemTree = items.map((item) => processItem(item, null));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
