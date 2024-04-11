@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
-import type { GridPaginationMeta, GridPaginationModel } from '@mui/x-data-grid';
+import type { GridPaginationMeta } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const SERVER_OPTIONS = {
@@ -23,25 +23,17 @@ export default function ServerPaginationGridEstimated() {
     pageInfo: { hasNextPage },
   } = useQuery(paginationModel);
 
-  const [paginationMeta, setPaginationMeta] = React.useState<GridPaginationMeta>({});
-
-  React.useEffect(() => {
-    if (hasNextPage !== undefined) {
-      setPaginationMeta((prev) => {
-        if (prev.hasNextPage !== hasNextPage) {
-          return { ...prev, hasNextPage };
-        }
-        return prev;
-      });
+  const paginationMetaRef = React.useRef<GridPaginationMeta>({});
+  // Memoize to avoid flickering when the `hasNextPage` is `undefined` during refetch
+  const paginationMeta = React.useMemo(() => {
+    if (
+      hasNextPage !== undefined &&
+      paginationMetaRef.current?.hasNextPage !== hasNextPage
+    ) {
+      paginationMetaRef.current = { hasNextPage };
     }
+    return paginationMetaRef.current;
   }, [hasNextPage]);
-
-  const handlePaginationModelChange = React.useCallback(
-    (newPaginationModel: GridPaginationModel) => {
-      setPaginationModel(newPaginationModel);
-    },
-    [],
-  );
 
   return (
     <div style={{ width: '100%' }}>
@@ -58,7 +50,7 @@ export default function ServerPaginationGridEstimated() {
           pageSizeOptions={[10, 25, 50, 100]}
           paginationModel={paginationModel}
           paginationMode="server"
-          onPaginationModelChange={handlePaginationModelChange}
+          onPaginationModelChange={setPaginationModel}
         />
       </div>
     </div>

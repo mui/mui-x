@@ -23,22 +23,17 @@ export default function ServerPaginationGridEstimated() {
     pageInfo: { hasNextPage },
   } = useQuery(paginationModel);
 
-  const [paginationMeta, setPaginationMeta] = React.useState({});
-
-  React.useEffect(() => {
-    if (hasNextPage !== undefined) {
-      setPaginationMeta((prev) => {
-        if (prev.hasNextPage !== hasNextPage) {
-          return { ...prev, hasNextPage };
-        }
-        return prev;
-      });
+  const paginationMetaRef = React.useRef({});
+  // Memoize to avoid flickering when the `hasNextPage` is `undefined` during refetch
+  const paginationMeta = React.useMemo(() => {
+    if (
+      hasNextPage !== undefined &&
+      paginationMetaRef.current?.hasNextPage !== hasNextPage
+    ) {
+      paginationMetaRef.current = { hasNextPage };
     }
+    return paginationMetaRef.current;
   }, [hasNextPage]);
-
-  const handlePaginationModelChange = React.useCallback((newPaginationModel) => {
-    setPaginationModel(newPaginationModel);
-  }, []);
 
   return (
     <div style={{ width: '100%' }}>
@@ -55,7 +50,7 @@ export default function ServerPaginationGridEstimated() {
           pageSizeOptions={[10, 25, 50, 100]}
           paginationModel={paginationModel}
           paginationMode="server"
-          onPaginationModelChange={handlePaginationModelChange}
+          onPaginationModelChange={setPaginationModel}
         />
       </div>
     </div>

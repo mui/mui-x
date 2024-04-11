@@ -36,17 +36,6 @@ export default function ServerPaginationGridNoRowCount() {
     return paginationMetaRef.current;
   }, [hasNextPage]);
 
-  const handlePaginationModelChange = React.useCallback((newPaginationModel) => {
-    setPaginationModel(newPaginationModel);
-  }, []);
-
-  React.useEffect(() => {
-    if (paginationMeta?.hasNextPage === false) {
-      // On last page set the row count to the number of rows
-      apiRef.current.setRowCount(rowLength);
-    }
-  }, [apiRef, paginationMeta]);
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -59,7 +48,7 @@ export default function ServerPaginationGridNoRowCount() {
         pageSizeOptions={[5, 10, 25, 50]}
         paginationModel={paginationModel}
         paginationMode="server"
-        onPaginationModelChange={handlePaginationModelChange}
+        onPaginationModelChange={setPaginationModel}
       />
     </div>
   );
