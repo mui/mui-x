@@ -21,8 +21,8 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   getItemMeta: (itemId: string) => TreeViewItemMeta;
   getItemsToRender: () => TreeViewItemProps[];
   getItemOrderedChildrenIds: (parentId: string | null) => string[];
-  getNavigableChildrenIds: (itemId: string | null) => string[];
-  isItemDisabled: (itemId: string | null) => itemId is string;
+  isItemDisabled: (itemId: string) => itemId is string;
+  isItemNavigable: (itemId: string) => boolean;
   getItemIndex: (itemId: string) => number;
   /**
    * Freeze any future update to the state based on the `items` prop.
