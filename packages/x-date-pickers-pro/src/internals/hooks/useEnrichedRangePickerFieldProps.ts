@@ -198,7 +198,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -206,7 +206,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -400,7 +400,7 @@ const useSingleInputFieldSlotProps = <
     event.stopPropagation();
 
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
