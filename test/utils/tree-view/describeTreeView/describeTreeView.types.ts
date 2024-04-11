@@ -78,6 +78,10 @@ export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature
 >(
   params: {
     items: readonly R[];
+    /**
+     * If `true`, the Tree View will be wrapped with an error boundary.
+     */
+    withErrorBoundary?: boolean;
   } & Omit<MergePluginsProperty<TPlugins, 'params'>, 'slots' | 'slotProps'> & {
       slots?: MergePluginsProperty<TPlugins, 'slots'> & {
         item?: React.ElementType<TreeItemProps | TreeItem2Props>;
@@ -88,13 +92,14 @@ export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature
     },
 ) => DescribeTreeViewRendererReturnValue<TPlugins>;
 
+type TreeViewComponent = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
+type TreeItemComponent = 'TreeItem' | 'TreeItem2';
+
 interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSignature[]> {
   render: DescribeTreeViewRenderer<TPlugins>;
-  setup:
-    | 'SimpleTreeView + TreeItem'
-    | 'SimpleTreeView + TreeItem2'
-    | 'RichTreeView + TreeItem'
-    | 'RichTreeView + TreeItem2';
+  setup: `${TreeViewComponent} + ${TreeItemComponent}`;
+  treeViewComponent: TreeViewComponent;
+  treeItemComponent: TreeItemComponent;
 }
 
 export interface DescribeTreeViewItem {
