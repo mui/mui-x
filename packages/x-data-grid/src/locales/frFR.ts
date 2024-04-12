@@ -21,7 +21,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Filtres',
   toolbarFiltersLabel: 'Afficher les filtres',
-  toolbarFiltersTooltipHide: 'Cacher les filtres',
+  toolbarFiltersTooltipHide: 'Masquer les filtres',
   toolbarFiltersTooltipShow: 'Afficher les filtres',
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
@@ -39,9 +39,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Télécharger pour Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Rechercher',
+  columnsManagementNoColumns: 'Pas de colonnes',
+  columnsManagementShowHideAllText: 'Afficher/masquer toutes',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
@@ -107,7 +107,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
-  columnMenuHideColumn: 'Cacher',
+  columnMenuHideColumn: 'Masquer',
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
