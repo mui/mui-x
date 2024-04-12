@@ -24,6 +24,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Fix invalid date error when filtering `date`/`dateTime` columns (#12709) @cherniavskii
 - [DataGrid] Fix overflow with dynamic row height (#12683) @romgrk
 - [DataGrid] Make colors customizable (#12614) @romgrk
+- [l10n] Improve French (fr-FR) locale (#12755) @derek-0000
 - [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
 - [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
 
