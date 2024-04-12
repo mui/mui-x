@@ -56,7 +56,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`.
 
 #### `@mui/x-charts@7.2.0`
 
-- [charts] Fix Barchart with empty dataset throwing an error (#12708) @JCQuintas
+- [charts] Fix Bar chart with empty dataset throwing an error (#12708) @JCQuintas
 
 ### Tree View
 
