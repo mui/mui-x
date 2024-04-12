@@ -45,10 +45,13 @@ Same changes as in `@mui/x-data-grid-pro@7.2.0`, plus:
 - [l10n] Improve French (fr-FR) locale (#12692) @FaroukBel
 - [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
 - [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
+- [pickers] Fix desktop date time Pickers grid layout (#12748) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.2.0`.
+Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
+
+- [DateTimeRangePicker] Fix desktop toolbar style (#12760) @LukasTy
 
 ### Charts
 
@@ -61,7 +64,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`.
 #### `@mui/x-tree-view@7.2.0`
 
 - [TreeView] Add a new lookup to access an item index without expansive computation (#12729) @flaviendelangle
-- [TreeView] Clean up usage of term node in internals (#12655) @noraleonte
+- [TreeView] Clean up usage of term "node" in internals (#12655) @noraleonte
 - [TreeView] Improve performance by removing `getNavigableChildrenIds` method (#12713) @flaviendelangle
 - [TreeView] Remove `state.items.itemTree` (#12717) @flaviendelangle
 - [TreeView] Remove remaining occurences of the word "node" in the codebase (#12712) @flaviendelangle
