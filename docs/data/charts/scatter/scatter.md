@@ -55,16 +55,16 @@ Otherwise, the click behavior will be the same as defined in the [interaction se
 
 ### Color scale
 
-Like other charts, you can modify the [series color](/x/react-charts/styling/#colors) by using series color, or some color palette.
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
 
-You can also modify color by using axes `colorMap` which maps values to colors.
+You can also modify the color by using axes `colorMap` which maps values to colors.
 The scatter charts use by priority:
 
 1. The y-axis color
 2. The x-axis color
 3. The series color
 
-You can find additional information about those `colorMap` properties in the [styling page](/x/react-charts/styling/#values-color).
+Learn more about the  `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
 {{"demo": "ColorScaleNoSnap.js"}}
 
