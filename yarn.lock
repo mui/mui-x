@@ -2097,19 +2097,13 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-tree-view@7.1.1":
+"@mui/x-license@7.1.1":
   version "7.1.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-tree-view/-/x-tree-view-7.1.1.tgz#530f657800d150734316a132a8d621b1b073c285"
-  integrity sha512-BOvhs55k02iPuJtSjoorEMBvPAYXQfPwtLzCOwlhyyLawloPNN5z9qRhbfTqwjdddFh0EEoSY1GyzuY5aOv7iw==
+  resolved "https://registry.yarnpkg.com/@mui/x-license/-/x-license-7.1.1.tgz#7b0486ac3d5d4393fdaf6df59e446d11488f434b"
+  integrity sha512-MadABMJ7agqaHqmDTzH2BudEqtTDelm3kNDk+WXgkv+DBF3IBFInIeO2YgvqnzOQSBMKpyNF/FiNowRm7uXtqQ==
   dependencies:
     "@babel/runtime" "^7.24.0"
-    "@mui/base" "^5.0.0-beta.40"
-    "@mui/system" "^5.15.14"
     "@mui/utils" "^5.15.14"
-    "@types/react-transition-group" "^4.4.10"
-    clsx "^2.1.0"
-    prop-types "^15.8.1"
-    react-transition-group "^4.4.5"
 
 "@netlify/functions@^2.6.0":
   version "2.6.0"
