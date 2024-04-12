@@ -58,6 +58,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 
 #### `@mui/x-charts@7.2.0`
 
+- [charts] Fix `tickLabelInterval` not working on YAxis (#12746) @JCQuintas
 - [charts] Fix Bar chart with empty dataset throwing an error (#12708) @JCQuintas
 
 ### Tree View
