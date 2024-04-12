@@ -9,7 +9,6 @@ _Apr 12, 2024_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Support reordering of items in `SimpleTreeView` (#12369) @flaviendelangle
 - 🎨 Make grid colors customizable through the MUI themes API
 - 🌍 Improve German (de-DE) and Swedish (sv-SE) locale on the Data Grid
 - 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locale on the Pickers
@@ -68,7 +67,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`.
 - [TreeView] Remove `state.items.itemTree` (#12717) @flaviendelangle
 - [TreeView] Remove remaining occurences of the word "node" in the codebase (#12712) @flaviendelangle
 - [TreeView] Return `instance` and `publicAPI` methods from plugin and populate the main objects inside `useTreeView` (#12650) @flaviendelangle
-- [TreeView] Support reordering of items in `SimpleTreeView` (#12369) @flaviendelangle
+- [TreeView] Fix behaviors when the item order changes (#12369) @flaviendelangle
 
 ### Docs
 
