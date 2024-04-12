@@ -244,9 +244,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           </TreeItem2IconContainer>
 
           <CustomLabel
-            {...getLabelProps()}
-            icon={icon}
-            expandable={expandable && status.expanded}
+            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}

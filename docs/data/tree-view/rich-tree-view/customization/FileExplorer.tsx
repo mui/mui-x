@@ -171,8 +171,7 @@ const StyledTreeItemLabelText = styled(Typography)({
 }) as unknown as typeof Typography;
 
 interface CustomLabelProps {
-  children: string;
-  className: string;
+  children: React.ReactNode;
   icon?: React.ElementType;
   expandable?: boolean;
 }
@@ -281,9 +280,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           </TreeItem2IconContainer>
 
           <CustomLabel
-            {...getLabelProps()}
-            icon={icon}
-            expandable={expandable && status.expanded}
+            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
