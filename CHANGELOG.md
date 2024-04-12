@@ -10,8 +10,7 @@ _Apr 12, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎨 Make grid colors customizable through the MUI themes API
-- 🌍 Improve German (de-DE) and Swedish (sv-SE) locale on the Data Grid
-- 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locale on the Pickers
+- 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locales on the Data Grid and Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
