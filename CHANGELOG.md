@@ -35,7 +35,7 @@ No changes.
 
 #### `@mui/x-date-pickers-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@6.19.10`.
+No changes.
 
 ### Charts / `@mui/x-charts@6.19.10`
 
