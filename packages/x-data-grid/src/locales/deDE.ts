@@ -39,9 +39,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Download als Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Suche',
+  columnsManagementNoColumns: 'Keine Spalten',
+  columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
