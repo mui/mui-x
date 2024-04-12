@@ -64,7 +64,7 @@ The scatter charts use by priority:
 2. The x-axis color
 3. The series color
 
-Learn more about the  `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
 {{"demo": "ColorScaleNoSnap.js"}}
 
