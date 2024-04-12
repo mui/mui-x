@@ -10,8 +10,7 @@ _Apr 12, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎨 Make grid colors customizable through the MUI themes API
-- 🌍 Improve German (de-DE) and Swedish (sv-SE) locales on the Data Grid
-- 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locale on the Pickers
+- 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locales on the Data Grid and Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -25,6 +24,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Fix invalid date error when filtering `date`/`dateTime` columns (#12709) @cherniavskii
 - [DataGrid] Fix overflow with dynamic row height (#12683) @romgrk
 - [DataGrid] Make colors customizable (#12614) @romgrk
+- [l10n] Improve French (fr-FR) locale (#12755) @derek-0000
 - [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
 - [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
 
@@ -46,10 +46,13 @@ Same changes as in `@mui/x-data-grid-pro@7.2.0`, plus:
 - [l10n] Improve French (fr-FR) locale (#12692) @FaroukBel
 - [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
 - [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
+- [pickers] Fix desktop date time Pickers grid layout (#12748) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.2.0`.
+Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
+
+- [DateTimeRangePicker] Fix desktop toolbar style (#12760) @LukasTy
 
 ### Charts
 
@@ -62,7 +65,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`.
 #### `@mui/x-tree-view@7.2.0`
 
 - [TreeView] Add a new lookup to access an item index without expansive computation (#12729) @flaviendelangle
-- [TreeView] Clean up usage of term node in internals (#12655) @noraleonte
+- [TreeView] Clean up usage of term "node" in internals (#12655) @noraleonte
 - [TreeView] Improve performance by removing `getNavigableChildrenIds` method (#12713) @flaviendelangle
 - [TreeView] Remove `state.items.itemTree` (#12717) @flaviendelangle
 - [TreeView] Remove remaining occurences of the word "node" in the codebase (#12712) @flaviendelangle
