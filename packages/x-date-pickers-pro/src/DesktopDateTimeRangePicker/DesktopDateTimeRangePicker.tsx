@@ -91,8 +91,9 @@ const rendererInterceptor = function rendererInterceptor<
         availableRangePositions: [rangePosition],
         view: !isTimeViewActive ? popperView : 'day',
         views: rendererProps.views.filter(isDatePickerView),
+        sx: [{ gridColumn: 1 }, ...finalProps.sx],
       })}
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
         view={isTimeViewActive ? popperView : 'hours'}
@@ -106,6 +107,7 @@ const rendererInterceptor = function rendererInterceptor<
             {}
           >
         }
+        sx={[{ gridColumn: 3 }, ...finalProps.sx]}
       />
     </React.Fragment>
   );
