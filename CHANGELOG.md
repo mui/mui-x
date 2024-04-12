@@ -27,24 +27,6 @@ Same changes as in `@mui/x-data-grid@6.19.10`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.10`.
 
-### Date Pickers
-
-#### `@mui/x-date-pickers@6.19.10`
-
-No changes.
-
-#### `@mui/x-date-pickers-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-No changes.
-
-### Charts / `@mui/x-charts@6.19.10`
-
-No changes.
-
-### Tree View / `@mui/x-tree-view@6.19.10`
-
-No changes.
-
 ### Core
 
 - [core] Update the docs release source branch (#12685) @LukasTy
