@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.10
+
+_Apr 12, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.10`
+
+- [DataGrid] Do not escape double quotes when copying to clipboard (#12734) @cherniavskii
+- [DataGrid] Fix bug in suspense (#12754) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.10`.
+
+#### `@mui/x-data-grid-premium@6.19.10` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.10`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.10`
+
+No changes.
+
+#### `@mui/x-date-pickers-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.10`.
+
+### Charts / `@mui/x-charts@6.19.10`
+
+No changes.
+
+### Tree View / `@mui/x-tree-view@6.19.10`
+
+No changes.
+
+### Core
+
+- [core] Update the docs release source branch (#12685) @LukasTy
+
 ## 6.19.9
 
 _Apr 5, 2024_
