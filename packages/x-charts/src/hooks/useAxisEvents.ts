@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { SvgContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/utils';
+import { useSvgRef } from './useSvgRef';
+import { useDrawingArea } from './useDrawingArea';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
 }
 export const useAxisEvents = (disableAxisListener: boolean) => {
-  const svgRef = React.useContext(SvgContext);
-  const { width, height, top, left } = React.useContext(DrawingContext);
+  const svgRef = useSvgRef();
+  const { left, top, width, height } = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
 

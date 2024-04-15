@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, Direction, getSeriesToDisplay } from './utils';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
+import { useDrawingArea } from '../hooks';
 
 export interface ChartsLegendSlots {
   /**
@@ -82,7 +82,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...props, theme });
 
-  const drawingArea = React.useContext(DrawingContext);
+  const drawingArea = useDrawingArea();
   const series = React.useContext(SeriesContext);
 
   const seriesToDisplay = getSeriesToDisplay(series);

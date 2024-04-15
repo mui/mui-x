@@ -4,12 +4,12 @@ import { Delaunay } from 'd3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { SvgContext, DrawingContext } from '../context/DrawingProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { getSVGPoint } from '../internals/utils';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
+import { useDrawingArea, useSvgRef } from '../hooks';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -29,8 +29,8 @@ type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number 
 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
-  const svgRef = React.useContext(SvgContext);
-  const { width, height, top, left } = React.useContext(DrawingContext);
+  const svgRef = useSvgRef();
+  const { left, top, width, height } = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
 

@@ -1,8 +1,8 @@
 // @ignore - do not document.
 import * as React from 'react';
-import { DrawingContext } from '../context/DrawingProvider';
 import { getPercentageValue } from '../internals/utils';
 import { getArcRatios, getAvailableRadius } from './utils';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 interface CircularConfig {
   /**
@@ -148,7 +148,7 @@ export function GaugeProvider(props: GaugeProviderProps) {
     children,
   } = props;
 
-  const { width, height, top, left } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const ratios = getArcRatios(startAngle, endAngle);
 

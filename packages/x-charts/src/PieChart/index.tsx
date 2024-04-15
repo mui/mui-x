@@ -6,3 +6,5 @@ export * from './PieArcLabelPlot';
 
 export * from './PieArc';
 export * from './PieArcLabel';
+
+export * from './getPieCoordinates';

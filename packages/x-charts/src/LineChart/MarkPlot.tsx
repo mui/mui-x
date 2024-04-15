@@ -4,9 +4,9 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { DrawingContext } from '../context/DrawingProvider';
 import { cleanId } from '../internals/utils';
 
 export interface MarkPlotSlots {
@@ -56,7 +56,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-  const { chartId } = React.useContext(DrawingContext);
+  const chartId = useChartId();
 
   const Mark = slots?.mark ?? MarkElement;
 
