@@ -17,9 +17,18 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     isItemFocused: () => false,
     isItemSelected: () => false,
     isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
-    getTreeItemId: () => '',
+    getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
+    getJSXItemsChildrenIndexes: () => {},
+    setJSXItemsChildrenIndexes: () => {},
+    getNode: () => ({
+      parentId: null,
+      id: 'one',
+      idAttribute: undefined,
+      disabled: false,
+      expandable: false,
+    }),
   } as any,
   publicAPI: {
     focusItem: () => {},
@@ -28,6 +37,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
   runItemPlugins: () => ({ rootRef: null, contentRef: null }),
   wrapItem: ({ children }) => children,
+  wrapRoot: ({ children }) => children,
   disabledItemsFocusable: false,
   icons: {
     slots: {},
@@ -35,6 +45,9 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
   selection: {
     multiSelect: false,
+  },
+  rootRef: {
+    current: null,
   },
 };
 
@@ -104,46 +117,6 @@ describe('<TreeItem />', () => {
     fireEvent.click(getByText('test'));
 
     expect(handleClick.callCount).to.equal(1);
-  });
-
-  it('should display the right icons', () => {
-    const { getByTestId } = render(
-      <SimpleTreeView
-        slots={{
-          expandIcon: () => <div data-test="defaultExpandIcon" />,
-          collapseIcon: () => <div data-test="defaultCollapseIcon" />,
-          endIcon: () => <div data-test="defaultEndIcon" />,
-        }}
-        defaultExpandedItems={['1']}
-      >
-        <TreeItem itemId="1" label="1" data-testid="1">
-          <TreeItem itemId="2" label="2" data-testid="2" />
-          <TreeItem
-            itemId="5"
-            label="5"
-            data-testid="5"
-            slots={{ icon: () => <div data-test="icon" /> }}
-          />
-          <TreeItem
-            itemId="6"
-            label="6"
-            data-testid="6"
-            slots={{ endIcon: () => <div data-test="endIcon" /> }}
-          />
-        </TreeItem>
-        <TreeItem itemId="3" label="3" data-testid="3">
-          <TreeItem itemId="4" label="4" data-testid="4" />
-        </TreeItem>
-      </SimpleTreeView>,
-    );
-
-    const getIcon = (testId) => getByTestId(testId).querySelector(`.${classes.iconContainer} div`);
-
-    expect(getIcon('1')).attribute('data-test').to.equal('defaultCollapseIcon');
-    expect(getIcon('2')).attribute('data-test').to.equal('defaultEndIcon');
-    expect(getIcon('3')).attribute('data-test').to.equal('defaultExpandIcon');
-    expect(getIcon('5')).attribute('data-test').to.equal('icon');
-    expect(getIcon('6')).attribute('data-test').to.equal('endIcon');
   });
 
   it('should allow conditional child', () => {

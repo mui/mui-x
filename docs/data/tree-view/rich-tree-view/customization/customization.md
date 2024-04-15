@@ -69,3 +69,16 @@ The demo below shows how to add an avatar and custom typography elements.
 The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+
+### File explorer
+
+:::warning
+This example is built using the new `TreeItem2` component
+which adds several slots to modify the content of the Tree Item or change its behavior.
+
+You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
+:::
+
+The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
+
+{{"demo": "FileExplorer.js", "defaultCodeOpen": false}}

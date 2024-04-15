@@ -1,4 +1,4 @@
-import { TreeViewNode, DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
@@ -18,19 +18,20 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  getNode: (itemId: string) => TreeViewNode;
+  getItemMeta: (itemId: string) => TreeViewItemMeta;
   getItemsToRender: () => TreeViewItemProps[];
-  getChildrenIds: (itemId: string | null) => string[];
-  getNavigableChildrenIds: (itemId: string | null) => string[];
-  isItemDisabled: (itemId: string | null) => itemId is string;
+  getItemOrderedChildrenIds: (parentId: string | null) => string[];
+  isItemDisabled: (itemId: string) => itemId is string;
+  isItemNavigable: (itemId: string) => boolean;
+  getItemIndex: (itemId: string) => number;
   /**
    * Freeze any future update to the state based on the `items` prop.
-   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
    */
   preventItemUpdates: () => void;
   /**
    * Check if the updates to the state based on the `items` prop are prevented.
-   * This is useful when `useTreeViewJSXNodes` is used to avoid having conflicting sources of truth.
+   * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
@@ -81,16 +82,12 @@ interface UseTreeViewItemsEventLookup {
   };
 }
 
-export interface TreeViewItemIdAndChildren {
-  id: TreeViewItemId;
-  children?: TreeViewItemIdAndChildren[];
-}
-
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    nodeTree: TreeViewItemIdAndChildren[];
-    nodeMap: TreeViewNodeMap;
+    itemMetaMap: TreeViewItemMetaMap;
     itemMap: TreeViewItemMap<R>;
+    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
+    itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
   };
 }
 
@@ -107,6 +104,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewNodeMap = { [itemId: string]: TreeViewNode };
+export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
 
 export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };

@@ -90,16 +90,18 @@ const rendererInterceptor = function rendererInterceptor<
         view: !isTimeViewActive ? popperView : 'day',
         focusedView: focusedView && isDatePickerView(focusedView) ? focusedView : null,
         views: rendererProps.views.filter(isDatePickerView),
+        sx: [{ gridColumn: 1 }, ...finalProps.sx],
       })}
       {timeViewsCount > 0 && (
         <React.Fragment>
-          <Divider orientation="vertical" />
+          <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
           {inViewRenderers[isTimeViewActive ? popperView : 'hours']?.({
             ...finalProps,
             view: isTimeViewActive ? popperView : 'hours',
             focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
             openTo: isInternalTimeView(openTo) ? openTo : 'hours',
             views: rendererProps.views.filter(isInternalTimeView),
+            sx: [{ gridColumn: 3 }, ...finalProps.sx],
           })}
         </React.Fragment>
       )}
