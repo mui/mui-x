@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.2.0
+
+_Apr 12, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎨 Make grid colors customizable through the MUI themes API
+- 🌍 Improve French (fr-FR), German (de-DE), and Swedish (sv-SE) locales on the Data Grid and Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.2.0`
+
+- [DataGrid] Add missing `api` property to `GridCallbackDetails` (#12742) @sai6855
+- [DataGrid] Do not escape double quotes when copying to clipboard (#12722) @cherniavskii
+- [DataGrid] Fix column vertical border (#12741) @romgrk
+- [DataGrid] Fix invalid date error when filtering `date`/`dateTime` columns (#12709) @cherniavskii
+- [DataGrid] Fix overflow with dynamic row height (#12683) @romgrk
+- [DataGrid] Make colors customizable (#12614) @romgrk
+- [l10n] Improve French (fr-FR) locale (#12755) @derek-0000
+- [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
+- [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
+
+#### `@mui/x-data-grid-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.2.0`.
+
+#### `@mui/x-data-grid-premium@7.2.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.2.0`, plus:
+
+- [DataGridPremium] Fix clipboard paste not working when cell loses focus (#12724) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.2.0`
+
+- [fields] Fix field editing after closing the picker (#12675) @LukasTy
+- [l10n] Improve French (fr-FR) locale (#12692) @FaroukBel
+- [l10n] Improve German (de-DE) locale (#12752) @Jens-Schoen
+- [l10n] Improve Swedish (sv-SE) locale (#12731) @pontusdacke
+- [pickers] Fix desktop date time Pickers grid layout (#12748) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
+
+- [DateTimeRangePicker] Fix desktop toolbar style (#12760) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.2.0`
+
+- [charts] Fix Bar chart with empty dataset throwing an error (#12708) @JCQuintas
+- [charts] Fix `tickLabelInterval` not working on `YAxis` (#12746) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.2.0`
+
+- [TreeView] Add a new lookup to access an item index without expansive computation (#12729) @flaviendelangle
+- [TreeView] Clean up usage of term "node" in internals (#12655) @noraleonte
+- [TreeView] Improve performance by removing `getNavigableChildrenIds` method (#12713) @flaviendelangle
+- [TreeView] Remove `state.items.itemTree` (#12717) @flaviendelangle
+- [TreeView] Remove remaining occurences of the word "node" in the codebase (#12712) @flaviendelangle
+- [TreeView] Return `instance` and `publicAPI` methods from plugin and populate the main objects inside `useTreeView` (#12650) @flaviendelangle
+- [TreeView] Fix behaviors when the item order changes (#12369) @flaviendelangle
+
+### Docs
+
+- [docs] Add `AxisFormatter` documentation for customizing tick/tooltip value formatting (#12700) @JCQuintas
+- [docs] Add file explorer example to rich tree view customization docs (#12707) @noraleonte
+- [docs] Do not use import of depth 3 in the doc (#12716) @flaviendelangle
+- [docs] Explain how to clip plots with composition (#12679) @alexfauquette
+- [docs] Fix typo in Data Grid v7 migration page (#12720) @bfaulk96
+- [docs] Fix typo in Pickers v7 migration page (#12721) @bfaulk96
+
+### Core
+
+- [core] Support multiple resolved `l10n` PR packages (#12735) @LukasTy
+- [core] Update Netlify release references in release README (#12687) @LukasTy
+- [core] Use `describeTreeView` for icons tests (#12672) @flaviendelangle
+- [core] Use `describeTreeView` in existing tests for `useTreeViewItems` (#12732) @flaviendelangle
+
 ## 7.1.1
 
 _Apr 5, 2024_

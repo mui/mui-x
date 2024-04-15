@@ -13,6 +13,7 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -59,6 +60,11 @@ const useAggregatedData = () => {
       const yScale = yAxis[yAxisKey].scale;
       const xData = xAxis[xAxisKey].data;
 
+      const gradientUsed: [string, 'x' | 'y'] | undefined =
+        (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
+        (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
+        undefined;
+
       if (process.env.NODE_ENV !== 'production') {
         if (xData === undefined) {
           throw new Error(
@@ -90,6 +96,7 @@ const useAggregatedData = () => {
       const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
       return {
         ...series[seriesId],
+        gradientUsed,
         d,
         seriesId,
       };
@@ -110,17 +117,18 @@ const useAggregatedData = () => {
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
+  const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
-
   return (
     <g {...other}>
-      {completedData.map(({ d, seriesId, color, highlightScope }) => {
+      {completedData.map(({ d, seriesId, color, highlightScope, gradientUsed }) => {
         return (
           <LineElement
             key={seriesId}
             id={seriesId}
             d={d}
             color={color}
+            gradientId={gradientUsed && getGradientId(...gradientUsed)}
             highlightScope={highlightScope}
             skipAnimation={skipAnimation}
             slots={slots}
