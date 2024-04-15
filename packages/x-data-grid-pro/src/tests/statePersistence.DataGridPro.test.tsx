@@ -78,6 +78,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
   },
+  density: 'compact',
 };
 
 describe('<DataGridPro /> - State persistence', () => {
@@ -135,6 +136,7 @@ describe('<DataGridPro /> - State persistence', () => {
         sorting: {
           sortModel: [],
         },
+        density: 'standard',
       });
     });
 
@@ -165,6 +167,7 @@ describe('<DataGridPro /> - State persistence', () => {
           paginationMode="server"
           rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          density={FULL_INITIAL_STATE.density}
           // Some portable states don't have a controllable model
           initialState={{
             columns: {
@@ -191,6 +194,7 @@ describe('<DataGridPro /> - State persistence', () => {
           paginationMode="server"
           rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          density={FULL_INITIAL_STATE.density}
           // Some portable states don't have a controllable model
           initialState={{
             columns: {
@@ -226,6 +230,7 @@ describe('<DataGridPro /> - State persistence', () => {
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
         apiRef.current.setColumnVisibilityModel({ idBis: false });
+        apiRef.current.setDensity('compact');
       });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
