@@ -234,37 +234,14 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
-  const runIfNoPreProcessError =
+  const runIfNoFieldErrors =
     <Args extends any[]>(callback?: (...args: Args) => void) =>
     async (...args: Args) => {
       if (callback) {
-        const { field, id, value, debounceMs, unstable_skipValueParser: skipValueParser } = args[0];
-        const column = apiRef.current.getColumn(field);
-        const row = apiRef.current.getRow(id)!;
-
-        let parsedValue = value;
-        if (column.valueParser && !skipValueParser) {
-          parsedValue = column.valueParser(value, row, column, apiRef);
-        }
-
-        const editingState = gridEditRowsStateSelector(apiRef.current.state);
-        let newProps: GridEditCellProps = {
-          ...editingState[id][field],
-          value: parsedValue,
-          changeReason: debounceMs ? 'debouncedSetEditCellValue' : 'setEditCellValue',
-        };
-
-        if (column.preProcessEditCellProps) {
-          const hasChanged = value !== editingState[id][field].value;
-
-          newProps = { ...newProps, isProcessingProps: true };
-
-          newProps = await Promise.resolve(
-            column.preProcessEditCellProps({ id, row, props: newProps, hasChanged }),
-          );
-        }
-
-        if (!newProps.error) {
+        const { id,field } = args[0];
+        const editRowsState = apiRef.current.state.editRows;
+        const hasFieldErrors = editRowsState[id][field]?.error;
+        if (!hasFieldErrors) {
           callback(...args);
         }
       }
@@ -278,7 +255,7 @@ export const useGridCellEditing = (
   useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
   useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoPreProcessError(props.onCellEditStop));
+  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {

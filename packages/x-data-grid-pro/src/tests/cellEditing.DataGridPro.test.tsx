@@ -190,7 +190,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         });
       });
 
-      it('should not call onCellEditStop if preProcessEditCellProps returns error', async () => {
+      it('should not publish onCellEditStop if field has error', async () => {
         columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
