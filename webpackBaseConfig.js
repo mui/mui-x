@@ -12,6 +12,7 @@ module.exports = {
       '@mui/x-data-grid-generator': path.resolve(__dirname, './packages/x-data-grid-generator/src'),
       '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/x-data-grid-pro/src'),
       '@mui/x-data-grid-premium': path.resolve(__dirname, './packages/x-data-grid-premium/src'),
+      '@mui/x-adapter-date-fns-v2': path.resolve(__dirname, './packages/x-adapter-date-fns-v2/src'),
       '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
