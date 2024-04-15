@@ -238,7 +238,7 @@ export const useGridCellEditing = (
     <Args extends any[]>(callback?: (...args: Args) => void) =>
     async (...args: Args) => {
       if (callback) {
-        const { id,field } = args[0];
+        const { id, field } = args[0];
         const editRowsState = apiRef.current.state.editRows;
         const hasFieldErrors = editRowsState[id][field]?.error;
         if (!hasFieldErrors) {
