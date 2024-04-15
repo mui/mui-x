@@ -40,7 +40,7 @@ function sortColumnGroups(
   if (depth > pivotModelColumns.length - 1) {
     return;
   }
-  const sort = pivotModelColumns[depth].sort || 'asc';
+  const sort = pivotModelColumns[depth].sort;
   columnGroups.sort((a, b) => {
     if (isLeaf(a) || isLeaf(b)) {
       return 0;
@@ -50,6 +50,9 @@ function sortColumnGroups(
     }
     if (b.children) {
       sortColumnGroups(b.children, pivotModelColumns, depth + 1);
+    }
+    if (sort === undefined) {
+      return 0;
     }
     return (
       (sort === 'asc' ? 1 : -1) *
