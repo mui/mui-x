@@ -69,7 +69,7 @@ Here is a demo with:
 
 {{"demo": "Formatting.js"}}
 
-### Series formatter
+### Advanced formatting
 
 The series `valueFormatter` property allows users to format data displayed on the tooltips.
 
