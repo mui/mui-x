@@ -1,4 +1,6 @@
 /* eslint-disable class-methods-use-this */
+import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '@mui/x-adapter-common';
+
 import addDays from 'date-fns/addDays';
 import addSeconds from 'date-fns/addSeconds';
 import addMinutes from 'date-fns/addMinutes';
@@ -42,13 +44,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import startOfYear from 'date-fns/startOfYear';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
-// @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import {
-  AdapterFormats,
-  AdapterOptions,
-  MuiPickersAdapter,
-} from '../../../../x-date-pickers/src/models';
 import { AdapterDateFnsBase } from '../../../../x-date-pickers/src/AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;

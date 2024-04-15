@@ -1,54 +1,52 @@
 /* eslint-disable class-methods-use-this */
-// @ts-nocheck
-import { addDays } from 'date-fns/addDays';
-import { addSeconds } from 'date-fns/addSeconds';
-import { addMinutes } from 'date-fns/addMinutes';
-import { addHours } from 'date-fns/addHours';
-import { addWeeks } from 'date-fns/addWeeks';
-import { addMonths } from 'date-fns/addMonths';
-import { addYears } from 'date-fns/addYears';
-import { endOfDay } from 'date-fns/endOfDay';
-import { endOfWeek } from 'date-fns/endOfWeek';
-import { endOfYear } from 'date-fns/endOfYear';
-import { format as dateFnsFormat, longFormatters } from 'date-fns/format';
-import { getDate } from 'date-fns/getDate';
-import { getDaysInMonth } from 'date-fns/getDaysInMonth';
-import { getHours } from 'date-fns/getHours';
-import { getMinutes } from 'date-fns/getMinutes';
-import { getMonth } from 'date-fns/getMonth';
-import { getSeconds } from 'date-fns/getSeconds';
-import { getMilliseconds } from 'date-fns/getMilliseconds';
-import { getWeek } from 'date-fns/getWeek';
-import { getYear } from 'date-fns/getYear';
-import { isAfter } from 'date-fns/isAfter';
-import { isBefore } from 'date-fns/isBefore';
-import { isEqual } from 'date-fns/isEqual';
-import { isSameDay } from 'date-fns/isSameDay';
-import { isSameYear } from 'date-fns/isSameYear';
-import { isSameMonth } from 'date-fns/isSameMonth';
-import { isSameHour } from 'date-fns/isSameHour';
-import { isValid } from 'date-fns/isValid';
-import { parse as dateFnsParse } from 'date-fns/parse';
-import { setDate } from 'date-fns/setDate';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
-import { setMonth } from 'date-fns/setMonth';
-import { setSeconds } from 'date-fns/setSeconds';
-import { setMilliseconds } from 'date-fns/setMilliseconds';
-import { setYear } from 'date-fns/setYear';
-import { startOfDay } from 'date-fns/startOfDay';
-import { startOfMonth } from 'date-fns/startOfMonth';
-import { endOfMonth } from 'date-fns/endOfMonth';
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { startOfYear } from 'date-fns/startOfYear';
-import { isWithinInterval } from 'date-fns/isWithinInterval';
-import { enUS } from 'date-fns/locale/en-US';
-import { Locale as DateFnsLocale } from 'date-fns/locale/types';
+import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '@mui/x-adapter-common';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  MuiPickersAdapter,
-} from '../../../../x-date-pickers/src/models';
+  addDays,
+  dateFnsFormat,
+  longFormatters,
+  DateFnsLocale,
+  addSeconds,
+  addMinutes,
+  addHours,
+  addWeeks,
+  addMonths,
+  addYears,
+  endOfDay,
+  endOfWeek,
+  endOfYear,
+  getDate,
+  getDaysInMonth,
+  getHours,
+  getMinutes,
+  getMonth,
+  getSeconds,
+  getMilliseconds,
+  getWeek,
+  getYear,
+  isAfter,
+  isBefore,
+  isEqual,
+  isSameDay,
+  isSameYear,
+  isSameMonth,
+  isSameHour,
+  isValid,
+  dateFnsParse,
+  setDate,
+  setHours,
+  setMinutes,
+  setMonth,
+  setSeconds,
+  setMilliseconds,
+  setYear,
+  startOfDay,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  startOfYear,
+  isWithinInterval,
+  enUS,
+} from './date-fns-exports';
 import { AdapterDateFnsBase } from '../../../../x-date-pickers/src/AdapterDateFnsBase';
 
 /**

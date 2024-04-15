@@ -46,7 +46,8 @@
     "directory": "packages/x-adapter-date-fns-v3"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.0"
+    "@babel/runtime": "^7.24.0",
+    "@mui/x-adapter-common": "workspace:*"
   },
   "peerDependencies": {
     "date-fns": "^3.2.0"
