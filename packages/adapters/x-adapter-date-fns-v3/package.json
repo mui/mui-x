@@ -58,8 +58,7 @@
   },
   "devDependencies": {
     "date-fns": "^3.2.0",
-    "rimraf": "^5.0.5",
-    "@mui/x-date-pickers": "workspace:*"
+    "rimraf": "^5.0.5"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

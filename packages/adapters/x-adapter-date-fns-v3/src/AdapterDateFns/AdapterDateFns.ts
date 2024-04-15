@@ -44,8 +44,12 @@ import { startOfYear } from 'date-fns/startOfYear';
 import { isWithinInterval } from 'date-fns/isWithinInterval';
 import { enUS } from 'date-fns/locale/en-US';
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
-import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  MuiPickersAdapter,
+} from '../../../../x-date-pickers/src/models';
+import { AdapterDateFnsBase } from '../../../../x-date-pickers/src/AdapterDateFnsBase';
 
 /**
  * Based on `@date-io/date-fns`

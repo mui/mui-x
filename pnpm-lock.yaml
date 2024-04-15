@@ -667,9 +667,6 @@ importers:
         specifier: ^7.24.0
         version: 7.24.4
     devDependencies:
-      '@mui/x-date-pickers':
-        specifier: workspace:*
-        version: link:../../x-date-pickers/build
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -684,9 +681,6 @@ importers:
         specifier: ^7.24.0
         version: 7.24.4
     devDependencies:
-      '@mui/x-date-pickers':
-        specifier: workspace:*
-        version: link:../../x-date-pickers/build
       date-fns:
         specifier: ^3.2.0
         version: 3.2.0
