@@ -61,7 +61,7 @@ function addLabelDimension(
 
   // Filter label to avoid overlap
   let currentTextLimit = 0;
-  let previouseTextLimit = 0;
+  let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
   return withDimension.map((item, labelIndex) => {
     const { width, offset, labelOffset, height } = item;
@@ -71,12 +71,12 @@ function addLabelDimension(
     const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
     currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previouseTextLimit) {
+    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `previouseTextLimit` from being updated.
+      // Notice that the early return prevents `previousTextLimit` from being updated.
       return { ...item, skipLabel: true };
     }
-    previouseTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
+    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
     return item;
   });
 }
@@ -347,7 +347,7 @@ ChartsXAxis.propTypes = {
    */
   tickMinStep: PropTypes.number,
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,

@@ -461,7 +461,6 @@ export const GridRootStyles = styled('div', {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
-      overflow: 'initial',
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
@@ -646,6 +645,9 @@ export const GridRootStyles = styled('div', {
 
     [`& .${c.filler}`]: {
       flex: 1,
+    },
+    [`& .${c['filler--borderTop']}`]: {
+      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
   };
 

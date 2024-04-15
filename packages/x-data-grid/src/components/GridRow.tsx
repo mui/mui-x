@@ -151,6 +151,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -420,6 +421,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
+        gridHasFiller={gridHasFiller}
         {...slotProps?.cell}
       />
     );

@@ -270,7 +270,9 @@ export const useGridCellEditing = (
     const isNewModelDifferentFromProp = newModel !== props.cellModesModel;
 
     if (onCellModesModelChange && isNewModelDifferentFromProp) {
-      onCellModesModelChange(newModel, {});
+      onCellModesModelChange(newModel, {
+        api: apiRef.current,
+      });
     }
 
     if (props.cellModesModel && isNewModelDifferentFromProp) {
