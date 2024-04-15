@@ -1,5 +1,4 @@
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { AdapterDateFns } from 'packages/adapters/x-adapter-date-fns-v2/src/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';
 import {
@@ -10,6 +9,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { enUS, fr, de, ru } from 'date-fns/locale';
+import { AdapterDateFns } from './AdapterDateFns';
 
 describe('<AdapterDateFns />', () => {
   describeGregorianAdapter(AdapterDateFns, {

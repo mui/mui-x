@@ -500,9 +500,6 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
-      date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
       date-fns-jalali:
         specifier: ^2.21.3-1
         version: 2.21.3-1
@@ -1065,6 +1062,9 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
+      date-fns:
+        specifier: ^2.25.0 || ^3.2.0
+        version: 3.2.0
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -1090,9 +1090,6 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
-      date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
       date-fns-jalali:
         specifier: ^2.13.0-0
         version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
@@ -1142,6 +1139,15 @@ importers:
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
+      '@mui/x-adapter-common':
+        specifier: workspace:*
+        version: link:../adapters/x-adapter-common/build
+      '@mui/x-adapter-date-fns-v2':
+        specifier: workspace:*
+        version: link:../adapters/x-adapter-date-fns-v2/build
+      '@mui/x-adapter-date-fns-v3':
+        specifier: workspace:*
+        version: link:../adapters/x-adapter-date-fns-v3/build
       '@mui/x-date-pickers':
         specifier: workspace:*
         version: link:../x-date-pickers/build
@@ -1151,6 +1157,9 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
+      date-fns:
+        specifier: ^2.25.0 || ^3.2.0
+        version: 3.2.0
       date-fns-jalali:
         specifier: ^2.13.0-0
         version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
@@ -1179,9 +1188,6 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
-      date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -8246,6 +8252,7 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.24.4
+    dev: true
 
   /date-fns@3.2.0:
     resolution: {integrity: sha512-E4KWKavANzeuusPi0jUjpuI22SURAznGkx7eZV+4i6x2A+IZxAMcajgkvuDAU1bg40+xuhW1zRdVIIM/4khuIg==}
