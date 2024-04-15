@@ -30,9 +30,6 @@ export const useGridDensity = (
     changeEvent: 'densityChange',
   });
 
-  /**
-   * API METHODS
-   */
   const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
     const currentDensity = gridDensitySelector(apiRef.current.state);
     if (currentDensity === newDensity) {
@@ -53,9 +50,6 @@ export const useGridDensity = (
 
   useGridApiMethod(apiRef, densityApi, 'public');
 
-  /**
-   * PRE-PROCESSING
-   */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const exportedDensity = gridDensitySelector(apiRef.current.state);
@@ -97,9 +91,6 @@ export const useGridDensity = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  /**
-   * EFFECTS
-   */
   React.useEffect(() => {
     if (props.density) {
       apiRef.current.setDensity(props.density);
