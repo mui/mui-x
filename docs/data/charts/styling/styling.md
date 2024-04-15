@@ -69,4 +69,4 @@ Since the library relies on SVG for rendering, you can customize them as you do 
 Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
-{{"demo": "SxStylingTemplate.js"}}
+{{"demo": "SxStyling.js"}}

@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { barElementClasses } from '@mui/x-charts/BarChart';
 
-const labels = ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'];
-const lData = [42, 24, 56, 45, 3];
-const rData = [57, 7, 19, 16, 22];
-const colors = ['#006BD6', '#EC407A'];
+const labels: string[] = ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'];
+const lData: number[] = [42, 24, 56, 45, 3];
+const rData: number[] = [57, 7, 19, 16, 22];
+const colors: string[] = ['#006BD6', '#EC407A'];
 
-export default function SxStylingTemplate() {
+export default function SxStyling(): React.JSX.Element {
   return (
     <BarChart
       sx={{
