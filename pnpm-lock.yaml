@@ -661,6 +661,40 @@ importers:
         specifier: ^14.2.1
         version: 14.2.1
 
+  packages/adapters/x-adapter-date-fns-v2:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.0
+        version: 7.24.4
+    devDependencies:
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../../x-date-pickers/build
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+    publishDirectory: build
+
+  packages/adapters/x-adapter-date-fns-v3:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.0
+        version: 7.24.4
+    devDependencies:
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../../x-date-pickers/build
+      date-fns:
+        specifier: ^3.2.0
+        version: 3.2.0
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+    publishDirectory: build
+
   packages/eslint-plugin-material-ui:
     devDependencies:
       '@types/eslint':
@@ -672,23 +706,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.21.0
         version: 6.21.0(eslint@8.57.0)(typescript@5.4.4)
-
-  packages/x-adapter-date-fns-v2:
-    dependencies:
-      '@babel/runtime':
-        specifier: ^7.24.0
-        version: 7.24.4
-    devDependencies:
-      '@mui/x-date-pickers':
-        specifier: workspace:*
-        version: link:../x-date-pickers/build
-      date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
-      rimraf:
-        specifier: ^5.0.5
-        version: 5.0.5
-    publishDirectory: build
 
   packages/x-charts:
     dependencies:
@@ -1024,7 +1041,10 @@ importers:
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@mui/x-adapter-date-fns-v2':
         specifier: workspace:*
-        version: link:../x-adapter-date-fns-v2/build
+        version: link:../adapters/x-adapter-date-fns-v2/build
+      '@mui/x-adapter-date-fns-v3':
+        specifier: workspace:*
+        version: link:../adapters/x-adapter-date-fns-v3/build
       '@types/react-transition-group':
         specifier: ^4.4.10
         version: 4.4.10
@@ -8215,7 +8235,6 @@ packages:
 
   /date-fns@3.2.0:
     resolution: {integrity: sha512-E4KWKavANzeuusPi0jUjpuI22SURAznGkx7eZV+4i6x2A+IZxAMcajgkvuDAU1bg40+xuhW1zRdVIIM/4khuIg==}
-    dev: false
 
   /date-format@4.0.14:
     resolution: {integrity: sha512-39BOQLs9ZjKh0/patS9nrT8wc3ioX3/eA/zgbKNopnF2wCqJEoxywwwElATYvRsXdnOxA/OQeQoFZ3rFjVajhg==}
