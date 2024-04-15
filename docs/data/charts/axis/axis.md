@@ -197,7 +197,9 @@ Those pros can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
+- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
+
+The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
 
 {{"demo": "ModifyAxisPosition.js"}}
 

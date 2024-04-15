@@ -55,10 +55,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_X_AXIS_KEY</code>."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_Y_AXIS_KEY</code>."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used."
     }
   },
   "classDescriptions": {},

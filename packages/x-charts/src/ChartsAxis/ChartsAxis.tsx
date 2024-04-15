@@ -50,12 +50,13 @@ export interface ChartsAxisProps {
 
 const getAxisId = (
   propsValue: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
+  defaultAxisId?: string,
 ): AxisId | null => {
   if (propsValue == null) {
     return null;
   }
   if (typeof propsValue === 'object') {
-    return propsValue.axisId ?? null;
+    return propsValue.axisId ?? defaultAxisId ?? null;
   }
   return propsValue;
 };
@@ -92,8 +93,8 @@ function ChartsAxis(props: ChartsAxisProps) {
 
   const leftId = getAxisId(leftAxis === undefined ? yAxisIds[0] : leftAxis);
   const bottomId = getAxisId(bottomAxis === undefined ? xAxisIds[0] : bottomAxis);
-  const topId = getAxisId(topAxis);
-  const rightId = getAxisId(rightAxis);
+  const topId = getAxisId(topAxis, xAxisIds[0]);
+  const rightId = getAxisId(rightAxis, yAxisIds[0]);
 
   if (topId !== null && !xAxis[topId]) {
     throw Error(
