@@ -34,7 +34,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
   const value = series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-  )?.(value);
+  )?.(value, { dataIndex: itemData.dataIndex });
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>

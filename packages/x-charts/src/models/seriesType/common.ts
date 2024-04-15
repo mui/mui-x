@@ -3,15 +3,28 @@ import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
 
+export type SeriesValueFormatterContext = {
+  /**
+   * The index of the value in the data array.
+   */
+  dataIndex: number;
+};
+
+export type SeriesValueFormatter<TValue> = (
+  value: TValue,
+  context: SeriesValueFormatterContext,
+) => string;
+
 export type CommonSeriesType<TValue> = {
   id?: SeriesId;
   color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.
-   * @returns {string} The string to dispaly.
+   * @param {SeriesValueFormatterContext} context The rendering context of the value.
+   * @returns {string} The string to display.
    */
-  valueFormatter?: <Value extends TValue>(value: Value) => string;
+  valueFormatter?: SeriesValueFormatter<TValue>;
   highlightScope?: Partial<HighlightScope>;
 };
 
