@@ -1,5 +1,5 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from 'packages/adapters/x-adapter-date-fns-v2/src';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
