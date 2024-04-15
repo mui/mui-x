@@ -235,7 +235,9 @@ export const useGridCellEditing = (
   );
 
   const runIfNoFieldErrors =
-    <Args extends Parameters<GridEventListener<'cellEditStop'>>>(callback?: (...args: Args) => void) =>
+    <Args extends Parameters<GridEventListener<'cellEditStop'>>>(
+      callback?: (...args: Args) => void,
+    ) =>
     async (...args: Args) => {
       if (callback) {
         const { id, field } = args[0];
