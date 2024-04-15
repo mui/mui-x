@@ -10,6 +10,11 @@ export type SeriesValueFormatterContext = {
   dataIndex: number;
 };
 
+export type SeriesValueFormatter<TValue> = (
+  value: TValue,
+  context: SeriesValueFormatterContext,
+) => string;
+
 export type CommonSeriesType<TValue> = {
   id?: SeriesId;
   color?: string;
@@ -19,7 +24,7 @@ export type CommonSeriesType<TValue> = {
    * @param {SeriesValueFormatterContext} context The rendering context of the value.
    * @returns {string} The string to display.
    */
-  valueFormatter?: <V extends TValue>(value: V, context: SeriesValueFormatterContext) => string;
+  valueFormatter?: SeriesValueFormatter<TValue>;
   highlightScope?: Partial<HighlightScope>;
 };
 
