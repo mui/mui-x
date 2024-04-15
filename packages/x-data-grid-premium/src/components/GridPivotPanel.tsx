@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridSortDirection } from '@mui/x-data-grid';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
@@ -134,27 +134,85 @@ type UpdatePivotModel = (params: {
   targetFieldPosition?: DropPosition;
 }) => void;
 
+const sortDirections: GridSortDirection[] = ['asc', 'desc', undefined];
+
+function SortSelect({
+  sort,
+  field,
+  onPivotModelChange,
+}: {
+  sort: PivotModel['columns'][number]['sort'];
+  field: FieldTransferObject['field'];
+  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+}) {
+  const rootProps = useGridRootProps();
+
+  return (
+    <rootProps.slots.baseSelect
+      size="small"
+      variant="standard"
+      sx={{ marginLeft: 'auto', fontSize: '12px' }}
+      value={sort || ''}
+      onChange={(event) => {
+        const newValue = (event.target.value || undefined) as GridSortDirection;
+        onPivotModelChange((prev) => {
+          return {
+            ...prev,
+            columns: prev.columns.map((col) => {
+              if (col.field === field) {
+                return {
+                  ...col,
+                  sort: newValue!,
+                };
+              }
+              return col;
+            }),
+          };
+        });
+      }}
+    >
+      {sortDirections.map((sortDirection) => (
+        <rootProps.slots.baseSelectOption
+          key={sortDirection || ''}
+          value={sortDirection || ''}
+          // FIXME
+          style={{ fontSize: '12px' }}
+        >
+          {sortDirection === 'asc' && 'A — Z'}
+          {sortDirection === 'desc' && 'Z — A'}
+          {sortDirection === undefined && 'None'}
+        </rootProps.slots.baseSelectOption>
+      ))}
+    </rootProps.slots.baseSelect>
+  );
+}
+
 function GridFieldItem({
   children,
   field,
-  modelKey,
   updatePivotModel,
+  onPivotModelChange,
   slots,
   slotProps,
   ...props
 }: {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
-  modelKey: FieldTransferObject['modelKey'];
   updatePivotModel: UpdatePivotModel;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
   slots: DataGridPremiumProcessedProps['slots'];
   slotProps: DataGridPremiumProcessedProps['slotProps'];
-}) {
+} & (
+  | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort'] }
+  | { modelKey: 'rows' }
+  | { modelKey: 'values' }
+  | { modelKey: null }
+)) {
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
-      const data: FieldTransferObject = { field, modelKey };
+      const data: FieldTransferObject = { field, modelKey: props.modelKey };
       event.dataTransfer.setData('text/plain', JSON.stringify(data));
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.setDragImage(
@@ -163,7 +221,7 @@ function GridFieldItem({
         event.nativeEvent.offsetY,
       );
     },
-    [field, modelKey],
+    [field, props.modelKey],
   );
 
   const getDropPosition = React.useCallback((event: React.DragEvent): DropPosition => {
@@ -207,44 +265,43 @@ function GridFieldItem({
           targetField: field,
           targetFieldPosition: position,
           originSection,
-          targetSection: modelKey,
+          targetSection: props.modelKey,
         });
       }
     },
-    [field, updatePivotModel, modelKey, getDropPosition],
+    [field, updatePivotModel, props.modelKey, getDropPosition],
   );
 
   const handleDeleteClick = React.useCallback(() => {
     updatePivotModel({
       field,
       targetSection: null,
-      originSection: modelKey,
+      originSection: props.modelKey,
     });
-  }, [field, modelKey, updatePivotModel]);
+  }, [field, props.modelKey, updatePivotModel]);
 
   return (
     <GridFieldItemContainer
-      {...props}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       dropPosition={dropPosition}
-      section={modelKey}
+      section={props.modelKey}
     >
       <DragHandle draggable="true" onDragStart={handleDragStart}>
         <slots.columnReorderIcon fontSize="small" />
       </DragHandle>
       {children}
-      {modelKey && (
-        <slots.baseIconButton
-          onClick={handleDeleteClick}
-          size="small"
-          edge="end"
-          sx={{ marginLeft: 'auto' }}
-        >
-          <slots.filterPanelDeleteIcon fontSize="inherit" />
-        </slots.baseIconButton>
-      )}
+      <div style={{ marginLeft: 'auto' }}>
+        {props.modelKey === 'columns' && (
+          <SortSelect sort={props.sort} field={field} onPivotModelChange={onPivotModelChange} />
+        )}
+        {props.modelKey !== null && (
+          <slots.baseIconButton onClick={handleDeleteClick} size="small" edge="end">
+            <slots.filterPanelDeleteIcon fontSize="inherit" />
+          </slots.baseIconButton>
+        )}
+      </div>
     </GridFieldItemContainer>
   );
 }
@@ -410,6 +467,7 @@ function GridPivotPanelContent({
                 modelKey="rows"
                 data-field={field}
                 updatePivotModel={updatePivotModel}
+                onPivotModelChange={onPivotModelChange}
                 slots={rootProps.slots}
                 slotProps={rootProps.slotProps}
               >
@@ -430,17 +488,20 @@ function GridPivotPanelContent({
         <PivotSectionTitle>Columns</PivotSectionTitle>
         {pivotModel.columns.length === 0 && <Placeholder />}
         {pivotModel.columns.length > 0 &&
-          pivotModel.columns.map(({ field, sort }) => {
+          pivotModel.columns.map((item) => {
+            const { field, sort } = item;
             return (
               <GridFieldItem
                 key={field}
                 field={field}
                 modelKey="columns"
                 updatePivotModel={updatePivotModel}
+                onPivotModelChange={onPivotModelChange}
                 slots={rootProps.slots}
                 slotProps={rootProps.slotProps}
+                sort={sort}
               >
-                {getColumnName(field)} {sort}
+                {getColumnName(field)}
               </GridFieldItem>
             );
           })}
@@ -464,6 +525,7 @@ function GridPivotPanelContent({
                 field={field}
                 modelKey="values"
                 updatePivotModel={updatePivotModel}
+                onPivotModelChange={onPivotModelChange}
                 slots={rootProps.slots}
                 slotProps={rootProps.slotProps}
               >
@@ -489,6 +551,7 @@ function GridPivotPanelContent({
               field={field}
               modelKey={null}
               updatePivotModel={updatePivotModel}
+              onPivotModelChange={onPivotModelChange}
               slots={rootProps.slots}
               slotProps={rootProps.slotProps}
             >
