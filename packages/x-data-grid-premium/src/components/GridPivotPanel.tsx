@@ -10,6 +10,7 @@ import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import { useResize } from '../hooks/utils/useResize';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridRootProps } from '../typeOverloads/reexports';
+import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 
 const GridPivotPanelContainerStyled = styled('div')({
   width: 250,
@@ -187,6 +188,66 @@ function SortSelect({
   );
 }
 
+function AggregationSelect({
+  aggFunc,
+  field,
+  onPivotModelChange,
+  colDef,
+}: {
+  aggFunc: PivotModel['values'][number]['aggFunc'];
+  field: FieldTransferObject['field'];
+  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+  colDef: GridColDef;
+}) {
+  const rootProps = useGridRootProps();
+
+  const availableAggregationFunctions = React.useMemo(
+    () =>
+      getAvailableAggregationFunctions({
+        aggregationFunctions: rootProps.aggregationFunctions,
+        colDef,
+      }),
+    [colDef, rootProps.aggregationFunctions],
+  );
+
+  return (
+    <rootProps.slots.baseSelect
+      size="small"
+      variant="standard"
+      sx={{ marginLeft: 'auto', fontSize: '12px' }}
+      value={aggFunc}
+      onChange={(event) => {
+        const newValue = event.target.value;
+        onPivotModelChange((prev) => {
+          return {
+            ...prev,
+            values: prev.values.map((col) => {
+              if (col.field === field) {
+                return {
+                  ...col,
+                  aggFunc: newValue!,
+                };
+              }
+              return col;
+            }),
+          };
+        });
+      }}
+    >
+      {availableAggregationFunctions.map((func) => (
+        <rootProps.slots.baseSelectOption
+          key={func}
+          value={func}
+          // FIXME
+          style={{ fontSize: '12px' }}
+        >
+          {func}
+        </rootProps.slots.baseSelectOption>
+      ))}
+    </rootProps.slots.baseSelect>
+  );
+}
+
 function GridFieldItem({
   children,
   field,
@@ -205,7 +266,7 @@ function GridFieldItem({
 } & (
   | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort'] }
   | { modelKey: 'rows' }
-  | { modelKey: 'values' }
+  | { modelKey: 'values'; aggFunc: PivotModel['values'][number]['aggFunc']; colDef: GridColDef }
   | { modelKey: null }
 )) {
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
@@ -296,6 +357,14 @@ function GridFieldItem({
         {props.modelKey === 'columns' && (
           <SortSelect sort={props.sort} field={field} onPivotModelChange={onPivotModelChange} />
         )}
+        {props.modelKey === 'values' && (
+          <AggregationSelect
+            aggFunc={props.aggFunc}
+            field={field}
+            colDef={props.colDef}
+            onPivotModelChange={onPivotModelChange}
+          />
+        )}
         {props.modelKey !== null && (
           <slots.baseIconButton onClick={handleDeleteClick} size="small" edge="end">
             <slots.filterPanelDeleteIcon fontSize="inherit" />
@@ -362,7 +431,11 @@ function GridPivotPanelContent({
         if (targetSection) {
           const newItem = targetSection === 'rows' ? field : { field };
           if (targetSection === 'values') {
-            newItem.aggFunc = 'sum';
+            const availableAggregationFunctions = getAvailableAggregationFunctions({
+              aggregationFunctions: rootProps.aggregationFunctions,
+              colDef: initialColumnsLookup[field],
+            });
+            newItem.aggFunc = availableAggregationFunctions[0];
           }
           if (targetSection === 'columns') {
             newItem.sort = 'asc';
@@ -528,8 +601,10 @@ function GridPivotPanelContent({
                 onPivotModelChange={onPivotModelChange}
                 slots={rootProps.slots}
                 slotProps={rootProps.slotProps}
+                aggFunc={aggFunc}
+                colDef={initialColumnsLookup[field]}
               >
-                {getColumnName(field)} {aggFunc}
+                {getColumnName(field)}
               </GridFieldItem>
             );
           })}
