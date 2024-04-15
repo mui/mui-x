@@ -71,9 +71,7 @@ Here is a demo with:
 
 ### Advanced formatting
 
-The series `valueFormatter` property allows users to format data displayed on the tooltips.
-
-It provides a context as its second argument containing a `dataIndex` property which you can use to calculate other data-related values.
+The series `valueFormatter` provides a context as its second argument containing a `dataIndex` property which you can use to calculate other data-related values.
 
 In the demo below you can notice we use `dataIndex` to add each team's rank in the tooltip.
 
