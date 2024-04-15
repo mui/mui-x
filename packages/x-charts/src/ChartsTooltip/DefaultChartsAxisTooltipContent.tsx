@@ -42,7 +42,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
             .filter(isCartesianSeries)
             .map(({ color, id, label, valueFormatter, data, getColor }) => {
               // @ts-ignore
-              const formattedValue = valueFormatter(data[dataIndex] ?? null);
+              const formattedValue = valueFormatter(data[dataIndex] ?? null, { dataIndex });
               if (formattedValue == null) {
                 return null;
               }
