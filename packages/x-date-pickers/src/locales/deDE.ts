@@ -26,10 +26,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Beginn',
   end: 'Ende',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdatum',
+  startTime: 'Startzeit',
+  endDate: 'Enddatum',
+  endTime: 'Endzeit',
 
   // Action bar
   cancelButtonLabel: 'Abbrechen',
@@ -85,17 +85,17 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Jahr',
+  month: 'Monat',
+  day: 'Tag',
+  weekDay: 'Wochentag',
+  hours: 'Stunden',
+  minutes: 'Minuten',
+  seconds: 'Sekunden',
+  meridiem: 'Tageszeit',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Leer',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

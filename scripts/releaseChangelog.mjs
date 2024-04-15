@@ -42,21 +42,21 @@ async function findLatestTaggedVersion(octokit) {
   return data[0].name.trim();
 }
 
-function resolvePackageByLabels(labels) {
-  let resolvedPackage = null;
+function resolvePackagesByLabels(labels) {
+  let resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
       case 'component: data grid':
-        resolvedPackage = 'DataGrid';
+        resolvedPackages.push('DataGrid');
         break;
       case 'component: pickers':
-        resolvedPackage = 'pickers';
+        resolvedPackages.push('pickers');
         break;
       default:
         break;
     }
   });
-  return resolvedPackage;
+  return resolvedPackages;
 }
 
 async function main(argv) {
@@ -203,19 +203,21 @@ async function main(argv) {
       case 'l10n':
       case '118n': {
         const prLabels = prsLabelsMap[commitItem.sha];
-        const resolvedPackage = resolvePackageByLabels(prLabels);
-        if (resolvedPackage) {
-          switch (resolvedPackage) {
-            case 'DataGrid':
-              dataGridCommits.push(commitItem);
-              break;
-            case 'pickers':
-              pickersCommits.push(commitItem);
-              break;
-            default:
-              coreCommits.push(commitItem);
-              break;
-          }
+        const resolvedPackages = resolvePackagesByLabels(prLabels);
+        if (resolvedPackages.length > 0) {
+          resolvedPackages.forEach((resolvedPackage) => {
+            switch (resolvedPackage) {
+              case 'DataGrid':
+                dataGridCommits.push(commitItem);
+                break;
+              case 'pickers':
+                pickersCommits.push(commitItem);
+                break;
+              default:
+                coreCommits.push(commitItem);
+                break;
+            }
+          });
         }
         break;
       }

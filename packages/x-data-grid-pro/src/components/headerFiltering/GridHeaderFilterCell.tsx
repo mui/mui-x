@@ -53,6 +53,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = DataGridProProcessedProps & {
@@ -103,6 +104,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       style: styleProp,
       indexInSection,
       sectionLength,
+      gridHasFiller,
       ...other
     } = props;
 
@@ -271,6 +273,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
+      gridHasFiller,
     );
 
     const ownerState: OwnerState = {
@@ -378,6 +381,7 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
+  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.

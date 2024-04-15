@@ -5,6 +5,15 @@
       "required": true,
       "additionalInfo": { "cssApi": true }
     },
+    "getColor": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number) => string",
+        "describedArgs": ["dataIndex"],
+        "returned": "string"
+      }
+    },
     "itemData": {
       "type": {
         "name": "shape",
