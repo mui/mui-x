@@ -14,7 +14,6 @@ import {
 } from '../LineChart/extremums';
 import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { getScale } from '../internals/getScale';
-import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
@@ -26,6 +25,7 @@ import {
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { SeriesId } from '../models/seriesType/common';
 
 export type CartesianContextProviderProps = {
@@ -97,7 +97,7 @@ if (process.env.NODE_ENV !== 'production') {
 function CartesianContextProvider(props: CartesianContextProviderProps) {
   const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
-  const drawingArea = React.useContext(DrawingContext);
+  const drawingArea = useDrawingArea();
 
   const xAxis = React.useMemo(
     () =>

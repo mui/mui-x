@@ -149,6 +149,7 @@
   { "name": "getMarkElementUtilityClass", "kind": "Function" },
   { "name": "getPieArcLabelUtilityClass", "kind": "Function" },
   { "name": "getPieArcUtilityClass", "kind": "Function" },
+  { "name": "getPieCoordinates", "kind": "Function" },
   { "name": "getReferenceLineUtilityClass", "kind": "Function" },
   { "name": "getSeriesToDisplay", "kind": "Function" },
   { "name": "getValueToPositionMapper", "kind": "Function" },
@@ -254,8 +255,15 @@
   { "name": "StackableSeriesType", "kind": "TypeAlias" },
   { "name": "StackOffsetType", "kind": "TypeAlias" },
   { "name": "StackOrderType", "kind": "TypeAlias" },
+  { "name": "unstable_useBarSeries", "kind": "Function" },
+  { "name": "unstable_useLineSeries", "kind": "Function" },
+  { "name": "unstable_usePieSeries", "kind": "Function" },
+  { "name": "unstable_useScatterSeries", "kind": "Function" },
+  { "name": "unstable_useSeries", "kind": "Function" },
+  { "name": "useChartId", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
+  { "name": "useSvgRef", "kind": "Function" },
   { "name": "useXScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" }
 ]

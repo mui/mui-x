@@ -5,6 +5,7 @@ import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/utils';
+import { getPieCoordinates } from './getPieCoordinates';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -41,7 +42,6 @@ function PiePlot(props: PiePlotProps) {
   if (seriesData === undefined) {
     return null;
   }
-  const availableRadius = Math.min(width, height) / 2;
 
   const { series, seriesOrder } = seriesData;
 
@@ -61,13 +61,16 @@ function PiePlot(props: PiePlotProps) {
           highlightScope,
         } = series[seriesId];
 
+        const { cx, cy, availableRadius } = getPieCoordinates(
+          { cx: cxParam, cy: cyParam },
+          { width, height },
+        );
+
         const outerRadius = getPercentageValue(
           outerRadiusParam ?? availableRadius,
           availableRadius,
         );
         const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
-        const cx = getPercentageValue(cxParam ?? '50%', width);
-        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
           <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcPlot
@@ -102,6 +105,12 @@ function PiePlot(props: PiePlotProps) {
           cy: cyParam,
           highlightScope,
         } = series[seriesId];
+
+        const { cx, cy, availableRadius } = getPieCoordinates(
+          { cx: cxParam, cy: cyParam },
+          { width, height },
+        );
+
         const outerRadius = getPercentageValue(
           outerRadiusParam ?? availableRadius,
           availableRadius,
@@ -113,8 +122,6 @@ function PiePlot(props: PiePlotProps) {
             ? (outerRadius + innerRadius) / 2
             : getPercentageValue(arcLabelRadiusParam, availableRadius);
 
-        const cx = getPercentageValue(cxParam ?? '50%', width);
-        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
           <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcLabelPlot
