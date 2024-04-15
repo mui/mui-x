@@ -47,7 +47,7 @@ import {
   isWithinInterval,
   enUS,
 } from './date-fns-exports';
-import { AdapterDateFnsBase } from '../../../../x-date-pickers/src/AdapterDateFnsBase';
+import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 /**
  * Based on `@date-io/date-fns`

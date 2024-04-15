@@ -1,1 +1,0 @@
-export { AdapterDateFnsBase } from './AdapterDateFnsBase';

@@ -45,7 +45,7 @@ import startOfYear from 'date-fns/startOfYear';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { AdapterDateFnsBase } from '../../../../x-date-pickers/src/AdapterDateFnsBase';
+import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;
 

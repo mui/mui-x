@@ -1,12 +1,14 @@
 /* eslint-disable class-methods-use-this */
+
 import {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
-} from '../models';
-import { MakeRequired } from '../internals/models/helpers';
+} from '@mui/x-adapter-common';
+
+export type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
 type DateFnsLocaleBase = {
   formatLong?: {
@@ -118,7 +120,7 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
   longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
 };
 
-declare module '@mui/x-date-pickers/models' {
+declare module '@mui/x-adapter-common/PickersValidDate' {
   interface PickerValidDateLookup {
     'date-fns': Date;
   }
