@@ -1,3 +1,4 @@
+import type { PickerValidDateLookup, PickerValidDate } from '@mui/x-adapter-common';
 import type { PickersShortcutsItemContext } from '../PickersShortcuts';
 
 export interface PickerChangeHandlerContext<TError> {
@@ -9,6 +10,4 @@ export interface PickerChangeHandlerContext<TError> {
   shortcut?: PickersShortcutsItemContext;
 }
 
-export interface PickerValidDateLookup {}
-
-export type PickerValidDate = PickerValidDateLookup[keyof PickerValidDateLookup];
+export { PickerValidDate, PickerValidDateLookup };

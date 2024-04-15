@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SxProps } from '@mui/material/styles';
+import type { FieldSectionContentType, FieldSectionType } from '@mui/x-adapter-common';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
@@ -13,19 +14,7 @@ import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValidDate } from './pickers';
 
-// Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
-export type FieldSectionType =
-  | 'year'
-  | 'month'
-  | 'day'
-  | 'weekDay'
-  | 'hours'
-  | 'minutes'
-  | 'seconds'
-  | 'meridiem'
-  | 'empty';
-
-export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
+export type { FieldSectionContentType, FieldSectionType };
 
 export type FieldValueType = 'date' | 'time' | 'date-time';
 

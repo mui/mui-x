@@ -1,4 +1,6 @@
-export type PickersTimezone = 'default' | 'system' | 'UTC' | string;
+import type { PickersTimezone } from '@mui/x-adapter-common';
+
+export { PickersTimezone };
 
 export interface TimezoneProps {
   /**

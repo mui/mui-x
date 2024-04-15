@@ -661,6 +661,17 @@ importers:
         specifier: ^14.2.1
         version: 14.2.1
 
+  packages/adapters/x-adapter-common:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.0
+        version: 7.24.4
+    devDependencies:
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+    publishDirectory: build
+
   packages/adapters/x-adapter-date-fns-v2:
     dependencies:
       '@babel/runtime':
@@ -1033,6 +1044,9 @@ importers:
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
+      '@mui/x-adapter-common':
+        specifier: workspace:*
+        version: link:../adapters/x-adapter-common/build
       '@mui/x-adapter-date-fns-v2':
         specifier: workspace:*
         version: link:../adapters/x-adapter-date-fns-v2/build
