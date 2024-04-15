@@ -10,6 +10,7 @@
     "outDir": "build",
     "rootDir": "./src"
   },
+  "references": [{ "path": "../x-adapter-common/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

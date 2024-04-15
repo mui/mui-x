@@ -12,7 +12,10 @@
   },
   "references": [
     { "path": "../x-date-pickers/tsconfig.build.json" },
-    { "path": "../x-license/tsconfig.build.json" }
+    { "path": "../x-license/tsconfig.build.json" },
+    { "path": "../adapters/x-adapter-common/tsconfig.build.json" },
+    { "path": "../adapters/x-adapter-date-fns-v2/tsconfig.build.json" },
+    { "path": "../adapters/x-adapter-date-fns-v3/tsconfig.build.json" }
   ],
   "include": [
     "./src/**/*.ts*",

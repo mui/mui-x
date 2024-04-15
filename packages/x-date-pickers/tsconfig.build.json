@@ -10,6 +10,11 @@
     "outDir": "build",
     "rootDir": "./src"
   },
+  "references": [
+    { "path": "../adapters/x-adapter-common/tsconfig.build.json" },
+    { "path": "../adapters/x-adapter-date-fns-v2/tsconfig.build.json" },
+    { "path": "../adapters/x-adapter-date-fns-v3/tsconfig.build.json" }
+  ],
   "include": [
     "src/**/*.ts*",
     "./node_modules/@mui/material/themeCssVarsAugmentation",
