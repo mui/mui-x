@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewNode, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
-  getFirstItem,
-  getLastItem,
-  getNextItem,
-  getPreviousItem,
-  populateInstance,
-} from '../../useTreeView/useTreeView.utils';
+  getFirstNavigableItem,
+  getLastNavigableItem,
+  getNextNavigableItem,
+  getPreviousNavigableItem,
+} from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
@@ -48,13 +47,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const newFirstCharMap: { [itemId: string]: string } = {};
 
-    const processItem = (node: TreeViewNode) => {
-      newFirstCharMap[node.id] = node.label!.substring(0, 1).toLowerCase();
+    const processItem = (item: TreeViewItemMeta) => {
+      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.items.nodeMap).forEach(processItem);
+    Object.values(state.items.itemMetaMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.items.nodeMap, params.getItemId, instance]);
+  }, [state.items.itemMetaMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, firstChar: string) => {
     let start: number;
@@ -65,7 +64,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const firstChars: string[] = [];
     // This really only works since the ids are strings
     Object.keys(firstCharMap.current).forEach((mapItemId) => {
-      const map = instance.getNode(mapItemId);
+      const map = instance.getItemMeta(mapItemId);
       const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
       const shouldBeSkipped = params.disabledItemsFocusable
         ? false
@@ -158,7 +157,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focus the next focusable item
       case key === 'ArrowDown': {
-        const nextItem = getNextItem(instance, itemId);
+        const nextItem = getNextNavigableItem(instance, itemId);
         if (nextItem) {
           event.preventDefault();
           instance.focusItem(event, nextItem);
@@ -182,7 +181,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the previous focusable item
       case key === 'ArrowUp': {
-        const previousItem = getPreviousItem(instance, itemId);
+        const previousItem = getPreviousNavigableItem(instance, itemId);
         if (previousItem) {
           event.preventDefault();
           instance.focusItem(event, previousItem);
@@ -208,7 +207,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
         if (instance.isItemExpanded(itemId)) {
-          const nextItemId = getNextItem(instance, itemId);
+          const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
             instance.focusItem(event, nextItemId);
             event.preventDefault();
@@ -228,7 +227,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else {
-          const parent = instance.getNode(itemId).parentId;
+          const parent = instance.getItemMeta(itemId).parentId;
           if (parent) {
             instance.focusItem(event, parent);
             event.preventDefault();
@@ -240,7 +239,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the first item in the tree
       case key === 'Home': {
-        instance.focusItem(event, getFirstItem(instance));
+        instance.focusItem(event, getFirstNavigableItem(instance));
 
         // Multi select behavior when pressing Ctrl + Shift + Home
         // Selects the focused item and all items up to the first item.
@@ -254,7 +253,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the last item in the tree
       case key === 'End': {
-        instance.focusItem(event, getLastItem(instance));
+        instance.focusItem(event, getLastNavigableItem(instance));
 
         // Multi select behavior when pressing Ctrl + Shirt + End
         // Selects the focused item and all the items down to the last item.
@@ -277,8 +276,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // Selects all the items
       case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
         instance.selectRange(event, {
-          start: getFirstItem(instance),
-          end: getLastItem(instance),
+          start: getFirstNavigableItem(instance),
+          end: getLastNavigableItem(instance),
         });
         event.preventDefault();
         break;
@@ -297,10 +296,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     }
   };
 
-  populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    updateFirstCharMap,
-    handleItemKeyDown,
-  });
+  return {
+    instance: {
+      updateFirstCharMap,
+      handleItemKeyDown,
+    },
+  };
 };
 
 useTreeViewKeyboardNavigation.params = {};

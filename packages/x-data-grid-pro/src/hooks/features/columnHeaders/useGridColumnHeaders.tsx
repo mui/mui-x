@@ -7,6 +7,7 @@ import {
   getDataGridUtilityClass,
   GridFilterItem,
   GridPinnedColumnPosition,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
@@ -65,8 +66,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
-  const dimensions = apiRef.current.getRootDimensions();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
@@ -138,6 +140,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={i}
           sectionLength={renderedColumns.length}
+          gridHasFiller={gridHasFiller}
           {...rootProps.slotProps?.headerFilterCell}
         />,
       );
