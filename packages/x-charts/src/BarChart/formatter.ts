@@ -87,10 +87,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    series: defaultizeValueFormatter(completedSeries, (v, _) =>
-      v == null ? '' : v.toLocaleString(),
-    ),
+    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
   };
 };
 
