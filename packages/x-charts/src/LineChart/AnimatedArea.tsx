@@ -14,9 +14,10 @@ export const AreaElementPath = styled(animated.path, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(1).formatHex()
-    : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
+  fill:
+    (ownerState.gradientId && `url(#${ownerState.gradientId})`) ||
+    (ownerState.isHighlighted && d3Color(ownerState.color)!.brighter(1).formatHex()) ||
+    d3Color(ownerState.color)!.brighter(0.5).formatHex(),
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
@@ -77,6 +78,7 @@ AnimatedArea.propTypes = {
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    gradientId: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,

@@ -8,6 +8,7 @@ import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { cleanId } from '../internals/utils';
+import getColor from './getColor';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -113,6 +114,8 @@ function MarkPlot(props: MarkPlotProps) {
 
           const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
 
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
+
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
               {xData
@@ -153,7 +156,7 @@ function MarkPlot(props: MarkPlotProps) {
                       id={seriesId}
                       dataIndex={index}
                       shape="circle"
-                      color={series[seriesId].color}
+                      color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
                       highlightScope={series[seriesId].highlightScope}
