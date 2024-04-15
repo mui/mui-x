@@ -13,6 +13,7 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -59,6 +60,11 @@ const useAggregatedData = () => {
       const yScale = yAxis[yAxisKey].scale;
       const xData = xAxis[xAxisKey].data;
 
+      const gradientUsed: [string, 'x' | 'y'] | undefined =
+        (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
+        (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
+        undefined;
+
       if (process.env.NODE_ENV !== 'production') {
         if (xData === undefined) {
           throw new Error(
@@ -92,6 +98,7 @@ const useAggregatedData = () => {
       const d = areaPath.curve(curve)(d3Data) || '';
       return {
         ...series[seriesId],
+        gradientUsed,
         d,
         seriesId,
       };
@@ -113,6 +120,7 @@ const useAggregatedData = () => {
 function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, onItemClick, skipAnimation, ...other } = props;
 
+  const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
 
   return (
@@ -120,13 +128,14 @@ function AreaPlot(props: AreaPlotProps) {
       {completedData
         .reverse()
         .map(
-          ({ d, seriesId, color, highlightScope, area }) =>
+          ({ d, seriesId, color, highlightScope, area, gradientUsed }) =>
             !!area && (
               <AreaElement
                 key={seriesId}
                 id={seriesId}
                 d={d}
                 color={color}
+                gradientId={gradientUsed && getGradientId(...gradientUsed)}
                 highlightScope={highlightScope}
                 slots={slots}
                 slotProps={slotProps}

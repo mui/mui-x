@@ -4,12 +4,13 @@ import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { isBandScaleConfig } from '../models/axis';
+import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
 import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
+import getColor from './getColor';
 
 /**
  * Solution of the equations
@@ -98,7 +99,8 @@ const useAggregatedData = (): CompletedBarData[] => {
       const yAxisConfig = yAxis[yAxisKey];
 
       const verticalLayout = series[seriesId].layout === 'vertical';
-      let baseScaleConfig;
+      let baseScaleConfig: AxisDefaultized<'band'>;
+
       if (verticalLayout) {
         if (!isBandScaleConfig(xAxisConfig)) {
           throw new Error(
@@ -118,7 +120,16 @@ const useAggregatedData = (): CompletedBarData[] => {
             } shoud have data property.`,
           );
         }
-        baseScaleConfig = xAxisConfig;
+        baseScaleConfig = xAxisConfig as AxisDefaultized<'band'>;
+        if (isBandScaleConfig(yAxisConfig) || isPointScaleConfig(yAxisConfig)) {
+          throw new Error(
+            `MUI X Charts: ${
+              yAxisKey === DEFAULT_Y_AXIS_KEY
+                ? 'The first `yAxis`'
+                : `The y-axis with id "${yAxisKey}"`
+            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
+          );
+        }
       } else {
         if (!isBandScaleConfig(yAxisConfig)) {
           throw new Error(
@@ -139,12 +150,22 @@ const useAggregatedData = (): CompletedBarData[] => {
             } shoud have data property.`,
           );
         }
-        baseScaleConfig = yAxisConfig;
+        baseScaleConfig = yAxisConfig as AxisDefaultized<'band'>;
+        if (isBandScaleConfig(xAxisConfig) || isPointScaleConfig(xAxisConfig)) {
+          throw new Error(
+            `MUI X Charts: ${
+              xAxisKey === DEFAULT_X_AXIS_KEY
+                ? 'The first `xAxis`'
+                : `The x-axis with id "${xAxisKey}"`
+            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
+          );
+        }
       }
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
 
+      const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
       const bandWidth = baseScaleConfig.scale.bandwidth();
 
       const { barWidth, offset } = getBandSize({
@@ -154,7 +175,7 @@ const useAggregatedData = (): CompletedBarData[] => {
       });
       const barOffset = groupIndex * (barWidth + offset);
 
-      const { stackedData, color } = series[seriesId];
+      const { stackedData } = series[seriesId];
 
       return stackedData.map((values, dataIndex: number) => {
         const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
@@ -176,7 +197,7 @@ const useAggregatedData = (): CompletedBarData[] => {
           yOrigin: yScale(0)!,
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
-          color,
+          color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
         };
       });

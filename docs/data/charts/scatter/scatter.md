@@ -53,6 +53,21 @@ Otherwise, the click behavior will be the same as defined in the [interaction se
 
 ## Styling
 
+### Color scale
+
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
+
+You can also modify the color by using axes `colorMap` which maps values to colors.
+The scatter charts use by priority:
+
+1. The y-axis color
+2. The x-axis color
+3. The series color
+
+Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScaleNoSnap.js"}}
+
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
+import getColor from './getColor';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -55,6 +56,11 @@ function ScatterPlot(props: ScatterPlotProps) {
       {seriesOrder.map((seriesId) => {
         const { id, xAxisKey, yAxisKey, markerSize, color } = series[seriesId];
 
+        const colorGetter = getColor(
+          series[seriesId],
+          xAxis[xAxisKey ?? defaultXAxisId],
+          yAxis[yAxisKey ?? defaultYAxisId],
+        );
         const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
         const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
         return (
@@ -63,6 +69,7 @@ function ScatterPlot(props: ScatterPlotProps) {
             xScale={xScale}
             yScale={yScale}
             color={color}
+            colorGetter={colorGetter}
             markerSize={markerSize ?? 4}
             series={series[seriesId]}
             onItemClick={onItemClick}
