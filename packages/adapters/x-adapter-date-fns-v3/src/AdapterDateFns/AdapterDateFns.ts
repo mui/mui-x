@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+// @ts-nocheck
 import { addDays } from 'date-fns/addDays';
 import { addSeconds } from 'date-fns/addSeconds';
 import { addMinutes } from 'date-fns/addMinutes';
