@@ -1139,15 +1139,6 @@ importers:
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
-      '@mui/x-adapter-common':
-        specifier: workspace:*
-        version: link:../adapters/x-adapter-common/build
-      '@mui/x-adapter-date-fns-v2':
-        specifier: workspace:*
-        version: link:../adapters/x-adapter-date-fns-v2/build
-      '@mui/x-adapter-date-fns-v3':
-        specifier: workspace:*
-        version: link:../adapters/x-adapter-date-fns-v3/build
       '@mui/x-date-pickers':
         specifier: workspace:*
         version: link:../x-date-pickers/build
