@@ -136,16 +136,15 @@ This prop is ignored when the `paginationMode` is set to `client`, i.e. when the
 
 You can achieve each of these use-cases by setting the values of `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props. The following table summarizes the use of these props in each of these scenarios.
 
-|                       | `rowCount` | `paginationMeta.hasNextPage` | `estimatedRowCount` |
-| :-------------------- | :--------- | :--------------------------- | :------------------ |
-| Known row count      | `number`   | —                            | —                   |
-| Unknown row count     | `-1`       | `boolean`                    | —                   |
-| Estimated row count   | `-1`       | `boolean`                    | `number`            |
+|                     | `rowCount` | `paginationMeta.hasNextPage` | `estimatedRowCount` |
+| :------------------ | :--------- | :--------------------------- | :------------------ |
+| Known row count     | `number`   | —                            | —                   |
+| Unknown row count   | `-1`       | `boolean`                    | —                   |
+| Estimated row count | `-1`       | `boolean`                    | `number`            |
 
 The following examples demonstrate each of these scenarios:
 
 #### Known row count
-
 
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 
@@ -170,8 +169,11 @@ const rowCount = React.useMemo(() => {
 
 #### Unknown row count
 
-Pass the props to the Grid as explained in the table above to handle the case when the actual row count is not initially available.
+Pass the props to the Grid as explained in the table above to handle the case when the actual row count is not initially available as the following example demonstrates.
 
+{{"demo": "ServerPaginationGridNoRowCount.js", "bg": "inline"}}
+
+:::warning
 The value of the `hasNextPage` variable might become `undefined` during loading if it's handled by some external fetching hook resulting in unwanted computations, one possible solution could be to memoize the `paginationMeta`:
 
 ```tsx
@@ -188,7 +190,7 @@ const paginationMeta = React.useMemo(() => {
 }, [hasNextPage]);
 ```
 
-{{"demo": "ServerPaginationGridNoRowCount.js", "bg": "inline"}}
+:::
 
 #### Estimated row count
 
