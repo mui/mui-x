@@ -136,19 +136,22 @@ This prop is ignored when the `paginationMode` is set to `client`, i.e. when the
 
 You can achieve each of these use-cases by setting the values of `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props. The following table summarizes the use of these props in each of these scenarios.
 
-|                              | Known row count | Unknown row count | Estimated row count |
-| :--------------------------- | :-------------- | :---------------- | :------------------ |
-| `rowCount`                   | `number`        | `-1`              | `-1`                |
-| `paginationMeta.hasNextPage` | —               | `boolean`         | `boolean`           |
-| `estimatedRowCount`          | —               | —                 | `number`            |
+|                       | `rowCount` | `paginationMeta.hasNextPage` | `estimatedRowCount` |
+| :-------------------- | :--------- | :--------------------------- | :------------------ |
+| Known row count      | `number`   | —                            | —                   |
+| Unknown row count     | `-1`       | `boolean`                    | —                   |
+| Estimated row count   | `-1`       | `boolean`                    | `number`            |
 
 The following examples demonstrate each of these scenarios:
 
 #### Known row count
 
-The value of the `rowCount` might become `undefined` during loading if it's handled by some external fetching hook resulting in reseting the page to zero.
 
-In such situations, memoizing the `rowCount` value could overcome this issue.
+{{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
+
+:::warning
+If the value `rowCount` becomes `undefined` during loading, it will reset the page to zero.
+To avoid this issue, you can memoize the `rowCount` value to ensure it doesn't change during loading:
 
 ```jsx
 const rowCountRef = React.useRef(pageInfo?.totalRowCount || 0);
@@ -163,7 +166,7 @@ const rowCount = React.useMemo(() => {
 <DataGrid rowCount={rowCount} />;
 ```
 
-{{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
+:::
 
 #### Unknown row count
 
