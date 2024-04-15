@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
-import { AdapterDateFns } from 'packages/adapters/x-adapter-date-fns-v2/src';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 

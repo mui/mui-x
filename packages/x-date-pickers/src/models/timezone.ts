@@ -1,6 +1,6 @@
 import type { PickersTimezone } from '@mui/x-adapter-common';
 
-export { PickersTimezone };
+export type { PickersTimezone };
 
 export interface TimezoneProps {
   /**

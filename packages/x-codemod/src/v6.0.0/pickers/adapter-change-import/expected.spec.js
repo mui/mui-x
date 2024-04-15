@@ -1,4 +1,4 @@
-import { AdapterDateFns } from 'packages/adapters/x-adapter-date-fns-v2/src/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';

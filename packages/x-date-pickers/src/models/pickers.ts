@@ -10,4 +10,4 @@ export interface PickerChangeHandlerContext<TError> {
   shortcut?: PickersShortcutsItemContext;
 }
 
-export { PickerValidDate, PickerValidDateLookup };
+export type { PickerValidDate, PickerValidDateLookup };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AdapterDateFns } from 'packages/adapters/x-adapter-date-fns-v2/src';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
