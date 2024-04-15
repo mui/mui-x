@@ -51,11 +51,26 @@ async function addLicense(packageData) {
   );
 }
 
+async function findFileInParentDirectoryRecursive(currentFileFullPath, fileToFind) {
+  if (await fse.pathExists(currentFileFullPath)) {
+    const fileToFindPath = path.join(currentFileFullPath, fileToFind);
+    if (await fse.pathExists(fileToFindPath)) {
+      return fileToFindPath;
+    }
+    const parentDirectory = path.dirname(currentFileFullPath);
+    return findFileInParentDirectoryRecursive(parentDirectory, fileToFind);
+  }
+  return null;
+}
+
 async function run() {
   try {
     const packageData = await createPackageFile();
 
-    const filesToCopy = ['./README.md', '../../CHANGELOG.md'];
+    const filesToCopy = [
+      './README.md',
+      await findFileInParentDirectoryRecursive(packagePath, 'CHANGELOG.md'),
+    ];
 
     const hasLicenseFileInPackage = await fse.exists(path.join(packagePath, 'LICENSE'));
     if (hasLicenseFileInPackage) {
