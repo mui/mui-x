@@ -9,6 +9,7 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
           color: item.color,
           label: item.label,
           id: item.id,
+          highlightScope: series[seriesId].highlightScope,
         }))
         .filter((item) => item.label !== undefined) as LegendParams[],
   );

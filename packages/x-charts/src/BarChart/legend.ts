@@ -6,6 +6,7 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
     color: series[seriesId].color,
     label: series[seriesId].label,
     id: seriesId,
+    highlightScope: series[seriesId].highlightScope,
   }));
   return data.filter((item) => item.label !== undefined) as LegendParams[];
 };
