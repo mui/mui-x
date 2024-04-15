@@ -39,9 +39,9 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Download som Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Søg',
+  columnsManagementNoColumns: 'Ingen søjler',
+  columnsManagementShowHideAllText: 'Vis/Shjul Alle',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
