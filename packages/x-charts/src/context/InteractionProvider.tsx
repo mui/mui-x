@@ -76,10 +76,12 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
       return { ...prevState, item: action.data };
 
     case 'exitChart':
-      if (prevState.item === null && prevState.axis.x === null && prevState.axis.y === null) {
-        return prevState;
-      }
-      return { ...prevState, axis: { x: null, y: null }, item: null };
+      console.log('revert this change');
+      return prevState;
+    // if (prevState.item === null && prevState.axis.x === null && prevState.axis.y === null) {
+    //   return prevState;
+    // }
+    // return { ...prevState, axis: { x: null, y: null }, item: null };
 
     case 'updateVoronoiUsage':
       return { ...prevState, useVoronoiInteraction: action.useVoronoiInteraction };

@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { SeriesId } from '../models/seriesType/common';
-import { LegendParams } from '../models/seriesType/config';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { HighlightScope } from '../context';
 
 export interface ChartsLegendItemProps {
   id: SeriesId;
@@ -22,7 +23,7 @@ export interface ChartsLegendItemProps {
   markGap: number;
   labelStyle: ChartsTextStyle;
   classes: Record<'mark' | 'series' | 'root' | 'seriesBackground', string>;
-  onClick?: (legend: LegendParams, index: number) => void;
+  highlightScope: HighlightScope;
 }
 
 function ChartsLegendItem(props: ChartsLegendItemProps) {
@@ -44,10 +45,16 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
     markGap,
     labelStyle,
     classes,
-    onClick,
     index,
+    highlightScope,
   } = props;
 
+  const getInteractionItemProps = useInteractionItemProps({
+    ...highlightScope,
+    highlighted: 'series',
+  });
+
+  console.log('fix type bar');
   return (
     <g
       className={clsx(classes.series, `${classes.series}-${id}`)}
@@ -60,11 +67,7 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
         height={innerHeight + 4}
         fill="transparent"
         className={classes.seriesBackground}
-        onClick={onClick ? () => onClick({ id, label, color }, index) : undefined}
-        style={{
-          pointerEvents: onClick ? 'all' : 'none',
-          cursor: onClick ? 'pointer' : 'unset',
-        }}
+        {...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex: index })}
       />
       <rect
         className={classes.mark}
