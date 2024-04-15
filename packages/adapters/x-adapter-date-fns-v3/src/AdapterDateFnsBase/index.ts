@@ -120,12 +120,6 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
   longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
 };
 
-declare module '@mui/x-adapter-common/PickersValidDate' {
-  interface PickerValidDateLookup {
-    'date-fns': Date;
-  }
-}
-
 /**
  * Based on `@date-io/date-fns`
  *
@@ -154,6 +148,7 @@ declare module '@mui/x-adapter-common/PickersValidDate' {
 export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   implements
     Pick<
+      // @ts-ignore we fix date typings in the x-date-picker package.
       MuiPickersAdapter<Date, DateFnsLocale>,
       | 'date'
       | 'getInvalidDate'

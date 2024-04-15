@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '@mui/x-adapter-common';
+
 import {
   addDays,
   dateFnsFormat,
@@ -76,6 +77,7 @@ import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
  */
 export class AdapterDateFns
   extends AdapterDateFnsBase<DateFnsLocale>
+  // @ts-ignore we fix date typings in the x-date-picker package.
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {

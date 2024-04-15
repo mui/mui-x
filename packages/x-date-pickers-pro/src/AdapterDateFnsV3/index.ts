@@ -1,1 +1,1 @@
-export { AdapterDateFns } from '@mui/x-adapter-date-fns-v3';
+export { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
