@@ -59,6 +59,9 @@
     },
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used."
+    },
+    "zAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_X_AXIS_KEY</code>."
     }
   },
   "classDescriptions": {},
