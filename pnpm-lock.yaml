@@ -730,6 +730,9 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@react-spring/core':
+        specifier: ^9.7.3
+        version: 9.7.3(react@18.2.0)
       '@react-spring/shared':
         specifier: ^9.7.3
         version: 9.7.3(react@18.2.0)
