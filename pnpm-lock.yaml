@@ -924,6 +924,12 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
     devDependencies:
+      '@mui/base':
+        specifier: ^5.0.0-beta.40
+        version: 5.0.0-beta.40(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/types':
+        specifier: ^7.2.14
+        version: 7.2.14(@types/react@18.2.60)
       '@types/prop-types':
         specifier: ^15.7.11
         version: 15.7.11
