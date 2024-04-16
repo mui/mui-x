@@ -513,9 +513,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   **NOTE**: If you're using **dynamic row height**, this also means cells aren't vertically centered by default anymore, you might want to set the `display: 'flex'` for all non-dynamic columns. This may also affect text-ellipsis, which you can restore by adding your own wrapper with `text-overflow: ellipsis`.
   ```tsx
   {
-    display: "flex",
+    display: 'flex',
     renderCell: ({ value }) => (
-      <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {value}
       </div>
     ),
