@@ -115,4 +115,4 @@ The demo below stores edited and deleted rows in the `unsavedChangesRef`.
 These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
 Row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) are also batched, as [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data).
 
-{{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "BulkEditingNoSnapPremium.js", "bg": "inline", "defaultCodeOpen": false}}
