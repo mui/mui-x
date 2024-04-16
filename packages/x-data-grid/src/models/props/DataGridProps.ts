@@ -54,14 +54,6 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 };
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase.
- */
-export interface DataGridProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue<R> {}
-
-/**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
@@ -815,10 +807,12 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
 }
 
 /**
- * Contains the commercial packages' props shared in the MIT version.
+ * The props of the `DataGrid` component after the pre-processing phase.
  */
-export interface DataGridProcessedPropsWithShared
-  extends DataGridProcessedProps,
+export interface DataGridProcessedProps<R extends GridValidRowModel = any>
+  extends DataGridPropsWithDefaultValues,
+    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridPropsWithoutDefaultValue<R>,
     DataGridProSharedPropsWithoutDefaultValue,
     Partial<DataGridProSharedPropsWithDefaultValue>,
     Partial<DataGridPremiumSharedPropsWithDefaultValue> {}
