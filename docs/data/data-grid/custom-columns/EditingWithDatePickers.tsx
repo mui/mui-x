@@ -19,7 +19,7 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDateFns } from '@mui/x-adapter-date-fns-v2';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
 import { styled } from '@mui/material/styles';
