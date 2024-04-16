@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-
 import {
   AdapterFormats,
   AdapterOptions,
@@ -7,17 +6,9 @@ import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
 } from '@mui/x-adapter-common';
+import { Locale as DateFnsLocale } from 'date-fns';
 
 export type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-
-type DateFnsLocaleBase = {
-  formatLong?: {
-    date?: any;
-    time?: any;
-    dateTime?: any;
-  };
-  code?: string;
-};
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -113,10 +104,7 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'P HH:mm',
 };
 
-type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRequired<
-  AdapterOptions<DateFnsLocale, never>,
-  'locale'
-> & {
+type DateFnsAdapterBaseOptions = MakeRequired<AdapterOptions<DateFnsLocale, never>, 'locale'> & {
   longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
 };
 
@@ -145,7 +133,7 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
+export class AdapterDateFnsBase
   implements
     Pick<
       // @ts-ignore we fix date typings in the x-date-picker package.
@@ -175,9 +163,9 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  public longFormatters: DateFnsAdapterBaseOptions<DateFnsLocale>['longFormatters'];
+  public longFormatters: DateFnsAdapterBaseOptions['longFormatters'];
 
-  constructor(props: DateFnsAdapterBaseOptions<DateFnsLocale>) {
+  constructor(props: DateFnsAdapterBaseOptions) {
     const { locale, formats, longFormatters } = props;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };

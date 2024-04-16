@@ -46,7 +46,7 @@ import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
+import { AdapterDateFnsBase } from './AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;
 
