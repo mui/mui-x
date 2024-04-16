@@ -127,7 +127,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={dimensions.headerHeight}
+          height={dimensions.headerFilterHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}

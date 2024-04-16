@@ -545,6 +545,7 @@ GridRow.propTypes = {
     }).isRequired,
     hasScrollX: PropTypes.bool.isRequired,
     hasScrollY: PropTypes.bool.isRequired,
+    headerFilterHeight: PropTypes.number.isRequired,
     headerHeight: PropTypes.number.isRequired,
     headersTotalHeight: PropTypes.number.isRequired,
     isReady: PropTypes.bool.isRequired,
