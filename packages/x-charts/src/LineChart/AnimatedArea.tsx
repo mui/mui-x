@@ -4,9 +4,9 @@ import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import { animated, useSpring } from '@react-spring/web';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { DrawingContext } from '../context/DrawingProvider';
 import { cleanId } from '../internals/utils';
 import type { AreaElementOwnerState } from './AreaElement';
+import { useChartId, useDrawingArea } from '../hooks';
 
 export const AreaElementPath = styled(animated.path, {
   name: 'MuiAreaElement',
@@ -14,9 +14,10 @@ export const AreaElementPath = styled(animated.path, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(1).formatHex()
-    : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
+  fill:
+    (ownerState.gradientId && `url(#${ownerState.gradientId})`) ||
+    (ownerState.isHighlighted && d3Color(ownerState.color)!.brighter(1).formatHex()) ||
+    d3Color(ownerState.color)!.brighter(0.5).formatHex(),
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
@@ -43,7 +44,8 @@ export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedArea(props: AnimatedAreaProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, right, bottom, width, height, chartId } = React.useContext(DrawingContext);
+  const { left, top, right, bottom, width, height } = useDrawingArea();
+  const chartId = useChartId();
 
   const path = useAnimatedPath(d!, skipAnimation);
 
@@ -76,6 +78,7 @@ AnimatedArea.propTypes = {
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    gradientId: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,

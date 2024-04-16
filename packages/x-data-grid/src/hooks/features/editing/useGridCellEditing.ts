@@ -234,6 +234,21 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
+  const runIfNoFieldErrors =
+    <Args extends Parameters<GridEventListener<'cellEditStop'>>>(
+      callback?: (...args: Args) => void,
+    ) =>
+    async (...args: Args) => {
+      if (callback) {
+        const { id, field } = args[0];
+        const editRowsState = apiRef.current.state.editRows;
+        const hasFieldErrors = editRowsState[id][field]?.error;
+        if (!hasFieldErrors) {
+          callback(...args);
+        }
+      }
+    };
+
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
   useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
@@ -242,7 +257,7 @@ export const useGridCellEditing = (
   useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
   useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, 'cellEditStop', props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {

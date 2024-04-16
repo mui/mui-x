@@ -364,6 +364,10 @@ DataGridProRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
+   * Override the height of the header filters.
+   */
+  headerFilterHeight: PropTypes.number,
+  /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
    */

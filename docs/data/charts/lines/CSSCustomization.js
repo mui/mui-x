@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 
 const years = [
   new Date(1990, 0, 1),
@@ -58,7 +58,7 @@ export default function CSSCustomization() {
   return (
     <LineChart
       sx={{
-        '& .MuiLineElement-root': {
+        [`& .${lineElementClasses.root}`]: {
           strokeDasharray: '10 5',
           strokeWidth: 4,
         },

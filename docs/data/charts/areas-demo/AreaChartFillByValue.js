@@ -3,7 +3,7 @@ import * as React from 'react';
 import { green, red } from '@mui/material/colors';
 import Stack from '@mui/material/Stack';
 import { useYScale, useDrawingArea } from '@mui/x-charts/hooks';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, areaElementClasses } from '@mui/x-charts/LineChart';
 
 const data = [4000, 3000, -1000, 500, -2100, -250, 3490];
 const xData = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
@@ -43,7 +43,7 @@ export default function AreaChartFillByValue() {
         height={200}
         margin={{ top: 20, bottom: 30, left: 75 }}
         sx={{
-          '& .MuiAreaElement-root': {
+          [`& .${areaElementClasses.root}`]: {
             fill: 'url(#swich-color-id-1)',
           },
         }}
@@ -64,7 +64,7 @@ export default function AreaChartFillByValue() {
         height={200}
         margin={{ top: 20, bottom: 30, left: 75 }}
         sx={{
-          '& .MuiAreaElement-root': {
+          [`& .${areaElementClasses.root}`]: {
             fill: 'url(#swich-color-id-2)',
           },
         }}
