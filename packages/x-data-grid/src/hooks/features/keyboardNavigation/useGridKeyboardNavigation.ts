@@ -6,7 +6,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { DataGridProcessedPropsWithShared } from '../../../models/props/DataGridProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
@@ -92,7 +92,7 @@ const getRightColumnIndex = ({
 export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedPropsWithShared,
+    DataGridProcessedProps,
     | 'pagination'
     | 'paginationMode'
     | 'getRowId'

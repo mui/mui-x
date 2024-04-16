@@ -16,6 +16,7 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
+  DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -138,9 +139,10 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
-    DataGridPropsWithoutDefaultValue<R>,
-    'initialState' | 'componentsProps' | 'slotProps'
-  > {
+      DataGridPropsWithoutDefaultValue<R>,
+      'initialState' | 'componentsProps' | 'slotProps'
+    >,
+    DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */

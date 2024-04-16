@@ -68,7 +68,7 @@ export const useGridCellSelection = (
   const autoScrollRAF = React.useRef<number | null>();
   const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =

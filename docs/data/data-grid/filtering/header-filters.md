@@ -67,6 +67,15 @@ Additionally, `slots.headerFilterMenu` could also be used to customize the menu 
 
 {{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Custom header filter height
+
+By default, the height of the header filter row is the same as the header row (represented by `columnHeaderHeight` prop).
+You can customize the height of the header filter cell using the `headerFilterHeight` prop.
+
+```tsx
+<DataGridPro {...data} headerFilterHeight={52} />
+```
+
 ## Ignore diacritics (accents)
 
 You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).

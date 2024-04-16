@@ -74,7 +74,6 @@ export const GridColumnHeaderRow = styled('div', {
   overridesResolver: (_, styles) => styles.columnHeaderRow,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
-  height: 'var(--DataGrid-headerHeight)',
 });
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {

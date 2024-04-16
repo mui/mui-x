@@ -31,10 +31,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
-import type {
-  DataGridProcessedProps,
-  DataGridProcessedPropsWithShared,
-} from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
@@ -182,7 +179,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps() as DataGridProcessedPropsWithShared;
+  const rootProps = useGridRootProps();
 
   const field = column.field;
 
