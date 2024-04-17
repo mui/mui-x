@@ -3,6 +3,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
@@ -264,6 +265,26 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
   ...state,
   columnResize: { resizingColumnField: '' },
 });
+
+function createResizeRefs() {
+  return {
+    colDef: undefined as undefined | GridStateColDef,
+    initialColWidth: 0,
+    initialTotalWidth: 0,
+    previousMouseClickEvent: undefined as undefined | MouseEvent,
+    columnHeaderElement: undefined as undefined | HTMLDivElement,
+    headerFilterElement: undefined as undefined | HTMLDivElement,
+    groupHeaderElements: [] as Element[],
+    cellElements: [] as Element[],
+    leftPinnedCellsAfter: [] as HTMLElement[],
+    rightPinnedCellsBefore: [] as HTMLElement[],
+    fillerLeft: undefined as undefined | HTMLElement,
+    fillerRight: undefined as undefined | HTMLElement,
+    leftPinnedHeadersAfter: [] as HTMLElement[],
+    rightPinnedHeadersBefore: [] as HTMLElement[],
+  };
+}
+
 /**
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
@@ -282,18 +303,7 @@ export const useGridColumnResize = (
   const theme = useTheme();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
-  const colDefRef = React.useRef<GridStateColDef>();
-  const previousMouseClickEvent = React.useRef<MouseEvent>();
-  const columnHeaderElementRef = React.useRef<HTMLDivElement>();
-  const headerFilterElementRef = React.useRef<HTMLDivElement>();
-  const groupHeaderElementsRef = React.useRef<Element[]>([]);
-  const cellElementsRef = React.useRef<Element[]>([]);
-  const leftPinnedCellsAfterRef = React.useRef<HTMLElement[]>([]);
-  const rightPinnedCellsBeforeRef = React.useRef<HTMLElement[]>([]);
-  const fillerLeftRef = React.useRef<HTMLElement>();
-  const fillerRightRef = React.useRef<HTMLElement>();
-  const leftPinnedHeadersAfterRef = React.useRef<HTMLElement[]>([]);
-  const rightPinnedHeadersBeforeRef = React.useRef<HTMLElement[]>([]);
+  const refs = useLazyRef(createResizeRefs).current;
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -305,27 +315,34 @@ export const useGridColumnResize = (
   const touchId = React.useRef<number>();
 
   const updateWidth = (newWidth: number) => {
-    logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
+    logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
 
-    const prevWidth = columnHeaderElementRef.current!.offsetWidth;
+    const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
+    const columnWidthDiff = newWidth - refs.initialColWidth;
+    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
 
-    colDefRef.current!.computedWidth = newWidth;
-    colDefRef.current!.width = newWidth;
-    colDefRef.current!.flex = 0;
+    apiRef.current.rootElementRef?.current?.style.setProperty(
+      '--DataGrid-rowWidth',
+      `${newTotalWidth}px`,
+    );
 
-    columnHeaderElementRef.current!.style.width = `${newWidth}px`;
-    columnHeaderElementRef.current!.style.minWidth = `${newWidth}px`;
-    columnHeaderElementRef.current!.style.maxWidth = `${newWidth}px`;
+    refs.colDef!.computedWidth = newWidth;
+    refs.colDef!.width = newWidth;
+    refs.colDef!.flex = 0;
 
-    const headerFilterElement = headerFilterElementRef.current;
+    refs.columnHeaderElement!.style.width = `${newWidth}px`;
+    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
+    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
+
+    const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
       headerFilterElement.style.minWidth = `${newWidth}px`;
       headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
-    groupHeaderElementsRef.current!.forEach((element) => {
+    refs.groupHeaderElements!.forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -342,7 +359,7 @@ export const useGridColumnResize = (
       div.style.maxWidth = finalWidth;
     });
 
-    cellElementsRef.current!.forEach((element) => {
+    refs.cellElements!.forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -360,27 +377,27 @@ export const useGridColumnResize = (
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
-      colDefRef.current!.field,
+      refs.colDef!.field,
     );
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
-      updateProperty(fillerLeftRef.current, 'width', widthDiff);
+      updateProperty(refs.fillerLeft, 'width', widthDiff);
 
-      leftPinnedCellsAfterRef.current.forEach((cell) => {
+      refs.leftPinnedCellsAfter.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
-      leftPinnedHeadersAfterRef.current.forEach((header) => {
+      refs.leftPinnedHeadersAfter.forEach((header) => {
         updateProperty(header, 'left', widthDiff);
       });
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
-      updateProperty(fillerRightRef.current, 'width', widthDiff);
+      updateProperty(refs.fillerRight, 'width', widthDiff);
 
-      rightPinnedCellsBeforeRef.current.forEach((cell) => {
+      refs.rightPinnedCellsBefore.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
       });
-      rightPinnedHeadersBeforeRef.current.forEach((header) => {
+      refs.rightPinnedHeadersBefore.forEach((header) => {
         updateProperty(header, 'right', widthDiff);
       });
     }
@@ -391,8 +408,8 @@ export const useGridColumnResize = (
     stopListening();
 
     // Prevent double-clicks from being interpreted as two separate clicks
-    if (previousMouseClickEvent.current) {
-      const prevEvent = previousMouseClickEvent.current;
+    if (refs.previousMouseClickEvent) {
+      const prevEvent = refs.previousMouseClickEvent;
       const prevTimeStamp = prevEvent.timeStamp;
       const prevClientX = prevEvent.clientX;
       const prevClientY = prevEvent.clientY;
@@ -403,16 +420,14 @@ export const useGridColumnResize = (
         nativeEvent.clientX === prevClientX &&
         nativeEvent.clientY === prevClientY
       ) {
-        previousMouseClickEvent.current = undefined;
+        refs.previousMouseClickEvent = undefined;
         return;
       }
     }
 
-    if (colDefRef.current) {
-      apiRef.current.setColumnWidth(colDefRef.current.field, colDefRef.current.width!);
-      logger.debug(
-        `Updating col ${colDefRef.current.field} with new width: ${colDefRef.current.width}`,
-      );
+    if (refs.colDef) {
+      apiRef.current.setColumnWidth(refs.colDef.field, refs.colDef.width!);
+      logger.debug(`Updating col ${refs.colDef.field} with new width: ${refs.colDef.width}`);
     }
 
     stopResizeEventTimeout.start(0, () => {
@@ -423,9 +438,12 @@ export const useGridColumnResize = (
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
 
-    colDefRef.current = colDef as GridStateColDef;
+    refs.initialColWidth = colDef.computedWidth;
+    refs.initialTotalWidth = apiRef.current.getRootDimensions().rowWidth;
 
-    columnHeaderElementRef.current = findHeaderElementFromField(
+    refs.colDef = colDef as GridStateColDef;
+
+    refs.columnHeaderElement = findHeaderElementFromField(
       apiRef.current.columnHeadersContainerRef!.current!,
       colDef.field,
     );
@@ -434,51 +452,48 @@ export const useGridColumnResize = (
       `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
     );
     if (headerFilterElement) {
-      headerFilterElementRef.current = headerFilterElement as HTMLDivElement;
+      refs.headerFilterElement = headerFilterElement as HTMLDivElement;
     }
 
-    groupHeaderElementsRef.current = findGroupHeaderElementsFromField(
+    refs.groupHeaderElements = findGroupHeaderElementsFromField(
       apiRef.current.columnHeadersContainerRef?.current!,
       colDef.field,
     );
 
-    cellElementsRef.current = findGridCellElementsFromCol(
-      columnHeaderElementRef.current,
-      apiRef.current,
-    );
+    refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
 
-    fillerLeftRef.current = findGridElement(apiRef.current, 'filler--pinnedLeft');
-    fillerRightRef.current = findGridElement(apiRef.current, 'filler--pinnedRight');
+    refs.fillerLeft = findGridElement(apiRef.current, 'filler--pinnedLeft');
+    refs.fillerRight = findGridElement(apiRef.current, 'filler--pinnedRight');
 
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
-      colDefRef.current!.field,
+      refs.colDef!.field,
     );
 
-    leftPinnedCellsAfterRef.current =
+    refs.leftPinnedCellsAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedCellsAfterCol(apiRef.current, columnHeaderElementRef.current);
-    rightPinnedCellsBeforeRef.current =
+        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement);
+    refs.rightPinnedCellsBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedCellsBeforeCol(apiRef.current, columnHeaderElementRef.current);
+        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement);
 
-    leftPinnedHeadersAfterRef.current =
+    refs.leftPinnedHeadersAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedHeadersAfterCol(apiRef.current, columnHeaderElementRef.current);
-    rightPinnedHeadersBeforeRef.current =
+        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement);
+    refs.rightPinnedHeadersBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedHeadersBeforeCol(apiRef.current, columnHeaderElementRef.current);
+        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
 
     resizeDirection.current = getResizeDirection(separator, theme.direction);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,
-      columnHeaderElementRef.current!.getBoundingClientRect(),
+      refs.columnHeaderElement!.getBoundingClientRect(),
       resizeDirection.current,
     );
   };
@@ -495,16 +510,16 @@ export const useGridColumnResize = (
     let newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       nativeEvent.clientX,
-      columnHeaderElementRef.current!.getBoundingClientRect(),
+      refs.columnHeaderElement!.getBoundingClientRect(),
       resizeDirection.current!,
     );
 
-    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
+    newWidth = clamp(newWidth, refs.colDef!.minWidth!, refs.colDef!.maxWidth!);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
-      element: columnHeaderElementRef.current,
-      colDef: colDefRef.current!,
+      element: refs.columnHeaderElement,
+      colDef: refs.colDef!,
       width: newWidth,
     };
     apiRef.current.publishEvent('columnResize', params, nativeEvent);
@@ -535,16 +550,16 @@ export const useGridColumnResize = (
     let newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       (finger as CursorCoordinates).x,
-      columnHeaderElementRef.current!.getBoundingClientRect(),
+      refs.columnHeaderElement!.getBoundingClientRect(),
       resizeDirection.current!,
     );
 
-    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
+    newWidth = clamp(newWidth, refs.colDef!.minWidth!, refs.colDef!.maxWidth!);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
-      element: columnHeaderElementRef.current,
-      colDef: colDefRef.current!,
+      element: refs.columnHeaderElement,
+      colDef: refs.colDef!,
       width: newWidth,
     };
     apiRef.current.publishEvent('columnResize', params, nativeEvent);
@@ -599,17 +614,10 @@ export const useGridColumnResize = (
     setTimeout(() => {
       doc.removeEventListener('click', preventClick, true);
     }, 100);
-    if (columnHeaderElementRef.current) {
-      columnHeaderElementRef.current!.style.pointerEvents = 'unset';
+    if (refs.columnHeaderElement) {
+      refs.columnHeaderElement!.style.pointerEvents = 'unset';
     }
-  }, [
-    apiRef,
-    columnHeaderElementRef,
-    handleResizeMouseMove,
-    handleResizeMouseUp,
-    handleTouchMove,
-    handleTouchEnd,
-  ]);
+  }, [apiRef, refs, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
@@ -653,7 +661,7 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      previousMouseClickEvent.current = event.nativeEvent;
+      refs.previousMouseClickEvent = event.nativeEvent;
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
