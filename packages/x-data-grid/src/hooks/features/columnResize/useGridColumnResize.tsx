@@ -617,14 +617,7 @@ export const useGridColumnResize = (
     if (refs.columnHeaderElement) {
       refs.columnHeaderElement!.style.pointerEvents = 'unset';
     }
-  }, [
-    apiRef,
-    refs,
-    handleResizeMouseMove,
-    handleResizeMouseUp,
-    handleTouchMove,
-    handleTouchEnd,
-  ]);
+  }, [apiRef, refs, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
