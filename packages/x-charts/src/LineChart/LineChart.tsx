@@ -37,6 +37,7 @@ import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
 } from '../ChartsOnAxisClickHandler';
+import { ChartsOverlay, ChartsOverlayProps, ChartsOverlaySlotProps, ChartsOverlaySlots } from '../ChartsOverlay/ChartsOverlay';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -45,7 +46,8 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -53,11 +55,13 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the line chart.
@@ -154,6 +158,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     slots,
     slotProps,
     skipAnimation,
+    loading,
   } = props;
 
   const id = useId();
@@ -229,6 +234,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
       <ChartsClipPath id={clipPathId} />
       {children}
+      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
     </ResponsiveChartContainer>
   );
 });
