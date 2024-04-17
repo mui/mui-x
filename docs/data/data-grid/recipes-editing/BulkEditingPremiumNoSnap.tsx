@@ -17,7 +17,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { darken } from '@mui/material/styles';
 
-export default function BulkEditingNoSnapPremium() {
+export default function BulkEditingPremiumNoSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

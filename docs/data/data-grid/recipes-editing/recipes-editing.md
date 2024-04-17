@@ -114,8 +114,8 @@ You can utilize this callback to batch edits locally and then choose to either p
 The demo below stores edited and deleted rows in the `unsavedChangesRef`.
 These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
 
-{{"demo": "BulkEditingNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "BulkEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
 When using [`DataGridPremium`](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
 
-{{"demo": "BulkEditingNoSnapPremium.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
