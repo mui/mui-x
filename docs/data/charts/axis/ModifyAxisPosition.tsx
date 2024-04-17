@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Chance } from 'chance';
 
@@ -22,8 +21,8 @@ export default function ModifyAxisPosition() {
         {...params}
         leftAxis={null}
         bottomAxis={null}
-        topAxis={DEFAULT_X_AXIS_KEY}
-        rightAxis={DEFAULT_Y_AXIS_KEY}
+        topAxis={{}}
+        rightAxis={{}}
         margin={{ top: 30, bottom: 10 }}
       />
     </Box>

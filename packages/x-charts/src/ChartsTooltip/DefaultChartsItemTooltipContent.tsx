@@ -15,7 +15,7 @@ import { CommonSeriesType } from '../models/seriesType/common';
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData, sx, classes } = props;
+  const { series, itemData, sx, classes, getColor } = props;
 
   if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
@@ -23,18 +23,18 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
   const { displayedLabel, color } =
     series.type === 'pie'
       ? {
-          color: series.data[itemData.dataIndex].color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: series.data[itemData.dataIndex].label,
         }
       : {
-          color: series.color,
+          color: getColor(itemData.dataIndex) ?? series.color,
           displayedLabel: series.label,
         };
 
   const value = series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-  )?.(value);
+  )?.(value, { dataIndex: itemData.dataIndex });
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>
@@ -67,6 +67,12 @@ DefaultChartsItemTooltipContent.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object.isRequired,
+  /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: PropTypes.func.isRequired,
   /**
    * The data used to identify the triggered item.
    */

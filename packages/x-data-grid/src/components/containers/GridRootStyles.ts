@@ -279,6 +279,8 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+    },
+    [`& .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
@@ -645,6 +647,9 @@ export const GridRootStyles = styled('div', {
 
     [`& .${c.filler}`]: {
       flex: 1,
+    },
+    [`& .${c['filler--borderTop']}`]: {
+      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
   };
 
