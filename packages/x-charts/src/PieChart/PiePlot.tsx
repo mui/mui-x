@@ -136,6 +136,8 @@ function PiePlot(props: PiePlotProps) {
               arcLabel={arcLabel}
               arcLabelMinAngle={arcLabelMinAngle}
               highlightScope={highlightScope}
+              slots={slots}
+              slotProps={slotProps}
             />
           </g>
         );
