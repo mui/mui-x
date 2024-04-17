@@ -1272,6 +1272,9 @@ importers:
 
   test:
     devDependencies:
+      '@babel/runtime':
+        specifier: ^7.24.0
+        version: 7.24.4
       '@emotion/cache':
         specifier: ^11.11.0
         version: 11.11.0
