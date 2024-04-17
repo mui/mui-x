@@ -107,7 +107,7 @@ Check out [Selection—Usage with server-side pagination](/x/react-data-grid/row
 
 ### Index-based pagination
 
-The index-based pagination is the most common type of pagination. It follows the same pattern as the client-side pagination (page, pageSize), but the data is fetched from the server.
+The index-based pagination uses the `page` and `pageSize` to fetch the data from the server page by page.
 
 To enable server-side pagination, you need to:
 
@@ -116,7 +116,7 @@ To enable server-side pagination, you need to:
 
 The server-side pagination can be further categorized into sub-types based on the availability of the total number of rows or `rowCount`.
 
-The Grid uses the `rowCount` to calculate the number of pages and to show the information about the current state of the pagination in the footer.
+The Data Grid uses the `rowCount` to calculate the number of pages and to show the information about the current state of the pagination in the footer.
 You can provide the `rowCount` in one of the following ways:
 
 - Initialize - use `initialState.pagination.rowCount` prop to initialize the `rowCount`
@@ -134,7 +134,7 @@ The `rowCount` prop is used in server-side pagination mode to inform the DataGri
 This prop is ignored when the `paginationMode` is set to `client`, i.e. when the pagination is handled on the client-side.
 :::
 
-You can achieve each of these use-cases by setting the values of `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props. The following table summarizes the use of these props in each of these scenarios.
+You can configure `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props to handle the above scenarios.
 
 |                     | `rowCount` | `paginationMeta.hasNextPage` | `estimatedRowCount` |
 | :------------------ | :--------- | :--------------------------- | :------------------ |
@@ -142,11 +142,9 @@ You can achieve each of these use-cases by setting the values of `rowCount`, `pa
 | Unknown row count   | `-1`       | `boolean`                    | —                   |
 | Estimated row count | `-1`       | `boolean`                    | `number`            |
 
-The following examples demonstrate each of these scenarios:
-
 #### Known row count
 
-Pass the props to the Grid as explained in the table above to handle the case when the actual row count is known, as the following example demonstrates.
+Pass the props to the Data Grid as explained in the table above to handle the case when the actual row count is known, as the following example demonstrates.
 
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 
@@ -171,7 +169,7 @@ const rowCount = React.useMemo(() => {
 
 #### Unknown row count
 
-Pass the props to the Grid as explained in the table above to handle the case when the actual row count is unknown, as the following example demonstrates.
+Pass the props to the Data Grid as explained in the table above to handle the case when the actual row count is unknown, as the following example demonstrates.
 
 {{"demo": "ServerPaginationGridNoRowCount.js", "bg": "inline"}}
 
@@ -196,15 +194,16 @@ const paginationMeta = React.useMemo(() => {
 
 #### Estimated row count
 
-Estimated row count could be considered a hybrid approach of known and unknown row count cases, where the actual row count is not initially available, but an estimated row count is available.
+Estimated row count could be considered a hybrid approach that switches between the "Known row count" and "Unknown row count" use cases.
 
-Initially, when an `estimatedRowCount` is set and `rowCount='-1'`, the grid work identical to the "Unknown row count" use case, with the exception that the `estimatedRowCount` is used to show more detailed information in the pagination footer.
+Initially, when an `estimatedRowCount` is set and `rowCount={-1}`, the Data Grid behaves as in the "Unknown row count" use case, but with the `estimatedRowCount` value shown in the pagination footer.
 
-Once the current row count exceeds the `estimatedRowCount`, the Grid will ignore the `estimatedRowCount` and completely work as the "Unknown row count" use case.
+If the number of rows loaded exceeds the `estimatedRowCount`, the Data Grid ignores the `estimatedRowCount` and the behavior is identical to the "Unknown row count" use case.
 
-Meanwhile, if the `rowCount` is set to a valid value (either by updating the `rowCount` prop or setting `hasNextPage='false'`), the Grid will shift to the "Known row count" use case.
+When the `hasNextPage` returns `false` or `rowCount` is set to a positive number, the Data Grid switches to the "Known row count" behavior.
 
-The following example demonstrates this scenario. The actual row count is `1000` but the Grid is initially provided with an estimated row count of `100`. You can set the `rowCount` value by hitting the "Set Row Count" button.
+In the following example, the actual row count is `1000` but the Data Grid is initially provided with `estimatedRowCount={100}`.
+You can set the `rowCount` to the actual row count by pressing the "Set Row Count" button.
 
 {{"demo": "ServerPaginationGridEstimated.js", "bg": "inline"}}
 
