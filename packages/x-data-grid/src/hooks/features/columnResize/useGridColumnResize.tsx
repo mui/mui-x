@@ -619,7 +619,7 @@ export const useGridColumnResize = (
     }
   }, [
     apiRef,
-    refs.columnHeaderElement,
+    refs,
     handleResizeMouseMove,
     handleResizeMouseUp,
     handleTouchMove,
