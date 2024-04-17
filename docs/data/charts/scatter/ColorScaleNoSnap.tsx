@@ -160,22 +160,24 @@ export default function ColorScaleNoSnap() {
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
             ? [
-                '  xAxis={[',
-                `    {`,
+                '  xAxis={[{',
+                `    colorMap: {`,
                 `      type: 'continuous',`,
                 `      min: -2,`,
                 `      max: 2,`,
                 `      color: ['green', 'orange']`,
                 `    }`,
-                '  ]}',
+                '  }]}',
               ]
             : []),
           ...(colorX === 'piecewise'
             ? [
                 '  xAxis={[{',
-                `    type: 'piecewise',`,
-                `    thresholds: [-1.5, 0, 1.5],`,
-                `    colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
                 '  }]}',
               ]
             : []),
@@ -184,19 +186,28 @@ export default function ColorScaleNoSnap() {
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'
             ? [
-                '  yAxis={[',
-                `    {`,
+                '  yAxis={[{',
+                `    colorMap: {`,
                 `      type: 'continuous',`,
                 `      min: -2,`,
                 `      max: 2,`,
                 `      color: ['blue', 'red']`,
                 `    }`,
-                '  ]}',
+                '  }]}',
               ]
             : []),
           ...(colorY === 'piecewise'
             ? [
                 '  yAxis={[{',
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['lightblue', 'blue', 'orange', 'red'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+
           // ColorZ
           ...(colorZ === 'None' ? ['  zAxis={[{}]}'] : []),
           ...(colorZ === 'continuous'
