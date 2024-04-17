@@ -12,6 +12,7 @@ import {
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
@@ -431,11 +432,16 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  headerHeight: number,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
-  const multiplicationFactor = isHeaderFilteringEnabled ? 2 : 1;
-  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + multiplicationFactor);
+
+  const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const filterHeadersHeight = isHeaderFilteringEnabled
+    ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
+    : 0;
+
+  return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useTheme } from '@mui/material/styles';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
@@ -73,7 +74,6 @@ export const GridColumnHeaderRow = styled('div', {
   overridesResolver: (_, styles) => styles.columnHeaderRow,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
-  height: 'var(--DataGrid-headerHeight)',
 });
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
@@ -110,6 +110,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     theme.direction,
     pinnedColumns.left.length,
   );
+  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
@@ -194,7 +195,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <React.Fragment>
         {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {isNotPinned && <div role="presentation" className={gridClasses.filler} />}
+        {isNotPinned && (
+          <div
+            role="presentation"
+            className={clsx(gridClasses.filler, borderTop && gridClasses['filler--borderTop'])}
+          />
+        )}
         {hasScrollbarFiller && (
           <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
         )}
@@ -275,6 +281,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={i}
           sectionLength={renderedColumns.length}
+          gridHasFiller={gridHasFiller}
           {...other}
         />,
       );
@@ -435,6 +442,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           style={style}
           indexInSection={indexInSection}
           sectionLength={renderedColumns.length}
+          gridHasFiller={gridHasFiller}
         />
       );
     });
