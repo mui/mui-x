@@ -119,9 +119,12 @@ The server-side pagination can be further categorized into sub-types based on th
 The Data Grid uses the `rowCount` to calculate the number of pages and to show the information about the current state of the pagination in the footer.
 You can provide the `rowCount` in one of the following ways:
 
-- Initialize - use `initialState.pagination.rowCount` prop to initialize the `rowCount`
-- Control - use the `rowCount` prop along with `onRowCountChange` to control the `rowCount` and reflect the changes when the row count is updated
-- Set using the `apiRef` - use the `apiRef.current.setRowCount` method to set the `rowCount` after the Grid is initialized
+- **Initialize.**
+  Use the `initialState.pagination.rowCount` prop to initialize the `rowCount`.
+- **Control.**
+  Use the `rowCount` prop along with `onRowCountChange` to control the `rowCount` and reflect the changes when the row count is updated.
+- **Set using the API.**
+  Use the `apiRef.current.setRowCount` method to set the `rowCount` after the Grid is initialized.
 
 There can be three different possibilities regarding the availability of the `rowCount` on the server-side:
 
