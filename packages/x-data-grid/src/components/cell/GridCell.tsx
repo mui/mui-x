@@ -31,10 +31,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
-import type {
-  DataGridProcessedProps,
-  DataGridProcessedPropsWithShared,
-} from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
@@ -67,6 +64,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
+  gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -167,6 +165,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
+    gridHasFiller,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -180,7 +179,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps() as DataGridProcessedPropsWithShared;
+  const rootProps = useGridRootProps();
 
   const field = column.field;
 
@@ -270,6 +269,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     sectionIndex,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -493,6 +493,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

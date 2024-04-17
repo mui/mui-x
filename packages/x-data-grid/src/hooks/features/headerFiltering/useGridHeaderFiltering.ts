@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedPropsWithShared } from '../../../models/props/DataGridProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -17,7 +17,7 @@ import {
 
 export const headerFilteringStateInitializer: GridStateInitializer = (
   state,
-  props: DataGridProcessedPropsWithShared,
+  props: DataGridProcessedProps,
 ) => ({
   ...state,
   headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
@@ -25,7 +25,7 @@ export const headerFilteringStateInitializer: GridStateInitializer = (
 
 export const useGridHeaderFiltering = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedPropsWithShared, 'signature' | 'headerFilters'>,
+  props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
   const setHeaderFilterState = React.useCallback(

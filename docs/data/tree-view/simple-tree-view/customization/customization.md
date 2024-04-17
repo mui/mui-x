@@ -83,12 +83,6 @@ The demo below shows how to trigger the expansion interaction just by clicking o
 
 {{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
-### File explorer
-
-The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
-
-{{"demo": "CustomizedTreeView.js"}}
-
 ### Gmail clone
 
 :::warning

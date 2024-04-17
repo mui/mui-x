@@ -182,6 +182,7 @@
       }
     },
     "groupingColDef": { "description": "The grouping column used by the tree data." },
+    "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature."
     },
@@ -803,6 +804,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
       "conditions": "the column has a filter applied to it"
+    },
+    "columnHeader--last": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the last column header element"
     },
     "columnHeader--moving": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

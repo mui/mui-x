@@ -3,18 +3,18 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/base/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
-import { populateInstance, populatePublicAPI } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
+import { getFirstNavigableItem } from '../../utils/tree';
 
 const useTabbableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
   selectedItems: string | string[] | null,
 ) => {
   const isItemVisible = (itemId: string) => {
-    const node = instance.getNode(itemId);
-    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
   };
 
   let tabbableItemId: string | null | undefined;
@@ -25,7 +25,7 @@ const useTabbableItemId = (
   }
 
   if (tabbableItemId == null) {
-    tabbableItemId = instance.getNavigableChildrenIds(null)[0];
+    tabbableItemId = getFirstNavigableItem(instance);
   }
 
   return tabbableItemId;
@@ -33,7 +33,6 @@ const useTabbableItemId = (
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
-  publicAPI,
   params,
   state,
   setState,
@@ -62,13 +61,15 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isItemVisible = (itemId: string) => {
-    const node = instance.getNode(itemId);
-    return node && (node.parentId == null || instance.isItemExpanded(node.parentId));
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const node = instance.getNode(itemId);
-    const itemElement = document.getElementById(instance.getTreeItemId(itemId, node.idAttribute));
+    const itemMeta = instance.getItemMeta(itemId);
+    const itemElement = document.getElementById(
+      instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute),
+    );
     if (itemElement) {
       itemElement.focus();
     }
@@ -95,7 +96,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
 
     if (itemToFocusId == null) {
-      itemToFocusId = instance.getNavigableChildrenIds(null)[0];
+      itemToFocusId = getFirstNavigableItem(instance);
     }
 
     innerFocusItem(event, itemToFocusId);
@@ -106,10 +107,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       return;
     }
 
-    const node = instance.getNode(state.focusedItemId);
-    if (node) {
+    const itemMeta = instance.getItemMeta(state.focusedItemId);
+    if (itemMeta) {
       const itemElement = document.getElementById(
-        instance.getTreeItemId(state.focusedItemId, node.idAttribute),
+        instance.getTreeItemIdAttribute(state.focusedItemId, itemMeta.idAttribute),
       );
       if (itemElement) {
         itemElement.blur();
@@ -120,18 +121,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   const canItemBeTabbed = (itemId: string) => itemId === tabbableItemId;
-
-  populateInstance<UseTreeViewFocusSignature>(instance, {
-    isItemFocused,
-    canItemBeTabbed,
-    focusItem,
-    focusDefaultItem,
-    removeFocusedItem,
-  });
-
-  populatePublicAPI<UseTreeViewFocusSignature>(publicAPI, {
-    focusItem,
-  });
 
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
     if (state.focusedItemId === id) {
@@ -148,9 +137,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
     };
 
-  const focusedItem = instance.getNode(state.focusedItemId!);
+  const focusedItem = instance.getItemMeta(state.focusedItemId!);
   const activeDescendant = focusedItem
-    ? instance.getTreeItemId(focusedItem.id, focusedItem.idAttribute)
+    ? instance.getTreeItemIdAttribute(focusedItem.id, focusedItem.idAttribute)
     : null;
 
   return {
@@ -158,6 +147,16 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       onFocus: createHandleFocus(otherHandlers),
       'aria-activedescendant': activeDescendant ?? undefined,
     }),
+    publicAPI: {
+      focusItem,
+    },
+    instance: {
+      isItemFocused,
+      canItemBeTabbed,
+      focusItem,
+      focusDefaultItem,
+      removeFocusedItem,
+    },
   };
 };
 

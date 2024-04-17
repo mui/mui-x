@@ -5,14 +5,24 @@ export const shouldCellShowRightBorder = (
   indexInSection: number,
   sectionLength: number,
   showCellVerticalBorderRootProp: boolean,
+  gridHasFiller: boolean,
 ) => {
   const isSectionLastCell = indexInSection === sectionLength - 1;
 
-  return (
-    (showCellVerticalBorderRootProp &&
-      (pinnedPosition !== GridPinnedColumnPosition.LEFT ? !isSectionLastCell : true)) ||
-    (pinnedPosition === GridPinnedColumnPosition.LEFT && isSectionLastCell)
-  );
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT && isSectionLastCell) {
+    return true;
+  }
+  if (showCellVerticalBorderRootProp) {
+    if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+      return true;
+    }
+    if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
+      return !isSectionLastCell;
+    }
+    // pinnedPosition === undefined, middle section
+    return !isSectionLastCell || gridHasFiller;
+  }
+  return false;
 };
 
 export const shouldCellShowLeftBorder = (
