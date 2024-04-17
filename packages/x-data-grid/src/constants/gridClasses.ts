@@ -118,6 +118,10 @@ export interface GridClasses {
    */
   checkboxInput: string;
   /**
+   * Styles applied to the column header element.
+   */
+  columnHeader: string;
+  /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
   'columnHeader--alignCenter': string;
@@ -156,9 +160,9 @@ export interface GridClasses {
   'columnHeader--pinnedLeft': string;
   'columnHeader--pinnedRight': string;
   /**
-   * Styles applied to the column header element.
+   * Styles applied to the last column header element.
    */
-  columnHeader: string;
+  'columnHeader--last': string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -635,6 +639,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cellSkeleton',
   'cellOffsetLeft',
   'checkboxInput',
+  'columnHeader',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
   'columnHeader--alignRight',
@@ -646,7 +651,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--filtered',
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
-  'columnHeader',
+  'columnHeader--last',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
