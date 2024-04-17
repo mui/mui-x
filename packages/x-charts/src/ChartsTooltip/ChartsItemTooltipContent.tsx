@@ -53,21 +53,27 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const getColor =
-    series.type === 'pie'
-      ? colorGetter(series)
-      : (series.type === 'scatter' &&
-          colorGetter(
-            series,
-            xAxis[series.xAxisKey ?? defaultXAxisId],
-            yAxis[series.yAxisKey ?? defaultYAxisId],
-            zAxis[series.zAxisKey ?? defaultZAxisId],
-          )) ||
-        colorGetter(
-          series,
-          xAxis[series.xAxisKey ?? defaultXAxisId],
-          yAxis[series.yAxisKey ?? defaultYAxisId],
-        );
+  let getColor: (index: number) => string;
+  switch (series.type) {
+    case 'pie':
+      getColor = colorGetter(series);
+      break;
+    case 'scatter':
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+        zAxis[series.zAxisKey ?? defaultZAxisId],
+      );
+      break;
+    default:
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+      );
+      break;
+  }
 
   const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({

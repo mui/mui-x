@@ -13,11 +13,7 @@ import { ZAxisDefaultized } from '../models/z-axis';
 
 function getColor(series: DefaultizedPieSeriesType): (dataIndex: number) => string;
 function getColor(
-  series:
-    | DefaultizedBarSeriesType
-    | DefaultizedLineSeriesType
-    | DefaultizedScatterSeriesType
-    | DefaultizedPieSeriesType,
+  series: DefaultizedBarSeriesType | DefaultizedLineSeriesType,
   xAxis: AxisDefaultized,
   yAxis: AxisDefaultized,
 ): (dataIndex: number) => string;

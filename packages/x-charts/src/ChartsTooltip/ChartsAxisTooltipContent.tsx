@@ -76,19 +76,25 @@ function ChartsAxisTooltipContent(props: {
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
             const seriesToAdd = series[seriesType]!.series[seriesId];
 
-            const getColor =
-              seriesToAdd.type === 'scatter'
-                ? colorGetter(
-                    seriesToAdd,
-                    xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-                    yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                    zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
-                  )
-                : colorGetter(
-                    seriesToAdd,
-                    xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-                    yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                  );
+            let getColor: (index: number) => string;
+            switch (seriesToAdd.type) {
+              case 'scatter':
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
+                );
+                break;
+              default:
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                );
+                break;
+            }
+
             rep.push({ ...seriesToAdd, getColor });
           }
         });
