@@ -629,6 +629,10 @@
       "nodeName": "the column header",
       "conditions": "the column has a filter applied to it"
     },
+    "columnHeader--last": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the last column header element"
+    },
     "columnHeader--moving": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
