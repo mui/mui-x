@@ -324,6 +324,7 @@ GridColumnHeaderItem.propTypes = {
   headerHeight: PropTypes.number.isRequired,
   indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
+  isLast: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   pinnedPosition: PropTypes.oneOf(['left', 'right']),
   sectionLength: PropTypes.number.isRequired,
