@@ -155,6 +155,7 @@ export default function ColorScaleNoSnap() {
         code={[
           `<ScatterChart`,
           '  /* ... */',
+          '  series={[{ data: data.map(point => ({...point, z: point.x + point.y})) }]}',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
@@ -196,9 +197,40 @@ export default function ColorScaleNoSnap() {
           ...(colorY === 'piecewise'
             ? [
                 '  yAxis={[{',
-                `    type: 'piecewise',`,
-                `    thresholds: [-1.5, 0, 1.5],`,
-                `    colors: ['lightblue', 'blue', 'orange', 'red'],`,
+          // ColorZ
+          ...(colorZ === 'None' ? ['  zAxis={[{}]}'] : []),
+          ...(colorZ === 'continuous'
+            ? [
+                '  zAxis={[{',
+                `    colorMap: {`,
+                `      type: 'continuous',`,
+                `      min: -2,`,
+                `      max: 2,`,
+                `      color: ['green', 'orange'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+          ...(colorZ === 'piecewise'
+            ? [
+                '  zAxis={[{',
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+          ...(colorZ === 'ordinal'
+            ? [
+                '  zAxis={[{',
+                `    data: ['A', ..., 'B', ..., 'C', ..., 'D', ...],`,
+                `    colorMap: {`,
+                `      type: 'ordinal',`,
+                `      values: ['A', 'B', 'C', 'D'],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
                 '  }]}',
               ]
             : []),
