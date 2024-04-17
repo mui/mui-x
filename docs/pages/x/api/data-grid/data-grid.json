@@ -1073,6 +1073,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--last",
+      "className": "MuiDataGrid-columnHeader--last",
+      "description": "Styles applied to the last column header element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--moving",
       "className": "MuiDataGrid-columnHeader--moving",
       "description": "Styles applied to the column header if it is being dragged.",

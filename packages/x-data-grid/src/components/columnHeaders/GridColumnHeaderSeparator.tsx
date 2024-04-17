@@ -61,7 +61,7 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={classes.root}
-      style={{ minHeight: height, opacity: rootProps.showColumnVerticalBorder ? 1 : 0 }}
+      style={{ minHeight: height, opacity: rootProps.showColumnVerticalBorder ? 0 : 1 }}
       {...other}
       onClick={stopClick}
     >
