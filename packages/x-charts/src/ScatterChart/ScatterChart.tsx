@@ -591,8 +591,7 @@ ScatterChart.propTypes = {
     }),
   ),
   /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   * The configuration of the z-axes.
    */
   zAxis: PropTypes.arrayOf(
     PropTypes.shape({
