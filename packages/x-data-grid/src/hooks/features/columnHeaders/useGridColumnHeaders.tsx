@@ -275,6 +275,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}
+          isLast={columnIndex === columnPositions.length - 1}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
