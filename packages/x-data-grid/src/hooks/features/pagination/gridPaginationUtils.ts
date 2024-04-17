@@ -11,7 +11,8 @@ export const getPageCount = (rowCount: number, pageSize: number, page: number): 
   }
 
   if (rowCount === -1) {
-    return page + 1;
+    // With unknown row-count, we can assume a page after the current one
+    return page + 2;
   }
 
   return 0;

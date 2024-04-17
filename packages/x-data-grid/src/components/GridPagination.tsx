@@ -74,7 +74,7 @@ const GridPagination = React.forwardRef<
   const { paginationMode, loading, estimatedRowCount } = rootProps;
 
   const computedProps: Partial<TablePaginationProps> = React.useMemo(() => {
-    if (paginationMode === 'server' && loading) {
+    if (rowCount === -1 && paginationMode === 'server' && loading) {
       return {
         backIconButtonProps: { disabled: true },
         nextIconButtonProps: { disabled: true },
@@ -82,7 +82,7 @@ const GridPagination = React.forwardRef<
     }
 
     return {};
-  }, [loading, paginationMode]);
+  }, [loading, paginationMode, rowCount]);
 
   const lastPage = React.useMemo(() => Math.max(0, pageCount - 1), [pageCount]);
 

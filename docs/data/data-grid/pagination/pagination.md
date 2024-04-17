@@ -146,6 +146,8 @@ The following examples demonstrate each of these scenarios:
 
 #### Known row count
 
+Pass the props to the Grid as explained in the table above to handle the case when the actual row count is known, as the following example demonstrates.
+
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 
 :::warning
@@ -169,7 +171,7 @@ const rowCount = React.useMemo(() => {
 
 #### Unknown row count
 
-Pass the props to the Grid as explained in the table above to handle the case when the actual row count is not initially available as the following example demonstrates.
+Pass the props to the Grid as explained in the table above to handle the case when the actual row count is unknown, as the following example demonstrates.
 
 {{"demo": "ServerPaginationGridNoRowCount.js", "bg": "inline"}}
 
@@ -194,26 +196,22 @@ const paginationMeta = React.useMemo(() => {
 
 #### Estimated row count
 
-There could be possibilities when the accurate row count is not initially available for many reasons such as:
+Estimated row count could be considered a hybrid approach of known and unknown row count cases, where the actual row count is not initially available, but an estimated row count is available.
 
-1. For some databases, computing `rowCount` upfront is a costly operation due to the scale of data or how the data is structured.
-2. Some data structures don't have the `rowCount` information until the very last page.
+Initially, when an `estimatedRowCount` is set and `rowCount='-1'`, the grid work identical to the "Unknown row count" use case, with the exception that the `estimatedRowCount` is used to show more detailed information in the pagination footer.
 
-In such scenarios, some backends provide an estimated row count initially which could be used to estimate the number of pages until the actual row count is available. In some cases, this estimate value could also be more than the actual row count. Therefore, the Grid uses it only to show the user an estimated number of rows, and uses `paginationMeta.hasNextPage` as a single source of truth to check whether more records are available on the server.
+Once the current row count exceeds the `estimatedRowCount`, the Grid will ignore the `estimatedRowCount` and completely work as the "Unknown row count" use case.
 
-There could be two possibilities after providing the initial props (as mentioned in the table above):
+Meanwhile, if the `rowCount` is set to a valid value (either by updating the `rowCount` prop or setting `hasNextPage='false'`), the Grid will shift to the "Known row count" use case.
 
-1. The actual row count is fetched from the server lazily and provided to the Grid using the `rowCount` prop. The `estimatedRowCount` prop will be ignored once the `rowCount` prop is set to a positive value.
-2. The user has already reached the estimated last page and the actual row count is still not available, in that case, the Grid could take the help of the `hasNextPage='false'` to know that the last page is fetched and try to set a value like in the unknown row count use case.
-
-The following example demonstrates the use of the `estimatedRowCount` and `hasNextPage` props to handle the case when the actual row count is not initially available. The actual row count is `1000` but the Grid is initially provided with an estimated row count of `100`.
-
-The Grid keeps fetching the next page until `hasNextPage` is `false` or the actual row count is provided to the Grid lazily, you can do that by clicking the "Set Row Count" button.
+The following example demonstrates this scenario. The actual row count is `1000` but the Grid is initially provided with an estimated row count of `100`. You can set the `rowCount` value by hitting the "Set Row Count" button.
 
 {{"demo": "ServerPaginationGridEstimated.js", "bg": "inline"}}
 
 :::warning
 The `hasNextPage` must not be set to `false` until there are _actually_ no records left to fetch, because when `hasNextPage` becomes `false`, the Grid considers this as the last page and tries to set the `rowCount` value to a finite value.
+
+If an external data fetching library sets the values to undefined during loading, you can memoize the `paginationMeta` value to ensure it doesn't change during loading as shown in the "Unknown row count" section.
 :::
 
 :::info
