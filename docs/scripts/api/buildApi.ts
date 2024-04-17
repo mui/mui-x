@@ -1,13 +1,22 @@
+/* eslint-disable no-await-in-loop */
 import * as yargs from 'yargs';
 import path from 'path';
 import fs from 'fs';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
-import buildInterfacesDocumentation from './buildInterfacesDocumentation';
+import {
+  buildApiInterfacesJson,
+  buildInterfacesDocumentationPage,
+} from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
-import { createXTypeScriptProjects } from '../createXTypeScriptProjects';
+import {
+  XTypeScriptProjects,
+  createXTypeScriptProjects,
+  datagridApiToDocument,
+  interfacesToDocument,
+} from '../createXTypeScriptProjects';
 import { DocumentedInterfaces } from './utils';
 
 const DEFAULT_PRETTIER_CONFIG_PATH = path.join(process.cwd(), 'prettier.config.js');
@@ -47,6 +56,7 @@ const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
 export default async function linkifyTranslation(
   directory: string,
   documentedInterfaces: DocumentedInterfaces,
+  folder: string,
 ) {
   const items = fs.readdirSync(directory);
 
@@ -55,7 +65,7 @@ export default async function linkifyTranslation(
       const itemPath = path.resolve(directory, item);
 
       if (fs.statSync(itemPath).isDirectory()) {
-        await linkifyTranslation(itemPath, documentedInterfaces);
+        await linkifyTranslation(itemPath, documentedInterfaces, folder);
         return;
       }
 
@@ -69,7 +79,7 @@ export default async function linkifyTranslation(
         if (!documentedInterfaces.get(content)) {
           return content;
         }
-        const url = `/x/api/data-grid/${kebabCase(content)}/`;
+        const url = `/x/api/${folder}/${kebabCase(content)}/`;
         return `<a href='${url}'>${content}</a>`;
       });
 
@@ -83,24 +93,51 @@ async function run() {
 
   // Create documentation folder if it does not exist
   const apiPagesFolder = path.resolve('./docs/pages/x/api');
-  const dataGridTranslationFolder = path.resolve('./docs/translations/api-docs/data-grid/');
 
-  const documentedInterfaces = await buildInterfacesDocumentation({
-    projects,
-    apiPagesFolder,
-  });
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { folder, packages, documentedInterfaces } of interfacesToDocument) {
+    const subProjects: XTypeScriptProjects = new Map();
 
-  await linkifyTranslation(dataGridTranslationFolder, documentedInterfaces);
+    packages.forEach((pck) => {
+      subProjects.set(pck, projects.get(pck)!);
+    });
 
-  await buildGridEventsDocumentation({
-    projects,
-    documentedInterfaces,
-  });
+    // Create translation folder if it does not exist
+    const translationFolder = path.resolve(`./docs/translations/api-docs/${folder}/`);
 
-  await buildGridSelectorsDocumentation({
-    project: projects.get('x-data-grid-premium')!,
-    apiPagesFolder,
-  });
+    const interfacesWithDedicatedPage = await buildInterfacesDocumentationPage({
+      projects: subProjects,
+      translationPagesDirectory: `docs/translations/api-docs/${folder}`,
+      importTranslationPagesDirectory: `docsx/translations/api-docs/${folder}`,
+      apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/${folder}`),
+      folder,
+      interfaces: documentedInterfaces,
+    });
+
+    await linkifyTranslation(translationFolder, interfacesWithDedicatedPage, folder);
+
+    if (folder === 'data-grid') {
+      // Generate JSON for some API inerfaces rendered in the `<ApiDocs />` components.
+      // This is API insterted inside some demo pages, and not dedicated pages.
+      await buildApiInterfacesJson({
+        projects: subProjects,
+        apiPagesFolder,
+        folder,
+        interfaces: datagridApiToDocument,
+        interfacesWithDedicatedPage,
+      });
+
+      await buildGridEventsDocumentation({
+        projects: subProjects,
+        interfacesWithDedicatedPage,
+      });
+
+      await buildGridSelectorsDocumentation({
+        project: projects.get('x-data-grid-premium')!,
+        apiPagesFolder,
+      });
+    }
+  }
 
   buildExportsDocumentation({
     projects,

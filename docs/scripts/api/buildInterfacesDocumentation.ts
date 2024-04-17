@@ -39,57 +39,6 @@ interface ParsedProperty {
   projects: XProjectNames[];
 }
 
-const translationPagesDirectory = 'docs/translations/api-docs/data-grid';
-const importTranslationPagesDirectory = 'docsx/translations/api-docs/data-grid';
-const apiPagesDirectory = path.join(process.cwd(), `docs/pages/x/api/data-grid`);
-
-const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
-  'GridCellSelectionApi',
-  'GridColumnPinningApi',
-  'GridColumnResizeApi',
-  'GridCsvExportApi',
-  'GridDetailPanelApi',
-  'GridEditingApi',
-  'GridExcelExportApi',
-  'GridFilterApi',
-  'GridPaginationApi',
-  'GridPrintExportApi',
-  'GridRowGroupingApi',
-  'GridRowMultiSelectionApi',
-  'GridRowSelectionApi',
-  'GridScrollApi',
-  'GridSortApi',
-  'GridVirtualizationApi',
-];
-
-const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
-  // apiRef
-  'GridApi',
-
-  // Params
-  'GridCellParams',
-  'GridRowParams',
-  'GridRowClassNameParams',
-  'GridRowSpacingParams',
-  'GridExportStateParams',
-
-  // Others
-  'GridColDef',
-  'GridSingleSelectColDef',
-  'GridActionsColDef',
-  'GridCsvExportOptions',
-  'GridPrintExportOptions',
-  'GridExcelExportOptions',
-
-  // Filters
-  'GridFilterModel',
-  'GridFilterItem',
-  'GridFilterOperator',
-
-  // Aggregation
-  'GridAggregationFunction',
-];
-
 const parseProperty = async (
   propertySymbol: ts.Symbol,
   project: XTypeScriptProject,
@@ -111,11 +60,10 @@ interface ProjectInterface {
 
 const parseInterfaceSymbol = async (
   interfaceName: string,
-  documentedInterfaces: DocumentedInterfaces,
+  packagesWithThisInterface: XProjectNames[],
   projects: XTypeScriptProjects,
 ): Promise<ParsedObject | null> => {
-  const projectInterfaces = documentedInterfaces
-    .get(interfaceName)!
+  const projectInterfaces = packagesWithThisInterface
     .map((projectName) => {
       const project = projects.get(projectName)!;
 
@@ -177,14 +125,17 @@ const parseInterfaceSymbol = async (
   return parsedInterface;
 };
 
+const isPro = (project: string) => project.includes('-pro');
+const isPremium = (project: string) => project.includes('-premium');
+
 function getPlanLevel(property: ParsedProperty) {
-  if (property.projects.includes('x-data-grid')) {
+  if (property.projects.some((project) => !isPro(project) && !isPremium(project))) {
     return '';
   }
-  if (property.projects.includes('x-data-grid-pro')) {
+  if (property.projects.some(isPro)) {
     return 'pro';
   }
-  if (property.projects.includes('x-data-grid-premium')) {
+  if (property.projects.some(isPremium)) {
     return 'premium';
   }
   throw new Error(`No valid plan found for ${property.name} property`);
@@ -228,23 +179,99 @@ function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
   return { demos: `<ul>${demos.join('\n')}</ul>` };
 }
 
-interface BuildInterfacesDocumentationOptions {
+interface BuildInterfacesCommonOptions {
   projects: XTypeScriptProjects;
-  apiPagesFolder: string;
+  folder: string;
+  /**
+   * An array of the interfaces to process.
+   */
+  interfaces: string[];
 }
 
-export default async function buildInterfacesDocumentation(
-  options: BuildInterfacesDocumentationOptions,
+type BuildApiInterfacesJsonOptions = BuildInterfacesCommonOptions & {
+  apiPagesFolder: string;
+  interfacesWithDedicatedPage: DocumentedInterfaces;
+};
+
+export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOptions) {
+  const { projects, apiPagesFolder, folder, interfaces, interfacesWithDedicatedPage } = options;
+
+  const allProjectsName = Array.from(projects.keys());
+
+  await Promise.all(
+    interfaces.map(async (interfaceName) => {
+      const packagesWithThisInterface = allProjectsName.filter(
+        (projectName) => !!projects.get(projectName)!.exports[interfaceName],
+      );
+
+      if (packagesWithThisInterface.length === 0) {
+        throw new Error(`Can't find symbol for ${interfaceName}`);
+      }
+
+      const project = projects.get(packagesWithThisInterface[0])!;
+
+      const parsedInterface = await parseInterfaceSymbol(
+        interfaceName,
+        packagesWithThisInterface,
+        projects,
+      );
+      if (!parsedInterface) {
+        return;
+      }
+
+      const slug = kebabCase(parsedInterface.name);
+
+      const json = {
+        name: parsedInterface.name,
+        description: linkify(
+          parsedInterface.description,
+          interfacesWithDedicatedPage,
+          'html',
+          folder,
+        ),
+        properties: parsedInterface.properties.map((property) => ({
+          name: property.name,
+          description: renderMarkdown(
+            linkify(property.description, interfacesWithDedicatedPage, 'html', folder),
+          ),
+          type: property.typeStr,
+        })),
+      };
+
+      await writePrettifiedFile(
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
+        JSON.stringify(json),
+        project,
+      );
+      // eslint-disable-next-line no-console
+      console.log('Built JSON file for', parsedInterface.name);
+    }),
+  );
+}
+
+type BuildInterfacesDocumentationPageOptions = BuildInterfacesCommonOptions & {
+  apiPagesDirectory: string;
+  translationPagesDirectory: string;
+  importTranslationPagesDirectory: string;
+};
+
+export async function buildInterfacesDocumentationPage(
+  options: BuildInterfacesDocumentationPageOptions,
 ) {
-  const { projects, apiPagesFolder } = options;
+  const {
+    projects,
+    apiPagesDirectory,
+    translationPagesDirectory,
+    importTranslationPagesDirectory,
+    folder,
+    interfaces,
+  } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
   const documentedInterfaces: DocumentedInterfaces = new Map();
-  [
-    ...OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES,
-    ...GRID_API_INTERFACES_WITH_DEDICATED_PAGES,
-  ].forEach((interfaceName) => {
+
+  interfaces.forEach((interfaceName) => {
     const packagesWithThisInterface = allProjectsName.filter(
       (projectName) => !!projects.get(projectName)!.exports[interfaceName],
     );
@@ -264,7 +291,7 @@ export default async function buildInterfacesDocumentation(
     // eslint-disable-next-line no-await-in-loop
     const parsedInterface = await parseInterfaceSymbol(
       interfaceName,
-      documentedInterfaces,
+      packagesWithThisInterface,
       projects,
     );
     if (!parsedInterface) {
@@ -273,94 +300,80 @@ export default async function buildInterfacesDocumentation(
 
     const slug = kebabCase(parsedInterface.name);
 
-    if (GRID_API_INTERFACES_WITH_DEDICATED_PAGES.includes(parsedInterface.name)) {
-      const json = {
-        name: parsedInterface.name,
-        description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
-        properties: parsedInterface.properties.map((property) => ({
-          name: property.name,
-          description: renderMarkdown(linkify(property.description, documentedInterfaces, 'html')),
-          type: property.typeStr,
-        })),
-      };
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
-        JSON.stringify(json),
-        project,
-      );
-      // eslint-disable-next-line no-console
-      console.log('Built JSON file for', parsedInterface.name);
-    } else {
-      const content = {
-        name: parsedInterface.name,
-        imports: generateImportStatement(parsedInterface, projects),
-        ...extractDemos(parsedInterface.tags.demos),
-        properties: {},
-      };
+    const content = {
+      name: parsedInterface.name,
+      imports: generateImportStatement(parsedInterface, projects),
+      ...extractDemos(parsedInterface.tags.demos),
+      properties: {},
+    };
 
-      const translations = {
-        interfaceDescription: renderMarkdown(
-          linkify(escapeCell(parsedInterface.description || ''), documentedInterfaces, 'html'),
+    const translations = {
+      interfaceDescription: renderMarkdown(
+        linkify(
+          escapeCell(parsedInterface.description || ''),
+          documentedInterfaces,
+          'html',
+          folder,
         ),
-        propertiesDescriptions: {},
-      };
+      ),
+      propertiesDescriptions: {},
+    };
 
-      parsedInterface.properties
-        .map((property) => ({
-          name: property.name,
-          description: renderMarkdown(
-            linkify(escapeCell(property.description), documentedInterfaces, 'html'),
-          ),
-          type: { description: escapeCell(property.typeStr) },
-          default: getDefaultValue(property),
-          planLevel: getPlanLevel(property),
-          required: property.required,
-        }))
-        .sort((a, b) => {
-          if ((a.required && b.required) || (!a.required && !b.required)) {
-            return a.name.localeCompare(b.name);
-          }
-          if (a.required) {
-            return -1;
-          }
-          return 1;
-        })
-        .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
-          content.properties[name] = { type };
-          if (defaultValue) {
-            content.properties[name].default = defaultValue;
-          }
-          if (required) {
-            content.properties[name].required = required;
-          }
-          if (planLevel === 'pro') {
-            content.properties[name].isProPlan = true;
-          }
-          if (planLevel === 'premium') {
-            content.properties[name].isPremiumPlan = true;
-          }
-          translations.propertiesDescriptions[name] = { description };
-        });
+    parsedInterface.properties
+      .map((property) => ({
+        name: property.name,
+        description: renderMarkdown(
+          linkify(escapeCell(property.description), documentedInterfaces, 'html', folder),
+        ),
+        type: { description: escapeCell(property.typeStr) },
+        default: getDefaultValue(property),
+        planLevel: getPlanLevel(property),
+        required: property.required,
+      }))
+      .sort((a, b) => {
+        if ((a.required && b.required) || (!a.required && !b.required)) {
+          return a.name.localeCompare(b.name);
+        }
+        if (a.required) {
+          return -1;
+        }
+        return 1;
+      })
+      .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
+        content.properties[name] = { type };
+        if (defaultValue) {
+          content.properties[name].default = defaultValue;
+        }
+        if (required) {
+          content.properties[name].required = required;
+        }
+        if (planLevel === 'pro') {
+          content.properties[name].isProPlan = true;
+        }
+        if (planLevel === 'premium') {
+          content.properties[name].isPremiumPlan = true;
+        }
+        translations.propertiesDescriptions[name] = { description };
+      });
 
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesDirectory, `${slug}.json`),
-        JSON.stringify(content),
-        project,
-      );
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(apiPagesDirectory, `${slug}.json`),
+      JSON.stringify(content),
+      project,
+    );
 
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(translationPagesDirectory, `${slug}.json`),
-        JSON.stringify(translations),
-        project,
-      );
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(translationPagesDirectory, `${slug}.json`),
+      JSON.stringify(translations),
+      project,
+    );
 
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesDirectory, `${slug}.js`),
-        `import * as React from 'react';
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(apiPagesDirectory, `${slug}.js`),
+      `import * as React from 'react';
     import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
     import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
     import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
@@ -385,12 +398,11 @@ export default async function buildInterfacesDocumentation(
       };
     };
     `.replace(/\r?\n/g, EOL),
-        project,
-      );
+      project,
+    );
 
-      // eslint-disable-next-line no-console
-      console.log('Built API docs for', parsedInterface.name);
-    }
+    // eslint-disable-next-line no-console
+    console.log('Built API docs for', parsedInterface.name);
   }
 
   return documentedInterfaces;

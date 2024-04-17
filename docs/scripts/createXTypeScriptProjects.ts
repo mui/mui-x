@@ -114,6 +114,69 @@ const getComponentPaths =
     return paths;
   };
 
+type InterfacesToDocumentType = {
+  folder: string;
+  packages: XProjectNames[];
+  documentedInterfaces: string[];
+};
+
+export const interfacesToDocument: InterfacesToDocumentType[] = [
+  {
+    folder: 'data-grid',
+    packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
+    documentedInterfaces: [
+      // apiRef
+      'GridApi',
+
+      // Params
+      'GridCellParams',
+      'GridRowParams',
+      'GridRowClassNameParams',
+      'GridRowSpacingParams',
+      'GridExportStateParams',
+
+      // Others
+      'GridColDef',
+      'GridSingleSelectColDef',
+      'GridActionsColDef',
+      'GridCsvExportOptions',
+      'GridPrintExportOptions',
+      'GridExcelExportOptions',
+
+      // Filters
+      'GridFilterModel',
+      'GridFilterItem',
+      'GridFilterOperator',
+
+      // Aggregation
+      'GridAggregationFunction',
+    ],
+  },
+  // {
+  //   folder: 'charts',
+  //   packages: ['x-charts'],
+  // },
+];
+
+export const datagridApiToDocument = [
+  'GridCellSelectionApi',
+  'GridColumnPinningApi',
+  'GridColumnResizeApi',
+  'GridCsvExportApi',
+  'GridDetailPanelApi',
+  'GridEditingApi',
+  'GridExcelExportApi',
+  'GridFilterApi',
+  'GridPaginationApi',
+  'GridPrintExportApi',
+  'GridRowGroupingApi',
+  'GridRowMultiSelectionApi',
+  'GridRowSelectionApi',
+  'GridScrollApi',
+  'GridSortApi',
+  'GridVirtualizationApi',
+];
+
 export const createXTypeScriptProjects = () => {
   const projects: XTypeScriptProjects = new Map();
 
