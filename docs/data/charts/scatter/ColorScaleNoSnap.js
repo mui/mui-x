@@ -219,7 +219,7 @@ export default function ColorScaleNoSnap() {
           ...(colorZ === 'ordinal'
             ? [
                 '  zAxis={[{',
-                `    data: ['A', 'A', ..., 'B', 'B', ..., 'C', 'C', ..., 'D', 'D', ...],`,
+                `    data: ['A', ..., 'B', ..., 'C', ..., 'D', ...],`,
                 `    colorMap: {`,
                 `      type: 'ordinal',`,
                 `      values: ['A', 'B', 'C', 'D'],`,
