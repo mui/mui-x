@@ -1,4 +1,9 @@
 require('@babel/register')({
   extensions: ['.js', '.ts', '.tsx'],
-  ignore: [/node_modules\/(?!@mui\/monorepo)/],
+  ignore: [function ignore(filePath) {
+    if (filePath.includes('/node_modules/')) {
+      return !filePath.includes('/node_modules/@mui/monorepo');
+    }
+    return false;
+  }]
 });
