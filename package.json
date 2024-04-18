@@ -85,6 +85,7 @@
     "@emotion/styled": "^11.11.0",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.14",
+    "@mui/internal-markdown": "^1.0.0",
     "@mui/material": "^5.15.14",
     "@mui/monorepo": "github:mui/material-ui#e1d94d5ce097815bcd738352e69bb43ce03bd266",
     "@mui/utils": "^5.15.14",
