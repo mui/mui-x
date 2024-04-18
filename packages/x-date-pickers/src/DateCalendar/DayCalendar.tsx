@@ -534,7 +534,22 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+    let currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+
+    /**
+     * This addresses a potential issue that arises when switching timezones
+     * changes the month. The calendar will renders days of the month currentmonth - 1,
+     * but will only consider the days of currentMonth as the current ones.
+     * @link https://github.com/mui/mui-x/issues/10804
+     */
+    if (utils.getMonth(currentMonth) !== utils.getMonth(currentMonthWithTimezone)) {
+      currentMonthWithTimezone = utils.setMonthYearDate(
+        currentMonthWithTimezone,
+        utils.getYear(currentMonth),
+        utils.getMonth(currentMonth),
+        utils.getDate(currentMonth),
+      );
+    }
     const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
     let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {

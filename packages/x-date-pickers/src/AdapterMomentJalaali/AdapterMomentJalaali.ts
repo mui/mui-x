@@ -247,4 +247,8 @@ export class AdapterMomentJalaali
   public getWeekNumber = (value: Moment) => {
     return value.jWeek();
   };
+
+  public setMonthYearDate = (value: Moment, year: number, month: number, date: number): Moment => {
+    return value.clone().jYear(year).jMonth(month).jDate(date);
+  };
 }

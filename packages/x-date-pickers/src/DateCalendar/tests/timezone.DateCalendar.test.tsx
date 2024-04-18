@@ -60,6 +60,74 @@ describe('<DateCalendar /> - Timezone', () => {
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
         });
+
+        it('on timezone change the rendered UI should display the Calendar of same month', () => {
+          // Render the component with initial timezone prop
+          const { rerender } = render(<DateCalendar timezone="UTC" />);
+
+          // Create a map of buttons with their indices for the initial render
+          const renderButtonsMap = {};
+          screen.getAllByRole('gridcell').forEach((element, index) => {
+            if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+              const numberMatch = element.textContent.trim().match(/\d+/);
+              if (numberMatch) {
+                const number = parseInt(numberMatch[0], 10);
+                renderButtonsMap[index] = number;
+              }
+            }
+          });
+
+          // Rerender the component with a different timezone prop
+          rerender(<DateCalendar timezone={timezone} />);
+
+          // Create a map of buttons with their indices for the rerender
+          const reRenderButtonsMap = {};
+
+          screen.getAllByRole('gridcell').forEach((element, index) => {
+            if (element.tagName.toLowerCase() === 'button' && element && element.textContent) {
+              const numberMatch = element.textContent.trim().match(/\d+/);
+              if (numberMatch) {
+                const number = parseInt(numberMatch[0], 10);
+                reRenderButtonsMap[index] = number;
+              }
+            }
+          });
+
+          // Ensure the number of buttons and their numbers are consistent
+          expect(Object.keys(reRenderButtonsMap).length).equals(
+            Object.keys(renderButtonsMap).length,
+          );
+          Object.keys(renderButtonsMap).forEach((index) => {
+            expect(reRenderButtonsMap[index]).equals(renderButtonsMap[index]);
+          });
+        });
+
+        it('on timezone change the difference between the selected date change should be at max 1', () => {
+          // Render the component with initial timezone prop
+          const { rerender } = render(<DateCalendar timezone="UTC" />);
+
+          const renderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          const mid = renderButtons.length / 2;
+
+          userEvent.mousePress(renderButtons[mid]);
+
+          rerender(<DateCalendar timezone={timezone} />);
+
+          const reRenderButtons = screen
+            .getAllByRole('gridcell')
+            .filter((button) => button.tagName.toLowerCase() === 'button');
+
+          const selectedButtonIndex = reRenderButtons.findIndex((button) =>
+            button.classList.contains('Mui-selected'),
+          );
+
+          const differenceOfIndex = Math.abs(mid - selectedButtonIndex);
+
+          expect(differenceOfIndex).lessThanOrEqual(1);
+        });
       });
     });
   });
