@@ -152,10 +152,17 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridAggregationFunction',
     ],
   },
-  // {
-  //   folder: 'charts',
-  //   packages: ['x-charts'],
-  // },
+  {
+    folder: 'charts',
+    packages: ['x-charts'],
+    documentedInterfaces: [
+      'BarSeriesType',
+      'LineSeriesType',
+      'PieSeriesType',
+      'ScatterSeriesType',
+      'AxisConfig',
+    ],
+  },
 ];
 
 export const datagridApiToDocument = [
