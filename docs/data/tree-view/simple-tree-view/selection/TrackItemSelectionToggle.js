@@ -21,7 +21,7 @@ export default function TrackItemSelectionToggle() {
           ? 'No item selection recorded'
           : `Last selected item: ${lastSelectedItem}`}
       </Typography>
-      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, minWidth: 300, flexGrow: 1 }}>
         <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

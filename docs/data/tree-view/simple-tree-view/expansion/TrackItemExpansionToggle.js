@@ -22,7 +22,7 @@ export default function TrackItemExpansionToggle() {
         </Typography>
       )}
 
-      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 200, minWidth: 300, flexGrow: 1 }}>
         <SimpleTreeView onItemExpansionToggle={handleItemExpansionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
