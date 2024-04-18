@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.11
+
+_Apr 18, 2024_
+
+We'd like to offer a big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.11`
+
+- [DataGrid] Fix virtualization memory leak (#12812) @romgrk
+
+#### `@mui/x-data-grid-pro@6.19.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.11`.
+
+#### `@mui/x-data-grid-premium@6.19.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.11`.
+
 ## 6.19.10
 
 _Apr 12, 2024_
