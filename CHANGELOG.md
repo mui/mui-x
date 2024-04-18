@@ -16,6 +16,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
   <img src="https://github.com/mui/mui-x/assets/45398769/f0066606-3486-4c4e-b3be-7fdd56d763c3" alt="scatter chart with gradient along y-axis" />
 
+- 🌍 Improve Danish (da-DK) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -3139,7 +3140,6 @@ _Apr 18, 2024_
 We'd like to offer a big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 📚 Documentation improvements
 
 ### Data Grid
 
@@ -3189,7 +3189,6 @@ _Apr 5, 2024_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Danish (da-DK) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
