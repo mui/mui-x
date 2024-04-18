@@ -22,20 +22,6 @@ describe('<SimpleTreeView />', () => {
   }));
 
   describe('warnings', () => {
-    it('should warn when switching from controlled to uncontrolled of the selectedItems prop', () => {
-      const { setProps } = render(
-        <SimpleTreeView selectedItems={null}>
-          <TreeItem itemId="1" label="one" />
-        </SimpleTreeView>,
-      );
-
-      expect(() => {
-        setProps({ selectedItems: undefined });
-      }).toErrorDev(
-        'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
-      );
-    });
-
     it('should not crash when shift clicking a clean tree', () => {
       render(
         <SimpleTreeView multiSelect>
@@ -145,70 +131,6 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('one')).to.have.attribute('aria-selected');
   });
 
-  it('should be able to be controlled with the selectedItems prop and singleSelect', () => {
-    function MyComponent() {
-      const [selectedState, setSelectedState] = React.useState(null);
-      const onSelectedItemsChange = (event, items) => {
-        setSelectedState(items);
-      };
-      return (
-        <SimpleTreeView selectedItems={selectedState} onSelectedItemsChange={onSelectedItemsChange}>
-          <TreeItem itemId="1" label="one" data-testid="one" />
-          <TreeItem itemId="2" label="two" data-testid="two" />
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-    expect(getByTestId('two')).not.to.have.attribute('aria-selected');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).not.to.have.attribute('aria-selected');
-
-    fireEvent.click(getByText('two'));
-
-    expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-  });
-
-  it('should be able to be controlled with the selectedItems prop and multiSelect', () => {
-    function MyComponent() {
-      const [selectedState, setSelectedState] = React.useState([]);
-      const onSelectedItemsChange = (event, items) => {
-        setSelectedState(items);
-      };
-      return (
-        <SimpleTreeView
-          selectedItems={selectedState}
-          onSelectedItemsChange={onSelectedItemsChange}
-          multiSelect
-        >
-          <TreeItem itemId="1" label="one" data-testid="one" />
-          <TreeItem itemId="2" label="two" data-testid="two" />
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId, getByText } = render(<MyComponent />);
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'false');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-    fireEvent.click(getByText('one'));
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'false');
-
-    fireEvent.click(getByText('two'), { ctrlKey: true });
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected', 'true');
-    expect(getByTestId('two')).to.have.attribute('aria-selected', 'true');
-  });
-
   it('should not error when component state changes', () => {
     function MyComponent() {
       const [, setState] = React.useState(1);
@@ -293,6 +215,33 @@ describe('<SimpleTreeView />', () => {
     fireEvent.keyDown(getByTestId('three'), { key: 'ArrowDown' });
 
     expect(getByTestId('four')).toHaveFocus();
+  });
+
+  it('should update indexes when two items are swapped', () => {
+    const onSelectedItemsChange = spy();
+
+    function TestComponent() {
+      const [items, setItems] = React.useState(['1', '2', '3']);
+
+      return (
+        <React.Fragment>
+          <button type="button" onClick={() => setItems(['1', '3', '2'])}>
+            Swap items
+          </button>
+          <SimpleTreeView onSelectedItemsChange={onSelectedItemsChange} multiSelect>
+            {items.map((itemId) => (
+              <TreeItem key={itemId} itemId={itemId} label={itemId} />
+            ))}
+          </SimpleTreeView>
+        </React.Fragment>
+      );
+    }
+
+    const { getByText } = render(<TestComponent />);
+    fireEvent.click(getByText('Swap items'));
+    fireEvent.click(getByText('1'));
+    fireEvent.click(getByText('3'), { shiftKey: true });
+    expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
   });
 
   describe('onItemFocus', () => {
@@ -437,18 +386,6 @@ describe('<SimpleTreeView />', () => {
       const { getByRole } = render(<SimpleTreeView />);
 
       expect(getByRole('tree')).not.to.equal(null);
-    });
-
-    it('(TreeView) should have the attribute `aria-multiselectable=false if using single select`', () => {
-      const { getByRole } = render(<SimpleTreeView />);
-
-      expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'false');
-    });
-
-    it('(TreeView) should have the attribute `aria-multiselectable=true if using multi select`', () => {
-      const { getByRole } = render(<SimpleTreeView multiSelect />);
-
-      expect(getByRole('tree')).to.have.attribute('aria-multiselectable', 'true');
     });
   });
 });

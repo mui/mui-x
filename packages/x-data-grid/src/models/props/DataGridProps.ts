@@ -54,14 +54,6 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 };
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase.
- */
-export interface DataGridProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue<R> {}
-
-/**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
@@ -790,3 +782,37 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
 }
+
+export interface DataGridProSharedPropsWithDefaultValue {
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  headerFilters: boolean;
+}
+
+export interface DataGridProSharedPropsWithoutDefaultValue {
+  /**
+   * Override the height of the header filters.
+   */
+  headerFilterHeight?: number;
+}
+
+export interface DataGridPremiumSharedPropsWithDefaultValue {
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: boolean;
+}
+
+/**
+ * The props of the `DataGrid` component after the pre-processing phase.
+ */
+export interface DataGridProcessedProps<R extends GridValidRowModel = any>
+  extends DataGridPropsWithDefaultValues,
+    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridPropsWithoutDefaultValue<R>,
+    DataGridProSharedPropsWithoutDefaultValue,
+    Partial<DataGridProSharedPropsWithDefaultValue>,
+    Partial<DataGridPremiumSharedPropsWithDefaultValue> {}

@@ -12,9 +12,10 @@ import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
 import {
-  XProjectNames,
   XTypeScriptProjects,
   createXTypeScriptProjects,
+  datagridApiToDocument,
+  interfacesToDocument,
 } from '../createXTypeScriptProjects';
 import { DocumentedInterfaces } from './utils';
 
@@ -87,51 +88,6 @@ export default async function linkifyTranslation(
   );
 }
 
-const specialAPIs: { folder: string; packages: XProjectNames[]; documentedInterfaces: string[] }[] =
-  [
-    {
-      folder: 'data-grid',
-      packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
-      documentedInterfaces: [
-        // apiRef
-        'GridApi',
-
-        // Params
-        'GridCellParams',
-        'GridRowParams',
-        'GridRowClassNameParams',
-        'GridRowSpacingParams',
-        'GridExportStateParams',
-
-        // Others
-        'GridColDef',
-        'GridSingleSelectColDef',
-        'GridActionsColDef',
-        'GridCsvExportOptions',
-        'GridPrintExportOptions',
-        'GridExcelExportOptions',
-
-        // Filters
-        'GridFilterModel',
-        'GridFilterItem',
-        'GridFilterOperator',
-
-        // Aggregation
-        'GridAggregationFunction',
-      ],
-    },
-    {
-      folder: 'charts',
-      packages: ['x-charts'],
-      documentedInterfaces: [
-        'BarSeriesType',
-        'LineSeriesType',
-        'PieSeriesType',
-        'ScatterSeriesType',
-        'AxisConfig',
-      ],
-    },
-  ];
 async function run() {
   const projects = createXTypeScriptProjects();
 
@@ -139,7 +95,7 @@ async function run() {
   const apiPagesFolder = path.resolve('./docs/pages/x/api');
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const { folder, packages, documentedInterfaces } of specialAPIs) {
+  for (const { folder, packages, documentedInterfaces } of interfacesToDocument) {
     const subProjects: XTypeScriptProjects = new Map();
 
     packages.forEach((pck) => {
@@ -167,24 +123,7 @@ async function run() {
         projects: subProjects,
         apiPagesFolder,
         folder,
-        interfaces: [
-          'GridCellSelectionApi',
-          'GridColumnPinningApi',
-          'GridColumnResizeApi',
-          'GridCsvExportApi',
-          'GridDetailPanelApi',
-          'GridEditingApi',
-          'GridExcelExportApi',
-          'GridFilterApi',
-          'GridPaginationApi',
-          'GridPrintExportApi',
-          'GridRowGroupingApi',
-          'GridRowMultiSelectionApi',
-          'GridRowSelectionApi',
-          'GridScrollApi',
-          'GridSortApi',
-          'GridVirtualizationApi',
-        ],
+        interfaces: datagridApiToDocument,
         interfacesWithDedicatedPage,
       });
 

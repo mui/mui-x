@@ -6,5 +6,5 @@ export type {
   ChartsYAxisProps,
   ChartsXAxisProps,
   ScaleName,
-  ContinuouseScaleName,
+  ContinuousScaleName,
 } from './axis';
