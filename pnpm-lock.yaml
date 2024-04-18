@@ -212,6 +212,9 @@ importers:
       danger:
         specifier: ^11.3.1
         version: 11.3.1
+      date-fns-v3:
+        specifier: https://registry.npmjs.org/date-fns/-/date-fns-3.6.0.tgz
+        version: /date-fns@3.6.0
       enzyme:
         specifier: ^3.11.0
         version: 3.11.0
@@ -389,6 +392,9 @@ importers:
       '@babel/core':
         specifier: ^7.24.0
         version: 7.24.4
+      '@babel/runtime':
+        specifier: ^7.24.0
+        version: 7.24.4
       '@babel/runtime-corejs2':
         specifier: ^7.24.0
         version: 7.24.4
@@ -506,9 +512,6 @@ importers:
       date-fns-jalali:
         specifier: ^2.21.3-1
         version: 2.21.3-1
-      date-fns-v3:
-        specifier: https://registry.npmjs.org/date-fns/-/date-fns-3.2.0.tgz
-        version: /date-fns@3.2.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -8230,9 +8233,9 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.4
 
-  /date-fns@3.2.0:
-    resolution: {integrity: sha512-E4KWKavANzeuusPi0jUjpuI22SURAznGkx7eZV+4i6x2A+IZxAMcajgkvuDAU1bg40+xuhW1zRdVIIM/4khuIg==}
-    dev: false
+  /date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+    dev: true
 
   /date-format@4.0.14:
     resolution: {integrity: sha512-39BOQLs9ZjKh0/patS9nrT8wc3ioX3/eA/zgbKNopnF2wCqJEoxywwwElATYvRsXdnOxA/OQeQoFZ3rFjVajhg==}

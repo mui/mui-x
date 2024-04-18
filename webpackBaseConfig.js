@@ -42,7 +42,12 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@mui)/,
+        exclude: function ignore(filePath) {
+          if (filePath.includes('/node_modules/')) {
+            return !filePath.includes('/node_modules/@mui');
+          }
+          return false;
+        },
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
