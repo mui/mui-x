@@ -52,7 +52,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const getNextItem = (itemIdToCheck: string) => {
       const nextItemId = getNextNavigableItem(instance, itemIdToCheck);
       // We reached the end of the tree, check from the beginning
-      if (nextItemId == null) {
+      if (nextItemId === null) {
         return getFirstNavigableItem(instance);
       }
 
