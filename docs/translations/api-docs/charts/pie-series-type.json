@@ -30,7 +30,9 @@
       "description": "The radius between circle center and the end of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
     "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
-    "sortingValues": { "description": "" },
+    "sortingValues": {
+      "description": "The sorting strategy used to oredr pie slices.<br />Can be &#39;none&#39;, &#39;asc&#39;, &#39;desc&#39;, or a sorting function."
+    },
     "startAngle": { "description": "The start angle (deg) of the first item." },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."

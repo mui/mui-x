@@ -34,7 +34,7 @@
     "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
     "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
-    "sortingValues": { "type": { "description": "ChartsPieSorting" } },
+    "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
     "startAngle": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
   }
