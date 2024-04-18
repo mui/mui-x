@@ -322,8 +322,8 @@ describe('<DataGrid /> - Pagination', () => {
           />,
         );
       }).toWarnDev([
-        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -350,8 +350,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(() => {
         render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
       }).toWarnDev([
-        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-        `MUI X: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -359,8 +359,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(() => {
         render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
       }).toWarnDev([
-        `MUI X: The page size \`100\` is not preset in the \`pageSizeOptions\``,
-        `MUI X: The page size \`100\` is not preset in the \`pageSizeOptions\``,
+        `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
+        `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -538,8 +538,8 @@ describe('<DataGrid /> - Pagination', () => {
     expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1–1 of 21');
   });
 
-  it('should support server side pagination', () => {
-    function ServerPaginationGrid() {
+  describe('server-side pagination', () => {
+    function ServerPaginationGrid(props: Partial<DataGridProps>) {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 1 });
 
@@ -576,20 +576,52 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid
             columns={[{ field: 'id' }]}
             rows={rows}
+            paginationMeta={{ hasNextPage: props.rowCount === -1 }}
             paginationModel={paginationModel}
             pageSizeOptions={[1]}
-            rowCount={3}
             paginationMode="server"
             onPaginationModelChange={handlePaginationModelChange}
+            {...props}
           />
         </div>
       );
     }
 
-    render(<ServerPaginationGrid />);
-    expect(getColumnValues(0)).to.deep.equal(['0']);
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getColumnValues(0)).to.deep.equal(['1']);
+    it('should support server side pagination with known row count', () => {
+      render(<ServerPaginationGrid rowCount={3} />);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should support server side pagination with unknown row count', () => {
+      const { setProps } = render(<ServerPaginationGrid rowCount={-1} />);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
+      expect(screen.getByText('1–1 of more than 1')).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(screen.getByText('2–2 of more than 2')).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      setProps({ rowCount: 3 });
+      expect(getColumnValues(0)).to.deep.equal(['2']);
+      expect(screen.getByText('3–3 of 3')).to.not.equal(null);
+    });
+
+    it('should support server side pagination with estimated row count', () => {
+      const { setProps } = render(<ServerPaginationGrid rowCount={-1} estimatedRowCount={2} />);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
+      expect(screen.getByText('1–1 of more than 2')).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(screen.getByText('2–2 of more than 2')).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['2']);
+      expect(screen.getByText('3–3 of more than 3')).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      setProps({ rowCount: 4 });
+      expect(getColumnValues(0)).to.deep.equal(['3']);
+      expect(screen.getByText('4–4 of 4')).to.not.equal(null);
+    });
   });
 
   it('should make the first cell focusable after changing the page', () => {
@@ -712,8 +744,11 @@ describe('<DataGrid /> - Pagination', () => {
   it('should log an error if rowCount is used with client-side pagination', () => {
     expect(() => {
       render(<BaselineTestCase paginationMode="client" rowCount={100} />);
-    }).toErrorDev([
-      'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.',
-    ]);
+    }).toErrorDev(
+      [
+        'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect.',
+        '`rowCount` is only meant to be used with `paginationMode="server"`.',
+      ].join('\n'),
+    );
   });
 });

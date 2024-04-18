@@ -184,6 +184,7 @@
     "setPageSize": {
       "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>."
     },
+    "setPaginationMeta": { "description": "Sets the <code>paginationMeta</code> to a new value." },
     "setPaginationModel": {
       "description": "Sets the <code>paginationModel</code> to a new value."
     },

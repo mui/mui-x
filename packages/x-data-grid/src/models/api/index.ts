@@ -9,7 +9,7 @@ export type { GridRowsMetaApi } from './gridRowsMetaApi';
 export * from './gridRowSelectionApi';
 export * from './gridSortApi';
 export type { GridStateApi } from './gridStateApi';
-export * from './gridLocaleTextApi';
+export type { GridLocaleText, GridLocaleTextApi, GridTranslationKeys } from './gridLocaleTextApi';
 export * from './gridCsvExportApi';
 export type { GridFocusApi } from './gridFocusApi';
 export * from './gridFilterApi';

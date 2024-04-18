@@ -16,10 +16,29 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
       ].join('\n')) ||
     undefined,
   (props) =>
+    (props.paginationMode === 'client' &&
+      props.paginationMeta != null &&
+      [
+        'MUI X: Usage of the `paginationMeta` prop with client-side pagination (`paginationMode="client"`) has no effect.',
+        '`paginationMeta` is only meant to be used with `paginationMode="server"`.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
     (props.signature === GridSignature.DataGrid &&
       props.paginationMode === 'client' &&
       isNumber(props.rowCount) &&
-      'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
+      [
+        'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect.',
+        '`rowCount` is only meant to be used with `paginationMode="server"`.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.paginationMode === 'server' &&
+      props.rowCount == null &&
+      [
+        "MUI X: The `rowCount` prop must be passed using `paginationMode='server'`",
+        'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',
+      ].join('\n')) ||
     undefined,
 ];
 

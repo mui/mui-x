@@ -256,6 +256,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "paginationMetaChange",
+    "description": "Fired when the pagination meta change.",
+    "params": "GridPaginationMeta",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "paginationModelChange",
     "description": "Fired when the pagination model changes.",
     "params": "GridPaginationModel",
