@@ -37,7 +37,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -52,7 +51,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -64,7 +62,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (otherHandlers: EventHandlers) =>
     (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -75,7 +72,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -87,7 +83,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const createContentHandleMouseDown =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
