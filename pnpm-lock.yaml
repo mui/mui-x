@@ -9,6 +9,9 @@ overrides:
   '@types/node': ^18.19.23
 
 patchedDependencies:
+  '@mui/monorepo@6.0.0-alpha.0':
+    hash: m6s35rhse6xiedzuwdr24itknq
+    path: patches/@mui__monorepo@6.0.0-alpha.0.patch
   babel-plugin-replace-imports@1.0.2:
     hash: h4cab4lqksemkw6ln3l3h4s77e
     path: patches/babel-plugin-replace-imports@1.0.2.patch
@@ -91,7 +94,7 @@ importers:
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       '@mui/monorepo':
         specifier: github:mui/material-ui#e1d94d5ce097815bcd738352e69bb43ce03bd266
-        version: github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266
+        version: github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266(patch_hash=m6s35rhse6xiedzuwdr24itknq)
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
@@ -18084,8 +18087,9 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266:
+  github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266(patch_hash=m6s35rhse6xiedzuwdr24itknq):
     resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/e1d94d5ce097815bcd738352e69bb43ce03bd266}
+    id: github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266
     name: '@mui/monorepo'
     version: 6.0.0-alpha.0
     requiresBuild: true
@@ -18102,3 +18106,4 @@ packages:
       - supports-color
       - utf-8-validate
     dev: true
+    patched: true
