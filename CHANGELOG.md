@@ -10,7 +10,6 @@ _Apr 18, 2024_
 We'd like to offer a big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 📚 Documentation improvements
 
 ### Data Grid
 
