@@ -50,6 +50,7 @@ export interface ScatterChartProps
     Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
   /**
    * The series to display in the scatter chart.
+   * An array of [[ScatterSeriesType]] objects.
    */
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   /**
@@ -361,6 +362,7 @@ ScatterChart.propTypes = {
   ]),
   /**
    * The series to display in the scatter chart.
+   * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -446,6 +448,7 @@ ScatterChart.propTypes = {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
@@ -516,6 +519,7 @@ ScatterChart.propTypes = {
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({

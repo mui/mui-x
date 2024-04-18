@@ -6,6 +6,7 @@
     "scaleType": { "type": { "description": "'linear'" }, "required": true },
     "axisId": { "type": { "description": "AxisId" } },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
+    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
     "data": { "type": { "description": "V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },

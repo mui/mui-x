@@ -61,6 +61,7 @@ export interface LineChartProps
     ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the line chart.
+   * An array of [[LineSeriesType]] objects.
    */
   series: MakeOptional<LineSeriesType, 'type'>[];
   /**
@@ -435,6 +436,7 @@ LineChart.propTypes = {
   ]),
   /**
    * The series to display in the line chart.
+   * An array of [[LineSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -520,6 +522,7 @@ LineChart.propTypes = {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
@@ -590,6 +593,7 @@ LineChart.propTypes = {
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({

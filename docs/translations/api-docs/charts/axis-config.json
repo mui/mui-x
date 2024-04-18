@@ -7,6 +7,7 @@
       "description": "The id of the axis to render.<br />If undefined, it will be the first defined axis."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "colorMap": { "description": "" },
     "data": {
       "description": "The data used by <code>&#39;band&#39;</code> and <code>&#39;point&#39;</code> scales."
     },
@@ -49,7 +50,7 @@
       "description": "Minimal step between two ticks.<br />When using time data, the value is assumed to be in ms.<br />Not supported by categorical axis (band, points)."
     },
     "tickNumber": {
-      "description": "The number of ticks. This number is not guaranted.<br />Not supported by categorical axis (band, points)."
+      "description": "The number of ticks. This number is not guaranteed.<br />Not supported by categorical axis (band, points)."
     },
     "tickPlacement": {
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."

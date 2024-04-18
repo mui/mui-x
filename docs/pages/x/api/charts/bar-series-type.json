@@ -13,9 +13,7 @@
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
-    "valueFormatter": {
-      "type": { "description": "&lt;V extends TValue&gt;(value: V) =&gt; string" }
-    },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisKey": { "type": { "description": "string" } },
     "yAxisKey": { "type": { "description": "string" } }
   }

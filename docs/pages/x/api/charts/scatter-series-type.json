@@ -10,9 +10,7 @@
     "id": { "type": { "description": "SeriesId" } },
     "label": { "type": { "description": "string" } },
     "markerSize": { "type": { "description": "number" } },
-    "valueFormatter": {
-      "type": { "description": "&lt;V extends TValue&gt;(value: V) =&gt; string" }
-    },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisKey": { "type": { "description": "string" } },
     "yAxisKey": { "type": { "description": "string" } }
   }
