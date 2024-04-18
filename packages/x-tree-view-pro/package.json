@@ -48,7 +48,7 @@
     "@mui/system": "^5.15.14",
     "@mui/utils": "^5.15.14",
     "@mui/x-license": "7.2.0",
-    "@mui/x-tree-view": "7.2.0",
+    "@mui/x-tree-view": "7.3.0",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.0",
     "prop-types": "^15.8.1",
