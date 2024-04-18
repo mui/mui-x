@@ -273,11 +273,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [
     enabled,
     enabledForColumns,
-    getNearestIndexToRender,
-    rowsMeta.positions.length,
+    rowsMeta,
     rootProps.autoHeight,
     rootProps.rowBuffer,
-    currentPage.rows,
+    currentPage,
     columnPositions,
     visibleColumns.length,
     apiRef,
