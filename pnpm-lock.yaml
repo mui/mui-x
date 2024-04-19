@@ -219,7 +219,7 @@ importers:
         specifier: ^11.3.1
         version: 11.3.1
       date-fns-v3:
-        specifier: https://registry.npmjs.org/date-fns/-/date-fns-3.6.0.tgz
+        specifier: npm:date-fns@3.6.0
         version: /date-fns@3.6.0
       enzyme:
         specifier: ^3.11.0
