@@ -31,7 +31,7 @@
     },
     "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
     "sortingValues": {
-      "description": "The sorting strategy used to oredr pie slices.<br />Can be &#39;none&#39;, &#39;asc&#39;, &#39;desc&#39;, or a sorting function."
+      "description": "The sorting strategy used to order pie slices.<br />Can be &#39;none&#39;, &#39;asc&#39;, &#39;desc&#39;, or a sorting function."
     },
     "startAngle": { "description": "The start angle (deg) of the first item." },
     "valueFormatter": {
