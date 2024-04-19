@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.3.0
+
+_Apr 18, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📄 Support [unknown and estimated row count in server-side pagination](https://mui.com/x/react-data-grid/pagination/#index-based-pagination) (#12490) @MBilalShafi
+- 🎨 Support color scales in Charts (#12490) @alexfauquette
+  Add a [`colorMap` configuration](https://mui.com/x/react-charts/styling/#values-color) to an axis, and the chart will use it to select colors.
+  Each impacted chart ([bar charts](https://mui.com/x/react-charts/bars/#color-scale), [line charts](https://mui.com/x/react-charts/lines/#color-scale), [scatter charts](https://mui.com/x/react-charts/scatter/#color-scale)) has a dedicated section explaining how this color map is impacting it.
+
+  <img src="https://github.com/mui/mui-x/assets/45398769/f0066606-3486-4c4e-b3be-7fdd56d763c3" alt="scatter chart with gradient along y-axis" />
+
+- 🌍 Improve Danish (da-DK) locale on the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.3.0`
+
+- [DataGrid] Fix calling `onCellEditStop` on error (#12747) @sai6855
+- [DataGrid] Fix column resize (#12792) @romgrk
+- [DataGrid] Fix column separators (#12808) @romgrk
+- [DataGrid] Limit panel width to not exceed screen width (#12799) @cherniavskii
+- [DataGrid] Support advanced server-side pagination use cases (#12474) @MBilalShafi
+- [DataGrid] Support state export and restore on grid density (#12671) @MBilalShafi
+- [l10n] Improve Danish (da-DK) locale (#12784) @EmilBahnsen
+
+#### `@mui/x-data-grid-pro@7.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.3.0`, plus:
+
+- [DataGridPro] Implement header filter height (#12666) @romgrk
+
+#### `@mui/x-data-grid-premium@7.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.3.0`.
+
+### Charts
+
+#### Breaking change
+
+A typo fix:
+
+```diff
+- ContinuouseScaleName
++ ContinuousScaleName
+```
+
+#### `@mui/x-charts@7.3.0`
+
+- [charts] Add `dataIndex` to series `valueFormatter` (#12745) @JCQuintas
+- [charts] Add color scale (#12490) @alexfauquette
+- [charts] Do not document the usage of `DEFAULT_X_AXIS_KEY` and `DEFAULT_Y_AXIS_KEY` (#12780) @alexfauquette
+- [charts] Export more utils (#12744) @alexfauquette
+- [charts] Fix passing slot props down to `PieArcLabel` (#12806) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.3.0`
+
+- [TreeView] Support `defaultMuiPrevented` on the `onFocus` prop of the root slot (#12813) @flaviendelangle
+
+### Docs
+
+- [docs] Add grid cell display example to the migration guide (#12793) @romgrk
+- [docs] Use charts classes objects (#12781) @alexfauquette
+- [docs] Fix layout shift on demos (#12816) @zanivan
+- [test] Increase timeout for test that sometimes fail on `DateTimeRangePicker` (#12786) @LukasTy
+
+### Core
+
+- [docs-infra] Prepare infra to document charts interfaces (#12653) @alexfauquette
+
 ## 7.2.0
 
 _Apr 12, 2024_
@@ -3057,6 +3132,56 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.11
+
+_Apr 18, 2024_
+
+We'd like to offer a big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.11`
+
+- [DataGrid] Fix virtualization memory leak (#12812) @romgrk
+
+#### `@mui/x-data-grid-pro@6.19.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.11`.
+
+#### `@mui/x-data-grid-premium@6.19.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.11`.
+
+## 6.19.10
+
+_Apr 12, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.10`
+
+- [DataGrid] Do not escape double quotes when copying to clipboard (#12734) @cherniavskii
+- [DataGrid] Fix bug in suspense (#12754) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.10`.
+
+#### `@mui/x-data-grid-premium@6.19.10` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.10`.
+
+### Core
+
+- [core] Update the docs release source branch (#12685) @LukasTy
 
 ## 6.19.9
 
