@@ -243,7 +243,7 @@ export function useGridColumns(
               [field]: newColumn,
             },
           },
-          apiRef.current.getRootDimensions().viewportInnerSize.width,
+          apiRef.current.getRootDimensions(),
         ),
       );
 
@@ -386,9 +386,10 @@ export function useGridColumns(
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 
-  /**
+  /*
    * EVENTS
    */
+
   const prevInnerWidth = React.useRef<number | null>(null);
   const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
     viewportInnerSize,
@@ -398,7 +399,7 @@ export function useGridColumns(
       setGridColumnsState(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),
-          viewportInnerSize.width,
+          apiRef.current.getRootDimensions(),
         ),
       );
     }
@@ -423,7 +424,7 @@ export function useGridColumns(
 
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
 
-  /**
+  /*
    * EFFECTS
    */
   // The effect do not track any value defined synchronously during the 1st render by hooks called after `useGridColumns`

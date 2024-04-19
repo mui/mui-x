@@ -22,6 +22,7 @@ import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -161,7 +162,7 @@ export function computeFlexColumnsWidth({
  */
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
-  viewportInnerWidth: number,
+  dimensions: GridDimensions | undefined,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
   let totalFlexUnits = 0;
@@ -196,10 +197,14 @@ export const hydrateColumnsWidth = (
     columnsLookup[columnField] = newColumn;
   });
 
-  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
+  const availableWidth =
+    dimensions === undefined
+      ? 0
+      : dimensions.viewportOuterSize.width - (dimensions.hasScrollY ? dimensions.scrollbarSize : 0);
+  const initialFreeSpace = Math.max(availableWidth - widthAllocatedBeforeFlex, 0);
 
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+  if (totalFlexUnits > 0 && availableWidth > 0) {
     const computedColumnWidths = computeFlexColumnsWidth({
       initialFreeSpace,
       totalFlexUnits,
@@ -395,7 +400,7 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
+    apiRef.current.getRootDimensions?.() ?? undefined,
   );
 };
 
