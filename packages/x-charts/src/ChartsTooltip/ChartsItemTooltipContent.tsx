@@ -9,6 +9,7 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import colorGetter from '../internals/colorGetter';
+import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -45,20 +46,34 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
-  const axisData = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
 
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
+  const defaultZAxisId = zAxisIds[0];
 
-  const getColor =
-    series.type === 'pie'
-      ? colorGetter(series)
-      : colorGetter(
-          series,
-          xAxis[series.xAxisKey ?? defaultXAxisId],
-          yAxis[series.yAxisKey ?? defaultYAxisId],
-        );
+  let getColor: (index: number) => string;
+  switch (series.type) {
+    case 'pie':
+      getColor = colorGetter(series);
+      break;
+    case 'scatter':
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+        zAxis[series.zAxisKey ?? defaultZAxisId],
+      );
+      break;
+    default:
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+      );
+      break;
+  }
 
   const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({
