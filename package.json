@@ -61,7 +61,8 @@
     "release:publish": "pnpm publish --recursive --no-private --tag latest",
     "release:publish:dry-run": "pnpm publish --recursive --no-private --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
-    "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\""
+    "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
+    "clean:node_modules": "rimraf --glob \"**/node_modules\""
   },
   "devDependencies": {
     "@argos-ci/core": "^1.5.4",
