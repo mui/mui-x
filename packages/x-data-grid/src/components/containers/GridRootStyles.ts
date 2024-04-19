@@ -125,9 +125,7 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
-  const containerBackground = t.vars
-    ? t.vars.palette.background.default
-    : t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default;
+  const containerBackground = t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default;
 
   const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
 
@@ -135,8 +133,8 @@ export const GridRootStyles = styled('div', {
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
 
-  const hoverOpacity = (t.vars || t).palette.action.hoverOpacity;
-  const hoverColor = (t.vars || t).palette.action.hover;
+  const hoverOpacity = t.palette.action.hoverOpacity;
+  const hoverColor = t.palette.action.hover;
 
   const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
   const selectedBackground = t.vars
@@ -153,15 +151,11 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverBackground = blend(pinnedBackground, hoverColor, hoverOpacity);
   const pinnedSelectedBackground = t.vars
     ? selectedBackground
     : blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+  const pinnedSelectedHoverBackground = blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
