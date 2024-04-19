@@ -10,39 +10,35 @@ const colors = ['#006BD6', '#EC407A'];
 export default function SxStyling() {
   return (
     <BarChart
-      sx={{
+      sx={(theme) => ({
         [`.${barElementClasses.root}`]: {
-          fill: '#0D0D0D',
-          stroke: colors[1],
+          fill: theme.palette.background.paper,
           strokeWidth: 2,
         },
-        [`.${barElementClasses.root}:nth-child(-n+${lData.length})`]: {
+        [`.MuiBarElement-series-l_id`]: {
           stroke: colors[0],
         },
+        [`.MuiBarElement-series-r_id`]: {
+          stroke: colors[1],
+        },
         [`.${axisClasses.root}`]: {
-          [`.${axisClasses.tick}`]: {
+          [`.${axisClasses.tick}, .${axisClasses.line}`]: {
             stroke: '#006BD6',
+            strokeWidth: 3,
           },
-          [`.${axisClasses.line}`]: {
-            stroke: '#006BD6',
+          [`.${axisClasses.tickLabel}`]: {
+            fill: '#006BD6',
           },
         },
-        [`.${axisClasses.bottom} .${axisClasses.tickContainer}`]: {
-          stroke: '#006BD6',
-        },
-        [`.${axisClasses.left} .${axisClasses.tickContainer}`]: {
-          stroke: '#006BD6',
-        },
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        backgroundImage:
-          'linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
+        border: `1px solid rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1)`,
+        backgroundImage: `linear-gradient(rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px)`,
         backgroundSize: '35px 35px',
         backgroundPosition: '20px 20px, 20px 20px',
-      }}
+      })}
       xAxis={[{ scaleType: 'band', data: labels }]}
       series={[
-        { data: lData, label: 'l', id: 'lId' },
-        { data: rData, label: 'r', id: 'rId' },
+        { data: lData, label: 'l', id: 'l_id' },
+        { data: rData, label: 'r', id: 'r_id' },
       ]}
       colors={colors}
       width={500}
