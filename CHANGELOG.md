@@ -243,7 +243,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [docs] Fix type arguments in Custom Field page (#12619) @Juneezee
 - [docs] Fix typo in `getItemId` prop description (#12637) @flaviendelangle
 - [docs] Make the Charts `margin` usage more visible (#12591) @alexfauquette
-- [docs] Match IE 11 spacing with Material UI @oliviertassinari
+- [docs] Match IE 11 spacing with Material UI @oliviertassinari
 - [docs] Move data grid interfaces to standard API page layout (#12016) @alexfauquette
 - [docs] Remove ` around @default values (#12158) @alexfauquette
 - [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
@@ -506,7 +506,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 - [docs] Update links to v6 (#12496) @cherniavskii
 - [docs] Update links to v7 docs (#12500) @noraleonte
 - [docs] Update supported versions (#12508) @joserodolfofreitas
-- [docs] Update "What's new in MUI X" page #12527 @cherniavskii
+- [docs] Update "What's new in MUI X" page #12527 @cherniavskii
 
 ### Core
 
