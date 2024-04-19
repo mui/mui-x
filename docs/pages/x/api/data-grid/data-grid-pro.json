@@ -59,6 +59,7 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
+    "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
@@ -356,6 +357,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onPaginationMetaChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(paginationMeta: GridPaginationMeta) => void",
+        "describedArgs": ["paginationMeta"]
+      }
+    },
     "onPaginationModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -470,6 +478,7 @@
       "default": "[25, 50, 100]"
     },
     "pagination": { "type": { "name": "bool" }, "default": "false" },
+    "paginationMeta": { "type": { "name": "shape", "description": "{ hasNextPage?: bool }" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

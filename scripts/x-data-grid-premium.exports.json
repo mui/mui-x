@@ -409,6 +409,8 @@
   { "name": "GridPagination", "kind": "Variable" },
   { "name": "GridPaginationApi", "kind": "Interface" },
   { "name": "GridPaginationInitialState", "kind": "Interface" },
+  { "name": "GridPaginationMeta", "kind": "Interface" },
+  { "name": "gridPaginationMetaSelector", "kind": "Variable" },
   { "name": "GridPaginationModel", "kind": "Interface" },
   { "name": "gridPaginationModelSelector", "kind": "Variable" },
   { "name": "gridPaginationRowCountSelector", "kind": "Variable" },
