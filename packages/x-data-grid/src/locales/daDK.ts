@@ -41,7 +41,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Columns management text
   columnsManagementSearchTitle: 'Søg',
   columnsManagementNoColumns: 'Ingen søjler',
-  columnsManagementShowHideAllText: 'Vis/Shjul Alle',
+  columnsManagementShowHideAllText: 'Vis/Skjul Alle',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
