@@ -104,6 +104,9 @@
       "description": "If <code>true</code>, the virtualization is disabled."
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
+    "estimatedRowCount": {
+      "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
+    },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, then the feature is fully disabled, and neither property nor method calls will have any effect."
     },
@@ -438,6 +441,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onPaginationMetaChange": {
+      "description": "Callback fired when the pagination meta has changed.",
+      "typeDescriptions": { "paginationMeta": "Updated pagination meta." }
+    },
     "onPaginationModelChange": {
       "description": "Callback fired when the pagination model has changed.",
       "typeDescriptions": {
@@ -560,6 +567,9 @@
     },
     "pageSizeOptions": { "description": "Select the pageSize dynamically using the component UI." },
     "pagination": { "description": "If <code>true</code>, pagination is enabled." },
+    "paginationMeta": {
+      "description": "The extra information about the pagination state of the Data Grid. Only applicable with <code>paginationMode=&quot;server&quot;</code>."
+    },
     "paginationMode": {
       "description": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side."
     },
@@ -579,7 +589,7 @@
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
-      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."
+      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Only works with <code>paginationMode=&quot;server&quot;</code>, ignored when <code>paginationMode=&quot;client&quot;</code>."
     },
     "rowGroupingColumnMode": {
       "description": "If <code>single</code>, all the columns that are grouped are represented in the same grid column. If <code>multiple</code>, each column that is grouped is represented in its own grid column."

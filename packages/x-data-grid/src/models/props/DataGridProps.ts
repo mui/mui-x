@@ -30,7 +30,7 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
-import { GridPaginationModel } from '../gridPaginationProps';
+import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 
 export interface GridExperimentalFeatures {
@@ -403,8 +403,15 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
+   * Only works with `paginationMode="server"`, ignored when `paginationMode="client"`.
    */
   rowCount?: number;
+  /**
+   * Use if the actual rowCount is not known upfront, but an estimation is available.
+   * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
+   * Applicable only with `paginationMode="server"` and when `rowCount="-1"`
+   */
+  estimatedRowCount?: number;
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
@@ -593,6 +600,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   paginationModel?: GridPaginationModel;
   /**
+   * The extra information about the pagination state of the Data Grid.
+   * Only applicable with `paginationMode="server"`.
+   */
+  paginationMeta?: GridPaginationMeta;
+  /**
    * Callback fired when the pagination model has changed.
    * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -603,6 +615,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {number} count Updated row count.
    */
   onRowCountChange?: (count: number) => void;
+  /**
+   * Callback fired when the pagination meta has changed.
+   * @param {GridPaginationMeta} paginationMeta Updated pagination meta.
+   */
+  onPaginationMetaChange?: (paginationMeta: GridPaginationMeta) => void;
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
