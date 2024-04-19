@@ -2017,8 +2017,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#next":
-  version "6.0.0-alpha.0"
-  resolved "https://github.com/mui/material-ui.git#e1d94d5ce097815bcd738352e69bb43ce03bd266"
+  version "6.0.0-alpha.3"
+  resolved "https://github.com/mui/material-ui.git#657705633bbcf85019aa8bbf16d143a0d304edfe"
   dependencies:
     "@googleapis/sheets" "^5.0.5"
     "@netlify/functions" "^2.6.0"
