@@ -135,14 +135,6 @@ Here is an example of how you can transpile these features on Webpack 4 using th
 +            ],
 +          },
 +        ],
-         use: [
-           {
-             loader: 'babel-loader',
-             options: {
-               presets: ['@babel/preset-env', '@babel/preset-react'],
-             },
-           },
-         ],
        },
      ],
    },
