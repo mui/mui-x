@@ -1,14 +1,19 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-// @ts-ignore
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
-export default function ColorScaleNoSnap() {
-  const [colorX, setColorX] = React.useState('None');
-  const [colorY, setColorY] = React.useState('piecewise');
+const series = [{ data: [-2, -9, 12, 11, 6, -4] }];
+
+export default function ColorScale() {
+  const [colorX, setColorX] = React.useState<
+    'None' | 'piecewise' | 'continuous' | 'ordinal'
+  >('piecewise');
+  const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'None',
+  );
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -18,18 +23,25 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="x-axis colorMap"
           value={colorX}
-          onChange={(event) => setColorX(event.target.value)}
+          onChange={(event) =>
+            setColorX(
+              event.target.value as 'None' | 'piecewise' | 'continuous' | 'ordinal',
+            )
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
           <MenuItem value="continuous">continuous</MenuItem>
+          <MenuItem value="ordinal">ordinal</MenuItem>
         </TextField>
         <TextField
           select
           sx={{ minWidth: 150 }}
           label="y-axis colorMap"
           value={colorY}
-          onChange={(event) => setColorY(event.target.value)}
+          onChange={(event) =>
+            setColorY(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -37,15 +49,10 @@ export default function ColorScaleNoSnap() {
         </TextField>
       </Stack>
 
-      <LineChart
+      <BarChart
         height={300}
         grid={{ horizontal: true }}
-        series={[
-          {
-            data: [-2, -9, 12, 11, 6, -4],
-            area: true,
-          },
-        ]}
+        series={series}
         margin={{
           top: 10,
           bottom: 20,
@@ -61,25 +68,36 @@ export default function ColorScaleNoSnap() {
               }) ||
               (colorY === 'piecewise' && {
                 type: 'piecewise',
-                thresholds: [0, 10],
-                colors: ['red', 'green', 'blue'],
+                thresholds: [0],
+                colors: ['red', 'green'],
               }) ||
               undefined,
           },
         ]}
         xAxis={[
           {
-            scaleType: 'time',
+            scaleType: 'band',
             data: [
-              new Date(2019, 0, 1),
-              new Date(2020, 0, 1),
-              new Date(2021, 0, 1),
-              new Date(2022, 0, 1),
-              new Date(2023, 0, 1),
-              new Date(2024, 0, 1),
+              new Date(2019, 1, 1),
+              new Date(2020, 1, 1),
+              new Date(2021, 1, 1),
+              new Date(2022, 1, 1),
+              new Date(2023, 1, 1),
+              new Date(2024, 1, 1),
             ],
             valueFormatter: (value) => value.getFullYear().toString(),
             colorMap:
+              (colorX === 'ordinal' && {
+                type: 'ordinal',
+                colors: [
+                  '#ccebc5',
+                  '#a8ddb5',
+                  '#7bccc4',
+                  '#4eb3d3',
+                  '#2b8cbe',
+                  '#08589e',
+                ],
+              }) ||
               (colorX === 'continuous' && {
                 type: 'continuous',
                 min: new Date(2019, 1, 1),
@@ -101,6 +119,16 @@ export default function ColorScaleNoSnap() {
           '  /* ... */',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
+          ...(colorX === 'ordinal'
+            ? [
+                '  xAxis={[{',
+                `    colorMap: {`,
+                `      type: 'ordinal',`,
+                `      colors: ['#ccebc5', '#a8ddb5', '#7bccc4', '#4eb3d3', '#2b8cbe', '#08589e']`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
           ...(colorX === 'continuous'
             ? [
                 '  xAxis={[{',
@@ -124,6 +152,7 @@ export default function ColorScaleNoSnap() {
                 '  }]}',
               ]
             : []),
+
           // ColorY
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'
@@ -143,8 +172,8 @@ export default function ColorScaleNoSnap() {
                 '  yAxis={[{',
                 `    colorMap: {`,
                 `      type: 'piecewise',`,
-                `      thresholds: [0, 10],`,
-                `      colors: ['red', 'green', 'blue'],`,
+                `      thresholds: [0],`,
+                `      colors: ['red', 'green'],`,
                 `    }`,
                 '  }]}',
               ]

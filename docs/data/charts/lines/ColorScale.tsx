@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
-export default function ColorScaleNoSnap() {
+export default function ColorScale() {
   const [colorX, setColorX] = React.useState<
     'None' | 'piecewise' | 'continuous' | 'ordinal'
   >('None');

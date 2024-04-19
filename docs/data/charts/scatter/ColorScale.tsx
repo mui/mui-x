@@ -11,7 +11,7 @@ import { Chance } from 'chance';
 const POINTS_NUMBER = 50;
 const chance = new Chance(42);
 
-export default function ColorScaleNoSnap() {
+export default function ColorScale() {
   const [colorX, setColorX] = React.useState<'None' | 'piecewise' | 'continuous'>(
     'piecewise',
   );

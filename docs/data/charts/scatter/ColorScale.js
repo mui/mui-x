@@ -4,7 +4,6 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-// @ts-ignore
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 import { Chance } from 'chance';
@@ -12,7 +11,7 @@ import { Chance } from 'chance';
 const POINTS_NUMBER = 50;
 const chance = new Chance(42);
 
-export default function ColorScaleNoSnap() {
+export default function ColorScale() {
   const [colorX, setColorX] = React.useState('piecewise');
   const [colorY, setColorY] = React.useState('None');
   const [colorZ, setColorZ] = React.useState('None');
