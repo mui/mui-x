@@ -9,6 +9,7 @@ import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 import { Chance } from 'chance';
 
+const POINTS_NUMBER = 50;
 const chance = new Chance(42);
 
 export default function ColorScaleNoSnap() {
@@ -18,6 +19,9 @@ export default function ColorScaleNoSnap() {
   const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
     'None',
   );
+  const [colorZ, setColorZ] = React.useState<
+    'None' | 'piecewise' | 'continuous' | 'ordinal'
+  >('None');
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -47,6 +51,22 @@ export default function ColorScaleNoSnap() {
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
           <MenuItem value="continuous">continuous</MenuItem>
+        </TextField>
+        <TextField
+          select
+          sx={{ minWidth: 150 }}
+          label="z-axis colorMap"
+          value={colorZ}
+          onChange={(event) =>
+            setColorZ(
+              event.target.value as 'None' | 'piecewise' | 'continuous' | 'ordinal',
+            )
+          }
+        >
+          <MenuItem value="None">None</MenuItem>
+          <MenuItem value="piecewise">piecewise</MenuItem>
+          <MenuItem value="continuous">continuous</MenuItem>
+          <MenuItem value="ordinal">ordinal</MenuItem>
         </TextField>
       </Stack>
 
@@ -98,31 +118,66 @@ export default function ColorScaleNoSnap() {
               undefined,
           },
         ]}
+        zAxis={[
+          {
+            data:
+              colorZ === 'ordinal'
+                ? [
+                    ...[...Array(POINTS_NUMBER)].map(() => 'A'),
+                    ...[...Array(POINTS_NUMBER)].map(() => 'B'),
+                    ...[...Array(POINTS_NUMBER)].map(() => 'C'),
+                    ...[...Array(POINTS_NUMBER)].map(() => 'D'),
+                  ]
+                : undefined,
+            colorMap:
+              (colorZ === 'continuous' && {
+                type: 'continuous',
+                min: -2,
+                max: 2,
+                color: ['green', 'orange'],
+              }) ||
+              (colorZ === 'piecewise' && {
+                type: 'piecewise',
+                thresholds: [-1.5, 0, 1.5],
+                colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],
+              }) ||
+              (colorZ === 'ordinal' && {
+                type: 'ordinal',
+
+                values: ['A', 'B', 'C', 'D'],
+                colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],
+              }) ||
+              undefined,
+          },
+        ]}
       />
       <HighlightedCode
         code={[
           `<ScatterChart`,
           '  /* ... */',
+          '  series={[{ data: data.map(point => ({...point, z: point.x + point.y})) }]}',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
             ? [
-                '  xAxis={[',
-                `    {`,
+                '  xAxis={[{',
+                `    colorMap: {`,
                 `      type: 'continuous',`,
                 `      min: -2,`,
                 `      max: 2,`,
                 `      color: ['green', 'orange']`,
                 `    }`,
-                '  ]}',
+                '  }]}',
               ]
             : []),
           ...(colorX === 'piecewise'
             ? [
                 '  xAxis={[{',
-                `    type: 'piecewise',`,
-                `    thresholds: [-1.5, 0, 1.5],`,
-                `    colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
                 '  }]}',
               ]
             : []),
@@ -131,22 +186,62 @@ export default function ColorScaleNoSnap() {
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'
             ? [
-                '  yAxis={[',
-                `    {`,
+                '  yAxis={[{',
+                `    colorMap: {`,
                 `      type: 'continuous',`,
                 `      min: -2,`,
                 `      max: 2,`,
                 `      color: ['blue', 'red']`,
                 `    }`,
-                '  ]}',
+                '  }]}',
               ]
             : []),
           ...(colorY === 'piecewise'
             ? [
                 '  yAxis={[{',
-                `    type: 'piecewise',`,
-                `    thresholds: [-1.5, 0, 1.5],`,
-                `    colors: ['lightblue', 'blue', 'orange', 'red'],`,
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['lightblue', 'blue', 'orange', 'red'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+
+          // ColorZ
+          ...(colorZ === 'None' ? ['  zAxis={[{}]}'] : []),
+          ...(colorZ === 'continuous'
+            ? [
+                '  zAxis={[{',
+                `    colorMap: {`,
+                `      type: 'continuous',`,
+                `      min: -2,`,
+                `      max: 2,`,
+                `      color: ['green', 'orange'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+          ...(colorZ === 'piecewise'
+            ? [
+                '  zAxis={[{',
+                `    colorMap: {`,
+                `      type: 'piecewise',`,
+                `      thresholds: [-1.5, 0, 1.5],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
+                '  }]}',
+              ]
+            : []),
+          ...(colorZ === 'ordinal'
+            ? [
+                '  zAxis={[{',
+                `    data: ['A', ..., 'B', ..., 'C', ..., 'D', ...],`,
+                `    colorMap: {`,
+                `      type: 'ordinal',`,
+                `      values: ['A', 'B', 'C', 'D'],`,
+                `      colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],`,
+                `    }`,
                 '  }]}',
               ]
             : []),
@@ -159,14 +254,23 @@ export default function ColorScaleNoSnap() {
   );
 }
 
-const series = [{ data: getGaussianSeriesData([0, 0], [1, 1], 200) }].map((s) => ({
+const series = [
+  {
+    data: [
+      ...getGaussianSeriesData([-1, -1]),
+      ...getGaussianSeriesData([-1, 1]),
+      ...getGaussianSeriesData([1, 1]),
+      ...getGaussianSeriesData([1, -1]),
+    ],
+  },
+].map((s) => ({
   ...s,
   valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 function getGaussianSeriesData(
   mean: [number, number],
-  stdev: [number, number] = [0.3, 0.4],
+  stdev: [number, number] = [0.5, 0.5],
   N: number = 50,
 ) {
   return [...Array(N)].map((_, i) => {
@@ -180,6 +284,6 @@ function getGaussianSeriesData(
         Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
-    return { x, y, id: i };
+    return { x, y, z: x + y, id: i };
   });
 }

@@ -11,7 +11,7 @@ export interface ContinuousColorConfig<Value = number | Date> {
    */
   max?: Value;
   /**
-   * The colors to render. Can either be and array with the extrem colors, or an interpolation function.
+   * The colors to render. It can be an array with the extremum colors, or an interpolation function.
    */
   color: [string, string] | ((t: number) => string);
 }
@@ -24,7 +24,7 @@ export interface PiecewiseColorConfig<Value = number | Date> {
   thresholds: Value[];
   /**
    * The colors used for each band defined by `thresholds`.
-   * Should contain N+1 colors with N the number of thresholds.
+   * Should contain N+1 colors, where N is the number of thresholds.
    */
   colors: string[];
 }
@@ -38,6 +38,7 @@ export interface OrdinalColorConfig<Value = number | Date | string> {
   values?: Value[];
   /**
    * The color palette.
+   * Items equal to `values[k]` will get the color of `colors[k]`.
    */
   colors: string[];
   /**

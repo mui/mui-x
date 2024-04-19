@@ -267,5 +267,7 @@
   { "name": "useGaugeState", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
   { "name": "useXScale", "kind": "Function" },
-  { "name": "useYScale", "kind": "Function" }
+  { "name": "useYScale", "kind": "Function" },
+  { "name": "ZAxisContextProvider", "kind": "Function" },
+  { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" }
 ]
