@@ -8,13 +8,9 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "@mui/types"]
   },
-  "include": [
-    "src/**/*.ts*",
-    "src/lib/**/*.js",
-    "./node_modules/@mui/material/themeCssVarsAugmentation",
-    "typing.d.ts"
-  ], // TODO: Remove JS files
+  "include": ["src/**/*.ts*", "src/lib/**/*.js"], // TODO: Remove JS files
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
