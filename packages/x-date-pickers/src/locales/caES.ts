@@ -19,8 +19,8 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   openNextView: 'Obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? "la vista anual està oberta, canvia a la vista de calendari"
-      : "la vista de calendari està oberta, canvia a la vista anual",
+      ? 'la vista anual està oberta, canvia a la vista de calendari'
+      : 'la vista de calendari està oberta, canvia a la vista anual',
 
   // DateRange labels
   start: 'Començar',
