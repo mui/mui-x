@@ -63,6 +63,11 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    * @default 0
    */
   paddingAngle?: number;
+  /**
+   * The sorting strategy used to order pie slices.
+   * Can be 'none', 'asc', 'desc', or a sorting function.
+   * @default 'none'
+   */
   sortingValues?: ChartsPieSorting;
   /**
    * The label displayed into the arc.

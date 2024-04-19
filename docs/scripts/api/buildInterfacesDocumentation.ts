@@ -209,7 +209,6 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
       }
 
       const project = projects.get(packagesWithThisInterface[0])!;
-
       const parsedInterface = await parseInterfaceSymbol(
         interfaceName,
         packagesWithThisInterface,
@@ -237,7 +236,6 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
           type: property.typeStr,
         })),
       };
-
       await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
