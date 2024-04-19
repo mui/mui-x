@@ -4,6 +4,7 @@ import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId
 export type ScatterValueType = {
   x: number;
   y: number;
+  z?: any;
   /**
    * A unique identifier for the scatter point
    */
@@ -20,6 +21,10 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
    * @default false
    */
   disableHover?: boolean;
+  /**
+   * The id of the z-axis used to render the series.
+   */
+  zAxisKey?: string;
 }
 
 /**

@@ -9,16 +9,19 @@ import {
   DefaultizedScatterSeriesType,
 } from '../models';
 import { AxisDefaultized } from '../models/axis';
+import { ZAxisDefaultized } from '../models/z-axis';
 
 function getColor(series: DefaultizedPieSeriesType): (dataIndex: number) => string;
 function getColor(
-  series:
-    | DefaultizedBarSeriesType
-    | DefaultizedLineSeriesType
-    | DefaultizedScatterSeriesType
-    | DefaultizedPieSeriesType,
+  series: DefaultizedBarSeriesType | DefaultizedLineSeriesType,
   xAxis: AxisDefaultized,
   yAxis: AxisDefaultized,
+): (dataIndex: number) => string;
+function getColor(
+  series: DefaultizedScatterSeriesType,
+  xAxis: AxisDefaultized,
+  yAxis: AxisDefaultized,
+  zAxis?: ZAxisDefaultized,
 ): (dataIndex: number) => string;
 function getColor(
   series:
@@ -28,6 +31,7 @@ function getColor(
     | DefaultizedPieSeriesType,
   xAxis?: AxisDefaultized,
   yAxis?: AxisDefaultized,
+  zAxis?: ZAxisDefaultized,
 ): (dataIndex: number) => string {
   if (xAxis !== undefined && yAxis !== undefined) {
     if (series.type === 'bar') {
@@ -39,7 +43,7 @@ function getColor(
     }
 
     if (series.type === 'scatter') {
-      return getScatterColor(series, xAxis, yAxis);
+      return getScatterColor(series, xAxis, yAxis, zAxis);
     }
   }
   if (series.type === 'pie') {
