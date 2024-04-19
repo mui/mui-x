@@ -70,12 +70,7 @@ module.exports = function setKarmaConfig(config) {
           {
             test: /\.(js|ts|tsx)$/,
             loader: 'babel-loader',
-            exclude: function ignore(filePath) {
-              if (filePath.includes('/node_modules/')) {
-                return !filePath.includes('/node_modules/@mui/monorepo');
-              }
-              return false;
-            },
+            exclude: /node_modules\/.*\/node_modules\/(?!@mui\/monorepo)/,
           },
         ],
       },
