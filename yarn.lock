@@ -2016,7 +2016,7 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#next":
+"@mui/monorepo@https://github.com/mui/material-ui.git#e1d94d5ce097815bcd738352e69bb43ce03bd266":
   version "6.0.0-alpha.0"
   resolved "https://github.com/mui/material-ui.git#e1d94d5ce097815bcd738352e69bb43ce03bd266"
   dependencies:
