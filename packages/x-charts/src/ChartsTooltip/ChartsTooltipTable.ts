@@ -1,15 +1,15 @@
-import Box from '@mui/system/Box';
 import { styled } from '@mui/material/styles';
+import { shouldForwardProp } from '@mui/system';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
 })(({ theme }) => ({
+  boxShadow: theme.shadows[1],
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
   transition: theme.transitions.create('box-shadow'),
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
 }));
 
@@ -41,7 +41,6 @@ export const ChartsTooltipCell = styled('td', {
 })(({ theme }) => ({
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
-
   [`&.${chartsTooltipClasses.labelCell}`]: {
     paddingLeft: theme.spacing(1),
   },
@@ -49,7 +48,6 @@ export const ChartsTooltipCell = styled('td', {
     paddingLeft: theme.spacing(4),
     color: (theme.vars || theme).palette.text.primary,
   },
-
   'td:first-of-type&': {
     paddingLeft: theme.spacing(2),
   },
@@ -58,15 +56,16 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
-// eslint-disable-next-line material-ui/no-styled-box
-export const ChartsTooltipMark = styled(Box, {
+export const ChartsTooltipMark = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
-})<{ ownerState: { color: string } }>(({ theme, ownerState }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'color',
+})<{ color: string }>(({ theme, color }) => ({
   width: theme.spacing(1),
   height: theme.spacing(1),
   borderRadius: '50%',
-  backgroundColor: ownerState.color,
+  boxShadow: theme.shadows[1],
+  backgroundColor: color,
   borderColor: (theme.vars || theme).palette.background.paper,
   border: `solid ${(theme.vars || theme).palette.background.paper} ${theme.spacing(0.25)}`,
   boxSizing: 'content-box',
