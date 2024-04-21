@@ -6,6 +6,7 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
+    "clearCache": { "description": "Clears the cache." },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
@@ -17,6 +18,8 @@
     "exportState": {
       "description": "Generates a serializable object containing the exportable parts of the DataGrid state.<br />These values can then be passed to the <code>initialState</code> prop or injected using the <code>restoreState</code> method."
     },
+    "fetchRowChildren": { "description": "Initiates the fetch of the children of a row." },
+    "fetchTopLevelRows": { "description": "Fetches the top level rows." },
     "forceUpdate": {
       "description": "Forces the grid to rerender. It&#39;s often used after a state update."
     },
@@ -25,6 +28,7 @@
     },
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
+    "getCacheData": { "description": "Tries to search for some data in cache" },
     "getCellElement": {
       "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>."
     },
@@ -145,12 +149,14 @@
     "setAggregationModel": {
       "description": "Sets the aggregation model to the one given by <code>model</code>."
     },
+    "setCacheData": { "description": "Tries to search for some data in cache" },
     "setCellFocus": {
       "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>."
     },
     "setCellSelectionModel": {
       "description": "Updates the selected cells to be those passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
     },
+    "setChildrenFetched": { "description": "Set the fetched children state of a row." },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
     },
@@ -178,13 +184,13 @@
     "setFilterModel": {
       "description": "Sets the filter model to the one given by <code>model</code>."
     },
+    "setLoading": { "description": "Sets the internal loading state." },
     "setPage": {
       "description": "Sets the displayed page to the value given by <code>page</code>."
     },
     "setPageSize": {
       "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>."
     },
-    "setPaginationMeta": { "description": "Sets the <code>paginationMeta</code> to a new value." },
     "setPaginationModel": {
       "description": "Sets the <code>paginationModel</code> to a new value."
     },
@@ -201,6 +207,7 @@
     "setRowIndex": {
       "description": "Moves a row from its original position to the position given by <code>targetIndex</code>."
     },
+    "setRowLoading": { "description": "Set the loading state of a row." },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
       "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.<br />Any row already selected will be unselected."
