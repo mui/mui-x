@@ -27,7 +27,7 @@ yarn release:changelog
 > `<!--/ DO_NOT_REMOVE /-->`
 > This string needs to stay where it gets inserted for the automated discord announcement to work.
 
-You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
+You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 

@@ -134,7 +134,7 @@ There can be three different possibilities regarding the availability of the `ro
 
 :::warning
 The `rowCount` prop is used in server-side pagination mode to inform the DataGrid about the total number of rows in your dataset.
-This prop is ignored when the `paginationMode` is set to `client`, i.e. when the pagination is handled on the client-side.
+This prop is ignored when the `paginationMode` is set to `client`, that is when the pagination is handled on the client-side.
 :::
 
 You can configure `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCount` props to handle the above scenarios.
