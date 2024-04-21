@@ -575,13 +575,13 @@ async function initializeEnvironment(
           .first()
           .evaluate((node) => node.clientWidth);
 
-        const groupHeaderColumnsTotalWidth = await columns.evaluateAll((columns) =>
+        const groupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
           // last column is not part of the group
-          columns.slice(0, -1).reduce((acc, column) => acc + column.clientWidth, 0),
+          elements.slice(0, -1).reduce((acc, element) => acc + element.clientWidth, 0),
         );
-        const subGroupHeaderColumnsTotalWidth = await columns.evaluateAll((columns) =>
+        const subGroupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
           // first and last columns are not part of the sub-group
-          columns.slice(1, -1).reduce((acc, column) => acc + column.clientWidth, 0),
+          elements.slice(1, -1).reduce((acc, element) => acc + element.clientWidth, 0),
         );
 
         expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
