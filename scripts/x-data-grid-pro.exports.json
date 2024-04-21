@@ -377,6 +377,8 @@
   { "name": "gridPaginatedVisibleSortedGridRowIdsSelector", "kind": "Variable" },
   { "name": "GridPagination", "kind": "Variable" },
   { "name": "GridPaginationInitialState", "kind": "Interface" },
+  { "name": "GridPaginationMeta", "kind": "Interface" },
+  { "name": "gridPaginationMetaSelector", "kind": "Variable" },
   { "name": "GridPaginationModel", "kind": "Interface" },
   { "name": "GridPaginationModelApi", "kind": "Interface" },
   { "name": "gridPaginationModelSelector", "kind": "Variable" },

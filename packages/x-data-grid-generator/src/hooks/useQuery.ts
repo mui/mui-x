@@ -54,7 +54,7 @@ export const createFakeServer = (
       );
 
       (async function fetchData() {
-        const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
+        const { returnedRows, nextCursor, totalRowCount, hasNextPage } = await loadServerRows(
           rows,
           queryOptions,
           serverOptionsWithDefault,
@@ -68,6 +68,7 @@ export const createFakeServer = (
           pageInfo: {
             totalRowCount,
             nextCursor,
+            hasNextPage,
             pageSize: returnedRows.length,
           },
         };

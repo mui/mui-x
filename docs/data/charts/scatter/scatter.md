@@ -60,9 +60,31 @@ As with other charts, you can modify the [series color](/x/react-charts/styling/
 You can also modify the color by using axes `colorMap` which maps values to colors.
 The scatter charts use by priority:
 
-1. The y-axis color
-2. The x-axis color
-3. The series color
+1. The z-axis color
+2. The y-axis color
+3. The x-axis color
+4. The series color
+
+:::info
+The z-axis is a third axis that allows to customize scatter points independently from their position.
+It can be provided with `zAxis` props, or with `ZAxisContextProvider` when using composition.
+
+The value to map can either come from the `z` property of series data, or from the zAxis data.
+Here are three ways to set z value to 5.
+
+```jsx
+<ScatterChart
+  // First option
+  series={[{ data: [{ id: 0, x: 1, y: 1, z: 5 }] }]}
+  // Second option
+  zAxis={[{ data: [5] }]}
+  // Third option
+  dataset={[{ price: 5 }]}
+  zAxis={[{ dataKey: 'price' }]}
+/>
+```
+
+:::
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 

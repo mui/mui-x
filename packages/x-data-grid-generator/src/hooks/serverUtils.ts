@@ -16,12 +16,14 @@ import { randomInt } from '../services/random-generator';
 export interface FakeServerResponse {
   returnedRows: GridRowModel[];
   nextCursor?: string;
+  hasNextPage?: boolean;
   totalRowCount: number;
 }
 
 export interface PageInfo {
   totalRowCount?: number;
   nextCursor?: string;
+  hasNextPage?: boolean;
   pageSize?: number;
 }
 
@@ -315,8 +317,10 @@ export const loadServerRows = (
     firstRowIndex = page * pageSize;
     lastRowIndex = (page + 1) * pageSize;
   }
+  const hasNextPage = lastRowIndex < filteredRows.length - 1;
   const response: FakeServerResponse = {
     returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
+    hasNextPage,
     nextCursor,
     totalRowCount,
   };
