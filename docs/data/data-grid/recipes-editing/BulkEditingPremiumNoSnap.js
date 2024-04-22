@@ -32,11 +32,11 @@ export default function BulkEditingPremiumNoSnap() {
   const apiRef = useGridApiRef();
 
   const [hasUnsavedRows, setHasUnsavedRows] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
   const unsavedChangesRef = React.useRef({
     unsavedRows: {},
     rowsBeforeChange: {},
   });
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const columns = React.useMemo(() => {
     return [
@@ -82,7 +82,7 @@ export default function BulkEditingPremiumNoSnap() {
     ];
   }, [data.columns, unsavedChangesRef, apiRef]);
 
-  const processRowUpdate = (newRow, oldRow) => {
+  const processRowUpdate = React.useCallback((newRow, oldRow) => {
     const rowId = newRow.id;
 
     unsavedChangesRef.current.unsavedRows[rowId] = newRow;
@@ -91,9 +91,9 @@ export default function BulkEditingPremiumNoSnap() {
     }
     setHasUnsavedRows(true);
     return newRow;
-  };
+  }, []);
 
-  const discardChanges = () => {
+  const discardChanges = React.useCallback(() => {
     setHasUnsavedRows(false);
     apiRef.current.updateRows(
       Object.values(unsavedChangesRef.current.rowsBeforeChange),
@@ -102,9 +102,9 @@ export default function BulkEditingPremiumNoSnap() {
       unsavedRows: {},
       rowsBeforeChange: {},
     };
-  };
+  }, [apiRef]);
 
-  const saveChanges = async () => {
+  const saveChanges = React.useCallback(async () => {
     try {
       // Persist updates in the database
       setIsSaving(true);
@@ -128,7 +128,18 @@ export default function BulkEditingPremiumNoSnap() {
     } catch (error) {
       setIsSaving(false);
     }
-  };
+  }, [apiRef]);
+
+  const getRowClassName = React.useCallback(({ id }) => {
+    const unsavedRow = unsavedChangesRef.current.unsavedRows[id];
+    if (unsavedRow) {
+      if (unsavedRow._action === 'delete') {
+        return 'row--removed';
+      }
+      return 'row--edited';
+    }
+    return '';
+  }, []);
 
   return (
     <div style={{ width: '100%' }}>
@@ -178,16 +189,7 @@ export default function BulkEditingPremiumNoSnap() {
             },
           }}
           loading={isSaving}
-          getRowClassName={({ id }) => {
-            const unsavedRow = unsavedChangesRef.current.unsavedRows[id];
-            if (unsavedRow) {
-              if (unsavedRow._action === 'delete') {
-                return 'row--removed';
-              }
-              return 'row--edited';
-            }
-            return '';
-          }}
+          getRowClassName={getRowClassName}
         />
       </div>
     </div>
