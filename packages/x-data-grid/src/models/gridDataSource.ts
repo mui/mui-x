@@ -1,10 +1,10 @@
-import {
+import type {
   GridSortModel,
   GridFilterModel,
   GridColDef,
   GridRowModel,
   GridPaginationModel,
-} from '@mui/x-data-grid';
+} from '.';
 
 export interface GridGetRowsParams {
   sortModel: GridSortModel;

@@ -8,7 +8,7 @@ import {
   GridGroupNode,
   GridFeatureMode,
 } from '@mui/x-data-grid';
-import {
+import type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,
@@ -17,6 +17,7 @@ import {
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
+  GridDataSourceCache,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -27,7 +28,6 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import type { GridDataSource, GridDataSourceCache } from './gridDataSource';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -144,7 +144,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 }
 
 interface DataGridProDataSourceProps {
-  unstable_dataSource?: GridDataSource;
   unstable_dataSourceCache?: GridDataSourceCache;
   getGroupKey?: (row: GridValidRowModel) => string;
   hasChildren?: (row: GridValidRowModel) => boolean;

@@ -42,9 +42,8 @@ import {
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
+  Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  // @ts-expect-error To read prop which belongs to the `DataGridPro` component
   const isDataSourceAvailable = props.unstable_dataSource != null;
   apiRef.current.caches.rows = createRowsInternalCache({
     rows: isDataSourceAvailable ? [] : props.rows,

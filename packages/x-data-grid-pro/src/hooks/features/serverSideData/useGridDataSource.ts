@@ -9,13 +9,9 @@ import {
   useGridApiMethod,
   GridServerSideGroupNode,
 } from '@mui/x-data-grid';
+import { GridGetRowsParams, GridGetRowsResponse, GridDataSource } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  GridGetRowsParams,
-  GridGetRowsResponse,
-  GridDataSource,
-} from '../../../models/gridDataSource';
 import { GridDataSourceApi } from './serverSideInterfaces';
 
 const computeStartEnd = (paginationModel: GridPaginationModel) => {
