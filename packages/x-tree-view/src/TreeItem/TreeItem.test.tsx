@@ -226,17 +226,13 @@ describe('<TreeItem />', () => {
   });
 
   it('should be able to use a custom id', () => {
-    const { getByRole, getByTestId } = render(
+    const { getByRole } = render(
       <SimpleTreeView>
         <TreeItem id="customId" itemId="one" data-testid="one" />
       </SimpleTreeView>,
     );
 
-    act(() => {
-      getByTestId('one').focus();
-    });
-
-    expect(getByRole('tree')).to.have.attribute('aria-activedescendant', 'customId');
+    expect(getByRole('treeitem')).to.have.attribute('id', 'customId');
   });
 
   describe('Accessibility', () => {
