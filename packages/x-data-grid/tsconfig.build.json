@@ -11,6 +11,6 @@
     "rootDir": "./src",
     "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "@mui/types"]
   },
-  "include": ["src/**/*.ts*", "src/lib/**/*.js"], // TODO: Remove JS files
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
