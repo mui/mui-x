@@ -4,6 +4,7 @@ import {
   DataGridPremium,
   useGridApiRef,
   GridActionsCellItem,
+  gridClasses,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
@@ -171,7 +172,7 @@ export default function BulkEditingPremiumNoSnap() {
           processRowUpdate={processRowUpdate}
           ignoreValueFormatterDuringExport
           sx={{
-            '& .MuiDataGrid-row.row--removed': {
+            [`& .${gridClasses.row}.row--removed`]: {
               backgroundColor: (theme) => {
                 if (theme.palette.mode === 'light') {
                   return 'rgba(255, 170, 170, 0.3)';
@@ -179,7 +180,7 @@ export default function BulkEditingPremiumNoSnap() {
                 return darken('rgba(255, 170, 170, 1)', 0.7);
               },
             },
-            '& .MuiDataGrid-row.row--edited': {
+            [`& .${gridClasses.row}.row--edited`]: {
               backgroundColor: (theme) => {
                 if (theme.palette.mode === 'light') {
                   return 'rgba(255, 254, 176, 0.3)';
