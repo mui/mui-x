@@ -20,6 +20,11 @@ export interface DescribeTreeViewRendererReturnValue<
    */
   setProps: (props: Partial<MergePluginsProperty<TPlugins, 'params'>>) => void;
   /**
+   * Passes new items to the Tree View.
+   * @param {readyonly DescribeTreeViewItem[]} items The new items.
+   */
+  setItems: (items: readonly DescribeTreeViewItem[]) => void;
+  /**
    * The ref object that allows Tree View manipulation.
    */
   apiRef: { current: TreeViewPublicAPI<TPlugins> };
@@ -28,6 +33,12 @@ export interface DescribeTreeViewRendererReturnValue<
    * @returns {HTMLElement} `root` slot of the Tree View.
    */
   getRoot: () => HTMLElement;
+  /**
+   * Returns the itemId of the focused item.
+   * If the focused element is not an item, returns `null`.
+   * @returns {string | null} The itemId of the focused item.
+   */
+  getFocusedItemId: () => string | null;
   /**
    * Returns the `root` slot of all the items.
    * @returns {HTMLElement[]} List of the `root` slot of all the items.
