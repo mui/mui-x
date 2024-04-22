@@ -106,7 +106,7 @@ Dropping old browsers support also means that we no longer transpile some featur
 
 These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
 
-Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` plugin:
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
 
 ```diff
  // webpack.config.js
