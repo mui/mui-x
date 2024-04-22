@@ -130,6 +130,7 @@ Here is an example of how you can transpile these features on Webpack 4 using th
 +          {
 +            test: path.resolve(__dirname, 'node_modules'),
 +            exclude: [
++              // Covers @mui/x-data-grid, @mui/x-data-grid-pro, and @mui/x-data-grid-premium
 +              path.resolve(__dirname, 'node_modules/@mui/x-data-grid'),
 +              path.resolve(__dirname, 'node_modules/@mui/x-license'),
 +            ],

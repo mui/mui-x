@@ -122,6 +122,7 @@ Here is an example of how you can transpile these features on Webpack 4 using th
 +          {
 +            test: path.resolve(__dirname, 'node_modules'),
 +            exclude: [
++              // Covers @mui/x-date-pickers and @mui/x-date-pickers-pro
 +              path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
 +              path.resolve(__dirname, 'node_modules/@mui/x-license'),
 +            ],
