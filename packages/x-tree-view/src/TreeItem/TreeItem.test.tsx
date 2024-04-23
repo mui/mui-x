@@ -1007,7 +1007,7 @@ describe('<TreeItem />', () => {
       describe('range selection', () => {
         it('keyboard arrow', () => {
           const { getByTestId, queryAllByRole, getByText } = render(
-            <SimpleTreeView multiSelect defaultExpandedItems={['two']}>
+            <SimpleTreeView multiSelect>
               <TreeItem itemId="one" label="one" data-testid="one" />
               <TreeItem itemId="two" label="two" data-testid="two" />
               <TreeItem itemId="three" label="three" data-testid="three" />
@@ -1085,7 +1085,7 @@ describe('<TreeItem />', () => {
 
         it('keyboard arrow merge', () => {
           const { getByTestId, getByText, queryAllByRole } = render(
-            <SimpleTreeView multiSelect defaultExpandedItems={['two']}>
+            <SimpleTreeView multiSelect>
               <TreeItem itemId="one" label="one" data-testid="one" />
               <TreeItem itemId="two" label="two" data-testid="two" />
               <TreeItem itemId="three" label="three" data-testid="three" />
@@ -1207,7 +1207,7 @@ describe('<TreeItem />', () => {
           expect(getByTestId('eight')).to.have.attribute('aria-selected', 'true');
           expect(getByTestId('nine')).to.have.attribute('aria-selected', 'true');
 
-          fireEvent.keyDown(getByTestId('nine'), {
+          fireEvent.keyDown(getByTestId('five'), {
             key: 'Home',
             shiftKey: true,
             ctrlKey: true,
