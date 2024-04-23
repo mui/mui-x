@@ -69,6 +69,27 @@ Here is a demo with:
 
 {{"demo": "Formatting.js"}}
 
+### Advanced formatting
+
+The series `valueFormatter` provides a context as its second argument containing a `dataIndex` property which you can use to calculate other data-related values.
+
+In the demo below you can notice we use `dataIndex` to add each team's rank in the tooltip.
+
+{{"demo": "SeriesFormatter.js"}}
+
+### Axis formatter
+
+To modify how data is displayed in the axis use the `valueFormatter` property.
+
+Its second argument is a context that provides a `location` property with either `'tick'` or `'tooltip'`.
+
+In this demo, you can see:
+
+- The country axis displays only the country code
+- The label displays annotated data `Country: name (code)`
+
+{{"demo": "AxisFormatter.js"}}
+
 ### Hiding values
 
 You can hide the axis value with `hideTooltip` in the `xAxis` props.

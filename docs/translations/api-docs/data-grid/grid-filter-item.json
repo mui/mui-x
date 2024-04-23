@@ -1,0 +1,13 @@
+{
+  "interfaceDescription": "Filter item definition interface.",
+  "propertiesDescriptions": {
+    "field": { "description": "The column from which we want to filter the rows." },
+    "operator": { "description": "The name of the operator we want to apply." },
+    "id": {
+      "description": "Must be unique.<br />Only useful when the model contains several items."
+    },
+    "value": {
+      "description": "The filtering value.<br />The operator filtering function will decide for each row if the row values is correct compared to this value."
+    }
+  }
+}

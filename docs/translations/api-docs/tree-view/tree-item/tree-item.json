@@ -46,7 +46,7 @@
     },
     "iconContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the tree node icon"
+      "nodeName": "the tree item icon"
     },
     "interactive": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",

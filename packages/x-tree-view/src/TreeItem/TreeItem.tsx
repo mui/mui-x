@@ -208,10 +208,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isNodeExpanded(itemId);
-  const focused = instance.isNodeFocused(itemId);
-  const selected = instance.isNodeSelected(itemId);
-  const disabled = instance.isNodeDisabled(itemId);
+  const expanded = instance.isItemExpanded(itemId);
+  const focused = instance.isItemFocused(itemId);
+  const selected = instance.isItemSelected(itemId);
+  const disabled = instance.isItemDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -313,7 +313,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, itemId);
   };
 
-  const idAttribute = instance.getTreeItemId(itemId, id);
+  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   return (

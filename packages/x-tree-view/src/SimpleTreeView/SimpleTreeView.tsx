@@ -36,6 +36,7 @@ export const SimpleTreeViewRoot = styled('ul', {
   margin: 0,
   listStyle: 'none',
   outline: 0,
+  position: 'relative',
 });
 
 type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
@@ -116,6 +117,7 @@ SimpleTreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
   /**

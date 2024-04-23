@@ -25,10 +25,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Début',
   end: 'Fin',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Date de début',
+  startTime: 'Heure de début',
+  endDate: 'Date de fin',
+  endTime: 'Heure de fin',
 
   // Action bar
   cancelButtonLabel: 'Annuler',
@@ -67,7 +67,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Effacer la valeur',
 
   // Table labels
   timeTableLabel: "choix de l'heure",
@@ -77,24 +77,24 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'JJ',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Année',
+  month: 'Mois',
+  day: 'Jour',
+  weekDay: 'Jour de la semaine',
+  hours: 'Heures',
+  minutes: 'Minutes',
+  seconds: 'Secondes',
+  meridiem: 'Méridien',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Vider',
 };
 
 export const frFR = getPickersLocalization(frFRPickers);

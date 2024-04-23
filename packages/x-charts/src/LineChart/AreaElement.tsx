@@ -28,6 +28,7 @@ export type AreaElementClassKey = keyof AreaElementClasses;
 export interface AreaElementOwnerState {
   id: SeriesId;
   color: string;
+  gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<AreaElementClasses>;
@@ -97,6 +98,7 @@ function AreaElement(props: AreaElementProps) {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     highlightScope,
     slots,
     slotProps,
@@ -116,6 +118,7 @@ function AreaElement(props: AreaElementProps) {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     isFaded,
     isHighlighted,
   };
@@ -146,6 +149,7 @@ AreaElement.propTypes = {
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
+  gradientId: PropTypes.string,
   highlightScope: PropTypes.shape({
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),

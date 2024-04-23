@@ -63,6 +63,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
     },
   },
   pagination: {
+    meta: {},
     paginationModel: { page: 1, pageSize: 2 },
     rowCount: 6,
   },
@@ -78,6 +79,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
   },
+  density: 'compact',
 };
 
 describe('<DataGridPro /> - State persistence', () => {
@@ -125,6 +127,7 @@ describe('<DataGridPro /> - State persistence', () => {
           filterModel: getDefaultGridFilterModel(),
         },
         pagination: {
+          meta: {},
           paginationModel: { page: 0, pageSize: 100 },
           rowCount: 6,
         },
@@ -135,6 +138,7 @@ describe('<DataGridPro /> - State persistence', () => {
         sorting: {
           sortModel: [],
         },
+        density: 'standard',
       });
     });
 
@@ -162,8 +166,10 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
+          paginationMode="server"
           rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          density={FULL_INITIAL_STATE.density}
           // Some portable states don't have a controllable model
           initialState={{
             columns: {
@@ -187,8 +193,11 @@ describe('<DataGridPro /> - State persistence', () => {
             page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
             pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
           }}
+          paginationMode="server"
           rowCount={FULL_INITIAL_STATE.pagination?.rowCount}
+          paginationMeta={FULL_INITIAL_STATE.pagination?.meta}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          density={FULL_INITIAL_STATE.density}
           // Some portable states don't have a controllable model
           initialState={{
             columns: {
@@ -224,6 +233,7 @@ describe('<DataGridPro /> - State persistence', () => {
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
         apiRef.current.setColumnVisibilityModel({ idBis: false });
+        apiRef.current.setDensity('compact');
       });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });

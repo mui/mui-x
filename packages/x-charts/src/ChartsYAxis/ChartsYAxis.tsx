@@ -4,8 +4,8 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DrawingContext } from '../context/DrawingProvider';
 import { useTicks } from '../hooks/useTicks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -68,12 +68,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     slotProps,
     tickPlacement,
     tickLabelPlacement,
+    tickInterval,
+    tickLabelInterval,
   } = defaultizedProps;
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -83,6 +85,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     valueFormatter,
     tickPlacement,
     tickLabelPlacement,
+    tickInterval,
   });
 
   const positionSign = position === 'right' ? 1 : -1;
@@ -141,9 +144,11 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         />
       )}
 
-      {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
+      {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
         const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
+        const skipLabel =
+          typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
@@ -154,7 +159,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && (
+            {formattedValue !== undefined && !skipLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -280,7 +285,7 @@ ChartsYAxis.propTypes = {
    */
   tickMinStep: PropTypes.number,
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,

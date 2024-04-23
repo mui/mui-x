@@ -23,6 +23,10 @@ yarn release:changelog
    --release       The branch to release (default: master)
 ```
 
+> :warning: the script will add a separator string in form of a comment like this right after the highlights:
+> `<!--/ DO_NOT_REMOVE /-->`
+> This string needs to stay where it gets inserted for the automated discord announcement to work.
+
 You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
@@ -52,8 +56,8 @@ Push the working branch on the documentation release branch to deploy the docume
 git push -f upstream master:docs-v7
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-next)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-next` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v7` deployment.
 
 ### Publish GitHub release
 

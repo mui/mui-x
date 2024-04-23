@@ -21,6 +21,8 @@ const useTreeViewLogExpanded = ({ params, models }) => {
       params.logMessage(`Expanded items: ${expandedStr}`);
     }
   }, [expandedStr]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return {};
 };
 
 // Sets the default value of this plugin parameters.
@@ -55,12 +57,12 @@ function TreeView(inProps) {
     ownerState,
   });
 
-  const nodesToRender = instance.getNodesToRender();
+  const itemsToRender = instance.getItemsToRender();
 
-  const renderNode = ({ children: itemChildren, ...itemProps }) => {
+  const renderItem = ({ children: itemChildren, ...itemProps }) => {
     return (
       <TreeItem key={itemProps.itemId} {...itemProps}>
-        {itemChildren?.map(renderNode)}
+        {itemChildren?.map(renderItem)}
       </TreeItem>
     );
   };
@@ -68,7 +70,7 @@ function TreeView(inProps) {
   return (
     <TreeViewProvider value={contextValue}>
       <RichTreeViewRoot {...rootProps}>
-        {nodesToRender.map(renderNode)}
+        {itemsToRender.map(renderItem)}
       </RichTreeViewRoot>
     </TreeViewProvider>
   );

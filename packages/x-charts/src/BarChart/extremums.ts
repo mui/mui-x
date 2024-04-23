@@ -19,13 +19,13 @@ const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
     )
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
-        const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
+        const [seriesMin, seriesMax] = series[seriesId].stackedData?.reduce(
           (seriesAcc, values) => [
             Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
             Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
           ],
           series[seriesId].stackedData[0],
-        );
+        ) ?? [null, null];
 
         return [
           acc[0] === null ? seriesMin : Math.min(seriesMin, acc[0]),
