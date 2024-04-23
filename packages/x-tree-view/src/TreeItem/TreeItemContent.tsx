@@ -114,10 +114,6 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
-  const handleCheckboxSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleCheckboxSelection(event);
-  };
-
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- Key event is handled by the TreeView */
     <div
@@ -138,13 +134,12 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
         <Checkbox
           className={classes.checkbox}
           checked={selected}
-          onChange={handleCheckboxSelectionChange}
+          onChange={handleCheckboxSelection}
           disabled={disableSelection}
           ref={checkboxRef}
           tabIndex={-1}
         />
       )}
-
       <div className={classes.label}>{label}</div>
     </div>
   );

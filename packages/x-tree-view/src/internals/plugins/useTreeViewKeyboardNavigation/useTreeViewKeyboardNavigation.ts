@@ -89,7 +89,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    if (event.altKey) {
+    if (
+      event.altKey ||
+      event.currentTarget !== (event.target as HTMLElement).closest('*[role="treeitem"]')
+    ) {
       return;
     }
 
