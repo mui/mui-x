@@ -11,6 +11,7 @@ import {
   BrowserContextOptions,
   BrowserType,
   WebError,
+  Locator,
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
@@ -537,6 +538,54 @@ async function initializeEnvironment(
 
         await sleep(200);
         expect(thrownError).to.equal(null);
+      });
+
+      // https://github.com/mui/mui-x/issues/12290
+      it('should properly set the width of a group header if the resize happened in a group with fluid columns', async () => {
+        await renderFixture('DataGrid/ResizeWithFlex');
+
+        const headers = await page.locator('.MuiDataGrid-columnHeaders > div').all();
+        const columnHeader = headers.pop()!;
+
+        const columns = columnHeader.locator('.MuiDataGrid-columnHeader');
+        const separators = await columnHeader
+          .locator('.MuiDataGrid-columnSeparator--resizable')
+          .all();
+
+        const moveSeparator = async (separator: Locator) => {
+          const boundingBox = (await separator?.boundingBox())!;
+          const x = boundingBox.x + boundingBox.width / 2;
+          const y = boundingBox.y + boundingBox.height / 2;
+
+          await page.mouse.move(x, y, { steps: 5 });
+          await page.mouse.down();
+          await page.mouse.move(x - 20, y, { steps: 5 });
+          await page.mouse.up();
+        };
+
+        await moveSeparator(separators[0]);
+        await moveSeparator(separators[1]);
+
+        const groupHeaderWidth = await headers[0]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+        const subGroupHeaderWidth = await headers[1]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+
+        const groupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // last column is not part of the group
+          elements.slice(0, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+        const subGroupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // first and last columns are not part of the sub-group
+          elements.slice(1, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+
+        expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
+        expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
       });
     });
 
