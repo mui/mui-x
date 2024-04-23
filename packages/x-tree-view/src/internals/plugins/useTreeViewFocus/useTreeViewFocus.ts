@@ -143,15 +143,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
     };
 
-  const focusedItem = instance.getItemMeta(state.focusedItemId!);
-  const activeDescendant = focusedItem
-    ? instance.getTreeItemIdAttribute(focusedItem.id, focusedItem.idAttribute)
-    : null;
-
   return {
     getRootProps: (otherHandlers) => ({
       onFocus: createRootHandleFocus(otherHandlers),
-      'aria-activedescendant': activeDescendant ?? undefined,
     }),
     publicAPI: {
       focusItem,

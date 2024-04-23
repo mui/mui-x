@@ -447,10 +447,12 @@ For example, if you were writing a test with `react-testing-library`, here is wh
  it('test example on first item', () => {
    const { getByRole } = render(
      <SimpleTreeView>
-       <TreeItem itemId="one">One</TreeItem>
-       <TreeItem itemId="two">Two</TreeItem>
+       <TreeItem itemId="one" id="one">One</TreeItem>
+       <TreeItem itemId="two" id="two">Two</TreeItem>
     </SimpleTreeView>
    );
+
+   // Set the focus to the item "One"
 -  const tree = getByRole('tree');
 +  const treeItem = getByRole('treeitem', { name: 'One' });
    act(() => {
@@ -459,6 +461,10 @@ For example, if you were writing a test with `react-testing-library`, here is wh
    });
 -  fireEvent.keyDown(tree, { key: 'ArrowDown' });
 +  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
+
+  // Check if the new focused item is "Two"
+- expect(tree)to.have.attribute('aria-activedescendant', 'two');
++ expect(document.activeElement).to.have.attribute('id', 'two');
  })
 ```
 
