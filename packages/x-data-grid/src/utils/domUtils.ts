@@ -72,8 +72,8 @@ export function findHeaderElementFromField(elem: Element, field: string): HTMLDi
 }
 
 export function getFieldsFromGroupHeaderElem(colCellEl: Element): string[] {
-  const found = colCellEl.getAttribute('data-fields')!.match(/^\|-(.+)-\|$/);
-  return found ? found[1].split('-|-') : [];
+  const fieldsString = colCellEl.getAttribute('data-fields');
+  return fieldsString?.startsWith('|-') ? fieldsString!.slice(2, -2).split('-|-') : [];
 }
 
 export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
