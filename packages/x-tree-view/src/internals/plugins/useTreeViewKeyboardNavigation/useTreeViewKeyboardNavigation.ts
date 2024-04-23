@@ -18,15 +18,6 @@ function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
-function findNextFirstChar(firstChars: string[], startIndex: number, char: string) {
-  for (let i = startIndex; i < firstChars.length; i += 1) {
-    if (char === firstChars[i]) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
@@ -55,47 +46,31 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     firstCharMap.current = newFirstCharMap;
   }, [state.items.itemMetaMap, params.getItemId, instance]);
 
-  const getFirstMatchingItem = (itemId: string, firstChar: string) => {
-    let start: number;
-    let index: number;
-    const lowercaseChar = firstChar.toLowerCase();
+  const getFirstMatchingItem = (itemId: string, query: string) => {
+    const cleanQuery = query.toLowerCase();
 
-    const firstCharIds: string[] = [];
-    const firstChars: string[] = [];
-    // This really only works since the ids are strings
-    Object.keys(firstCharMap.current).forEach((mapItemId) => {
-      const map = instance.getItemMeta(mapItemId);
-      const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
-      const shouldBeSkipped = params.disabledItemsFocusable
-        ? false
-        : instance.isItemDisabled(mapItemId);
-
-      if (visible && !shouldBeSkipped) {
-        firstCharIds.push(mapItemId);
-        firstChars.push(firstCharMap.current[mapItemId]);
+    const getNextItem = (itemIdToCheck: string) => {
+      const nextItemId = getNextNavigableItem(instance, itemIdToCheck);
+      // We reached the end of the tree, check from the beginning
+      if (nextItemId === null) {
+        return getFirstNavigableItem(instance);
       }
-    });
 
-    // Get start index for search based on position of currentItem
-    start = firstCharIds.indexOf(itemId) + 1;
-    if (start >= firstCharIds.length) {
-      start = 0;
+      return nextItemId;
+    };
+
+    let matchingItemId: string | null = null;
+    let currentItemId: string = getNextItem(itemId);
+    // The "currentItemId !== itemId" condition is to avoid an infinite loop when there is no matching item.
+    while (matchingItemId == null && currentItemId !== itemId) {
+      if (firstCharMap.current[currentItemId] === cleanQuery) {
+        matchingItemId = currentItemId;
+      } else {
+        currentItemId = getNextItem(currentItemId);
+      }
     }
 
-    // Check remaining slots in the menu
-    index = findNextFirstChar(firstChars, start, lowercaseChar);
-
-    // If not found in remaining slots, check from beginning
-    if (index === -1) {
-      index = findNextFirstChar(firstChars, 0, lowercaseChar);
-    }
-
-    // If a match was found...
-    if (index > -1) {
-      return firstCharIds[index];
-    }
-
-    return null;
+    return matchingItemId;
   };
 
   const canToggleItemSelection = (itemId: string) =>
