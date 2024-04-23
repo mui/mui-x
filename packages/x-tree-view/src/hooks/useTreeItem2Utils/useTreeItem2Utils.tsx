@@ -63,7 +63,7 @@ export const useTreeItem2Utils = ({
 
     if (multiple) {
       if (event.shiftKey) {
-        instance.selectRange(event, { end: itemId });
+        instance.expandSelectionRange(event, itemId);
       } else {
         instance.selectItem(event, itemId, true);
       }

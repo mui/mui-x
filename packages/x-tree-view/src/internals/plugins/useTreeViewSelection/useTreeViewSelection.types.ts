@@ -1,14 +1,49 @@
 import * as React from 'react';
-import type { DefaultizedProps, TreeViewItemRange, TreeViewPluginSignature } from '../../models';
+import type { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
   isItemSelected: (itemId: string) => boolean;
-  selectItem: (event: React.SyntheticEvent, itemId: string, multiple?: boolean) => void;
-  selectRange: (event: React.SyntheticEvent, items: TreeViewItemRange, stacked?: boolean) => void;
-  rangeSelectToFirst: (event: React.KeyboardEvent, itemId: string) => void;
-  rangeSelectToLast: (event: React.KeyboardEvent, itemId: string) => void;
+  selectItem: (
+    event: React.SyntheticEvent,
+    itemId: string,
+    keepExistingSelection?: boolean,
+  ) => void;
+  /**
+   * Select all the navigable items in the tree.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   */
+  selectAllNavigableItems: (event: React.SyntheticEvent) => void;
+  /**
+   * Expand the current selection range up to the given item.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} itemId The id of the item to expand the selection to.
+   */
+  expandSelectionRange: (event: React.SyntheticEvent, itemId: string) => void;
+  /**
+   * Expand the current selection range from the first navigable item to the given item.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} itemId The id of the item up to which the selection range should be expanded.
+   */
+  selectRangeFromStartToItem: (event: React.SyntheticEvent, itemId: string) => void;
+  /**
+   * Expand the current selection range from the given item to the last navigable item.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} itemId The id of the item from which the selection range should be expanded.
+   */
+  selectRangeFromItemToEnd: (event: React.SyntheticEvent, itemId: string) => void;
+  /**
+   * Update the selection when navigating with ArrowUp / ArrowDown keys.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} currentItemId The id of the active item before the keyboard navigation.
+   * @param {string} nextItemId The id of the active item after the keyboard navigation.
+   */
+  selectItemFromArrowNavigation: (
+    event: React.SyntheticEvent,
+    currentItemId: string,
+    nextItemId: string,
+  ) => void;
 }
 
 type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true

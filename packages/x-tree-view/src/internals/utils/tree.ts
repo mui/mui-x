@@ -124,7 +124,7 @@ export const getFirstNavigableItem = (instance: TreeViewInstance<[UseTreeViewIte
  * Another way to put it is which item is shallower in a trémaux tree
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
-const findOrderInTremauxTree = (
+export const findOrderInTremauxTree = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
   itemAId: string,
   itemBId: string,
@@ -185,20 +185,57 @@ const findOrderInTremauxTree = (
     : [itemBId, itemAId];
 };
 
-export const getNavigableItemsInRange = (
+export const getNonDisabledItemsInRange = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemAId: string,
   itemBId: string,
 ) => {
+  const getNextItem = (itemId: string) => {
+    // If the item is expanded and has some children, return the first of them.
+    if (instance.isItemExpandable(itemId) && instance.isItemExpanded(itemId)) {
+      return instance.getItemOrderedChildrenIds(itemId)[0];
+    }
+
+    let itemMeta = instance.getItemMeta(itemId);
+    while (itemMeta != null) {
+      // Try to find the first navigable sibling after the current item.
+      const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
+      const currentItemIndex = instance.getItemIndex(itemMeta.id);
+
+      if (currentItemIndex < siblings.length - 1) {
+        return siblings[currentItemIndex + 1];
+      }
+
+      // If the item is the last of its siblings, go up a level to the parent and try again.
+      itemMeta = instance.getItemMeta(itemMeta.parentId!);
+    }
+
+    throw new Error('Invalid range');
+  };
+
   const [first, last] = findOrderInTremauxTree(instance, itemAId, itemBId);
   const items = [first];
-
   let current = first;
 
   while (current !== last) {
-    current = getNextNavigableItem(instance, current)!;
-    items.push(current);
+    current = getNextItem(current);
+    if (!instance.isItemDisabled(current)) {
+      items.push(current);
+    }
   }
 
   return items;
+};
+
+export const getAllNavigableItems = (
+  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+) => {
+  let item: string | null = getFirstNavigableItem(instance);
+  const navigableItems: string[] = [];
+  while (item != null) {
+    navigableItems.push(item);
+    item = getNextNavigableItem(instance, item);
+  }
+
+  return navigableItems;
 };
