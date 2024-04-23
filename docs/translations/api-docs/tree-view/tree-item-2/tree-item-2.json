@@ -14,10 +14,6 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {
-    "checkbox": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the checkbox element"
-    },
     "disabled": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the element",
@@ -45,6 +41,7 @@
     }
   },
   "slotDescriptions": {
+    "checkbox": "The component that renders the item checkbox for selection.",
     "collapseIcon": "The icon used to collapse the item.",
     "content": "The component that renders the content of the item. (e.g.: everything related to this item, not to its children).",
     "endIcon": "The icon displayed next to an end item.",

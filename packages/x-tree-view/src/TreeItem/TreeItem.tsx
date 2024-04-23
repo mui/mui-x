@@ -29,9 +29,9 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     interactive: ['interactive'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
+    checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
-    checkbox: ['checkbox'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);

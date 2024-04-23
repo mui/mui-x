@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
+import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
 import { shouldForwardProp } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
@@ -139,6 +140,21 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   paddingLeft: 12,
 });
 
+export const TreeItem2Checkbox = styled(
+  React.forwardRef(
+    (props: CheckboxProps & { visible: boolean }, ref: React.Ref<HTMLButtonElement>) => {
+      const { visible, ...other } = props;
+      if (!visible) {
+        return null;
+      }
+
+      return <MuiCheckbox {...other} ref={ref} />;
+    },
+  ),
+)({
+  padding: 0,
+});
+
 const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
   const { classes } = ownerState;
 
@@ -150,6 +166,7 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     focused: ['focused'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
+    checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
   };
@@ -183,6 +200,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
     status,
@@ -246,6 +264,15 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.label,
   });
 
+  const Checkbox: React.ElementType = slots.label ?? TreeItem2Checkbox;
+  const checkboxProps = useSlotProps({
+    elementType: Checkbox,
+    getSlotProps: getCheckboxProps,
+    externalSlotProps: slotProps.checkbox,
+    ownerState: {},
+    className: classes.checkbox,
+  });
+
   const GroupTransition: React.ElementType | undefined = slots.groupTransition ?? undefined;
   const groupTransitionProps = useSlotProps({
     elementType: GroupTransition,
@@ -262,6 +289,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
           <IconContainer {...iconContainerProps}>
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
+          <Checkbox {...checkboxProps} />
           <Label {...labelProps} />
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}

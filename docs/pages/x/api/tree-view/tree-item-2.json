@@ -45,6 +45,12 @@
       "class": "MuiTreeItem2-iconContainer"
     },
     {
+      "name": "checkbox",
+      "description": "The component that renders the item checkbox for selection.",
+      "default": "TreeItem2Checkbox",
+      "class": "MuiTreeItem2-checkbox"
+    },
+    {
       "name": "label",
       "description": "The component that renders the item label.",
       "default": "TreeItem2Label",
@@ -60,12 +66,6 @@
     }
   ],
   "classes": [
-    {
-      "key": "checkbox",
-      "className": "MuiTreeItem2-checkbox",
-      "description": "Styles applied to the checkbox element.",
-      "isGlobal": false
-    },
     {
       "key": "disabled",
       "className": "Mui-disabled",
