@@ -428,6 +428,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   density?: GridDensity;
   /**
+   * Set the description of the Data Grid.
+   */
+  description?: string;
+  /**
+   * Set the language of the Data Grid (format: en-US).
+   */
+  lang?: string;
+  /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
    * Only works with `paginationMode="server"`, ignored when `paginationMode="client"`.
