@@ -36,29 +36,27 @@ describeTreeView<[UseTreeViewKeyboardNavigationSignature, UseTreeViewItemsSignat
         expect(getFocusedItemId()).to.equal('1');
       });
 
-      it('should work when the next item has the same starting character', () => {
+      it('should move to the next item in the displayed order when typing the same starting character', () => {
         const { getFocusedItemId, getItemRoot } = render({
-          items: [
-            { id: '1', label: 'one' },
-            { id: '2', label: 'two' },
-            { id: '3', label: 'three' },
-            { id: '4', label: 'four' },
-          ],
+          items: [{ id: 'A1' }, { id: 'B1' }, { id: 'A2' }, { id: 'B3' }, { id: 'B2' }],
         });
 
         act(() => {
-          getItemRoot('1').focus();
+          getItemRoot('A1').focus();
         });
-        expect(getFocusedItemId()).to.equal('1');
+        expect(getFocusedItemId()).to.equal('A1');
 
-        fireEvent.keyDown(getItemRoot('1'), { key: 't' });
-        expect(getFocusedItemId()).to.equal('2');
+        fireEvent.keyDown(getItemRoot('A1'), { key: 'b' });
+        expect(getFocusedItemId()).to.equal('B1');
 
-        fireEvent.keyDown(getItemRoot('2'), { key: 't' });
-        expect(getFocusedItemId()).to.equal('3');
+        fireEvent.keyDown(getItemRoot('B1'), { key: 'b' });
+        expect(getFocusedItemId()).to.equal('B3');
 
-        fireEvent.keyDown(getItemRoot('3'), { key: 't' });
-        expect(getFocusedItemId()).to.equal('2');
+        fireEvent.keyDown(getItemRoot('B3'), { key: 'b' });
+        expect(getFocusedItemId()).to.equal('B2');
+
+        fireEvent.keyDown(getItemRoot('B2'), { key: 'b' });
+        expect(getFocusedItemId()).to.equal('B1');
       });
 
       it('should work with capitalized label', () => {
