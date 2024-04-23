@@ -1,11 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "types": ["react", "mocha", "node"]
-  },
-  "include": [
-    "src/**/*",
-    "../../test/utils/addChaiAssertions.ts",
-    "@mui-internal/test-utils/initMatchers.ts"
-  ]
+  "include": ["src/**/*"]
 }
