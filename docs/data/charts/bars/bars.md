@@ -118,7 +118,8 @@ There are few limitations to this method though.
 
 - [Stacking](/x/react-charts/bars/#stacking) won't look right with border radius.
 - On charts containing `Negative` and `Positive` values, rounding will apply to all of them in the same way, which might be undesirable.
-  :::
+
+:::
 
 ## Click event
 
