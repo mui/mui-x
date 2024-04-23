@@ -131,7 +131,7 @@ export const TreeItem2IconContainer = styled('div', {
 });
 
 export const TreeItem2GroupTransition = styled(Collapse, {
-  name: 'MuiTreeItem2GroupTransition',
+  name: 'MuiTreeItem2',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
 })({
@@ -151,6 +151,11 @@ export const TreeItem2Checkbox = styled(
       return <MuiCheckbox {...other} ref={ref} />;
     },
   ),
+  {
+    name: 'MuiTreeItem2',
+    slot: 'Checkbox',
+    overridesResolver: (props, styles) => styles.checkbox,
+  },
 )({
   padding: 0,
 });
@@ -264,7 +269,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.label,
   });
 
-  const Checkbox: React.ElementType = slots.label ?? TreeItem2Checkbox;
+  const Checkbox: React.ElementType = slots.checkbox ?? TreeItem2Checkbox;
   const checkboxProps = useSlotProps({
     elementType: Checkbox,
     getSlotProps: getCheckboxProps,
