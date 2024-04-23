@@ -140,6 +140,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
           tabIndex={-1}
         />
       )}
+
       <div className={classes.label}>{label}</div>
     </div>
   );
