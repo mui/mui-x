@@ -59,6 +59,9 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "devDependencies": {
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/c7827b7d/@mui/internal-test-utils"
+  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],

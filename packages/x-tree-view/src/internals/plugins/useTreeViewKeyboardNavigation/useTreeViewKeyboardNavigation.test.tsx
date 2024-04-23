@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, createRenderer, fireEvent } from '@mui-internal/test-utils';
+import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 describe('useTreeViewKeyboardNavigation', () => {

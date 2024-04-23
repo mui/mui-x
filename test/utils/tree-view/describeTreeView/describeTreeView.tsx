@@ -1,13 +1,13 @@
 import * as React from 'react';
-import createDescribe from '@mui-internal/test-utils/createDescribe';
-import { createRenderer, ErrorBoundary } from '@mui-internal/test-utils';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
+import { createRenderer, ErrorBoundary } from '@mui/internal-test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
-import { MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
+import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
   DescribeTreeViewRenderer,
@@ -89,7 +89,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
               ({
                 ...slotProps?.item,
                 'data-testid': ownerState.itemId,
-              }) as any,
+              } as any),
           }}
           getItemLabel={(item) => item.label ?? item.id}
           isItemDisabled={(item) => !!item.disabled}

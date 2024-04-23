@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
+import { act, createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import Portal from '@mui/material/Portal';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
