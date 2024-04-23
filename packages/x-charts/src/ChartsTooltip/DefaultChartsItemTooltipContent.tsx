@@ -41,13 +41,11 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
         <tbody>
           <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsTooltipMark ownerState={{ color }} className={classes.mark} />
+              <ChartsTooltipMark color={color} className={classes.mark} />
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
               {displayedLabel}
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
               {formattedValue}
             </ChartsTooltipCell>
