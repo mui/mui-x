@@ -52,12 +52,12 @@ export function useTreeItemState(itemId: string) {
   const handleCheckboxSelection = (event: React.ChangeEvent) => {
     if (multiSelect) {
       if ((event.nativeEvent as PointerEvent).shiftKey) {
-        instance.selectRange(event, { end: itemId });
+        instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectNode(event, itemId, true);
+        instance.selectItem(event, itemId, true);
       }
     } else {
-      instance.selectNode(event, itemId);
+      instance.selectItem(event, itemId);
     }
   };
 
