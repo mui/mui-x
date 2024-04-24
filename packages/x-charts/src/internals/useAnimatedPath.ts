@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { interpolateString } from 'd3-interpolate';
-import { useSpringRef, useSpring, to } from '@react-spring/web';
+import { useSpringRef, useSpring } from '@react-spring/web';
 
 // Taken from Nivo
 export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
@@ -21,12 +21,16 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
     }
   }, [api, path]);
 
-  const { value } = useSpring({
+  const spring = useSpring({
     ref: api,
     from: { value: 0 },
     to: { value: 1 },
     reset: true,
     immediate: skipAnimation,
+    onResolve() {
+      previousPathRef.current = path;
+      currentPathRef.current = path;
+    },
   });
 
   const interpolation = (t: number) => {
@@ -35,6 +39,5 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
     }
     return interpolateString(previousPathRef.current, path)(t);
   };
-
-  return to([value], interpolation);
+  return spring.value.to(interpolation);
 };
