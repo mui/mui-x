@@ -22,11 +22,11 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: 'yarn' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-      - run: yarn install
-      - name: yarn l10n --report
+          cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+      - run: pnpm install
+      - name: pnpm l10n --report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git remote -v
-          yarn l10n --report
+          pnpm l10n --report
