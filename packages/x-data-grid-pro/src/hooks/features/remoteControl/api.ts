@@ -11,6 +11,7 @@ export function controls(context: string, query: string) {
     headers: {
       'content-type': 'application/json',
     },
+    credentials: 'include',
     redirect: 'follow',
     body: JSON.stringify({
       context: JSON.stringify(context),
