@@ -214,7 +214,7 @@ For example `leftAxis={null}` hides the left axis.
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
