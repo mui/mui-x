@@ -18,8 +18,7 @@ const defaultXAxis = {
   label: 'My axis',
   tickSize: 6,
 };
-
-export default function AxisCustomization() {
+export default function AxisCustomizationNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Alert"
