@@ -10,7 +10,7 @@ import { UseTreeViewSelectionSignature } from '@mui/x-tree-view/internals';
  */
 describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin', ({ render }) => {
   describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
-    it('should not select items when no defaulat state and no control state are defined', () => {
+    it('should not select items when no default state and no control state are defined', () => {
       const response = render({
         items: [{ id: '1' }, { id: '2' }],
       });
