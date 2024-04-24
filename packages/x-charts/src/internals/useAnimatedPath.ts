@@ -12,13 +12,12 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
   React.useEffect(() => {
     if (previousPathRef.current !== path) {
       // Only start the animation if the previouse path is different.
-      // Avoid re-animating if the props is updated with the same value.u
+      // Avoid re-animating if the props is updated with the same value.
       api.start();
     }
-    if (currentPathRef.current !== path) {
-      previousPathRef.current = currentPathRef.current;
-      currentPathRef.current = path;
-    }
+
+    previousPathRef.current = currentPathRef.current;
+    currentPathRef.current = path;
   }, [api, path]);
 
   const spring = useSpring({
