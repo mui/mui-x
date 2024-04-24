@@ -99,9 +99,14 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     };
 
   const createCheckboxHandleChange =
-    (otherHandlers: EventHandlers) => (event: React.ChangeEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) =>
+    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onChange?.(event);
       if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      if (disableSelection || status.disabled) {
         return;
       }
 
@@ -173,7 +178,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       visible: checkboxSelection,
       ref: checkboxRef,
       checked: status.selected,
-      disabled: disableSelection,
+      disabled: disableSelection || status.disabled,
       tabIndex: -1,
       ...externalProps,
       onChange: createCheckboxHandleChange(externalEventHandlers),

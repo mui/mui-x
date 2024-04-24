@@ -109,7 +109,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         } else if (params.multiSelect) {
           instance.selectItem(event, itemId, true);
         } else {
-          instance.selectItem(event, itemId);
+          instance.selectItem(event, itemId, false);
         }
         break;
       }
@@ -125,7 +125,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
             instance.selectItem(event, itemId, true);
           } else if (!instance.isItemSelected(itemId)) {
-            instance.selectItem(event, itemId);
+            instance.selectItem(event, itemId, false);
             event.preventDefault();
           }
         }

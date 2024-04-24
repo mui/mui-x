@@ -44,17 +44,21 @@ export function useTreeItemState(itemId: string) {
           instance.selectItem(event, itemId, true);
         }
       } else {
-        instance.selectItem(event, itemId);
+        instance.selectItem(event, itemId, false);
       }
     }
   };
 
-  const handleCheckboxSelection = (event: React.ChangeEvent) => {
+  const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disableSelection || disabled) {
+      return;
+    }
+
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem(event, itemId, multiSelect);
+      instance.selectItem(event, itemId, multiSelect, event.target.checked);
     }
   };
 

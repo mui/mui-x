@@ -42,6 +42,12 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     const getItemContent = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
 
+    const getItemCheckbox = (id: string) =>
+      getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.checkbox}`)!;
+
+    const getItemCheckboxInput = (id: string) =>
+      getItemCheckbox(id).querySelector<HTMLInputElement>(`input`)!;
+
     const getItemLabel = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.label}`)!;
 
@@ -58,6 +64,8 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
       getFocusedItemId,
       getItemRoot,
       getItemContent,
+      getItemCheckbox,
+      getItemCheckboxInput,
       getItemLabel,
       getItemIconContainer,
       isItemExpanded,
