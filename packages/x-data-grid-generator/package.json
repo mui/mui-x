@@ -50,9 +50,6 @@
     "@mui/material": "^5.15.14",
     "react": "^17.0.0 || ^18.0.0"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }
