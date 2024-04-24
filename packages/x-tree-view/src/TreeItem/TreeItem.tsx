@@ -26,7 +26,6 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     expanded: ['expanded'],
     selected: ['selected'],
     focused: ['focused'],
-    interactive: ['interactive'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     checkbox: ['checkbox'],
@@ -70,11 +69,9 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  [`&.${treeItemClasses.interactive}`]: {
-    cursor: 'pointer',
-  },
+  cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
-  [`&.${treeItemClasses.interactive}:hover`]: {
+  '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
@@ -92,7 +89,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    [`&.${treeItemClasses.interactive}:hover`]: {
+    '&:hover': {
       backgroundColor: theme.vars
         ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
         : alpha(
@@ -339,7 +336,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
             root: classes.content,
             expanded: classes.expanded,
             selected: classes.selected,
-            interactive: classes.interactive,
             focused: classes.focused,
             disabled: classes.disabled,
             iconContainer: classes.iconContainer,

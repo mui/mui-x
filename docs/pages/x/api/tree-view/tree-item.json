@@ -84,12 +84,6 @@
       "isGlobal": false
     },
     {
-      "key": "interactive",
-      "className": "MuiTreeItem-interactive",
-      "description": "State class applied to the content element when clicking it causes an action.",
-      "isGlobal": false
-    },
-    {
       "key": "label",
       "className": "MuiTreeItem-label",
       "description": "Styles applied to the label element.",

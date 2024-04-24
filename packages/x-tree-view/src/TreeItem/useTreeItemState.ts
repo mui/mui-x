@@ -66,7 +66,6 @@ export function useTreeItemState(itemId: string) {
   };
 
   return {
-    expandable,
     disabled,
     expanded,
     selected,

@@ -29,11 +29,6 @@
       "nodeName": "the content element",
       "conditions": "focused"
     },
-    "interactive": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "clicking it causes an action"
-    },
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",

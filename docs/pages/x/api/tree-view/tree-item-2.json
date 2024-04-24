@@ -85,12 +85,6 @@
       "isGlobal": true
     },
     {
-      "key": "interactive",
-      "className": "MuiTreeItem2-interactive",
-      "description": "State class applied to the content element when clicking it causes an action.",
-      "isGlobal": false
-    },
-    {
       "key": "selected",
       "className": "Mui-selected",
       "description": "State class applied to the content element when selected.",
