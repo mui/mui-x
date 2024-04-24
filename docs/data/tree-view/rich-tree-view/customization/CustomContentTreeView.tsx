@@ -14,6 +14,7 @@ import {
   TreeItem2GroupTransition,
   TreeItem2Label,
   TreeItem2Root,
+  TreeItem2Checkbox,
 } from '@mui/x-tree-view/TreeItem2';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
@@ -56,6 +57,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
     status,
@@ -79,6 +81,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             >
               {(label as string)[0]}
             </Avatar>
+            <TreeItem2Checkbox {...getCheckboxProps()} />
             <TreeItem2Label {...getLabelProps()} />
           </Box>
         </CustomTreeItemContent>
