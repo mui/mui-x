@@ -37,31 +37,16 @@ On macOS:
 
 :::
 
-<kbd class="key">Enter</kbd>: Activates the focused item
-
-- If item has children, it is expanded or collapsed
-- If the item does not have children, it is selected
-
-<kbd class="key">Up arrow</kbd>: Moves focus to the previous focusable item, without expanding or collapsing it.
-
-<kbd class="key">Down arrow</kbd>: Moves focus to the next focusable item, without expanding or collapsing it.
-
-<kbd class="key">Right arrow</kbd> or <kbd class="key">Left arrow</kbd> when RTL is enabled
-
-- If focus is on a collapsed item, expands the item without moving focus
-- If focus is on an expanded item, moves focus to the first child
-- If focus is on an end item, nothing happens
-
-<kbd class="key">Left arrow</kbd> or <kbd class="key">Right arrow</kbd> when RTL is enabled
-
-- If focus is on an expanded item, collapses the item
-- If the focused item is collapsed or an end item, and it has a parent, focus moves to the parent
-
-<kbd class="key">Home</kbd>: Focuses the first item in the tree
-
-<kbd class="key">End</kbd>: Focuses the last item in the tree
-
-<kbd class="key">\*</kbd>: Expands all siblings that are at the same level as the focused item
+|                                                                                        Keys | Description                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                                                                <kbd class="key">Enter</kbd> | Activates the focused item. <ul><li>If item has children, it is expanded or collapsed</li><li>If the item does not have children, it is selected</li></ul>                                                           |
+|                                                             <kbd class="key">Arrow Up</kbd> | Moves focus to the previous focusable item, without expanding or collapsing it.                                                                                                                                      |
+|                                                           <kbd class="key">Arrow Down</kbd> | Moves focus to the next focusable item, without expanding or collapsing it.                                                                                                                                          |
+| <kbd class="key">Arrow Right</kbd> or <kbd class="key">Arrow Left</kbd> when RTL is enabled | <ul><li>If focus is on a collapsed item, expands the item without moving focus</li><li>If focus is on an expanded item, moves focus to the first child</li><li>If focus is on an end item, nothing happens</li></ul> |
+| <kbd class="key">Arrow Left</kbd> or <kbd class="key">Arrow Right</kbd> when RTL is enabled | <ul><li>If focus is on an expanded item, collapses the item</li><li>If focus is on a collapsed item that has a parent, moves focus to its parent</li><li>If focus is on a root item, nothing happens</li></ul>       |
+|                                                                 <kbd class="key">Home</kbd> | Focuses the first item in the tree                                                                                                                                                                                   |
+|                                                                  <kbd class="key">End</kbd> | Focuses the last item in the tree                                                                                                                                                                                    |
+|                                                                   <kbd class="key">\*</kbd> | Toggle row children expansion when grouping cell is focused                                                                                                                                                          |
 
 Type-ahead is supported for single characters. When typing a character, focus moves to the next item with a label that starts with the typed character.
 
@@ -85,14 +70,11 @@ When a multi-select tree receives focus:
 - If none of the items are selected when the tree receives focus, focus is set on the first item.
 - If an item is selected before the tree receives focus, focus is set on the first of the selected items.
 
-<kbd class="key">Space</kbd>: Toggles the selection state of the focused item.
-
-<kbd class="key">Shift + Up Arrow</kbd>: Moves focus and toggles the selection state of the previous item.
-
-<kbd class="key">Shift + Down Arrow</kbd>: Moves focus and toggles the selection state of the next item.
-
-<kbd class="key">Ctrl + Shift + Home</kbd>: Selects the focused item and all items up to the first item.
-
-<kbd class="key">Ctrl + Shift + End</kbd>: Selects the focused item and all the items down to the last item.
-
-<kbd class="key">Ctrl + A</kbd>: Selects all items.
+|                                                                                 Keys | Description                                                       |
+| -----------------------------------------------------------------------------------: | :---------------------------------------------------------------- |
+|                                                         <kbd class="key">Space</kbd> | Toggles the selection state of the focused item.                  |
+|                         <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd> | Moves focus and toggles the selection state of the previous item. |
+|                       <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd> | Moves focus and toggles the selection state of the next item.     |
+| <kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Home</kbd> | Selects the focused item and all items up to the first item.      |
+|  <kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">End</kbd> | Selects the focused item and all the items down to the last item. |
+|                                 <kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd> | Selects all items.                                                |
