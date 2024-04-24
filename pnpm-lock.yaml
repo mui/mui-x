@@ -90,7 +90,7 @@ importers:
         specifier: ^5.15.14
         version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.60)(react@18.2.0)
       '@mui/internal-markdown':
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: 1.0.1
       '@mui/material':
         specifier: ^5.15.14
