@@ -6,7 +6,7 @@
 > You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
 
 > Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
-Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
+> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
 
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
