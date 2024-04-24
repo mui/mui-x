@@ -1,7 +1,7 @@
-diff --git a/node_modules/date-fns-jalali/typings.d.ts b/node_modules/date-fns-jalali/typings.d.ts
-index ff89673..0502c2b 100644
---- a/node_modules/date-fns-jalali/typings.d.ts
-+++ b/node_modules/date-fns-jalali/typings.d.ts
+diff --git a/typings.d.ts b/typings.d.ts
+index ff89673733e3ef0f68eade1b681bad1f61a18c0e..0502c2b42e5a0f812fe9e07d479ceb71e0858650 100644
+--- a/typings.d.ts
++++ b/typings.d.ts
 @@ -26,13 +26,13 @@ interface CurriedFn4<A, B, C, D, R> {
  
  // Type Aliases

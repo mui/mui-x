@@ -1,0 +1,13 @@
+diff --git a/packages/api-docs-builder/utils/parseTest.ts b/packages/api-docs-builder/utils/parseTest.ts
+index 14d2c70c9939cb2e71e7664c06e8f51700711772..e21e06960ffbaf05aff6e5d4d7faa123cb6105bc 100644
+--- a/packages/api-docs-builder/utils/parseTest.ts
++++ b/packages/api-docs-builder/utils/parseTest.ts
+@@ -3,7 +3,7 @@ import * as babel from '@babel/core';
+ import { readFile } from 'fs-extra';
+ import glob from 'fast-glob';
+ 
+-const workspaceRoot = path.join(__dirname, '../../../');
++const workspaceRoot = process.cwd();
+ const babelConfigPath = path.join(workspaceRoot, 'babel.config.js');
+ 
+ function getTestFilesNames(filepath: string) {

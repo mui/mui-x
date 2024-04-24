@@ -42,7 +42,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@mui)/,
+        exclude: /node_modules\/.*\/node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,

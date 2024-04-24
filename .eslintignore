@@ -1,4 +1,6 @@
 /.git
+pnpm-lock.yaml
+netlify/functions
 /docs/.next
 /docs/export
 /docs/pages/playground/

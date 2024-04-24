@@ -1,17 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["react", "mocha", "node"],
+    "types": [
+      "mocha",
+      "node",
+      "@mui/material/themeCssVarsAugmentation",
+      "dayjs/plugin/utc.d.ts",
+      "dayjs/plugin/timezone.d.ts",
+      "moment-timezone"
+    ],
     "noImplicitAny": false
   },
-  "include": [
-    "src/**/*",
-    "../../node_modules/@mui/monorepo/packages/test-utils/src/initMatchers.ts",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/date-fns",
-    "../../node_modules/dayjs/plugin/utc.d.ts",
-    "../../node_modules/dayjs/plugin/timezone.d.ts",
-    "../../node_modules/moment-timezone/index.d.ts"
-  ],
+  "include": ["src/**/*"],
   "exclude": ["src/**/actual*.ts*"]
 }

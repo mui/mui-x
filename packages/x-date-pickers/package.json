@@ -15,7 +15,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -30,7 +31,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
     "build:modern": "node ../../scripts/build.mjs modern",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
@@ -98,14 +99,18 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2",
+    "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
+    "@types/prop-types": "^15.7.11",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.10",
     "luxon": "^3.4.4",
     "moment": "^2.30.1",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.10.0"
+    "moment-jalaali": "^0.10.0",
+    "moment-timezone": "^0.5.44",
+    "rimraf": "^5.0.5"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
