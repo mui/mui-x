@@ -11,7 +11,8 @@
   "homepage": "https://mui.com/x/react-data-grid/",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -28,7 +29,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
     "build:modern": "node ../../scripts/build.mjs modern",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
@@ -45,9 +46,9 @@
     "@babel/runtime": "^7.24.0",
     "@mui/system": "^5.15.14",
     "@mui/utils": "^5.15.14",
-    "@mui/x-data-grid": "7.3.0",
-    "@mui/x-data-grid-pro": "7.3.0",
-    "@mui/x-license": "7.2.0",
+    "@mui/x-data-grid": "workspace:*",
+    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-license": "workspace:*",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.0",
     "exceljs": "^4.4.0",
@@ -58,6 +59,11 @@
     "@mui/material": "^5.15.14",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@types/prop-types": "^15.7.11",
+    "date-fns": "^2.30.0",
+    "rimraf": "^5.0.5"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

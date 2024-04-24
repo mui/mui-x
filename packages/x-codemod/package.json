@@ -18,7 +18,7 @@
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
     "copy-files": "cpy README.md build && cpy package.json build",
-    "build": "node ../../scripts/build.mjs node --ignore 'src/types.ts' && yarn copy-files"
+    "build": "node ../../scripts/build.mjs node --ignore 'src/types.ts' && pnpm copy-files"
   },
   "repository": {
     "type": "git",
@@ -40,11 +40,15 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.11.5"
+    "@types/jscodeshift": "^0.11.5",
+    "dayjs": "^1.11.10",
+    "moment-timezone": "^0.5.44",
+    "rimraf": "^5.0.5"
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "engines": {
     "node": ">=14.0.0"
