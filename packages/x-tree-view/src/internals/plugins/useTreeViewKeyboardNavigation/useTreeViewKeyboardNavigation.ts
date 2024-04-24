@@ -18,15 +18,6 @@ function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
-function findNextFirstChar(firstChars: string[], startIndex: number, char: string) {
-  for (let i = startIndex; i < firstChars.length; i += 1) {
-    if (char === firstChars[i]) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
@@ -55,47 +46,31 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     firstCharMap.current = newFirstCharMap;
   }, [state.items.itemMetaMap, params.getItemId, instance]);
 
-  const getFirstMatchingItem = (itemId: string, firstChar: string) => {
-    let start: number;
-    let index: number;
-    const lowercaseChar = firstChar.toLowerCase();
+  const getFirstMatchingItem = (itemId: string, query: string) => {
+    const cleanQuery = query.toLowerCase();
 
-    const firstCharIds: string[] = [];
-    const firstChars: string[] = [];
-    // This really only works since the ids are strings
-    Object.keys(firstCharMap.current).forEach((mapItemId) => {
-      const map = instance.getItemMeta(mapItemId);
-      const visible = map.parentId ? instance.isItemExpanded(map.parentId) : true;
-      const shouldBeSkipped = params.disabledItemsFocusable
-        ? false
-        : instance.isItemDisabled(mapItemId);
-
-      if (visible && !shouldBeSkipped) {
-        firstCharIds.push(mapItemId);
-        firstChars.push(firstCharMap.current[mapItemId]);
+    const getNextItem = (itemIdToCheck: string) => {
+      const nextItemId = getNextNavigableItem(instance, itemIdToCheck);
+      // We reached the end of the tree, check from the beginning
+      if (nextItemId === null) {
+        return getFirstNavigableItem(instance);
       }
-    });
 
-    // Get start index for search based on position of currentItem
-    start = firstCharIds.indexOf(itemId) + 1;
-    if (start >= firstCharIds.length) {
-      start = 0;
+      return nextItemId;
+    };
+
+    let matchingItemId: string | null = null;
+    let currentItemId: string = getNextItem(itemId);
+    // The "currentItemId !== itemId" condition is to avoid an infinite loop when there is no matching item.
+    while (matchingItemId == null && currentItemId !== itemId) {
+      if (firstCharMap.current[currentItemId] === cleanQuery) {
+        matchingItemId = currentItemId;
+      } else {
+        currentItemId = getNextItem(currentItemId);
+      }
     }
 
-    // Check remaining slots in the menu
-    index = findNextFirstChar(firstChars, start, lowercaseChar);
-
-    // If not found in remaining slots, check from beginning
-    if (index === -1) {
-      index = findNextFirstChar(firstChars, 0, lowercaseChar);
-    }
-
-    // If a match was found...
-    if (index > -1) {
-      return firstCharIds[index];
-    }
-
-    return null;
+    return matchingItemId;
   };
 
   const canToggleItemSelection = (itemId: string) =>
@@ -127,7 +102,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === ' ' && canToggleItemSelection(itemId): {
         event.preventDefault();
         if (params.multiSelect && event.shiftKey) {
-          instance.selectRange(event, { end: itemId });
+          instance.expandSelectionRange(event, itemId);
         } else if (params.multiSelect) {
           instance.selectItem(event, itemId, true);
         } else {
@@ -165,14 +140,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           // Multi select behavior when pressing Shift + ArrowDown
           // Toggles the selection state of the next item
           if (params.multiSelect && event.shiftKey && canToggleItemSelection(nextItem)) {
-            instance.selectRange(
-              event,
-              {
-                end: nextItem,
-                current: itemId,
-              },
-              true,
-            );
+            instance.selectItemFromArrowNavigation(event, itemId, nextItem);
           }
         }
 
@@ -189,14 +157,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           // Multi select behavior when pressing Shift + ArrowUp
           // Toggles the selection state of the previous item
           if (params.multiSelect && event.shiftKey && canToggleItemSelection(previousItem)) {
-            instance.selectRange(
-              event,
-              {
-                end: previousItem,
-                current: itemId,
-              },
-              true,
-            );
+            instance.selectItemFromArrowNavigation(event, itemId, previousItem);
           }
         }
 
@@ -239,12 +200,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the first item in the tree
       case key === 'Home': {
-        instance.focusItem(event, getFirstNavigableItem(instance));
-
         // Multi select behavior when pressing Ctrl + Shift + Home
         // Selects the focused item and all items up to the first item.
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
-          instance.rangeSelectToFirst(event, itemId);
+          instance.selectRangeFromStartToItem(event, itemId);
+        } else {
+          instance.focusItem(event, getFirstNavigableItem(instance));
         }
 
         event.preventDefault();
@@ -253,12 +214,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the last item in the tree
       case key === 'End': {
-        instance.focusItem(event, getLastNavigableItem(instance));
-
         // Multi select behavior when pressing Ctrl + Shirt + End
         // Selects the focused item and all the items down to the last item.
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
-          instance.rangeSelectToLast(event, itemId);
+          instance.selectRangeFromItemToEnd(event, itemId);
+        } else {
+          instance.focusItem(event, getLastNavigableItem(instance));
         }
 
         event.preventDefault();
@@ -275,10 +236,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // Multi select behavior when pressing Ctrl + a
       // Selects all the items
       case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
-        instance.selectRange(event, {
-          start: getFirstNavigableItem(instance),
-          end: getLastNavigableItem(instance),
-        });
+        instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
       }
