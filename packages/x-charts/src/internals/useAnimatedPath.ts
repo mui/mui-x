@@ -33,11 +33,12 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
     },
   });
 
-  const interpolation = (t: number) => {
+  const interpolation = React.useMemo(() => {
     if (previousPathRef.current === null) {
-      return path;
+      return () => path;
     }
-    return interpolateString(previousPathRef.current, path)(t);
-  };
+    return interpolateString(previousPathRef.current, path);
+  }, [path]);
+
   return spring.value.to(interpolation);
 };
