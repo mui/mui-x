@@ -93,7 +93,7 @@
     "@next/eslint-plugin-next": "14.0.4",
     "@octokit/plugin-retry": "^6.0.1",
     "@octokit/rest": "^20.0.2",
-    "@playwright/test": "1.41.2",
+    "@playwright/test": "1.43.1",
     "@testing-library/react": "^14.2.1",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.12",
