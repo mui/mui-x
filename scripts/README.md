@@ -5,6 +5,9 @@
 > Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
 > You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
 
+> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
+Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
+
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
