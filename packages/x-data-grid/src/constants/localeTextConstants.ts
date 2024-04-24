@@ -29,6 +29,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarQuickFilterLabel: 'Search',
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
+  // Remote control toolbar field
+  toolbarRemoteControlPlaceholder: 'Remote prompt…',
+  toolbarRemoteControlLabel: 'Remote control',
+  toolbarRemoteControlDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',

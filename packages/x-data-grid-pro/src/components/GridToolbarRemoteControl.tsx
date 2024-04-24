@@ -1,22 +1,26 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   getDataGridUtilityClass,
   useGridApiContext,
   useGridRootProps,
   gridColumnLookupSelector,
+  GridLogicOperator,
+  GridSingleSelectColDef,
 } from '@mui/x-data-grid';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { getValueOptions } from '@mui/x-data-grid/internals';
+import * as remoteControl from '../hooks/features/remoteControl/api';
+import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { GridApiPro } from '../models';
+
+const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition;
 
 type OwnerState = DataGridProProcessedProps;
-
-const REMOTE_ENDPOINT = 'http://localhost:3006'
-
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -38,64 +42,86 @@ const Style = styled('div', {
   flexDirection: 'row',
 });
 
-export type GridToolbarRemoteControlProps = {};
-
-function GridToolbarRemoteControl(props: GridToolbarRemoteControlProps) {
-  const apiRef = useGridApiContext();
+function GridToolbarRemoteControl() {
+  const apiRef = useGridApiContext<GridApiPro>();
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const classes = useUtilityClasses(rootProps);
-  const [isLoading, setLoading] = React.useState(false)
-  const [query, setQuery] = React.useState('')
+  const [isLoading, setLoading] = React.useState(false);
+  const [query, setQuery] = React.useState('');
 
   const sendRequest = React.useCallback(() => {
-    const context = generateContext(apiRef, rootProps)
+    const context = generateContext(apiRef, rootProps);
+    const columns = gridColumnLookupSelector(apiRef);
 
-    setLoading(true)
-    fetch(`${REMOTE_ENDPOINT}/api/v1`, {
-      mode: 'cors',
-      method: 'post',
-      headers: {
-        'content-type': 'application/json',
-      },
-      redirect: 'follow',
-      body: JSON.stringify({
-        context: JSON.stringify(context),
-        query,
-      }),
-    })
-    .then(result => result.json())
-    .then(result => {
-      console.log(result)
-    })
-    .catch(error => {
-      console.log(error)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
-  }, [apiRef, rootProps, query])
+    setLoading(true);
+    apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: true } }));
+    remoteControl
+      .controls(context, query)
+      .then((result) => {
+        apiRef.current.setFilterModel({
+          items: result.filters.map((f, i) => {
+            const item = {
+              id: i,
+              field: f.column,
+              operator: f.operator,
+              value: f.value,
+            };
+            const column = columns[f.column];
+            if (column.type === 'singleSelect') {
+              const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
+              const found = options.find((o) => typeof o === 'object' && o.label === f.value);
+              if (found) {
+                item.value = (found as any).value;
+              }
+            }
+
+            return item;
+          }),
+          logicOperator: (result.filterOperator as GridLogicOperator) ?? GridLogicOperator.And,
+          quickFilterValues: [],
+        });
+        apiRef.current.setSortModel(
+          result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
+        );
+        if ((apiRef.current as any).setRowGroupingModel) {
+          (apiRef.current as any).setRowGroupingModel(result.grouping.map((g) => g.column));
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-alert
+        alert(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+        apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: false } }));
+      });
+  }, [apiRef, rootProps, query]);
 
   const handleChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value)
-  })
+    setQuery(event.target.value);
+  });
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
-      sendRequest()
+      sendRequest();
     }
-  })
+  });
 
   const handleDone = useEventCallback((value: string) => {
-    setQuery(value)
-    sendRequest()
-  })
+    setQuery(value);
+    sendRequest();
+  });
 
   return (
     <Style ownerState={rootProps} className={classes.root}>
-      <RecordButton
-        onUpdate={setQuery}
-        onDone={handleDone}
-      />
+      {BrowserSpeechRecognition && (
+        <RecordButton
+          label={isLoading ? 'Loading…' : undefined}
+          disabled={isLoading}
+          onUpdate={setQuery}
+          onDone={handleDone}
+        />
+      )}
       <rootProps.slots.baseTextField
         variant="standard"
         placeholder={apiRef.current.getLocaleText('toolbarRemoteControlPlaceholder')}
@@ -110,43 +136,39 @@ function GridToolbarRemoteControl(props: GridToolbarRemoteControlProps) {
   );
 }
 
-const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition
-type SpeechRecognitionOptions = { onUpdate: (value: string) => void, onDone: (value: string) => void }
-function RecordButton(props: SpeechRecognitionOptions) {
-  if (!BrowserSpeechRecognition) {
-    return null
-  }
-
+type SpeechRecognitionOptions = {
+  onUpdate: (value: string) => void;
+  onDone: (value: string) => void;
+};
+function RecordButton(props: SpeechRecognitionOptions & { disabled: boolean; label?: string }) {
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  const [isRecording, setRecording] = React.useState(false)
+  const [isRecording, setRecording] = React.useState(false);
 
   const recognition = useLazyRef(() => {
-    const timeout = new Timeout()
-    const instance = new BrowserSpeechRecognition()
+    const timeout = new Timeout();
+    const instance = new BrowserSpeechRecognition();
     instance.continuous = true;
     instance.interimResults = true;
     instance.lang = rootProps.lang ?? 'en-US';
 
-    let finalResult = ''
-    let interimResult = ''
-
-    // XXX: handle this
-    // instance.onerror = (event: ErrorEvent) => {};
+    let finalResult = '';
+    let interimResult = '';
 
     function start(options: SpeechRecognitionOptions) {
       if (isRecording) {
         return;
       }
-      setRecording(true)
+      setRecording(true);
 
       instance.onresult = (event: any) => {
         finalResult = '';
         interimResult = '';
-        if (typeof event.results == 'undefined') {
-          return instance.stop();
+        if (typeof event.results === 'undefined') {
+          instance.stop();
+          return;
         }
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
           if (event.results[i].isFinal) {
             finalResult += event.results[i][0].transcript;
           } else {
@@ -155,73 +177,77 @@ function RecordButton(props: SpeechRecognitionOptions) {
         }
 
         if (finalResult === '') {
-          options.onUpdate(interimResult)
+          options.onUpdate(interimResult);
         }
-        timeout.start(1000, () => instance.stop())
+        timeout.start(1000, () => instance.stop());
       };
 
       instance.onsoundend = () => {
-        console.log('SOUND_END')
         instance.stop();
-      }
+      };
 
       instance.onend = () => {
-        console.log('END')
-        options.onDone(finalResult)
-        setRecording(false)
-      }
+        options.onDone(finalResult);
+        setRecording(false);
+      };
 
-      instance.start()
+      instance.start();
     }
 
-    return { start }
+    return { start };
   }).current;
 
   const handleClick = useEventCallback(() => {
-    recognition.start(props)
-  })
+    recognition.start({ onDone: props.onDone, onUpdate: props.onUpdate });
+  });
 
+  // XXX: l11n
   return (
-    <rootProps.slots.baseButton onClick={handleClick}>
-      Voice
-    </rootProps.slots.baseButton> // XXX: l11n
-  )
+    <rootProps.slots.baseButton disabled={props.disabled || isRecording} onClick={handleClick}>
+      {props.label ?? (isRecording ? 'Recording…' : 'Voice')}
+    </rootProps.slots.baseButton>
+  );
 }
 
-GridToolbarRemoteControl.propTypes = {
+RecordButton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  disabled: PropTypes.bool.isRequired,
+  label: PropTypes.string,
+  onDone: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
 } as any;
 
 export { GridToolbarRemoteControl };
 
-
 function generateContext(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  rootProps: DataGridProProcessedProps
+  apiRef: React.MutableRefObject<GridApiPro>,
+  rootProps: DataGridProProcessedProps,
 ) {
-  const columns = Object.values(gridColumnLookupSelector(apiRef))
-  const rows = rootProps.rows
+  const columns = Object.values(gridColumnLookupSelector(apiRef));
+  const rows = rootProps.rows;
 
-  const columnsContext = Object.values(columns).map(c => ({
+  const columnsContext = Object.values(columns).map((c) => ({
     field: c.field,
     description: c.description ?? null,
     examples: rows.slice(0, 5).map(() => {
-      const row = rows[~~(Math.random() * rows.length)]
+      const row = rows[Math.floor(Math.random() * rows.length)];
       if (c.valueGetter) {
-        return c.valueGetter(row[c.field] as never, row, c, apiRef)
+        return c.valueGetter(row[c.field] as never, row, c, apiRef);
       }
-      return row[c.field]
+      return row[c.field];
     }),
     type: c.type ?? 'string',
-    allowedOperators: c.filterOperators?.map(o => o.value) ?? []
-  }))
+    allowedOperators: c.filterOperators?.map((o) => o.value) ?? [],
+  }));
 
-  const context =
-    (rootProps.description ? `The rows represent: ${rootProps.description}\n\n` : '')
-    + `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`
+  let context = '';
+  if (rootProps.description) {
+    context += `The rows represent: ${rootProps.description}\n\n`;
+  }
+  context += `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`;
 
-  return context
+  return context;
 }

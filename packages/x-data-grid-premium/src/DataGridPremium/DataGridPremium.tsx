@@ -207,6 +207,10 @@ DataGridPremiumRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * Set the description of the Data Grid.
+   */
+  description: PropTypes.string,
+  /**
    * The row ids to show the detail panel.
    */
   detailPanelExpandedRowIds: PropTypes.arrayOf(
@@ -528,6 +532,10 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * Set the language of the Data Grid (format: en-US).
+   */
+  lang: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
