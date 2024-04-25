@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - next
+      - fix-l10n-workflow
 
 permissions: {}
 
@@ -26,7 +27,7 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+          # cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       - name: pnpm l10n --report
         env:
