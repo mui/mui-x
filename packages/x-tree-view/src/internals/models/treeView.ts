@@ -1,10 +1,9 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergePluginsProperty } from './helpers';
 
-export interface TreeViewNode {
+export interface TreeViewItemMeta {
   id: string;
   idAttribute: string | undefined;
-  index: number;
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
@@ -12,13 +11,6 @@ export interface TreeViewNode {
    * Only defined for `RichTreeView`.
    */
   label?: string;
-}
-
-export interface TreeViewItemRange {
-  start?: string | null;
-  end?: string | null;
-  next?: string | null;
-  current?: string;
 }
 
 export interface TreeViewModel<TValue> {

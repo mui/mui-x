@@ -29,7 +29,8 @@ export const getDerivedPaginationModel = (
   let paginationModel = paginationState.paginationModel;
   const rowCount = paginationState.rowCount;
   const pageSize = paginationModelProp?.pageSize ?? paginationModel.pageSize;
-  const pageCount = getPageCount(rowCount, pageSize);
+  const page = paginationModelProp?.page ?? paginationModel.page;
+  const pageCount = getPageCount(rowCount, pageSize, page);
 
   if (
     paginationModelProp &&

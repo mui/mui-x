@@ -1,7 +1,7 @@
 import { TreeViewPluginSignature } from '../../models';
 
 export interface UseTreeViewIdInstance {
-  getTreeItemId: (itemId: string, idAttribute: string | undefined) => string;
+  getTreeItemIdAttribute: (itemId: string, idAttribute: string | undefined) => string;
 }
 
 export interface UseTreeViewIdParameters {
@@ -15,7 +15,7 @@ export interface UseTreeViewIdParameters {
 export type UseTreeViewIdDefaultizedParameters = UseTreeViewIdParameters;
 
 export interface UseTreeViewIdState {
-  focusedNodeId: string | null;
+  focusedItemId: string | null;
 }
 
 export type UseTreeViewIdSignature = TreeViewPluginSignature<{

@@ -55,7 +55,6 @@ export const BarElementPath = styled(animated.rect, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: BarElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  shapeRendering: 'crispEdges',
   fill: ownerState.isHighlighted
     ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
     : ownerState.color,

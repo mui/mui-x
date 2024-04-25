@@ -198,7 +198,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -206,7 +206,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -400,7 +400,7 @@ const useSingleInputFieldSlotProps = <
     event.stopPropagation();
 
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -431,7 +431,7 @@ const useSingleInputFieldSlotProps = <
       ref: anchorRef,
       ...fieldProps?.InputProps,
     },
-    focused: open,
+    focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(wrapperVariant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`

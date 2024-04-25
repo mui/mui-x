@@ -301,8 +301,8 @@ export interface UsePickerValueActions {
   onDismiss: () => void;
   onCancel: () => void;
   onSetToday: () => void;
-  onOpen: () => void;
-  onClose: () => void;
+  onOpen: (event: React.UIEvent) => void;
+  onClose: (event?: React.UIEvent) => void;
 }
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
@@ -316,7 +316,7 @@ export interface UsePickerValueViewsResponse<TValue> {
   value: TValue;
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   open: boolean;
-  onClose: () => void;
+  onClose: (event?: React.MouseEvent) => void;
 }
 
 /**

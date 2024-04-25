@@ -73,6 +73,7 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
+    "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
@@ -89,7 +90,7 @@
     },
     "getAggregationPosition": {
       "type": { "name": "func" },
-      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`",
+      "default": "(groupNode) => groupNode == null ? 'footer' : 'inline'",
       "signature": {
         "type": "function(groupNode: GridGroupNode) => GridAggregationPosition | null",
         "describedArgs": ["groupNode"],
@@ -163,6 +164,7 @@
       }
     },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "headerFilterHeight": { "type": { "name": "number" } },
     "headerFilters": { "type": { "name": "bool" }, "default": "false" },
     "hideFooter": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
@@ -405,6 +407,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onPaginationMetaChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(paginationMeta: GridPaginationMeta) => void",
+        "describedArgs": ["paginationMeta"]
+      }
+    },
     "onPaginationModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -526,6 +535,7 @@
       "default": "[25, 50, 100]"
     },
     "pagination": { "type": { "name": "bool" }, "default": "false" },
+    "paginationMeta": { "type": { "name": "shape", "description": "{ hasNextPage?: bool }" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -548,6 +558,7 @@
         "returned": "Promise<R> | R"
       }
     },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
@@ -1265,6 +1276,12 @@
       "key": "columnHeader--filtered",
       "className": "MuiDataGridPremium-columnHeader--filtered",
       "description": "Styles applied to the column header if the column has a filter applied to it.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--last",
+      "className": "MuiDataGridPremium-columnHeader--last",
+      "description": "Styles applied to the last column header element.",
       "isGlobal": false
     },
     {

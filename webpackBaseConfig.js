@@ -16,6 +16,7 @@ module.exports = {
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
+      '@mui/x-tree-view-pro': path.resolve(__dirname, './packages/x-tree-view-pro/src'),
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
       '@mui/material-nextjs': path.resolve(
         __dirname,
@@ -41,7 +42,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@mui)/,
+        exclude: /node_modules\/.*\/node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,

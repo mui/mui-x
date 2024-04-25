@@ -1,4 +1,4 @@
-import glob from 'glob-gitignore';
+import glob from 'fast-glob';
 import fse from 'fs-extra';
 
 async function run() {
@@ -12,11 +12,11 @@ async function run() {
   ];
 
   const files = importFiles.reduce((acc, pattern) => {
-    const newFiles = glob.sync(`docs/node_modules/@mui/monorepo/${pattern}`);
+    const newFiles = glob.sync(`node_modules/@mui/monorepo/${pattern}`);
     return acc.concat(newFiles);
   }, []);
   files.forEach((file) => {
-    fse.copySync(file, file.replace('docs/node_modules/@mui/monorepo/docs/', 'docs/'));
+    fse.copySync(file, file.replace('node_modules/@mui/monorepo/docs/', 'docs/'));
     // eslint-disable-next-line no-console
     console.log(`copy ${file}`);
   });

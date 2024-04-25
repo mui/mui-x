@@ -35,14 +35,24 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>(({ ownerState }) => ({
+})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>({
   overflowY: 'auto',
   width: '100%',
   '@media (prefers-reduced-motion: no-preference)': {
-    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    scrollBehavior: 'auto',
   },
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-}));
+  variants: [
+    {
+      props: { alreadyRendered: true },
+      style: {
+        '@media (prefers-reduced-motion: no-preference)': {
+          scrollBehavior: 'smooth',
+        },
+      },
+    },
+  ],
+});
 
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
@@ -333,7 +343,7 @@ DigitalClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

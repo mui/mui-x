@@ -1,17 +1,22 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPaginationRowCountApi } from './gridPaginationInterfaces';
+import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
-import { useGridLogger, useGridSelector, useGridApiMethod } from '../../utils';
+import {
+  useGridLogger,
+  useGridSelector,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { gridPaginationRowCountSelector } from './gridPaginationSelector';
-import { noRowCountInServerMode } from './gridPaginationUtils';
+import {
+  gridPaginationRowCountSelector,
+  gridPaginationMetaSelector,
+  gridPaginationModelSelector,
+} from './gridPaginationSelector';
 
-/**
- * @requires useGridFilter (state)
- * @requires useGridDimensions (event) - can be after
- */
 export const useGridRowCount = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
@@ -22,7 +27,10 @@ export const useGridRowCount = (
   const logger = useGridLogger(apiRef, 'useGridRowCount');
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
-  const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const rowCountState = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const paginationMeta = useGridSelector(apiRef, gridPaginationMetaSelector);
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
+  const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
@@ -37,7 +45,7 @@ export const useGridRowCount = (
    */
   const setRowCount = React.useCallback<GridPaginationRowCountApi['setRowCount']>(
     (newRowCount) => {
-      if (rowCount === newRowCount) {
+      if (rowCountState === newRowCount) {
         return;
       }
       logger.debug("Setting 'rowCount' to", newRowCount);
@@ -50,7 +58,7 @@ export const useGridRowCount = (
         },
       }));
     },
-    [apiRef, logger, rowCount],
+    [apiRef, logger, rowCountState],
   );
 
   const paginationRowCountApi: GridPaginationRowCountApi = {
@@ -110,21 +118,43 @@ export const useGridRowCount = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
+   * EVENTS
+   */
+  const handlePaginationModelChange = React.useCallback(
+    (model: GridPaginationState['paginationModel']) => {
+      if (props.paginationMode === 'client' || !previousPageSize.current) {
+        return;
+      }
+      if (model.pageSize !== previousPageSize.current) {
+        previousPageSize.current = model.pageSize;
+        if (rowCountState === -1) {
+          // Row count unknown and page size changed, reset the page
+          apiRef.current.setPage(0);
+        }
+      }
+    },
+    [props.paginationMode, previousPageSize, rowCountState, apiRef],
+  );
+
+  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+
+  /**
    * EFFECTS
    */
-  React.useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
-      if (props.paginationMode === 'server' && props.rowCount == null) {
-        noRowCountInServerMode();
-      }
-    }
-  }, [props.rowCount, props.paginationMode]);
-
   React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(visibleTopLevelRowCount);
     } else if (props.rowCount != null) {
       apiRef.current.setRowCount(props.rowCount);
     }
-  }, [apiRef, visibleTopLevelRowCount, props.paginationMode, props.rowCount]);
+  }, [apiRef, props.paginationMode, visibleTopLevelRowCount, props.rowCount]);
+
+  const isLastPage = paginationMeta.hasNextPage === false;
+  React.useEffect(() => {
+    if (isLastPage && rowCountState === -1) {
+      apiRef.current.setRowCount(
+        paginationModel.pageSize * paginationModel.page + visibleTopLevelRowCount,
+      );
+    }
+  }, [apiRef, visibleTopLevelRowCount, isLastPage, rowCountState, paginationModel]);
 };

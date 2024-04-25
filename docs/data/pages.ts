@@ -383,7 +383,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
-          { pathname: '/x/react-date-pickers/playground', title: 'Customziation playground' },
+          { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
         ],
       },
     ],
@@ -438,11 +438,6 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge', title: 'Gauge' },
           {
-            pathname: '/x/api/charts-group',
-            title: 'API Reference',
-            children: [...chartsComponentApi],
-          },
-          {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
@@ -453,6 +448,24 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking', title: 'Stacking' },
               { pathname: '/x/react-charts/styling', title: 'Styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+            ],
+          },
+          {
+            pathname: '/x/api/charts-group',
+            title: 'API Reference',
+            children: [
+              ...chartsComponentApi,
+              {
+                pathname: '/x/api/charts-interfaces-group',
+                subheader: 'Interfaces',
+                children: [
+                  { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
+                  { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
+                  { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
+                  { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
+                  { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                ],
+              },
             ],
           },
           {

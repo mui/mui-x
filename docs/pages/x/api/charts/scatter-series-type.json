@@ -1,0 +1,18 @@
+{
+  "name": "ScatterSeriesType",
+  "imports": ["import { ScatterSeriesType } from '@mui/x-charts'"],
+  "properties": {
+    "data": { "type": { "description": "ScatterValueType[]" }, "required": true },
+    "type": { "type": { "description": "'scatter'" }, "required": true },
+    "color": { "type": { "description": "string" } },
+    "disableHover": { "type": { "description": "boolean" }, "default": "false" },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "label": { "type": { "description": "string" } },
+    "markerSize": { "type": { "description": "number" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisKey": { "type": { "description": "string" } },
+    "yAxisKey": { "type": { "description": "string" } },
+    "zAxisKey": { "type": { "description": "string" } }
+  }
+}
