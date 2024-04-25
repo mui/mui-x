@@ -18,7 +18,6 @@ materialDesign: https://m2.material.io/components/date-pickers
 ## Component composition
 
 The component is built using the `MultiInputTimeRangeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
-All the documented props of those two components can also be passed to the Time Range Picker component.
 
 Check-out their documentation page for more information:
 
