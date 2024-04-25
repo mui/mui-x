@@ -104,9 +104,6 @@
     "moment": "^2.30.1",
     "rimraf": "^5.0.5"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }
