@@ -9,9 +9,6 @@ overrides:
   '@types/node': ^18.19.23
 
 patchedDependencies:
-  '@mui/monorepo@6.0.0-alpha.0':
-    hash: m6s35rhse6xiedzuwdr24itknq
-    path: patches/@mui__monorepo@6.0.0-alpha.0.patch
   babel-plugin-replace-imports@1.0.2:
     hash: h4cab4lqksemkw6ln3l3h4s77e
     path: patches/babel-plugin-replace-imports@1.0.2.patch
@@ -90,14 +87,14 @@ importers:
         specifier: ^5.15.14
         version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.60)(react@18.2.0)
       '@mui/internal-markdown':
-        specifier: ^1.0.0
-        version: 1.0.1
+        specifier: ^1.0.3
+        version: 1.0.3
       '@mui/material':
         specifier: ^5.15.14
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#e1d94d5ce097815bcd738352e69bb43ce03bd266
-        version: github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266(patch_hash=m6s35rhse6xiedzuwdr24itknq)
+        specifier: github:mui/material-ui#afffc2ffc3db1e6abf48f3b3e13a41e8b758f874
+        version: github.com/mui/material-ui/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
@@ -3577,8 +3574,8 @@ packages:
       typescript: 5.4.5
     dev: true
 
-  /@mui/internal-markdown@1.0.1:
-    resolution: {integrity: sha512-goTCzEbx0yxDbCU9ngHo02f5TBHwngF6RDM2ALqtgUsvNp14/lVU3OFytvpxcwjeSrrbVPEw4MSidYO8FnlUKQ==}
+  /@mui/internal-markdown@1.0.3:
+    resolution: {integrity: sha512-b+8T8S1raSuaOXaNyKiChyw1Lb/nEY1ITGsw6oygVLacsN6mZ7EB5cmvEbHA4EQiNwqCn7BgI9OoBTTr0GdZtg==}
     dependencies:
       '@babel/runtime': 7.24.4
       lodash: 4.17.21
@@ -10466,8 +10463,8 @@ packages:
       - supports-color
     dev: true
 
-  /google-auth-library@9.7.0:
-    resolution: {integrity: sha512-I/AvzBiUXDzLOy4iIZ2W+Zq33W4lcukQv1nl7C8WUA6SQwyQwUwu3waNmWNAvzds//FG8SZ+DnKnW/2k6mQS8A==}
+  /google-auth-library@9.9.0:
+    resolution: {integrity: sha512-9l+zO07h1tDJdIHN74SpnWIlNR+OuOemXlWJlLP9pXy6vFtizgpEzMuwJa4lqY9UAdiAv5DVd5ql0Am916I+aA==}
     engines: {node: '>=14'}
     dependencies:
       base64-js: 1.5.1
@@ -10487,7 +10484,7 @@ packages:
     dependencies:
       extend: 3.0.2
       gaxios: 6.1.1
-      google-auth-library: 9.7.0
+      google-auth-library: 9.9.0
       qs: 6.11.2
       url-template: 2.0.8
       uuid: 9.0.1
@@ -18079,18 +18076,17 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266(patch_hash=m6s35rhse6xiedzuwdr24itknq):
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/e1d94d5ce097815bcd738352e69bb43ce03bd266}
-    id: github.com/mui/material-ui/e1d94d5ce097815bcd738352e69bb43ce03bd266
+  github.com/mui/material-ui/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874:
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874}
     name: '@mui/monorepo'
-    version: 6.0.0-alpha.0
+    version: 6.0.0-alpha.4
     requiresBuild: true
     dependencies:
       '@googleapis/sheets': 5.0.5
       '@netlify/functions': 2.6.0
       '@slack/bolt': 3.17.1
       execa: 8.0.1
-      google-auth-library: 9.7.0
+      google-auth-library: 9.9.0
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -18098,4 +18094,3 @@ packages:
       - supports-color
       - utf-8-validate
     dev: true
-    patched: true

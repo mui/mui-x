@@ -86,9 +86,9 @@
     "@emotion/styled": "^11.11.0",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.14",
-    "@mui/internal-markdown": "^1.0.0",
+    "@mui/internal-markdown": "^1.0.3",
     "@mui/material": "^5.15.14",
-    "@mui/monorepo": "github:mui/material-ui#e1d94d5ce097815bcd738352e69bb43ce03bd266",
+    "@mui/monorepo": "github:mui/material-ui#afffc2ffc3db1e6abf48f3b3e13a41e8b758f874",
     "@mui/utils": "^5.15.14",
     "@next/eslint-plugin-next": "14.0.4",
     "@octokit/plugin-retry": "^6.0.1",
@@ -197,8 +197,7 @@
     "patchedDependencies": {
       "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
-      "@mui/monorepo@6.0.0-alpha.0": "patches/@mui__monorepo@6.0.0-alpha.0.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
     }
   }
 }
