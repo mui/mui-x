@@ -10,6 +10,7 @@ _Apr 25, 2024_
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Scatter Charts get a z-axis to allow coloring data points independently from their coordinate
+- 🌍 Improve Catalan (ca-ES) and Spanish (es-ES) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -57,12 +58,11 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 
 - [TreeView] Remove un-needed `aria-activedescendant` attribute (#12867) @flaviendelangle
 - [TreeView] Rework the selection internals (#12703) @flaviendelangle
-- [TreeView] Use the order in which the items are displayed for type-ahead (#12827) @flaviendelangle
-
+- [TreeView] Use the order in which the items are displayed for `type-ahead` (#12827) @flaviendelangle
 
 ### Docs
 
-- [docs] Add demo for styling charts with sx props (#12791) @derek-0000
+- [docs] Add demo for styling charts with `sx` props (#12791) @derek-0000
 - [docs] Cover webpack 4 support in migration guide (#12710) @cherniavskii
 - [docs] Document interfaces for charts (#12656) @alexfauquette
 - [docs] Fix Vale regression (#12862) @oliviertassinari
