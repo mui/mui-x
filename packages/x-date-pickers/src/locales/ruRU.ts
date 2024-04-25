@@ -16,16 +16,20 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Следующий месяц',
 
   // View navigation
-  openPreviousView: 'открыть предыдущий вид',
-  openNextView: 'открыть следующий вид',
+  openPreviousView: 'Открыть предыдущий вид',
+  openNextView: 'Открыть следующий вид',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Начало',
   end: 'Конец',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Generic range placeholders
   // from: 'From',
@@ -46,9 +50,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${
-      time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -71,7 +73,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
       : 'Выберите время',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Очистить значение',
 
   // Table labels
   timeTableLabel: 'выбрать время',
@@ -86,6 +88,19 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(д|п)п',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);

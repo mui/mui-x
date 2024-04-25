@@ -1,6 +1,6 @@
 export { useStaticPicker } from './useStaticPicker';
 export type {
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
   StaticOnlyPickerProps,
 } from './useStaticPicker.types';

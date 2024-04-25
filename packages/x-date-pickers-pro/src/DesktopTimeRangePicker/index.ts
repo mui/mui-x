@@ -1,6 +1,6 @@
 export { DesktopTimeRangePicker } from './DesktopTimeRangePicker';
 export type {
   DesktopTimeRangePickerProps,
-  DesktopTimeRangePickerSlotsComponent,
-  DesktopTimeRangePickerSlotsComponentsProps,
+  DesktopTimeRangePickerSlots,
+  DesktopTimeRangePickerSlotProps,
 } from './DesktopTimeRangePicker.types';

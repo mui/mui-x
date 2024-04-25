@@ -4,18 +4,18 @@
 
 ## Single row selection
 
-Single row selection comes enabled by default.
+Single row selection comes enabled by default for the MIT `DataGrid` component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
-To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
+To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
 ## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-On the `DataGridPro` component, you can select multiple rows in two ways:
+On the `DataGridPro` and `DataGridPremium` components, you can select multiple rows in two ways:
 
-- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> key while selecting rows.
-- To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
+- To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
+- To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
 
 {{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
@@ -64,6 +64,13 @@ Always set the `checkboxSelection` prop to `true` even when providing a custom c
 Otherwise, the data grid might remove your column.
 :::
 
+### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+By default, when you click the "Select All" checkbox, all rows in the data grid are selected.
+If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
+
+{{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
+
 ## Usage with server-side pagination
 
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
@@ -86,7 +93,7 @@ The following demo shows the prop in action:
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "RowSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

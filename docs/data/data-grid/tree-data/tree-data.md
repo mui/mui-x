@@ -102,16 +102,19 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> If you are using `sortingMode="server"`, you need to always put the children of a row after its parent.
-> For instance:
->
-> ```ts
-> // ✅ The row A.A is immediately after its parent
-> const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
->
-> // ❌ The row A.A is not immediately after its parent
-> const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
-> ```
+:::warning
+If you are using `sortingMode="server"`, the children of a row must always immediately follow their parent.
+For instance:
+
+```ts
+// ✅ The row A.A is immediately after its parent
+const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
+
+// ❌ The row A.A is not immediately after its parent
+const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+```
+
+:::
 
 ## Children lazy-loading 🚧
 

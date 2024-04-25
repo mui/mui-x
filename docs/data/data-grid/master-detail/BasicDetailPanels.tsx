@@ -62,7 +62,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
                 field: 'total',
                 headerName: 'Total',
                 type: 'number',
-                valueGetter: ({ row }) => row.quantity * row.unitPrice,
+                valueGetter: (value, row) => row.quantity * row.unitPrice,
               },
             ]}
             rows={rowProp.products}
@@ -75,7 +75,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   );
 }
 
-const columns: GridColDef[] = [
+const columns: GridColDef<(typeof rows)[number]>[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'date', type: 'date', headerName: 'Placed at' },
@@ -84,7 +84,7 @@ const columns: GridColDef[] = [
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc: number, product: any) => product.unitPrice * product.quantity,
         0,
@@ -177,7 +177,6 @@ export default function BasicDetailPanels() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThreshold={0}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

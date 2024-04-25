@@ -52,6 +52,7 @@ export default function InterpolationDemoNoSnap() {
         ]}
         height={300}
         margin={{ top: 10, bottom: 30 }}
+        skipAnimation
       />
       <HighlightedCode code={getExample(curveType)} language="tsx" />
     </Box>

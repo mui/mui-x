@@ -1,13 +1,18 @@
 import * as React from 'react';
-import Select from '@mui/material/Select';
+import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { DataGrid, GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRenderEditCellParams,
+  useGridApiContext,
+  DataGridProps,
+} from '@mui/x-data-grid';
 
 function SelectEditInputCell(props: GridRenderEditCellParams) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = async (event) => {
+  const handleChange: SelectProps['onChange'] = async (event) => {
     await apiRef.current.setEditCellValue({ id, field, value: event.target.value }, event);
     apiRef.current.stopCellEditMode({ id, field });
   };
@@ -22,11 +27,7 @@ function SelectEditInputCell(props: GridRenderEditCellParams) {
   );
 }
 
-function renderSelectEditInputCell(params) {
-  return <SelectEditInputCell {...params} />;
-}
-
-const baselineProps = {
+const baselineProps: DataGridProps = {
   rows: [
     {
       id: 0,
@@ -46,7 +47,7 @@ const baselineProps = {
       field: 'brand',
       width: 100,
       editable: true,
-      renderEditCell: renderSelectEditInputCell,
+      renderEditCell: (params) => <SelectEditInputCell {...params} />,
     },
   ],
 };

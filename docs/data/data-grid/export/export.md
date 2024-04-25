@@ -122,7 +122,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
   columns={[
     {
       field: 'progress',
-      valueFormatter: ({ value }) => `${value * 100}%`,
+      valueFormatter: (value) => `${value * 100}%`,
       renderCell: ({ value }) => <ProgressBar value={value} />,
     },
   ]}
@@ -311,7 +311,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 :::warning
 This feature only works with `@mui/styled-engine` v5.11.8 or newer.
-Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
@@ -405,7 +405,7 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 ### CSV

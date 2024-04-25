@@ -13,28 +13,28 @@ describe('v7.0.0/pickers', () => {
     it('transforms code as needed', () => {
       const actual = transform(
         {
-          source: read('./actual.spec.js'),
-          path: require.resolve('./actual.spec.js'),
+          source: read('./actual.spec.tsx'),
+          path: require.resolve('./actual.spec.tsx'),
         },
-        { jscodeshift },
+        { jscodeshift: jscodeshift.withParser('tsx') },
         {},
       );
 
-      const expected = read('./expected.spec.js');
+      const expected = read('./expected.spec.tsx');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
     it('should be idempotent for expression', () => {
       const actual = transform(
         {
-          source: read('./expected.spec.js'),
-          path: require.resolve('./expected.spec.js'),
+          source: read('./expected.spec.tsx'),
+          path: require.resolve('./expected.spec.tsx'),
         },
-        { jscodeshift },
+        { jscodeshift: jscodeshift.withParser('tsx') },
         {},
       );
 
-      const expected = read('./expected.spec.js');
+      const expected = read('./expected.spec.tsx');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

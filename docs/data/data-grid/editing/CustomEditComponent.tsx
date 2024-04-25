@@ -16,7 +16,7 @@ function renderRating(params: GridRenderCellParams<any, number>) {
 function RatingEditInputCell(props: GridRenderCellParams<any, number>) {
   const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
-  const ref = React.useRef<HTMLElement>();
+  const ref = React.useRef<HTMLElement>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number | null) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
@@ -56,7 +56,7 @@ export default function CustomEditComponent() {
   );
 }
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'places',
     headerName: 'Places',
@@ -65,6 +65,7 @@ const columns = [
   {
     field: 'rating',
     headerName: 'Rating',
+    display: 'flex',
     renderCell: renderRating,
     renderEditCell: renderRatingEditInputCell,
     editable: true,

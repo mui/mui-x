@@ -5,34 +5,12 @@ import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen, userEvent } from '@mui-internal/test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import {
-  createPickerRenderer,
-  adapterToUse,
-  openPicker,
-  expectInputValue,
-  getTextbox,
-} from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  it('allows to change selected date from the field according to `format`', () => {
-    const handleChange = spy();
-
-    render(<DesktopDatePicker onChange={handleChange} />);
-    const input = getTextbox();
-
-    fireEvent.change(input, {
-      target: {
-        value: '10/11/2018',
-      },
-    });
-
-    expectInputValue(input, '10/11/2018');
-    expect(handleChange.callCount).to.equal(1);
-  });
 
   describe('Views', () => {
     it('should switch between views uncontrolled', () => {
@@ -160,10 +138,12 @@ describe('<DesktopDatePicker />', () => {
 
     let originalScrollX: number;
     let originalScrollY: number;
+
     beforeEach(() => {
       originalScrollX = window.screenX;
       originalScrollY = window.scrollY;
     });
+
     afterEach(() => {
       window.scrollTo(originalScrollX, originalScrollY);
     });
@@ -307,15 +287,6 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
-
-    it('should allow to navigate to previous and next month if props.minDate == null', () => {
-      render(<DesktopDatePicker minDate={null} />);
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
-    });
   });
 
   describe('Validation', () => {
@@ -358,6 +329,6 @@ describe('<DesktopDatePicker />', () => {
       render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
-    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+    }).toWarnDev('MUI X: `openTo="month"` is not a valid prop.');
   });
 });

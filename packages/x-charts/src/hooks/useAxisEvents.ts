@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
+import { getSVGPoint } from '../internals/utils';
+import { useSvgRef } from './useSvgRef';
+import { useDrawingArea } from './useDrawingArea';
 
+function getAsANumber(value: number | Date) {
+  return value instanceof Date ? value.getTime() : value;
+}
 export const useAxisEvents = (disableAxisListener: boolean) => {
-  const svgRef = React.useContext(SVGContext);
-  const { width, height, top, left } = React.useContext(DrawingContext);
+  const svgRef = useSvgRef();
+  const { left, top, width, height } = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -30,7 +35,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       if (usedXAxis === null) {
         return null;
       }
-      const { scale, data: axisData } = axisConfig;
+      const { scale, data: axisData, reverse } = axisConfig;
 
       if (!isBandScale(scale)) {
         const value = scale.invert(mouseValue);
@@ -38,18 +43,24 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         if (axisData === undefined) {
           return { value };
         }
-        const closestIndex = axisData?.findIndex((v: typeof value, index) => {
-          if (v > value) {
-            // @ts-ignore
-            if (index === 0 || Math.abs(value - v) <= Math.abs(value - axisData[index - 1])) {
+
+        const valueAsNumber = getAsANumber(value);
+        const closestIndex = axisData?.findIndex((pointValue: typeof value, index) => {
+          const v = getAsANumber(pointValue);
+          if (v > valueAsNumber) {
+            if (
+              index === 0 ||
+              Math.abs(valueAsNumber - v) <=
+                Math.abs(valueAsNumber - getAsANumber(axisData[index - 1]))
+            ) {
               return true;
             }
           }
-          if (v <= value) {
+          if (v <= valueAsNumber) {
             if (
               index === axisData.length - 1 ||
-              // @ts-ignore
-              Math.abs(value - v) < Math.abs(value - axisData[index + 1])
+              Math.abs(getAsANumber(value) - v) <
+                Math.abs(getAsANumber(value) - getAsANumber(axisData[index + 1]))
             ) {
               return true;
             }
@@ -71,6 +82,13 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       if (dataIndex < 0 || dataIndex >= axisData!.length) {
         return null;
       }
+      if (reverse) {
+        const reverseIndex = axisData!.length - 1 - dataIndex;
+        return {
+          index: reverseIndex,
+          value: axisData![reverseIndex],
+        };
+      }
       return {
         index: dataIndex,
         value: axisData![dataIndex],
@@ -82,29 +100,25 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         x: -1,
         y: -1,
       };
-      dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+      dispatch({ type: 'exitChart' });
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-      // Get mouse coordinate in global SVG space
-      const pt = svgRef.current!.createSVGPoint();
-      pt.x = event.clientX;
-      pt.y = event.clientY;
-      const svgPt = pt.matrixTransform(svgRef.current!.getScreenCTM()!.inverse());
+      const svgPoint = getSVGPoint(svgRef.current!, event);
 
       mousePosition.current = {
-        x: svgPt.x,
-        y: svgPt.y,
+        x: svgPoint.x,
+        y: svgPoint.y,
       };
 
-      const outsideX = svgPt.x < left || svgPt.x > left + width;
-      const outsideY = svgPt.y < top || svgPt.y > top + height;
+      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
+      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
       if (outsideX || outsideY) {
-        dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+        dispatch({ type: 'exitChart' });
         return;
       }
-      const newStateX = getUpdate(xAxis[usedXAxis], svgPt.x);
-      const newStateY = getUpdate(yAxis[usedYAxis], svgPt.y);
+      const newStateX = getUpdate(xAxis[usedXAxis], svgPoint.x);
+      const newStateY = getUpdate(yAxis[usedYAxis], svgPoint.y);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };

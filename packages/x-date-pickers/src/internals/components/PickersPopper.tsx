@@ -27,7 +27,7 @@ interface PickersPopperOwnerState extends PickerPopperProps {
   placement: PopperPlacementType;
 }
 
-export interface PickersPopperSlotsComponent {
+export interface PickersPopperSlots {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
@@ -50,7 +50,7 @@ export interface PickersPopperSlotsComponent {
   popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps {
+export interface PickersPopperSlotProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -77,8 +77,11 @@ export interface PickerPopperProps extends UsePickerValueActions {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  slots?: PickersPopperSlotsComponent;
-  slotProps?: PickersPopperSlotsComponentsProps;
+  slots?: PickersPopperSlots;
+  slotProps?: PickersPopperSlotProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;
@@ -109,13 +112,19 @@ const PickersPopperPaper = styled(MuiPaper, {
   overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickersPopperOwnerState;
-}>(({ ownerState }) => ({
+}>({
   outline: 0,
   transformOrigin: 'top center',
-  ...(ownerState.placement.includes('top') && {
-    transformOrigin: 'bottom center',
-  }),
-}));
+  variants: [
+    {
+      props: ({ placement }: PickersPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(placement),
+      style: {
+        transformOrigin: 'bottom center',
+      },
+    },
+  ],
+});
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   return (
@@ -243,7 +252,7 @@ function useClickAwayListener(
     // TODO This behavior is not tested automatically
     // It's unclear whether this is due to different update semantics in test (batched in act() vs discrete on click).
     // Or if this is a timing related issues due to different Transition components
-    // Once we get rid of all the manual scheduling (e.g. setTimeout(update, 0)) we can revisit this code+test.
+    // Once we get rid of all the manual scheduling (for example setTimeout(update, 0)) we can revisit this code+test.
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 
@@ -269,7 +278,7 @@ interface PickersPopperPaperProps {
   paperClasses: string;
   onPaperClick: React.MouseEventHandler<HTMLDivElement>;
   onPaperTouchStart: React.TouchEventHandler<HTMLDivElement>;
-  paperSlotProps?: PickersPopperSlotsComponentsProps['desktopPaper'];
+  paperSlotProps?: PickersPopperSlotProps['desktopPaper'];
 }
 
 const PickersPopperPaperWrapper = React.forwardRef(
@@ -338,8 +347,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
-      // IE11, Edge (prior to using Blink?) use 'Esc'
-      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
+      if (open && nativeEvent.key === 'Escape') {
         onDismiss();
       }
     }

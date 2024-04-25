@@ -60,6 +60,9 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'd',
   weekday: 'cccc',
   weekdayShort: 'ccccc',
   hours24h: 'HH',
@@ -82,6 +85,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    luxon: DateTime;
+  }
+}
 
 /**
  * Based on `@date-io/luxon`
@@ -205,6 +214,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     // Extract escaped section to avoid extending them
     const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
 
+    // This RegExp tests if a string is only mad of supported tokens
+    const validTokens = [...Object.keys(this.formatTokenMap), 'yyyyy'];
+    const isWordComposedOfTokens = new RegExp(`^(${validTokens.join('|')})+$`);
+
     // Extract words to test if they are a token or a word to escape.
     const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
@@ -216,12 +229,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
             return token;
           }
           const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
-          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+
+          return expandedToken.replace(catchWordsRegexp, (substring, g1, g2) => {
             const word = g1 || g2; // words are either in group 1 or group 2
-            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
-              return correspondance;
+
+            if (isWordComposedOfTokens.test(word)) {
+              return substring;
             }
-            return `'${correspondance}'`;
+            return `'${substring}'`;
           });
         })
         .join('')
@@ -290,13 +305,13 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isAfterYear = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.endOf('year'), 'years').toObject();
+    const diff = value.diff(this.endOfYear(comparingInValueTimezone), 'years').toObject();
     return diff.years! > 0;
   };
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.endOf('day'), 'days').toObject();
+    const diff = value.diff(this.endOfDay(comparingInValueTimezone), 'days').toObject();
     return diff.days! > 0;
   };
 
@@ -306,20 +321,20 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public isBeforeYear = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.startOf('year'), 'years').toObject();
+    const diff = value.diff(this.startOfYear(comparingInValueTimezone), 'years').toObject();
     return diff.years! < 0;
   };
 
   public isBeforeDay = (value: DateTime, comparing: DateTime) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
-    const diff = value.diff(comparingInValueTimezone.startOf('day'), 'days').toObject();
+    const diff = value.diff(this.startOfDay(comparingInValueTimezone), 'days').toObject();
     return diff.days! < 0;
   };
 
   public isWithinRange = (value: DateTime, [start, end]: [DateTime, DateTime]) => {
     return (
-      value.equals(start) ||
-      value.equals(end) ||
+      this.isEqual(value, start) ||
+      this.isEqual(value, end) ||
       (this.isAfter(value, start) && this.isBefore(value, end))
     );
   };
@@ -333,7 +348,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week');
+    return value.startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -349,7 +364,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week');
+    return value.endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -447,17 +462,16 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public getWeekArray = (value: DateTime) => {
     const cleanValue = this.setLocaleToValue(value);
-    const { days } = cleanValue
-      .endOf('month')
-      .endOf('week')
-      .diff(cleanValue.startOf('month').startOf('week'), 'days')
-      .toObject();
+    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
+    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+
+    const { days } = lastDay.diff(firstDay, 'days').toObject();
 
     const weeks: DateTime[][] = [];
     new Array<number>(Math.round(days!))
       .fill(0)
       .map((_, i) => i)
-      .map((day) => cleanValue.startOf('month').startOf('week').plus({ days: day }))
+      .map((day) => firstDay.plus({ days: day }))
       .forEach((v, i) => {
         if (i === 0 || (i % 7 === 0 && i > 6)) {
           weeks.push([v]);
@@ -471,19 +485,22 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
-    return value.weekNumber;
+    return value.localWeekNumber ?? value.weekNumber;
+  };
+
+  public getDayOfWeek = (value: DateTime) => {
+    return value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {
-    const startDate = start.startOf('year');
-    const endDate = end.endOf('year');
-
-    let current = startDate;
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: DateTime[] = [];
 
-    while (current < endDate) {
+    let current = startDate;
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = current.plus({ year: 1 });
+      current = this.addYears(current, 1);
     }
 
     return years;

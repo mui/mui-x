@@ -1,6 +1,6 @@
 export { MobileTimeRangePicker } from './MobileTimeRangePicker';
 export type {
   MobileTimeRangePickerProps,
-  MobileTimeRangePickerSlotsComponent,
-  MobileTimeRangePickerSlotsComponentsProps,
+  MobileTimeRangePickerSlots,
+  MobileTimeRangePickerSlotProps,
 } from './MobileTimeRangePicker.types';

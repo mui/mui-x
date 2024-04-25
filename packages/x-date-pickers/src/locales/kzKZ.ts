@@ -23,9 +23,13 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
       ? 'жылдық көріністі ашу, күнтізбе көрінісіне ауысу'
       : 'күнтізбе көрінісін ашу, жылдық көрінісіне ауысу',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Бастау',
   end: 'Cоңы',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Generic range placeholders
   // from: 'From',
@@ -46,9 +50,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} таңдау. ${
-      time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view]} таңдау. ${time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} сағат`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -86,6 +88,19 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(т|к)',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const kzKZ = getPickersLocalization(kzKZPickers);

@@ -42,6 +42,23 @@ async function findLatestTaggedVersion(octokit) {
   return data[0].name.trim();
 }
 
+function resolvePackagesByLabels(labels) {
+  let resolvedPackages = [];
+  labels.forEach((label) => {
+    switch (label.name) {
+      case 'component: data grid':
+        resolvedPackages.push('DataGrid');
+        break;
+      case 'component: pickers':
+        resolvedPackages.push('pickers');
+        break;
+      default:
+        break;
+    }
+  });
+  return resolvedPackages;
+}
+
 async function main(argv) {
   const { githubToken, lastRelease: lastReleaseInput, release } = argv;
 
@@ -89,6 +106,7 @@ async function main(argv) {
   // Fetch all the pull Request and check if there is a section named changelog
 
   const changeLogMessages = [];
+  const prsLabelsMap = {};
   await Promise.all(
     commitsItems.map(async (commitsItem) => {
       const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
@@ -97,12 +115,14 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage },
+        data: { body: bodyMessage, labels },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
+
+      prsLabelsMap[commitsItem.sha] = labels;
 
       if (!bodyMessage) {
         return;
@@ -146,8 +166,6 @@ async function main(argv) {
     const tag = parseTags(commitItem.commit.message);
     switch (tag) {
       case 'DataGrid':
-      case 'l10n':
-      case '118n':
         dataGridCommits.push(commitItem);
         break;
       case 'DataGridPro':
@@ -164,6 +182,7 @@ async function main(argv) {
         pickersCommits.push(commitItem);
         break;
       case 'DateRangePicker':
+      case 'DateTimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts':
@@ -181,6 +200,27 @@ async function main(argv) {
       case 'codemod':
         codemodCommits.push(commitItem);
         break;
+      case 'l10n':
+      case '118n': {
+        const prLabels = prsLabelsMap[commitItem.sha];
+        const resolvedPackages = resolvePackagesByLabels(prLabels);
+        if (resolvedPackages.length > 0) {
+          resolvedPackages.forEach((resolvedPackage) => {
+            switch (resolvedPackage) {
+              case 'DataGrid':
+                dataGridCommits.push(commitItem);
+                break;
+              case 'pickers':
+                pickersCommits.push(commitItem);
+                break;
+              default:
+                coreCommits.push(commitItem);
+                break;
+            }
+          });
+        }
+        break;
+      }
       default:
         otherCommits.push(commitItem);
         break;
@@ -227,6 +267,8 @@ We'd like to offer a big thanks to the ${
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### \`@mui/x-data-grid@__VERSION__\`
@@ -246,7 +288,7 @@ Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
-### Date Pickers
+### Date and Time Pickers
 
 #### \`@mui/x-date-pickers@__VERSION__\`
 
@@ -259,11 +301,15 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}
 
-### Charts / \`@mui/x-charts@__VERSION__\`
+### Charts
+ 
+#### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 
-### Tree View / \`@mui/x-tree-view@__VERSION__\`
+### Tree View
+
+#### \`@mui/x-tree-view@__VERSION__\`
 
 ${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}

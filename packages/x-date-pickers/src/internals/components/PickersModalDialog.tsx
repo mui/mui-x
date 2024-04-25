@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 
-export interface PickersModalDialogSlotsComponent {
+export interface PickersModalDialogSlots {
   /**
    * Custom component for the dialog inside which the views are rendered on mobile.
    * @default PickersModalDialogRoot
@@ -26,7 +26,7 @@ export interface PickersModalDialogSlotsComponent {
   mobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogSlotsComponentsProps {
+export interface PickersModalDialogSlotProps {
   /**
    * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
    */
@@ -46,12 +46,12 @@ export interface PickersModalDialogProps extends UsePickerValueActions {
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersModalDialogSlotsComponent;
+  slots?: PickersModalDialogSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersModalDialogSlotsComponentsProps;
+  slotProps?: PickersModalDialogSlotProps;
   open: boolean;
 }
 

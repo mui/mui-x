@@ -1,6 +1,1 @@
-<DataGridPro
-  {...data}
-  columns={columns}
-  disableColumnFilter
-  unstable_headerFilters
-/>
+<DataGridPro {...data} columns={columns} disableColumnFilter headerFilters />

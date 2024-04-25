@@ -1,53 +1,33 @@
 import {
-  UsePickerParams,
-  BasePickerProps,
-  PickersPopperSlotsComponent,
-  PickersPopperSlotsComponentsProps,
-  ExportedBaseToolbarProps,
+  PickersPopperSlots,
+  PickersPopperSlotProps,
   UsePickerViewsProps,
-  BaseNonStaticPickerProps,
-  UsePickerValueNonStaticProps,
-  UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
-import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
-import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
-import {
-  RangePickerFieldSlotsComponent,
-  RangePickerFieldSlotsComponentsProps,
-} from '../useEnrichedRangePickerFieldProps';
+  RangeOnlyPickerProps,
+  RangePickerAdditionalViewProps,
+  UseRangePickerParams,
+  UseRangePickerProps,
+  UseRangePickerSlotProps,
+  UseRangePickerSlots,
+} from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlotsComponent<
-  TDate,
+export interface UseDesktopRangePickerSlots<
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponent {}
+> extends UseRangePickerSlots<TDate, TView>,
+    PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotsComponentsProps<
-  TDate,
+export interface UseDesktopRangePickerSlotProps<
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedUseDesktopRangePickerSlotsComponentsProps<TDate, TView> {
-  toolbar?: ExportedBaseToolbarProps;
-}
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends UseRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
+    PickersPopperSlotProps {}
 
-export interface ExportedUseDesktopRangePickerSlotsComponentsProps<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersPopperSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    RangePickerFieldSlotsComponentsProps<TDate> {}
-
-export interface DesktopRangeOnlyPickerProps<TDate>
-  extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
-    UsePickerViewsNonStaticProps,
-    BaseRangeNonStaticPickerProps,
-    UseRangePositionProps {
+export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -55,53 +35,53 @@ export interface DesktopRangeOnlyPickerProps<TDate>
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends DesktopRangeOnlyPickerProps<TDate>,
-    BasePickerProps<
-      DateRange<TDate>,
-      TDate,
-      TView,
-      TError,
-      TExternalProps,
-      DesktopRangePickerAdditionalViewProps
-    > {
+> extends UseRangePickerProps<
+    TDate,
+    TView,
+    TError,
+    TExternalProps,
+    DesktopRangePickerAdditionalViewProps
+  > {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlotsComponent<TDate, TView>;
+  slots: UseDesktopRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps
-  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseDesktopRangePickerParams<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
-> extends Pick<
-    UsePickerParams<
-      DateRange<TDate>,
-      TDate,
-      TView,
-      RangeFieldSection,
-      TExternalProps,
-      DesktopRangePickerAdditionalViewProps
-    >,
-    'valueManager' | 'valueType' | 'validator'
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
+> extends UseRangePickerParams<
+    TDate,
+    TView,
+    TExternalProps,
+    DesktopRangePickerAdditionalViewProps
   > {
-  props: TExternalProps;
   /**
    * If `true`, the popper will always be aligned on the currently focused input.
    * This is helpful when the view only renders information about one of the dates.
+   * @default false
    */
-  shouldMovePopperToFocusedInput: boolean;
+  shouldMovePopperToFocusedInput?: boolean;
 }

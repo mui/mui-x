@@ -1,9 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekOfYearPlugin from 'dayjs/plugin/weekOfYear';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import advancedFormatPlugin from 'dayjs/plugin/advancedFormat';
 import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -14,9 +15,10 @@ import {
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
-defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
+defaultDayjs.extend(weekOfYearPlugin);
 defaultDayjs.extend(isBetweenPlugin);
+defaultDayjs.extend(advancedFormatPlugin);
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
@@ -73,6 +75,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  dayOfMonthFull: 'Do',
   weekday: 'dddd',
   weekdayShort: 'dd',
   hours24h: 'HH',
@@ -110,6 +113,12 @@ const MISSING_TIMEZONE_PLUGIN = [
 
 const withLocale = (dayjs: any, locale?: string): Constructor =>
   !locale ? dayjs : (...args) => dayjs(...args).locale(locale);
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    dayjs: Dayjs;
+  }
+}
 
 /**
  * Based on `@date-io/dayjs`
@@ -158,7 +167,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
-    defaultDayjs.extend(weekOfYear);
+    // Moved plugins to the constructor to allow for users to use options on the library
+    // for reference: https://github.com/mui/mui-x/pull/11151
+    defaultDayjs.extend(customParseFormatPlugin);
   }
 
   private setLocaleToValue = (value: Dayjs) => {
@@ -625,8 +636,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public getWeekArray = (value: Dayjs) => {
     const cleanValue = this.setLocaleToValue(value);
-    const start = cleanValue.startOf('month').startOf('week');
-    const end = cleanValue.endOf('month').endOf('week');
+    const start = this.startOfWeek(this.startOfMonth(cleanValue));
+    const end = this.endOfWeek(this.endOfMonth(cleanValue));
 
     let count = 0;
     let current = start;
@@ -649,13 +660,17 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.week();
   };
 
+  public getDayOfWeek(value: Dayjs): number {
+    return value.day() + 1;
+  }
+
   public getYearRange = ([start, end]: [Dayjs, Dayjs]) => {
-    const startDate = start.startOf('year');
-    const endDate = end.endOf('year');
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: Dayjs[] = [];
 
     let current = startDate;
-    while (current < endDate) {
+    while (this.isBefore(current, endDate)) {
       years.push(current);
       current = this.addYears(current, 1);
     }

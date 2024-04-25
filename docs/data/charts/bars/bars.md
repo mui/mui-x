@@ -1,5 +1,7 @@
 ---
 title: React Bar chart
+productId: x-charts
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
 ---
 
 # Charts - Bars
@@ -38,7 +40,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each over.
 
-{{"demo": "BarGapNoSnap.js"}}
+{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -57,10 +59,109 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ## Layout
 
+### Bar direction
+
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
+If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
+
+### Tick placement
+
+When using a `"band"` scale, the axis has some additional customization properties about the tick position.
+
+- `tickPlacement` for the position of ticks
+- `tickLabelPlacement` for the position of the label associated with the tick
+
+You can test all configuration options in the following demo:
+
+{{"demo": "TickPlacementBars.js"}}
+
+### Grid
+
+You can add a grid in the background of the chart with the `grid` prop.
+
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+{{"demo": "GridDemo.js"}}
+
+### Color scale
+
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
+
+You can also modify the color by using axes `colorMap` which maps values to colors.
+The bar charts use by priority:
+
+1. The value axis color
+2. The band axis color
+3. The series color
+
+Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScaleNoSnap.js"}}
+
+### Border Radius
+
+The border radius can be set by using a [clipPath](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) with
+[inset](https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape/inset) on the BarChart's `bar` [slot](/x/api/charts/bar-chart/#bar-chart-prop-slots)
+
+You can customize any of properties inside `inset`, the first property is "distance from border" and should be left at `0px` else it might break the bars alignment.
+
+```css
+inset(0px round <top-left> <top-right> <bottom-right> <bottom-left>)
+```
+
+{{"demo": "BorderRadius.js"}}
+
+:::warning
+There are few limitations to this method though.
+
+- [Stacking](/x/react-charts/bars/#stacking) won't look right with border radius.
+- On charts containing `Negative` and `Positive` values, rounding will apply to all of them in the same way, which might be undesirable.
+
+:::
+
+## Click event
+
+Bar charts provides two click handlers:
+
+- `onItemClick` for click on a specific bar.
+- `onAxisClick` for a click anywhere in the chart
+
+They both provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "BarClickNoSnap.js"}}
+
+:::info
+Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+
+:::
+
+### Composition
+
+If you're using composition, you can get those click event as follow.
+Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+
+```jsx
+import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
+// ...
+
+<ChartContainer>
+  {/* ... */}
+  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
+  <BarPlot onItemClick={onItemClick} />
+</ChartContainer>;
+```
 
 ## Animation
 
@@ -71,11 +172,11 @@ Charts containers already use the `useReducedMotion` from `@react-spring/web` to
 
 ```jsx
 // For a single component chart
-<BarChart  skipAnimation />
+<BarChart skipAnimation />
 
 // For a composed chart
 <ResponsiveChartContainer>
-  <BarPlot  skipAnimation />
+  <BarPlot skipAnimation />
 </ResponsiveChartContainer>
 ```
 

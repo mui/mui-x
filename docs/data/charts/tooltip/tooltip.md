@@ -1,5 +1,7 @@
 ---
 title: Charts - Tooltip
+productId: x-charts
+components: ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent, ChartsAxisHighlight
 ---
 
 # Charts - Tooltip
@@ -7,9 +9,9 @@ title: Charts - Tooltip
 <p class="description">Tooltip provides extra data on charts item.</p>
 
 In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
-If you are using composition, you can add the `<ChartTooltip />` component and pass props directly.
+If you are using composition, you can add the `<ChartsTooltip />` component and pass props directly.
 
-## Interactions
+## Tooltip trigger
 
 The tooltip can be triggered by two kinds of events:
 
@@ -67,6 +69,27 @@ Here is a demo with:
 
 {{"demo": "Formatting.js"}}
 
+### Advanced formatting
+
+The series `valueFormatter` provides a context as its second argument containing a `dataIndex` property which you can use to calculate other data-related values.
+
+In the demo below you can notice we use `dataIndex` to add each team's rank in the tooltip.
+
+{{"demo": "SeriesFormatter.js"}}
+
+### Axis formatter
+
+To modify how data is displayed in the axis use the `valueFormatter` property.
+
+Its second argument is a context that provides a `location` property with either `'tick'` or `'tooltip'`.
+
+In this demo, you can see:
+
+- The country axis displays only the country code
+- The label displays annotated data `Country: name (code)`
+
+{{"demo": "AxisFormatter.js"}}
+
 ### Hiding values
 
 You can hide the axis value with `hideTooltip` in the `xAxis` props.
@@ -79,12 +102,38 @@ It will remove the header showing the x-axis value from the tooltip.
 />
 ```
 
+### Overriding content
+
+To modify the tooltip content, use `slots.itemContent` or `slots.axisContent`.
+The first one is rendered when tooltip trigger is set to `"item"`.
+The second one when trigger is set to `"axis"`.
+
+```jsx
+// With single component
+<LineChart
+  slots={{
+    itemContent: CustomItemTooltip
+  }}
+/>
+
+// With composition
+<ChartContainer>
+  // ...
+  <Tooltip
+    trigger='item'
+    slots={{
+      itemContent: CustomItemTooltip
+    }}
+  />
+</ChartContainer>
+```
+
 ## Composition
 
 If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#interactions).
+You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>

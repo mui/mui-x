@@ -1,39 +1,46 @@
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { MakeOptional, TimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import {
-  UseMobileRangePickerSlotsComponent,
-  ExportedUseMobileRangePickerSlotsComponentsProps,
+  UseMobileRangePickerSlots,
+  UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
 } from '../internals/hooks/useMobileRangePicker';
 import {
   BaseTimeRangePickerProps,
-  BaseTimeRangePickerSlotsComponent,
-  BaseTimeRangePickerSlotsComponentsProps,
+  BaseTimeRangePickerSlots,
+  BaseTimeRangePickerSlotProps,
 } from '../TimeRangePicker/shared';
 
-export interface MobileTimeRangePickerSlotsComponent<
-  TDate,
-  TView extends TimeViewWithMeridiem = TimeView,
-> extends BaseTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, TView>, 'field'> {}
+export interface MobileTimeRangePickerSlots<TDate extends PickerValidDate>
+  extends BaseTimeRangePickerSlots<TDate>,
+    MakeOptional<UseMobileRangePickerSlots<TDate, TimeViewWithMeridiem>, 'field'> {}
 
-export interface MobileTimeRangePickerSlotsComponentsProps<
-  TDate,
-  TView extends TimeViewWithMeridiem = TimeView,
-> extends BaseTimeRangePickerSlotsComponentsProps,
-    ExportedUseMobileRangePickerSlotsComponentsProps<TDate, TView> {}
+export interface MobileTimeRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseTimeRangePickerSlotProps,
+    Omit<
+      UseMobileRangePickerSlotProps<
+        TDate,
+        TimeViewWithMeridiem,
+        TEnableAccessibleFieldDOMStructure
+      >,
+      'tabs' | 'toolbar'
+    > {}
 
-export interface MobileTimeRangePickerProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
-  extends BaseTimeRangePickerProps<TDate, TView>,
-    MobileRangeOnlyPickerProps<TDate> {
+export interface MobileTimeRangePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseTimeRangePickerProps<TDate>,
+    MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileTimeRangePickerSlotsComponent<TDate, TView>;
+  slots?: MobileTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileTimeRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: MobileTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

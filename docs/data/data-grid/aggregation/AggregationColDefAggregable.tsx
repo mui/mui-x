@@ -23,7 +23,7 @@ const COLUMNS: GridColDef[] = [
     type: 'number',
     width: 150,
     groupable: false,
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return value;
       }
@@ -50,7 +50,6 @@ export default function AggregationColDefAggregable() {
           aggregation: {
             model: {
               gross: 'sum',
-              year: 'sum',
             },
           },
         }}

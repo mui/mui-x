@@ -17,3 +17,11 @@ In the demo below, you can toggle the group by clicking anywhere on the grouping
 Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the demo below, the `Company` column is pinned:
 
 {{"demo": "RowGroupingPinning.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Sorting row groups by the number of child rows
+
+By default, the row grouping column uses `sortComparator` of the grouping column for sorting.
+
+To sort the row groups by the number of child rows, you can override it using `groupingColDef.sortComparator`:
+
+{{"demo": "RowGroupingSortByChildRows.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -1,8 +1,7 @@
-import { DateOrTimeView } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
 
-export const areViewsEqual = <TView extends DateOrTimeView>(
-  views: ReadonlyArray<DateOrTimeView>,
+export const areViewsEqual = <TView extends DateOrTimeViewWithMeridiem>(
+  views: ReadonlyArray<DateOrTimeViewWithMeridiem>,
   expectedViews: TView[],
 ): views is ReadonlyArray<TView> => {
   if (views.length !== expectedViews.length) {
@@ -32,7 +31,7 @@ export const applyDefaultViewProps = <TView extends DateOrTimeViewWithMeridiem>(
   } else if (viewsWithDefault.length > 0) {
     openToWithDefault = viewsWithDefault[0];
   } else {
-    throw new Error('MUI: The `views` prop must contain at least one view');
+    throw new Error('MUI X: The `views` prop must contain at least one view.');
   }
 
   return {

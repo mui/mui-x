@@ -1,6 +1,7 @@
 export { DesktopDateTimePicker } from './DesktopDateTimePicker';
+export { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 export type {
   DesktopDateTimePickerProps,
-  DesktopDateTimePickerSlotsComponent,
-  DesktopDateTimePickerSlotsComponentsProps,
+  DesktopDateTimePickerSlots,
+  DesktopDateTimePickerSlotProps,
 } from './DesktopDateTimePicker.types';

@@ -1,0 +1,25 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "type": { "description": "" },
+    "color": { "description": "" },
+    "data": { "description": "Data associated to each bar." },
+    "dataKey": { "description": "The key used to retrive data from the dataset." },
+    "highlightScope": { "description": "" },
+    "id": { "description": "" },
+    "label": { "description": "" },
+    "layout": { "description": "Layout of the bars. All bar should have the same layout." },
+    "stack": {
+      "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
+    },
+    "stackOffset": { "description": "Defines how stacked series handle negative values." },
+    "stackOrder": {
+      "description": "The order in which series&#39; of the same group are stacked together."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "xAxisKey": { "description": "The id of the x-axis used to render the series." },
+    "yAxisKey": { "description": "The id of the y-axis used to render the series." }
+  }
+}

@@ -22,9 +22,13 @@ const euPickers: Partial<PickersLocaleText<any>> = {
       ? 'urteko bista irekita dago, aldatu egutegi bistara'
       : 'egutegi bista irekita dago, aldatu urteko bistara',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Hasi',
   end: 'Bukatu',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Generic range placeholders
   // from: 'From',
@@ -45,11 +49,7 @@ const euPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Aukeratu ${views[view]}. ${
-      time === null
-        ? 'Ez da ordurik aukertau'
-        : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`
-    }`,
+    `Aukeratu ${views[view]}. ${time === null ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,
@@ -87,6 +87,19 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const eu = getPickersLocalization(euPickers);

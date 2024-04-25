@@ -1,35 +1,35 @@
 import {
   BaseTimePickerProps,
-  BaseTimePickerSlotsComponent,
-  BaseTimePickerSlotsComponentsProps,
+  BaseTimePickerSlots,
+  BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import {
   StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
+  UseStaticPickerSlots,
+  UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals';
-import { TimeView } from '../models';
+import { MakeOptional } from '../internals/models/helpers';
+import { PickerValidDate, TimeView } from '../models';
 
-export interface StaticTimePickerSlotsComponent<TDate>
-  extends BaseTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate, TimeView> {}
+export interface StaticTimePickerSlots<TDate extends PickerValidDate>
+  extends BaseTimePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate, TimeView> {}
 
-export interface StaticTimePickerSlotsComponentsProps<TDate>
-  extends BaseTimePickerSlotsComponentsProps,
-    UseStaticPickerSlotsComponentsProps<TDate, TimeView> {}
+export interface StaticTimePickerSlotProps<TDate extends PickerValidDate>
+  extends BaseTimePickerSlotProps,
+    UseStaticPickerSlotProps<TDate, TimeView> {}
 
-export interface StaticTimePickerProps<TDate>
+export interface StaticTimePickerProps<TDate extends PickerValidDate>
   extends BaseTimePickerProps<TDate, TimeView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticTimePickerSlotsComponent<TDate>;
+  slots?: StaticTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticTimePickerSlotProps<TDate>;
 }

@@ -1,13 +1,14 @@
 import { TimeClockClasses } from './timeClockClasses';
 import {
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
+  PickersArrowSwitcherSlots,
+  PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface ExportedTimeClockProps<TDate> extends ExportedBaseClockProps<TDate> {
+export interface ExportedTimeClockProps<TDate extends PickerValidDate>
+  extends ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default false
@@ -15,13 +16,20 @@ export interface ExportedTimeClockProps<TDate> extends ExportedBaseClockProps<TD
   ampmInClock?: boolean;
 }
 
-export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
+export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 
-export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
+export interface TimeClockSlotProps extends PickersArrowSwitcherSlotProps {}
 
-export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
-  extends ExportedTimeClockProps<TDate>,
+export interface TimeClockProps<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem = TimeView,
+> extends ExportedTimeClockProps<TDate>,
     BaseClockProps<TDate, TView> {
+  /**
+   * Available views.
+   * @default ['hours', 'minutes']
+   */
+  views?: readonly TView[];
   /**
    * Override or extend the styles applied to the component.
    */
@@ -30,11 +38,11 @@ export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = Time
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimeClockSlotsComponent;
+  slots?: TimeClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeClockSlotsComponentsProps;
+  slotProps?: TimeClockSlotProps;
   showViewSwitcher?: boolean;
 }

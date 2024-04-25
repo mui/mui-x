@@ -1,17 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   extractValidationProps,
-  PickerViewRendererLookup,
   resolveTimeFormat,
+  TimeViewWithMeridiem,
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
-import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
+import {
+  TimeRangePickerRenderers,
+  useTimeRangePickerDefaultizedProps,
+} from '../TimeRangePicker/shared';
 import {
   renderDigitalClockTimeRangeView,
   renderMultiSectionDigitalClockTimeRangeView,
@@ -19,14 +22,20 @@ import {
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
-import { DateRange } from '../internals/models';
 
-type MobileTimeRangePickerComponent = (<TDate>(
-  props: MobileTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimeRangePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TDate>(
-  inProps: MobileTimeRangePickerProps<TDate>,
+const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
@@ -34,24 +43,18 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TD
   // Props with the default values common to all date time pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
     TDate,
-    TimeView,
-    MobileTimeRangePickerProps<TDate>
+    MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimeRangePicker');
 
-  const thresholdToRenderTimeInASingleColumn =
-    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn =
-    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
-
-  const renderTimeRangeView = shouldRenderTimeInASingleColumn
+  const renderTimeRangeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeRangeView
     : renderMultiSectionDigitalClockTimeRangeView;
 
-  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, TimeView, any, {}> = {
+  const viewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any> = {
     hours: renderTimeRangeView,
     minutes: renderTimeRangeView,
     seconds: renderTimeRangeView,
+    meridiem: renderTimeRangeView,
     ...defaultizedProps.viewRenderers,
   };
 
@@ -80,7 +83,12 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<TD
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useMobileRangePicker<
+    TDate,
+    TimeViewWithMeridiem,
+    TEnableAccessibleFieldDOMStructure,
+    typeof props
+  >({
     props,
     valueManager: rangeValueManager,
     valueType: 'time',
@@ -97,7 +105,7 @@ MobileTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -107,9 +115,6 @@ MobileTimeRangePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
@@ -126,7 +131,7 @@ MobileTimeRangePicker.propTypes = {
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -152,6 +157,10 @@ MobileTimeRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -182,17 +191,22 @@ MobileTimeRangePicker.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Name attribute used by the `input` element in the Field.
+   * Ignored if the field has several inputs.
+   */
+  name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
@@ -269,20 +283,21 @@ MobileTimeRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -292,19 +307,7 @@ MobileTimeRangePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate
@@ -351,7 +354,7 @@ MobileTimeRangePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -359,13 +362,13 @@ MobileTimeRangePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.arrayOf(PropTypes.any),
+  value: PropTypes.arrayOf(PropTypes.object),
   /**
    * The visible view.
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -373,6 +376,7 @@ MobileTimeRangePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

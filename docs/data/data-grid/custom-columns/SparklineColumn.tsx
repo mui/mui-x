@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGrid,
   GridColDef,
-  GridRowsProp,
   GridColTypeDef,
   GridRenderCellParams,
   GRID_STRING_COL_DEF,
@@ -31,15 +30,17 @@ function GridSparklineCell(
 
 const sparklineColumnType: GridColTypeDef<number[]> = {
   ...GRID_STRING_COL_DEF,
+  type: 'custom',
   resizable: false,
   filterable: false,
   sortable: false,
   editable: false,
   groupable: false,
+  display: 'flex',
   renderCell: (params) => <GridSparklineCell {...params} />,
 };
 
-const columns: GridColDef[] = [
+const columns: GridColDef<(typeof rows)[number]>[] = [
   { field: 'name', headerName: 'Package name', width: 180 },
   {
     field: 'monthlyDownloads',
@@ -53,14 +54,14 @@ const columns: GridColDef[] = [
     headerName: 'Monthly DLs (bar)',
     renderCell: (params) => <GridSparklineCell {...params} plotType="bar" />,
     width: 150,
-    valueGetter: (params) => params.row.monthlyDownloads,
+    valueGetter: (value, row) => row.monthlyDownloads,
   },
   {
     field: 'lastMonthDownloads',
     headerName: 'Last month DLs',
     type: 'number',
-    valueGetter: (params) =>
-      params.row.monthlyDownloads[params.row.monthlyDownloads.length - 1],
+    valueGetter: (value, row) =>
+      row.monthlyDownloads[row.monthlyDownloads.length - 1],
     width: 150,
   },
 ];
@@ -73,7 +74,7 @@ export default function SparklineColumn() {
   );
 }
 
-const rows: GridRowsProp = [
+const rows = [
   {
     name: 'react-datepicker',
     monthlyDownloads: [

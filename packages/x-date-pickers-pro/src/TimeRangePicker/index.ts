@@ -1,8 +1,8 @@
 export { TimeRangePicker } from './TimeRangePicker';
 export type {
   TimeRangePickerProps,
-  TimeRangePickerSlotsComponents,
-  TimeRangePickerSlotsComponentsProps,
+  TimeRangePickerSlots,
+  TimeRangePickerSlotProps,
 } from './TimeRangePicker.types';
 
 export { TimeRangePickerToolbar } from './TimeRangePickerToolbar';

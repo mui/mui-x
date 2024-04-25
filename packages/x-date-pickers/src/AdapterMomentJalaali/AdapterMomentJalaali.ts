@@ -49,6 +49,9 @@ const defaultFormats: AdapterFormats = {
   month: 'jMMMM',
   monthShort: 'jMMM',
   dayOfMonth: 'jD',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'jD',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -84,6 +87,12 @@ const NUMBER_SYMBOL_MAP = {
   '9': '۹',
   '0': '۰',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'moment-jalaali': Moment;
+  }
+}
 
 /**
  * Based on `@date-io/jalaali`
@@ -235,41 +244,7 @@ export class AdapterMomentJalaali
     return value.clone().jDate(date);
   };
 
-  public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('jMonth').startOf('week');
-    const end = value.clone().endOf('jMonth').endOf('week');
-
-    let count = 0;
-    let current = start;
-    const nestedWeeks: Moment[][] = [];
-
-    while (current.isBefore(end)) {
-      const weekNumber = Math.floor(count / 7);
-      nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      nestedWeeks[weekNumber].push(current);
-
-      current = current.clone().add(1, 'day');
-      count += 1;
-    }
-
-    return nestedWeeks;
-  };
-
   public getWeekNumber = (value: Moment) => {
     return value.jWeek();
-  };
-
-  public getYearRange = ([start, end]: [Moment, Moment]) => {
-    const startDate = this.moment(start).startOf('jYear');
-    const endDate = this.moment(end).endOf('jYear');
-    const years: Moment[] = [];
-
-    let current = startDate;
-    while (current.isBefore(endDate)) {
-      years.push(current);
-      current = current.clone().add(1, 'jYear');
-    }
-
-    return years;
   };
 }

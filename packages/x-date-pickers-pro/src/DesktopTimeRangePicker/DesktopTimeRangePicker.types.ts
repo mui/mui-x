@@ -1,31 +1,42 @@
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import {
   MakeOptional,
   DesktopOnlyTimePickerProps,
   TimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerSlotsComponent,
-  ExportedUseDesktopRangePickerSlotsComponentsProps,
+  UseDesktopRangePickerSlots,
+  UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseTimeRangePickerProps,
-  BaseTimeRangePickerSlotsComponent,
-  BaseTimeRangePickerSlotsComponentsProps,
+  BaseTimeRangePickerSlots,
+  BaseTimeRangePickerSlotProps,
 } from '../TimeRangePicker/shared';
 
-export interface DesktopTimeRangePickerSlotsComponent<TDate>
-  extends BaseTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, TimeViewWithMeridiem>, 'field'> {}
+export interface DesktopTimeRangePickerSlots<TDate extends PickerValidDate>
+  extends BaseTimeRangePickerSlots<TDate>,
+    MakeOptional<UseDesktopRangePickerSlots<TDate, TimeViewWithMeridiem>, 'field'> {}
 
-export interface DesktopTimeRangePickerSlotsComponentsProps<TDate>
-  extends BaseTimeRangePickerSlotsComponentsProps,
-    ExportedUseDesktopRangePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
+export interface DesktopTimeRangePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseTimeRangePickerSlotProps,
+    Omit<
+      UseDesktopRangePickerSlotProps<
+        TDate,
+        TimeViewWithMeridiem,
+        TEnableAccessibleFieldDOMStructure
+      >,
+      'tabs' | 'toolbar'
+    > {}
 
-export interface DesktopTimeRangePickerProps<TDate>
-  extends BaseTimeRangePickerProps<TDate, TimeViewWithMeridiem>,
-    DesktopRangeOnlyPickerProps<TDate>,
+export interface DesktopTimeRangePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseTimeRangePickerProps<TDate>,
+    DesktopRangeOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
    * Available views.
@@ -35,10 +46,10 @@ export interface DesktopTimeRangePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopTimeRangePickerSlotsComponent<TDate>;
+  slots?: DesktopTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimeRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

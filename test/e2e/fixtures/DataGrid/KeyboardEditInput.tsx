@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 
-const baselineProps = {
+const baselineProps: DataGridProps = {
   rows: [{ id: 0, brand: 'Nike' }],
   columns: [{ field: 'brand', type: 'string', editable: true, width: 100 }],
 };

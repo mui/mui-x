@@ -51,7 +51,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
           { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', title: 'Row spanning 🚧' },
+          { pathname: '/x/react-data-grid/row-spanning', title: 'Row spanning', planned: true },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
@@ -109,39 +109,49 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
+          {
+            pathname: '/x/react-data-grid/pivoting',
+            title: 'Pivoting',
+            plan: 'premium',
+            planned: true,
+          },
         ],
       },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
-        title: 'Server-side data 🚧',
-        plan: 'pro',
+        title: 'Server-side data',
+        planned: true,
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', planned: true },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
-            title: 'Lazy loading 🚧',
+            title: 'Lazy loading',
             plan: 'pro',
+            planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-            title: 'Infinite loading 🚧',
+            title: 'Infinite loading',
             plan: 'pro',
+            planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/tree-data',
-            title: 'Tree data 🚧',
+            title: 'Tree data',
             plan: 'pro',
+            planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
-            title: 'Row grouping 🚧',
+            title: 'Row grouping',
             plan: 'pro',
+            planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/aggregation',
-            title: 'Aggregation 🚧',
+            title: 'Aggregation',
             plan: 'premium',
+            planned: true,
           },
         ],
       },
@@ -225,6 +235,7 @@ const pages: MuiPage[] = [
           },
         ],
       },
+      { pathname: '/x/react-data-grid/faq', title: 'FAQ' },
     ],
   },
   {
@@ -234,6 +245,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
+      { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
@@ -246,7 +258,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-field',
                 title: 'Date Field',
-                newFeature: true,
               },
               { pathname: '/x/react-date-pickers/date-calendar', title: 'Date Calendar' },
             ],
@@ -259,13 +270,11 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-field',
                 title: 'Time Field',
-                newFeature: true,
               },
               { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
               {
                 pathname: '/x/react-date-pickers/digital-clock',
                 title: 'Digital Clock',
-                newFeature: true,
               },
             ],
           },
@@ -277,7 +286,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-time-field',
                 title: 'Date Time Field',
-                newFeature: true,
               },
             ],
           },
@@ -290,12 +298,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-range-field',
                 title: 'Date Range Field',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-range-calendar',
                 title: 'Date Range Calendar',
-                newFeature: true,
               },
             ],
           },
@@ -312,7 +318,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-field',
                 title: 'Time Range Field',
-                newFeature: true,
               },
             ],
           },
@@ -323,16 +328,21 @@ const pages: MuiPage[] = [
             children: [
               {
                 pathname: '/x/react-date-pickers/date-time-range-picker',
-                title: 'Date Time Range Picker 🚧',
+                title: 'Date Time Range Picker',
+                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
                 title: 'Date Time Range Field',
-                newFeature: true,
               },
             ],
           },
-          { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+          { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
+          {
+            pathname: '/x/api/date-pickers-group',
+            title: 'API Reference',
+            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
+          },
         ],
       },
       {
@@ -374,13 +384,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
+          { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
         ],
-      },
-      { pathname: '/x/react-date-pickers/playground' },
-      {
-        pathname: '/x/api/date-pickers-group',
-        title: 'API Reference',
-        children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
       },
     ],
   },
@@ -390,61 +395,99 @@ const pages: MuiPage[] = [
     newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
+      { pathname: '/x/react-charts/getting-started' },
       {
-        pathname: '/x/react-charts-bars',
-        title: 'Bars',
+        pathname: '/x/react-charts-available',
+        subheader: 'Available components',
         children: [
-          { pathname: '/x/react-charts/bars', title: 'Bars' },
-          { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
+          {
+            pathname: '/x/react-charts-bars',
+            title: 'Bars',
+            children: [
+              { pathname: '/x/react-charts/bars', title: 'Bars overview' },
+              { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-lines',
+            title: 'Lines',
+            children: [
+              { pathname: '/x/react-charts/lines', title: 'Lines overview' },
+              { pathname: '/x/react-charts/line-demo', title: 'Lines demo' },
+              { pathname: '/x/react-charts/areas-demo', title: 'Area demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-pie',
+            title: 'Pie',
+            children: [
+              { pathname: '/x/react-charts/pie', title: 'Pie overview' },
+              { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-scatter',
+            title: 'Scatter',
+            children: [
+              { pathname: '/x/react-charts/scatter', title: 'Scatter overview' },
+              { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
+            ],
+          },
+          {
+            pathname: '/x/react-charts/sparkline',
+            title: 'Sparkline',
+          },
+          { pathname: '/x/react-charts/gauge', title: 'Gauge' },
+          {
+            pathname: '/x/react-charts/common-features',
+            subheader: 'Common features',
+            children: [
+              { pathname: '/x/react-charts/axis', title: 'Axis' },
+              { pathname: '/x/react-charts/components', title: 'Custom components' },
+              { pathname: '/x/react-charts/composition', title: 'Composition' },
+              { pathname: '/x/react-charts/legend', title: 'Legend' },
+              { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+              { pathname: '/x/react-charts/styling', title: 'Styling' },
+              { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+            ],
+          },
+          {
+            pathname: '/x/api/charts-group',
+            title: 'API Reference',
+            children: [
+              ...chartsComponentApi,
+              {
+                pathname: '/x/api/charts-interfaces-group',
+                subheader: 'Interfaces',
+                children: [
+                  { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
+                  { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
+                  { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
+                  { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
+                  { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                ],
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-charts-future',
+            subheader: 'Future components',
+            children: [
+              { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
+              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              {
+                pathname: '/x/react-charts/heat-map',
+                title: 'Heatmap',
+                plan: 'pro',
+                planned: true,
+              },
+              { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/sankey', title: 'Sankey', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
+            ],
+          },
         ],
       },
-      {
-        pathname: '/x/react-charts-lines',
-        title: 'Lines',
-        children: [
-          { pathname: '/x/react-charts/lines', title: 'Lines' },
-          { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
-          { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-pie',
-        title: 'Pie',
-        children: [
-          { pathname: '/x/react-charts/pie', title: 'Pie' },
-          { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-scatter',
-        title: 'Scatter',
-        children: [
-          { pathname: '/x/react-charts/scatter', title: 'Scatter' },
-          { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts/sparkline',
-        title: 'Sparkline',
-      },
-      { pathname: '/x/react-charts/axis', title: 'Axis' },
-      { pathname: '/x/react-charts/components', title: 'Custom components' },
-      { pathname: '/x/react-charts/legend', title: 'Legend' },
-      { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-      { pathname: '/x/react-charts/styling', title: 'Styling' },
-      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
-      {
-        pathname: '/x/api/charts-group',
-        title: 'API Reference',
-        children: [...chartsComponentApi],
-      },
-      { pathname: '/x/react-charts/gauge', title: 'Gauge 🚧' },
-      { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
-      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
-      { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
-      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧', plan: 'pro' },
-      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧', plan: 'pro' },
-      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧', plan: 'pro' },
     ],
   },
   {
@@ -452,8 +495,30 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     newFeature: true,
     children: [
-      { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
+      { pathname: '/x/react-tree-view/getting-started' },
+      {
+        pathname: '/x/react-tree-view/simple-tree-view',
+        subheader: 'Simple Tree View',
+        children: [
+          { pathname: '/x/react-tree-view/simple-tree-view/items' },
+          { pathname: '/x/react-tree-view/simple-tree-view/selection' },
+          { pathname: '/x/react-tree-view/simple-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/simple-tree-view/customization' },
+          { pathname: '/x/react-tree-view/simple-tree-view/focus' },
+        ],
+      },
+      {
+        pathname: '/x/react-tree-view/rich-tree-view',
+        subheader: 'Rich Tree View',
+        children: [
+          { pathname: '/x/react-tree-view/rich-tree-view/items' },
+          { pathname: '/x/react-tree-view/rich-tree-view/selection' },
+          { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
+          { pathname: '/x/react-tree-view/rich-tree-view/customization' },
+          { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+        ],
+      },
       {
         pathname: '/x/api/tree-view-group',
         title: 'API Reference',
@@ -486,7 +551,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-v6',
-        subheader: 'Upgrade to v6',
+        title: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
           {
@@ -501,7 +566,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-earlier',
-        subheader: 'Earlier versions',
+        title: 'Earlier versions',
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',

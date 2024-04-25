@@ -203,6 +203,13 @@
     "componentProp": "onResize"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "densityChange",
+    "description": "Fired when the density changes.",
+    "params": "GridDensity",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "excelExportStateChange",
     "description": "Fired when the state of the Excel export task changes",
@@ -249,6 +256,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "paginationMetaChange",
+    "description": "Fired when the pagination meta change.",
+    "params": "GridPaginationMeta",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "paginationModelChange",
     "description": "Fired when the pagination model changes.",
     "params": "GridPaginationModel",
@@ -273,8 +287,8 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "renderedRowsIntervalChange",
-    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderedRowsIntervalChangeParams object.",
-    "params": "GridRenderedRowsIntervalChangeParams",
+    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderContext object.",
+    "params": "GridRenderContext",
     "event": "MuiEvent<{}>"
   },
   {
@@ -294,19 +308,18 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowCountChange",
+    "description": "Fired when the row count change.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowDoubleClick",
     "description": "Fired when a row is double-clicked.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onRowDoubleClick"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "rowEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridRowId",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onRowEditCommit"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

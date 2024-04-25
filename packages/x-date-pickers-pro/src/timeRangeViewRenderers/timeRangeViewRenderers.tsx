@@ -11,13 +11,13 @@ import {
   MultiSectionDigitalClockProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { TimeClock, TimeClockProps } from '@mui/x-date-pickers/TimeClock';
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import type { TimeRangePickerProps } from '../TimeRangePicker/TimeRangePicker.types';
-import { DateRange } from '../internals/models';
+import { DateRange } from '../models';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type TimeRangeViewRendererProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
   TComponentProps extends Omit<BaseClockProps<any, any>, 'value' | 'onChange'>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> &
@@ -29,7 +29,7 @@ export type TimeRangeViewRendererProps<
     views: readonly TView[];
   };
 
-export const renderTimeRangeViewClock = <TDate extends unknown>({
+export const renderTimeRangeViewClock = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -45,7 +45,6 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
   ampmInClock,
@@ -63,7 +62,8 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
 }: TimeRangeViewRendererProps<
   TDate,
   TimeView,
-  Omit<TimeClockProps<TDate>, 'value' | 'onChange'> & Pick<TimeRangePickerProps<TDate>, 'timeSteps'>
+  Omit<TimeClockProps<TDate>, 'value' | 'defaultValue' | 'onChange'> &
+    Pick<TimeRangePickerProps<TDate>, 'timeSteps'>
 >) => {
   const valueForCurrentView = rangePosition === 'start' ? value[0] : value[1];
 
@@ -96,7 +96,6 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
       minTime={minTime}
       maxTime={maxTime}
       shouldDisableTime={shouldDisableTime}
-      shouldDisableClock={shouldDisableClock}
       minutesStep={minutesStep}
       ampm={ampm}
       ampmInClock={ampmInClock}
@@ -113,7 +112,7 @@ export const renderTimeRangeViewClock = <TDate extends unknown>({
   );
 };
 
-export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
+export const renderDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -129,11 +128,8 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -183,11 +179,8 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
       minTime={minTime}
       maxTime={maxTime}
       shouldDisableTime={shouldDisableTime}
-      shouldDisableClock={shouldDisableClock}
       minutesStep={minutesStep}
       ampm={ampm}
-      components={components}
-      componentsProps={componentsProps}
       slots={slots}
       slotProps={slotProps}
       readOnly={readOnly}
@@ -202,7 +195,7 @@ export const renderDigitalClockTimeRangeView = <TDate extends unknown>({
   );
 };
 
-export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends unknown>({
+export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -218,11 +211,8 @@ export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends unknow
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -272,11 +262,8 @@ export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends unknow
       minTime={minTime}
       maxTime={maxTime}
       shouldDisableTime={shouldDisableTime}
-      shouldDisableClock={shouldDisableClock}
       minutesStep={minutesStep}
       ampm={ampm}
-      components={components}
-      componentsProps={componentsProps}
       slots={slots}
       slotProps={slotProps}
       readOnly={readOnly}

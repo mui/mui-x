@@ -1,0 +1,89 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "autoFocus": {
+      "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "dateSeparator": { "description": "String displayed between the start and the end dates." },
+    "defaultValue": {
+      "description": "The default value. Use when the component is not controlled."
+    },
+    "direction": {
+      "description": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes."
+    },
+    "disabled": { "description": "If <code>true</code>, the component is disabled." },
+    "disableFuture": {
+      "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
+    },
+    "disablePast": {
+      "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
+    },
+    "divider": { "description": "Add an element between each child." },
+    "format": { "description": "Format of the date when rendered in the input(s)." },
+    "formatDensity": {
+      "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
+    },
+    "maxDate": { "description": "Maximal selectable date." },
+    "minDate": { "description": "Minimal selectable date." },
+    "onChange": {
+      "description": "Callback fired when the value changes.",
+      "typeDescriptions": {
+        "value": "The new value.",
+        "context": "The context containing the validation result of the current value."
+      }
+    },
+    "onError": {
+      "description": "Callback fired when the error associated to the current value changes.",
+      "typeDescriptions": {
+        "error": "The new error.",
+        "value": "The value associated to the error."
+      }
+    },
+    "onSelectedSectionsChange": {
+      "description": "Callback fired when the selected sections change.",
+      "typeDescriptions": { "newValue": "The new selected sections." }
+    },
+    "readOnly": {
+      "description": "It prevents the user from changing the value of the field (not from interacting with the field)."
+    },
+    "referenceDate": {
+      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set."
+    },
+    "selectedSections": {
+      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
+    },
+    "shouldDisableDate": {
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "typeDescriptions": {
+        "day": "The date to test.",
+        "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
+        "boolean": "Returns <code>true</code> if the date should be disabled."
+      }
+    },
+    "shouldRespectLeadingZeros": {
+      "description": "If <code>true</code>, the format will respect the leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "spacing": { "description": "Defines the space between immediate children." },
+    "sx": {
+      "description": "The system prop, which allows defining system overrides as well as additional CSS styles."
+    },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See the {{link}} for more details."
+    },
+    "useFlexGap": {
+      "description": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br>While CSS <code>gap</code> removes the <a href=\"https://mui.com/joy-ui/react-stack/#limitations\">known limitations</a>, it is not fully supported in some browsers. We recommend checking <a href=\"https://caniuse.com/?search=flex%20gap\">https://caniuse.com/?search=flex%20gap</a> before using this flag.<br>To enable this flag globally, follow the <a href=\"https://mui.com/material-ui/customization/theme-components/#default-props\">theme&#39;s default props</a> configuration."
+    },
+    "value": { "description": "The selected value. Used when the component is controlled." }
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "separator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the separator element"
+    }
+  }
+}

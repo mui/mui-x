@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import {
   PickersToolbar,
   PickersToolbarButton,
@@ -12,16 +12,15 @@ import {
   BaseToolbarProps,
   useLocaleText,
   ExportedBaseToolbarProps,
-  TimeViewWithMeridiem,
   resolveTimeFormat,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
 } from './timeRangePickerToolbarClasses';
+import { DateRange } from '../models';
 
 const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
   const { classes } = ownerState;
@@ -33,8 +32,8 @@ const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getTimeRangePickerToolbarUtilityClass, classes);
 };
 
-export interface TimeRangePickerToolbarProps<TDate>
-  extends BaseToolbarProps<DateRange<TDate>, TimeViewWithMeridiem>,
+export interface TimeRangePickerToolbarProps<TDate extends PickerValidDate>
+  extends BaseToolbarProps<DateRange<TDate>, TimeView>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
   ampm: boolean;
   ampmInClock: boolean;
@@ -76,7 +75,7 @@ const TimeRangePickerToolbarMobileRoot = styled('div', {
 })({ padding: '16px 24px' });
 
 const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: TimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerToolbar' });
@@ -182,9 +181,6 @@ TimeRangePickerToolbar.propTypes = {
   ampm: PropTypes.bool.isRequired,
   ampmInClock: PropTypes.bool.isRequired,
   classes: PropTypes.object,
-  /**
-   * className applied to the root component.
-   */
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**
@@ -203,6 +199,9 @@ TimeRangePickerToolbar.propTypes = {
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -219,13 +218,15 @@ TimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  value: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
-    .isRequired,
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired,
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired).isRequired,
 } as any;
 
 export { TimeRangePickerToolbar };

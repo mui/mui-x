@@ -1,13 +1,17 @@
 name: No Response
 
-# Both `issue_comment` and `scheduled` event types are required for this Action
+# `issues`.`closed`, `issue_comment`.`created`, and `scheduled` event types are required for this Action
 # to work properly.
 on:
+  issues:
+    types: [closed]
   issue_comment:
     types: [created]
   schedule:
-    # Schedule for five minutes after the hour, every hour
-    - cron: '5 * * * *'
+    # These runs in our repos are spread evenly throughout the day to avoid hitting rate limits.
+    # If you change this schedule, consider changing the remaining repositories as well.
+    # Runs at 3 am, 3 pm
+    - cron: '0 3,15 * * *'
 
 permissions: {}
 
@@ -18,7 +22,7 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: MBilalShafi/no-response-add-label@6291e5d1a4eaffe530b2ec434991f258641a8599
+      - uses: MBilalShafi/no-response-add-label@8336c12292902f27b931154c34ba4670cb9899a2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # Number of days of inactivity before an Issue is closed for lack of response
@@ -30,4 +34,3 @@ jobs:
           # Comment to post when closing an Issue for lack of response. Set to `false` to disable
           closeComment: >
             The issue has been inactive for 7 days and has been automatically closed.
-            If you think that it has been incorrectly closed, please reopen it and provide missing information (if any) or continue the last discussion.

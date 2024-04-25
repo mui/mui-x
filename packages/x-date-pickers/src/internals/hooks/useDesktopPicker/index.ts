@@ -1,7 +1,8 @@
 export { useDesktopPicker } from './useDesktopPicker';
 export type {
-  UseDesktopPickerSlotsComponent,
-  UseDesktopPickerSlotsComponentsProps,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  UseDesktopPickerSlotProps,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
+  UseDesktopPickerProps,
 } from './useDesktopPicker.types';

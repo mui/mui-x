@@ -7,11 +7,6 @@ title: Data Grid - Header filters
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
 :::warning
-This feature is unstable, it needs to be explicitly activated using the `unstable_headerFilters` prop.
-
-```tsx
-<DataGridPro unstable_headerFilters {...otherProps} />
-```
 
 To use header filters, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
@@ -71,6 +66,15 @@ Additionally, `slots.headerFilterMenu` could also be used to customize the menu 
 ```
 
 {{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom header filter height
+
+By default, the height of the header filter row is the same as the header row (represented by `columnHeaderHeight` prop).
+You can customize the height of the header filter cell using the `headerFilterHeight` prop.
+
+```tsx
+<DataGridPro {...data} headerFilterHeight={52} />
+```
 
 ## Ignore diacritics (accents)
 

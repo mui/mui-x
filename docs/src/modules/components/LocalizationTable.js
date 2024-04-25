@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import Link from 'docs/src/modules/components/Link';
+import { Link } from '@mui/docs/Link';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
 const Root = styled('div')(({ theme }) => ({

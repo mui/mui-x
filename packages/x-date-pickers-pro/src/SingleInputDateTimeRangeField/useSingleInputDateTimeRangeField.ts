@@ -1,59 +1,53 @@
+import * as React from 'react';
 import {
-  useUtils,
   useField,
-  applyDefaultDate,
-  useDefaultDates,
   splitFieldInternalAndForwardedProps,
+  useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import {
-  UseSingleInputDateTimeRangeFieldDefaultizedProps,
-  UseSingleInputDateTimeRangeFieldParams,
-  UseSingleInputDateTimeRangeFieldProps,
-} from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
+import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { RangeFieldSection, DateRange } from '../models';
 
-export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateTimeRangeFieldProps<TDate>,
-): UseSingleInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm
-    ? utils.formats.keyboardDateTime12h
-    : utils.formats.keyboardDateTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
-    minTime: props.minDateTime ?? props.minTime,
-    maxTime: props.maxDateTime ?? props.maxTime,
-    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
-  } as any;
-};
-
-export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps>) => {
-  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+export const useSingleInputDateTimeRangeField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseSingleInputDateTimeRangeFieldProps<
+    TDate,
+    TEnableAccessibleFieldDOMStructure
+  >,
+>(
+  inProps: TAllProps,
+) => {
+  const props = useDefaultizedDateTimeField<
+    TDate,
+    UseSingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateTimeRangeFieldProps<any>
+    keyof UseSingleInputDateTimeRangeFieldProps<any, any>
   >(props, 'date-time');
 
-  return useField({
-    inputRef,
+  const fieldValueManager = React.useMemo(
+    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
+    [internalProps.dateSeparator],
+  );
+
+  return useField<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,
-    fieldValueManager: rangeFieldValueManager,
+    fieldValueManager,
     validator: validateDateTimeRange,
     valueType: 'date-time',
   });

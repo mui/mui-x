@@ -17,7 +17,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { useTheme } from '@mui/material/styles';
+import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
+import { useTheme, alpha } from '@mui/material/styles';
+import { yellow, blue, green } from '@mui/material/colors';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -247,37 +249,70 @@ export const featuresSet: Row[] = [
 function getChipProperties(plan: string) {
   switch (plan) {
     case 'Premium':
-      return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
+      return { avatarLink: '/static/x/premium.svg' };
     case 'Pro':
-      return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
+      return { avatarLink: '/static/x/pro.svg' };
     default:
-      return { avatarLink: undefined, color: '#c8ffdb' };
+      return { avatarLink: '/static/x/community.svg' };
   }
 }
 
 function PlanTag(props: { plan: string }) {
-  const chipPropperties = getChipProperties(props.plan);
-  const avatar = !chipPropperties.avatarLink ? undefined : (
-    <img src={chipPropperties.avatarLink} width={21} height={24} alt="" />
+  const theme = useTheme();
+  const chipProperties = getChipProperties(props.plan);
+  const avatar = !chipProperties.avatarLink ? undefined : (
+    <img src={chipProperties.avatarLink} width={21} height={24} alt="" />
   );
   return (
     <Chip
+      variant="outlined"
+      size="small"
       avatar={avatar}
+      label={props.plan}
       sx={{
-        backgroundColor: chipPropperties.color,
-        color: 'rgba(0, 0, 0, 0.87)',
+        pl: 0.5,
+        ...(props.plan === 'Premium' && {
+          backgroundColor:
+            theme.palette.mode === 'dark' ? alpha(yellow[900], 0.4) : yellow[50],
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? alpha(yellow[300], 0.4)
+              : alpha(yellow[900], 0.4),
+        }),
+        ...(props.plan === 'Pro' && {
+          backgroundColor:
+            theme.palette.mode === 'dark' ? alpha(blue[600], 0.4) : blue[50],
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? alpha(blue[300], 0.4)
+              : alpha(blue[900], 0.2),
+        }),
+        ...(props.plan === 'Community' && {
+          backgroundColor:
+            theme.palette.mode === 'dark' ? alpha(green[600], 0.4) : green[50],
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? alpha(green[300], 0.4)
+              : alpha(green[900], 0.2),
+        }),
+        '& .MuiChip-label': {
+          fontWeight: 'medium',
+          fontSize: theme.typography.pxToRem(12),
+          pl: 1,
+        },
         '& .MuiChip-avatar': {
-          width: 21,
+          width: 16,
         },
       }}
-      label={props.plan}
     />
   );
 }
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer sx={{ p: 1 }}>
+    <GridToolbarContainer
+      sx={{ p: 2.5, borderBottom: '1px solid', borderColor: 'divider' }}
+    >
       <GridToolbarQuickFilter />
     </GridToolbarContainer>
   );
@@ -286,19 +321,46 @@ function CustomToolbar() {
 function RowDemo(props: { row: Row }) {
   const { row } = props;
   const theme = useTheme();
-  const gridBgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
-  const panelColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
-    <Box sx={{ py: 2, backgroundColor: panelColor }}>
+    <Box
+      sx={{
+        py: 6,
+        bgcolor: theme.palette.mode === 'dark' ? '#141A1F' : 'grey.50', // dark color is the branding theme's primaryDark.800
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
       <div style={{ width: '90%', margin: 'auto' }}>
-        <Box sx={{ backgroundColor: gridBgColor }}>{row.demo}</Box>
+        <Box
+          sx={{
+            backgroundColor: theme.palette.mode === 'dark' ? '#0B0D0E' : '#fff', // dark color is the branding theme's common black
+          }}
+        >
+          {row.demo}
+        </Box>
         {row.linkToCode ? (
-          <Typography sx={{ marginTop: 1 }} variant="body2">
-            <Link href={`/x/react-data-grid${row.linkToCode}`} target="_blank">
-              Open demo source
-            </Link>
-          </Typography>
+          <Link
+            href={`/x/react-data-grid${row.linkToCode}`}
+            target="_blank"
+            color="primary"
+            variant="body2"
+            sx={{
+              mt: 1.5,
+              fontWeight: 'bold',
+              fontFamily: 'IBM Plex Sans',
+              display: 'inline-flex',
+              alignItems: 'center',
+              '& > svg': { transition: '0.2s' },
+              '&:hover > svg': { transform: 'translateX(2px)' },
+            }}
+          >
+            View the demo source
+            <KeyboardArrowRightRounded
+              fontSize="small"
+              sx={{ mt: '1px', ml: '2px' }}
+            />
+          </Link>
         ) : null}
       </div>
     </Box>
@@ -321,6 +383,7 @@ const columns: GridColDef[] = [
     flex: 0.2,
     minWidth: 100,
     groupable: false,
+    display: 'flex',
     renderCell: (params) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
@@ -338,7 +401,7 @@ const columns: GridColDef[] = [
             alignItems: 'center',
           }}
         >
-          <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
+          <Typography variant="body2" fontWeight="medium" fontFamily="IBM Plex Sans">
             <Link
               href={`/x/react-data-grid${params.row.detailPage}`}
               target="_blank"
@@ -347,24 +410,23 @@ const columns: GridColDef[] = [
             </Link>
           </Typography>
           {params.row.newBadge && (
-            <Box
-              sx={{
-                width: 'fit-content',
-                height: 'fit-content',
-                fontSize: '0.8em',
-                fontWeight: 600,
-                position: 'absolute',
-                textAlign: 'center',
-                top: -13,
-                left: -20,
-                background: '#fcf0a0',
-                color: '#af5b00',
-                px: 1,
-                borderRadius: 10,
-              }}
-            >
-              New
-            </Box>
+            <Chip
+              label="New"
+              color="success"
+              size="small"
+              sx={(theme) => ({
+                ml: 1,
+                p: 0.2,
+                height: 'auto',
+                fontSize: theme.typography.pxToRem(10),
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                letterSpacing: '.04rem',
+                '& .MuiChip-label': {
+                  px: '4px',
+                },
+              })}
+            />
           )}
         </Box>
       );
@@ -384,6 +446,7 @@ const columns: GridColDef[] = [
     flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
+    display: 'flex',
     renderCell: (params: GridRenderCellParams<any, string>) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
@@ -447,7 +510,15 @@ export default function PopularFeaturesDemo() {
   }, []);
 
   return (
-    <Box sx={{ minHeight: 1000, width: '100%' }}>
+    <Box
+      sx={{
+        minHeight: 1000,
+        width: '100%',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 3,
+      }}
+    >
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
@@ -470,11 +541,16 @@ export default function PopularFeaturesDemo() {
           },
         }}
         sx={{
-          [`& .${gridClasses.cell}`]: {
-            py: 2,
+          fontFamily: 'IBM Plex Sans',
+          // Do not target cells in nested grids
+          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
+            py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
-            fontWeight: 400,
+            fontWeight: 'medium',
+          },
+          [`& .${gridClasses.withBorderColor}`]: {
+            borderColor: 'divider',
           },
           [`& .${gridClasses.detailPanel}`]: {
             background: 'transparent',

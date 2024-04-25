@@ -12,19 +12,48 @@
       },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "DatePickerToolbar",
   "imports": [
     "import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';",
     "import { DatePickerToolbar } from '@mui/x-date-pickers';",
     "import { DatePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiDatePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "title",
+      "className": "MuiDatePickerToolbar-title",
+      "description": "Styles applied to the title element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDatePickerToolbar",
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

@@ -1,7 +1,7 @@
 export { useDesktopRangePicker } from './useDesktopRangePicker';
 export type {
-  UseDesktopRangePickerSlotsComponent,
-  UseDesktopRangePickerSlotsComponentsProps,
-  ExportedUseDesktopRangePickerSlotsComponentsProps,
+  UseDesktopRangePickerSlots,
+  UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
+  UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';

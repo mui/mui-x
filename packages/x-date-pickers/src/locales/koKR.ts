@@ -22,9 +22,13 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '시작',
   end: '종료',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Generic range placeholders
   // from: 'From',
@@ -45,11 +49,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${views[view]} 선택하세요. ${
-      time === null
-        ? '시간을 선택하지 않았습니다.'
-        : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`
-    }`,
+    `${views[view]} 선택하세요. ${time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시간`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
@@ -72,7 +72,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: '지우기',
 
   // Table labels
   timeTableLabel: '선택한 시간',
@@ -87,6 +87,19 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const koKR = getPickersLocalization(koKRPickers);

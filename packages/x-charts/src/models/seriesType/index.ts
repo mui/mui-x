@@ -31,7 +31,6 @@ export * from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';
-export type { StackOrderType, StackOffsetType } from './common';
 export type {
   AllSeriesType,
   CartesianSeriesType,
@@ -39,3 +38,13 @@ export type {
   DefaultizedCartesianSeriesType,
   StackableSeriesType,
 };
+
+export function isDefaultizedBarSeries(
+  series: DefaultizedSeriesType,
+): series is DefaultizedBarSeriesType {
+  return series.type === 'bar';
+}
+
+export function isBarSeries(series: AllSeriesType): series is BarSeriesType {
+  return series.type === 'bar';
+}

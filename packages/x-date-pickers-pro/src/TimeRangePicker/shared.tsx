@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
-import { TimeStepOptions } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeStepOptions, TimeView } from '@mui/x-date-pickers/models';
 import {
   DefaultizedProps,
   BasePickerInputProps,
@@ -12,21 +12,19 @@ import {
   TimeViewWithMeridiem,
   useUtils,
   applyDefaultViewProps,
+  resolveTimeViewsResponse,
+  UseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import {
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from '@mui/x-date-pickers/TimeClock';
+import { TimeClockSlots, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import {
   TimeRangePickerToolbar,
   TimeRangePickerToolbarProps,
   ExportedTimeRangePickerToolbarProps,
 } from './TimeRangePickerToolbar';
-import { TimeRangeValidationError } from '../models';
-import { DateRange } from '../internals/models';
+import { DateRange, TimeRangeValidationError } from '../models';
 
-export interface BaseTimeRangePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
+export interface BaseTimeRangePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -34,39 +32,46 @@ export interface BaseTimeRangePickerSlotsComponent<TDate> extends TimeClockSlots
   Toolbar?: React.JSXElementConstructor<TimeRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimeRangePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
+export interface BaseTimeRangePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimeRangePickerToolbarProps;
 }
 
-export interface BaseTimeRangePickerProps<TDate, TView extends TimeViewWithMeridiem>
+export type TimeRangePickerRenderers<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  DateRange<TDate>,
+  TView,
+  TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>> & {
+    view: TView;
+  },
+  TAdditionalProps
+>;
+
+export interface BaseTimeRangePickerProps<TDate extends PickerValidDate>
   extends Omit<
-      BasePickerInputProps<DateRange<TDate>, TDate, TView, TimeRangeValidationError>,
-      'orientation'
+      BasePickerInputProps<DateRange<TDate>, TDate, TimeViewWithMeridiem, TimeRangeValidationError>,
+      'orientation' | 'views' | 'openTo'
     >,
-    ExportedBaseClockProps<TDate> {
+    ExportedBaseClockProps<TDate>,
+    Partial<Pick<UseViewsOptions<DateRange<TDate>, TimeView>, 'openTo' | 'views'>> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseTimeRangePickerSlotsComponent<TDate>;
+  slots?: BaseTimeRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseTimeRangePickerSlotsComponentsProps;
+  slotProps?: BaseTimeRangePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      DateRange<TDate>,
-      TView,
-      TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
-      {}
-    >
-  >;
+  viewRenderers?: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem>;
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24
@@ -82,19 +87,23 @@ export interface BaseTimeRangePickerProps<TDate, TView extends TimeViewWithMerid
 }
 
 type UseTimeRangePickerDefaultizedProps<
-  TDate,
-  TView extends TimeViewWithMeridiem,
-  Props extends BaseTimeRangePickerProps<TDate, TView>,
+  TDate extends PickerValidDate,
+  Props extends BaseTimeRangePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
->;
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>,
+    'views'
+  >
+> & {
+  shouldRenderTimeInASingleColumn: boolean;
+  views: readonly TimeViewWithMeridiem[];
+};
 
 export function useTimeRangePickerDefaultizedProps<
-  TDate,
-  TView extends TimeViewWithMeridiem,
-  Props extends BaseTimeRangePickerProps<TDate, TView>,
->(props: Props, name: string): UseTimeRangePickerDefaultizedProps<TDate, TView, Props> {
+  TDate extends PickerValidDate,
+  Props extends BaseTimeRangePickerProps<TDate>,
+>(props: Props, name: string): UseTimeRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
 
   const themeProps = useThemeProps({
@@ -103,6 +112,12 @@ export function useTimeRangePickerDefaultizedProps<
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const { openTo, views: defaultViews } = applyDefaultViewProps<TimeView>({
+    views: themeProps.views,
+    openTo: themeProps.openTo,
+    defaultViews: ['hours', 'minutes'],
+    defaultOpenTo: 'hours',
+  });
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -115,16 +130,27 @@ export function useTimeRangePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const {
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
+    timeSteps,
+  } = resolveTimeViewsResponse<TDate, TimeView, TimeViewWithMeridiem>({
+    thresholdToRenderTimeInASingleColumn: themeProps.thresholdToRenderTimeInASingleColumn,
+    ampm,
+    timeSteps: themeProps.timeSteps,
+    views: defaultViews,
+  });
+
   return {
     ...themeProps,
-    ampm,
     localeText,
-    ...applyDefaultViewProps({
-      views: themeProps.views,
-      openTo: themeProps.openTo,
-      defaultViews: ['hours', 'minutes'] as TView[],
-      defaultOpenTo: 'hours' as TView,
-    }),
+    timeSteps,
+    openTo,
+    shouldRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn,
+    views,
+    ampm,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     slots: {

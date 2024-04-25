@@ -11,7 +11,6 @@ function save(lines) {
 }
 
 const UNSUPPORTED_PATHS = ['/careers/', '/store/'];
-const UNSUPPORTED_ANCHORS_PATHS = ['/api/'];
 
 const buffer = [];
 
@@ -27,35 +26,36 @@ const availableLinksCore = {};
 const usedLinksX = {};
 const usedLinksCore = {};
 
-parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX, '');
+parseDocFolder(path.join(docsSpaceRoot, './pages/'), availableLinksX, usedLinksX);
 parseDocFolder(
   path.resolve(__dirname, '../../node_modules/@mui/monorepo/docs/pages/'),
   availableLinksCore,
   usedLinksCore,
-  '',
 );
 
-function getPageUrlFromLink(link) {
+function removeApiLinkHash(link) {
+  // Determine if the link is an API path
+  // for example /x/api/data-grid/, /material-ui/api/button/, /system/api/box/
+  const isApiPath = link.match(/^\/[\w-]+\/api\//);
+  if (!isApiPath) {
+    return link;
+  }
   const [rep] = link.split('/#');
-  return rep;
+  // if the link actually includes a hash, we need to re-add the necessary `/` at the end
+  return link.includes('/#') ? `${rep}/` : rep;
 }
 
 const usedLinks = { ...usedLinksCore, ...usedLinksX };
 const availableLinks = { ...availableLinksCore, ...availableLinksX };
 
-const removeUnsupportedHash = (link) => {
-  const doNotSupportAnchors = UNSUPPORTED_ANCHORS_PATHS.some((unsupportedPath) =>
-    link.includes(unsupportedPath),
-  );
-  const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
-  return rep;
-};
-write('Broken links found by `yarn docs:link-check` that exist:\n');
+write('Broken links found by `docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
-  .filter((link) => !availableLinks[removeUnsupportedHash(link)])
-  // unstyled sections are added by scripts (can not be found in markdown)
-  .filter((link) => !link.includes('#unstyled'))
+  .filter((link) => !availableLinks[removeApiLinkHash(link)])
+  // these url segments are specific to Base UI and added by scripts (can not be found in markdown)
+  .filter((link) =>
+    ['components-api', 'hooks-api', '#unstyled'].every((str) => !link.includes(str)),
+  )
   .filter((link) => UNSUPPORTED_PATHS.every((unsupportedPath) => !link.includes(unsupportedPath)))
   .sort()
   .forEach((linkKey) => {
@@ -66,7 +66,7 @@ Object.keys(usedLinks)
     console.log('available anchors on the same page:');
     console.log(
       Object.keys(availableLinks)
-        .filter((link) => getPageUrlFromLink(link) === getPageUrlFromLink(linkKey))
+        .filter((link) => removeApiLinkHash(link) === removeApiLinkHash(linkKey))
         .sort()
         .map(getAnchor)
         .join('\n'),

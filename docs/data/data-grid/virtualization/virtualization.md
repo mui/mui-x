@@ -11,7 +11,7 @@ _\*unlimited: Browsers set a limit on the number of pixels a scroll container ca
 
 Row virtualization is the insertion and removal of rows as the data grid scrolls vertically.
 
-The grid renders twice as many rows as are visible. It isn't configurable yet.
+The grid renders some additional rows above and below the visible rows. You can use `rowBufferPx` prop to hint to the Data Grid the area to render, but this value may not be respected in certain situations, for example during high-speed scrolling.
 Row virtualization is limited to 100 rows in the `DataGrid` component.
 
 ## Column virtualization
@@ -23,11 +23,11 @@ Column virtualization is the insertion and removal of columns as the data grid s
 - Overscanning more allows the built-in search feature of the browser to find more matching cells.
 - Overscanning too much can negatively impact performance.
 
-By default, 2 columns are rendered outside of the viewport. You can change this option with the `columnBuffer` prop. The following demo renders 1,000 columns in total:
+By default, columns coming under 150 pixels region are rendered outside of the viewport. You can change this option with the `columnBufferPx` prop. As for `rowBufferPx`, the value may be ignored in some situations. The following demo renders 1,000 columns in total:
 
 {{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
 
-You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
+You can disable column virtualization by calling `apiRef.current.unstable_setColumnVirtualization(false)`, or by setting the column buffer to the number of total columns.
 
 ## Disable virtualization
 
@@ -38,7 +38,7 @@ You may want to turn it off to be able to test the data grid with a headless bro
 <DataGrid {...data} disableVirtualization />
 ```
 
-:::info
+:::warning
 Disabling the virtualization will increase the size of the DOM and drastically reduce the performance.
 Use it only for testing purposes or on small datasets.
 :::

@@ -1,7 +1,7 @@
 export { useMobilePicker } from './useMobilePicker';
 export type {
-  UseMobilePickerSlotsComponent,
-  UseMobilePickerSlotsComponentsProps,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  UseMobilePickerSlots,
+  UseMobilePickerSlotProps,
+  ExportedUseMobilePickerSlotProps,
   MobileOnlyPickerProps,
 } from './useMobilePicker.types';

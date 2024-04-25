@@ -2,7 +2,7 @@ import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { useDrawingArea, useXScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
-import { ChartsText } from '../internals/components/ChartsText';
+import { ChartsText } from '../ChartsText';
 import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
@@ -96,7 +96,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
       if (!warnedOnce) {
         warnedOnce = true;
         console.error(
-          `MUI X: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
+          `MUI X Charts: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
         );
       }
     }

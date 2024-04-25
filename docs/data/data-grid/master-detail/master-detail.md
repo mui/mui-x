@@ -41,21 +41,12 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 :::warning
 Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-The grid depends on the referential value of these props to cache their values and optimize the rendering.
+The Data Grid depends on the referential value of these props to cache their values and optimize the rendering.
 
 ```tsx
 const getDetailPanelContent = React.useCallback(() => { ... }, []);
 
 <DataGridPro getDetailPanelContent={getDetailPanelContent} />
-```
-
-Depending on the height of the detail panel, you may see a blank space when scrolling.
-This is caused by the data grid using a lazy approach to update the rendered rows.
-Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
-Note that this may reduce the performance.
-
-```tsx
-<DataGridPro rowThreshold={0} />
 ```
 
 :::
@@ -111,7 +102,7 @@ If this is not sufficient, the entire toggle component can be overridden.
 To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
 The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
 The new toggle component can be provided via [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) in the same as any other column.
-By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
+By only setting the `field`, is up to you to configure the remaining options (for example disable the column menu, filtering, sorting).
 To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 
 ```tsx

@@ -1,5 +1,7 @@
 ---
 title: Charts - Axis
+productId: x-charts
+components: ChartsAxis, ChartsReferenceLine, ChartsText
 ---
 
 # Charts - Axis
@@ -39,6 +41,7 @@ Those demonstrations use the defaultized values.
 The axis type is specified by its property `scaleType` which expect one of the following values:
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
+- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
 - `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
 
@@ -49,12 +52,24 @@ Which expects an array of value coherent with the `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` it can contain `string`, or numerical values
+- For `'band'` or `'point'` it can contain `string`, or numerical values
 
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
 - bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+
+### Axis formatter
+
+Axis data can be displayed in the axes ticks and the tooltip.
+To modify how data is displayed use the `valueFormatter` property.
+
+The second argument of `valueFormatter` provides some rendering context for advanced use cases.
+
+In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
+To distinguish tick and tooltip, it uses the `context.location`.
+
+{{"demo": "FormatterDemoNoSnap.js"}}
 
 ### Axis sub domain
 
@@ -62,10 +77,41 @@ By default, the axis domain is computed such that all your data is visible.
 To show a specific range of values, you can provide properties `min` and/or `max` to the axis definition.
 
 ```js
-xAxis={[{ min: 10, max: 50,  }]}
+xAxis={[
+  {
+    min: 10,
+    max: 50,
+  },
+]}
 ```
 
 {{"demo": "MinMaxExample.js"}}
+
+### Axis direction
+
+By default, the axes' directions are left to right and bottom to top.
+You can change this behavior with the property `reverse`.
+
+{{"demo": "ReverseExampleNoSnap.js"}}
+
+## Grid
+
+You can add a grid in the background of the cartesian chart with the `grid` prop.
+
+It accepts an object with `vertical` and `horizontal` properties.
+Setting those properties to `true` will display the grid lines.
+
+If you use composition you can pass those properties to the `<ChartsGrid />` component.
+
+```jsx
+<BarChart grid={{ vertical: true }}>
+
+<ChartContainer>
+  <ChartsGrid vertical >
+</ChartContainer>
+```
+
+{{"demo": "GridDemo.js"}}
 
 ## Tick position
 
@@ -129,6 +175,21 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 You can further customize the axis rendering besides the axis definition.
 
+### Fixing overflow issues
+
+If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
+Resolving this can be achieved in two ways:
+
+- Increase the space between the SVG border and the axis by setting the [margin props](/x/react-charts/styling/#placement).
+- Modify the axis label position by:
+  - Using the axis configuration `labelStyle.transform`.
+  - Applying CSS transform to the class name `axisClasses.label`.
+
+In the following demo, the margin is modified to provide more space to the x and y axes.
+The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
+
+{{"demo": "MarginAndLabelPosition.js"}}
+
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
@@ -136,7 +197,9 @@ Those pros can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
+- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
+
+The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
 
 {{"demo": "ModifyAxisPosition.js"}}
 
@@ -151,13 +214,13 @@ For example `leftAxis={null}` hides the left axis.
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition
 

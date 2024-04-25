@@ -1,6 +1,6 @@
 export { useStaticRangePicker } from './useStaticRangePicker';
 export type {
-  UseStaticRangePickerSlotsComponent,
-  UseStaticRangePickerSlotsComponentsProps,
+  UseStaticRangePickerSlots,
+  UseStaticRangePickerSlotProps,
   StaticRangeOnlyPickerProps,
 } from './useStaticRangePicker.types';

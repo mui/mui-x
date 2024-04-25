@@ -37,12 +37,11 @@ export default function ExtendedSortComparator() {
       {
         field: 'nameAdmin',
         headerName: 'Name',
-        valueGetter: (params) => ({
-          name: params.row.name,
-          isAdmin: params.row.isAdmin,
+        valueGetter: (value, row) => ({
+          name: row.name,
+          isAdmin: row.isAdmin,
         }),
-        valueFormatter: (params) => {
-          const value = params.value;
+        valueFormatter: (value) => {
           if (value.isAdmin) {
             return `${value.name} (admin)`;
           }

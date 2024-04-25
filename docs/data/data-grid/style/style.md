@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
 2. Using the `getCellClassName` prop:
 
 This prop is called for every cell in every column.
-Different from the first option, this prop is defined at the data grid level, not column level.
+Different from the first option, this prop is defined at the Data Grid level, not column level.
 It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}
@@ -104,7 +104,7 @@ It is also called with a `GridCellParams` object.
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
 Choose between one of the following values: 'left' | 'right' | 'center'.
 
-:::info
+:::warning
 You must use `headerAlign` to align the content of the header.
 :::
 
@@ -115,6 +115,25 @@ You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` t
 The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
+
+## Theme header and pinned sections
+
+By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background of its header and pinned sections. These elements require a solid color to hide the scrollable content behind them. You can override that color with the following configuration:
+
+```tsx
+import { createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  mixins: {
+    MuiDataGrid: {
+      // Pinned columns sections
+      pinnedBackground: '#340606',
+      // Headers, and top & bottom fixed rows
+      containerBackground: '#343434',
+    },
+  },
+});
+```
 
 ## Custom theme
 

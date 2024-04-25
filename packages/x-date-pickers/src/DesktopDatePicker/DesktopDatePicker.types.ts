@@ -1,27 +1,31 @@
 import {
-  UseDesktopPickerSlotsComponent,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../models';
+import { DateView, PickerValidDate } from '../models';
 
-export interface DesktopDatePickerSlotsComponent<TDate>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, DateView>, 'field' | 'openPickerIcon'> {}
+export interface DesktopDatePickerSlots<TDate extends PickerValidDate>
+  extends BaseDatePickerSlots<TDate>,
+    MakeOptional<UseDesktopPickerSlots<TDate, DateView>, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDatePickerSlotsComponentsProps<TDate>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateView> {}
+export interface DesktopDatePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseDesktopPickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DesktopDatePickerProps<TDate>
-  extends BaseDatePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+export interface DesktopDatePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseDatePickerProps<TDate>,
+    DesktopOnlyPickerProps {
   /**
    * Years rendered per row.
    * @default 4
@@ -31,10 +35,10 @@ export interface DesktopDatePickerProps<TDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDatePickerSlotsComponent<TDate>;
+  slots?: DesktopDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

@@ -22,7 +22,7 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
-   * @default `[]`
+   * @default []
    */
   items?: PickersShortcutsItem<TValue>[];
   /**
@@ -36,11 +36,10 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  // TODO v7: Make changeImportance and shortcut mandatory.
   onChange: (
     newValue: TValue,
-    changeImportance?: PickerShortcutChangeImportance,
-    shortcut?: PickersShortcutsItemContext,
+    changeImportance: PickerShortcutChangeImportance,
+    shortcut: PickersShortcutsItemContext,
   ) => void;
   isValid: (value: TValue) => boolean;
 }
@@ -55,7 +54,7 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance, isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -128,7 +127,7 @@ PickersShortcuts.propTypes = {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
-   * @default `[]`
+   * @default []
    */
   items: PropTypes.arrayOf(
     PropTypes.shape({
