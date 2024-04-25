@@ -827,8 +827,8 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reselect:
-        specifier: ^4.1.8
-        version: 4.1.8
+        specifier: ^5.1.0
+        version: 5.1.0
     devDependencies:
       '@mui/joy':
         specifier: ^5.0.0-beta.24
@@ -927,8 +927,8 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reselect:
-        specifier: ^4.1.8
-        version: 4.1.8
+        specifier: ^5.1.0
+        version: 5.1.0
     devDependencies:
       '@types/prop-types':
         specifier: ^15.7.11
@@ -977,8 +977,8 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reselect:
-        specifier: ^4.1.8
-        version: 4.1.8
+        specifier: ^5.1.0
+        version: 5.1.0
     devDependencies:
       '@types/prop-types':
         specifier: ^15.7.11
@@ -15551,6 +15551,10 @@ packages:
 
   /reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
+
+  /reselect@5.1.0:
+    resolution: {integrity: sha512-aw7jcGLDpSgNDyWBQLv2cedml85qd95/iszJjN988zX1t7AVRJi19d9kto5+W7oCfQ94gyo40dVbT6g2k4/kXg==}
+    dev: false
 
   /resolve-alpn@1.2.1:
     resolution: {integrity: sha512-0a1F4l73/ZFZOakJnQ3FvkJ2+gSTQWz/r2KE5OdDY0TxPm5h4GkqkWWfM47T7HsbnOtcJVEF4epCVy6u7Q3K+g==}
