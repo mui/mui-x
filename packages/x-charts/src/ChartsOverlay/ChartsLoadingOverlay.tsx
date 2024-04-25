@@ -12,11 +12,12 @@ const StyledText = styled('text')(({ theme }) => ({
 }));
 
 export function ChartsLoadingOverlay(props: CommonOverlayProps) {
+  const { message, ...other } = props;
   const { top, left, height, width } = useDrawingArea();
 
   return (
-    <StyledText x={left + width / 2} y={top + height / 2} {...props}>
-      Loading data ...
+    <StyledText x={left + width / 2} y={top + height / 2} {...other}>
+      {message ?? 'Loading data ...'}
     </StyledText>
   );
 }

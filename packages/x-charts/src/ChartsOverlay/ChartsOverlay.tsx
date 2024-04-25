@@ -19,6 +19,10 @@ export function useNoData() {
 }
 
 export type CommonOverlayProps = React.SVGAttributes<SVGTextElement> & {
+  /**
+   * The message displayed by the overlay.
+   */
+  message?: string;
   sx?: SxProps<Theme>;
 };
 
