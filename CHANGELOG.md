@@ -43,7 +43,6 @@ Same changes as in `@mui/x-data-grid-pro@7.3.1`.
 Same changes as in `@mui/x-date-pickers@7.3.1`.
 
 ### Charts
- 
 #### `@mui/x-charts@7.3.1`
 
 - [charts] Add documentation on border radius alternative for `BarCharts` (#12859) @JCQuintas
