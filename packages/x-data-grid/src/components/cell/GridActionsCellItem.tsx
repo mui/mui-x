@@ -47,7 +47,7 @@ const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemPro
           onClick={handleClick}
           {...rootProps.slotProps?.baseIconButton}
         >
-          {React.cloneElement(icon!, { fontSize: 'small' })}
+          {React.cloneElement(icon!, { fontSize: 'inherit' })}
         </rootProps.slots.baseIconButton>
       );
     }
