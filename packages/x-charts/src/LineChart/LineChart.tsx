@@ -37,7 +37,12 @@ import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
 } from '../ChartsOnAxisClickHandler';
-import { ChartsOverlay, ChartsOverlayProps, ChartsOverlaySlotProps, ChartsOverlaySlots } from '../ChartsOverlay/ChartsOverlay';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -214,6 +219,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
           onItemClick={onLineClick}
           skipAnimation={skipAnimation}
         />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -235,7 +241,6 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
       <ChartsClipPath id={clipPathId} />
       {children}
-      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
     </ResponsiveChartContainer>
   );
 });
@@ -313,6 +318,10 @@ LineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a  loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
