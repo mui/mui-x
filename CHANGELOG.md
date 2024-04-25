@@ -9,7 +9,7 @@ _Apr 26, 2024_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Scatter Charts get a z-axis to allow coloring data points independently from their coordinate
+- 🎁 Scatter Charts get a [z-axis to allow coloring data points independently from their coordinates](https://mui.com/x/react-charts/scatter/#color-scale)
 - 🌍 Improve Catalan (ca-ES) and Spanish (es-ES) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
