@@ -61,11 +61,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     let matchingItemId: string | null = null;
     let currentItemId: string = getNextItem(itemId);
-    // The "currentItemId !== itemId" condition is to avoid an infinite loop when there is no matching item.
-    while (matchingItemId == null && currentItemId !== itemId) {
+    const checkedItems: Record<string, true> = {};
+    // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
+    while (matchingItemId == null && !checkedItems[currentItemId]) {
       if (firstCharMap.current[currentItemId] === cleanQuery) {
         matchingItemId = currentItemId;
       } else {
+        checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
     }

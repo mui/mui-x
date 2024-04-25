@@ -91,7 +91,17 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          getItemLabel={(item) => item.label ?? item.id}
+          getItemLabel={(item) => {
+            if (item.label) {
+              if (typeof item.label !== 'string') {
+                throw new Error('Only use string labels when testing RichTreeView(Pro)');
+              }
+
+              return item.label;
+            }
+
+            return item.id;
+          }}
           isItemDisabled={(item) => !!item.disabled}
           {...other}
         />
