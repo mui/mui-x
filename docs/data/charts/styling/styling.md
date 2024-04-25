@@ -102,6 +102,21 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+## Overlay
+
+Charts have a _loading_ and _noData_ overlays that appears if
+
+- `loading` prop is set to `true`.
+- There is no data to display.
+
+{{"demo": "Overlay.js"}}
+
+To modify the overly message, you can use `slotProps.loadingOverlay.message` and `slotProps.noDataOverlay.message`.
+
+For more advanced customization, use the `loadingOverlay` and `noDataOverlay` slots.
+
+{{"demo": "CustomOverlay.js"}}
+
 ## Styling
 
 ### Size
