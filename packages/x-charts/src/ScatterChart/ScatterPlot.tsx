@@ -4,6 +4,7 @@ import { Scatter, ScatterProps } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import getColor from './getColor';
+import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -40,6 +41,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
   const seriesData = React.useContext(SeriesContext).scatter;
   const axisData = React.useContext(CartesianContext);
+  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
 
   if (seriesData === undefined) {
     return null;
@@ -49,17 +51,20 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
+  const defaultZAxisId = zAxisIds[0];
+
   const ScatterItems = slots?.scatter ?? Scatter;
 
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, markerSize, color } = series[seriesId];
+        const { id, xAxisKey, yAxisKey, zAxisKey, markerSize, color } = series[seriesId];
 
         const colorGetter = getColor(
           series[seriesId],
           xAxis[xAxisKey ?? defaultXAxisId],
           yAxis[yAxisKey ?? defaultYAxisId],
+          zAxis[zAxisKey ?? defaultZAxisId],
         );
         const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
         const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;

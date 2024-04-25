@@ -11,6 +11,7 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
 import { isCartesianSeriesType } from './utils';
 import colorGetter from '../internals/colorGetter';
+import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
   getColor: (dataIndex: number) => string;
@@ -59,6 +60,7 @@ function ChartsAxisTooltipContent(props: {
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
 
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
   const series = React.useContext(SeriesContext);
 
   const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
@@ -74,17 +76,31 @@ function ChartsAxisTooltipContent(props: {
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
             const seriesToAdd = series[seriesType]!.series[seriesId];
 
-            const color = colorGetter(
-              seriesToAdd,
-              xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-              yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-            );
-            rep.push({ ...seriesToAdd, getColor: color });
+            let getColor: (index: number) => string;
+            switch (seriesToAdd.type) {
+              case 'scatter':
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
+                );
+                break;
+              default:
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                );
+                break;
+            }
+
+            rep.push({ ...seriesToAdd, getColor });
           }
         });
       });
     return rep;
-  }, [USED_AXIS_ID, isXaxis, series, xAxis, xAxisIds, yAxis, yAxisIds]);
+  }, [USED_AXIS_ID, isXaxis, series, xAxis, xAxisIds, yAxis, yAxisIds, zAxis, zAxisIds]);
 
   const relevantAxis = React.useMemo(() => {
     return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];

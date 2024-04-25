@@ -59,29 +59,17 @@ commands:
         description: 'Set to true if you intend to any browser (for example with playwright).'
 
     steps:
-      - run:
-          name: View install environment
-          command: |
-            node --version
-            yarn --version
-      - restore_cache:
-          name: Restore yarn cache
-          keys:
-            - v8-yarn-{{ checksum "yarn.lock" }}
-      - run:
-          name: Set yarn cache folder
-          command: |
-            # Keep path in sync with `save_cache` for key "v8-yarn-"
-            yarn config set cache-folder /tmp/yarn-cache
-            # Debug information
-            yarn cache dir
-            yarn cache list
       - when:
           condition: << parameters.browsers >>
           steps:
             - run:
+                name: Install pnpm package manager
+                command: |
+                  corepack enable
+                  corepack prepare pnpm@latest-8 --activate
+            - run:
                 name: Prepare playwright hash
-                command: yarn --json list --pattern playwright > /tmp/playwright_info.json
+                command: pnpm list --json --filter playwright > /tmp/playwright_info.json
             - store_artifacts:
                 name: Debug playwright hash
                 path: /tmp/playwright_info.json
@@ -90,24 +78,19 @@ commands:
                 keys:
                   - v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
       - run:
+          name: View install environment
+          command: |
+            node --version
+            pnpm --version
+      - run:
           name: Install js dependencies
-          command: yarn install
+          command: pnpm install
       - when:
           condition: << parameters.browsers >>
           steps:
             - run:
                 name: Install playwright browsers
                 command: npx playwright install --with-deps
-      - save_cache:
-          name: Save yarn cache
-          key: v8-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-            - /tmp/yarn-cache
-      - when:
-          condition: << parameters.browsers >>
-          steps:
             - save_cache:
                 name: Save playwright cache
                 key: v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
@@ -127,7 +110,13 @@ jobs:
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Check for duplicated packages
-          command: yarn deduplicate
+          command: |
+            if [[ $(git diff --name-status next | grep pnpm-lock) == "" ]];
+            then
+                echo "No changes to dependencies detected. Skipping..."
+            else
+                pnpm dedupe --check
+            fi
   test_unit:
     <<: *default-job
     steps:
@@ -135,10 +124,10 @@ jobs:
       - install_js
       - run:
           name: Tests charts
-          command: yarn test:charts:unit # Run special test for charts due to ESM compatibility issue
+          command: pnpm test:charts:unit # Run special test for charts due to ESM compatibility issue
       - run:
           name: Tests fake browser
-          command: yarn test:coverage
+          command: pnpm test:coverage
       - run:
           name: Check coverage generated
           command: |
@@ -159,43 +148,47 @@ jobs:
       - install_js
       - run:
           name: Eslint
-          command: yarn eslint:ci
+          command: pnpm eslint:ci
       - run:
           name: Lint JSON
-          command: yarn jsonlint
+          command: pnpm jsonlint
       - run:
           name: Lint Markdown
-          command: yarn markdownlint
+          command: pnpm markdownlint
   test_static:
     <<: *default-job
     steps:
       - checkout
       - install_js
       - run:
-          name: '`yarn prettier` changes committed?'
-          command: yarn prettier --check
+          name: '`pnpm prettier` changes committed?'
+          command: pnpm prettier --check
       - run:
           name: Generate PropTypes
-          command: yarn proptypes
+          command: pnpm proptypes
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
       - run:
-          name: '`yarn proptypes` changes committed?'
+          name: '`pnpm proptypes` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
-          command: yarn docs:api
+          command: pnpm docs:api
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
       - run:
-          name: '`yarn docs:api` changes committed?'
+          name: '`pnpm docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Sync locale files
-          command: yarn l10n
+          command: pnpm l10n
       - run:
-          name: '`yarn l10n` changes committed?'
+          name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`yarn docs:link-check` changes committed?'
+          name: '`pnpm docs:link-check` changes committed?'
           command: |
-            yarn docs:link-check
+            pnpm docs:link-check
             git add -A && git diff --exit-code --staged
   test_browser:
     <<: *default-job
@@ -209,7 +202,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers
-          command: yarn test:karma
+          command: pnpm test:karma
       - store_artifacts:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
@@ -221,15 +214,15 @@ jobs:
       - install_js
       - run:
           name: Transpile TypeScript demos
-          command: yarn docs:typescript:formatted --disable-cache
+          command: pnpm docs:typescript:formatted --disable-cache
       - run:
-          name: '`yarn docs:typescript:formatted` changes committed?'
+          name: '`pnpm docs:typescript:formatted` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Tests TypeScript definitions
-          command: yarn typescript:ci
+          command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=2048
+            NODE_OPTIONS: --max-old-space-size=1536
   test_e2e:
     <<: *default-job
     docker:
@@ -242,7 +235,7 @@ jobs:
           browsers: true
       - run:
           name: Run e2e tests
-          command: yarn test:e2e
+          command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
     docker:
@@ -254,8 +247,8 @@ jobs:
       - install_js:
           browsers: true
       - run:
-          name: yarn test:e2e-website
-          command: yarn test:e2e-website
+          name: pnpm test:e2e-website
+          command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
@@ -270,10 +263,10 @@ jobs:
           browsers: true
       - run:
           name: Run visual regression tests
-          command: xvfb-run yarn test:regressions
+          command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
-          command: yarn test:argos
+          command: pnpm test:argos
   run_danger:
     <<: *default-job
     docker:
@@ -286,7 +279,7 @@ jobs:
           browsers: true
       - run:
           name: Run danger on PRs
-          command: yarn danger ci --fail-on-errors
+          command: pnpm danger ci --fail-on-errors
           environment:
             DANGER_DISABLE_TRANSPILATION: 'true'
 workflows:
