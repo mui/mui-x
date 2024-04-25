@@ -65,9 +65,6 @@
     "date-fns": "^2.30.0",
     "rimraf": "^5.0.5"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }

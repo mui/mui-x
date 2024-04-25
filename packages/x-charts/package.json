@@ -92,9 +92,6 @@
       "default": "./esm/*/index.js"
     }
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }

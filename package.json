@@ -188,9 +188,6 @@
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "resolutions": {
     "react-is": "^18.2.0",
     "@types/node": "^18.19.23"
