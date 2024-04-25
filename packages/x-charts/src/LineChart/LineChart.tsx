@@ -238,7 +238,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
+      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>

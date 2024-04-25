@@ -194,7 +194,7 @@ function PieChart(props: PieChartProps) {
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
-      <ChartsTooltip {...tooltip} />
+      {!loading && <ChartsTooltip {...tooltip} />}
       {children}
     </ResponsiveChartContainer>
   );

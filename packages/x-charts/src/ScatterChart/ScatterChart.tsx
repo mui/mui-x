@@ -183,7 +183,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
         <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
         <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-        <ChartsTooltip trigger="item" {...tooltip} />
+        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainer>
