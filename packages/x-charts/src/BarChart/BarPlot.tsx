@@ -180,8 +180,8 @@ const useAggregatedData = (): CompletedBarData[] => {
       return stackedData.map((values, dataIndex: number) => {
         const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-        const minValueCoord = Math.min(...valueCoordinates);
-        const maxValueCoord = Math.max(...valueCoordinates);
+        const minValueCoord = Math.round(Math.min(...valueCoordinates));
+        const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
         return {
           seriesId,
