@@ -18,12 +18,16 @@ jobs:
     steps:
       - run: echo "${{ github.actor }}"
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d #v3.0.0
+        with:
+          version: 8
+          run_install: false
       - name: Use Node.js 20.x
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - name: pnpm l10n --report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
