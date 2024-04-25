@@ -147,7 +147,7 @@ Here is an example of how you can transpile these features on Webpack 4 using th
 The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
 As a result, the following changes have been made:
 
-- The main element now corresponds to the virtal scroller element.
+- The main element now corresponds to the virtual scroller element.
 - Headers are now contained in the virtual scroller.
 - Pinned row and column sections are now contained in the virtual scroller.
 - The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
@@ -409,7 +409,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Filtering
 
-- The `getApplyFilterFnV7` in `GridFilterOperator` was renamed to `getApplyFilterFn`.
+- The `getApplyFilterFnV7` in `GridFilterOperator` has been renamed to `getApplyFilterFn`.
   If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
 
 - The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
@@ -560,7 +560,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 - The `columnHeader--showColumnBorder` class was replaced by `columnHeader--withLeftBorder` and `columnHeader--withRightBorder`.
 - The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
-- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
+- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes have been removed along with the element they were applied to.
   The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
 - The column headers and pinned section now require an explicit color. By default, the MUI `theme.palette.background.default` color will be used. To customize it, see https://mui.com/material-ui/customization/palette/#customization
   We will be adding a new color name to the palette for additional customization, read [#12443](https://github.com/mui/mui-x/issues/12443) for more details.

@@ -5,6 +5,9 @@
 > Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
 > You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
 
+> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
+> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
+
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
@@ -14,10 +17,10 @@ A typical release goes like this:
 The following steps must be proposed as a pull request.
 
 1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
-   To do so, use `yarn release:changelog` The options are the following:
+   To do so, use `pnpm release:changelog` The options are the following:
 
 ```bash
-yarn release:changelog
+pnpm release:changelog
    --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
    --lastRelease   The release to compare against (default: the last one)
    --release       The branch to release (default: master)
@@ -33,16 +36,16 @@ In case of a problem, another method to generate the changelog is available at t
 
 2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 3. Update the root `package.json`'s version
-4. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version` (`yarn release:version prerelease` for alpha / beta releases).
+4. Update the versions of the other `package.json` files and of the dependencies with `pnpm release:version` (`pnpm release:version prerelease` for alpha / beta releases).
 5. Open PR with changes and wait for review and green CI.
 6. Merge PR once CI is green, and it has been approved.
 
 ### Release the packages
 
 1. Checkout the last version of the working branch
-2. `yarn && yarn release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `yarn release:publish` (release the versions on npm, you need your 2FA device)
-4. `yarn release:tag` (push the newly created tag)
+2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
+3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
+4. `pnpm release:tag` (push the newly created tag)
 
 ### Publish the documentation
 
@@ -89,4 +92,4 @@ You can use the following script in your browser console on any GitHub page to a
 
 ### Manually create the release tag
 
-If the `yarn release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
+If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
