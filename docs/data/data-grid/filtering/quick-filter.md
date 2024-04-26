@@ -19,7 +19,7 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
     filter: {
       filterModel: {
         items: [],
-        quickFilterValues: ['quick', 'filter'],
+        quickFilterValues: ['ab'],
       },
     },
   }}
