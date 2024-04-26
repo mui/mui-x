@@ -239,7 +239,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
   inProps: PickersDayProps<TDate>,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
-  const props = useThemeProps<Theme, PickersDayProps<TDate>, 'MuiPickersDay'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersDay',
   });
