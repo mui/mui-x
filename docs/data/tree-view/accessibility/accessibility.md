@@ -66,7 +66,9 @@ When a single-select tree receives focus:
 When a multi-select tree receives focus:
 
 - If none of the items are selected when the tree receives focus, focus is set on the first item.
-- If an item is selected before the tree receives focus, focus is set on the first of the selected items.
+- If one or more items are selected before the tree receives focus, then focus is set on:
+  - the first selected item if it is the first render
+  - the item that was last selected otherwise
 
 |                                                                                 Keys | Description                                                       |
 | -----------------------------------------------------------------------------------: | :---------------------------------------------------------------- |
