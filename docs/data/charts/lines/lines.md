@@ -159,7 +159,7 @@ The line charts use by priority:
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScaleNoSnap.js"}}
+{{"demo": "ColorScale.js"}}
 
 :::warning
 For now, ordinal config is not supported for line chart.
