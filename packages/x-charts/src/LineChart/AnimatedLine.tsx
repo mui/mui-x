@@ -2,12 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, useSpring } from '@react-spring/web';
 import { color as d3Color } from 'd3-color';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { cleanId } from '../internals/utils';
 import type { LineElementOwnerState } from './LineElement';
-import { useChartId } from '../hooks/useChartId';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
@@ -47,29 +45,36 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, bottom, width, height, right } = useDrawingArea();
-  const chartId = useChartId();
+  const totalLength = useLazyRef(measureLength, d).current;
+  const ref = React.useRef<SVGPathElement>(null);
 
   const path = useAnimatedPath(d, skipAnimation);
 
-  const { animatedWidth } = useSpring({
-    from: { animatedWidth: left },
-    to: { animatedWidth: width + left + right },
+  useSpring({
+    from: { length: 0 },
+    to: { length: totalLength },
     reset: false,
     immediate: skipAnimation,
+    onChange: ({ value: { length }}) => {
+      if (ref.current) {
+        ref.current.style.strokeDasharray = `${length} ${totalLength}`
+      }
+    },
   });
 
-  const clipId = cleanId(`${chartId}-${ownerState.id}-line-clip`);
   return (
     <React.Fragment>
-      <clipPath id={clipId}>
-        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
-      </clipPath>
-      <g clipPath={`url(#${clipId})`}>
-        <LineElementPath {...other} ownerState={ownerState} d={path} />
+      <g>
+        <LineElementPath ref={ref} {...other} ownerState={ownerState} d={path} />
       </g>
     </React.Fragment>
   );
+}
+
+function measureLength(path?: string) {
+  const element = document.createElementNS('http://www.w3.org/2000/svg', 'path');  
+  element.setAttributeNS(null, 'd', path ?? '')
+  return element.getTotalLength()
 }
 
 AnimatedLine.propTypes = {
