@@ -64,7 +64,7 @@ export interface UsePickerViewsBaseProps<
   disabled?: boolean;
   /**
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
   /**
