@@ -45,19 +45,26 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const totalLength = useLazyRef(measureLength, d).current;
+  const measurements = useLazyRef(measurePath, d).current;
   const ref = React.useRef<SVGPathElement>(null);
 
   const path = useAnimatedPath(d, skipAnimation);
 
   useSpring({
     from: { length: 0 },
-    to: { length: totalLength },
+    to: { length: measurements.totalLength },
     reset: false,
-    immediate: skipAnimation,
-    onChange: ({ value: { length }}) => {
-      if (ref.current) {
-        ref.current.style.strokeDasharray = `${length} ${totalLength}`
+    immediate: skipAnimation || measurements.totalLength === 0,
+    onChange: ({ value: { length } }) => {
+      if (ref.current && measurements.points.length > 1) {
+        const start = measurements.points[0];
+        let partialPath = `M${start.x},${start.y} `;
+        for (let i = 1; i < length / N; i++) {
+          const p = measurements.points[i];
+          partialPath += `L${p.x},${p.y} `;
+        }
+
+        ref.current.setAttributeNS(null, 'd', partialPath);
       }
     },
   });
@@ -71,10 +78,21 @@ function AnimatedLine(props: AnimatedLineProps) {
   );
 }
 
-function measureLength(path?: string) {
-  const element = document.createElementNS('http://www.w3.org/2000/svg', 'path');  
-  element.setAttributeNS(null, 'd', path ?? '')
-  return element.getTotalLength()
+const N = 3;
+const element =
+  typeof document !== 'undefined'
+    ? document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    : undefined;
+function measurePath(path?: string) {
+  if (!element) {
+    return { totalLength: 0, points: [] };
+  }
+  element.setAttributeNS(null, 'd', path ?? '');
+  const totalLength = element.getTotalLength();
+  const points = Array.from({ length: Math.ceil(totalLength / N) }).map((_, i) =>
+    element.getPointAtLength(i * N),
+  );
+  return { totalLength, points };
 }
 
 AnimatedLine.propTypes = {
