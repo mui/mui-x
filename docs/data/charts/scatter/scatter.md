@@ -88,7 +88,7 @@ Here are three ways to set z value to 5.
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScaleNoSnap.js"}}
+{{"demo": "ColorScale.js"}}
 
 ### Grid
 

@@ -7,7 +7,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { BarChart } from '@mui/x-charts/BarChart';
 
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const barChartsParams = {
   series: [

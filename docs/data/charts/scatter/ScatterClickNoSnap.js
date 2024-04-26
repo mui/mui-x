@@ -7,7 +7,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const scatterChartsParams = {
   series: [
