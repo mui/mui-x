@@ -292,7 +292,7 @@ BarChart.propTypes = {
     slots: PropTypes.object,
   }),
   /**
-   * If `true`, a  loading overlay is displayed.
+   * If `true`, a loading overlay is displayed.
    */
   loading: PropTypes.bool,
   /**
