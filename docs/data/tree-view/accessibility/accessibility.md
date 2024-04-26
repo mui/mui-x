@@ -22,7 +22,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what we aims to support very well.
+This is the most common target for organizations, so we aim to support it very well.
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) provide valuable information on how to optimize the accessibility of a Tree View.
 
@@ -31,9 +31,7 @@ The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/tree
 :::info
 The following key assignments apply to Windows and Linux users.
 
-On macOS:
-
-- replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
+On macOS replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
 
 :::
 
@@ -52,7 +50,7 @@ Type-ahead is supported for single characters. When typing a character, focus mo
 
 ## Selection
 
-The tree view support both single and multi selection. To learn more about the selection API, visit the dedicated page for the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) or the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/).
+The tree view supports both single and multi-selection. To learn more about the selection API, visit the dedicated page for the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) or the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/).
 
 To read more about the distinction between selection and focus, you can refer to the [WAI-ARIA Authoring Practices guide](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_vs_selection).
 
