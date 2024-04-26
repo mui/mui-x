@@ -267,6 +267,8 @@ We'd like to offer a big thanks to the ${
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### \`@mui/x-data-grid@__VERSION__\`

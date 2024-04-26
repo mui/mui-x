@@ -146,9 +146,11 @@ export const loadServerRows = (
     firstRowIndex = page * pageSize;
     lastRowIndex = (page + 1) * pageSize;
   }
+  const hasNextPage = lastRowIndex < filteredRows.length - 1;
   const response: FakeServerResponse = {
     returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
     nextCursor,
+    hasNextPage,
     totalRowCount,
   };
 
@@ -162,12 +164,14 @@ export const loadServerRows = (
 interface FakeServerResponse {
   returnedRows: GridRowModel[];
   nextCursor?: string;
+  hasNextPage: boolean;
   totalRowCount: number;
 }
 
 interface PageInfo {
   totalRowCount?: number;
   nextCursor?: string;
+  hasNextPage?: boolean;
   pageSize?: number;
 }
 
@@ -249,7 +253,7 @@ export const createFakeServer = (
       );
 
       (async function fetchData() {
-        const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
+        const { returnedRows, nextCursor, totalRowCount, hasNextPage } = await loadServerRows(
           rows,
           queryOptions,
           serverOptionsWithDefault,
@@ -263,6 +267,7 @@ export const createFakeServer = (
           pageInfo: {
             totalRowCount,
             nextCursor,
+            hasNextPage,
             pageSize: returnedRows.length,
           },
         };

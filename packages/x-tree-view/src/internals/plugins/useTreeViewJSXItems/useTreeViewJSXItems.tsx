@@ -110,6 +110,13 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   };
 };
 
+const isItemExpandable = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+  }
+  return Boolean(reactChildren);
+};
+
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
   props,
   rootRef,
@@ -130,15 +137,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   }
   const { registerChild, unregisterChild, parentId } = parentContext;
 
-  const isExpandable = (reactChildren: React.ReactNode) => {
-    if (Array.isArray(reactChildren)) {
-      return reactChildren.length > 0 && reactChildren.some(isExpandable);
-    }
-    return Boolean(reactChildren);
-  };
-
-  const expandable = isExpandable(children);
-
+  const expandable = isItemExpandable(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
 

@@ -12,6 +12,7 @@ import {
   findRightPinnedCellsBeforeCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
+  getFieldsFromGroupHeaderElem,
   findGroupHeaderElementsFromField,
   findGridHeader,
   findGridCells,
@@ -428,6 +429,24 @@ export const useGridColumnResize = (
     if (refs.colDef) {
       apiRef.current.setColumnWidth(refs.colDef.field, refs.colDef.width!);
       logger.debug(`Updating col ${refs.colDef.field} with new width: ${refs.colDef.width}`);
+
+      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      refs.groupHeaderElements!.forEach((element) => {
+        const fields = getFieldsFromGroupHeaderElem(element);
+        const div = element as HTMLDivElement;
+
+        const newWidth = fields.reduce((acc, field) => {
+          if (columnsState.columnVisibilityModel[field] !== false) {
+            return acc + columnsState.lookup[field].computedWidth;
+          }
+          return acc;
+        }, 0);
+        const finalWidth: `${number}px` = `${newWidth}px`;
+
+        div.style.width = finalWidth;
+        div.style.minWidth = finalWidth;
+        div.style.maxWidth = finalWidth;
+      });
     }
 
     stopResizeEventTimeout.start(0, () => {

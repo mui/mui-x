@@ -346,6 +346,10 @@
     },
     "setPage": { "type": { "description": "(page: number) =&gt; void" }, "required": true },
     "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" }, "required": true },
+    "setPaginationMeta": {
+      "type": { "description": "(paginationMeta: GridPaginationMeta) =&gt; void" },
+      "required": true
+    },
     "setPaginationModel": {
       "type": { "description": "(model: GridPaginationModel) =&gt; void" },
       "required": true

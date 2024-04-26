@@ -7,6 +7,7 @@ import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
+import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 
 const useTabbableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
@@ -128,24 +129,23 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   });
 
-  const createHandleFocus =
-    (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
+  const createRootHandleFocus =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLUListElement> & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
       // if the event bubbled (which is React specific) we don't want to steal focus
       if (event.target === event.currentTarget) {
         instance.focusDefaultItem(event);
       }
     };
 
-  const focusedItem = instance.getItemMeta(state.focusedItemId!);
-  const activeDescendant = focusedItem
-    ? instance.getTreeItemIdAttribute(focusedItem.id, focusedItem.idAttribute)
-    : null;
-
   return {
     getRootProps: (otherHandlers) => ({
-      onFocus: createHandleFocus(otherHandlers),
-      'aria-activedescendant': activeDescendant ?? undefined,
+      onFocus: createRootHandleFocus(otherHandlers),
     }),
     publicAPI: {
       focusItem,

@@ -23,10 +23,19 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
   const getUtils = (
     result: MuiRenderResult,
-  ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'apiRef'> => {
+  ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'setItems' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllItemRoots = () => result.queryAllByRole('treeitem');
+
+    const getFocusedItemId = () => {
+      const activeElement = document.activeElement;
+      if (!activeElement || !activeElement.classList.contains(treeItemClasses.root)) {
+        return null;
+      }
+
+      return (activeElement as HTMLElement).dataset.testid!;
+    };
 
     const getItemRoot = (id: string) => result.getByTestId(id);
 
@@ -46,6 +55,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     return {
       getRoot,
       getAllItemRoots,
+      getFocusedItemId,
       getItemRoot,
       getItemContent,
       getItemLabel,
@@ -81,7 +91,17 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          getItemLabel={(item) => item.label ?? item.id}
+          getItemLabel={(item) => {
+            if (item.label) {
+              if (typeof item.label !== 'string') {
+                throw new Error('Only use string labels when testing RichTreeView(Pro)');
+              }
+
+              return item.label;
+            }
+
+            return item.id;
+          }}
           isItemDisabled={(item) => !!item.disabled}
           {...other}
         />
@@ -91,6 +111,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
       return {
         setProps: result.setProps,
+        setItems: (newItems) => result.setProps({ items: newItems }),
         apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
         ...getUtils(result),
       };
@@ -137,6 +158,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
       return {
         setProps: result.setProps,
+        setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
         apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TPlugins> },
         ...getUtils(result),
       };

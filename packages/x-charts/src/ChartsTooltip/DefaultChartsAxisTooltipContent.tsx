@@ -50,16 +50,13 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
                 <ChartsTooltipRow key={id} className={classes.row}>
                   <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
                     <ChartsTooltipMark
-                      ownerState={{ color: getColor(dataIndex) ?? color }}
-                      boxShadow={1}
+                      color={getColor(dataIndex) ?? color}
                       className={classes.mark}
                     />
                   </ChartsTooltipCell>
-
                   <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
                     {label ? <Typography>{label}</Typography> : null}
                   </ChartsTooltipCell>
-
                   <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                     <Typography>{formattedValue}</Typography>
                   </ChartsTooltipCell>

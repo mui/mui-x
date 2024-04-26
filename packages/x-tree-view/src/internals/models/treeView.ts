@@ -13,13 +13,6 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export interface TreeViewItemRange {
-  start?: string | null;
-  end?: string | null;
-  next?: string | null;
-  current?: string;
-}
-
 export interface TreeViewModel<TValue> {
   name: string;
   value: TValue;
