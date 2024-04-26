@@ -683,129 +683,6 @@ describe('<TreeItem />', () => {
         });
       });
 
-      describe('type-ahead functionality', () => {
-        it('moves focus to the next item with a name that starts with the typed character', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label={<span>two</span>} data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('one').focus();
-          });
-
-          expect(getByTestId('one')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('one'), { key: 't' });
-
-          expect(getByTestId('two')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('two'), { key: 'f' });
-
-          expect(getByTestId('four')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('four'), { key: 'o' });
-
-          expect(getByTestId('one')).toHaveFocus();
-        });
-
-        it('moves focus to the next item with the same starting character', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" data-testid="two" />
-              <TreeItem itemId="three" label="three" data-testid="three" />
-              <TreeItem itemId="four" label="four" data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('one').focus();
-          });
-
-          expect(getByTestId('one')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('one'), { key: 't' });
-
-          expect(getByTestId('two')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('two'), { key: 't' });
-
-          expect(getByTestId('three')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('three'), { key: 't' });
-
-          expect(getByTestId('two')).toHaveFocus();
-        });
-
-        it('should not move focus when pressing a modifier key + letter', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" data-testid="one" />
-              <TreeItem itemId="two" data-testid="two" />
-              <TreeItem itemId="three" data-testid="three" />
-              <TreeItem itemId="four" data-testid="four" />
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('one').focus();
-          });
-
-          expect(getByTestId('one')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('one'), { key: 'f', ctrlKey: true });
-
-          expect(getByTestId('one')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('one'), { key: 'f', metaKey: true });
-
-          expect(getByTestId('one')).toHaveFocus();
-
-          fireEvent.keyDown(getByTestId('one'), { key: 'f', shiftKey: true });
-
-          expect(getByTestId('one')).toHaveFocus();
-        });
-
-        it('should not throw when an item is removed', () => {
-          function TestComponent() {
-            const [hide, setState] = React.useState(false);
-            return (
-              <React.Fragment>
-                <button type="button" onClick={() => setState(true)}>
-                  Hide
-                </button>
-                <SimpleTreeView>
-                  {!hide && <TreeItem itemId="hide" label="ab" />}
-                  <TreeItem itemId="keyDown" label="keyDown" data-testid="keyDown" />
-                  <TreeItem itemId="navTo" label="ac" data-testid="navTo" />
-                </SimpleTreeView>
-              </React.Fragment>
-            );
-          }
-
-          const { getByText, getByTestId } = render(<TestComponent />);
-          fireEvent.click(getByText('Hide'));
-          expect(getByTestId('navTo')).not.toHaveFocus();
-
-          expect(() => {
-            act(() => {
-              getByTestId('keyDown').focus();
-            });
-
-            expect(getByTestId('keyDown')).toHaveFocus();
-
-            fireEvent.keyDown(getByTestId('keyDown'), { key: 'a' });
-          }).not.to.throw();
-
-          expect(getByTestId('navTo')).toHaveFocus();
-        });
-      });
-
       describe('asterisk key interaction', () => {
         it('expands all siblings that are at the same level as the current item', () => {
           const onExpandedItemsChange = spy();
@@ -1545,22 +1422,6 @@ describe('<TreeItem />', () => {
 
     describe('focus', () => {
       describe('`disabledItemsFocusable={true}`', () => {
-        it('should not prevent focus by type-ahead', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView disabledItemsFocusable>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" disabled data-testid="two" />
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('one').focus();
-          });
-          expect(getByTestId('one')).toHaveFocus();
-          fireEvent.keyDown(getByTestId('one'), { key: 't' });
-          expect(getByTestId('two')).toHaveFocus();
-        });
-
         it('should not prevent focus by arrow keys', () => {
           const { getByTestId } = render(
             <SimpleTreeView disabledItemsFocusable>
@@ -1581,22 +1442,6 @@ describe('<TreeItem />', () => {
       });
 
       describe('`disabledItemsFocusable=false`', () => {
-        it('should prevent focus by type-ahead', () => {
-          const { getByTestId } = render(
-            <SimpleTreeView>
-              <TreeItem itemId="one" label="one" data-testid="one" />
-              <TreeItem itemId="two" label="two" disabled data-testid="two" />
-            </SimpleTreeView>,
-          );
-
-          act(() => {
-            getByTestId('one').focus();
-          });
-          expect(getByTestId('one')).toHaveFocus();
-          fireEvent.keyDown(getByTestId('one'), { key: 't' });
-          expect(getByTestId('one')).toHaveFocus();
-        });
-
         it('should be skipped on navigation with arrow keys', () => {
           const { getByTestId } = render(
             <SimpleTreeView>

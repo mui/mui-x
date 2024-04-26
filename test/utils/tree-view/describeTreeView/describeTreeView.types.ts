@@ -115,7 +115,7 @@ interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSig
 
 export interface DescribeTreeViewItem {
   id: string;
-  label?: string;
+  label?: React.ReactNode;
   disabled?: boolean;
   children?: readonly DescribeTreeViewItem[];
 }
