@@ -89,7 +89,7 @@
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
     },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
+      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." }
   },
