@@ -167,7 +167,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
-  getTreeDataPath?: (row: R) => string[];
+  getTreeDataPath?: (row: R) => ReadonlyArray<string>;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
