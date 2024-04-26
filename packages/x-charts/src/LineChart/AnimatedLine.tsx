@@ -7,6 +7,8 @@ import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
 import type { LineElementOwnerState } from './LineElement';
 
+const PATH_SAMPLING_INTERVAL = 3; // pixels
+
 export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
   slot: 'Root',
@@ -59,7 +61,7 @@ function AnimatedLine(props: AnimatedLineProps) {
       if (ref.current && measurements.points.length > 1) {
         const start = measurements.points[0];
         let partialPath = `M${start.x},${start.y} `;
-        for (let i = 1; i < length / N; i++) {
+        for (let i = 1; i < length / PATH_SAMPLING_INTERVAL; i += 1) {
           const p = measurements.points[i];
           partialPath += `L${p.x},${p.y} `;
         }
@@ -70,15 +72,12 @@ function AnimatedLine(props: AnimatedLineProps) {
   });
 
   return (
-    <React.Fragment>
-      <g>
-        <LineElementPath ref={ref} {...other} ownerState={ownerState} d={path} />
-      </g>
-    </React.Fragment>
+    <g>
+      <LineElementPath ref={ref} {...other} ownerState={ownerState} d={path} />
+    </g>
   );
 }
 
-const N = 3;
 const element =
   typeof document !== 'undefined'
     ? document.createElementNS('http://www.w3.org/2000/svg', 'path')
@@ -89,8 +88,8 @@ function measurePath(path?: string) {
   }
   element.setAttributeNS(null, 'd', path ?? '');
   const totalLength = element.getTotalLength();
-  const points = Array.from({ length: Math.ceil(totalLength / N) }).map((_, i) =>
-    element.getPointAtLength(i * N),
+  const points = Array.from({ length: Math.ceil(totalLength / PATH_SAMPLING_INTERVAL) }).map(
+    (_, i) => element.getPointAtLength(i * PATH_SAMPLING_INTERVAL),
   );
   return { totalLength, points };
 }
