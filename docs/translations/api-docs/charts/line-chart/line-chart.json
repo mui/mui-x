@@ -77,9 +77,9 @@
     "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
-    "loadingOverlay": "Loading overlay component rendered when the chart is in a loading state.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "mark": "",
-    "noDataOverlay": "No data overlay component rendered when the chart has no data to display.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "popper": "Custom component for the tooltip popper."
   }
 }

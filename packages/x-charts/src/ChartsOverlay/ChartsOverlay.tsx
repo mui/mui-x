@@ -28,12 +28,12 @@ export type CommonOverlayProps = React.SVGAttributes<SVGTextElement> & {
 
 export interface ChartsOverlaySlots {
   /**
-   * Loading overlay component rendered when the chart is in a loading state.
+   * Overlay component rendered when the chart is in a loading state.
    * @default ChartsLoadingOverlay
    */
   loadingOverlay?: React.ElementType<CommonOverlayProps>;
   /**
-   * No data overlay component rendered when the chart has no data to display.
+   * Overlay component rendered when the chart has no data to display.
    * @default ChartsNoDataOverlay
    */
   noDataOverlay?: React.ElementType<CommonOverlayProps>;

@@ -62,8 +62,8 @@
     "axisTickLabel": "Custom component for tick label.",
     "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
-    "loadingOverlay": "Loading overlay component rendered when the chart is in a loading state.",
-    "noDataOverlay": "No data overlay component rendered when the chart has no data to display.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",
     "pieArcLabel": "",
     "popper": "Custom component for the tooltip popper."

@@ -156,13 +156,13 @@
     },
     {
       "name": "loadingOverlay",
-      "description": "Loading overlay component rendered when the chart is in a loading state.",
+      "description": "Overlay component rendered when the chart is in a loading state.",
       "default": "ChartsLoadingOverlay",
       "class": null
     },
     {
       "name": "noDataOverlay",
-      "description": "No data overlay component rendered when the chart has no data to display.",
+      "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
       "class": null
     }
