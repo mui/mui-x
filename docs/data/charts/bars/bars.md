@@ -98,7 +98,7 @@ The bar charts use by priority:
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScaleNoSnap.js"}}
+{{"demo": "ColorScale.js"}}
 
 ### Border Radius
 

@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.3.1
+
+_Apr 26, 2024_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Scatter Charts get a [z-axis to allow coloring data points independently from their coordinates](https://mui.com/x/react-charts/scatter/#color-scale)
+- 🌍 Improve Catalan (ca-ES) and Spanish (es-ES) locales on the Date and Time Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.3.1`
+
+- [DataGrid] Fix date filtering for negative timezone offsets (#12836) @cherniavskii
+- [DataGrid] Fix flex column width when used with pinned columns (#12849) @romgrk
+- [DataGrid] Fix group header resize (#12863) @arminmeh
+- [DataGrid] Pass slot props to `columnHeaders` slot (#12768) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.3.1`.
+
+#### `@mui/x-data-grid-premium@7.3.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.3.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.3.1`
+
+- [l10n] Improve Catalan (ca-ES) locale (#12856) @soler1212
+- [l10n] Improve Spanish (es-ES) locale (#12858) @soler1212
+
+#### `@mui/x-date-pickers-pro@7.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.3.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.3.1`
+
+- [charts] Add documentation on border radius alternative for `BarCharts` (#12859) @JCQuintas
+- [charts] Add z-axis to colorize scatter charts (#12738) @alexfauquette
+- [charts] Fix left/bottomAxis not picking up default axis id (#12894) @JCQuintas
+- [charts] Improve default tooltip content (#12257) @oliviertassinari
+- [charts] Round y values for bar chart (#12846) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.3.1`
+
+- [TreeView] Remove un-needed `aria-activedescendant` attribute (#12867) @flaviendelangle
+- [TreeView] Rework the selection internals (#12703) @flaviendelangle
+- [TreeView] Use the order in which the items are displayed for `type-ahead` (#12827) @flaviendelangle
+
+### Docs
+
+- [docs] Add demo for styling charts with `sx` props (#12791) @derek-0000
+- [docs] Cover webpack 4 support in migration guide (#12710) @cherniavskii
+- [docs] Document interfaces for charts (#12656) @alexfauquette
+- [docs] Fix Vale regression (#12862) @oliviertassinari
+- [docs] Improve Data Grid migration guide (#12879) @MBilalShafi
+- [docs] Update Column features availability (#12865) @DanailH
+
+### Core
+
+- [core] Fix `l10n` GH workflow (#12895) @LukasTy
+- [core] Match Base UI and Toolpad @oliviertassinari
+- [core] Remove redundant `setupFiles` entries in `package.json` (#12899) @LukasTy
+- [core] Use `describeTreeView` for focus tests (#12698) @flaviendelangle
+- [core] Use `describeTreeView` for type-ahead tests (#12811) @flaviendelangle
+- [code-infra] Change package manager to `pnpm` (#11875) @LukasTy
+- [code-infra] Closer sync with eslint config of codebase (#12864) @oliviertassinari
+- [support-infra] Add release announcement to GitHub workflows (#11867) (#12843) @michelengelen
+
 ## 7.3.0
 
 _Apr 18, 2024_

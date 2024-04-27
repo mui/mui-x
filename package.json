@@ -1,5 +1,5 @@
 {
-  "version": "7.3.0",
+  "version": "7.3.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -86,9 +86,9 @@
     "@emotion/styled": "^11.11.0",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.14",
-    "@mui/internal-markdown": "^1.0.0",
+    "@mui/internal-markdown": "^1.0.3",
     "@mui/material": "^5.15.14",
-    "@mui/monorepo": "github:mui/material-ui#e1d94d5ce097815bcd738352e69bb43ce03bd266",
+    "@mui/monorepo": "github:mui/material-ui#afffc2ffc3db1e6abf48f3b3e13a41e8b758f874",
     "@mui/utils": "^5.15.14",
     "@next/eslint-plugin-next": "14.0.4",
     "@octokit/plugin-retry": "^6.0.1",
@@ -102,7 +102,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.0",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.23",
+    "@types/node": "^18.19.31",
     "@types/prettier": "^2.7.3",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
@@ -179,7 +179,7 @@
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.10",
-    "tsx": "^4.7.0",
+    "tsx": "^4.7.3",
     "typescript": "^5.4.5",
     "unist-util-visit": "^2.0.3",
     "util": "^0.12.5",
@@ -188,20 +188,16 @@
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "resolutions": {
     "react-is": "^18.2.0",
-    "@types/node": "^18.19.23"
+    "@types/node": "^18.19.31"
   },
   "packageManager": "pnpm@8.15.1",
   "pnpm": {
     "patchedDependencies": {
       "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
-      "@mui/monorepo@6.0.0-alpha.0": "patches/@mui__monorepo@6.0.0-alpha.0.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
     }
   }
 }

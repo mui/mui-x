@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.3.0",
+  "version": "7.3.1",
   "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -63,9 +63,6 @@
     "@types/prop-types": "^15.7.11",
     "rimraf": "^5.0.5"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }
