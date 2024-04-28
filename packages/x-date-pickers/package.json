@@ -57,6 +57,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@js-joda/core": "^5.6.2",
     "@mui/material": "^5.15.14",
     "date-fns": "^2.25.0 || ^3.2.0",
     "date-fns-jalali": "^2.13.0-0",
@@ -73,6 +74,9 @@
       "optional": true
     },
     "@emotion/styled": {
+      "optional": true
+    },
+    "@js-joda/core": {
       "optional": true
     },
     "date-fns": {
@@ -98,6 +102,7 @@
     }
   },
   "devDependencies": {
+    "@js-joda/locale_en-us": "^4.11.0",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",

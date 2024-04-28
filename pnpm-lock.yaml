@@ -999,6 +999,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.60)(react@18.2.0)
+      '@js-joda/core':
+        specifier: ^5.6.2
+        version: 5.6.2
       '@mui/base':
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -1030,6 +1033,9 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
+      '@js-joda/locale_en-us':
+        specifier: ^4.11.0
+        version: 4.11.0(@js-joda/core@5.6.2)(@js-joda/timezone@2.21.0)
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -3425,6 +3431,27 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@js-joda/core@5.6.2:
+    resolution: {integrity: sha512-ow4R+7C24xeTjiMTTZ4k6lvxj7MRBqvqLCQjThQff3RjOmIMokMP20LNYVFhGafJtUx/Xo2Qp4qU8eNoTVH0SA==}
+
+  /@js-joda/locale_en-us@4.11.0(@js-joda/core@5.6.2)(@js-joda/timezone@2.21.0):
+    resolution: {integrity: sha512-AhBwtKtDg6MiM4fkZeQ2u56vw+a/urherreU/1tBt0Q9npAq4HIQ0lWPLBlB/78/cgDA6GryGBZX68J7iLLNAQ==}
+    peerDependencies:
+      '@js-joda/core': '>=3.2.0'
+      '@js-joda/timezone': ^2.3.0
+    dependencies:
+      '@js-joda/core': 5.6.2
+      '@js-joda/timezone': 2.21.0(@js-joda/core@5.6.2)
+    dev: true
+
+  /@js-joda/timezone@2.21.0(@js-joda/core@5.6.2):
+    resolution: {integrity: sha512-doyzPp6jqVow/eE7jG7yP4jNOmtzRAyIby5bzv3MDYzZ0yJlSVrM+LhTnmGTmxcgooqbLcqWymix+v4yUnNhPw==}
+    peerDependencies:
+      '@js-joda/core': '>=1.11.0'
+    dependencies:
+      '@js-joda/core': 5.6.2
+    dev: true
 
   /@lerna/create@8.1.2(typescript@5.4.5):
     resolution: {integrity: sha512-GzScCIkAW3tg3+Yn/MKCH9963bzG+zpjGz2NdfYDlYWI7p0f/SH46v1dqpPpYmZ2E/m3JK8HjTNNNL8eIm8/YQ==}
