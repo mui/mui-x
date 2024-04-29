@@ -37,6 +37,12 @@ import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
 } from '../ChartsOnAxisClickHandler';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -45,7 +51,8 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -53,11 +60,13 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the line chart.
@@ -155,6 +164,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     slots,
     slotProps,
     skipAnimation,
+    loading,
   } = props;
 
   const id = useId();
@@ -209,6 +219,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
           onItemClick={onLineClick}
           skipAnimation={skipAnimation}
         />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -227,7 +238,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       />
       <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
+      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
@@ -307,6 +318,10 @@ LineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

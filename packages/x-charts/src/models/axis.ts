@@ -159,7 +159,7 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
 export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
-interface AxisScaleConfig {
+export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<number | Date | string>;

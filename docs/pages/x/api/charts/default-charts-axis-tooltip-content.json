@@ -8,7 +8,6 @@
       },
       "required": true
     },
-    "axisValue": { "type": { "name": "any" }, "required": true },
     "classes": {
       "type": { "name": "object" },
       "required": true,
@@ -17,6 +16,9 @@
     "series": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
+    },
+    "axisValue": {
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
     },
     "dataIndex": { "type": { "name": "number" } }
   },

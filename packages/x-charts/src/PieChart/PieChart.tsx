@@ -30,22 +30,31 @@ import {
   ChartsYAxisProps,
 } from '../models/axis';
 import { useIsRTL } from '../internals/useIsRTL';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,
     PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 
 export interface PieChartSlotProps
   extends ChartsAxisSlotProps,
     PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -133,6 +142,7 @@ function PieChart(props: PieChartProps) {
     slots,
     slotProps,
     onItemClick,
+    loading,
   } = props;
   const isRTL = useIsRTL();
 
@@ -181,9 +191,10 @@ function PieChart(props: PieChartProps) {
         onItemClick={onItemClick}
         skipAnimation={skipAnimation}
       />
+      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
-      <ChartsTooltip {...tooltip} />
+      {!loading && <ChartsTooltip {...tooltip} />}
       {children}
     </ResponsiveChartContainer>
   );
@@ -253,6 +264,10 @@ PieChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../internals/isBandScale';
-import { D3Scale } from '../models/axis';
+import { AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
 
 /**
  * For a given scale return a function that map value to their position.
@@ -16,7 +16,9 @@ export function getValueToPositionMapper(scale: D3Scale) {
   return (value: any) => scale(value) as number;
 }
 
-export function useXScale(identifier?: number | string) {
+export function useXScale<S extends ScaleName>(
+  identifier?: number | string,
+): AxisScaleConfig[S]['scale'] {
   const { xAxis, xAxisIds } = React.useContext(CartesianContext);
 
   const id = typeof identifier === 'string' ? identifier : xAxisIds[identifier ?? 0];
@@ -24,7 +26,9 @@ export function useXScale(identifier?: number | string) {
   return xAxis[id].scale;
 }
 
-export function useYScale(identifier?: number | string) {
+export function useYScale<S extends ScaleName>(
+  identifier?: number | string,
+): AxisScaleConfig[S]['scale'] {
   const { yAxis, yAxisIds } = React.useContext(CartesianContext);
 
   const id = typeof identifier === 'string' ? identifier : yAxisIds[identifier ?? 0];

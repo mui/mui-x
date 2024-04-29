@@ -139,6 +139,11 @@ export function useTicks(
       }));
     }
 
+    if (scale.domain().length === 0 || scale.domain()[0] === scale.domain()[1]) {
+      // The axis should not be visible, so ticks should also be hidden.
+      return [];
+    }
+
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
     return ticks.map((value: any) => ({
       value,
