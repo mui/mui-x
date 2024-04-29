@@ -279,13 +279,16 @@ export const useGridPivoting = ({
     const nonPivotProps: {
       rows: DataGridPremiumProps['rows'];
       columns: DataGridPremiumProps['columns'];
-      initialState?: DataGridPremiumProps['initialState'];
     } = { rows, columns };
-    if (exportedStateRef.current) {
-      nonPivotProps.initialState = exportedStateRef.current;
-    }
     return nonPivotProps;
   }, [isPivot, columns, rows, pivotModel, apiRef, prevProps.isPivot]);
+
+  React.useLayoutEffect(() => {
+    if (!isPivot && exportedStateRef.current) {
+      apiRef.current.restoreState(exportedStateRef.current);
+      exportedStateRef.current = null;
+    }
+  }, [isPivot, apiRef]);
 
   return {
     isPivot,
