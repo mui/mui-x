@@ -46,8 +46,8 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime12h: 'MM/dd/yyyy hh:mm a',
   keyboardDateTime24h: 'MM/dd/yyyy HH:mm',
   minutes: 'mm',
-  month: 'LLLL',
-  monthShort: 'LLL',
+  month: 'MMMM',
+  monthShort: 'MMM',
   weekday: 'EEEE',
   weekdayShort: 'EEE',
   normalDate: 'd MMMM',
@@ -122,7 +122,7 @@ export class AdapterJsJoda implements MuiPickersAdapter<CalendarType> {
 
   public lib = 'js-joda';
 
-  public locale?: Locale;
+  public locale: Locale;
 
   public formats: AdapterFormats;
 
@@ -187,18 +187,49 @@ export class AdapterJsJoda implements MuiPickersAdapter<CalendarType> {
 
   public parse = (value: string, format: string): CalendarType | null => {
     try {
+      const timeFields = [
+        ChronoField.HOUR_OF_DAY,
+        ChronoField.MINUTE_OF_HOUR,
+        ChronoField.SECOND_OF_MINUTE,
+      ];
+      const dateFields = [ChronoField.DAY_OF_MONTH, ChronoField.MONTH_OF_YEAR, ChronoField.YEAR];
+
       const accessor = this.formatter(format).parse(value);
-      return accessor.isSupported(ChronoField.HOUR_OF_DAY) &&
-        accessor.isSupported(ChronoField.MINUTE_OF_HOUR) &&
-        accessor.isSupported(ChronoField.SECOND_OF_MINUTE)
-        ? LocalDateTime.from(accessor)
-        : LocalDate.from(accessor);
+      const timeFieldCount = timeFields.filter((f) => accessor.isSupported(f)).length;
+      const dateFieldCount = dateFields.filter((f) => accessor.isSupported(f)).length;
+      if (timeFieldCount === timeFields.length && dateFieldCount === dateFields.length) {
+        return LocalDateTime.from(accessor);
+      }
+      if (timeFieldCount === timeFields.length) {
+        return LocalDate.from(accessor);
+      }
+
+      // For compatibility with other adapters, allow constructing from a
+      // partial date/time plus the current timestamp as a reference.  Note that
+      // this behavior differs from other adapters - e.g., if you parse a day
+      // field:
+      //
+      // - Day.js and date-fns reset the hour/minute/second to 0 in the local
+      //   timezone.
+      // - This implementation merges only the day field, leaving
+      //   hour/minute/second unchanged.
+      let result = timeFieldCount
+        ? LocalDateTime.now().with(ChronoField.MILLI_OF_SECOND, 0)
+        : LocalDate.now();
+      [timeFields, dateFields].forEach((fields) =>
+        fields.forEach((field) => {
+          if (accessor.isSupported(field)) {
+            result = result.with(field, accessor.get(field));
+          }
+        }),
+      );
+      return result;
     } catch (ex) {
       return null;
     }
   };
 
-  public getCurrentLocaleCode = (): string => this.locale?.toString() ?? 'en-US'; // TODO - test; what's the default?
+  public getCurrentLocaleCode = (): string => this.locale.toString();
 
   public is12HourCycleInCurrentLocale = (): boolean => true; // TODO - unimplemented
 
