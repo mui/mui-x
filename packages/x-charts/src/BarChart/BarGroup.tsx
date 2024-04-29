@@ -36,11 +36,9 @@ function BarGroup(props: {
 
   return (
     <React.Fragment>
-      <defs>
-        <clipPath id={maskUniqueId}>
-          <BarClipRect style={style} ownerState={rest} />
-        </clipPath>
-      </defs>
+      <clipPath id={maskUniqueId}>
+        <BarClipRect style={style} ownerState={rest} />
+      </clipPath>
       <g clipPath={`url(#${maskUniqueId})`}>{children}</g>
     </React.Fragment>
   );
