@@ -133,8 +133,7 @@ function BarElement(props: BarElementProps) {
 
   const Bar = slots?.bar ?? BarElementPath;
 
-  // @ts-ignore idk how ownerprops and slotprops work :(
-  const { borderRadius, ...barProps } = useSlotProps({
+  const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
     additionalProps: {
@@ -148,9 +147,7 @@ function BarElement(props: BarElementProps) {
     ownerState,
   });
 
-  return (
-    <Bar clipPath={`inset(0px round ${borderRadius}px ${borderRadius}px 0px 0px)`} {...barProps} />
-  );
+  return <Bar {...barProps} />;
 }
 
 BarElement.propTypes = {

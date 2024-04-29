@@ -98,6 +98,7 @@ export interface BarChartProps
    * @default 'vertical'
    */
   layout?: BarSeriesType['layout'];
+  borderRadius?: number;
 }
 
 /**
@@ -132,6 +133,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     rightAxis,
     bottomAxis,
     skipAnimation,
+    borderRadius,
     onItemClick,
     onAxisClick,
     children,
@@ -196,6 +198,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           slotProps={slotProps}
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
+          borderRadius={borderRadius}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
