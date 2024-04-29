@@ -205,8 +205,6 @@ const useAggregatedData = (): {
         const minValueCoord = Math.round(Math.min(...valueCoordinates));
         const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
-        const axisCorrectedData = series[seriesId].data[dataIndex];
-
         const result = {
           seriesId,
           dataIndex,
@@ -223,7 +221,7 @@ const useAggregatedData = (): {
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
-          value: axisCorrectedData,
+          value: series[seriesId].data[dataIndex],
           maskId: `${series[seriesId].stack ?? ''}_${groupIndex}_${dataIndex}`,
         };
 
