@@ -192,6 +192,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
+  const domain = xScale.domain();
+  if (domain.length === 0 || domain[0] === domain[1]) {
+    // Skip axis rendering if
+    // - the data is empty (for band and point axis)
+    // - No data is associated to the axis (other scale types)
+    return null;
+  }
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}

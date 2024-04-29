@@ -96,7 +96,7 @@ DefaultChartsAxisTooltipContent.propTypes = {
   /**
    * The value associated to the current mouse position.
    */
-  axisValue: PropTypes.any.isRequired,
+  axisValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */
