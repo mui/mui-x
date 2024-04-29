@@ -1,11 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useTransition } from '@react-spring/web';
-import useId from '@mui/utils/useId';
-import { styled } from '@mui/material/styles';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
@@ -13,6 +10,7 @@ import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
 import getColor from './getColor';
+import { BarGroup } from './BarGroup';
 
 /**
  * Solution of the equations
@@ -68,7 +66,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
   borderRadius?: number;
 }
 
-interface CompletedBarData {
+export interface CompletedBarData {
   seriesId: SeriesId;
   dataIndex: number;
   layout: BarSeriesType['layout'];
@@ -84,7 +82,7 @@ interface CompletedBarData {
   maskId: string;
 }
 
-type MaskData = {
+export type MaskData = {
   id: string;
   width: number;
   height: number;
@@ -262,29 +260,6 @@ const useAggregatedData = (): {
   };
 };
 
-const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
-  ...(layout === 'vertical'
-    ? {
-        y: yOrigin,
-        x,
-        height: 0,
-        width,
-      }
-    : {
-        y,
-        x: xOrigin,
-        height,
-        width: 0,
-      }),
-});
-
-const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
-  y,
-  x,
-  height,
-  width,
-});
-
 /**
  * Demos:
  *
@@ -301,132 +276,15 @@ function BarPlot(props: BarPlotProps) {
   const { skipAnimation, onItemClick, ...other } = props;
   return Object.entries(Object.groupBy(completedData, (data) => data.maskId)).map(
     ([maskId, data]) => (
-      <Render
+      <BarGroup
         key={maskId}
-        completedData={data}
+        completedData={data!}
         maskData={masksData[maskId]}
         skipAnimation={skipAnimation}
         onItemClick={onItemClick}
         {...other}
       />
     ),
-  );
-}
-
-const getRadius = (
-  edge: 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left',
-  hasNegative: boolean,
-  hasPositive: boolean,
-  borderRadius: number | undefined,
-  isVertical: boolean,
-) => {
-  if (!borderRadius) {
-    return 0;
-  }
-
-  if (edge === 'top-left' && ((isVertical && hasPositive) || hasNegative)) {
-    return borderRadius;
-  }
-
-  if (edge === 'top-right' && (isVertical || hasPositive)) {
-    return borderRadius;
-  }
-
-  if ((edge === 'bottom-right' && !isVertical && hasPositive) || hasNegative) {
-    return borderRadius;
-  }
-
-  if (edge === 'bottom-left' && !isVertical && hasNegative) {
-    return borderRadius;
-  }
-
-  return 0;
-};
-
-export const BarClipRect = styled(animated.rect, {
-  name: 'MuiBarClipRect',
-  slot: 'Root',
-})();
-
-function Render(props: Record<string, any>) {
-  const maskUniqueId = useId();
-  const { completedData, skipAnimation, maskData, onItemClick, borderRadius, ...other } = props;
-
-  const maskTransition = useTransition(maskData, {
-    from: getOutStyle,
-    leave: getOutStyle,
-    enter: getInStyle,
-    update: getInStyle,
-    immediate: skipAnimation,
-  });
-
-  const { hasNegative, layout } = maskData;
-  const isVertical = layout === 'vertical';
-
-  const radius = {
-    topLeft: getRadius('top-left', hasNegative, maskData.hasPositive, borderRadius, isVertical),
-    topRight: getRadius('top-right', hasNegative, maskData.hasPositive, borderRadius, isVertical),
-    bottomRight: getRadius(
-      'bottom-right',
-      hasNegative,
-      maskData.hasPositive,
-      borderRadius,
-      isVertical,
-    ),
-    bottomLeft: getRadius(
-      'bottom-left',
-      hasNegative,
-      maskData.hasPositive,
-      borderRadius,
-      isVertical,
-    ),
-  };
-
-  // fix small values bars
-  return (
-    <React.Fragment>
-      <defs>
-        <clipPath id={maskUniqueId}>
-          {maskTransition((style) => {
-            return (
-              <BarClipRect
-                style={style}
-                clipPath={`inset(0px round ${radius.topLeft}px ${radius.topRight}px ${radius.bottomRight}px ${radius.bottomLeft}px)`}
-              />
-            );
-          })}
-        </clipPath>
-      </defs>
-      <g clipPath={`url(#${maskUniqueId})`}>
-        {completedData.map(
-          ({ seriesId, dataIndex, color, highlightScope, x, y, height, width }) => {
-            return (
-              <BarElement
-                key={`${seriesId}-${dataIndex}`}
-                id={seriesId}
-                data-testid={`${seriesId}-${dataIndex}`}
-                dataIndex={dataIndex}
-                highlightScope={highlightScope}
-                color={color}
-                {...other}
-                onClick={
-                  onItemClick &&
-                  ((event) => {
-                    onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                  })
-                }
-                style={{
-                  x,
-                  y,
-                  height,
-                  width,
-                }}
-              />
-            );
-          },
-        )}
-      </g>
-    </React.Fragment>
   );
 }
 
