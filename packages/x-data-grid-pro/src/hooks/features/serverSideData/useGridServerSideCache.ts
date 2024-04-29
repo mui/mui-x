@@ -2,11 +2,7 @@ import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  GridGetRowsParams,
-  GridGetRowsResponse,
-  GridDataSourceCache,
-} from '../../../models/gridDataSource';
+import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
 import { GridServerSideCacheApi } from './serverSideInterfaces';
 
 const noop = () => undefined;

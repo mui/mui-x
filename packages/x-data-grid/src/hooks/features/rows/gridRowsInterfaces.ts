@@ -70,6 +70,12 @@ export interface GridRowsState {
   additionalRowGroups?: {
     pinnedRows?: GridPinnedRowsState;
   };
+  /**
+   * Contains some values of type `GridRowId` that have been requested to be fetched
+   * either by `defaultGroupingExpansionDepth` or `isGroupExpandedByDefault` props.
+   * Applicable with server-side grouped data and `unstable_dataSource` only.
+   */
+  groupsToFetch?: GridRowId[];
 }
 
 export interface GridRowTreeCreationParams {
@@ -78,6 +84,7 @@ export interface GridRowTreeCreationParams {
   updates: GridRowsPartialUpdates | GridRowsFullUpdate;
   dataRowIdToIdLookup: GridRowIdToIdLookup;
   dataRowIdToModelLookup: GridRowIdToModelLookup;
+  previousGroupsToFetch?: GridRowId[];
 }
 
 export type GridRowTreeUpdateGroupAction = 'removeChildren' | 'insertChildren' | 'modifyChildren';
@@ -93,7 +100,7 @@ export type GridRowTreeUpdatedGroupsManager = {
 
 export type GridRowTreeCreationValue = Pick<
   GridRowsState,
-  'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds'
+  'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds' | 'groupsToFetch'
 > & {
   updatedGroupsManager?: GridRowTreeUpdatedGroupsManager;
 };

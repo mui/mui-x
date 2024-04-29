@@ -24,12 +24,16 @@ interface UpdateRowTreeParams {
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   groupingName: string;
   onDuplicatePath?: GridTreePathDuplicateHandler;
+  previousGroupsToFetch?: GridRowId[];
 }
 
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
   const tree = { ...params.previousTree };
   const treeDepths = { ...params.previousTreeDepth };
   const updatedGroupsManager = createUpdatedGroupsManager();
+  const groupsToFetch = params.previousGroupsToFetch
+    ? new Set([...params.previousGroupsToFetch])
+    : new Set([]);
 
   for (let i = 0; i < params.nodes.inserted.length; i += 1) {
     const { id, path, hasServerChildren } = params.nodes.inserted[i];
@@ -45,6 +49,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       onDuplicatePath: params.onDuplicatePath,
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
+      groupsToFetch,
     });
   }
 
@@ -83,6 +88,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         onDuplicatePath: params.onDuplicatePath,
         isGroupExpandedByDefault: params.isGroupExpandedByDefault,
         defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
+        groupsToFetch,
       });
     } else {
       updatedGroupsManager?.addAction(tree[id].parent!, 'modifyChildren');
@@ -98,5 +104,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     groupingName: params.groupingName,
     dataRowIds,
     updatedGroupsManager,
+    groupsToFetch: Array.from(groupsToFetch),
   };
 };

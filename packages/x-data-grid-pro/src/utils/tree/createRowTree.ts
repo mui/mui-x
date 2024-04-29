@@ -22,6 +22,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
     [GRID_ROOT_GROUP_ID]: buildRootGroup(),
   };
   const treeDepths: GridRowTreeCreationValue['treeDepths'] = {};
+  const groupsToFetch = new Set([]);
 
   for (let i = 0; i < params.nodes.length; i += 1) {
     const node = params.nodes[i];
@@ -37,6 +38,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       treeDepths,
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
+      groupsToFetch,
     });
   }
 
@@ -45,5 +47,6 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
     treeDepths,
     groupingName: params.groupingName,
     dataRowIds,
+    groupsToFetch: Array.from(groupsToFetch),
   };
 };

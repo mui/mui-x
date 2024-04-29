@@ -1,5 +1,5 @@
 import { GridRowId } from '@mui/x-data-grid';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
 /**
  * The dataSource API interface that is available in the grid [[apiRef]].
@@ -8,8 +8,9 @@ export interface GridDataSourceApi {
   /**
    * Initiates the fetch of the children of a row.
    * @param {string} id The id of the rowNode belonging to the group to be fetched.
+   * @param {boolean} throttle If `true`, the request will be throttled. (default: `true`)
    */
-  fetchRowChildren: (id: GridRowId) => void;
+  fetchRowChildren: (id: GridRowId, throttle?: boolean) => void;
   /**
    * Set the loading state of a row.
    * @param {string} id The id of the rowNode.

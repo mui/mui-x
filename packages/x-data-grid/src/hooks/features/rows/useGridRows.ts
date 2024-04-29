@@ -20,6 +20,7 @@ import {
   gridDataRowIdsSelector,
   gridRowsDataRowIdToIdLookupSelector,
   gridRowMaximumTreeDepthSelector,
+  gridRowGroupsToFetchSelector,
 } from './gridRowsSelector';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -146,6 +147,7 @@ export const useGridRows = (
             loadingProp: props.loading,
             previousTree: gridRowTreeSelector(apiRef),
             previousTreeDepths: gridRowTreeDepthsSelector(apiRef),
+            previousGroupsToFetch: gridRowGroupsToFetchSelector(apiRef),
           }),
         }));
         apiRef.current.publishEvent('rowsSet');
@@ -193,7 +195,7 @@ export const useGridRows = (
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
-    (updates) => {
+    (updates, throttle = true) => {
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
         throw new Error(
           [
@@ -234,7 +236,7 @@ export const useGridRows = (
         previousCache: apiRef.current.caches.rows,
       });
 
-      throttledRowsChange({ cache, throttle: true });
+      throttledRowsChange({ cache, throttle });
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );

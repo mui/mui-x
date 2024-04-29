@@ -31,6 +31,11 @@ export const gridRowsDataRowIdToIdLookupSelector = createSelector(
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
+export const gridRowGroupsToFetchSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.groupsToFetch,
+);
+
 export const gridRowGroupingNameSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.groupingName,

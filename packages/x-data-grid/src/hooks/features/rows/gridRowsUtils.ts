@@ -132,7 +132,11 @@ export const getRowsStateFromCache = ({
   loadingProp,
   previousTree,
   previousTreeDepths,
-}: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
+  previousGroupsToFetch,
+}: Pick<
+  GridRowTreeCreationParams,
+  'previousTree' | 'previousTreeDepths' | 'previousGroupsToFetch'
+> & {
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
@@ -145,12 +149,14 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     dataRowIds: unProcessedDataRowIds,
     groupingName,
+    groupsToFetch = [],
   } = apiRef.current.applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
     dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
+    previousGroupsToFetch,
   });
 
   // 2. Apply the "hydrateRows" pipe-processing.
@@ -182,6 +188,7 @@ export const getRowsStateFromCache = ({
     }),
     groupingName,
     loading: loadingProp,
+    groupsToFetch,
   };
 };
 

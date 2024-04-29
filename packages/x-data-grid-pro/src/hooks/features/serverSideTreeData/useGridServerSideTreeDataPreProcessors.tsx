@@ -177,6 +177,7 @@ export const useGridServerSideTreeDataPreProcessors = (
           removed: params.updates.actions.remove,
         },
         previousTree: params.previousTree!,
+        previousGroupsToFetch: params.previousGroupsToFetch,
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,

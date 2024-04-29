@@ -46,7 +46,7 @@
       "required": true
     },
     "fetchRowChildren": {
-      "type": { "description": "(id: GridRowId) =&gt; void" },
+      "type": { "description": "(id: GridRowId, throttle?: boolean) =&gt; void" },
       "required": true,
       "isProPlan": true
     },
@@ -516,7 +516,7 @@
       "required": true
     },
     "updateRows": {
-      "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
+      "type": { "description": "(updates: GridRowModelUpdate[], throttle?: boolean) =&gt; void" },
       "required": true
     },
     "upsertFilterItem": {

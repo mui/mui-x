@@ -61,8 +61,9 @@ export interface GridRowApi {
   /**
    * Allows to update, insert and delete rows.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
+   * @param {boolean} throttle Whether to throttle the updates or not. (default: `true`)
    */
-  updateRows: (updates: GridRowModelUpdate[]) => void;
+  updateRows: (updates: GridRowModelUpdate[], throttle?: boolean) => void;
   /**
    * Gets the row data with a given id.
    * @param {GridRowId} id The id of the row.
