@@ -112,7 +112,7 @@ const useAggregatedData = (): {
 
   const masks: Record<string, MaskData> = {};
 
-  const data = stackingGroups.flatMap(({ ids: groupIds }, groupId) => {
+  const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
     return groupIds.flatMap((seriesId) => {
       const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
       const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
@@ -195,7 +195,7 @@ const useAggregatedData = (): {
         numberOfGroups: stackingGroups.length,
         gapRatio: baseScaleConfig.barGapRatio,
       });
-      const barOffset = groupId * (barWidth + offset);
+      const barOffset = groupIndex * (barWidth + offset);
 
       const { stackedData } = series[seriesId];
 
@@ -224,7 +224,7 @@ const useAggregatedData = (): {
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
           value: axisCorrectedData,
-          maskId: `${series[seriesId].stack ?? ''}_${groupId}_${dataIndex}`,
+          maskId: `${series[seriesId].stack ?? ''}_${groupIndex}_${dataIndex}`,
         };
 
         if (!masks[result.maskId]) {
