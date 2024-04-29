@@ -66,7 +66,6 @@ interface BarProps extends Omit<React.ComponentPropsWithoutRef<'path'>, 'id' | '
   highlightScope?: Partial<HighlightScope>;
   onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   ownerState: BarElementOwnerState;
-  borderRadius?: number;
 }
 
 export interface BarElementSlots {
