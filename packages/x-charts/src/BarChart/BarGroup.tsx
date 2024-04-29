@@ -1,21 +1,29 @@
 import * as React from 'react';
-import { animated, useTransition } from '@react-spring/web';
+import { SpringValue, animated, useTransition } from '@react-spring/web';
 import useId from '@mui/utils/useId';
-import { styled } from '@mui/material/styles';
 import { BarElement } from './BarElement';
 import type { CompletedBarData, MaskData } from './BarPlot';
 import { BarItemIdentifier } from '../models';
 
 const getRadius = (
   edge: 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left',
-  hasNegative: boolean,
-  hasPositive: boolean,
-  borderRadius: number | undefined,
-  isVertical: boolean,
+  {
+    hasNegative,
+    hasPositive,
+    borderRadius,
+    layout,
+  }: {
+    hasNegative: boolean;
+    hasPositive: boolean;
+    borderRadius: number;
+    layout?: 'vertical' | 'horizontal';
+  },
 ) => {
   if (!borderRadius) {
     return 0;
   }
+
+  const isVertical = layout === 'vertical';
 
   if (edge === 'top-left' && ((isVertical && hasPositive) || hasNegative)) {
     return borderRadius;
@@ -59,10 +67,25 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
   width,
 });
 
-const BarClipRect = styled(animated.rect, {
-  name: 'MuiBarClipRect',
-  slot: 'Root',
-})();
+function BarClipRect(props: Record<string, any>) {
+  const radiusData = props.ownerState;
+
+  return (
+    <animated.rect
+      style={{
+        ...props.style,
+        clipPath: (
+          (props.ownerState.layout === 'vertical'
+            ? props.style?.height
+            : props.style?.width) as SpringValue<number>
+        ).to(
+          (value) =>
+            `inset(0px round ${Math.min(value, getRadius('top-left', radiusData))}px ${Math.min(value, getRadius('top-right', radiusData))}px ${Math.min(value, getRadius('bottom-right', radiusData))}px ${Math.min(value, getRadius('bottom-left', radiusData))}px)`,
+        ),
+      }}
+    />
+  );
+}
 
 function BarGroup(props: {
   completedData: CompletedBarData[];
@@ -83,40 +106,24 @@ function BarGroup(props: {
     enter: getInStyle,
     update: getInStyle,
     immediate: skipAnimation,
+    config: {
+      duration: 2500,
+    },
   });
-
-  const { hasNegative, layout } = maskData;
-  const isVertical = layout === 'vertical';
-
-  const radius = {
-    topLeft: getRadius('top-left', hasNegative, maskData.hasPositive, borderRadius, isVertical),
-    topRight: getRadius('top-right', hasNegative, maskData.hasPositive, borderRadius, isVertical),
-    bottomRight: getRadius(
-      'bottom-right',
-      hasNegative,
-      maskData.hasPositive,
-      borderRadius,
-      isVertical,
-    ),
-    bottomLeft: getRadius(
-      'bottom-left',
-      hasNegative,
-      maskData.hasPositive,
-      borderRadius,
-      isVertical,
-    ),
-  };
 
   // fix small values bars
   return (
     <React.Fragment>
       <defs>
         <clipPath id={maskUniqueId}>
-          {maskTransition((style) => {
+          {maskTransition((style, ownerState) => {
             return (
               <BarClipRect
                 style={style}
-                clipPath={`inset(0px round ${radius.topLeft}px ${radius.topRight}px ${radius.bottomRight}px ${radius.bottomLeft}px)`}
+                ownerState={{
+                  ...ownerState,
+                  borderRadius: borderRadius || 0,
+                }}
               />
             );
           })}
