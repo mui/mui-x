@@ -81,7 +81,7 @@ Gauge.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '80%'

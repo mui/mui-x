@@ -76,7 +76,7 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
   });
 
   const formattedSeries: FormattedSeries = {};
-  // Apply formater on a type group
+  // Apply formatter on a type group
   (Object.keys(seriesTypeFormatter) as ChartSeriesType[]).forEach((type) => {
     if (seriesGroups[type] !== undefined) {
       formattedSeries[type] =

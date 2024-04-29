@@ -17,7 +17,7 @@ export interface BarSeriesType
    */
   data?: (number | null)[];
   /**
-   * The key used to retrive data from the dataset.
+   * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
   label?: string;

@@ -18,7 +18,7 @@
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "innerRadius": {
-      "description": "The radius between circle center and the begining of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+      "description": "The radius between circle center and the beginning of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
@@ -39,12 +39,12 @@
   "classDescriptions": {
     "referenceArc": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the arc diplaying the range of available values"
+      "nodeName": "the arc displaying the range of available values"
     },
     "root": { "description": "Styles applied to the root element." },
     "valueArc": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the arc diplaying the value"
+      "nodeName": "the arc displaying the value"
     },
     "valueText": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the value text" }
   }

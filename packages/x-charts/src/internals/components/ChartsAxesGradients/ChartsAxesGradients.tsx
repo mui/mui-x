@@ -8,7 +8,7 @@ import ChartsContinuousGradient from './ChartsContinuousGradient';
 export function useChartGradient() {
   const { chartId } = React.useContext(DrawingContext);
   return React.useCallback(
-    (axisId: string, direction: 'x' | 'y') => `${chartId}-graient-${direction}-${axisId}`,
+    (axisId: string, direction: 'x' | 'y') => `${chartId}-gradient-${direction}-${axisId}`,
     [chartId],
   );
 }
@@ -32,7 +32,7 @@ export function ChartsAxesGradients() {
             return (
               <ChartsPiecewiseGradient
                 key={gradientId}
-                isReveresed={!reverse}
+                isReversed={!reverse}
                 scale={scale}
                 colorMap={colorMap}
                 size={svgHeight}
@@ -45,7 +45,7 @@ export function ChartsAxesGradients() {
             return (
               <ChartsContinuousGradient
                 key={gradientId}
-                isReveresed={!reverse}
+                isReversed={!reverse}
                 scale={scale}
                 colorScale={colorScale!}
                 colorMap={colorMap}
@@ -66,7 +66,7 @@ export function ChartsAxesGradients() {
             return (
               <ChartsPiecewiseGradient
                 key={gradientId}
-                isReveresed={reverse}
+                isReversed={reverse}
                 scale={scale}
                 colorMap={colorMap}
                 size={svgWidth}
@@ -79,7 +79,7 @@ export function ChartsAxesGradients() {
             return (
               <ChartsContinuousGradient
                 key={gradientId}
-                isReveresed={reverse}
+                isReversed={reverse}
                 scale={scale}
                 colorScale={colorScale!}
                 colorMap={colorMap}

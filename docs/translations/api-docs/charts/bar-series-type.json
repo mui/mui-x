@@ -4,7 +4,7 @@
     "type": { "description": "" },
     "color": { "description": "" },
     "data": { "description": "Data associated to each bar." },
-    "dataKey": { "description": "The key used to retrive data from the dataset." },
+    "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "highlightScope": { "description": "" },
     "id": { "description": "" },
     "label": { "description": "" },

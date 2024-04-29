@@ -11,7 +11,7 @@ import { PieItemId } from '../models/seriesType/pie';
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -71,7 +71,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
 
 /**
  * Helper to compute label position.
- * It's not an inline function because we need it in inerpolation.
+ * It's not an inline function because we need it in interpolation.
  */
 const getLabelPosition =
   (formattedArcLabel: string | null | undefined, variable: 'x' | 'y') =>

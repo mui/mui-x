@@ -5,7 +5,7 @@ import { ContinuousColorConfig } from '../../../models/colorMapping';
 const PX_PRECISION = 10;
 
 type ChartsContinuousGradientProps = {
-  isReveresed?: boolean;
+  isReversed?: boolean;
   gradientId: string;
   size: number;
   direction: 'x' | 'y';
@@ -15,7 +15,7 @@ type ChartsContinuousGradientProps = {
 };
 
 export default function ChartsContinuousGradient(props: ChartsContinuousGradientProps) {
-  const { isReveresed, gradientId, size, direction, scale, colorScale, colorMap } = props;
+  const { isReversed, gradientId, size, direction, scale, colorScale, colorMap } = props;
 
   const extremValues = [colorMap.min ?? 0, colorMap.max ?? 100] as [number, number] | [Date, Date];
   const extremPositions = extremValues.map(scale).filter((p): p is number => p !== undefined);
@@ -40,7 +40,7 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
       x2="0"
       y1="0"
       y2="0"
-      {...{ [`${direction}${isReveresed ? 1 : 2}`]: `${size}px` }}
+      {...{ [`${direction}${isReversed ? 1 : 2}`]: `${size}px` }}
       gradientUnits="userSpaceOnUse" // Use the SVG coordinate instead of the component ones.
     >
       {Array.from({ length: numberOfPoints + 1 }, (_, index) => {
@@ -52,7 +52,7 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
         if (x === undefined) {
           return null;
         }
-        const offset = isReveresed ? 1 - x / size : x / size;
+        const offset = isReversed ? 1 - x / size : x / size;
         const color = colorScale(value);
 
         if (color === null) {

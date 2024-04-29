@@ -51,7 +51,7 @@ export interface LineSeriesType
    */
   data?: (number | null)[];
   /**
-   * The key used to retrive data from the dataset.
+   * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
   stack?: string;

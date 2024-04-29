@@ -14,7 +14,7 @@
     "highlighted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "higlighted"
+      "conditions": "highlighted"
     },
     "root": { "description": "Styles applied to the root element." }
   },
