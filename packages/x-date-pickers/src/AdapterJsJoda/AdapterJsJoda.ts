@@ -7,6 +7,7 @@ import {
   DayOfWeek,
   LocalDate,
   LocalDateTime,
+  LocalTime,
   Month,
   TemporalAdjusters,
   Year,
@@ -23,9 +24,23 @@ import type {
   PickersTimezone,
 } from '@mui/x-date-pickers/models';
 
+/**
+ * js-joda is unique in having distinct data types for date versus date and
+ * time.  Because this is unique to js-joda, MUI doesn't maintain this
+ * distinction; it assumes everything is date and time and uses startOfDay to
+ * represent a date.  We use this symbol to track startOfDay timestamps that can
+ * act as dates.
+ */
+const startOfDay = Symbol('startOfDay');
+
 declare module '@mui/x-date-pickers/models' {
   export interface PickerValidDateLookup {
     'js-joda': CalendarType;
+  }
+}
+declare module '@js-joda/core' {
+  interface Temporal {
+    [startOfDay]?: boolean;
   }
 }
 
@@ -153,11 +168,25 @@ export class AdapterJsJoda implements MuiPickersAdapter<CalendarType> {
   // Manipulating time on a local date may indicate, e.g., using a DatePicker to
   // change the date portion without affecting the selected time.  On a
   // LocalDate, that's a noop.
-  private getTime = (value: CalendarType, field: ChronoField): number =>
-    value instanceof LocalDate ? 0 : value.get(field);
+  private getTime = (value: CalendarType, field: ChronoField): number => {
+    if (value instanceof LocalDate || value[startOfDay]) {
+      return -0;
+    }
+    return value.get(field);
+  };
 
-  private setTime = (value: CalendarType, field: ChronoField, amount: number): CalendarType =>
-    value instanceof LocalDate ? value : value.with(field, amount);
+  private setTime = (value: CalendarType, field: ChronoField, amount: number): CalendarType => {
+    if (value instanceof LocalDate && Object.is(amount, -0)) {
+      // A -0 from getTime indicates a LocalDate or startOfDay.  Let the date
+      // remain a date.
+      return value;
+    }
+    if (value instanceof LocalDate) {
+      // Coerce to LocalDateTime.
+      return LocalDateTime.of(value, LocalTime.of(0, 0, 0).with(field, amount));
+    }
+    return value instanceof LocalDate ? value : value.with(field, amount);
+  };
 
   public date = <T extends string | null | undefined>(
     value?: T,
@@ -173,15 +202,22 @@ export class AdapterJsJoda implements MuiPickersAdapter<CalendarType> {
     ) as R;
   };
 
-  public getInvalidDate = (): CalendarType => null as any; // TODO
+  // All js-joda objects are valid.  Since it's a Java-inspired API, we'll
+  // resort to null for invalid.
+  public getInvalidDate = (): CalendarType => null as any;
 
   public getTimezone = (value: CalendarType | null): string =>
     value instanceof ZonedDateTime ? value.zone().id() : 'system';
 
-  public setTimezone = (value: CalendarType, timezone: PickersTimezone): CalendarType =>
-    value instanceof LocalDate
-      ? value
-      : ZonedDateTime.of(value as LocalDateTime, this.zone(timezone));
+  public setTimezone = (value: CalendarType, timezone: PickersTimezone): CalendarType => {
+    if (value instanceof LocalDate) {
+      return value;
+    }
+    if (value instanceof LocalDateTime) {
+      return ZonedDateTime.of(value, this.zone(timezone));
+    }
+    return value.withZoneSameInstant(this.zone(timezone));
+  };
 
   public toJsDate = (value: CalendarType): Date => convert(value).toDate();
 
