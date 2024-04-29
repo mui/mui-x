@@ -98,7 +98,6 @@ export interface BarChartProps
    * @default 'vertical'
    */
   layout?: BarSeriesType['layout'];
-  borderRadius?: number;
 }
 
 /**
