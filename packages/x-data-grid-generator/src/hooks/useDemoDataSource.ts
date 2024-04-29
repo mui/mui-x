@@ -32,7 +32,7 @@ const dataCache = new LRUCache<string, GridDemoData>({
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
-type CreateDummyDataSourceResponse = {
+type UseDemoDataSourceResponse = {
   columns: GridColDef[];
   initialState: GridInitialState;
   getGroupKey?: (row: GridRowModel) => string;
@@ -62,7 +62,7 @@ const defaultColDef = getGridDefaultColumnTypes();
 export const useDemoDataSource = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
   serverOptions?: ServerOptions,
-): CreateDummyDataSourceResponse => {
+): UseDemoDataSourceResponse => {
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
   const options = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };

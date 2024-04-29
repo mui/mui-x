@@ -8,9 +8,8 @@ export interface GridDataSourceApi {
   /**
    * Initiates the fetch of the children of a row.
    * @param {string} id The id of the rowNode belonging to the group to be fetched.
-   * @param {boolean} throttle If `true`, the request will be throttled. (default: `true`)
    */
-  fetchRowChildren: (id: GridRowId, throttle?: boolean) => void;
+  fetchRowChildren: (id: GridRowId) => void;
   /**
    * Set the loading state of a row.
    * @param {string} id The id of the rowNode.

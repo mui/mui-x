@@ -22,15 +22,15 @@ export interface GridGetRowsParams {
    */
   end: number; // last row index to fetch
   /**
+   * List of grouped columns (only applicable with `rowGrouping`).
+   */
+  groupFields: GridColDef['field'][];
+  /**
    * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
    * `getGroupKey` prop must be implemented to use this.
    * Useful for `treeData` and `rowGrouping` only.
    */
   groupKeys?: string[];
-  /**
-   * List of grouped columns (only applicable with `rowGrouping`).
-   */
-  groupFields?: GridColDef['field'][];
 }
 
 export interface GridGetRowsResponse {
