@@ -6,6 +6,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -48,7 +49,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-export const BarElementPath = styled('rect', {
+export const BarElementPath = styled(animated.rect, {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,

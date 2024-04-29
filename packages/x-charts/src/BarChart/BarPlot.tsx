@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { HighlightScope } from '../context/HighlightProvider';
@@ -84,13 +85,13 @@ export interface CompletedBarData {
 
 export type MaskData = {
   id: string;
-  width: number;
-  height: number;
   hasNegative: boolean;
   hasPositive: boolean;
+  layout: BarSeriesType['layout'];
+  width: number;
+  height: number;
   x: number;
   y: number;
-  layout: BarSeriesType['layout'];
   xOrigin: number;
   yOrigin: number;
 };
@@ -260,6 +261,50 @@ const useAggregatedData = (): {
   };
 };
 
+const getOutStyle = ({
+  layout,
+  yOrigin,
+  x,
+  width,
+  y,
+  xOrigin,
+  height,
+  mask,
+}: CompletedBarData & { mask: MaskData }) => ({
+  ...(layout === 'vertical'
+    ? {
+        y: yOrigin,
+        x,
+        height: 0,
+        width,
+        maskY: mask.yOrigin,
+        maskX: mask.x,
+        maskHeight: 0,
+        maskWidth: mask.width,
+      }
+    : {
+        y,
+        x: xOrigin,
+        height,
+        width: 0,
+        maskY: mask.y,
+        maskX: mask.xOrigin,
+        maskWidth: 0,
+        maskHeight: mask.height,
+      }),
+});
+
+const getInStyle = ({ x, width, y, height, mask }: CompletedBarData & { mask: MaskData }) => ({
+  y,
+  x,
+  height,
+  width,
+  maskY: mask.y,
+  maskX: mask.x,
+  maskWidth: mask.width,
+  maskHeight: mask.height,
+});
+
 /**
  * Demos:
  *
@@ -274,17 +319,55 @@ const useAggregatedData = (): {
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation, onItemClick, ...other } = props;
-  return Object.entries(Object.groupBy(completedData, (data) => data.maskId)).map(
-    ([maskId, data]) => (
-      <BarGroup
-        key={maskId}
-        completedData={data!}
-        maskData={masksData[maskId]}
-        skipAnimation={skipAnimation}
-        onItemClick={onItemClick}
-        {...other}
-      />
-    ),
+  const transition = useTransition(
+    completedData.map((d) => ({
+      ...d,
+      mask: masksData[d.maskId],
+    })),
+    {
+      keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
+      from: getOutStyle,
+      leave: getOutStyle,
+      enter: getInStyle,
+      update: getInStyle,
+      immediate: skipAnimation,
+    },
+  );
+
+  return (
+    <React.Fragment>
+      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+        return (
+          <BarGroup
+            key={`${seriesId}-${dataIndex}`}
+            {...masksData[maskId]}
+            borderRadius={props.borderRadius}
+            style={{
+              x: (style as any).maskX,
+              y: (style as any).maskY,
+              width: (style as any).maskWidth,
+              height: (style as any).maskHeight,
+            }}
+          >
+            <BarElement
+              id={seriesId}
+              seriesId={seriesId}
+              dataIndex={dataIndex}
+              color={color}
+              highlightScope={highlightScope}
+              {...other}
+              onClick={
+                onItemClick &&
+                ((event) => {
+                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                })
+              }
+              style={style}
+            />
+          </BarGroup>
+        );
+      })}
+    </React.Fragment>
   );
 }
 
