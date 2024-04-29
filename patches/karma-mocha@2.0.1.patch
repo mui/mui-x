@@ -1,7 +1,7 @@
-diff --git a/node_modules/karma-mocha/lib/adapter.js b/node_modules/karma-mocha/lib/adapter.js
-index 0c8199e..0482a21 100644
---- a/node_modules/karma-mocha/lib/adapter.js
-+++ b/node_modules/karma-mocha/lib/adapter.js
+diff --git a/lib/adapter.js b/lib/adapter.js
+index 0c8199e4420656b2ad2b764e043dc6812aa520c7..0482a2124fa12a52ffd3a8a2faa3bcd38eeb57f4 100644
+--- a/lib/adapter.js
++++ b/lib/adapter.js
 @@ -55,10 +55,11 @@ var processAssertionError = function (error_) {
        showDiff: error_.showDiff
      }

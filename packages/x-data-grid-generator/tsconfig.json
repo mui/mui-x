@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["react", "mocha", "node"]
+    "types": ["react", "mocha", "node", "@mui/material/themeCssVarsAugmentation"]
   },
-  "include": ["src/**/*", "../../node_modules/@mui/material/themeCssVarsAugmentation"]
+  "include": ["src/**/*"]
 }
