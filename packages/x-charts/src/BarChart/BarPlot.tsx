@@ -351,14 +351,7 @@ export const BarClipRect = styled(animated.rect, {
 function Render(props: Record<string, any>) {
   const maskUniqueId = useId();
   const { completedData, skipAnimation, maskData, onItemClick, borderRadius, ...other } = props;
-  const transition = useTransition(completedData, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: getOutStyle,
-    leave: getOutStyle,
-    enter: getInStyle,
-    update: getInStyle,
-    immediate: skipAnimation,
-  });
+
   const maskTransition = useTransition(maskData, {
     from: getOutStyle,
     leave: getOutStyle,
@@ -389,6 +382,7 @@ function Render(props: Record<string, any>) {
     ),
   };
 
+  // fix small values bars
   return (
     <React.Fragment>
       <defs>
@@ -404,24 +398,33 @@ function Render(props: Record<string, any>) {
         </clipPath>
       </defs>
       <g clipPath={`url(#${maskUniqueId})`}>
-        {transition((style, { seriesId, dataIndex, color, highlightScope }) => {
-          return (
-            <BarElement
-              id={seriesId}
-              dataIndex={dataIndex}
-              highlightScope={highlightScope}
-              color={color}
-              {...other}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                })
-              }
-              style={style}
-            />
-          );
-        })}
+        {completedData.map(
+          ({ seriesId, dataIndex, color, highlightScope, x, y, height, width }) => {
+            return (
+              <BarElement
+                key={`${seriesId}-${dataIndex}`}
+                id={seriesId}
+                data-testid={`${seriesId}-${dataIndex}`}
+                dataIndex={dataIndex}
+                highlightScope={highlightScope}
+                color={color}
+                {...other}
+                onClick={
+                  onItemClick &&
+                  ((event) => {
+                    onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                  })
+                }
+                style={{
+                  x,
+                  y,
+                  height,
+                  width,
+                }}
+              />
+            );
+          },
+        )}
       </g>
     </React.Fragment>
   );
