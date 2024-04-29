@@ -1,36 +1,41 @@
+type GetRadiusData = {
+  hasNegative: boolean;
+  hasPositive: boolean;
+  borderRadius?: number;
+  layout?: 'vertical' | 'horizontal';
+};
+
+type GetRadiusCorner = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left';
+
+/**
+ * Returns if the corner should have a radius or not based on the layout and the data.
+ * @param {GetRadiusCorner} corner The corner to check.
+ * @param {GetRadiusData} cornerData The data for the corner.
+ * @returns {number} The radius for the corner.
+ */
 export const getRadius = (
-  edge: 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left',
-  {
-    hasNegative,
-    hasPositive,
-    borderRadius,
-    layout,
-  }: {
-    hasNegative: boolean;
-    hasPositive: boolean;
-    borderRadius?: number;
-    layout?: 'vertical' | 'horizontal';
-  },
-) => {
+  corner: GetRadiusCorner,
+  { hasNegative, hasPositive, borderRadius, layout }: GetRadiusData,
+): number => {
   if (!borderRadius) {
     return 0;
   }
 
   const isVertical = layout === 'vertical';
 
-  if (edge === 'top-left' && ((isVertical && hasPositive) || (!isVertical && hasNegative))) {
+  if (corner === 'top-left' && ((isVertical && hasPositive) || (!isVertical && hasNegative))) {
     return borderRadius;
   }
 
-  if (edge === 'top-right' && ((isVertical && hasPositive) || (!isVertical && hasPositive))) {
+  if (corner === 'top-right' && ((isVertical && hasPositive) || (!isVertical && hasPositive))) {
     return borderRadius;
   }
 
-  if (edge === 'bottom-right' && ((isVertical && hasNegative) || (!isVertical && hasPositive))) {
+  if (corner === 'bottom-right' && ((isVertical && hasNegative) || (!isVertical && hasPositive))) {
     return borderRadius;
   }
 
-  if (edge === 'bottom-left' && ((isVertical && hasNegative) || (!isVertical && hasNegative))) {
+  if (corner === 'bottom-left' && ((isVertical && hasNegative) || (!isVertical && hasNegative))) {
     return borderRadius;
   }
 
