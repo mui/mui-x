@@ -28,7 +28,7 @@ To use the server-side tree data, pass the `unstable_dataSource` prop as explain
 
   Used by the grid to determine the number of children of a row on server
 
-Following is a demo of the server-side tree data with the server side data source which supports server side filtering, sorting, and pagination. It also uses supports the caching using the `unstable_dataSourceCache` prop based on the `QueryClient` exposed by `@tanstack/query-core`.
+Following is a demo of the server-side tree data with the data source which supports filtering, sorting, and pagination on the server. It also supports the caching using the `unstable_dataSourceCache` prop based on the `QueryClient` exposed by `@tanstack/query-core`.
 
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
