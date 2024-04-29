@@ -246,8 +246,8 @@ const useAggregatedData = (): {
         mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
         mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
         mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-        mask.hasNegative = mask.hasNegative || (axisCorrectedData ?? 0) < 0;
-        mask.hasPositive = mask.hasPositive || (axisCorrectedData ?? 0) > 0;
+        mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
+        mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
 
         return result;
       });

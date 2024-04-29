@@ -4,45 +4,7 @@ import useId from '@mui/utils/useId';
 import { BarElement } from './BarElement';
 import type { CompletedBarData, MaskData } from './BarPlot';
 import { BarItemIdentifier } from '../models';
-
-const getRadius = (
-  edge: 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left',
-  {
-    hasNegative,
-    hasPositive,
-    borderRadius,
-    layout,
-  }: {
-    hasNegative: boolean;
-    hasPositive: boolean;
-    borderRadius: number;
-    layout?: 'vertical' | 'horizontal';
-  },
-) => {
-  if (!borderRadius) {
-    return 0;
-  }
-
-  const isVertical = layout === 'vertical';
-
-  if (edge === 'top-left' && ((isVertical && hasPositive) || hasNegative)) {
-    return borderRadius;
-  }
-
-  if (edge === 'top-right' && (isVertical || hasPositive)) {
-    return borderRadius;
-  }
-
-  if ((edge === 'bottom-right' && !isVertical && hasPositive) || hasNegative) {
-    return borderRadius;
-  }
-
-  if (edge === 'bottom-left' && !isVertical && hasNegative) {
-    return borderRadius;
-  }
-
-  return 0;
-};
+import { getRadius } from './getRadius';
 
 const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
   ...(layout === 'vertical'
