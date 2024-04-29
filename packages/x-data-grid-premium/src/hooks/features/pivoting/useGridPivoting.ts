@@ -10,6 +10,7 @@ import {
   isLeaf,
 } from '@mui/x-data-grid-pro';
 import { usePreviousProps } from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import {
   DataGridPremiumProps,
@@ -283,7 +284,7 @@ export const useGridPivoting = ({
     return nonPivotProps;
   }, [isPivot, columns, rows, pivotModel, apiRef, prevProps.isPivot]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (!isPivot && exportedStateRef.current) {
       apiRef.current.restoreState(exportedStateRef.current);
       exportedStateRef.current = null;
