@@ -75,7 +75,7 @@ export default function ServerSideTreeData() {
           initialState={initialState}
           slots={{ toolbar: GridToolbar }}
           slotProps={{ toolbar: { showQuickFilter: true } }}
-          defaultGroupingExpansionDepth={-1}
+          defaultGroupingExpansionDepth={1}
           filterDebounceMs={1000}
         />
       </div>

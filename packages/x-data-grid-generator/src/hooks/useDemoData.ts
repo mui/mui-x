@@ -73,7 +73,7 @@ export async function extrapolateSeed(
   });
 }
 
-const deepFreeze = <T>(object: T): T => {
+export const deepFreeze = <T>(object: T): T => {
   // Retrieve the property names defined on object
   const propNames = Object.getOwnPropertyNames(object);
 

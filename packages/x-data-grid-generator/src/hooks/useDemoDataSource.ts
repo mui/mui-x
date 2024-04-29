@@ -1,4 +1,5 @@
 import * as React from 'react';
+import LRUCache from 'lru-cache';
 import {
   getGridDefaultColumnTypes,
   GridRowModel,
@@ -9,7 +10,12 @@ import {
   GridColumnVisibilityModel,
   GridDataSource,
 } from '@mui/x-data-grid-pro';
-import { UseDemoDataOptions, getColumnsFromOptions, extrapolateSeed } from './useDemoData';
+import {
+  UseDemoDataOptions,
+  getColumnsFromOptions,
+  extrapolateSeed,
+  deepFreeze,
+} from './useDemoData';
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 import { getRealGridData, GridDemoData } from '../services/real-data-service';
 import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
@@ -21,6 +27,11 @@ import {
 } from './serverUtils';
 import type { ServerOptions } from './serverUtils';
 
+const dataCache = new LRUCache<string, GridDemoData>({
+  max: 10,
+  ttl: 60 * 5 * 1e3, // 5 minutes
+});
+
 type CreateDummyDataSourceResponse = {
   columns: GridColDef[];
   initialState: GridInitialState;
@@ -28,6 +39,7 @@ type CreateDummyDataSourceResponse = {
   hasChildren?: (row: GridRowModel) => boolean;
   getChildrenCount?: (row: GridRowModel) => number;
   getRows: GridDataSource['getRows'];
+  loadNewData: () => void;
 };
 
 const getInitialState = (columns: GridColDefGenerator[], groupingField?: string) => {
@@ -52,7 +64,7 @@ export const useDemoDataSource = (
   serverOptions?: ServerOptions,
 ): CreateDummyDataSourceResponse => {
   const [data, setData] = React.useState<GridDemoData>();
-  const previousRowLength = React.useRef<number>();
+  const [index, setIndex] = React.useState(0);
   const options = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
 
   const columns = React.useMemo(() => {
@@ -103,8 +115,19 @@ export const useDemoDataSource = (
   }, [isTreeData]);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      // Fetch all the data on the first request
+    const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+
+    // Cache to allow fast switch between the JavaScript and TypeScript version
+    // of the demos.
+    if (dataCache.has(cacheKey)) {
+      const newData = dataCache.get(cacheKey)!;
+      setData(newData);
+      return undefined;
+    }
+
+    let active = true;
+
+    (async () => {
       let rowData;
       const rowLength = options.rowLength;
       if (rowLength > 1000) {
@@ -113,6 +136,11 @@ export const useDemoDataSource = (
       } else {
         rowData = await getRealGridData(rowLength, columns);
       }
+
+      if (!active) {
+        return;
+      }
+
       if (isTreeData) {
         rowData = addTreeDataOptionsToDemoData(rowData, {
           maxDepth: options.treeData?.maxDepth,
@@ -120,10 +148,18 @@ export const useDemoDataSource = (
           averageChildren: options.treeData?.averageChildren,
         });
       }
+
+      if (process.env.NODE_ENV !== 'production') {
+        deepFreeze(rowData);
+      }
+
+      dataCache.set(cacheKey, rowData);
       setData(rowData);
-      previousRowLength.current = rowLength;
+    })();
+
+    return () => {
+      active = false;
     };
-    fetchData();
   }, [
     columns,
     isTreeData,
@@ -131,6 +167,9 @@ export const useDemoDataSource = (
     options.treeData?.maxDepth,
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
+    options.dataSet,
+    options.maxColumns,
+    index,
   ]);
 
   const getRows = React.useCallback(
@@ -180,5 +219,8 @@ export const useDemoDataSource = (
     hasChildren,
     getChildrenCount,
     getRows,
+    loadNewData: () => {
+      setIndex((oldIndex) => oldIndex + 1);
+    },
   };
 };

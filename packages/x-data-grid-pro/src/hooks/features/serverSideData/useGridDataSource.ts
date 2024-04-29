@@ -119,14 +119,11 @@ class NestedDataManager {
   public clearPendingRequests = () => {
     this.fetchQueue.clear();
     this.fetchQueueIndex = 0;
-    Array.from(this.pendingRequests).forEach((id) => {
-      this.fetchQueueStatus.set(id, RequestStatus.CANCELLED);
-      this.api.setRowLoading(id, false);
-      this.pendingRequests.delete(id);
-    });
+    Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
 
   public clearPendingRequest = (id: GridRowId) => {
+    this.api.setRowLoading(id, false);
     this.fetchQueueStatus.set(id, RequestStatus.CANCELLED);
     this.pendingRequests.delete(id);
   };
@@ -148,6 +145,7 @@ export const useGridDataSource = (
     new NestedDataManager(privateApiRef),
   ).current;
   const groupsToAutoFetch = gridRowGroupsToFetchSelector(privateApiRef);
+
   const getInputParams = React.useCallback(
     (additionalParams?: Partial<GridGetRowsParams>): GridGetRowsParams => {
       const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -283,7 +281,7 @@ export const useGridDataSource = (
     (id, isLoading) => {
       const currentNode = privateApiRef.current.getRowNode(id) as GridServerSideGroupNode;
       if (!currentNode) {
-        throw new Error(`MUI: No row with id #${id} found`);
+        return;
       }
 
       const newNode: GridServerSideGroupNode = { ...currentNode, isLoading };
@@ -304,7 +302,7 @@ export const useGridDataSource = (
     (id, childrenFetched) => {
       const currentNode = privateApiRef.current.getRowNode(id) as GridServerSideGroupNode;
       if (!currentNode) {
-        throw new Error(`MUI: No row with id #${id} found`);
+        return;
       }
 
       const newNode: GridServerSideGroupNode = { ...currentNode, childrenFetched };
