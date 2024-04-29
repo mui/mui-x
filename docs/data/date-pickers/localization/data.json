@@ -107,7 +107,7 @@
     "languageTag": "hu-HU",
     "importName": "huHU",
     "localeName": "Hungarian",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/huHU.ts"
   },

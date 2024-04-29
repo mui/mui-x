@@ -30,22 +30,31 @@ import {
   ChartsOnAxisClickHandler,
   ChartsOnAxisClickHandlerProps,
 } from '../ChartsOnAxisClickHandler';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the bar chart.
@@ -128,6 +137,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     children,
     slots,
     slotProps,
+    loading,
   } = props;
 
   const id = useId();
@@ -187,6 +197,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
         />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
@@ -198,7 +209,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...defaultizedAxisHighlight} />
-      <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
+      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
@@ -280,6 +291,10 @@ BarChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

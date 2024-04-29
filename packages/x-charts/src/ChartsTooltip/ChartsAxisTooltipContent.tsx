@@ -37,7 +37,7 @@ export type ChartsAxisContentProps = {
   /**
    * The value associated to the current mouse position.
    */
-  axisValue: any;
+  axisValue: string | number | Date | null;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -157,7 +157,11 @@ ChartsAxisTooltipContent.propTypes = {
           .isRequired,
       }),
     }),
-    axisValue: PropTypes.any,
+    axisValue: PropTypes.oneOfType([
+      PropTypes.instanceOf(Date),
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     classes: PropTypes.object,
     dataIndex: PropTypes.number,
     series: PropTypes.arrayOf(PropTypes.object),

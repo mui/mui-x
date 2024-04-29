@@ -39,6 +39,7 @@
       "deprecated": true,
       "deprecationInfo": "Consider using <code>slotProps.legend</code> instead."
     },
+    "loading": { "type": { "name": "bool" } },
     "margin": {
       "type": {
         "name": "shape",
@@ -138,6 +139,18 @@
       "name": "itemContent",
       "description": "Custom component for displaying tooltip content when triggered by item event.",
       "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
       "class": null
     }
   ],
