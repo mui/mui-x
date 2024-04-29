@@ -38,14 +38,13 @@ export default function GridPivotingMovies() {
     columns: data.columns,
     pivotModel,
     apiRef,
-    initialIsPivot: true,
+    initialIsPivot: false,
   });
 
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
         <DataGridPremium
-          key={isPivot.toString()}
           {...props}
           apiRef={apiRef}
           autoHeight={isPivot}

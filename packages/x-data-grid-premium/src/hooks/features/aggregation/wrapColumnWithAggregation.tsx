@@ -178,6 +178,10 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
+    // TODO: investigate why colDef is undefined
+    if (!params.colDef) {
+      return null;
+    }
     return (
       <GridAggregationHeader
         {...params}
