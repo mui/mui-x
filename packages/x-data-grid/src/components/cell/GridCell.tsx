@@ -215,7 +215,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }),
   );
 
-  const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
+  const { cellMode, hasFocus, isEditable = false, value } = cellParamsWithAPI;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
@@ -256,7 +256,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     classNames.push(getCellClassName(cellParamsWithAPI));
   }
 
-  const valueToRender = formattedValue == null ? value : formattedValue;
+  const valueToRender = cellParamsWithAPI.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
@@ -420,9 +420,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
+    const formattedValue = column.valueFormatter
+      ? column.valueFormatter(editCellState.value as never, updatedRow, column, apiRef)
+      : cellParamsWithAPI.formattedValue;
+
     const params: GridRenderEditCellParams = {
       ...cellParamsWithAPI,
       row: updatedRow,
+      formattedValue,
       ...editCellStateRest,
     };
 
