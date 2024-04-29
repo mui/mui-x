@@ -75,7 +75,7 @@ class NestedDataManager {
     }
   };
 
-  public fetch = async (ids: GridRowId[]) => {
+  public enqueue = async (ids: GridRowId[]) => {
     ids.forEach((id) => {
       if (this.pendingRequests.size < this.maxConcurrentRequests) {
         this.pendingRequests.add(id);
@@ -85,6 +85,9 @@ class NestedDataManager {
       }
 
       if (this.fetchQueue.size > 0) {
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
         this.timer = setInterval(this.processQueue, 300);
       }
     });
@@ -113,7 +116,7 @@ class NestedDataManager {
     if (this.fetchQueue.has(id)) {
       return RequestStatus.SETTLED;
     }
-    if (this.fetchQueue.has(id)) {
+    if (this.settledRequests.has(id)) {
       return RequestStatus.INQUEUE;
     }
     return RequestStatus.UNKNOWN;
@@ -331,7 +334,7 @@ export const useGridDataSource = (
 
   React.useEffect(() => {
     if (groupsToAutoFetch && groupsToAutoFetch.length > 0) {
-      nestedDataManager.fetch(groupsToAutoFetch);
+      nestedDataManager.enqueue(groupsToAutoFetch);
       privateApiRef.current.setState((state) => ({
         ...state,
         rows: {
