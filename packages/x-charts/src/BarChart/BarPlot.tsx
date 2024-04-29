@@ -108,7 +108,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
+            } should be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
         if (xAxis[xAxisKey].data === undefined) {
@@ -117,7 +117,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud have data property.`,
+            } should have data property.`,
           );
         }
         baseScaleConfig = xAxisConfig as AxisDefaultized<'band'>;
@@ -127,7 +127,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
+            } should be a continuous type to display the bar series of id "${seriesId}".`,
           );
         }
       } else {
@@ -137,7 +137,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud be of type "band" to display the bar series of id "${seriesId}".`,
+            } should be of type "band" to display the bar series of id "${seriesId}".`,
           );
         }
 
@@ -147,7 +147,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               yAxisKey === DEFAULT_Y_AXIS_KEY
                 ? 'The first `yAxis`'
                 : `The y-axis with id "${yAxisKey}"`
-            } shoud have data property.`,
+            } should have data property.`,
           );
         }
         baseScaleConfig = yAxisConfig as AxisDefaultized<'band'>;
@@ -157,7 +157,7 @@ const useAggregatedData = (): CompletedBarData[] => {
               xAxisKey === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
                 : `The x-axis with id "${xAxisKey}"`
-            } shoud be a continuous type to display the bar series of id "${seriesId}".`,
+            } should be a continuous type to display the bar series of id "${seriesId}".`,
           );
         }
       }

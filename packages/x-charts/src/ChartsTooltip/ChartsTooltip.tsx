@@ -62,12 +62,12 @@ export type ChartsTooltipProps = {
    */
   trigger?: TriggerOptions;
   /**
-   * Component to override the tooltip content when triger is set to 'item'.
+   * Component to override the tooltip content when trigger is set to 'item'.
    * @deprecated Use slots.itemContent instead
    */
   itemContent?: React.ElementType<ChartsItemContentProps<any>>;
   /**
-   * Component to override the tooltip content when triger is set to 'axis'.
+   * Component to override the tooltip content when trigger is set to 'axis'.
    * @deprecated Use slots.axisContent instead
    */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
@@ -189,7 +189,7 @@ ChartsTooltip.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Component to override the tooltip content when triger is set to 'axis'.
+   * Component to override the tooltip content when trigger is set to 'axis'.
    * @deprecated Use slots.axisContent instead
    */
   axisContent: PropTypes.elementType,
@@ -198,7 +198,7 @@ ChartsTooltip.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * Component to override the tooltip content when triger is set to 'item'.
+   * Component to override the tooltip content when trigger is set to 'item'.
    * @deprecated Use slots.itemContent instead
    */
   itemContent: PropTypes.elementType,
