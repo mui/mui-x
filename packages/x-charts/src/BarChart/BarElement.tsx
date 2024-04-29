@@ -66,6 +66,7 @@ interface BarProps extends Omit<React.ComponentPropsWithoutRef<'path'>, 'id' | '
   highlightScope?: Partial<HighlightScope>;
   onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
   ownerState: BarElementOwnerState;
+  borderRadius?: number;
 }
 
 export interface BarElementSlots {
@@ -131,7 +132,9 @@ function BarElement(props: BarElementProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? BarElementPath;
-  const barProps = useSlotProps({
+
+  // @ts-ignore idk how ownerprops and slotprops work :(
+  const { borderRadius, ...barProps } = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
     additionalProps: {
@@ -144,7 +147,10 @@ function BarElement(props: BarElementProps) {
     },
     ownerState,
   });
-  return <Bar {...barProps} />;
+
+  return (
+    <Bar clipPath={`inset(0px round ${borderRadius}px ${borderRadius}px 0px 0px)`} {...barProps} />
+  );
 }
 
 BarElement.propTypes = {
