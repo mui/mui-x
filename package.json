@@ -143,7 +143,7 @@
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.4.3",
     "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "fast-glob": "^3.3.2",
     "format-util": "^1.0.5",
