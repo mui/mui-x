@@ -1,6 +1,8 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+// TODO move this helper to @mui/monorepo/.eslintrc
+// It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root) => ({
   files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
   excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
@@ -50,10 +52,12 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
+    // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
+    // TODO move to @mui/monorepo/.eslintrc
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
@@ -75,7 +79,10 @@ module.exports = {
     ],
     // Fixes false positive when using both `inputProps` and `InputProps` on the same example
     // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
+    // TODO move to @mui/monorepo/.eslintrc
+    // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
+    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
@@ -114,17 +121,13 @@ module.exports = {
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },
+    // TODO remove, shouldn't disable prop-type generation rule.
+    // lot of public components are missing it.
     {
       files: ['*.tsx'],
       excludedFiles: '*.spec.tsx',
       rules: {
         'react/prop-types': 'off',
-      },
-    },
-    {
-      files: ['docs/data/**/*.js', 'docs/data/**/*.tsx'],
-      rules: {
-        'filenames/match-exported': ['error'],
       },
     },
     {

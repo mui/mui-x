@@ -86,7 +86,12 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Drop the legacy bundle
+## Breaking changes
+
+Since v7 is a major release, it contains some changes that affect the public API.
+These changes were done for consistency, improve stability and make room for new features.
+
+### Drop the legacy bundle
 
 The support for IE 11 has been removed from all MUI X packages.
 The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
@@ -94,6 +99,40 @@ The `legacy` bundle that used to support old browsers like IE 11 is no longer i
 :::info
 If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
+
+### Drop Webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [
++              // Covers @mui/x-date-pickers and @mui/x-date-pickers-pro
++              path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
++              path.resolve(__dirname, 'node_modules/@mui/x-license'),
++            ],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
 
 ## Component slots
 

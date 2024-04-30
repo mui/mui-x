@@ -60,7 +60,7 @@ export interface PieArcLabelPlotProps
     >,
     ComputedPieRadius {
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded?: DefaultizedPieSeriesType['faded'];
@@ -205,7 +205,7 @@ PieArcLabelPlot.propTypes = {
     }),
   ).isRequired,
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
@@ -218,7 +218,7 @@ PieArcLabelPlot.propTypes = {
     paddingAngle: PropTypes.number,
   }),
   /**
-   * Override the arc attibutes when it is highlighted.
+   * Override the arc attributes when it is highlighted.
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
@@ -235,7 +235,7 @@ PieArcLabelPlot.propTypes = {
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * @default 0
    */
   innerRadius: PropTypes.number,

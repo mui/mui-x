@@ -25,6 +25,12 @@ import {
   ChartsLegendSlotProps,
   ChartsLegendSlots,
 } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import {
@@ -38,17 +44,20 @@ export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
   /**
    * The series to display in the scatter chart.
@@ -133,6 +142,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     children,
     slots,
     slotProps,
+    loading,
   } = props;
   return (
     <ResponsiveChartContainer
@@ -170,9 +180,10 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
             disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined
           }
         />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
         <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
         <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-        <ChartsTooltip trigger="item" {...tooltip} />
+        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainer>
@@ -253,6 +264,10 @@ ScatterChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
