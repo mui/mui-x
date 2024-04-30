@@ -18,7 +18,7 @@ if (process.argv.length < 3) {
     env: {
       ...process.env,
       TZ: 'UTC',
-    }
+    },
   });
 } else {
   console.log('Running selected tests in watch mode...');
@@ -34,6 +34,6 @@ if (process.argv.length < 3) {
     env: {
       ...process.env,
       TZ: 'UTC',
-    }
+    },
   });
 }
