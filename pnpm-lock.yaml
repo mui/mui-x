@@ -628,7 +628,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       '@mui/internal-scripts':
-        specifier: ^1.0.1
+        specifier: ^1.0.3
         version: 1.0.3
       '@types/d3-scale':
         specifier: ^4.0.8
