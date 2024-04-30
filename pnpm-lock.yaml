@@ -243,7 +243,7 @@ importers:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-webpack@0.13.8)(eslint@8.57.0)
       eslint-plugin-jsdoc:
-        specifier: ^48.2.0
+        specifier: ^48.2.3
         version: 48.2.3(eslint@8.57.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.8.0
