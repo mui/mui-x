@@ -117,7 +117,7 @@ importers:
         specifier: ^7.20.5
         version: 7.20.5
       '@types/chai':
-        specifier: ^4.3.12
+        specifier: ^4.3.14
         version: 4.3.14
       '@types/chai-dom':
         specifier: ^1.11.3
@@ -1300,7 +1300,7 @@ importers:
         specifier: ^9.7.3
         version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
       '@types/chai':
-        specifier: ^4.3.12
+        specifier: ^4.3.14
         version: 4.3.14
       '@types/prop-types':
         specifier: ^15.7.11
