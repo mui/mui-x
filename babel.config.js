@@ -7,16 +7,6 @@ function resolveAliasPath(relativeToBabelConf) {
 }
 
 const defaultAlias = {
-  '@mui/x-data-grid': resolveAliasPath('./packages/x-data-grid/src'),
-  '@mui/x-data-grid-generator': resolveAliasPath('./packages/x-data-grid-generator/src'),
-  '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
-  '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
-  '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
-  '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
-  '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
-  '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
-  '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
-  '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
