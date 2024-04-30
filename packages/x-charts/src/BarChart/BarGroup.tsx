@@ -34,6 +34,10 @@ function BarGroup(props: {
   const maskUniqueId = useId();
   const { style, children, ...rest } = props;
 
+  if (!props.borderRadius || props.borderRadius <= 0) {
+    return children;
+  }
+
   return (
     <React.Fragment>
       <clipPath id={maskUniqueId}>
