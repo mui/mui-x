@@ -24,7 +24,7 @@ importers:
   .:
     devDependencies:
       '@argos-ci/core':
-        specifier: ^1.5.4
+        specifier: ^1.5.5
         version: 1.5.5
       '@babel/cli':
         specifier: ^7.23.9
