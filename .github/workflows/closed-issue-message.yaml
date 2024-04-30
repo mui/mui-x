@@ -25,7 +25,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: actions-cool/check-user-permission@a0668c9aec87f3875fc56170b6452a453e9dd819
+      - uses: actions-cool/check-user-permission@956b2e73cdfe3bcb819bb7225e490cb3b18fd76e
         id: checkUser
         with:
           require: 'write'
