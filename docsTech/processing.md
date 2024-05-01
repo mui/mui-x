@@ -242,7 +242,7 @@ useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
 
 #### List
 
-##### `'canBeReordered'` (pro only)
+##### `'canBeReordered'` (Pro only)
 
 **Publisher**: `useGridColumnReorder` when dragging a column over another.
 

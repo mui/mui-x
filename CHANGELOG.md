@@ -305,7 +305,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
 - [TreeView] Create `RichTreeViewPro` component (not released yet) (#12610) @flaviendelangle
-- [TreeView] Create pro package (not released yet) (#12240) @flaviendelangle
+- [TreeView] Create Pro package (not released yet) (#12240) @flaviendelangle
 - [TreeView] Fix typo in errors (#12623) @alissa-tung
 - [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
 
@@ -2517,7 +2517,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
 - [core] Remove blank lines, coding style @oliviertassinari
 - [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
-- [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
+- [github] Do not add `plan: Pro` and `plan: Premium` labels on Pro / Premium issue templates (#10183) @flaviendelangle
 
 ## 7.0.0-alpha.2
 
@@ -3440,10 +3440,10 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 - [docs] Fix the Treemap illustration (#12189) @danilo-leal
 - [docs] Fix typo for `AdapterDateFnsV3` (#12037) @flaviendelangle
 - [docs] Improve performance on Charts entry point @oliviertassinari
-- [docs] Move Heatmap to pro (#12170) @alexfauquette
+- [docs] Move Heatmap to Pro (#12170) @alexfauquette
 - [docs] Remove Charts installation next tag call-out (#12133) @LukasTy
 - [docs] Removed `focused` prop from demo (#12126) @michelengelen
-- [docs] Add missing Heatmap pro icon @oliviertassinari
+- [docs] Add missing Heatmap Pro icon @oliviertassinari
 - [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
 - [docs] Avoid use of shorthand (#12009) @oliviertassinari
 
@@ -6170,7 +6170,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Create examples of pickers with custom fields (#8034) @flaviendelangle
 - [docs] Fix 301 redirections @oliviertassinari
 - [docs] Fix link to React's docs @oliviertassinari
-- [docs] Fix pro license links to point to the same page (#8303) @LukasTy
+- [docs] Fix Pro license links to point to the same page (#8303) @LukasTy
 - [docs] Give an incentive to upgrade (#8269) @oliviertassinari
 - [docs] Improve contrast on data grid navigation (#8239) @oliviertassinari
 - [docs] Update shortcuts page to use slotProps (#8288) @dcorb
