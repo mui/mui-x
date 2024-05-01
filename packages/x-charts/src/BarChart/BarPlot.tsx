@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SpringValue, animated, useTransition } from '@react-spring/web';
+import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
@@ -10,8 +10,8 @@ import { BarItemIdentifier } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
-import { getRadius } from './getRadius';
 import { AnimationData, CompletedBarData, MaskData } from './types';
+import { ClipPathMask } from './ClipPathMask';
 
 /**
  * Solution of the equations
@@ -254,26 +254,6 @@ const getInStyle = ({ x, width, y, height }: AnimationData) => ({
   width,
 });
 
-function BarClipRect(props: Record<string, any>) {
-  const radiusData = props.ownerState;
-
-  return (
-    <animated.rect
-      style={{
-        ...props.style,
-        clipPath: (
-          (props.ownerState.layout === 'vertical'
-            ? props.style?.height
-            : props.style?.width) as SpringValue<number>
-        ).to(
-          (value) =>
-            `inset(0px round ${Math.min(value, getRadius('top-left', radiusData))}px ${Math.min(value, getRadius('top-right', radiusData))}px ${Math.min(value, getRadius('bottom-right', radiusData))}px ${Math.min(value, getRadius('bottom-left', radiusData))}px)`,
-        ),
-      }}
-    />
-  );
-}
-
 /**
  * Demos:
  *
@@ -309,22 +289,15 @@ function BarPlot(props: BarPlotProps) {
   return (
     <React.Fragment>
       {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
-        if (!borderRadius || borderRadius <= 0) {
-          return null;
-        }
-
         return (
-          <clipPath id={id}>
-            <BarClipRect
-              ownerState={{
-                borderRadius,
-                hasPositive,
-                hasNegative,
-                layout,
-              }}
-              style={style}
-            />
-          </clipPath>
+          <ClipPathMask
+            maskId={id}
+            borderRadius={borderRadius}
+            hasNegative={hasNegative}
+            hasPositive={hasPositive}
+            layout={layout}
+            style={style}
+          />
         );
       })}
       {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
