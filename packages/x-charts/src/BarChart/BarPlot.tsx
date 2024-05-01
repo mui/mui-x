@@ -301,7 +301,7 @@ function BarPlot(props: BarPlotProps) {
         );
       })}
       {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
-        const child = (
+        const barElement = (
           <BarElement
             id={seriesId}
             dataIndex={dataIndex}
@@ -319,10 +319,10 @@ function BarPlot(props: BarPlotProps) {
         );
 
         if (!borderRadius || borderRadius <= 0) {
-          return child;
+          return barElement;
         }
 
-        return <g clipPath={`url(#${maskId})`}>{child}</g>;
+        return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
     </React.Fragment>
   );
