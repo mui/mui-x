@@ -34,7 +34,7 @@ function BarClipRect(props: Record<string, any>) {
   );
 }
 
-function ClipPathMask(props: {
+function BarClipPath(props: {
   maskId: string;
   borderRadius?: number;
   hasNegative: boolean;
@@ -55,4 +55,4 @@ function ClipPathMask(props: {
   );
 }
 
-export { ClipPathMask };
+export { BarClipPath };

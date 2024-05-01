@@ -11,7 +11,7 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
-import { ClipPathMask } from './ClipPathMask';
+import { BarClipPath } from './BarClipPath';
 
 /**
  * Solution of the equations
@@ -293,7 +293,7 @@ function BarPlot(props: BarPlotProps) {
     <React.Fragment>
       {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
         return (
-          <ClipPathMask
+          <BarClipPath
             maskId={id}
             borderRadius={borderRadius}
             hasNegative={hasNegative}
