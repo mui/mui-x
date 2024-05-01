@@ -34,14 +34,19 @@ function BarClipRect(props: Record<string, any>) {
   );
 }
 
-function BarClipPath(props: {
+export interface BarClipPathProps {
   maskId: string;
   borderRadius?: number;
   hasNegative: boolean;
   hasPositive: boolean;
   layout?: 'vertical' | 'horizontal';
   style: {};
-}) {
+}
+
+/**
+ * @ignore - internal component.
+ */
+function BarClipPath(props: BarClipPathProps) {
   const { style, maskId, ...rest } = props;
 
   if (!props.borderRadius || props.borderRadius <= 0) {
