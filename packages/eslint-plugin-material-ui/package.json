@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "devDependencies": {
     "@types/eslint": "^8.56.5",
-    "@typescript-eslint/experimental-utils": "^5.62.0",
+    "@typescript-eslint/utils": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0"
   },
   "scripts": {
