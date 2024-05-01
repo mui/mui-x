@@ -58,7 +58,6 @@ export interface PickersDayProps<TDate extends PickerValidDate>
    * @default false
    */
   disabled?: boolean;
-
   /**
    * If `true`, days are rendering without margin. Useful for displaying linked range of days.
    * @default false
