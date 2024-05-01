@@ -57,7 +57,6 @@ export interface GridFilterPanelProps
    * @default false
    */
   disableRemoveAllButton?: boolean;
-
   /**
    * @ignore - do not document.
    */

@@ -66,7 +66,6 @@ export interface BarChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip?: ChartsTooltipProps;
-
   /**
    * Option to display a cartesian grid in the background.
    */
