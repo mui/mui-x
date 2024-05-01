@@ -99,12 +99,13 @@ export type MaskData = {
 
 const useAggregatedData = (): {
   completedData: CompletedBarData[];
-  masksData: Record<string, MaskData>;
+  masksData: MaskData[];
 } => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
+  const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
@@ -223,7 +224,7 @@ const useAggregatedData = (): {
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
-          maskId: `${series[seriesId].stack ?? ''}_${groupIndex}_${dataIndex}`,
+          maskId: `${chartId}_${series[seriesId].stack ?? ''}_${groupIndex}_${dataIndex}`,
         };
 
         if (!masks[result.maskId]) {
@@ -256,7 +257,7 @@ const useAggregatedData = (): {
 
   return {
     completedData: data,
-    masksData: masks,
+    masksData: Object.values(masks),
   };
 };
 
@@ -268,40 +269,32 @@ const getOutStyle = ({
   y,
   xOrigin,
   height,
-  mask,
-}: CompletedBarData & { mask: MaskData }) => ({
+}: Pick<CompletedBarData, 'layout' | 'y' | 'x' | 'xOrigin' | 'yOrigin' | 'width' | 'height'>) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
         x,
         height: 0,
         width,
-        maskY: mask.yOrigin,
-        maskX: mask.x,
-        maskHeight: 0,
-        maskWidth: mask.width,
       }
     : {
         y,
         x: xOrigin,
         height,
         width: 0,
-        maskY: mask.y,
-        maskX: mask.xOrigin,
-        maskWidth: 0,
-        maskHeight: mask.height,
       }),
 });
 
-const getInStyle = ({ x, width, y, height, mask }: CompletedBarData & { mask: MaskData }) => ({
+const getInStyle = ({
+  x,
+  width,
+  y,
+  height,
+}: Pick<CompletedBarData, 'layout' | 'y' | 'x' | 'xOrigin' | 'yOrigin' | 'width' | 'height'>) => ({
   y,
   x,
   height,
   width,
-  maskY: mask.y,
-  maskX: mask.x,
-  maskWidth: mask.width,
-  maskHeight: mask.height,
 });
 
 function BarClipRect(props: Record<string, any>) {
@@ -337,44 +330,46 @@ function BarClipRect(props: Record<string, any>) {
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const chartId = useChartId();
   const { skipAnimation, onItemClick, borderRadius, ...other } = props;
-  const transition = useTransition(
-    completedData.map((d) => ({
-      ...d,
-      mask: masksData[d.maskId],
-    })),
-    {
-      keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-      from: getOutStyle,
-      leave: getOutStyle,
-      enter: getInStyle,
-      update: getInStyle,
-      immediate: skipAnimation,
-    },
-  );
+  const transition = useTransition(completedData, {
+    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
+    from: getOutStyle,
+    leave: getOutStyle,
+    enter: getInStyle,
+    update: getInStyle,
+    immediate: skipAnimation,
+  });
+
+  const maskTransition = useTransition(masksData, {
+    keys: (v) => v.id,
+    from: getOutStyle,
+    leave: getOutStyle,
+    enter: getInStyle,
+    update: getInStyle,
+    immediate: skipAnimation,
+  });
 
   return (
     <React.Fragment>
-      {transition((style, { seriesId, maskId }) => {
+      {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
         if (!borderRadius || borderRadius <= 0) {
           return null;
         }
 
         return (
-          <clipPath id={`${chartId}_${seriesId}_${maskId}`}>
+          <clipPath id={id}>
             <BarClipRect
               ownerState={{
                 borderRadius,
-                hasPositive: masksData[maskId]?.hasPositive,
-                hasNegative: masksData[maskId]?.hasNegative,
-                layout: masksData[maskId]?.layout,
+                hasPositive,
+                hasNegative,
+                layout,
               }}
               style={{
-                x: (style as any).maskX,
-                y: (style as any).maskY,
-                width: (style as any).maskWidth,
-                height: (style as any).maskHeight,
+                x: (style as any).x,
+                y: (style as any).y,
+                width: (style as any).width,
+                height: (style as any).height,
               }}
             />
           </clipPath>
@@ -402,7 +397,7 @@ function BarPlot(props: BarPlotProps) {
           return child;
         }
 
-        return <g clipPath={`url(#${chartId}_${seriesId}_${maskId})`}>{child}</g>;
+        return <g clipPath={`url(#${maskId})`}>{child}</g>;
       })}
     </React.Fragment>
   );
