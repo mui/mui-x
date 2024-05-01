@@ -6,13 +6,12 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
-import { HighlightScope } from '../context/HighlightProvider';
-import { BarItemIdentifier, BarSeriesType } from '../models';
+import { BarItemIdentifier } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { SeriesId } from '../models/seriesType/common';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { getRadius } from './getRadius';
+import { AnimationData, CompletedBarData, MaskData } from './types';
 
 /**
  * Solution of the equations
@@ -67,35 +66,6 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
   ) => void;
   borderRadius?: number;
 }
-
-export interface CompletedBarData {
-  seriesId: SeriesId;
-  dataIndex: number;
-  layout: BarSeriesType['layout'];
-  x: number;
-  y: number;
-  xOrigin: number;
-  yOrigin: number;
-  height: number;
-  width: number;
-  color: string;
-  value: number | null;
-  highlightScope?: Partial<HighlightScope>;
-  maskId: string;
-}
-
-export type MaskData = {
-  id: string;
-  hasNegative: boolean;
-  hasPositive: boolean;
-  layout: BarSeriesType['layout'];
-  width: number;
-  height: number;
-  x: number;
-  y: number;
-  xOrigin: number;
-  yOrigin: number;
-};
 
 const useAggregatedData = (): {
   completedData: CompletedBarData[];
@@ -261,15 +231,7 @@ const useAggregatedData = (): {
   };
 };
 
-const getOutStyle = ({
-  layout,
-  yOrigin,
-  x,
-  width,
-  y,
-  xOrigin,
-  height,
-}: Pick<CompletedBarData, 'layout' | 'y' | 'x' | 'xOrigin' | 'yOrigin' | 'width' | 'height'>) => ({
+const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
@@ -285,12 +247,7 @@ const getOutStyle = ({
       }),
 });
 
-const getInStyle = ({
-  x,
-  width,
-  y,
-  height,
-}: Pick<CompletedBarData, 'layout' | 'y' | 'x' | 'xOrigin' | 'yOrigin' | 'width' | 'height'>) => ({
+const getInStyle = ({ x, width, y, height }: AnimationData) => ({
   y,
   x,
   height,
@@ -365,12 +322,7 @@ function BarPlot(props: BarPlotProps) {
                 hasNegative,
                 layout,
               }}
-              style={{
-                x: (style as any).x,
-                y: (style as any).y,
-                width: (style as any).width,
-                height: (style as any).height,
-              }}
+              style={style}
             />
           </clipPath>
         );
