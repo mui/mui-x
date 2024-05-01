@@ -46,6 +46,7 @@ export interface GridFilterPanelProps
     | 'valueInputProps'
     | 'filterColumns'
   >;
+
   /**
    * If `true`, the `Add filter` button will not be displayed.
    * @default false
