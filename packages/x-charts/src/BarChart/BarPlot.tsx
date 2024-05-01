@@ -338,7 +338,7 @@ function BarClipRect(props: Record<string, any>) {
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const chartId = useChartId();
-  const { skipAnimation, onItemClick, ...other } = props;
+  const { skipAnimation, onItemClick, borderRadius, ...other } = props;
   const transition = useTransition(
     completedData.map((d) => ({
       ...d,
@@ -357,7 +357,7 @@ function BarPlot(props: BarPlotProps) {
   return (
     <React.Fragment>
       {transition((style, { seriesId, maskId }) => {
-        if (!props.borderRadius || props.borderRadius <= 0) {
+        if (!borderRadius || borderRadius <= 0) {
           return null;
         }
 
@@ -365,7 +365,7 @@ function BarPlot(props: BarPlotProps) {
           <clipPath id={`${chartId}_${seriesId}_${maskId}`}>
             <BarClipRect
               ownerState={{
-                borderRadius: props.borderRadius,
+                borderRadius,
                 hasPositive: masksData[maskId]?.hasPositive,
                 hasNegative: masksData[maskId]?.hasNegative,
                 layout: masksData[maskId]?.layout,
@@ -384,7 +384,6 @@ function BarPlot(props: BarPlotProps) {
         const child = (
           <BarElement
             id={seriesId}
-            seriesId={seriesId}
             dataIndex={dataIndex}
             color={color}
             highlightScope={highlightScope}
@@ -399,7 +398,7 @@ function BarPlot(props: BarPlotProps) {
           />
         );
 
-        if (!props.borderRadius || props.borderRadius <= 0) {
+        if (!borderRadius || borderRadius <= 0) {
           return child;
         }
 
