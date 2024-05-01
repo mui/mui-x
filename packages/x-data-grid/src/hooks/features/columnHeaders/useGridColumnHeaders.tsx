@@ -350,18 +350,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const firstGroupToRender =
       apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
 
-    const firstGroupIndex = rowStructure.findIndex(
-      ({ groupId, columnFields }) =>
-        groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
-    );
+    const firstGroupIndex = rowStructure.findIndex(({ groupId }) => groupId === firstGroupToRender);
 
     const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
     const lastGroupToRender =
       apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
-    const lastGroupIndex = rowStructure.findIndex(
-      ({ groupId, columnFields }) =>
-        groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
-    );
+
+    const lastGroupIndex = rowStructure.findIndex(({ groupId }) => groupId === lastGroupToRender);
 
     const visibleColumnGroupHeader = rowStructure
       .slice(firstGroupIndex, lastGroupIndex + 1)
