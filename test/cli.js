@@ -58,6 +58,7 @@ async function run(argv) {
       ...process.env,
       BABEL_ENV: 'test',
       NODE_ENV: argv.production ? 'production' : 'test',
+      TZ: 'UTC',
     },
     shell: true,
     stdio: ['inherit', 'inherit', 'inherit'],
