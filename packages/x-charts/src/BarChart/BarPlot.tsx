@@ -64,6 +64,9 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
     event: React.MouseEvent<SVGElement, MouseEvent>,
     barItemIdentifier: BarItemIdentifier,
   ) => void;
+  /**
+   * Defines the radius of the bar element.
+   */
   borderRadius?: number;
 }
 
@@ -333,6 +336,10 @@ BarPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Defines the radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

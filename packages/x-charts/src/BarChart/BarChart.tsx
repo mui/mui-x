@@ -234,6 +234,10 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
+   * Defines the radius of the bar chart.
+   */
+  borderRadius: PropTypes.number,
+  /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
