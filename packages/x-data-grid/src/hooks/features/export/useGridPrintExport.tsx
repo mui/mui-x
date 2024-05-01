@@ -191,6 +191,8 @@ export const useGridPrintExport = (
       // prevents us to do it
       const container = document.createElement('div');
       container.appendChild(gridClone);
+      // To avoid an empty page in start on Chromium based browsers
+      printDoc.body.style.marginTop = '0px';
       printDoc.body.innerHTML = container.innerHTML;
 
       const defaultPageStyle =
