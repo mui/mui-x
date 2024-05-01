@@ -10,7 +10,7 @@ overrides:
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
-    hash: h4cab4lqksemkw6ln3l3h4s77e
+    hash: 7wlacyoi44skuhtzjdjwgtjyxe
     path: patches/babel-plugin-replace-imports@1.0.2.patch
   date-fns-jalali@2.13.0-0:
     hash: knk56uiq6xxn77bv6lgrgre7si
@@ -187,7 +187,7 @@ importers:
         version: 0.3.0
       babel-plugin-replace-imports:
         specifier: ^1.0.2
-        version: 1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e)
+        version: 1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe)
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
@@ -6604,7 +6604,7 @@ packages:
   /babel-plugin-react-remove-properties@0.3.0:
     resolution: {integrity: sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==}
 
-  /babel-plugin-replace-imports@1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e):
+  /babel-plugin-replace-imports@1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe):
     resolution: {integrity: sha512-v+9S4FBg9wYit3c+bDxhRHv/pnhBhhneZOPvqT1c293SSjUuUy1MPK76TsJ9038fp/SD2/TNcqG5PUBoG9/ByQ==}
     dependencies:
       lodash.isempty: 4.4.0
