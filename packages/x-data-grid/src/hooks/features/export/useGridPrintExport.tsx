@@ -7,7 +7,7 @@ import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { GridValidRowModel } from '../../../models/gridRows';
-import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import { GridInitialStateCommunity, GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -72,6 +72,7 @@ export const useGridPrintExport = (
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
   const previousRows = React.useRef<GridValidRowModel[]>([]);
+  const previousVirtualizationState = React.useRef<GridStateCommunity['virtualization']>();
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -139,7 +140,7 @@ export const useGridPrintExport = (
 
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
-      const gridRootElement = apiRef.current.rootElementRef!.current;
+      const gridRootElement = apiRef.current.rootElementRef.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
 
       // Allow to overflow to not hide the border of the last row
@@ -280,7 +281,10 @@ export const useGridPrintExport = (
         apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
       }
 
-      apiRef.current.unstable_setVirtualization(true);
+      apiRef.current.setState((state) => ({
+        ...state,
+        virtualization: previousVirtualizationState.current!,
+      }));
       apiRef.current.setRows(previousRows.current);
 
       // Clear local state
@@ -324,8 +328,16 @@ export const useGridPrintExport = (
             ),
           },
         }));
-        apiRef.current.forceUpdate();
       }
+      previousVirtualizationState.current = apiRef.current.state.virtualization;
+      apiRef.current.setState((state) => ({
+        ...state,
+        virtualization: {
+          ...state.virtualization,
+          enabled: false,
+          enabledForColumns: false,
+        },
+      }));
 
       await updateGridColumnsForPrint(
         options?.fields,
@@ -335,7 +347,6 @@ export const useGridPrintExport = (
 
       updateGridRowsForPrint(options?.getRowsToExport ?? defaultGetRowsToExport);
 
-      apiRef.current.unstable_setVirtualization(false);
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
