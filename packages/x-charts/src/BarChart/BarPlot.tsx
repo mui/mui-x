@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
+import { SpringValue, animated, useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
@@ -11,7 +11,8 @@ import { BarItemIdentifier, BarSeriesType } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
 import getColor from './getColor';
-import { BarGroup } from './BarGroup';
+import { useChartId } from '../hooks';
+import { getRadius } from './getRadius';
 
 /**
  * Solution of the equations
@@ -303,6 +304,26 @@ const getInStyle = ({ x, width, y, height, mask }: CompletedBarData & { mask: Ma
   maskHeight: mask.height,
 });
 
+function BarClipRect(props: Record<string, any>) {
+  const radiusData = props.ownerState;
+
+  return (
+    <animated.rect
+      style={{
+        ...props.style,
+        clipPath: (
+          (props.ownerState.layout === 'vertical'
+            ? props.style?.height
+            : props.style?.width) as SpringValue<number>
+        ).to(
+          (value) =>
+            `inset(0px round ${Math.min(value, getRadius('top-left', radiusData))}px ${Math.min(value, getRadius('top-right', radiusData))}px ${Math.min(value, getRadius('bottom-right', radiusData))}px ${Math.min(value, getRadius('bottom-left', radiusData))}px)`,
+        ),
+      }}
+    />
+  );
+}
+
 /**
  * Demos:
  *
@@ -316,6 +337,7 @@ const getInStyle = ({ x, width, y, height, mask }: CompletedBarData & { mask: Ma
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
+  const chartId = useChartId();
   const { skipAnimation, onItemClick, ...other } = props;
   const transition = useTransition(
     completedData.map((d) => ({
@@ -334,36 +356,54 @@ function BarPlot(props: BarPlotProps) {
 
   return (
     <React.Fragment>
-      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+      {transition((style, { seriesId, maskId }) => {
+        if (!props.borderRadius || props.borderRadius <= 0) {
+          return null;
+        }
+
         return (
-          <BarGroup
-            key={`${seriesId}-${dataIndex}`}
-            {...masksData[maskId]}
-            borderRadius={props.borderRadius}
-            style={{
-              x: (style as any).maskX,
-              y: (style as any).maskY,
-              width: (style as any).maskWidth,
-              height: (style as any).maskHeight,
-            }}
-          >
-            <BarElement
-              id={seriesId}
-              seriesId={seriesId}
-              dataIndex={dataIndex}
-              color={color}
-              highlightScope={highlightScope}
-              {...other}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                })
-              }
-              style={style}
+          <clipPath id={`${chartId}_${seriesId}_${maskId}`}>
+            <BarClipRect
+              ownerState={{
+                borderRadius: props.borderRadius,
+                hasPositive: masksData[maskId]?.hasPositive,
+                hasNegative: masksData[maskId]?.hasNegative,
+                layout: masksData[maskId]?.layout,
+              }}
+              style={{
+                x: (style as any).maskX,
+                y: (style as any).maskY,
+                width: (style as any).maskWidth,
+                height: (style as any).maskHeight,
+              }}
             />
-          </BarGroup>
+          </clipPath>
         );
+      })}
+      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+        const child = (
+          <BarElement
+            id={seriesId}
+            seriesId={seriesId}
+            dataIndex={dataIndex}
+            color={color}
+            highlightScope={highlightScope}
+            {...other}
+            onClick={
+              onItemClick &&
+              ((event) => {
+                onItemClick(event, { type: 'bar', seriesId, dataIndex });
+              })
+            }
+            style={style}
+          />
+        );
+
+        if (!props.borderRadius || props.borderRadius <= 0) {
+          return child;
+        }
+
+        return <g clipPath={`url(#${chartId}_${seriesId}_${maskId})`}>{child}</g>;
       })}
     </React.Fragment>
   );
