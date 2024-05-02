@@ -49,6 +49,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Vyhľadať',
   columnsManagementNoColumns: 'Žiadne stĺpce',
   columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',

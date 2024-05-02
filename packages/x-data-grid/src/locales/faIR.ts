@@ -42,6 +42,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'جستجو',
   columnsManagementNoColumns: 'بدون سطر',
   columnsManagementShowHideAllText: 'نمایش/مخفی کردن همه',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',

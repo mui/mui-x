@@ -282,7 +282,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               disabled={isResetDisabled}
               {...rootProps.slotProps?.baseButton}
             >
-              Reset
+              {apiRef.current.getLocaleText('columnsManagementReset')}
             </rootProps.slots.baseButton>
           ) : null}
         </GridColumnsManagementFooter>
