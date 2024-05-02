@@ -11,6 +11,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 🎁 Add "no data" and "loading" states to charts, allowing users to create [custom visualizations for each state](https://mui.com/x/react-charts/styling/#overlay)
 - 🌍 Improve Hebrew (he-IL) and Hungarian (hu-HU) locales on the Date and Time Pickers
+- 🌍 Improve Slovak (sk-SK) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
