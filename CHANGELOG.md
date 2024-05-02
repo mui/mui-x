@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 2, 2024_
 
-We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add "no data" and "loading" states to charts, allowing users to create [custom visualizations for each state](https://mui.com/x/react-charts/styling/#overlay)
 - 🌍 Improve Hebrew (he-IL) and Hungarian (hu-HU) locales on the Date and Time Pickers
