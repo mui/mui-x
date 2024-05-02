@@ -27,7 +27,10 @@ Same changes as in `@mui/x-data-grid@7.3.2`.
 
 #### `@mui/x-data-grid-premium@7.3.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.3.2`.
+Same changes as in `@mui/x-data-grid-pro@7.3.2`, plus:
+
+- [DataGridPremium] Fix print export not working with row grouping (#12957) @MBilalShafi
+
 
 ### Date and Time Pickers
 
