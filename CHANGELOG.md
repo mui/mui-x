@@ -57,6 +57,7 @@ Same changes as in `@mui/x-date-pickers@7.3.2`.
 
 ### Docs
 
+- [docs] Improve Data Grid migration guide (#12969) @MBilalShafi
 - [docs] Polish references to the plans (#12922) @oliviertassinari
 
 ### Core
