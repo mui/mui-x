@@ -211,7 +211,7 @@
     "languageTag": "sk-SK",
     "importName": "skSK",
     "localeName": "Slovak",
-    "missingKeysCount": 3,
+    "missingKeysCount": 0,
     "totalKeysCount": 117,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/skSK.ts"
   },
