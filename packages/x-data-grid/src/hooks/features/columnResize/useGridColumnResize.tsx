@@ -318,10 +318,15 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
 
+    const dimensions = apiRef.current.getRootDimensions();
+
     const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
     const columnWidthDiff = newWidth - refs.initialColWidth;
-    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
+    const newTotalWidth = Math.max(
+      refs.initialTotalWidth + columnWidthDiff,
+      dimensions.viewportOuterSize.width,
+    );
 
     apiRef.current.rootElementRef?.current?.style.setProperty(
       '--DataGrid-rowWidth',
@@ -533,7 +538,7 @@ export const useGridColumnResize = (
       resizeDirection.current!,
     );
 
-    newWidth = clamp(newWidth, refs.colDef!.minWidth!, refs.colDef!.maxWidth!);
+    newWidth = clamp(newWidth, refs.colDef!.minWidth ?? 50, refs.colDef!.maxWidth ?? Infinity);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {

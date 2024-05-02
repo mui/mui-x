@@ -524,7 +524,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
+      {rightCells.length > 0 && (
+        <div
+          role="presentation"
+          className={clsx(gridClasses.filler, gridClasses['filler--borderTop'])}
+        />
+      )}
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>
