@@ -19,7 +19,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.3.2`
 
-[l10n] Improve Slovak (sk-SK) locale (#12949) @stefikp
 - [DataGrid] Derive `formattedValue` from the edit value when passing to `renderEditCell` (#12870) @cherniavskii
 - [DataGrid] Fix rows not being recomputed on `props.rowCount` change (#12833) @MBilalShafi
 
