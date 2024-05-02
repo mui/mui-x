@@ -23,6 +23,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.3.2`
 
+- [DataGrid] Allow to change reset text in the columns management panel (#12972) @MBilalShafi
 - [DataGrid] Derive `formattedValue` from the edit value when passing to `renderEditCell` (#12870) @cherniavskii
 - [DataGrid] Fix rows not being recomputed on `props.rowCount` change (#12833) @MBilalShafi
 - [l10n] Improve Danish (da-DK) locale (#12844) @fosterbuster
