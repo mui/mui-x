@@ -21,6 +21,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [DataGrid] Derive `formattedValue` from the edit value when passing to `renderEditCell` (#12870) @cherniavskii
 - [DataGrid] Fix rows not being recomputed on `props.rowCount` change (#12833) @MBilalShafi
+- [l10n] Improve Danish (da-DK) locale (#12844) @fosterbuster
+- [l10n] Improve Slovak (sk-SK) locale (#12949) @stefikp
 
 #### `@mui/x-data-grid-pro@7.3.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
