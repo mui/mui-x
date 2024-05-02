@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "7.3.1",
+  "version": "7.3.2",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
