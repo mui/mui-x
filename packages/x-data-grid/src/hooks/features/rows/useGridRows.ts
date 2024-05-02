@@ -90,6 +90,7 @@ export const useGridRows = (
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const lastUpdateMs = React.useRef(Date.now());
+  const lastRowCount = React.useRef(props.rowCount);
   const timeout = useTimeout();
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
@@ -594,6 +595,12 @@ export const useGridRows = (
       return;
     }
 
+    let isRowCountPropUpdated = false;
+    if (props.rowCount !== lastRowCount.current) {
+      isRowCountPropUpdated = true;
+      lastRowCount.current = props.rowCount;
+    }
+
     const areNewRowsAlreadyInState =
       apiRef.current.caches.rows.rowsBeforePartialUpdates === props.rows;
     const isNewLoadingAlreadyInState =
@@ -625,8 +632,9 @@ export const useGridRows = (
         apiRef.current.caches.rows.rowCountPropBeforePartialUpdates = props.rowCount;
         apiRef.current.forceUpdate();
       }
-
-      return;
+      if (!isRowCountPropUpdated) {
+        return;
+      }
     }
 
     logger.debug(`Updating all rows, new length ${props.rows.length}`);
