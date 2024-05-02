@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.3.2
+
+_May 2, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add "no data" and "loading" states to charts, allowing users to create [custom visualizations for each state](https://mui.com/x/react-charts/styling/#overlay)
+- 🌍 Improve Hebrew (he-IL) and Hungarian (hu-HU) locales on the Date and Time Pickers
+- 🌍 Improve Danish (da-DK) and Slovak (sk-SK) locales on the Data Grid
+- 📝 Fix a [typo](https://github.com/mui/mui-x/pull/12941/files/4bf4bffbc2799a01a96bc7458a17318cf41c1722#diff-26c31cc69d6f51110f89e339578ef9b3d4a3551f79077fff73f7babb81c5099f) in the auto-generated Charts gradient `id` attribute.
+  It should not affect you, but if you were relying on the gradient `id` attribute, please update your usage.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.3.2`
+
+- [DataGrid] Allow to change reset text in the columns management panel (#12972) @MBilalShafi
+- [DataGrid] Derive `formattedValue` from the edit value when passing to `renderEditCell` (#12870) @cherniavskii
+- [DataGrid] Fix rows not being recomputed on `props.rowCount` change (#12833) @MBilalShafi
+- [l10n] Improve Danish (da-DK) locale (#12844) @fosterbuster
+- [l10n] Improve Slovak (sk-SK) locale (#12949) @stefikp
+
+#### `@mui/x-data-grid-pro@7.3.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.3.2`.
+
+#### `@mui/x-data-grid-premium@7.3.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.3.2`, plus:
+
+- [DataGridPremium] Fix print export not working with row grouping (#12957) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.3.2`
+
+- [l10n] Improve Hebrew (he-IL) locale (#12910) @michaelNXT1
+- [l10n] Improve Hungarian (hu-HU) locale (#12930) @noherczeg
+- [pickers] Fix typo on the `viewRenderers` prop description (#12915) @flaviendelangle
+- [pickers] Improve TypeScript performance in `PickersDay` (#12920) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.3.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.3.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.3.2`
+
+- [charts] Add an overlay for "no data" or "loading" states (#12817) @alexfauquette
+- [charts] Fix typos in documentation, translations and errors (#12941) @JCQuintas
+- [charts] Fix `prop.slots` and `prop.slotProps` not passed to `<ChartsTooltip />` (#12939) @JCQuintas
+
+### Docs
+
+- [docs] Improve Data Grid migration guide (#12969) @MBilalShafi
+- [docs] Polish references to the plans (#12922) @oliviertassinari
+
+### Core
+
+- [core] Fix dependencies (#12951) @LukasTy
+- [core] Remove inconsistent blank lines (#12966) @oliviertassinari
+- [code-infra] Bump node image used by CI in docker (#12961) @LukasTy
+- [docs-infra] Remove no longer needed `next.config` settings (#12861) @oliviertassinari
+- [docs-infra] Use the `@mui/docs/HighlightedCode` (#12848) @alexfauquette
+- [test] Restore `t` command (#12948) @LukasTy
+
 ## 7.3.1
 
 _Apr 26, 2024_
