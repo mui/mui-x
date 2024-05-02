@@ -50,10 +50,6 @@ Same changes as in `@mui/x-date-pickers@7.3.2`.
 - [charts] Fix typos in documentation, translations and errors (#12941) @JCQuintas
 - [charts] Fix `prop.slots` and `prop.slotProps` not passed to `<ChartsTooltip />` (#12939) @JCQuintas
 
-### Tree View
-
-#### `@mui/x-tree-view@7.3.2`
-
 ### Docs
 
 - [docs] Polish references to the plans (#12922) @oliviertassinari
