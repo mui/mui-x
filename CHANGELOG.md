@@ -10,7 +10,6 @@ _May 2, 2024_
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add "no data" and "loading" states to charts, allowing users to create [custom visualizations for each state](https://mui.com/x/react-charts/styling/#overlay)
-- 📝 Fixed a typo in an undocumented [x-charts gradient id](https://github.com/mui/mui-x/pull/12941/files/4bf4bffbc2799a01a96bc7458a17318cf41c1722#diff-26c31cc69d6f51110f89e339578ef9b3d4a3551f79077fff73f7babb81c5099f) that could have unintended side effects
 - 🌍 Improve Hebrew (he-IL) and Hungarian (hu-HU) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -48,6 +47,8 @@ Same changes as in `@mui/x-date-pickers@7.3.2`.
 
 - [charts] Add an overlay for "no data" or "loading" states (#12817) @alexfauquette
 - [charts] Fix typos in documentation, translations and errors (#12941) @JCQuintas
+  This affects an undocumented [x-charts gradient id](https://github.com/mui/mui-x/pull/12941/files/4bf4bffbc2799a01a96bc7458a17318cf41c1722#diff-26c31cc69d6f51110f89e339578ef9b3d4a3551f79077fff73f7babb81c5099f) that could have unintended side effects
+
 - [charts] Fix `prop.slots` and `prop.slotProps` not passed to `<ChartsTooltip />` (#12939) @JCQuintas
 
 ### Docs
