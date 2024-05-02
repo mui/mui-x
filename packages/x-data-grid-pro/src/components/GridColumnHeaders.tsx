@@ -28,6 +28,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
+      columnGroupsModel,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
       ...other
@@ -46,6 +47,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
         headerGroupingMaxDepth,
         columnMenuState,
         columnVisibility,
+        columnGroupsModel,
         columnGroupsHeaderStructure,
       });
 
@@ -81,6 +83,7 @@ GridColumnHeaders.propTypes = {
       }),
     ),
   ).isRequired,
+  columnGroupsModel: PropTypes.object.isRequired,
   columnHeaderFocus: PropTypes.shape({
     field: PropTypes.string.isRequired,
   }),
