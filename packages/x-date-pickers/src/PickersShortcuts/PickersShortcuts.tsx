@@ -12,6 +12,7 @@ interface PickersShortcutsItemGetValueParams<TValue> {
 export interface PickersShortcutsItem<TValue> {
   label: string;
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
+  key?: string;
 }
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
@@ -64,6 +65,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     const newValue = getValue({ isValid });
 
     return {
+      key: item?.key || item.label,
       label: item.label,
       onClick: () => {
         onChange(newValue, changeImportance, item);
@@ -132,6 +134,7 @@ PickersShortcuts.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       getValue: PropTypes.func.isRequired,
+      key: PropTypes.string,
       label: PropTypes.string.isRequired,
     }),
   ),
