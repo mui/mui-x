@@ -67,7 +67,7 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
 
-Create a new release on the newly published tag, then copy/paste the new changes in the changelog while removing the "version" and "date" sections. Eg: the first line of the release should be something in the lines of `We'd like to offer a big thanks to...`
+Create a new release on the newly published tag, then copy/paste the new changes in the changelog while removing the "version" and "date" sections. If in doubt, check the previous release notes.
 
 ### Announce
 
