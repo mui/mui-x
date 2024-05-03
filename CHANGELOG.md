@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+TEST RELEASE WORKFLOW!
+
 ## 7.0.0-beta.7
 
 _Mar 14, 2024_
