@@ -99,4 +99,4 @@ If the `pnpm release:tag` fails you can create and push the tag using the follow
 
 ### release:publish failed
 
-If you receive an error message like `There are no new packages that should be published`. Ensure that you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`
+If you receive an error message like `There are no new packages that should be published`. Ensure you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`.
