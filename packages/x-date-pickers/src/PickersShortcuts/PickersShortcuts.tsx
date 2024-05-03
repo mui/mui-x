@@ -12,7 +12,11 @@ interface PickersShortcutsItemGetValueParams<TValue> {
 export interface PickersShortcutsItem<TValue> {
   label: string;
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
-  key?: string;
+  /**
+   * Identifier of the shortcut.
+   * If provided, it will be used as the key of the shortcut.
+   */
+  id?: string;
 }
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
@@ -65,7 +69,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     const newValue = getValue({ isValid });
 
     return {
-      key: item?.key || item.label,
+      ...item,
       label: item.label,
       onClick: () => {
         onChange(newValue, changeImportance, item);
@@ -89,7 +93,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     >
       {resolvedItems.map((item) => {
         return (
-          <ListItem key={item.label}>
+          <ListItem key={item.id ?? item.label}>
             <Chip {...item} />
           </ListItem>
         );
