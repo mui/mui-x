@@ -38,7 +38,8 @@ In case of a problem, another method to generate the changelog is available at t
 3. Update the root `package.json`'s version
 4. Update the versions of the other `package.json` files and of the dependencies with `pnpm release:version` (`pnpm release:version prerelease` for alpha / beta releases).
 5. Open PR with changes and wait for review and green CI.
-6. Merge PR once CI is green, and it has been approved.
+6. Once CI is green and you have enough approvals, send a message on the `team-x` slack channel announcing a merge freeze.
+7. Merge PR.
 
 ### Release the packages
 
@@ -65,6 +66,8 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 ### Publish GitHub release
 
 After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
+
+Create a new release on the newly published tag, then copy/paste the new changes in the changelog while removing the "version" and "date" sections. If in doubt, check the previous release notes.
 
 ### Announce
 
@@ -93,3 +96,7 @@ You can use the following script in your browser console on any GitHub page to a
 ### Manually create the release tag
 
 If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
+
+### release:publish failed
+
+If you receive an error message like `There are no new packages that should be published`. Ensure you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`.
