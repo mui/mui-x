@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   add-reviewers:
-    if: ${{ github.event.label.name == 'bug' }}
+    if: ${{ github.event.label.name == 'release' }}
     # Tests that label is added on the PR
     runs-on: ubuntu-latest
     permissions:
