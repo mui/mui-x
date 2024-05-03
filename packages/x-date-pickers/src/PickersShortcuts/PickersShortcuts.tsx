@@ -138,7 +138,7 @@ PickersShortcuts.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       getValue: PropTypes.func.isRequired,
-      key: PropTypes.string,
+      id: PropTypes.string,
       label: PropTypes.string.isRequired,
     }),
   ),
