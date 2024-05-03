@@ -1,5 +1,6 @@
 {
   "props": {
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -12,6 +13,14 @@
     "import { AreaElement } from '@mui/x-charts/LineChart';",
     "import { AreaElement } from '@mui/x-charts';"
   ],
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "faded",
@@ -22,7 +31,7 @@
     {
       "key": "highlighted",
       "className": "MuiAreaElement-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {

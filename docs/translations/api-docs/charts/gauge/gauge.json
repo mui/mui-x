@@ -1,0 +1,51 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius). Set it to &#39;50%&#39; to get rounded arc."
+    },
+    "cx": {
+      "description": "The x coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the width the drawing area."
+    },
+    "cy": {
+      "description": "The y coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "endAngle": { "description": "The end angle (deg)." },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "innerRadius": {
+      "description": "The radius between circle center and the beginning of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+    },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "outerRadius": {
+      "description": "The radius between circle center and the end of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+    },
+    "startAngle": { "description": "The start angle (deg)." },
+    "value": {
+      "description": "The value of the gauge. Set to <code>null</code> to not display a value."
+    },
+    "valueMax": { "description": "The maximal value of the gauge." },
+    "valueMin": { "description": "The minimal value of the gauge." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    }
+  },
+  "classDescriptions": {
+    "referenceArc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the arc displaying the range of available values"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "valueArc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the arc displaying the value"
+    },
+    "valueText": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the value text" }
+  }
+}

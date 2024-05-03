@@ -1,16 +1,19 @@
 import { expect } from 'chai';
-import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
 /**
- * To check if the date has the right offset even after changing it's date parts,
+ * To check if the date has the right offset even after changing its date parts,
  * we convert it to a different timezone that always has the same offset,
  * then we check that both dates have the same hour value.
  */
 // We change to
-const expectSameTimeInMonacoTZ = <TDate>(adapter: MuiPickersAdapter<TDate>, value: TDate) => {
+const expectSameTimeInMonacoTZ = <TDate extends PickerValidDate>(
+  adapter: MuiPickersAdapter<TDate>,
+  value: TDate,
+) => {
   const valueInMonacoTz = adapter.setTimezone(value, 'Europe/Monaco');
   expect(adapter.getHours(value)).to.equal(adapter.getHours(valueInMonacoTz));
 };
@@ -574,7 +577,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       ).to.equal(false);
     });
 
-    it('should use inclusivity of range', () => {
+    it('should use inclusiveness of range', () => {
       expect(
         adapter.isWithinRange(adapter.date('2019-09-01T00:00:00.000Z')!, [
           adapter.date('2019-09-01T00:00:00.000Z')!,
@@ -600,6 +603,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         adapter.isWithinRange(adapter.date('2019-12-01')!, [
           adapter.date('2019-09-01')!,
           adapter.date('2019-12-01')!,
+        ]),
+      ).to.equal(true);
+    });
+
+    it('should be equal with values in different locales', () => {
+      expect(
+        adapter.isWithinRange(adapter.date('2022-04-17'), [
+          adapterFr.date('2022-04-17'),
+          adapterFr.date('2022-04-19'),
         ]),
       ).to.equal(true);
     });

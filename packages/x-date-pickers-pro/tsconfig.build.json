@@ -8,18 +8,13 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["node", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [
     { "path": "../x-date-pickers/tsconfig.build.json" },
-    { "path": "../x-license-pro/tsconfig.build.json" }
+    { "path": "../x-license/tsconfig.build.json" }
   ],
-  "include": [
-    "./src/**/*.ts*",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/dayjs/plugin/utc.d.ts",
-    "../../node_modules/dayjs/plugin/timezone.d.ts",
-    "../../node_modules/moment-timezone/index.d.ts"
-  ],
+  "include": ["./src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

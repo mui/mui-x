@@ -15,16 +15,20 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Наступний місяць',
 
   // View navigation
-  openPreviousView: 'відкрити попередній вигляд',
-  openNextView: 'відкрити наступний вигляд',
+  openPreviousView: 'Відкрити попередній вигляд',
+  openNextView: 'Відкрити наступний вигляд',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'річний вигляд відкрито, перейти до календарного вигляду'
       : 'календарний вигляд відкрито, перейти до річного вигляду',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Початок',
   end: 'Кінець',
+  startDate: 'День початку',
+  startTime: 'Час початку',
+  endDate: 'День закінчення',
+  endTime: 'Час закінчення',
 
   // Action bar
   cancelButtonLabel: 'Відміна',
@@ -40,9 +44,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Вибрати ${timeViews[view]}. ${
-      time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Вибрати ${timeViews[view]}. ${time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -65,7 +67,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Оберіть час, обраний час  ${utils.format(value, 'fullTime')}`
       : 'Оберіть час',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Очистити дані',
 
   // Table labels
   timeTableLabel: 'оберіть час',
@@ -80,6 +82,19 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Рік',
+  month: 'Місяць',
+  day: 'День',
+  weekDay: 'День тижня',
+  hours: 'Годин',
+  minutes: 'Хвилин',
+  seconds: 'Секунд',
+  meridiem: 'Меридіем',
+
+  // Common
+  empty: 'Порожній',
 };
 
 export const ukUA = getPickersLocalization(ukUAPickers);

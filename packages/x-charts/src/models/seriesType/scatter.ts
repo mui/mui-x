@@ -1,7 +1,15 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType } from './common';
+import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
-export type ScatterValueType = { x: number; y: number; id: string | number };
+export type ScatterValueType = {
+  x: number;
+  y: number;
+  z?: any;
+  /**
+   * A unique identifier for the scatter point
+   */
+  id: string | number;
+};
 
 export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
   type: 'scatter';
@@ -13,6 +21,10 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
    * @default false
    */
   disableHover?: boolean;
+  /**
+   * The id of the z-axis used to render the series.
+   */
+  zAxisKey?: string;
 }
 
 /**
@@ -21,7 +33,7 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
  */
 export type ScatterItemIdentifier = {
   type: 'scatter';
-  seriesId: DefaultizedScatterSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 

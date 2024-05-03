@@ -22,9 +22,13 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Début',
   end: 'Fin',
+  startDate: 'Date de début',
+  startTime: 'Heure de début',
+  endDate: 'Date de fin',
+  endTime: 'Heure de fin',
 
   // Action bar
   cancelButtonLabel: 'Annuler',
@@ -40,11 +44,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Choix des ${views[view]}. ${
-      time === null
-        ? 'Aucune heure choisie'
-        : `L'heure choisie est ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Choix des ${views[view]}. ${time === null ? 'Aucune heure choisie' : `L'heure choisie est ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} heures`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,
@@ -67,7 +67,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Effacer la valeur',
 
   // Table labels
   timeTableLabel: "choix de l'heure",
@@ -77,11 +77,24 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'JJ',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Année',
+  month: 'Mois',
+  day: 'Jour',
+  weekDay: 'Jour de la semaine',
+  hours: 'Heures',
+  minutes: 'Minutes',
+  seconds: 'Secondes',
+  meridiem: 'Méridien',
+
+  // Common
+  empty: 'Vider',
 };
 
 export const frFR = getPickersLocalization(frFRPickers);

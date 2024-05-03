@@ -86,35 +86,16 @@ Premium package:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
-## Questions and feedback
+## Support
 
-### GitHub
-
-We use GitHub issues as a bug and feature request tracker.
-If you think you've found a bug, or you have a new feature idea, please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
-You can search through existing issues and pull requests to see if someone has reported one similar to yours.
-
-[Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
-
-### Stack Overflow
-
-Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI X community, as well as MUI X maintainers.
-
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
-
-### Bugs and feature requests
-
-You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
-Please always provide a reproduction case.
-As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
-Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
+From community guidance to critical business support, we're here to help. Read the [support guide](https://mui.com/x/introduction/support/).
 
 ## Contributing
 
 Read the [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
 
 Contributing to MUI X is about more than just issues and pull requests!
-There are many other ways to [support MUI](https://mui.com/material-ui/getting-started/faq/#mui-is-awesome-how-can-i-support-the-project) beyond contributing to the code base.
+There are many other ways to [support MUI X](https://mui.com/material-ui/getting-started/faq/#mui-is-awesome-how-can-i-support-the-project) beyond contributing to the code base.
 
 ## Changelog
 
@@ -122,7 +103,7 @@ The [changelog](https://github.com/mui/mui-x/releases) is regularly updated to r
 
 ## Roadmap
 
-Future plans and high-priority features and enhancements can be found in our [roadmap](https://mui.com/x/introduction/roadmap/).
+Future plans and high-priority features and enhancements can be found in the [roadmap](https://mui.com/x/introduction/roadmap/).
 
 ## Security
 

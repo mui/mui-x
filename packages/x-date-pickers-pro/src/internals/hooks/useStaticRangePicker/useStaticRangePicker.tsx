@@ -9,13 +9,13 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange } from '../../../models';
+import { DateRange, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
-import { RangeFieldSection } from '../../models/fields';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -28,7 +28,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticDateRangePicker
  */
 export const useStaticRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -51,6 +51,7 @@ export const useStaticRangePicker = <
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
+    fieldRef: undefined,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,

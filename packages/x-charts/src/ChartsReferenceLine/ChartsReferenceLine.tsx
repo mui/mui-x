@@ -13,7 +13,7 @@ function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;
   if (x !== undefined && y !== undefined) {
     throw new Error(
-      'MUI X Charts: The ChartsReferenceLine can not have both `x` and `y` props set.',
+      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set.',
     );
   }
 
@@ -38,7 +38,7 @@ ChartsReferenceLine.propTypes = {
    * The id of the axis used for the reference value.
    * @default The `id` of the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */
@@ -61,7 +61,7 @@ ChartsReferenceLine.propTypes = {
    */
   lineStyle: PropTypes.object,
   /**
-   * Additional space arround the label in px.
+   * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
    * @default 5
    */

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
-import { getHeaders, getTitle, renderMarkdown } from '@mui/markdown';
+import { getHeaders, getTitle, renderMarkdown } from '@mui/internal-markdown';
 import {
   ComponentInfo,
   extractPackageFile,
@@ -64,18 +64,18 @@ export function getComponentImports(name: string, filename: string) {
   const githubPath = toGitHubPath(filename);
 
   const rootImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/.*/,
-    (match, dash, pkg) => `@mui/${pkg}`,
+    /\/packages\/(.+?)?\/src\/.*/,
+    (match, pkg) => `@mui/${pkg}`,
   );
 
   const subdirectoryImportPath = githubPath.replace(
-    /\/packages\/(grid\/|)(.+?)?\/src\/([^\\/]+)\/.*/,
-    (match, dash, pkg, directory) => `@mui/${pkg}/${directory}`,
+    /\/packages\/(.+?)?\/src\/([^\\/]+)\/.*/,
+    (match, pkg, directory) => `@mui/${pkg}/${directory}`,
   );
 
   const reExportPackage = [rootImportPath];
 
-  // TODO: uncomment when releasing the pro package
+  // TODO x-tree-view-pro uncomment when making the package public
   // if (rootImportPath === '@mui/x-tree-view') {
   //   reExportPackage.push('@mui/x-tree-view-pro');
   // }

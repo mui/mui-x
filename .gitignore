@@ -20,5 +20,7 @@ dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
+# vale downloaded config
 .github/styles/Google
-.github/styles/write-good
+.github/styles/MUI
+.github/styles/.vale-config

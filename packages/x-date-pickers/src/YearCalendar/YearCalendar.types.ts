@@ -2,7 +2,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
-import { TimezoneProps } from '../models';
+import { PickerValidDate, TimezoneProps } from '../models';
 
 export interface ExportedYearCalendarProps {
   /**
@@ -16,7 +16,7 @@ export interface ExportedYearCalendarProps {
   yearsReversed?: boolean;
 }
 
-export interface YearCalendarProps<TDate>
+export interface YearCalendarProps<TDate extends PickerValidDate>
   extends ExportedYearCalendarProps,
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,

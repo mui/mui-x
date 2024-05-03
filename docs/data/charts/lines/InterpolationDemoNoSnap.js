@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
 
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const curveTypes = [
   'catmullRom',
@@ -52,6 +52,7 @@ export default function InterpolationDemoNoSnap() {
         ]}
         height={300}
         margin={{ top: 10, bottom: 30 }}
+        skipAnimation
       />
       <HighlightedCode code={getExample(curveType)} language="tsx" />
     </Box>

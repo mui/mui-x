@@ -5,6 +5,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
+import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
@@ -13,11 +14,12 @@ import {
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -26,12 +28,10 @@ export interface MarkElementClasses {
 export type MarkElementClassKey = keyof MarkElementClasses;
 
 interface MarkElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  x: number;
-  y: number;
   classes?: Partial<MarkElementClasses>;
 }
 
@@ -54,13 +54,11 @@ const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   return composeClasses(slots, getMarkElementUtilityClass, classes);
 };
 
-const MarkElementPath = styled('path', {
+const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
-  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
@@ -78,8 +76,6 @@ MarkElementPath.propTypes = {
     id: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
@@ -89,7 +85,12 @@ MarkElementPath.propTypes = {
 } as any;
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
+    /**
+     * If `true`, animations are skipped.
+     * @default false
+     */
+    skipAnimation?: boolean;
     /**
      * The shape of the marker.
      */
@@ -121,6 +122,8 @@ function MarkElement(props: MarkElementProps) {
     shape,
     dataIndex,
     highlightScope,
+    onClick,
+    skipAnimation,
     ...other
   } = props;
 
@@ -134,23 +137,28 @@ function MarkElement(props: MarkElementProps) {
   const isFaded =
     !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
 
+  const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted,
     isFaded,
     color,
-    x,
-    y,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
     <MarkElementPath
       {...other}
+      style={{
+        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
+        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+      }}
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
+      onClick={onClick}
+      cursor={onClick ? 'pointer' : 'unset'}
       {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
     />
   );
@@ -170,11 +178,17 @@ MarkElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The shape of the marker.
    */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
 } as any;
 
 export { MarkElement };

@@ -4,8 +4,8 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DrawingContext } from '../context/DrawingProvider';
-import useTicks from '../hooks/useTicks';
+import { useTicks } from '../hooks/useTicks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -66,16 +66,27 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     valueFormatter,
     slots,
     slotProps,
+    tickPlacement,
+    tickLabelPlacement,
+    tickInterval,
+    tickLabelInterval,
   } = defaultizedProps;
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, tickNumber, valueFormatter });
+  const yTicks = useTicks({
+    scale: yScale,
+    tickNumber,
+    valueFormatter,
+    tickPlacement,
+    tickLabelPlacement,
+    tickInterval,
+  });
 
   const positionSign = position === 'right' ? 1 : -1;
 
@@ -119,6 +130,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     ownerState: {},
   });
 
+  const domain = yScale.domain();
+  if (domain.length === 0 || domain[0] === domain[1]) {
+    // Skip axis rendering if
+    // - the data is empty (for band and point axis)
+    // - No data is associated to the axis (other scale types)
+    return null;
+  }
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
@@ -133,9 +151,11 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         />
       )}
 
-      {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
+      {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
         const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
+        const skipLabel =
+          typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
@@ -146,7 +166,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && (
+            {formattedValue !== undefined && !skipLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -175,7 +195,7 @@ ChartsYAxis.propTypes = {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId: PropTypes.string,
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */
@@ -250,6 +270,12 @@ ChartsYAxis.propTypes = {
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
+   * The placement of ticks label. Can be the middle of the band, or the tick position.
+   * Only used if scale is 'band'.
+   * @default 'middle'
+   */
+  tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+  /**
    * The style applied to ticks text.
    */
   tickLabelStyle: PropTypes.object,
@@ -260,16 +286,22 @@ ChartsYAxis.propTypes = {
    */
   tickMaxStep: PropTypes.number,
   /**
-   * Maximal step between two ticks.
+   * Minimal step between two ticks.
    * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
   tickMinStep: PropTypes.number,
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,
+  /**
+   * The placement of ticks in regard to the band interval.
+   * Only used if scale is 'band'.
+   * @default 'extremities'
+   */
+  tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
   /**
    * The size of the ticks.
    * @default 6

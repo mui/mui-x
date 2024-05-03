@@ -22,9 +22,13 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
       : 'Seleção de calendários está aberta, alternando para seleção de ano',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Início',
   end: 'Fim',
+  startDate: 'Data de início',
+  startTime: 'Hora de início',
+  endDate: 'Data de Término',
+  endTime: 'Hora de Término',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -40,11 +44,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecione ${timeViews[view]}. ${
-      time === null
-        ? 'Hora não selecionada'
-        : `Selecionado a hora ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Selecione ${timeViews[view]}. ${time === null ? 'Hora não selecionada' : `Selecionado a hora ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -82,6 +82,19 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Ano',
+  month: 'Mês',
+  day: 'Dia',
+  weekDay: 'Dia da Semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meio dia',
+
+  // Common
+  empty: 'Vazio',
 };
 
 export const ptBR = getPickersLocalization(ptBRPickers);

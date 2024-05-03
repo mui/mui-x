@@ -15,39 +15,37 @@ import { CommonSeriesType } from '../models/seriesType/common';
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData, sx, classes } = props;
+  const { series, itemData, sx, classes, getColor } = props;
 
-  if (itemData.dataIndex === undefined) {
+  if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
   }
   const { displayedLabel, color } =
     series.type === 'pie'
       ? {
-          color: series.data[itemData.dataIndex].color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: series.data[itemData.dataIndex].label,
         }
       : {
-          color: series.color,
+          color: getColor(itemData.dataIndex) ?? series.color,
           displayedLabel: series.label,
         };
 
   const value = series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-  )?.(value);
+  )?.(value, { dataIndex: itemData.dataIndex });
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsTooltipMark ownerState={{ color }} className={classes.mark} />
+              <ChartsTooltipMark color={color} className={classes.mark} />
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
               {displayedLabel}
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
               {formattedValue}
             </ChartsTooltipCell>
@@ -68,27 +66,23 @@ DefaultChartsItemTooltipContent.propTypes = {
    */
   classes: PropTypes.object.isRequired,
   /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: PropTypes.func.isRequired,
+  /**
    * The data used to identify the triggered item.
    */
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   /**
    * The series linked to the triggered axis.
    */
-  series: PropTypes.shape({
-    color: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.number).isRequired,
-    highlightScope: PropTypes.shape({
-      faded: PropTypes.oneOf(['global', 'none', 'series']),
-      highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-    }),
-    id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-    valueFormatter: PropTypes.func.isRequired,
-  }).isRequired,
+  series: PropTypes.object.isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

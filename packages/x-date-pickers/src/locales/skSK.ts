@@ -16,16 +16,20 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Predchádzajúci mesiac',
 
   // View navigation
-  openPreviousView: 'otvoriť predchádzajúce zobrazenie',
-  openNextView: 'otvoriť ďalšie zobrazenie',
+  openPreviousView: 'Otvoriť predchádzajúce zobrazenie',
+  openNextView: 'Otvoriť ďalšie zobrazenie',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ročné zobrazenie otvorené, prepnite do zobrazenia kalendára'
       : 'zobrazenie kalendára otvorené, prepnite do zobrazenia roka',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začiatok',
   end: 'Koniec',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Zrušiť',
@@ -41,9 +45,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybraný. ${
-      time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} vybraný. ${time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodín`,
   minutesClockNumberText: (minutes) => `${minutes} minút`,
   secondsClockNumberText: (seconds) => `${seconds} sekúnd`,
@@ -81,6 +83,19 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const skSK = getPickersLocalization(skSKPickers);

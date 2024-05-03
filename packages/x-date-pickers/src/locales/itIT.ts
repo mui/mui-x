@@ -15,16 +15,20 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Mese successivo',
 
   // View navigation
-  openPreviousView: 'apri la vista precedente',
-  openNextView: 'apri la vista successiva',
+  openPreviousView: 'Apri la vista precedente',
+  openNextView: 'Apri la vista successiva',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Inizio',
   end: 'Fine',
+  startDate: 'Data di inizio',
+  startTime: 'Ora di inizio',
+  endDate: 'Data di fine',
+  endTime: 'Ora di fine',
 
   // Action bar
   cancelButtonLabel: 'Cancellare',
@@ -40,11 +44,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleziona ${views[view]}. ${
-      time === null
-        ? 'Nessun orario selezionato'
-        : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Seleziona ${views[view]}. ${time === null ? 'Nessun orario selezionato' : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
@@ -67,7 +67,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Cancella valore',
 
   // Table labels
   timeTableLabel: "scegli un'ora",
@@ -77,11 +77,24 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'GG',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'GGGG' : 'GG'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Anno',
+  month: 'Mese',
+  day: 'Giorno',
+  weekDay: 'Giorno della settimana',
+  hours: 'Ore',
+  minutes: 'Minuti',
+  seconds: 'Secondi',
+  meridiem: 'Meridiano',
+
+  // Common
+  empty: 'Vuoto',
 };
 
 export const itIT = getPickersLocalization(itITPickers);

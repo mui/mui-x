@@ -25,15 +25,18 @@ const StyledBox = styled('div')(({ theme }) => ({
   },
 }));
 
-let promiseTimeout: any;
+let promiseTimeout: ReturnType<typeof setTimeout>;
 function validateName(username: string): Promise<boolean> {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
 
   return new Promise<any>((resolve) => {
-    promiseTimeout = setTimeout(() => {
-      const exists = existingUsers.includes(username.toLowerCase());
-      resolve(exists ? `${username} is already taken.` : null);
-    }, Math.random() * 500 + 100); // simulate network latency
+    promiseTimeout = setTimeout(
+      () => {
+        const exists = existingUsers.includes(username.toLowerCase());
+        resolve(exists ? `${username} is already taken.` : null);
+      },
+      Math.random() * 500 + 100,
+    ); // simulate network latency
   });
 }
 

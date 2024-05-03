@@ -34,6 +34,10 @@ export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type
 
 export const SeriesContext = React.createContext<FormattedSeries>({});
 
+if (process.env.NODE_ENV !== 'production') {
+  SeriesContext.displayName = 'SeriesContext';
+}
+
 const seriesTypeFormatter: {
   [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
 } = {
@@ -72,7 +76,7 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
   });
 
   const formattedSeries: FormattedSeries = {};
-  // Apply formater on a type group
+  // Apply formatter on a type group
   (Object.keys(seriesTypeFormatter) as ChartSeriesType[]).forEach((type) => {
     if (seriesGroups[type] !== undefined) {
       formattedSeries[type] =

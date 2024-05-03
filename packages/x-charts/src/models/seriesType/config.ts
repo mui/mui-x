@@ -5,6 +5,7 @@ import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueTyp
 import { AxisConfig } from '../axis';
 import { DefaultizedProps, MakeOptional } from '../helpers';
 import { StackingGroupsType } from '../../internals/stackSeries';
+import { SeriesId } from './common';
 
 interface ChartsSeriesConfig {
   bar: {
@@ -52,7 +53,7 @@ export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
 
 type ExtremumGetterParams<T extends ChartSeriesType> = {
-  series: { [id: string]: ChartSeries<T> };
+  series: Record<SeriesId, ChartSeries<T>>;
   axis: AxisConfig;
   isDefaultAxis: boolean;
 };
@@ -64,13 +65,13 @@ export type ExtremumGetter<T extends ChartSeriesType> = (
 ) => ExtremumGetterResult;
 
 export type FormatterParams<T extends ChartSeriesType> = {
-  series: { [id: string]: ChartsSeriesConfig[T]['seriesInput'] };
-  seriesOrder: string[];
+  series: Record<SeriesId, ChartsSeriesConfig[T]['seriesInput']>;
+  seriesOrder: SeriesId[];
 };
 
 export type FormatterResult<T extends ChartSeriesType> = {
-  series: { [id: string]: ChartSeriesDefaultized<T> };
-  seriesOrder: string[];
+  series: Record<SeriesId, ChartSeriesDefaultized<T>>;
+  seriesOrder: SeriesId[];
 } & (ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
@@ -100,7 +101,7 @@ export type LegendParams = {
    * The identifier of the legend element.
    * Used for internal purpose such as `key` props
    */
-  id: string;
+  id: SeriesId;
 };
 
 export type LegendGetter<T extends ChartSeriesType> = (

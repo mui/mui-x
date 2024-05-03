@@ -1,0 +1,36 @@
+---
+productId: x-tree-view
+title: Simple Tree View - Focus
+components: SimpleTreeView, TreeItem
+packageName: '@mui/x-tree-view'
+githubLabel: 'component: tree view'
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+---
+
+# Simple Tree View - Focus
+
+<p class="description">Learn how to focus Tree View items.</p>
+
+## Focus a specific item
+
+You can use the the `apiRef.focusItem` method to focus a specific item.
+This methods receives two parameters: `event` and `itemId`.
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+`apiRef` will be undefined during the first render and will then contain methods allowing you to imperatively interact with the Tree View.
+:::
+
+:::info
+This method only works with items that are currently visible.
+Calling `apiRef.focusItem` on an item whose parent is collapsed will do nothing.
+:::
+
+{{"demo": "FocusedSimpleTreeView.js"}}

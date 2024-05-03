@@ -1,6 +1,6 @@
 ---
 productId: x-date-pickers
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateCalendar
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateTimeRangePicker, DesktopDateTimeRangePicker, MobileDateTimeRangePicker, DateCalendar
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -32,7 +32,8 @@ But the same props are available on:
 - the view components;
 
   For example—the validation props showcased with `TimePicker` are also available on `TimeClock` and `DigitalClock`.
-  :::
+
+:::
 
 ## Invalid values feedback
 
@@ -115,9 +116,9 @@ Please note that `shouldDisableDate` will execute on every date rendered in the 
 
 #### Disable specific dates in range components [<span class="pro-premium"></span>](/x/introduction/licensing/#pro-plan)
 
-For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker` 🚧)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
+For components supporting date range edition (`DateRangePicker`, `DateTimeRangePicker`)—the `shouldDisableDate` prop receives a second argument to differentiate the start and the end date.
 
-In the example below—the start date can't be in the weekend but the end date can.
+In the example below—the start date cannot be in the weekend but the end date can.
 
 {{"demo": "DateRangeValidationShouldDisableDate.js", "defaultCodeOpen": false}}
 

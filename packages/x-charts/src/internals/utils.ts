@@ -10,7 +10,7 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
 /**
- * Transform mouse event position to corrdinates inside the SVG.
+ * Transform mouse event position to coordinates inside the SVG.
  * @param svg The SVG element
  * @param event The mouseEvent to transform
  */
@@ -50,4 +50,11 @@ export function getPercentageValue(value: number | string, refValue: number) {
   throw Error(
     `MUI-Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
   );
+}
+
+/**
+ * Remove spaces to have viable ids
+ */
+export function cleanId(id: string) {
+  return id.replace(' ', '_');
 }

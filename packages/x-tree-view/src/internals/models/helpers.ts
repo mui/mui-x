@@ -8,13 +8,19 @@ export type DefaultizedProps<
   Required<Pick<P, RequiredProps>> &
   AdditionalProps;
 
+export type SlotComponentPropsFromProps<
+  TProps extends {},
+  TOverrides extends {},
+  TOwnerState extends {},
+> = (Partial<TProps> & TOverrides) | ((ownerState: TOwnerState) => Partial<TProps> & TOverrides);
+
 type IsAny<T> = 0 extends 1 & T ? true : false;
 
 export type OptionalIfEmpty<A extends string, B> = keyof B extends never
   ? Partial<Record<A, B>>
   : IsAny<B> extends true
-  ? Partial<Record<A, B>>
-  : Record<A, B>;
+    ? Partial<Record<A, B>>
+    : Record<A, B>;
 
 export type MergePluginsProperty<
   TPlugins extends readonly any[],
@@ -35,6 +41,7 @@ export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
 export interface MergePlugins<TPlugins extends readonly any[]> {
   state: MergePluginsProperty<TPlugins, 'state'>;
   instance: MergePluginsProperty<TPlugins, 'instance'>;
+  publicAPI: MergePluginsProperty<TPlugins, 'publicAPI'>;
   params: MergePluginsProperty<TPlugins, 'params'>;
   defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
   dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;

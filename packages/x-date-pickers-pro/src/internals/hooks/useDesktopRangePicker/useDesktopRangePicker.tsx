@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -10,10 +10,10 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  BaseFieldProps,
   DateOrTimeViewWithMeridiem,
+  ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { UsePickerValueFieldResponse } from '@mui/x-date-pickers/internals/hooks/usePicker';
+import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -22,20 +22,31 @@ import {
 } from './useDesktopRangePicker.types';
 import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../../models';
-import { RangeFieldSection } from '../../models/fields';
+import { DateRange, BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TDate,
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseDesktopRangePickerParams<
+  TDate,
+  TView,
+  TEnableAccessibleFieldDOMStructure,
+  TExternalProps
+>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -45,6 +56,9 @@ export const useDesktopRangePicker = <
     sx,
     format,
     formatDensity,
+    enableAccessibleFieldDOMStructure,
+    selectedSections,
+    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -60,8 +74,15 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
-  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+  const fieldType = (slots.field as any).fieldType ?? 'multi-input';
+  const { rangePosition, onRangePositionChange } = useRangePosition(
+    props,
+    fieldType === 'single-input' ? startFieldRef : undefined,
+  );
 
   const {
     open,
@@ -81,12 +102,20 @@ export const useDesktopRangePicker = <
     ...pickerParams,
     props,
     wrapperVariant: 'desktop',
-    autoFocusView: true,
+    autoFocusView: false,
+    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
     },
   });
+
+  React.useEffect(() => {
+    if (layoutProps.view) {
+      initialView.current = layoutProps.view;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
@@ -102,30 +131,25 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldType = (Field as any).fieldType ?? 'multi-input';
-
-  const fieldProps: BaseFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    InferError<TExternalProps>
-  > = useSlotProps<
+  const fieldProps = useSlotProps<
     typeof Field,
-    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
+    UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    | Partial<
+        BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >
+    | Partial<
+        BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
         >
       >,
     TExternalProps
@@ -140,10 +164,13 @@ export const useDesktopRangePicker = <
       sx,
       format,
       formatDensity,
+      enableAccessibleFieldDOMStructure,
+      selectedSections,
+      onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef, name }),
+      ...(inputRef ? { inputRef, name } : {}),
     },
     ownerState: props,
   });
@@ -151,6 +178,7 @@ export const useDesktopRangePicker = <
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
     TDate,
     TView,
+    TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',
@@ -164,15 +192,24 @@ export const useDesktopRangePicker = <
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange,
-    singleInputFieldRef,
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    startFieldRef,
+    endFieldRef,
+    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
+    initialView: initialView.current ?? undefined,
+    onViewChange: layoutProps.onViewChange,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
+    tabs: {
+      ...slotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    } as ExportedBaseTabsProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

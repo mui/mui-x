@@ -29,6 +29,7 @@ import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -40,7 +41,7 @@ const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   return composeClasses(slots, getDateCalendarUtilityClass, classes);
 };
 
-function useDateCalendarDefaultizedProps<TDate>(
+function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate>,
   name: string,
 ): DateCalendarDefaultizedProps<TDate> {
@@ -83,7 +84,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: DateCalendarProps<any> }>({});
 
-type DateCalendarComponent = (<TDate>(
+type DateCalendarComponent = (<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -98,7 +99,7 @@ type DateCalendarComponent = (<TDate>(
  *
  * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
-export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
+export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends PickerValidDate>(
   inProps: DateCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -417,20 +418,23 @@ DateCalendar.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -458,7 +462,6 @@ DateCalendar.propTypes = {
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
-   * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
   /**
@@ -474,11 +477,11 @@ DateCalendar.propTypes = {
   /**
    * Maximal selectable date.
    */
-  maxDate: PropTypes.any,
+  maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
    */
-  minDate: PropTypes.any,
+  minDate: PropTypes.object,
   /**
    * Months rendered per row.
    * @default 3
@@ -538,7 +541,7 @@ DateCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -548,7 +551,7 @@ DateCalendar.propTypes = {
   /**
    * Disable specific date.
    *
-   * Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
    * @template TDate
    * @param {TDate} day The date to test.
@@ -610,7 +613,7 @@ DateCalendar.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.

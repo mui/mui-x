@@ -9,7 +9,10 @@ import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
-import nextConfig from '../docs/next.config';
+import {
+  SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
+  SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
+} from '../docs/constants';
 
 const MyOctokit = Octokit.plugin(retry);
 
@@ -23,8 +26,8 @@ const packagesWithL10n = [
   {
     key: 'data-grid',
     reportName: '🧑‍💼 DataGrid, DataGridPro, DataGridPremium',
-    constantsRelativePath: 'packages/grid/x-data-grid/src/constants/localeTextConstants.ts',
-    localesRelativePath: 'packages/grid/x-data-grid/src/locales',
+    constantsRelativePath: 'packages/x-data-grid/src/constants/localeTextConstants.ts',
+    localesRelativePath: 'packages/x-data-grid/src/locales',
     documentationReportPath: 'docs/data/data-grid/localization/data.json',
   },
   {
@@ -139,7 +142,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, e.g. MuiTablePagination
+        // Ignore translations for MUI Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -344,7 +347,7 @@ const generateDocReport = async (
         localeName,
         missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
         totalKeysCount: baseTranslationsNumber[packageKey],
-        githubLink: `${nextConfig.env.SOURCE_CODE_REPO}/blob/${nextConfig.env.SOURCE_GITHUB_BRANCH}/${info.path}`,
+        githubLink: `${DOCS_SOURCE_CODE_REPO}/blob/${DOCS_SOURCE_GITHUB_BRANCH}/${info.path}`,
       });
     });
 
@@ -367,7 +370,7 @@ async function updateIssue(githubToken, newMessage) {
 
   const requestBody = `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
 
-Run \`yarn l10n --report\` to update the list below ⬇️
+Run \`pnpm l10n --report\` to update the list below ⬇️
 
 ${newMessage}
 `;
@@ -439,7 +442,10 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           }
           if (!missingTranslations[localeCode][packageInfo.key]) {
             missingTranslations[localeCode][packageInfo.key] = {
-              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              // prettier-ignore
+              path: localePath
+                .replace(workspaceRoot, '').slice(1) // Remove leading slash
+                .split(path.sep).join('/'), // Ensure the path is using forward slashes even on Windows machines
               missingKeys: [],
             };
           }

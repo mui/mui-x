@@ -124,6 +124,7 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  dayOfMonthFull: 'do',
   weekday: 'EEEE',
   weekdayShort: 'EEEEEE',
   hours24h: 'HH',
@@ -158,6 +159,12 @@ const NUMBER_SYMBOL_MAP = {
   '9': '۹',
   '0': '۰',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'date-fns-jalali': Date;
+  }
+}
 
 /**
  * Based on `@date-io/date-fns-jalali`
@@ -494,6 +501,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   public getWeekNumber = (date: Date) => {
     return getWeek(date, { locale: this.locale });
   };
+
+  public getDayOfWeek(value: Date) {
+    return value.getDay() + 1;
+  }
 
   public getYearRange = ([start, end]: [Date, Date]) => {
     const startDate = this.startOfYear(start);

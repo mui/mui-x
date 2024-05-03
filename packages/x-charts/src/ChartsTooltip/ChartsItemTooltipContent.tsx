@@ -7,6 +7,9 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
+import { CartesianContext } from '../context/CartesianContextProvider';
+import colorGetter from '../internals/colorGetter';
+import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -21,6 +24,12 @@ export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> 
    * Override or extend the styles applied to the component.
    */
   classes: ChartsTooltipClasses;
+  /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: (dataIndex: number) => string;
   sx?: SxProps<Theme>;
 };
 
@@ -37,6 +46,35 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
+  const defaultZAxisId = zAxisIds[0];
+
+  let getColor: (index: number) => string;
+  switch (series.type) {
+    case 'pie':
+      getColor = colorGetter(series);
+      break;
+    case 'scatter':
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+        zAxis[series.zAxisKey ?? defaultZAxisId],
+      );
+      break;
+    default:
+      getColor = colorGetter(
+        series,
+        xAxis[series.xAxisKey ?? defaultXAxisId],
+        yAxis[series.yAxisKey ?? defaultYAxisId],
+      );
+      break;
+  }
+
   const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({
     elementType: Content,
@@ -46,6 +84,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
       series,
       sx,
       classes,
+      getColor,
     },
     ownerState: {},
   });
@@ -61,22 +100,13 @@ ChartsItemTooltipContent.propTypes = {
   content: PropTypes.elementType,
   contentProps: PropTypes.shape({
     classes: PropTypes.object,
+    getColor: PropTypes.func,
     itemData: PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
     }),
-    series: PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-      valueFormatter: PropTypes.func.isRequired,
-    }),
+    series: PropTypes.object,
     sx: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
       PropTypes.func,
@@ -85,7 +115,7 @@ ChartsItemTooltipContent.propTypes = {
   }),
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([

@@ -3,7 +3,7 @@ import {
   createTypeScriptProject,
   CreateTypeScriptProjectOptions,
   TypeScriptProject,
-} from '@mui/monorepo/packages/api-docs-builder/utils/createTypeScriptProject';
+} from '@mui/internal-docs-utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
@@ -29,7 +29,7 @@ export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
 }
 
 export type XProjectNames =
-  | 'x-license-pro'
+  | 'x-license'
   | 'x-data-grid'
   | 'x-data-grid-pro'
   | 'x-data-grid-premium'
@@ -37,7 +37,8 @@ export type XProjectNames =
   | 'x-date-pickers'
   | 'x-date-pickers-pro'
   | 'x-charts'
-  | 'x-tree-view';
+  | 'x-tree-view'
+  | 'x-tree-view-pro';
 
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
@@ -113,14 +114,84 @@ const getComponentPaths =
     return paths;
   };
 
+type InterfacesToDocumentType = {
+  folder: string;
+  packages: XProjectNames[];
+  documentedInterfaces: string[];
+};
+
+export const interfacesToDocument: InterfacesToDocumentType[] = [
+  {
+    folder: 'data-grid',
+    packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
+    documentedInterfaces: [
+      // apiRef
+      'GridApi',
+
+      // Params
+      'GridCellParams',
+      'GridRowParams',
+      'GridRowClassNameParams',
+      'GridRowSpacingParams',
+      'GridExportStateParams',
+
+      // Others
+      'GridColDef',
+      'GridSingleSelectColDef',
+      'GridActionsColDef',
+      'GridCsvExportOptions',
+      'GridPrintExportOptions',
+      'GridExcelExportOptions',
+
+      // Filters
+      'GridFilterModel',
+      'GridFilterItem',
+      'GridFilterOperator',
+
+      // Aggregation
+      'GridAggregationFunction',
+    ],
+  },
+  {
+    folder: 'charts',
+    packages: ['x-charts'],
+    documentedInterfaces: [
+      'BarSeriesType',
+      'LineSeriesType',
+      'PieSeriesType',
+      'ScatterSeriesType',
+      'AxisConfig',
+    ],
+  },
+];
+
+export const datagridApiToDocument = [
+  'GridCellSelectionApi',
+  'GridColumnPinningApi',
+  'GridColumnResizeApi',
+  'GridCsvExportApi',
+  'GridDetailPanelApi',
+  'GridEditingApi',
+  'GridExcelExportApi',
+  'GridFilterApi',
+  'GridPaginationApi',
+  'GridPrintExportApi',
+  'GridRowGroupingApi',
+  'GridRowMultiSelectionApi',
+  'GridRowSelectionApi',
+  'GridScrollApi',
+  'GridSortApi',
+  'GridVirtualizationApi',
+];
+
 export const createXTypeScriptProjects = () => {
   const projects: XTypeScriptProjects = new Map();
 
   projects.set(
-    'x-license-pro',
+    'x-license',
     createXTypeScriptProject({
-      name: 'x-license-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      name: 'x-license',
+      rootPath: path.join(workspaceRoot, 'packages/x-license'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'license',
     }),
@@ -130,7 +201,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid',
     createXTypeScriptProject({
       name: 'x-data-grid',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -152,7 +223,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-pro',
     createXTypeScriptProject({
       name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-pro'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -169,7 +240,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-premium',
     createXTypeScriptProject({
       name: 'x-data-grid-premium',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-premium'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
@@ -186,7 +257,7 @@ export const createXTypeScriptProjects = () => {
     'x-data-grid-generator',
     createXTypeScriptProject({
       name: 'x-data-grid-generator',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      rootPath: path.join(workspaceRoot, 'packages/x-data-grid-generator'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
     }),
@@ -263,6 +334,25 @@ export const createXTypeScriptProjects = () => {
       }),
     }),
   );
+
+  // TODO x-tree-view-pro uncomment when making the package public
+  // projects.set(
+  //   'x-tree-view-pro',
+  //   createXTypeScriptProject({
+  //     name: 'x-tree-view-pro',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
+  //     entryPointPath: 'src/index.ts',
+  //     documentationFolderName: 'tree-view',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //   }),
+  // );
 
   return projects;
 };

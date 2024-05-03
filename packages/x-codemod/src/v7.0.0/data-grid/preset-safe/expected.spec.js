@@ -25,8 +25,7 @@ export default function App() {
           baseCheckbox: {
             checked: 'true',
           },
-        }}
-      />
+        }} />
       <DataGridPremium
         slots={{
           baseTextField: TextField,

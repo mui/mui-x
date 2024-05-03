@@ -8,11 +8,12 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { HighlightScope } from '../context/HighlightProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { PieItemId } from '../models';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -21,7 +22,7 @@ export interface PieArcClasses {
 export type PieArcClassKey = keyof PieArcClasses;
 
 interface PieArcOwnerState {
-  id: string;
+  id: PieItemId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -58,34 +59,34 @@ const PieArcRoot = styled(animated.path, {
   strokeLinejoin: 'round',
 }));
 
-export type PieArcProps = PieArcOwnerState &
-  React.ComponentPropsWithoutRef<'path'> & {
-    startAngle: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
-    outerRadius: SpringValue<number>;
+export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
+  PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
+    endAngle: SpringValue<number>;
     highlightScope?: Partial<HighlightScope>;
+    innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+    outerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
+    startAngle: SpringValue<number>;
   };
 
 function PieArc(props: PieArcProps) {
   const {
-    id,
-    dataIndex,
     classes: innerClasses,
     color,
+    cornerRadius,
+    dataIndex,
+    endAngle,
     highlightScope,
-    onClick,
+    id,
+    innerRadius,
     isFaded,
     isHighlighted,
-    startAngle,
-    endAngle,
-    paddingAngle,
-    innerRadius,
+    onClick,
     outerRadius,
-    cornerRadius,
+    paddingAngle,
+    startAngle,
     ...other
   } = props;
 
@@ -135,6 +136,7 @@ PieArc.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
 } as any;

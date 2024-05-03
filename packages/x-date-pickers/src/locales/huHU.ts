@@ -23,9 +23,13 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
       ? 'az évválasztó már nyitva, váltson a naptárnézetre'
       : 'a naptárnézet már nyitva, váltson az évválasztóra',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Kezdő dátum',
   end: 'Záró dátum',
+  startDate: 'Kezdő dátum',
+  startTime: 'Kezdő idő',
+  endDate: 'Záró dátum',
+  endTime: 'Záró idő',
 
   // Action bar
   cancelButtonLabel: 'Mégse',
@@ -41,11 +45,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} kiválasztása. ${
-      time === null
-        ? 'Nincs kiválasztva idő'
-        : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} kiválasztása. ${time === null ? 'Nincs kiválasztva idő' : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours.toLowerCase()}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes.toLowerCase()}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds.toLowerCase()}`,
@@ -78,11 +78,24 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'É'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'HHHH' : 'HH'),
   fieldDayPlaceholder: () => 'NN',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'NNNN' : 'NN'),
   fieldHoursPlaceholder: () => 'óó',
   fieldMinutesPlaceholder: () => 'pp',
   fieldSecondsPlaceholder: () => 'mm',
   fieldMeridiemPlaceholder: () => 'dd',
+
+  // View names
+  year: 'Év',
+  month: 'Hónap',
+  day: 'Nap',
+  weekDay: 'Hétköznap',
+  hours: timeViews.hours,
+  minutes: timeViews.minutes,
+  seconds: timeViews.seconds,
+  meridiem: timeViews.meridiem,
+
+  // Common
+  empty: 'Üres',
 };
 
 export const huHU = getPickersLocalization(huHUPickers);

@@ -46,27 +46,32 @@ export type {
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
+export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
 
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
-  createDateStrForInputFromSections,
-  addPositionPropertiesToSections,
+  createDateStrForV7HiddenInputFromSections,
+  createDateStrForV6InputFromSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
-  UseFieldForwardedProps,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
+export type {
+  UsePickerResponse,
+  UsePickerParams,
+  UsePickerProps,
+  UsePickerValueFieldResponse,
+  PickerViewsRendererProps,
+} from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
@@ -75,6 +80,7 @@ export type {
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
+  PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
 export { useStaticPicker } from './hooks/useStaticPicker';
@@ -96,7 +102,7 @@ export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
+export type { BaseFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BasePickerInputProps,
@@ -105,7 +111,7 @@ export type {
 export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
 export type {
   WrapperVariant,
   TimeViewWithMeridiem,
@@ -140,6 +146,11 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
+export {
+  useDefaultizedDateField,
+  useDefaultizedTimeField,
+  useDefaultizedDateTimeField,
+} from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { extractValidationProps } from './utils/validation/extractValidationProps';
 export { validateDate } from './utils/validation/validateDate';
@@ -159,4 +170,4 @@ export type {
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
-export { isTimeView } from './utils/time-utils';
+export { isInternalTimeView, isTimeView } from './utils/time-utils';

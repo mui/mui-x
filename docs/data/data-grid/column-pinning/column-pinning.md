@@ -73,7 +73,7 @@ To disable the pinning of a single column, set the `pinnable` property in `GridC
 
 ### Pin non-pinnable columns programmatically
 
-It may be desirable to allow one or more columns to be pinned or unpinned programmatically that can not be pinned or unpinned on the UI (i.e. columns for which prop `disableColumnPinning = true` or `colDef.pinnable = false`).
+It may be desirable to allow one or more columns to be pinned or unpinned programmatically that cannot be pinned or unpinned on the UI (that is columns for which prop `disableColumnPinning = true` or `colDef.pinnable = false`).
 This can be done in one of the following ways.
 
 - (A) Initializing the pinned columns
@@ -111,7 +111,8 @@ Another alternate option to disable pinning actions on the UI is to disable the 
 
 1. Use [`disableColumnMenu` prop](/x/react-data-grid/column-menu/#disable-column-menu) to completely disable the column menu.
 2. Use column menu API to hide the pinning options in the column menu. See [Column Menu - Hiding a menu item](/x/react-data-grid/column-menu/#hiding-a-menu-item) for more details.
-   :::
+
+:::
 
 ## Pinning the checkbox selection column
 

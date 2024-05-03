@@ -7,6 +7,7 @@ import {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
   TreeViewInstance,
+  TreeViewPublicAPI,
 } from '../models';
 
 export type UseTreeViewParameters<
@@ -17,6 +18,9 @@ export type UseTreeViewParameters<
 export interface UseTreeViewBaseParameters<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 > {
+  apiRef:
+    | React.MutableRefObject<TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>>>
+    | undefined;
   rootRef?: React.Ref<HTMLUListElement> | undefined;
   plugins: TPlugins;
   slots: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slots'>;
@@ -31,14 +35,7 @@ export type UseTreeViewDefaultizedParameters<
 export interface UseTreeViewRootSlotProps
   extends Pick<
     React.HTMLAttributes<HTMLUListElement>,
-    | 'onFocus'
-    | 'onBlur'
-    | 'onKeyDown'
-    | 'id'
-    | 'aria-activedescendant'
-    | 'aria-multiselectable'
-    | 'role'
-    | 'tabIndex'
+    'onFocus' | 'onBlur' | 'onKeyDown' | 'id' | 'aria-multiselectable' | 'role' | 'tabIndex'
   > {
   ref: React.Ref<HTMLUListElement>;
 }

@@ -1,9 +1,14 @@
 import { PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import { DefaultizedProps } from '../helpers';
-import { CommonDefaultizedProps, CommonSeriesType } from './common';
+import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+
+export type PieItemId = string | number;
 
 export type PieValueType = {
-  id: string | number;
+  /**
+   * A unique identifier of the pie slice.
+   */
+  id: PieItemId;
   value: number;
   label?: string;
   color?: string;
@@ -18,7 +23,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   type: 'pie';
   data: Tdata[];
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default 0
@@ -58,6 +63,11 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    * @default 0
    */
   paddingAngle?: number;
+  /**
+   * The sorting strategy used to order pie slices.
+   * Can be 'none', 'asc', 'desc', or a sorting function.
+   * @default 'none'
+   */
   sortingValues?: ChartsPieSorting;
   /**
    * The label displayed into the arc.
@@ -83,7 +93,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    */
   cy?: number | string;
   /**
-   * Override the arc attibutes when it is highlighted.
+   * Override the arc attributes when it is highlighted.
    */
   highlighted?: {
     /**
@@ -99,7 +109,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     color?: string;
   };
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    */
   faded?: {
     /**
@@ -122,7 +132,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
  */
 export type PieItemIdentifier = {
   type: 'pie';
-  seriesId: DefaultizedPieSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 
@@ -136,7 +146,7 @@ export interface DefaultizedPieSeriesType
  */
 export interface ComputedPieRadius {
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * @default 0
    */
   innerRadius?: number;

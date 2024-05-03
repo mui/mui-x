@@ -6,11 +6,12 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -19,7 +20,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: string;
+  id: PieItemId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -56,7 +57,7 @@ const PieArcLabelRoot = styled(animated.text, {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  React.ComponentPropsWithoutRef<'text'> & {
+  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
@@ -70,7 +71,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
 
 /**
  * Helper to compute label position.
- * It's not an inline function because we need it in inerpolation.
+ * It's not an inline function because we need it in interpolation.
  */
 const getLabelPosition =
   (formattedArcLabel: string | null | undefined, variable: 'x' | 'y') =>
@@ -153,6 +154,7 @@ PieArcLabel.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   formattedArcLabel: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
 } as any;
