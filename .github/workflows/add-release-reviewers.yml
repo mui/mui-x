@@ -16,7 +16,7 @@ jobs:
       contents: read
     steps:
       - id: get-members
-        uses: garnertb/get-team-members@v1
+        uses: garnertb/get-team-members@0482f68c88601800f85145570ea93bf8fcfcf46f
         with:
           org: mui
           team_slug: x
