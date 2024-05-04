@@ -28,8 +28,8 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /orgs/$ORG/teams/$TEAM_SLUG/members \
             | jq 'reduce inputs as $i (.; . += $i)') \
-          echo "data=$DATA" >> $GITHUB_OUTPUT \
-          echo "members=${{ join(fromJson($DATA).*.login) }}" >> $GITHUB_OUTPUT \
+          echo "data=$DATA" >> $GITHUB_OUTPUT
+          echo "members=${{ join(fromJson($DATA).*.login) }}" >> $GITHUB_OUTPUT
 
       # assign reviewers
       - id: assign-reviewers
