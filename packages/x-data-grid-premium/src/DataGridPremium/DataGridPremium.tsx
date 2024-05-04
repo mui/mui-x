@@ -28,10 +28,11 @@ export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
 const releaseInfo = getReleaseInfo();
 
-const dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[] = [
-  ...propValidatorsDataGrid,
-  ...propValidatorsDataGridPro,
-];
+let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
+
+if (process.env.NODE_ENV !== 'production') {
+  dataGridPremiumPropValidators = [...propValidatorsDataGrid, ...propValidatorsDataGridPro];
+}
 
 const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
