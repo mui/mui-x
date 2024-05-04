@@ -37,8 +37,9 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
-  validateProps(props, propValidators);
-
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidators);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot

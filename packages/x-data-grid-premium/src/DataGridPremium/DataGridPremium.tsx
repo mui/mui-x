@@ -42,7 +42,9 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  validateProps(props, dataGridPremiumPropValidators);
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, dataGridPremiumPropValidators);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
