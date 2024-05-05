@@ -129,8 +129,8 @@ importers:
         specifier: ^11.0.4
         version: 11.0.4
       '@types/lodash':
-        specifier: ^4.17.0
-        version: 4.17.0
+        specifier: ^4.17.1
+        version: 4.17.1
       '@types/mocha':
         specifier: ^10.0.6
         version: 10.0.6
@@ -637,8 +637,8 @@ importers:
         specifier: ^0.0.9
         version: 0.0.9
       '@types/lodash':
-        specifier: ^4.14.202
-        version: 4.17.0
+        specifier: ^4.17.1
+        version: 4.17.1
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -5150,8 +5150,8 @@ packages:
       '@types/node': 18.19.31
     dev: true
 
-  /@types/lodash@4.17.0:
-    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
+  /@types/lodash@4.17.1:
+    resolution: {integrity: sha512-X+2qazGS3jxLAIz5JDXDzglAF3KpijdhFxlf/V1+hEsOUc+HnWi81L/uv/EvGuV90WY+7mPGFCUDGfQC3Gj95Q==}
     dev: true
 
   /@types/lru-cache@7.10.10:
