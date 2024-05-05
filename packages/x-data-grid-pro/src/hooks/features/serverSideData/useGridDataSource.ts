@@ -23,7 +23,9 @@ const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
   }
 };
 
+// Make these configurable using dedicated props?
 const MAX_CONCURRENT_REQUESTS = Infinity;
+const QUEUE_PROCESS_INTERVAL_MS = 300;
 
 enum RequestStatus {
   INQUEUE,
@@ -40,7 +42,7 @@ enum RequestStatus {
 class NestedDataManager {
   private pendingRequests: Set<GridRowId> = new Set();
 
-  private fetchQueue: Set<GridRowId> = new Set();
+  private queuedRequests: Set<GridRowId> = new Set();
 
   private settledRequests: Set<GridRowId> = new Set();
 
@@ -48,28 +50,36 @@ class NestedDataManager {
 
   private maxConcurrentRequests: number;
 
+  private queueProcessInterval: number;
+
   private timer?: string | number | NodeJS.Timeout;
 
   constructor(
     privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-    maxRequests = MAX_CONCURRENT_REQUESTS,
+    maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
+    queueProcessInterval = QUEUE_PROCESS_INTERVAL_MS,
   ) {
     this.api = privateApiRef.current;
-    this.maxConcurrentRequests = maxRequests;
+    this.maxConcurrentRequests = maxConcurrentRequests;
+    this.queueProcessInterval = queueProcessInterval;
   }
 
   private processQueue = async () => {
-    if (this.fetchQueue.size === 0) {
+    if (this.queuedRequests.size === 0) {
       clearInterval(this.timer);
       return;
     }
     if (this.pendingRequests.size >= this.maxConcurrentRequests) {
       return;
     }
-    const fetchQueue = Array.from(this.fetchQueue);
+    const fetchQueue = Array.from(this.queuedRequests);
     for (let i = 0; i < this.maxConcurrentRequests; i += 1) {
       const nextId = fetchQueue[i];
-      this.fetchQueue.delete(nextId);
+      if (!nextId) {
+        clearInterval(this.timer);
+        return;
+      }
+      this.queuedRequests.delete(nextId);
       this.api.fetchRowChildren(nextId);
       this.pendingRequests.add(nextId);
     }
@@ -81,14 +91,14 @@ class NestedDataManager {
         this.pendingRequests.add(id);
         this.api.fetchRowChildren(id);
       } else {
-        this.fetchQueue.add(id);
+        this.queuedRequests.add(id);
       }
 
-      if (this.fetchQueue.size > 0) {
+      if (this.queuedRequests.size > 0) {
         if (this.timer) {
           clearInterval(this.timer);
         }
-        this.timer = setInterval(this.processQueue, 300);
+        this.timer = setInterval(this.processQueue, this.queueProcessInterval);
       }
     });
   };
@@ -100,7 +110,7 @@ class NestedDataManager {
 
   public clearPendingRequests = () => {
     clearInterval(this.timer);
-    this.fetchQueue.clear();
+    this.queuedRequests.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
 
@@ -113,16 +123,16 @@ class NestedDataManager {
     if (this.pendingRequests.has(id)) {
       return RequestStatus.PENDING;
     }
-    if (this.fetchQueue.has(id)) {
-      return RequestStatus.SETTLED;
+    if (this.queuedRequests.has(id)) {
+      return RequestStatus.INQUEUE;
     }
     if (this.settledRequests.has(id)) {
-      return RequestStatus.INQUEUE;
+      return RequestStatus.SETTLED;
     }
     return RequestStatus.UNKNOWN;
   };
 
-  public getActiveRequestsCount = () => this.pendingRequests.size + this.fetchQueue.size;
+  public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
 }
 
 export const useGridDataSource = (
@@ -136,13 +146,14 @@ export const useGridDataSource = (
     new NestedDataManager(privateApiRef),
   ).current;
   const groupsToAutoFetch = useGridSelector(privateApiRef, gridRowGroupsToFetchSelector);
-  const fetchParams = useGridSelector(privateApiRef, gridGetRowsParamsSelector);
 
   const fetchTopLevelRows = React.useCallback(async () => {
     const getRows = props.unstable_dataSource?.getRows;
     if (!getRows) {
       return;
     }
+
+    const fetchParams = gridGetRowsParamsSelector(privateApiRef);
 
     const cachedData = privateApiRef.current.getCacheData(fetchParams) as
       | GridGetRowsResponse
@@ -178,26 +189,36 @@ export const useGridDataSource = (
         throw new Error(getErrorMessage(fetchParams));
       }
     }
-  }, [fetchParams, nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows]);
+  }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows]);
+
+  const enqueueChildrenFetch = React.useCallback(
+    (id: GridRowId) => {
+      nestedDataManager.enqueue([id]);
+    },
+    [nestedDataManager],
+  );
 
   const fetchRowChildren = React.useCallback<GridDataSourceApi['fetchRowChildren']>(
     async (id) => {
       if (!props.treeData) {
+        nestedDataManager.clearPendingRequest(id);
         return;
       }
       const getRows = props.unstable_dataSource?.getRows;
       if (!getRows) {
+        nestedDataManager.clearPendingRequest(id);
         return;
       }
 
       const rowNode = privateApiRef.current.getRowNode(id) as GridServerSideGroupNode;
       if (!rowNode) {
+        nestedDataManager.clearPendingRequest(id);
         return;
       }
 
-      const inputParams = { ...fetchParams, groupKeys: rowNode.path };
+      const fetchParams = { ...gridGetRowsParamsSelector(privateApiRef), groupKeys: rowNode.path };
 
-      const cachedData = privateApiRef.current.getCacheData(inputParams) as
+      const cachedData = privateApiRef.current.getCacheData(fetchParams) as
         | GridGetRowsResponse
         | undefined;
 
@@ -210,7 +231,6 @@ export const useGridDataSource = (
           privateApiRef.current.setRowCount(cachedData.rowCount);
         }
         privateApiRef.current.setRowChildrenExpansion(id, true);
-        privateApiRef.current.setChildrenFetched(id, true);
       } else {
         const isLoading = rowNode.isLoading;
         if (!isLoading) {
@@ -218,38 +238,35 @@ export const useGridDataSource = (
         }
 
         try {
-          const getRowsResponse = await getRows(inputParams);
+          const getRowsResponse = await getRows(fetchParams);
           if (!privateApiRef.current.getRowNode(id)) {
+            // The row has been removed from the grid
             nestedDataManager.clearPendingRequest(id);
+            privateApiRef.current.setRowLoading(id, false);
             return;
           }
           if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
+            // Unregistered or cancelled request
+            privateApiRef.current.setRowLoading(id, false);
             return;
           }
           nestedDataManager.setRequestSettled(id);
-          privateApiRef.current.setCacheData(inputParams, getRowsResponse);
+          privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
           if (getRowsResponse.rowCount) {
             privateApiRef.current.setRowCount(getRowsResponse.rowCount);
           }
           privateApiRef.current.caches.groupKeys = rowNode.path;
           privateApiRef.current.updateRows(getRowsResponse.rows, false);
           privateApiRef.current.setRowChildrenExpansion(id, true);
-          privateApiRef.current.setChildrenFetched(id, true);
           privateApiRef.current.setRowLoading(id, false);
         } catch (error) {
           nestedDataManager.setRequestSettled(id);
           privateApiRef.current.setRowLoading(id, false);
-          throw new Error(getErrorMessage(inputParams));
+          throw new Error(getErrorMessage(fetchParams));
         }
       }
     },
-    [
-      fetchParams,
-      nestedDataManager,
-      privateApiRef,
-      props.treeData,
-      props.unstable_dataSource?.getRows,
-    ],
+    [nestedDataManager, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
 
   const setRowLoading = React.useCallback<GridDataSourceApi['setRowLoading']>(
@@ -273,31 +290,11 @@ export const useGridDataSource = (
     [privateApiRef],
   );
 
-  const setChildrenFetched = React.useCallback<GridDataSourceApi['setChildrenFetched']>(
-    (id, childrenFetched) => {
-      const currentNode = privateApiRef.current.getRowNode(id) as GridServerSideGroupNode;
-      if (!currentNode) {
-        return;
-      }
-
-      const newNode: GridServerSideGroupNode = { ...currentNode, childrenFetched };
-      privateApiRef.current.setState((state) => {
-        return {
-          ...state,
-          rows: {
-            ...state.rows,
-            tree: { ...state.rows.tree, [id]: newNode },
-          },
-        };
-      });
-    },
-    [privateApiRef],
-  );
-
   const dataSourceApi: GridDataSourceApi = {
+    enqueueChildrenFetch,
+    // TODO: Make `fetchRowChildren` private
     fetchRowChildren,
     setRowLoading,
-    setChildrenFetched,
     fetchTopLevelRows,
   };
 

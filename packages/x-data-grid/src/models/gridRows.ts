@@ -124,10 +124,6 @@ export interface GridServerSideGroupNode extends GridDataGroupNode {
    */
   isServerSide: boolean;
   /**
-   * If true, this node has been expanded by the user and the children have been fetched.
-   */
-  childrenFetched: boolean;
-  /**
    * The cached path to be passed on as `groupKey` to the server.
    */
   path: string[];

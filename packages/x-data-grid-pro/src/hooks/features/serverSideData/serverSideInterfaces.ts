@@ -17,15 +17,14 @@ export interface GridDataSourceApi {
    */
   setRowLoading: (id: GridRowId, loading: boolean) => void;
   /**
-   * Set the fetched children state of a row.
-   * @param {string} id The id of the rowNode.
-   * @param {boolean} childrenFetched The children to set.
-   */
-  setChildrenFetched: (id: GridRowId, childrenFetched: boolean) => void;
-  /**
    * Fetches the top level rows.
    */
   fetchTopLevelRows: () => void;
+  /**
+   * Enqueues the fetch of the children of a row.
+   * @param {GridRowId} id The id of the rowNode belonging to the group to be fetched.
+   */
+  enqueueChildrenFetch: (id: GridRowId) => void;
 }
 
 /**

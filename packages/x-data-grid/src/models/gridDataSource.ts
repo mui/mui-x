@@ -41,35 +41,28 @@ export interface GridGetRowsResponse {
    */
   rowCount?: number;
   /**
-   * Additional `pageInfo` to help the grid determine if there are more rows to fetch (corner-cases).
-   * `hasNextPage`: When row count is unknown/inaccurate, if `truncated` is set or rowCount is not known, data will keep loading until `hasNextPage` is `false`
-   * `truncated`: To reflect `rowCount` is inaccurate (will trigger `x-y of many` in pagination after the count of rows fetched is greater than provided `rowCount`)
-   * It could be useful with:
-   * 1. Cursor based pagination:
-   *   When rowCount is not known, grid will check for `hasNextPage` to determine
-   *   if there are more rows to fetch.
-   * 2. Inaccurate `rowCount`:
-   *   `truncated: true` will let the grid know that `rowCount` is estimated/truncated.
-   *   Thus `hasNextPage` will come into play to check more rows are available to fetch after the number becomes >= provided `rowCount`
+   * Additional `pageInfo` for advanced use-cases.
+   * `hasNextPage`: When row count is unknown/estimated, `hasNextPage` will be used to check if more records are available on server
    */
   pageInfo?: {
-    nextCursor?: number | string;
     hasNextPage?: boolean;
-    truncated?: number;
+    nextCursor?: string;
   };
 }
 
 export interface GridDataSource {
   /**
-   * Fetcher Functions:
-   * - `getRows` is required
-   * - `updateRow` is optional
-   *
-   * `getRows` will be used by the grid to fetch data for the current page or children for the current parent group.
-   * It may return a `rowCount` to update the total count of rows in the grid along with the optional `pageInfo`.
+   * This method will be called when the grid needs to fetch some rows
+   * @param {GridGetRowsParams} params The parameters required to fetch the rows
+   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
-  updateRow?(rows: GridRowModel): Promise<any>;
+  /**
+   * This method will be called when the user updates a row [Not yet implemented]
+   * @param {GridRowModel} updatedRow The updated row
+   * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache
+   */
+  updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 
 export interface GridDataSourceCache {

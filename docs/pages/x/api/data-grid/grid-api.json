@@ -28,6 +28,11 @@
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
     },
+    "enqueueChildrenFetch": {
+      "type": { "description": "(id: GridRowId) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "exportDataAsCsv": {
       "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" },
       "required": true
@@ -46,7 +51,7 @@
       "required": true
     },
     "fetchRowChildren": {
-      "type": { "description": "(id: GridRowId, throttle?: boolean) =&gt; void" },
+      "type": { "description": "(id: GridRowId) =&gt; void" },
       "required": true,
       "isProPlan": true
     },
@@ -321,11 +326,6 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "setChildrenFetched": {
-      "type": { "description": "(id: GridRowId, childrenFetched: boolean) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "setColumnHeaderFilterFocus": {
       "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" },
       "required": true
@@ -379,6 +379,10 @@
     "setLoading": { "type": { "description": "(loading: boolean) =&gt; void" }, "required": true },
     "setPage": { "type": { "description": "(page: number) =&gt; void" }, "required": true },
     "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" }, "required": true },
+    "setPaginationMeta": {
+      "type": { "description": "(paginationMeta: GridPaginationMeta) =&gt; void" },
+      "required": true
+    },
     "setPaginationModel": {
       "type": { "description": "(model: GridPaginationModel) =&gt; void" },
       "required": true

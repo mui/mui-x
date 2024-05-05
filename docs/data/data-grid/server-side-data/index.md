@@ -72,23 +72,25 @@ This feature is under development and is marked as **unstable**. The information
 
 :::
 
-The Data Grid already supports manual server-side data fetching for many features. To make it even smoother, you can use the data source that is compatible with existing data fetching logic and all major server-side features.
+The Data Grid already supports manual server-side data fetching for many features. To make it even smoother, you can use the data source. Think of it like a descriptor of the actual data source on server.
 
-It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a specific sub-set of data when needed.
+It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a sub-set of data when needed.
 
 Let's take a look at the `GridDataSource` interface.
 
 ```tsx
 interface GridDataSource {
   /**
-    Fetcher Functions:
-    - `getRows` is required
-    - `updateRow` is optional
-
-    `getRows` will be used by the grid to fetch data for the current page or children for the current parent group
-    It may return a `rowCount` to update the total count of rows in the grid
-  */
+   * This method will be called when the grid needs to fetch some rows
+   * @param {GridGetRowsParams} params The parameters required to fetch the rows
+   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
+   */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
+  /**
+   * This method will be called when the user updates a row [Not yet implemented]
+   * @param {GridRowModel} updatedRow The updated row
+   * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache
+   */
   updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 ```
@@ -120,7 +122,7 @@ const customDataSource: GridDataSource = {
 
 The code has been significantly reduced, the need for managing the controlled states is removed, and data fetching logic is centralized.
 
-### Implementation
+### How it works
 
 When the data grid requires some data, it calls `getRows` method with the arguments of type `GridGetRowsParams`
 
@@ -194,9 +196,9 @@ When there's no data source, the features `filtering`, `sorting`, `pagination` w
 
 #### With data source
 
-With the data source, the features `filtering`, `sorting`, `pagination` will automatically be set to `server`.
+With the data source, the features `filtering`, `sorting`, `pagination` are automatically be set to `server`.
 
-When the corresponding models update, the data grid will call the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
+When the corresponding models update, the data grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
 
 ```tsx
 <DataGridPro
