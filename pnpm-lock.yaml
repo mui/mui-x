@@ -537,8 +537,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       markdown-to-jsx:
-        specifier: ^7.4.1
-        version: 7.4.1(react@18.2.0)
+        specifier: ^7.4.7
+        version: 7.4.7(react@18.2.0)
       marked:
         specifier: ^5.1.2
         version: 5.1.2
@@ -12711,8 +12711,8 @@ packages:
       uc.micro: 2.1.0
     dev: true
 
-  /markdown-to-jsx@7.4.1(react@18.2.0):
-    resolution: {integrity: sha512-GbrbkTnHp9u6+HqbPRFJbObi369AgJNXi/sGqq5HRsoZW063xR1XDCaConqq+whfEIAlzB1YPnOgsPc7B7bc/A==}
+  /markdown-to-jsx@7.4.7(react@18.2.0):
+    resolution: {integrity: sha512-0+ls1IQZdU6cwM1yu0ZjjiVWYtkbExSyUIFU2ZeDIFuZM1W42Mh4OlJ4nb4apX4H8smxDHRdFaoIVJGwfv5hkg==}
     engines: {node: '>= 10'}
     peerDependencies:
       react: '>= 0.14.0'
