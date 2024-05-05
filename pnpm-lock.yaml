@@ -558,7 +558,7 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       postcss:
-        specifier: ^8.4.35
+        specifier: ^8.4.38
         version: 8.4.38
       prismjs:
         specifier: ^1.29.0
