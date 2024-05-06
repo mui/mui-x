@@ -5,12 +5,20 @@ import { styled, useThemeProps } from '@mui/material/styles';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks } from '../hooks/useTicks';
-import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
+import {
+  ChartsGridClasses,
+  getChartsGridUtilityClass,
+  chartsGridClasses,
+} from './chartsGridClasses';
 
 const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => [
+    { [`&.${chartsGridClasses.verticalLine}`]: styles.verticalLine },
+    { [`&.${chartsGridClasses.horizontalLine}`]: styles.horizontalLine },
+    styles.root,
+  ],
 })({});
 
 const GridLine = styled('line', {
