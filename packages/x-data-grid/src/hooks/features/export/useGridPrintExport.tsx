@@ -183,9 +183,12 @@ export const useGridPrintExport = (
       const gridFooterElement: HTMLElement | null = gridClone.querySelector(
         `.${gridClasses.footerContainer}`,
       );
-      gridFooterElement!.style.position = 'absolute';
-      gridFooterElement!.style.width = '100%';
-      gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
+
+      if (gridFooterElement) {
+        gridFooterElement.style.position = 'absolute';
+        gridFooterElement.style.width = '100%';
+        gridFooterElement.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
+      }
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
