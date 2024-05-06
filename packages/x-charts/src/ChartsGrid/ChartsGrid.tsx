@@ -1,26 +1,26 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks } from '../hooks/useTicks';
-import {
-  ChartsGridClasses,
-  getChartsGridUtilityClass,
-  chartsGridClasses,
-} from './chartsGridClasses';
+import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 
 const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
+})({});
+
+const GridLine = styled('line', {
+  name: 'MuiChartsGrid',
+  slot: 'Line',
+  overridesResolver: (props, styles) => styles.line,
 })(({ theme }) => ({
-  [`& .${chartsGridClasses.line}`]: {
-    stroke: (theme.vars || theme).palette.divider,
-    shapeRendering: 'crispEdges',
-    strokeWidth: 1,
-  },
+  stroke: (theme.vars || theme).palette.divider,
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
 }));
 
 const useUtilityClasses = ({ classes }: ChartsGridProps) => {
@@ -58,10 +58,12 @@ export interface ChartsGridProps {
  * - [ChartsGrid API](https://mui.com/x/api/charts/charts-axis/)
  */
 function ChartsGrid(props: ChartsGridProps) {
-  const { vertical, horizontal, ...other } = props;
+  const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
+
+  const { vertical, horizontal, ...other } = themeProps;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(themeProps);
 
   const horizontalAxisId = yAxisIds[0];
   const verticalAxisId = xAxisIds[0];
@@ -85,7 +87,7 @@ function ChartsGrid(props: ChartsGridProps) {
     <GridRoot {...other} className={classes.root}>
       {vertical &&
         xTicks.map(({ formattedValue, offset }) => (
-          <line
+          <GridLine
             key={`vertical-${formattedValue}`}
             y1={yScale.range()[0]}
             y2={yScale.range()[1]}
@@ -96,7 +98,7 @@ function ChartsGrid(props: ChartsGridProps) {
         ))}
       {horizontal &&
         yTicks.map(({ formattedValue, offset }) => (
-          <line
+          <GridLine
             key={`horizontal-${formattedValue}`}
             y1={offset}
             y2={offset}
