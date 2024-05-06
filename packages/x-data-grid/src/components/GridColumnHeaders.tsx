@@ -79,7 +79,6 @@ GridColumnHeaders.propTypes = {
       }),
     ),
   ).isRequired,
-  columnGroupsModel: PropTypes.object.isRequired,
   columnHeaderFocus: PropTypes.shape({
     field: PropTypes.string.isRequired,
   }),

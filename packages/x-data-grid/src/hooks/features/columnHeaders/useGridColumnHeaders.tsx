@@ -28,10 +28,8 @@ import {
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
-import {
-  GridGroupingStructure,
-  GridColumnsGroupingState,
-} from '../columnGrouping/gridColumnGroupsInterfaces';
+import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
+import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
@@ -58,7 +56,6 @@ export interface UseGridColumnHeadersProps {
   headerGroupingMaxDepth: number;
   columnMenuState: GridColumnMenuState;
   columnVisibility: GridColumnVisibilityModel;
-  columnGroupsModel: GridColumnsGroupingState['unwrappedGroupingModel'];
   columnGroupsHeaderStructure: GridGroupingStructure[][];
   hasOtherElementInTabSequence: boolean;
 }
@@ -92,7 +89,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     headerGroupingMaxDepth,
     columnMenuState,
     columnVisibility,
-    columnGroupsModel,
     columnGroupsHeaderStructure,
     hasOtherElementInTabSequence,
   } = props;
@@ -103,9 +99,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const theme = useTheme();
   const rootProps = useGridRootProps();
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
-
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
