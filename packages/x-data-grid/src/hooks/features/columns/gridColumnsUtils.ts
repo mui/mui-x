@@ -171,7 +171,7 @@ export const hydrateColumnsWidth = (
   const flexColumns: GridStateColDef[] = [];
 
   // For the non-flex columns, compute their width
-  // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
+  // For the flex columns, compute their minimum width and how much width must be allocated during the flex allocation
   rawState.orderedFields.forEach((columnField) => {
     let column = rawState.lookup[columnField] as GridStateColDef;
     let computedWidth = 0;
@@ -193,8 +193,7 @@ export const hydrateColumnsWidth = (
     }
 
     if (column.computedWidth !== computedWidth) {
-      column = { ...column };
-      column.computedWidth = computedWidth;
+      column = { ...column, computedWidth };
     }
 
     if (isFlex) {
@@ -389,7 +388,7 @@ export const createColumnsState = ({
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep![field]) {
+      if (!columnsToKeep[field]) {
         delete columnsState.lookup[field];
       }
     });
