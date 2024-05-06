@@ -98,7 +98,7 @@ For more details on how to install each package, visit the [package installation
 
 ## Evaluation (trial) licenses
 
-In accordance with the [End User License Agreement](https://mui.com/r/x-license-trial/), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
+Per the [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
 You can also use it for the development of code not intended for production (for example the reproduction of an issue, doing a benchmark).
 
 You don't need to contact us to use these components for the above cases.
