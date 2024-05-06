@@ -146,6 +146,7 @@ export const useGridDataSource = (
     new NestedDataManager(privateApiRef),
   ).current;
   const groupsToAutoFetch = useGridSelector(privateApiRef, gridRowGroupsToFetchSelector);
+  const scheduledGroups = React.useRef<number>(0);
 
   const fetchTopLevelRows = React.useCallback(async () => {
     const getRows = props.unstable_dataSource?.getRows;
@@ -162,6 +163,7 @@ export const useGridDataSource = (
     if (nestedDataManager.getActiveRequestsCount() > 0) {
       nestedDataManager.clearPendingRequests();
     }
+    scheduledGroups.current = 0;
     if (cachedData != null) {
       const rows = cachedData.rows;
       privateApiRef.current.caches.groupKeys = [];
@@ -330,15 +332,14 @@ export const useGridDataSource = (
   }, [privateApiRef, props.unstable_dataSource]);
 
   React.useEffect(() => {
-    if (groupsToAutoFetch && groupsToAutoFetch.length > 0) {
-      nestedDataManager.enqueue(groupsToAutoFetch);
-      privateApiRef.current.setState((state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
-          groupsToFetch: [],
-        },
-      }));
+    if (
+      groupsToAutoFetch &&
+      groupsToAutoFetch.length &&
+      scheduledGroups.current < groupsToAutoFetch.length
+    ) {
+      const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
+      nestedDataManager.enqueue(groupsToSchedule);
+      scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [privateApiRef, nestedDataManager, groupsToAutoFetch]);
 };
