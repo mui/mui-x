@@ -1384,7 +1384,7 @@ describe('<DataGridPro /> - Row editing', () => {
       }, [hasFocus, inputRef]);
       return (
         <Portal>
-          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+          <input ref={setInputRef} data-testid="input" />
         </Portal>
       );
     }
