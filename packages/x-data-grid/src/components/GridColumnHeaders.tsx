@@ -27,7 +27,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
-      columnGroupsModel,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
       ...other
@@ -44,7 +43,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
-      columnGroupsModel,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
     });

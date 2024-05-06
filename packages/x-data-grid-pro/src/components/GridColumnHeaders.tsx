@@ -28,7 +28,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       headerGroupingMaxDepth,
       columnMenuState,
       columnVisibility,
-      columnGroupsModel,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
       ...other
@@ -47,7 +46,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
         headerGroupingMaxDepth,
         columnMenuState,
         columnVisibility,
-        columnGroupsModel,
         columnGroupsHeaderStructure,
       });
 

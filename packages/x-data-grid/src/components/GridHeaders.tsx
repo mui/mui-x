@@ -44,7 +44,6 @@ function GridHeaders() {
 
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
   const columnVisibility = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnGroupsHeaderStructure = useGridSelector(
     apiRef,
     gridColumnGroupsHeaderStructureSelector,
@@ -75,7 +74,6 @@ function GridHeaders() {
       headerGroupingMaxDepth={headerGroupingMaxDepth}
       columnMenuState={columnMenuState}
       columnVisibility={columnVisibility}
-      columnGroupsModel={columnGroupsModel}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
       {...rootProps.slotProps?.columnHeaders}
