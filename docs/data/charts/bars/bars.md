@@ -102,24 +102,11 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 ### Border Radius
 
-The border radius can be set by using a [clipPath](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) with
-[inset](https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape/inset) on the BarChart's `bar` [slot](/x/api/charts/bar-chart/#bar-chart-prop-slots)
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
-You can customize any of properties inside `inset`, the first property is "distance from border" and should be left at `0px` else it might break the bars alignment.
-
-```css
-inset(0px round <top-left> <top-right> <bottom-right> <bottom-left>)
-```
+It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
 
 {{"demo": "BorderRadius.js"}}
-
-:::warning
-There are few limitations to this method though.
-
-- [Stacking](/x/react-charts/bars/#stacking) won't look right with border radius.
-- On charts containing `Negative` and `Positive` values, rounding will apply to all of them in the same way, which might be undesirable.
-
-:::
 
 ## Click event
 
