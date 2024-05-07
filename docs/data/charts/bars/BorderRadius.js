@@ -57,7 +57,7 @@ export default function BorderRadius() {
 }
 
 const dataset = [
-  [3, -8, 'First'],
+  [3, -7, 'First'],
   [0, -5, 'Second'],
   [10, 0, 'Third'],
   [9, 6, 'Fourth'],
