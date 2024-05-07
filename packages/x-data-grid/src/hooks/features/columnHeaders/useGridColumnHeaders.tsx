@@ -29,6 +29,7 @@ import {
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
+import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
@@ -98,9 +99,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const theme = useTheme();
   const rootProps = useGridRootProps();
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
-
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
@@ -347,8 +348,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const rowStructure = columnGroupsHeaderStructure[depth];
 
     const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
-    const firstGroupToRender =
-      apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
+    const firstGroupToRender = columnGroupsModel[firstColumnFieldToRender]?.[depth] ?? null;
 
     const firstGroupIndex = rowStructure.findIndex(
       ({ groupId, columnFields }) =>
@@ -356,8 +356,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
 
     const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
-    const lastGroupToRender =
-      apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
+    const lastGroupToRender = columnGroupsModel[lastColumnFieldToRender]?.[depth] ?? null;
+
     const lastGroupIndex = rowStructure.findIndex(
       ({ groupId, columnFields }) =>
         groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
