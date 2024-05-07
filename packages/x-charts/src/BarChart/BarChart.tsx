@@ -131,6 +131,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     rightAxis,
     bottomAxis,
     skipAnimation,
+    borderRadius,
     onItemClick,
     onAxisClick,
     children,
@@ -195,6 +196,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           slotProps={slotProps}
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
+          borderRadius={borderRadius}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
@@ -230,6 +232,10 @@ BarChart.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
