@@ -17,7 +17,6 @@ import {
   gridFocusColumnGroupHeaderSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
 import {
-  gridColumnGroupsUnwrappedModelSelector,
   gridColumnGroupsHeaderMaxDepthSelector,
   gridColumnGroupsHeaderStructureSelector,
 } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
