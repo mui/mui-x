@@ -207,6 +207,14 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
   public escapedCharacters = { start: "'", end: "'" };
 
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
+    if (typeof addDays !== 'function') {
+      throw new Error(
+          [
+            'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
+            'Please, install v2.x of the package or use the `AdapterDateFnsJalaliV3` instead.',
+          ].join('\n'),
+      );
+    }
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
