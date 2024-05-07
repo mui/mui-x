@@ -65,7 +65,7 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
     barItemIdentifier: BarItemIdentifier,
   ) => void;
   /**
-   * Defines the radius of the bar element.
+   * Defines the border radius of the bar element.
    */
   borderRadius?: number;
 }
