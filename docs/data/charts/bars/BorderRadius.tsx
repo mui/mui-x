@@ -14,7 +14,7 @@ export default function BorderRadius() {
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={4}>
         <Stack direction="column" spacing={1} flex={1}>
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
