@@ -234,7 +234,7 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * Defines the radius of the bar element.
+   * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
   /**

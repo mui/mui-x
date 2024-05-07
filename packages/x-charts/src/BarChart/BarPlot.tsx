@@ -339,7 +339,7 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Defines the radius of the bar element.
+   * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
   /**
