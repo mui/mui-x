@@ -180,6 +180,8 @@ const useAggregatedData = (): {
         const minValueCoord = Math.round(Math.min(...valueCoordinates));
         const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
+        const stackId = series[seriesId].stack;
+
         const result = {
           seriesId,
           dataIndex,
@@ -197,7 +199,7 @@ const useAggregatedData = (): {
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
-          maskId: `${chartId}_${series[seriesId].stack ?? ''}_${groupIndex}_${dataIndex}`,
+          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
 
         if (!masks[result.maskId]) {
