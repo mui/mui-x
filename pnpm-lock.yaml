@@ -215,6 +215,9 @@ importers:
       danger:
         specifier: ^11.3.1
         version: 11.3.1
+      date-fns-jalali-v3:
+        specifier: npm:date-fns-jalali@3.6.0-0
+        version: /date-fns-jalali@3.6.0-0
       date-fns-v3:
         specifier: npm:date-fns@3.6.0
         version: /date-fns@3.6.0
@@ -8204,6 +8207,10 @@ packages:
     resolution: {integrity: sha512-Sgw1IdgCgyWDKCpq6uwAu24vPMOtvmcXXXuETr1jQO/aVj4h23XAltcP7hLbo+osqoiJnPmiydbI/q1W7TYAjA==}
     engines: {node: '>=0.11'}
     dev: false
+
+  /date-fns-jalali@3.6.0-0:
+    resolution: {integrity: sha512-rcOocwhBFgEN4i+vXPoEp/irCxAmX8yloK/l/oeMOVCLpaFQfkq7jVn0vCWK91P2H9I/doSAPEN4WSWQeqwsug==}
+    dev: true
 
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
