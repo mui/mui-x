@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEventCallback as useEventCallback, HTMLElementType } from '@mui/utils';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridMenu, GridMenuProps } from '../GridMenu';
+import { GridMenu, GridMenuProps, getTarget } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {
   columnMenuId?: string;
@@ -11,7 +11,7 @@ export interface GridColumnHeaderMenuProps {
   contentComponentProps?: any;
   field: string;
   open: boolean;
-  target: HTMLElement | null;
+  target: HTMLElement | null | { current: HTMLElement | null };
   onExited?: GridMenuProps['onExited'];
 }
 
@@ -33,14 +33,14 @@ function GridColumnHeaderMenu({
       // Prevent triggering the sorting
       event.stopPropagation();
 
-      if (target?.contains(event.target as HTMLElement)) {
+      if (getTarget(target)?.contains(event.target as HTMLElement)) {
         return;
       }
     }
     apiRef.current.hideColumnMenu();
   });
 
-  if (!target || !colDef) {
+  if (!colDef) {
     return null;
   }
 

@@ -48,7 +48,6 @@ export const useGridColumnMenu = (
           };
         });
         apiRef.current.hidePreferences();
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger],
