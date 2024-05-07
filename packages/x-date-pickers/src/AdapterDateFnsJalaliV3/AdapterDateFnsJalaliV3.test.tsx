@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers';
-import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
 import {
   createPickerRenderer,
   expectFieldValueV7,

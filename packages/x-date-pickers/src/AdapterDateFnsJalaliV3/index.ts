@@ -1,1 +1,1 @@
-export { AdapterDateFnsJalali } from './AdapterDateFnsJalali';
+export { AdapterDateFnsJalali } from './AdapterDateFnsJalaliV3';
