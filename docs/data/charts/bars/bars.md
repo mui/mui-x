@@ -102,7 +102,7 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 ### Border Radius
 
-The border radius can be set by using the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+To give your bar chart rounded corners, you can apply the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
 It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
 
