@@ -234,7 +234,7 @@ const useAggregatedData = (): {
   };
 };
 
-const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
+const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
@@ -250,7 +250,7 @@ const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Animatio
       }),
 });
 
-const getInStyle = ({ x, width, y, height }: AnimationData) => ({
+const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   y,
   x,
   height,
@@ -273,19 +273,19 @@ function BarPlot(props: BarPlotProps) {
   const { skipAnimation, onItemClick, borderRadius, ...other } = props;
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: getOutStyle,
-    leave: getOutStyle,
-    enter: getInStyle,
-    update: getInStyle,
+    from: leaveStyle,
+    leave: leaveStyle,
+    enter: enterStyle,
+    update: enterStyle,
     immediate: skipAnimation,
   });
 
   const maskTransition = useTransition(masksData, {
     keys: (v) => v.id,
-    from: getOutStyle,
-    leave: getOutStyle,
-    enter: getInStyle,
-    update: getInStyle,
+    from: leaveStyle,
+    leave: leaveStyle,
+    enter: enterStyle,
+    update: enterStyle,
     immediate: skipAnimation,
   });
 
