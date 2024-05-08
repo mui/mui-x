@@ -58,8 +58,11 @@ const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 let localSettings = {};
 try {
+  // eslint-disable-next-line import/no-unresolved
   localSettings = require('./next.config.local.js');
-} catch (_) {}
+} catch (_) {
+  // Ignore
+}
 
 export default withDocsInfra({
   transpilePackages: [
