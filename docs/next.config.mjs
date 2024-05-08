@@ -41,14 +41,12 @@ const WORKSPACE_ALIASES = {
   '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
 };
 
-const workspaceRoot = path.join(currentDirectory, '../');
-
 /**
  * @param {string} pkgPath
  * @returns {{version: string}}
  */
 function loadPkg(pkgPath) {
-  const pkgContent = fs.readFileSync(path.resolve(workspaceRoot, pkgPath, 'package.json'), 'utf8');
+  const pkgContent = fs.readFileSync(path.resolve(WORKSPACE_ROOT, pkgPath, 'package.json'), 'utf8');
   return JSON.parse(pkgContent);
 }
 
@@ -140,7 +138,7 @@ export default withDocsInfra({
                   {
                     loader: '@mui/internal-markdown/loader',
                     options: {
-                      workspaceRoot,
+                      workspaceRoot: WORKSPACE_ROOT,
                       ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
                       languagesInProgress: LANGUAGES_IN_PROGRESS,
                       env: {
@@ -156,12 +154,6 @@ export default withDocsInfra({
           {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
             include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
-            use: options.defaultLoaders.babel,
-          },
-          {
-            test: /\.(js|mjs|ts|tsx)$/,
-            include: [workspaceRoot],
-            exclude: /node_modules/,
             use: options.defaultLoaders.babel,
           },
           {
