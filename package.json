@@ -196,7 +196,6 @@
   "packageManager": "pnpm@8.15.8",
   "pnpm": {
     "patchedDependencies": {
-      "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
       "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
     }
