@@ -21,8 +21,24 @@ const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
-const MONOREPO_PACKAGES = {
+const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
+};
+
+const WORKSPACE_ALIASES = {
+  '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
+  '@mui/x-data-grid-generator': path.resolve(
+    WORKSPACE_ROOT,
+    './packages/x-data-grid-generator/src',
+  ),
+  '@mui/x-data-grid-pro': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-pro/src'),
+  '@mui/x-data-grid-premium': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-premium/src'),
+  '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers/src'),
+  '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro/src'),
+  '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts/src'),
+  '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
+  '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
+  '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
 };
 
 const workspaceRoot = path.join(currentDirectory, '../');
@@ -91,7 +107,9 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          ...MONOREPO_PACKAGES,
+          ...MONOREPO_ALIASES,
+          ...WORKSPACE_ALIASES,
+          // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
