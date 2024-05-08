@@ -192,7 +192,7 @@
     "react-is": "^18.2.0",
     "@types/node": "^18.19.31"
   },
-  "packageManager": "pnpm@8.15.1",
+  "packageManager": "pnpm@8.15.8",
   "pnpm": {
     "patchedDependencies": {
       "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
