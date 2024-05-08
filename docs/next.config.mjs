@@ -103,6 +103,18 @@ export default withDocsInfra({
     return {
       ...config,
       plugins,
+      // TODO, this shouldn't be needed in the first place
+      // Migrate everything from @mui/monorepo to @mui/docs and embed @mui/internal-markdown in @mui/docs
+      resolveLoader: {
+        ...config.resolveLoader,
+        alias: {
+          ...config.resolveLoader.alias,
+          '@mui/internal-markdown/loader': path.resolve(
+            MONOREPO_PATH,
+            './packages/markdown/loader',
+          ),
+        },
+      },
       resolve: {
         ...config.resolve,
         alias: {
@@ -126,7 +138,7 @@ export default withDocsInfra({
                 use: [
                   options.defaultLoaders.babel,
                   {
-                    loader: require.resolve('@mui/internal-markdown/loader'),
+                    loader: '@mui/internal-markdown/loader',
                     options: {
                       workspaceRoot,
                       ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
