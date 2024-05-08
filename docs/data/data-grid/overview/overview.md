@@ -25,7 +25,7 @@ Visit the [installation guide](/x/react-data-grid/getting-started/#installation)
 
 The component comes in three different versions, one available under MIT license and two available under commercial license.
 
-## MIT version (free forever)
+## MIT license (free forever)
 
 The MIT licensed version is a stronger alternative to [plain data tables](/material-ui/react-table/#sorting-amp-selecting).
 It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
@@ -36,7 +36,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Commercial versions
+## Commercial licenses
 
 The commercially licensed versions are available in two plans: Pro and Premium.
 
