@@ -16,7 +16,8 @@ It comes with an intuitive API for real-time updates, accessibility, as well as 
 
 ## Overview
 
-The Data Grid presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
+The Data Grid presents information in a structured format of rows and columns.
+The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
 :::info
 Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
