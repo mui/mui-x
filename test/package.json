@@ -17,7 +17,7 @@
     "@react-spring/web": "^9.7.3",
     "@playwright/test": "^1.43.1",
     "@types/chai": "^4.3.16",
-    "@types/prop-types": "^15.7.11",
+    "@types/prop-types": "^15.7.12",
     "@types/react": "^18.2.60",
     "chai": "^4.4.1",
     "dayjs": "^1.11.11",
