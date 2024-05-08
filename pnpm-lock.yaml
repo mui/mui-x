@@ -878,7 +878,7 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       '@types/lru-cache':
-        specifier: ^7.10.9
+        specifier: ^7.10.10
         version: 7.10.10
       rimraf:
         specifier: ^5.0.5
