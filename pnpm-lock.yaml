@@ -93,8 +93,8 @@ importers:
         specifier: ^5.15.14
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#afffc2ffc3db1e6abf48f3b3e13a41e8b758f874
-        version: github.com/mui/material-ui/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874
+        specifier: github:mui/material-ui#efba47d9ff7c65b83643447dd3b610d27ec1c4f0
+        version: github.com/mui/material-ui/efba47d9ff7c65b83643447dd3b610d27ec1c4f0
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
@@ -4743,8 +4743,8 @@ packages:
     resolution: {integrity: sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==}
     dev: true
 
-  /@slack/bolt@3.17.1:
-    resolution: {integrity: sha512-N+4WxpkM59RXi7BL3IXUtENnn9cF7TOBn7ttaHpgvlnjUaro+yQyY60arXTlP4ytVDFJ1w0mSdfftcM17h+i2w==}
+  /@slack/bolt@3.18.0:
+    resolution: {integrity: sha512-A7bDi5kY50fS6/nsmURkQdO3iMxD8aX/rA+m1UXEM2ue2z4KijeQtx2sOZ4YkJQ/h7BsgTQM0CYh3qqmo+m5sQ==}
     engines: {node: '>=12.13.0', npm: '>=6.12.0'}
     dependencies:
       '@slack/logger': 4.0.0
@@ -18095,15 +18095,15 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/mui/material-ui/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874:
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/afffc2ffc3db1e6abf48f3b3e13a41e8b758f874}
+  github.com/mui/material-ui/efba47d9ff7c65b83643447dd3b610d27ec1c4f0:
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/efba47d9ff7c65b83643447dd3b610d27ec1c4f0}
     name: '@mui/monorepo'
-    version: 6.0.0-alpha.4
+    version: 6.0.0-alpha.5
     requiresBuild: true
     dependencies:
       '@googleapis/sheets': 5.0.5
       '@netlify/functions': 2.6.0
-      '@slack/bolt': 3.17.1
+      '@slack/bolt': 3.18.0
       execa: 8.0.1
       google-auth-library: 9.9.0
     transitivePeerDependencies:
