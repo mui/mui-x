@@ -54,7 +54,7 @@
     "chance": "^1.1.11",
     "clean-css": "^5.3.3",
     "clipboard-copy": "^4.0.1",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "core-js": "^2.6.12",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",

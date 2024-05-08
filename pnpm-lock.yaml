@@ -498,8 +498,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       core-js:
         specifier: ^2.6.12
         version: 2.6.12
@@ -706,8 +706,8 @@ importers:
         specifier: ^9.7.3
         version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       d3-color:
         specifier: ^3.1.0
         version: 3.1.0
@@ -815,8 +815,8 @@ importers:
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -865,8 +865,8 @@ importers:
         specifier: ^1.1.11
         version: 1.1.11
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       lru-cache:
         specifier: ^7.18.3
         version: 7.18.3
@@ -912,8 +912,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
@@ -965,8 +965,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -1015,8 +1015,8 @@ importers:
         specifier: ^4.4.10
         version: 4.4.10
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -1101,8 +1101,8 @@ importers:
         specifier: workspace:*
         version: link:../x-license/build
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       date-fns-jalali:
         specifier: ^2.13.0-0
         version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
@@ -1192,8 +1192,8 @@ importers:
         specifier: ^4.4.10
         version: 4.4.10
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -1248,8 +1248,8 @@ importers:
         specifier: ^4.4.10
         version: 4.4.10
       clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -3549,7 +3549,7 @@ packages:
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.60
-      clsx: 2.1.0
+      clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -3632,7 +3632,7 @@ packages:
       '@mui/types': 7.2.14(@types/react@18.2.60)
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@types/react': 18.2.60
-      clsx: 2.1.0
+      clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -3664,7 +3664,7 @@ packages:
       '@mui/types': 7.2.14(@types/react@18.2.60)
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@types/react': 18.2.60
-      clsx: 2.1.0
+      clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -3697,7 +3697,7 @@ packages:
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@types/react': 18.2.60
       '@types/react-transition-group': 4.4.10
-      clsx: 2.1.0
+      clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
       react: 18.2.0
@@ -3758,7 +3758,7 @@ packages:
       '@mui/types': 7.2.14(@types/react@18.2.60)
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@types/react': 18.2.60
-      clsx: 2.1.0
+      clsx: 2.1.1
       csstype: 3.1.3
       hoist-non-react-statics: 3.3.2
       jss: 10.10.0
@@ -3797,7 +3797,7 @@ packages:
       '@mui/types': 7.2.14(@types/react@18.2.60)
       '@mui/utils': 5.15.14(@types/react@18.2.60)(react@18.2.0)
       '@types/react': 18.2.60
-      clsx: 2.1.0
+      clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
       react: 18.2.0
@@ -7423,8 +7423,8 @@ packages:
     engines: {node: '>=0.8'}
     dev: true
 
-  /clsx@2.1.0:
-    resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
+  /clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
   /cmd-shim@6.0.1:
