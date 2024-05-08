@@ -10,11 +10,8 @@ overrides:
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
-    hash: h4cab4lqksemkw6ln3l3h4s77e
+    hash: 7wlacyoi44skuhtzjdjwgtjyxe
     path: patches/babel-plugin-replace-imports@1.0.2.patch
-  date-fns-jalali@2.13.0-0:
-    hash: knk56uiq6xxn77bv6lgrgre7si
-    path: patches/date-fns-jalali@2.13.0-0.patch
   karma-mocha@2.0.1:
     hash: r6idlcdpax26bbzwxyjicxb5ra
     path: patches/karma-mocha@2.0.1.patch
@@ -187,7 +184,7 @@ importers:
         version: 0.3.0
       babel-plugin-replace-imports:
         specifier: ^1.0.2
-        version: 1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e)
+        version: 1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe)
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
@@ -215,6 +212,9 @@ importers:
       danger:
         specifier: ^11.3.1
         version: 11.3.1
+      date-fns-jalali-v3:
+        specifier: npm:date-fns-jalali@3.6.0-0
+        version: /date-fns-jalali@3.6.0-0
       date-fns-v3:
         specifier: npm:date-fns@3.6.0
         version: /date-fns@3.6.0
@@ -510,8 +510,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       date-fns-jalali:
-        specifier: ^2.21.3-1
-        version: 2.21.3-1
+        specifier: ^2.30.0-0
+        version: 2.30.0-0
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -1046,8 +1046,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       date-fns-jalali:
-        specifier: ^2.13.0-0
-        version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
+        specifier: ^2.30.0-0
+        version: 2.30.0-0
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -1103,9 +1103,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      date-fns-jalali:
-        specifier: ^2.13.0-0
-        version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
       moment-hijri:
         specifier: ^2.1.2
         version: 2.1.2
@@ -1134,6 +1131,9 @@ importers:
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
+      date-fns-jalali:
+        specifier: ^2.30.0-0
+        version: 2.30.0-0
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -6594,7 +6594,7 @@ packages:
   /babel-plugin-react-remove-properties@0.3.0:
     resolution: {integrity: sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==}
 
-  /babel-plugin-replace-imports@1.0.2(patch_hash=h4cab4lqksemkw6ln3l3h4s77e):
+  /babel-plugin-replace-imports@1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe):
     resolution: {integrity: sha512-v+9S4FBg9wYit3c+bDxhRHv/pnhBhhneZOPvqT1c293SSjUuUy1MPK76TsJ9038fp/SD2/TNcqG5PUBoG9/ByQ==}
     dependencies:
       lodash.isempty: 4.4.0
@@ -8186,14 +8186,15 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
-  /date-fns-jalali@2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si):
-    resolution: {integrity: sha512-yjlI9O18Z6ryGNagryrLO8OQ+3rishM3+A0UOX2UX10cWMn2NTlQcQ+ywTEJvF5IJz0FwX/slt2nCcpyQ/c8gw==}
-    patched: true
-
-  /date-fns-jalali@2.21.3-1:
-    resolution: {integrity: sha512-Sgw1IdgCgyWDKCpq6uwAu24vPMOtvmcXXXuETr1jQO/aVj4h23XAltcP7hLbo+osqoiJnPmiydbI/q1W7TYAjA==}
+  /date-fns-jalali@2.30.0-0:
+    resolution: {integrity: sha512-2wz5AOzd3oQ+PnL3E/iKvJZ14i6oTp15sW047ZFCOgM9OSP8ggbb9jm/4SKI8ejdUGH96Krb5dfEQe8zbkVyZw==}
     engines: {node: '>=0.11'}
-    dev: false
+    dependencies:
+      '@babel/runtime': 7.24.4
+
+  /date-fns-jalali@3.6.0-0:
+    resolution: {integrity: sha512-rcOocwhBFgEN4i+vXPoEp/irCxAmX8yloK/l/oeMOVCLpaFQfkq7jVn0vCWK91P2H9I/doSAPEN4WSWQeqwsug==}
+    dev: true
 
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
