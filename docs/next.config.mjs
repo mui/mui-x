@@ -19,6 +19,12 @@ import constants from './constants.js';
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 
+const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
+const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
+const MONOREPO_PACKAGES = {
+  '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
+};
+
 const workspaceRoot = path.join(currentDirectory, '../');
 
 /**
@@ -42,6 +48,11 @@ try {
 } catch (_) {}
 
 export default withDocsInfra({
+  transpilePackages: [
+    // TODO, those shouldn't be needed in the first place
+    '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
+    '@mui/docs',
+  ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -73,8 +84,6 @@ export default withDocsInfra({
       );
     }
 
-    const includesMonorepo = [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/];
-
     return {
       ...config,
       plugins,
@@ -82,11 +91,8 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          '@mui/docs': path.resolve(
-            currentDirectory,
-            '../node_modules/@mui/monorepo/packages/mui-docs/src',
-          ),
-          docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
+          ...MONOREPO_PACKAGES,
+          docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
@@ -119,7 +125,7 @@ export default withDocsInfra({
           },
           {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
-            include: includesMonorepo,
+            include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
             use: options.defaultLoaders.babel,
           },
           {
