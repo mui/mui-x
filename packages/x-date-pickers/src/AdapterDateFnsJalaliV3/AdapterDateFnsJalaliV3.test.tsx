@@ -7,11 +7,10 @@ import {
   describeJalaliAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { enUS } from 'date-fns-jalali/locale/en-US';
-import { faIR } from 'date-fns-jalali/locale/fa-IR';
+import { enUS, faIR } from 'date-fns-jalali/locale';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 
-describe('<AdapterDateFnsJalali />', () => {
+describe('<AdapterDateFnsJalaliV3 />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
 
   describe('Adapter localization', () => {

@@ -212,7 +212,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
       throw new Error(
           [
             `MUI: The \`date-fns-jalali\` package v2.x is not compatible with this adapter.`,
-            'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
+            'Please, install v3.x of the package or use the `AdapterDateFnsJalali` instead.',
           ].join('\n'),
       );
     }
