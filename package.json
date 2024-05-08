@@ -129,6 +129,7 @@
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "danger": "^11.3.1",
+    "date-fns-jalali-v3": "npm:date-fns-jalali@3.6.0-0",
     "date-fns-v3": "npm:date-fns@3.6.0",
     "enzyme": "^3.11.0",
     "eslint": "^8.57.0",
@@ -195,7 +196,6 @@
   "packageManager": "pnpm@8.15.8",
   "pnpm": {
     "patchedDependencies": {
-      "date-fns-jalali@2.13.0-0": "patches/date-fns-jalali@2.13.0-0.patch",
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
       "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
     }
