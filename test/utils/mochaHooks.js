@@ -17,7 +17,7 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     // This license key is only valid for use with Material UI SAS's projects
     // See the terms: https://mui.com/r/x-license-eula
     LicenseInfo.setLicenseKey(
-      'd483a722e0dc68f4d483487da0ccac45Tz1NVUktRG9jLEU9MTcxNTE2MzgwOTMwNyxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
+      'e43ff101678711136a9b81c18047cb69Tz1NVUktRG9jLEU9MTc0Njc4NzYxODIwMSxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
     );
   });
 
