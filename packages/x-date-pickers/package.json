@@ -101,7 +101,7 @@
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
-    "@types/prop-types": "^15.7.11",
+    "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.11",
