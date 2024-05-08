@@ -327,7 +327,7 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-timezone:
-        specifier: ^0.5.44
+        specifier: ^0.5.45
         version: 0.5.45
       nyc:
         specifier: ^15.1.0
@@ -793,7 +793,7 @@ importers:
         specifier: ^1.11.10
         version: 1.11.10
       moment-timezone:
-        specifier: ^0.5.44
+        specifier: ^0.5.45
         version: 0.5.45
       rimraf:
         specifier: ^5.0.5
@@ -1064,7 +1064,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       moment-timezone:
-        specifier: ^0.5.44
+        specifier: ^0.5.45
         version: 0.5.45
       rimraf:
         specifier: ^5.0.5
