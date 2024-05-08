@@ -513,8 +513,8 @@ importers:
         specifier: ^2.21.3-1
         version: 2.21.3-1
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
+        specifier: ^1.11.11
+        version: 1.11.11
       doctrine:
         specifier: ^3.0.0
         version: 3.0.0
@@ -790,8 +790,8 @@ importers:
         specifier: ^0.11.5
         version: 0.11.11
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
+        specifier: ^1.11.11
+        version: 1.11.11
       moment-timezone:
         specifier: ^0.5.45
         version: 0.5.45
@@ -1049,8 +1049,8 @@ importers:
         specifier: ^2.13.0-0
         version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
+        specifier: ^1.11.11
+        version: 1.11.11
       luxon:
         specifier: ^3.4.4
         version: 3.4.4
@@ -1135,8 +1135,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
+        specifier: ^1.11.11
+        version: 1.11.11
       luxon:
         specifier: ^3.4.4
         version: 3.4.4
@@ -1312,8 +1312,8 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
+        specifier: ^1.11.11
+        version: 1.11.11
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -8224,8 +8224,8 @@ packages:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
     dev: true
 
-  /dayjs@1.11.10:
-    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+  /dayjs@1.11.11:
+    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
 
   /debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -9512,7 +9512,7 @@ packages:
     engines: {node: '>=8.3.0'}
     dependencies:
       archiver: 5.3.2
-      dayjs: 1.11.10
+      dayjs: 1.11.11
       fast-csv: 4.3.6
       jszip: 3.10.1
       readable-stream: 3.6.2
