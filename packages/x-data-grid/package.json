@@ -62,7 +62,7 @@
   "devDependencies": {
     "@mui/joy": "^5.0.0-beta.24",
     "@mui/types": "^7.2.14",
-    "@types/prop-types": "^15.7.11",
+    "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.5"
   },
   "engines": {
