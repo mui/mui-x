@@ -59,13 +59,14 @@ commands:
         description: 'Set to true if you intend to any browser (for example with playwright).'
 
     steps:
-      - run:
-          name: Install pnpm package manager
-          # See https://stackoverflow.com/a/73411601
-          command: corepack enable --install-directory ~/bin
       - when:
           condition: << parameters.browsers >>
           steps:
+            - run:
+                name: Install pnpm package manager
+                command: |
+                  corepack enable
+                  corepack prepare pnpm@latest-8 --activate
             - run:
                 name: Prepare playwright hash
                 command: pnpm list --json --filter playwright > /tmp/playwright_info.json
@@ -274,7 +275,9 @@ jobs:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
-      - install_js
+      - install_js:
+          # TODO remove, no needed
+          browsers: true
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
