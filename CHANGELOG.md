@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.4.0
+
+_May 8, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add optional `id` attribute on shortcut items of the Date and Time Pickers
+- 🎁 Add support for Jalaali v3 in the Date and Time Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.4.0`
+
+- [DataGrid] Fix throw error with onBlur at SVG element (#13028) @oukunan
+- [DataGrid] Fix: column group change bug (#12965) @romgrk
+
+#### `@mui/x-data-grid-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.4.0`.
+
+#### `@mui/x-data-grid-premium@7.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.4.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.4.0`
+
+- [pickers] Add `AdapterDateFnsJalaliV3` adapter (#12891) @smmoosavi
+- [pickers] Add optional `id` attribute on shortcut items (#12976) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.4.0`.
+
+### Charts
+ 
+#### `@mui/x-charts@7.4.0`
+
+- [charts] Add `ChartsGrid` to `themeAugmentation` (#13026) @noraleonte
+- [charts] Support rounded corners on `BarChart` (#12834) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.4.0`
+
+- [TreeView] Fix props propagation and theme entry in `TreeItem2` (#12889) @flaviendelangle
+
+### Docs
+
+- [docs] Add accessibility page to TreeView docs (#12845) @noraleonte
+- [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
+
+### Core
+
+- [core] Improve release process docs (#12977) @JCQuintas
+- [core] Prepare React 19 (#12991) @oliviertassinari
+- [core] Update license key used for tests (#13052) @LukasTy
+- [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
+- [infra] Automation: Add release PR reviewers (#12982) @michelengelen
+- [infra] Changed action target branch (#13029) @michelengelen
+- [infra] Fix automated reviewers assignment workflow (#12986) @michelengelen
+- [infra] Fix automated reviewers assignment workflow - part 2 (#12989) @michelengelen
+- [infra] Fix automated reviewers assignment workflow - part 3 (#13012) @michelengelen
+- [infra] changed permission for nested workflow (#13024) @michelengelen
+- [infra] changed to usage of reusable workflow (#13017) @michelengelen
+- [infra] changed version to use master branch for now (#13022) @michelengelen
+
+
 ## 7.3.2
 
 _May 2, 2024_
