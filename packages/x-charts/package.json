@@ -45,7 +45,7 @@
     "@mui/utils": "^5.15.14",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "d3-color": "^3.1.0",
     "d3-delaunay": "^6.0.4",
     "d3-interpolate": "^3.0.1",
