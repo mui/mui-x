@@ -1107,7 +1107,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       date-fns-jalali:
-        specifier: ^2.13.0-0
+        specifier: ^2.13.0-0 || ^3.2.0-0
         version: 2.13.0-0(patch_hash=knk56uiq6xxn77bv6lgrgre7si)
       moment-hijri:
         specifier: ^2.1.2
