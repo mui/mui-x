@@ -7,7 +7,9 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       series[seriesId].data
         .map((item) => ({
           color: item.color,
-          label: item.label,
+          label: item.label
+            ? series[seriesId].labelFormatter?.(item.label, { location: 'legend' }) ?? item.label
+            : undefined,
           id: item.id,
         }))
         .filter((item) => item.label !== undefined) as LegendParams[],
