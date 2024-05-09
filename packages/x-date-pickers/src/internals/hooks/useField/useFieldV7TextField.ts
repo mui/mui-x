@@ -370,7 +370,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return;
       }
 
-      if ((event.nativeEvent as InputEvent).inputType === 'insertParagraph') {
+      const inputType = (event.nativeEvent as InputEvent).inputType;
+      if (inputType === 'insertParagraph' || inputType === 'insertLineBreak') {
         revertDOMSectionChange(sectionIndex);
         return;
       }
