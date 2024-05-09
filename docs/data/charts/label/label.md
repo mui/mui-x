@@ -37,7 +37,7 @@ The [Pie](/x/react-charts/pie/) chart behaves a little differently due to its na
 
 Instead of receiving the `label` as part of the series. It instead receives it as part of the `data` set inside a series.
 
-And its `location` argument can have the following values:
+Its `location` argument can have the following values:
 
 - `'legend'` in order to format the label to display in the [Legend](/x/react-charts/legend/)
 - `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
