@@ -210,7 +210,7 @@ PieArcLabelPlot.propTypes = {
       formattedValue: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
