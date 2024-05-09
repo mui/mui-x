@@ -11,6 +11,7 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
 import { isCartesianSeries, utcFormatter } from './utils';
+import { getLabel } from '../internals/getLabel';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;
@@ -46,6 +47,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
               if (formattedValue == null) {
                 return null;
               }
+              const formattedLabel = getLabel(label, 'tooltip');
               return (
                 <ChartsTooltipRow key={id} className={classes.row}>
                   <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
@@ -55,7 +57,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
                     />
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                    {label ? <Typography>{label}</Typography> : null}
+                    {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                     <Typography>{formattedValue}</Typography>
