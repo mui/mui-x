@@ -14,6 +14,7 @@ import {
   useTransformData,
 } from './dataTransform/useTransformData';
 import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
+import { getLabel } from '../internals/getLabel';
 
 const RATIO = 180 / Math.PI;
 
@@ -30,11 +31,22 @@ function getItemLabel(
     return null;
   }
 
-  if (typeof arcLabel === 'string') {
-    return item[arcLabel]?.toString();
+  if (arcLabel === 'label') {
+    return getLabel(item.label, 'arc');
   }
 
-  return arcLabel(item);
+  if (arcLabel === 'value') {
+    return item.value?.toString();
+  }
+
+  if (arcLabel === 'formattedValue') {
+    return item.formattedValue;
+  }
+
+  return arcLabel({
+    ...item,
+    label: getLabel(item.label, 'arc'),
+  });
 }
 
 export interface PieArcLabelPlotSlots {
