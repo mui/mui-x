@@ -62,7 +62,6 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 
 - [core] Improve release process docs (#12977) @JCQuintas
 - [core] Prepare React 19 (#12991) @oliviertassinari
-- [core] Update license key used for tests (#13052) @LukasTy
 - [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
 - [infra] Automation: Add release PR reviewers (#12982) @michelengelen
 
