@@ -41,6 +41,6 @@ And its `location` argument can have the following values:
 
 - `'legend'` in order to format the label to display in the [Legend](/x/react-charts/legend/)
 - `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
-- `'arc'` for formatting the [Arc](http://localhost:3001/x/react-charts/pie/#labels) label when `arcLabel` is set to `'label'`
+- `'arc'` to format the [Arc](http://localhost:3001/x/react-charts/pie/#labels) label when `arcLabel` is set to `'label'`
 
 {{"demo": "PieLabel.js"}}
