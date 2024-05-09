@@ -65,13 +65,6 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 - [core] Update license key used for tests (#13052) @LukasTy
 - [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
 - [infra] Automation: Add release PR reviewers (#12982) @michelengelen
-- [infra] Changed action target branch (#13029) @michelengelen
-- [infra] Fix automated reviewers assignment workflow (#12986) @michelengelen
-- [infra] Fix automated reviewers assignment workflow - part 2 (#12989) @michelengelen
-- [infra] Fix automated reviewers assignment workflow - part 3 (#13012) @michelengelen
-- [infra] changed permission for nested workflow (#13024) @michelengelen
-- [infra] changed to usage of reusable workflow (#13017) @michelengelen
-- [infra] changed version to use master branch for now (#13022) @michelengelen
 
 
 ## 7.3.2
