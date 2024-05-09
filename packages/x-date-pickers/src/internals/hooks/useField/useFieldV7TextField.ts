@@ -513,8 +513,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   return {
     interactions,
     returnedValue: {
-      // this ID will be used by the `PickersTextField` to tie all element ids together
-      id,
       // Forwarded
       autoFocus,
       readOnly,
