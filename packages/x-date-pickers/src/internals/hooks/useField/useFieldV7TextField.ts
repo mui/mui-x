@@ -370,6 +370,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return;
       }
 
+      if ((event.nativeEvent as InputEvent).inputType === 'insertParagraph') {
+        revertDOMSectionChange(sectionIndex);
+        return;
+      }
+
       resetCharacterQuery();
       clearActiveSection();
       return;
@@ -507,6 +512,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   return {
     interactions,
     returnedValue: {
+      // this ID will be used by the `PickersTextField` to tie all element ids together
+      id,
       // Forwarded
       autoFocus,
       readOnly,
