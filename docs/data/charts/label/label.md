@@ -39,7 +39,7 @@ Instead of receiving the `label` as part of the series. It instead receives it a
 
 Its `location` argument can have the following values:
 
-- `'legend'` in order to format the label to display in the [Legend](/x/react-charts/legend/)
+- `'legend'` to format the label to display in the [Legend](/x/react-charts/legend/)
 - `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
 - `'arc'` to format the [Arc](http://localhost:3001/x/react-charts/pie/#labels) label when `arcLabel` is set to `'label'`
 
