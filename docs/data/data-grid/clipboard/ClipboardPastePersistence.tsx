@@ -196,7 +196,7 @@ const visibleFields = [
   'traderEmail',
   'quantity',
   'filledQuantity',
-]
+];
 
 const useSessionStorageData = () => {
   const { data } = useDemoData({
