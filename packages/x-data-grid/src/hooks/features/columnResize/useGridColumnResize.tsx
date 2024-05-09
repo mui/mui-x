@@ -437,6 +437,7 @@ export const useGridColumnResize = (
 
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
+    const escapedColDefField = CSS.escape(colDef.field);
 
     refs.initialColWidth = colDef.computedWidth;
     refs.initialTotalWidth = apiRef.current.getRootDimensions().rowWidth;
@@ -445,11 +446,11 @@ export const useGridColumnResize = (
 
     refs.columnHeaderElement = findHeaderElementFromField(
       apiRef.current.columnHeadersContainerRef!.current!,
-      colDef.field,
+      escapedColDefField,
     );
 
     const headerFilterElement = root.querySelector(
-      `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+      `.${gridClasses.headerFilterRow} [data-field="${escapedColDefField}"]`,
     );
     if (headerFilterElement) {
       refs.headerFilterElement = headerFilterElement as HTMLDivElement;
@@ -457,7 +458,7 @@ export const useGridColumnResize = (
 
     refs.groupHeaderElements = findGroupHeaderElementsFromField(
       apiRef.current.columnHeadersContainerRef?.current!,
-      colDef.field,
+      escapedColDefField,
     );
 
     refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
