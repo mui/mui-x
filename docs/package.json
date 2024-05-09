@@ -58,7 +58,7 @@
     "core-js": "^2.6.12",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
-    "date-fns-jalali": "^2.21.3-1",
+    "date-fns-jalali": "^2.30.0-0",
     "dayjs": "^1.11.11",
     "doctrine": "^3.0.0",
     "exceljs": "^4.4.0",
