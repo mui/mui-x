@@ -33,7 +33,7 @@ The function receives `location` as its first argument, and it can have the foll
 
 ### Pie
 
-The [Pie](/x/react-charts/pie/) charts however, behave a little different due to their nature. They also have one more place where the label can be rendered.
+The [Pie](/x/react-charts/pie/) chart behaves a little differently due to its nature. It also has one more place where the label can be rendered.
 
 Instead of receiving the `label` as part of the series. It instead receives it as part of the `data` set inside a series.
 
