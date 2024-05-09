@@ -20,11 +20,16 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
   if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
   }
-
-  const color = series.type === 'pie' ? getColor(itemData.dataIndex) : series.color;
-  const label = series.type === 'pie' ? series.data[itemData.dataIndex].label : series.label;
-  const displayedLabel =
-    (label && series.labelFormatter?.(label, { location: 'tooltip' })) ?? label;
+  const { displayedLabel, color } =
+    series.type === 'pie'
+      ? {
+          color: getColor(itemData.dataIndex),
+          displayedLabel: series.data[itemData.dataIndex].label,
+        }
+      : {
+          color: getColor(itemData.dataIndex) ?? series.color,
+          displayedLabel: series.label,
+        };
 
   const value = series.data[itemData.dataIndex];
   const formattedValue = (

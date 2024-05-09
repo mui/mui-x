@@ -40,7 +40,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
         <tbody>
           {series
             .filter(isCartesianSeries)
-            .map(({ color, id, label, valueFormatter, data, getColor, labelFormatter }) => {
+            .map(({ color, id, label, valueFormatter, data, getColor }) => {
               // @ts-ignore
               const formattedValue = valueFormatter(data[dataIndex] ?? null, { dataIndex });
               if (formattedValue == null) {
@@ -55,11 +55,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
                     />
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                    {label ? (
-                      <Typography>
-                        {labelFormatter?.(label, { location: 'tooltip' }) ?? label}
-                      </Typography>
-                    ) : null}
+                    {label ? <Typography>{label}</Typography> : null}
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                     <Typography>{formattedValue}</Typography>
