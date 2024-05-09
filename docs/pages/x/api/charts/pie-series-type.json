@@ -6,7 +6,7 @@
     "type": { "type": { "description": "'pie'" }, "required": true },
     "arcLabel": {
       "type": {
-        "description": "'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) =&gt; string)"
+        "description": "'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
       }
     },
     "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },
