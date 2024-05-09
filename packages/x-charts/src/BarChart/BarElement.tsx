@@ -55,7 +55,6 @@ export const BarElementPath = styled(animated.rect, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: BarElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  shapeRendering: 'crispEdges',
   fill: ownerState.isHighlighted
     ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
     : ownerState.color,
@@ -132,6 +131,7 @@ function BarElement(props: BarElementProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? BarElementPath;
+
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
@@ -145,6 +145,7 @@ function BarElement(props: BarElementProps) {
     },
     ownerState,
   });
+
   return <Bar {...barProps} />;
 }
 

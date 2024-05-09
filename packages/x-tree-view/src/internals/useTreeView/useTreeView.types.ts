@@ -35,14 +35,7 @@ export type UseTreeViewDefaultizedParameters<
 export interface UseTreeViewRootSlotProps
   extends Pick<
     React.HTMLAttributes<HTMLUListElement>,
-    | 'onFocus'
-    | 'onBlur'
-    | 'onKeyDown'
-    | 'id'
-    | 'aria-activedescendant'
-    | 'aria-multiselectable'
-    | 'role'
-    | 'tabIndex'
+    'onFocus' | 'onBlur' | 'onKeyDown' | 'id' | 'aria-multiselectable' | 'role' | 'tabIndex'
   > {
   ref: React.Ref<HTMLUListElement>;
 }

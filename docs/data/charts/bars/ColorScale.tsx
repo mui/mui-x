@@ -3,14 +3,17 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-// @ts-ignore
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const series = [{ data: [-2, -9, 12, 11, 6, -4] }];
 
-export default function ColorScaleNoSnap() {
-  const [colorX, setColorX] = React.useState('piecewise');
-  const [colorY, setColorY] = React.useState('None');
+export default function ColorScale() {
+  const [colorX, setColorX] = React.useState<
+    'None' | 'piecewise' | 'continuous' | 'ordinal'
+  >('piecewise');
+  const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'None',
+  );
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -20,7 +23,11 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="x-axis colorMap"
           value={colorX}
-          onChange={(event) => setColorX(event.target.value)}
+          onChange={(event) =>
+            setColorX(
+              event.target.value as 'None' | 'piecewise' | 'continuous' | 'ordinal',
+            )
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -32,7 +39,9 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="y-axis colorMap"
           value={colorY}
-          onChange={(event) => setColorY(event.target.value)}
+          onChange={(event) =>
+            setColorY(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -143,6 +152,7 @@ export default function ColorScaleNoSnap() {
                 '  }]}',
               ]
             : []),
+
           // ColorY
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'

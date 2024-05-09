@@ -7,7 +7,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const data1 = [
   { label: 'Group A', value: 400 },

@@ -9,7 +9,7 @@
     },
     "curve": { "description": "" },
     "data": { "description": "Data associated to the line." },
-    "dataKey": { "description": "The key used to retrive data from the dataset." },
+    "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "disableHighlight": {
       "description": "Do not render the line highlight item if set to <code>true</code>."
     },

@@ -1,21 +1,26 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-
+import { ScatterValueType } from '@mui/x-charts';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-// @ts-ignore
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 import { Chance } from 'chance';
 
 const POINTS_NUMBER = 50;
 const chance = new Chance(42);
 
-export default function ColorScaleNoSnap() {
-  const [colorX, setColorX] = React.useState('piecewise');
-  const [colorY, setColorY] = React.useState('None');
-  const [colorZ, setColorZ] = React.useState('None');
+export default function ColorScale() {
+  const [colorX, setColorX] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'piecewise',
+  );
+  const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
+    'None',
+  );
+  const [colorZ, setColorZ] = React.useState<
+    'None' | 'piecewise' | 'continuous' | 'ordinal'
+  >('None');
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -25,7 +30,9 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="x-axis colorMap"
           value={colorX}
-          onChange={(event) => setColorX(event.target.value)}
+          onChange={(event) =>
+            setColorX(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -36,7 +43,9 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="y-axis colorMap"
           value={colorY}
-          onChange={(event) => setColorY(event.target.value)}
+          onChange={(event) =>
+            setColorY(event.target.value as 'None' | 'piecewise' | 'continuous')
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -47,7 +56,11 @@ export default function ColorScaleNoSnap() {
           sx={{ minWidth: 150 }}
           label="z-axis colorMap"
           value={colorZ}
-          onChange={(event) => setColorZ(event.target.value)}
+          onChange={(event) =>
+            setColorZ(
+              event.target.value as 'None' | 'piecewise' | 'continuous' | 'ordinal',
+            )
+          }
         >
           <MenuItem value="None">None</MenuItem>
           <MenuItem value="piecewise">piecewise</MenuItem>
@@ -129,6 +142,7 @@ export default function ColorScaleNoSnap() {
               }) ||
               (colorZ === 'ordinal' && {
                 type: 'ordinal',
+
                 values: ['A', 'B', 'C', 'D'],
                 colors: ['#d01c8b', '#f1b6da', '#b8e186', '#4dac26'],
               }) ||
@@ -166,6 +180,7 @@ export default function ColorScaleNoSnap() {
                 '  }]}',
               ]
             : []),
+
           // ColorY
           ...(colorY === 'None' ? ['  yAxis={[{}]}'] : []),
           ...(colorY === 'continuous'
@@ -191,6 +206,7 @@ export default function ColorScaleNoSnap() {
                 '  }]}',
               ]
             : []),
+
           // ColorZ
           ...(colorZ === 'None' ? ['  zAxis={[{}]}'] : []),
           ...(colorZ === 'continuous'
@@ -248,10 +264,14 @@ const series = [
   },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
-function getGaussianSeriesData(mean, stdev = [0.5, 0.5], N = 50) {
+function getGaussianSeriesData(
+  mean: [number, number],
+  stdev: [number, number] = [0.5, 0.5],
+  N: number = 50,
+) {
   return [...Array(N)].map((_, i) => {
     const x =
       Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *

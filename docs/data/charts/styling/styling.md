@@ -102,6 +102,40 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+## Overlay
+
+Charts have a _loading_ and _noData_ overlays that appears if
+
+- `loading` prop is set to `true`.
+- There is no data to display.
+
+{{"demo": "Overlay.js"}}
+
+### Axis display
+
+You can provide the axes data in order to display them while loading the data.
+
+{{"demo": "OverlayWithAxis.js"}}
+
+### Custom overlay
+
+To modify the overly message, you can use the `message` props as follow.
+
+```jsx
+<BarChart
+  slotProps={{
+    // Custom loading message
+    loadingOverlay: { message: 'Data should be available soon.' },
+    // Custom message for empty chart
+    noDataOverlay: { message: 'Select some data to display.' },
+  }}
+/>
+```
+
+For more advanced customization, use the `loadingOverlay` and `noDataOverlay` slots link in the following demo.
+
+{{"demo": "CustomOverlay.js"}}
+
 ## Styling
 
 ### Size
