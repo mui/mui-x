@@ -18,20 +18,22 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { darken } from '@mui/material/styles';
 
+const visibleFields = [
+  'id',
+  'commodity',
+  'traderName',
+  'traderEmail',
+  'quantity',
+  'filledQuantity',
+];
+
 export default function BulkEditingPremiumNoSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 7,
     editable: true,
-    visibleFields: [
-      'id',
-      'commodity',
-      'traderName',
-      'traderEmail',
-      'quantity',
-      'filledQuantity',
-    ],
+    visibleFields,
   });
 
   const apiRef = useGridApiRef();
