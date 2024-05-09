@@ -6,7 +6,7 @@ components: BarChart, ScatterChart, LineChart, PieChart
 
 # Charts - Label
 
-<p class="description">Label refers to the text reference of a series or data. In the UI it is used in many components like the `legend`, `tooltip` and inside an `arc` of a pie chart.</p>
+<p class="description">Label refers to the text reference of a series or data. It is used in many components like the "legend", "tooltip",  and inside an "arc" of a pie chart.</p>
 
 ## Basic display
 
