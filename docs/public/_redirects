@@ -1,7 +1,7 @@
 / /x/introduction/ 301
 /x/ https://mui.com/x/ 302
 # Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-/x/_next/* /_next/:splat
+/x/_next/* /_next/:splat 200
 
 # For links that we can't edit later on, for example hosted in the code published on npm or sent by email
 
