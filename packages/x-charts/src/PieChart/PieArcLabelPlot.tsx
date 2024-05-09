@@ -31,22 +31,19 @@ function getItemLabel(
     return null;
   }
 
-  if (arcLabel === 'label') {
-    return getLabel(item.label, 'arc');
+  switch (arcLabel) {
+    case 'label':
+      return getLabel(item.label, 'arc');
+    case 'value':
+      return item.value?.toString();
+    case 'formattedValue':
+      return item.formattedValue;
+    default:
+      return arcLabel({
+        ...item,
+        label: getLabel(item.label, 'arc'),
+      });
   }
-
-  if (arcLabel === 'value') {
-    return item.value?.toString();
-  }
-
-  if (arcLabel === 'formattedValue') {
-    return item.formattedValue;
-  }
-
-  return arcLabel({
-    ...item,
-    label: getLabel(item.label, 'arc'),
-  });
 }
 
 export interface PieArcLabelPlotSlots {
