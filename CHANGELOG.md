@@ -33,6 +33,7 @@ Same changes as in `@mui/x-data-grid-pro@7.4.0`.
 
 #### `@mui/x-date-pickers@7.4.0`
 
+- [fields] Fix regression preventing form submit on "Enter" click (#13065) @LukasTy
 - [pickers] Add `AdapterDateFnsJalaliV3` adapter (#12891) @smmoosavi
 - [pickers] Add optional `id` attribute on shortcut items (#12976) @noraleonte
 
