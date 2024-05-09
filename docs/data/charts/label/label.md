@@ -14,7 +14,7 @@ In the most basic example, you can pass in a `string` as a series' label, and it
 
 {{"demo": "BasicLabel.js"}}
 
-## Conditional Formatting
+## Conditional formatting
 
 In order to change the content of the label based on where it is being displayed. You can pass a function to the `label` property of the [BarSeriesType](/x/api/charts/bar-series-type/), [LineSeriesType](/x/api/charts/line-series-type/) and [ScatterSeriesType](/x/api/charts/scatter-series-type/) or [PieSeriesType](/x/api/charts/pie-series-type/)`.data.label` in case of a pie chart.
 
