@@ -10,7 +10,10 @@ export type PieValueType = {
    */
   id: PieItemId;
   value: number;
-  label?: string;
+  /**
+   * The label to display on the tooltip or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend' | 'arc') => string);
   color?: string;
 };
 
