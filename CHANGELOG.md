@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### `@mui/x-data-grid@7.4.0`
 
-- [DataGrid] Fix throw error with onBlur at SVG element (#13028) @oukunan
+- [DataGrid] Fix error when focus moves from column header to `svg` element (#13028) @oukunan
 - [DataGrid] Fix: column group change bug (#12965) @romgrk
 
 #### `@mui/x-data-grid-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
