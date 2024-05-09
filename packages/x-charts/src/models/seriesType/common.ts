@@ -10,10 +10,21 @@ export type SeriesValueFormatterContext = {
   dataIndex: number;
 };
 
+export type SeriesLabelFormatterContext = {
+  /**
+   * The location where the value is being rendered.
+   * - `'tooltip'`: The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'`: The value is displayed on the legend.
+   */
+  location: 'tooltip' | 'legend';
+};
+
 export type SeriesValueFormatter<TValue> = (
   value: TValue,
   context: SeriesValueFormatterContext,
 ) => string;
+
+export type SeriesLabelFormatter = (label: string, context: SeriesLabelFormatterContext) => string;
 
 export type CommonSeriesType<TValue> = {
   id?: SeriesId;
@@ -25,6 +36,13 @@ export type CommonSeriesType<TValue> = {
    * @returns {string} The string to display.
    */
   valueFormatter?: SeriesValueFormatter<TValue>;
+  /**
+   * Formatter used to render labels in tooltip or legend.
+   * @param {string} label The series' value to render.
+   * @param {SeriesLabelFormatterContext} context The rendering context of the value.
+   * @returns {string} The string to display.
+   */
+  labelFormatter?: SeriesLabelFormatter;
   highlightScope?: Partial<HighlightScope>;
 };
 
