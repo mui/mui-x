@@ -65,7 +65,6 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 - [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
 - [infra] Automation: Add release PR reviewers (#12982) @michelengelen
 
-
 ## 7.3.2
 
 _May 2, 2024_
