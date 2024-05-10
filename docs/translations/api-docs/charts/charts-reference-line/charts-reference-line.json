@@ -8,7 +8,7 @@
     "labelStyle": { "description": "The style applied to the label." },
     "lineStyle": { "description": "The style applied to the line." },
     "spacing": {
-      "description": "Additional space arround the label in px. Can be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes."
+      "description": "Additional space around the label in px. Can be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes."
     },
     "x": {
       "description": "The x value associated with the reference line. If defined the reference line will be vertical."

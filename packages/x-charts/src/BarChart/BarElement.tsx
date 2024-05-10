@@ -131,6 +131,7 @@ function BarElement(props: BarElementProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? BarElementPath;
+
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
@@ -144,6 +145,7 @@ function BarElement(props: BarElementProps) {
     },
     ownerState,
   });
+
   return <Bar {...barProps} />;
 }
 

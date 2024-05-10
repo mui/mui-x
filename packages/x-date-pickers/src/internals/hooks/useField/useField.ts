@@ -133,11 +133,6 @@ export const useField = <
         break;
       }
 
-      case event.key === 'Enter': {
-        event.preventDefault();
-        break;
-      }
-
       // Move selection to next section
       case event.key === 'ArrowRight': {
         event.preventDefault();
