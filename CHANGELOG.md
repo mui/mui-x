@@ -42,7 +42,6 @@ Same changes as in `@mui/x-data-grid-pro@7.4.0`.
 Same changes as in `@mui/x-date-pickers@7.4.0`.
 
 ### Charts
- 
 #### `@mui/x-charts@7.4.0`
 
 - [charts] Add `ChartsGrid` to `themeAugmentation` (#13026) @noraleonte
