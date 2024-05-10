@@ -15,20 +15,24 @@ import {
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const propValidators: PropValidator<DataGridProcessedProps>[] = [
-  ...propValidatorsDataGrid,
-  // Only validate in MIT version
-  (props) =>
-    (props.columns &&
-      props.columns.some((column) => column.resizable) &&
-      [
-        `MUI X: \`column.resizable = true\` is not a valid prop.`,
-        'Column resizing is not available in the MIT version.',
-        '',
-        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-      ].join('\n')) ||
-    undefined,
-];
+let propValidators: PropValidator<DataGridProcessedProps>[];
+
+if (process.env.NODE_ENV !== 'production') {
+  propValidators = [
+    ...propValidatorsDataGrid,
+    // Only validate in MIT version
+    (props) =>
+      (props.columns &&
+        props.columns.some((column) => column.resizable) &&
+        [
+          `MUI X: \`column.resizable = true\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version.',
+          '',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+        ].join('\n')) ||
+      undefined,
+  ];
+}
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -37,8 +41,9 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
-  validateProps(props, propValidators);
-
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidators);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
