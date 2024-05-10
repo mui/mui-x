@@ -10,7 +10,7 @@ _May 10, 2024_
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Add optional `id` attribute on shortcut items of the Date and Time Pickers
-- 🎁 Add support for Jalaali v3 in the Date and Time Pickers
+- 🎁 Add support for `date-fns-jalali` v3 in the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
