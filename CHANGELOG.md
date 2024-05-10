@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.4.0
+
+_May 10, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add optional `id` attribute on shortcut items of the Date and Time Pickers
+- 🎁 Add support for `date-fns-jalali` v3 in the Date and Time Pickers
+- 🚀 Support rounded corners on `BarChart`
+- 🌍 Add accessibility page to TreeView docs
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.4.0`
+
+- [DataGrid] Fix error when focus moves from column header to `svg` element (#13028) @oukunan
+- [DataGrid] Fix error on column groups change (#12965) @romgrk
+
+#### `@mui/x-data-grid-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.4.0`.
+
+#### `@mui/x-data-grid-premium@7.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.4.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.4.0`
+
+- [fields] Fix regression preventing form submit on "Enter" click (#13065) @LukasTy
+- [pickers] Add `AdapterDateFnsJalaliV3` adapter (#12891) @smmoosavi
+- [pickers] Add optional `id` attribute on shortcut items (#12976) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.4.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.4.0`
+
+- [charts] Add `ChartsGrid` to `themeAugmentation` (#13026) @noraleonte
+- [charts] Support rounded corners on `BarChart` (#12834) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.4.0`
+
+- [TreeView] Fix props propagation and theme entry in `TreeItem2` (#12889) @flaviendelangle
+
+### Docs
+
+- [docs] Add accessibility page to TreeView docs (#12845) @noraleonte
+- [docs] Fix Charts styling typos (#13061) @oliviertassinari
+- [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
+- [docs] Update interface name in pinned columns docs (#13070) @cherniavskii
+
+### Core
+
+- [core] Improve release process docs (#12977) @JCQuintas
+- [core] Prepare React 19 (#12991) @oliviertassinari
+- [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
+- [infra] Automation: Add release PR reviewers (#12982) @michelengelen
+
 ## 7.3.2
 
 _May 2, 2024_
@@ -16,8 +83,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   It should not affect you, but if you were relying on the gradient `id` attribute, please update your usage.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
