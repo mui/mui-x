@@ -56,7 +56,9 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 ### Docs
 
 - [docs] Add accessibility page to TreeView docs (#12845) @noraleonte
+- [docs] Fix Charts styling typos (#13061) @oliviertassinari
 - [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
+- [docs] Update interface name in pinned columns docs (#13070) @cherniavskii
 
 ### Core
 
