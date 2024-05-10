@@ -21,7 +21,7 @@ To pin a column, there are a few ways:
 To set pinned columns via `initialState`, pass an object with the following shape to this prop:
 
 ```ts
-interface GridPinnedColumns {
+interface GridPinnedColumnFields {
   left?: string[]; // Optional field names to pin to the left
   right?: string[]; // Optional field names to pin to the right
 }
