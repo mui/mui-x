@@ -64,15 +64,13 @@ Trying to solve these problems one after the other can make the code complex and
 
 ## Data source
 
-The idea for a centralized data source is to simplify server-side data fetching. It's an abstraction layer between the data grid and the server, providing a simple interface for interacting with server.
+The idea for a centralized data source is to simplify server-side data fetching. It's an abstraction layer between the data grid and the server, providing a simple interface for interacting with server. Think of it like a middle-man handling the communication between the Data Grid (client) and the actual data source (server).
 
 :::warning
 
 This feature is under development and is marked as **unstable**. The information shared on this page could change in future. Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
 
 :::
-
-The Data Grid already supports manual server-side data fetching for many features. To make it even smoother, you can use the data source. Think of it like a descriptor of the actual data source on server.
 
 It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a sub-set of data when needed.
 
@@ -226,6 +224,26 @@ interface GridDataSourceCache {
 ```
 
 You can use an existing library or write you own custom implementation of the cache.
+
+### Error handling
+
+You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`. It will be called whenever there's an error in fetching the data.
+
+The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
+
+```tsx
+<DataGridPro
+  columns={columns}
+  unstable_dataSource={customDataSource}
+  unstable_onDataSourceError={(error, params) => {
+    console.error(error);
+  }}
+/>
+```
+
+The demo below uses the `useDemoDataSource` utility to simulate the server-side error. Change the value of success rate make the server-side error occur randomly.
+
+{{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
 
 ### Updating data 🚧
 

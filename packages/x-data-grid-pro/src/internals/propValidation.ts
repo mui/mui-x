@@ -25,11 +25,6 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
       'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.') ||
     undefined,
   (props) =>
-    (props.unstable_dataSource &&
-      props.rows &&
-      'MUI X: The `rows` prop has no effect when the `unstable_dataSource` prop is passed.') ||
-    undefined,
-  (props) =>
     (props.signature !== GridSignature.DataGrid &&
       props.paginationMode === 'client' &&
       props.rowsLoadingMode !== 'server' &&

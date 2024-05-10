@@ -26,6 +26,7 @@ import {
   DEFAULT_SERVER_OPTIONS,
 } from './serverUtils';
 import type { ServerOptions } from './serverUtils';
+import { randomInt, random } from '../services';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -181,6 +182,18 @@ export const useDemoDataSource = (
       }
       let getRowsResponse: GridGetRowsResponse;
       const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
+
+      const { successRate = 1 } = serverOptionsWithDefault;
+      if (successRate !== 1) {
+        const rate = random(0.01, 0.99);
+        if (rate > successRate) {
+          const { minDelay, maxDelay } = serverOptionsWithDefault;
+          const delay = randomInt(minDelay, maxDelay);
+          return new Promise<GridGetRowsResponse>((_, reject) => {
+            setTimeout(() => reject(new Error('Could not fetch the data')), delay);
+          });
+        }
+      }
 
       if (isTreeData /* || TODO: `isRowGrouping` */) {
         const { rows, rootRowCount } = await processTreeDataRows(

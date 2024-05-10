@@ -8,14 +8,11 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { gridRowGroupsToFetchSelector } from '@mui/x-data-grid/internals';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { GridGetRowsResponse } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector } from './gridServerSideDataSelector';
 import { GridDataSourceApi } from './serverSideInterfaces';
-
-const getErrorMessage = (inputParams: GridGetRowsParams) =>
-  `MUI: Error in fetching rows for the input params: ${JSON.stringify(inputParams)}`;
 
 const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
   if (modeProp === 'server') {
@@ -139,7 +136,12 @@ export const useGridDataSource = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'unstable_dataSource' | 'sortingMode' | 'filterMode' | 'paginationMode' | 'treeData'
+    | 'unstable_dataSource'
+    | 'unstable_onDataSourceError'
+    | 'sortingMode'
+    | 'filterMode'
+    | 'paginationMode'
+    | 'treeData'
   >,
 ): void => {
   const nestedDataManager = React.useRef<NestedDataManager>(
@@ -147,6 +149,7 @@ export const useGridDataSource = (
   ).current;
   const groupsToAutoFetch = useGridSelector(privateApiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
+  const onError = props.unstable_onDataSourceError;
 
   const fetchTopLevelRows = React.useCallback(async () => {
     const getRows = props.unstable_dataSource?.getRows;
@@ -187,11 +190,12 @@ export const useGridDataSource = (
         privateApiRef.current.setRows(getRowsResponse.rows);
         privateApiRef.current.setLoading(false);
       } catch (error) {
+        privateApiRef.current.setRows([]);
         privateApiRef.current.setLoading(false);
-        throw new Error(getErrorMessage(fetchParams));
+        onError?.(error as Error, fetchParams);
       }
     }
-  }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows]);
+  }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError]);
 
   const enqueueChildrenFetch = React.useCallback(
     (id: GridRowId) => {
@@ -264,11 +268,11 @@ export const useGridDataSource = (
         } catch (error) {
           nestedDataManager.setRequestSettled(id);
           privateApiRef.current.setRowLoading(id, false);
-          throw new Error(getErrorMessage(fetchParams));
+          onError?.(error as Error, fetchParams);
         }
       }
     },
-    [nestedDataManager, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
+    [nestedDataManager, onError, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
 
   const setRowLoading = React.useCallback<GridDataSourceApi['setRowLoading']>(
