@@ -1,15 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@mui/x-license';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-// This license key is only valid for use with Material UI SAS's projects
-// See the terms: https://mui.com/r/x-license-eula
-LicenseInfo.setLicenseKey(
-  'e43ff101678711136a9b81c18047cb69Tz1NVUktRG9jLEU9MTc0Njc4NzYxODIwMSxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-);
+import { setupTestLicenseKey } from '../utils/testLicense';
+
+setupTestLicenseKey();
 
 Globals.assign({
   skipAnimation: true,
