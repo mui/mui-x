@@ -11,6 +11,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - ✨ Add optional `id` attribute on shortcut items of the Date and Time Pickers
 - 🎁 Add support for `date-fns-jalali` v3 in the Date and Time Pickers
+- 🚀 Support rounded corners on `BarChart`
+- 🌍 Add accessibility page to TreeView docs
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -81,8 +83,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   It should not affect you, but if you were relying on the gradient `id` attribute, please update your usage.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
