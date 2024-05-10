@@ -1293,6 +1293,9 @@ importers:
       '@mui/x-date-pickers-pro':
         specifier: workspace:*
         version: link:../packages/x-date-pickers-pro/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../packages/x-license/build
       '@playwright/test':
         specifier: ^1.43.1
         version: 1.43.1
