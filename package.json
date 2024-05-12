@@ -102,7 +102,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.1",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.31",
+    "@types/node": "^18.19.33",
     "@types/prettier": "^2.7.3",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
@@ -191,7 +191,7 @@
   },
   "resolutions": {
     "react-is": "^18.2.0",
-    "@types/node": "^18.19.31"
+    "@types/node": "^18.19.33"
   },
   "packageManager": "pnpm@8.15.8",
   "pnpm": {
