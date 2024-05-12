@@ -6,7 +6,7 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
-    "clearCache": { "description": "Clears the cache." },
+    "clearCache": { "description": "Clear the cache" },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
@@ -29,7 +29,7 @@
     },
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
-    "getCacheData": { "description": "Tries to search for some data in cache" },
+    "getCacheData": { "description": "Get data from the cache" },
     "getCellElement": {
       "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>."
     },
@@ -150,7 +150,7 @@
     "setAggregationModel": {
       "description": "Sets the aggregation model to the one given by <code>model</code>."
     },
-    "setCacheData": { "description": "Tries to search for some data in cache" },
+    "setCacheData": { "description": "Set data in the cache" },
     "setCellFocus": {
       "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>."
     },

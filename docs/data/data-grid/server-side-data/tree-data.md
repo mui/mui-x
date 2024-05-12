@@ -6,11 +6,23 @@ title: React Server-side tree data
 
 <p class="description">Tree data lazy-loading with server-side data source.</p>
 
-To use the server-side tree data, pass the `unstable_dataSource` prop as explained in the [overview section](/x/react-data-grid/server-side-data/), in addition to that passing of some additional props is required for the server-side tree data to work properly.
+To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
+
+Additionally, you must supply the following required props, listed and explained below.
+
+```tsx
+<DataGridPro
+  {...data}
+  unstable_dataSource={dataSource}
+  getGroupKey={getGroupKey}
+  hasChildren={hasChildren}
+  getChildrenCount={getChildrenCount}
+/>
+```
 
 - `getGroupKey(row: GridRowModel): string`
 
-  Used by the grid to group rows by their parent group. Replaces `getTreeDataPath` used in client-side tree-data.
+  Used to group rows by their parent group. Replaces `getTreeDataPath` used in client-side tree-data.
   For example, consider this tree structure for tree data.
 
   ```js
@@ -18,7 +30,7 @@ To use the server-side tree data, pass the `unstable_dataSource` prop as explain
     - (2) Thomas // groupKey 'Thomas'
   ```
 
-  When `(2) Thomas` is expanded, the `getRows` function will be called with group keys `['Sarah', 'Thomas']`.
+  When **(2) Thomas** is expanded, the `getRows` function will be called with group keys `['Sarah', 'Thomas']`.
 
 - `hasChildren(row: GridRowModel): boolean`
 
@@ -28,10 +40,10 @@ To use the server-side tree data, pass the `unstable_dataSource` prop as explain
 
   Used by the grid to determine the number of children of a row on server
 
-Following is a demo of the server-side tree data with the data source which supports filtering, sorting, and pagination on the server. It also supports the caching using the `unstable_dataSourceCache` prop based on the `QueryClient` exposed by `@tanstack/query-core`.
+Following is a demo of the server-side tree data with the data source which supports filtering, sorting, and pagination on the server. It also caches the data by default.
 
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The demo above uses a utility `useDemoDataSource` which uses a data generator service to generate data for testing of the application. It exposes a function called `getRows` which could be used directly as `GridDataSource.getRows`.
+The demo above uses a utility `useDemoDataSource` which uses a data generator service to generate data for testing of the application. Apart from providing the additional props, it exposes a function called `getRows` which could be used directly as `GridDataSource.getRows`.
 :::

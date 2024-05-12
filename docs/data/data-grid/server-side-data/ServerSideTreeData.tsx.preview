@@ -1,9 +1,8 @@
-<Button onClick={() => cache.clear()}>Reset cache</Button>
+<Button onClick={() => apiRef.current.clearCache()}>Reset cache</Button>
 <div style={{ height: 400 }}>
   <DataGridPro
     {...props}
     unstable_dataSource={dataSource}
-    unstable_dataSourceCache={cache}
     treeData
     apiRef={apiRef}
     pagination

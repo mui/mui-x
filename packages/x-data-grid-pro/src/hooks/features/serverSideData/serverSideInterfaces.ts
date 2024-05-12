@@ -32,19 +32,19 @@ export interface GridDataSourceApi {
  */
 export interface GridServerSideCacheApi {
   /**
-   * Tries to search for some data in cache
-   * @param {GridGetRowsParams} params The params of type [[GridGetRowsParams]].
-   * @returns {GridGetRowsResponse | null} The data of type [[GridGetRowsResponse]] or `null` for cache miss.
+   * Get data from the cache
+   * @param {GridGetRowsParams} params The params of type `GridGetRowsParams`.
+   * @returns {GridGetRowsResponse | undefined} The data of type `GridGetRowsResponse` or `undefined` for cache miss.
    */
-  getCacheData: (params: GridGetRowsParams) => unknown;
+  getCacheData: (params: GridGetRowsParams) => GridGetRowsResponse | undefined;
   /**
-   * Tries to search for some data in cache
+   * Set data in the cache
    * @param {GridGetRowsParams} params The params of type [[GridGetRowsParams]].
    * @param {GridGetRowsResponse} data The data of type [[GridGetRowsResponse]].
    */
   setCacheData: (params: GridGetRowsParams, data: GridGetRowsResponse) => void;
   /**
-   * Clears the cache.
+   * Clear the cache
    */
   clearCache: () => void;
 }

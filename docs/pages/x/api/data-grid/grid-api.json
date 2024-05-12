@@ -68,7 +68,9 @@
     },
     "getAllRowIds": { "type": { "description": "() =&gt; GridRowId[]" }, "required": true },
     "getCacheData": {
-      "type": { "description": "(params: GridGetRowsParams) =&gt; unknown" },
+      "type": {
+        "description": "(params: GridGetRowsParams) =&gt; GridGetRowsResponse | undefined"
+      },
       "required": true,
       "isProPlan": true
     },

@@ -5,17 +5,42 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
 import { GridServerSideCacheApi } from './serverSideInterfaces';
 
-const noop = () => undefined;
+class SimpleServerSideCache {
+  private cache: Record<string, GridGetRowsResponse>;
+
+  constructor() {
+    this.cache = {};
+  }
+
+  static getKey(params: GridGetRowsParams) {
+    return JSON.stringify([
+      params.paginationModel,
+      params.filterModel,
+      params.sortModel,
+      params.groupKeys,
+    ]);
+  }
+
+  set(key: string, value: GridGetRowsResponse) {
+    this.cache[key] = value;
+  }
+
+  get(key: string) {
+    return this.cache[key];
+  }
+
+  clear() {
+    this.cache = {};
+  }
+}
+
+const cacheInstance = new SimpleServerSideCache();
 
 const defaultCache: GridDataSourceCache = {
-  // TODO: Implement an internal cache
-  set: noop,
-  get: noop,
-  clear: noop,
-};
-
-const getQueryKey = (params: GridGetRowsParams) => {
-  return [params.paginationModel, params.sortModel, params.filterModel, params.groupKeys];
+  getKey: SimpleServerSideCache.getKey,
+  set: (key, value) => cacheInstance.set(key as string, value as GridGetRowsResponse),
+  get: (key) => cacheInstance.get(key as string),
+  clear: () => cacheInstance.clear(),
 };
 
 export const useGridServerSideCache = (
@@ -25,17 +50,15 @@ export const useGridServerSideCache = (
     'unstable_dataSource' | 'disableServerSideCache' | 'unstable_dataSourceCache'
   >,
 ): void => {
-  const cacheRef = React.useRef<GridDataSourceCache>(
-    props.unstable_dataSourceCache || defaultCache,
-  );
+  const cache = React.useRef<GridDataSourceCache>(props.unstable_dataSourceCache || defaultCache);
 
   const getCacheData = React.useCallback(
     (params: GridGetRowsParams) => {
       if (props.disableServerSideCache) {
         return undefined;
       }
-      const queryKey = getQueryKey(params);
-      return cacheRef.current.get(queryKey);
+      const key = cache.current.getKey(params);
+      return cache.current.get(key);
     },
     [props.disableServerSideCache],
   );
@@ -45,8 +68,8 @@ export const useGridServerSideCache = (
       if (props.disableServerSideCache) {
         return;
       }
-      const queryKey = getQueryKey(params);
-      cacheRef.current.set(queryKey, data);
+      const key = cache.current.getKey(params);
+      cache.current.set(key, data);
     },
     [props.disableServerSideCache],
   );
@@ -55,7 +78,7 @@ export const useGridServerSideCache = (
     if (props.disableServerSideCache) {
       return;
     }
-    cacheRef.current.clear();
+    cache.current.clear();
   }, [props.disableServerSideCache]);
 
   const serverSideCacheApi: GridServerSideCacheApi = {
@@ -73,7 +96,7 @@ export const useGridServerSideCache = (
       return;
     }
     if (props.unstable_dataSourceCache) {
-      cacheRef.current = props.unstable_dataSourceCache;
+      cache.current = props.unstable_dataSourceCache;
     }
   }, [props.unstable_dataSourceCache]);
 };

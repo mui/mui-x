@@ -174,26 +174,27 @@ export const useGridDataSource = (
       if (cachedData.rowCount) {
         privateApiRef.current.setRowCount(cachedData.rowCount);
       }
-    } else {
-      const isLoading = gridRowsLoadingSelector(privateApiRef);
-      if (!isLoading) {
-        privateApiRef.current.setLoading(true);
-      }
+      return;
+    }
 
-      try {
-        const getRowsResponse = await getRows(fetchParams);
-        privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount) {
-          privateApiRef.current.setRowCount(getRowsResponse.rowCount);
-        }
-        privateApiRef.current.caches.groupKeys = [];
-        privateApiRef.current.setRows(getRowsResponse.rows);
-        privateApiRef.current.setLoading(false);
-      } catch (error) {
-        privateApiRef.current.setRows([]);
-        privateApiRef.current.setLoading(false);
-        onError?.(error as Error, fetchParams);
+    const isLoading = gridRowsLoadingSelector(privateApiRef);
+    if (!isLoading) {
+      privateApiRef.current.setLoading(true);
+    }
+
+    try {
+      const getRowsResponse = await getRows(fetchParams);
+      privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
+      if (getRowsResponse.rowCount) {
+        privateApiRef.current.setRowCount(getRowsResponse.rowCount);
       }
+      privateApiRef.current.caches.groupKeys = [];
+      privateApiRef.current.setRows(getRowsResponse.rows);
+      privateApiRef.current.setLoading(false);
+    } catch (error) {
+      privateApiRef.current.setRows([]);
+      privateApiRef.current.setLoading(false);
+      onError?.(error as Error, fetchParams);
     }
   }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError]);
 
@@ -237,39 +238,40 @@ export const useGridDataSource = (
           privateApiRef.current.setRowCount(cachedData.rowCount);
         }
         privateApiRef.current.setRowChildrenExpansion(id, true);
-      } else {
-        const isLoading = rowNode.isLoading;
-        if (!isLoading) {
-          privateApiRef.current.setRowLoading(id, true);
-        }
+        return;
+      }
 
-        try {
-          const getRowsResponse = await getRows(fetchParams);
-          if (!privateApiRef.current.getRowNode(id)) {
-            // The row has been removed from the grid
-            nestedDataManager.clearPendingRequest(id);
-            privateApiRef.current.setRowLoading(id, false);
-            return;
-          }
-          if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
-            // Unregistered or cancelled request
-            privateApiRef.current.setRowLoading(id, false);
-            return;
-          }
-          nestedDataManager.setRequestSettled(id);
-          privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
-          if (getRowsResponse.rowCount) {
-            privateApiRef.current.setRowCount(getRowsResponse.rowCount);
-          }
-          privateApiRef.current.caches.groupKeys = rowNode.path;
-          privateApiRef.current.updateRows(getRowsResponse.rows, false);
-          privateApiRef.current.setRowChildrenExpansion(id, true);
+      const isLoading = rowNode.isLoading;
+      if (!isLoading) {
+        privateApiRef.current.setRowLoading(id, true);
+      }
+
+      try {
+        const getRowsResponse = await getRows(fetchParams);
+        if (!privateApiRef.current.getRowNode(id)) {
+          // The row has been removed from the grid
+          nestedDataManager.clearPendingRequest(id);
           privateApiRef.current.setRowLoading(id, false);
-        } catch (error) {
-          nestedDataManager.setRequestSettled(id);
-          privateApiRef.current.setRowLoading(id, false);
-          onError?.(error as Error, fetchParams);
+          return;
         }
+        if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
+          // Unregistered or cancelled request
+          privateApiRef.current.setRowLoading(id, false);
+          return;
+        }
+        nestedDataManager.setRequestSettled(id);
+        privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
+        if (getRowsResponse.rowCount) {
+          privateApiRef.current.setRowCount(getRowsResponse.rowCount);
+        }
+        privateApiRef.current.caches.groupKeys = rowNode.path;
+        privateApiRef.current.updateRows(getRowsResponse.rows, false);
+        privateApiRef.current.setRowChildrenExpansion(id, true);
+        privateApiRef.current.setRowLoading(id, false);
+      } catch (error) {
+        nestedDataManager.setRequestSettled(id);
+        privateApiRef.current.setRowLoading(id, false);
+        onError?.(error as Error, fetchParams);
       }
     },
     [nestedDataManager, onError, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],

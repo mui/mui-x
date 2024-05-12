@@ -2,27 +2,6 @@ import * as React from 'react';
 import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
-import { QueryClient } from '@tanstack/query-core';
-
-const cacheInstance = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-    },
-  },
-});
-
-const cache = {
-  set: (key, value) => {
-    cacheInstance.setQueryData(key, value);
-  },
-  get: (key) => {
-    return cacheInstance.getQueryData(key);
-  },
-  clear: () => {
-    cacheInstance.clear();
-  },
-};
 
 const pageSizeOptions = [5, 10, 50];
 
@@ -56,12 +35,11 @@ export default function ServerSideTreeData() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => cache.clear()}>Reset cache</Button>
+      <Button onClick={() => apiRef.current.clearCache()}>Reset cache</Button>
       <div style={{ height: 400 }}>
         <DataGridPro
           {...props}
           unstable_dataSource={dataSource}
-          unstable_dataSourceCache={cache}
           treeData
           apiRef={apiRef}
           pagination

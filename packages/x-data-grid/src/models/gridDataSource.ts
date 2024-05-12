@@ -66,7 +66,26 @@ export interface GridDataSource {
 }
 
 export interface GridDataSourceCache {
-  set: (key: any[], value: unknown) => void;
-  get: (key: any[]) => unknown;
+  /**
+   * Provides a key for the cache to be used in `set` and `get`
+   * @param {GridGetRowsParams} params The parameters required to fetch the rows
+   * @returns {unknown} The key for the cache to be used in `set` and `get`
+   */
+  getKey: (params: GridGetRowsParams) => unknown;
+  /**
+   * Sets the cache entry for the given key
+   * @param {unknown} key The key for the cache
+   * @param {GridGetRowsResponse} value The value to be stored in the cache
+   */
+  set: (key: unknown, value: GridGetRowsResponse) => void;
+  /**
+   * Gets the cache entry for the given key
+   * @param {unknown} key The key for the cache
+   * @returns {GridGetRowsResponse} The value stored in the cache
+   */
+  get: (key: unknown) => GridGetRowsResponse;
+  /**
+   * Clears the cache
+   */
   clear: () => void;
 }
