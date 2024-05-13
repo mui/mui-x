@@ -36,6 +36,7 @@
     }
   },
   "slotDescriptions": {
+    "checkbox": "The component that renders the item checkbox for selection.",
     "collapseIcon": "The icon used to collapse the item.",
     "content": "The component that renders the content of the item. (e.g.: everything related to this item, not to its children).",
     "endIcon": "The icon displayed next to an end item.",

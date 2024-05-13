@@ -42,6 +42,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',

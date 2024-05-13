@@ -45,6 +45,8 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
   selection: {
     multiSelect: false,
+    checkboxSelection: false,
+    disableSelection: false,
   },
   rootRef: {
     current: null,

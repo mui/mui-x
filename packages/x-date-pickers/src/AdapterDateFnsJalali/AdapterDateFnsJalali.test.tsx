@@ -10,7 +10,6 @@ import {
 import { enUS } from 'date-fns/locale';
 import faIR from 'date-fns-jalali/locale/fa-IR';
 import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
-import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 
 describe('<AdapterDateFnsJalali />', () => {
@@ -18,7 +17,7 @@ describe('<AdapterDateFnsJalali />', () => {
 
   describe('Adapter localization', () => {
     it('Formatting', () => {
-      const adapter = new AdapterMomentJalaali();
+      const adapter = new AdapterDateFnsJalali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
@@ -26,11 +25,11 @@ describe('<AdapterDateFnsJalali />', () => {
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
-      expectDate('fullDate', '۱۳۹۸، Bahman ۱م');
-      expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
-      expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
-      expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ بعد از ظهر');
-      expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
+      expectDate('fullDate', '12-ام بهمن 1398');
+      expectDate('keyboardDate', '1398/11/12');
+      expectDate('keyboardDateTime', '1398/11/12 11:44 ب.ظ.');
+      expectDate('keyboardDateTime12h', '1398/11/12 11:44 ب.ظ.');
+      expectDate('keyboardDateTime24h', '1398/11/12 23:44');
     });
   });
 

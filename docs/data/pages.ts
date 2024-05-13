@@ -444,6 +444,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/axis', title: 'Axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition', title: 'Composition' },
+              { pathname: '/x/react-charts/label', title: 'Label' },
               { pathname: '/x/react-charts/legend', title: 'Legend' },
               { pathname: '/x/react-charts/stacking', title: 'Stacking' },
               { pathname: '/x/react-charts/styling', title: 'Styling' },
@@ -496,6 +497,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       { pathname: '/x/react-tree-view/getting-started' },
+      { pathname: '/x/react-tree-view/accessibility' },
       {
         pathname: '/x/react-tree-view/simple-tree-view',
         subheader: 'Simple Tree View',
