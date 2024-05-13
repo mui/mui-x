@@ -10,6 +10,7 @@ export const useInteractionItemProps = (scope?: Partial<HighlightScope>, skip?: 
   if (skip) {
     return () => ({});
   }
+  console.log('maybe enter legend/leave legend');
   const getInteractionItemProps = (data: SeriesItemIdentifier) => {
     const onMouseEnter = () => {
       dispatchInteraction({

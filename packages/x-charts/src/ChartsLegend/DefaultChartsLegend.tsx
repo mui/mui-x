@@ -7,10 +7,12 @@ import { AnchorPosition, Direction } from './utils';
 import { FormattedSeries } from '../context/SeriesContextProvider';
 import { LegendParams } from '../models/seriesType/config';
 import { DefaultizedProps } from '../models/helpers';
-import { ChartsText, ChartsTextStyle } from '../ChartsText';
+import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import type { ChartsLegendProps } from './ChartsLegend';
+import { calculateLabelPositions } from './calculateLabelPositions';
+import { ChartsLegendItem } from './ChartsLegendItem';
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
@@ -35,7 +37,7 @@ export interface LegendRendererProps
   series: FormattedSeries;
   seriesToDisplay: LegendParams[];
   drawingArea: DrawingArea;
-  classes: Record<'mark' | 'series' | 'root', string>;
+  classes: Record<'mark' | 'series' | 'root' | 'seriesBackground', string>;
   /**
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
@@ -67,6 +69,7 @@ export interface LegendRendererProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
+  onClick?: (legend: LegendParams, index: number) => void;
 }
 
 /**
@@ -106,7 +109,6 @@ function DefaultChartsLegend(props: LegendRendererProps) {
     labelStyle: inLabelStyle,
   } = props;
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
 
   const labelStyle = React.useMemo(
     () =>
@@ -147,95 +149,27 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   const availableWidth = totalWidth - padding.left - padding.right;
   const availableHeight = totalHeight - padding.top - padding.bottom;
 
-  const [seriesWithPosition, legendWidth, legendHeight] = React.useMemo(() => {
-    // Start at 0, 0. Will be modified later by padding and position.
-    let x = 0;
-    let y = 0;
-
-    // total values used to align legend later.
-    let totalWidthUsed = 0;
-    let totalHeightUsed = 0;
-    let rowIndex = 0;
-    const rowMaxHeight = [0];
-
-    const seriesWithRawPosition = seriesToDisplay.map(({ label, ...other }) => {
-      const itemSpace = getItemSpace(label, labelStyle);
-      const rep = {
-        ...other,
-        label,
-        positionX: x,
-        positionY: y,
-        innerHeight: itemSpace.innerHeight,
-        innerWidth: itemSpace.innerWidth,
-        outerHeight: itemSpace.outerHeight,
-        outerWidth: itemSpace.outerWidth,
-        rowIndex,
-      };
-
-      if (direction === 'row') {
-        if (x + itemSpace.innerWidth > availableWidth) {
-          // This legend item would create overflow along the x-axis, so we start a new row.
-          x = 0;
-          y += rowMaxHeight[rowIndex];
-          rowIndex += 1;
-          if (rowMaxHeight.length <= rowIndex) {
-            rowMaxHeight.push(0);
-          }
-          rep.positionX = x;
-          rep.positionY = y;
-          rep.rowIndex = rowIndex;
-        }
-        totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.outerWidth);
-        totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.outerHeight);
-        rowMaxHeight[rowIndex] = Math.max(rowMaxHeight[rowIndex], itemSpace.outerHeight);
-
-        x += itemSpace.outerWidth;
-      }
-
-      if (direction === 'column') {
-        if (y + itemSpace.innerHeight > availableHeight) {
-          // This legend item would create overflow along the y-axis, so we start a new column.
-          x = totalWidthUsed + itemGap;
-          y = 0;
-          rowIndex = 0;
-          rep.positionX = x;
-          rep.positionY = y;
-          rep.rowIndex = rowIndex;
-        }
-        if (rowMaxHeight.length <= rowIndex) {
-          rowMaxHeight.push(0);
-        }
-        totalWidthUsed = Math.max(totalWidthUsed, x + itemSpace.outerWidth);
-        totalHeightUsed = Math.max(totalHeightUsed, y + itemSpace.outerHeight);
-
-        rowIndex += 1;
-        y += itemSpace.outerHeight;
-      }
-
-      return rep;
-    });
-
-    return [
-      seriesWithRawPosition.map((item) => ({
-        ...item,
-        positionY:
-          item.positionY +
-          (direction === 'row'
-            ? rowMaxHeight[item.rowIndex] / 2 // Get the center of the entire row
-            : item.outerHeight / 2), // Get the center of the item
-      })),
-      totalWidthUsed,
-      totalHeightUsed,
-    ];
-  }, [
-    seriesToDisplay,
-    getItemSpace,
-    labelStyle,
-    direction,
-    availableWidth,
-    availableHeight,
-    itemGap,
-  ]);
+  const [seriesWithPosition, legendWidth, legendHeight] = React.useMemo(
+    () =>
+      calculateLabelPositions(
+        seriesToDisplay,
+        getItemSpace,
+        availableWidth,
+        availableHeight,
+        direction,
+        itemGap,
+        labelStyle,
+      ),
+    [
+      seriesToDisplay,
+      getItemSpace,
+      availableWidth,
+      availableHeight,
+      direction,
+      itemGap,
+      labelStyle,
+    ],
+  );
 
   const gapX = React.useMemo(() => {
     switch (position.horizontal) {
@@ -266,27 +200,20 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
-        {seriesWithPosition.map(({ id, label, color, positionX, positionY }) => (
-          <g
-            key={id}
-            className={classes.series}
-            transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
-          >
-            <rect
-              className={classes.mark}
-              x={isRTL ? -itemMarkWidth : 0}
-              y={-itemMarkHeight / 2}
-              width={itemMarkWidth}
-              height={itemMarkHeight}
-              fill={color}
-            />
-            <ChartsText
-              style={labelStyle}
-              text={label}
-              x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
-              y={0}
-            />
-          </g>
+        {seriesWithPosition.map((item, i) => (
+          <ChartsLegendItem
+            {...item}
+            index={i}
+            gapX={gapX}
+            gapY={gapY}
+            legendWidth={legendWidth}
+            itemMarkHeight={itemMarkHeight}
+            itemMarkWidth={itemMarkWidth}
+            markGap={markGap}
+            labelStyle={labelStyle}
+            classes={classes}
+            key={item.id}
+          />
         ))}
       </ChartsLegendRoot>
     </NoSsr>
@@ -345,6 +272,7 @@ DefaultChartsLegend.propTypes = {
    * @default 5
    */
   markGap: PropTypes.number,
+  onClick: PropTypes.func,
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.

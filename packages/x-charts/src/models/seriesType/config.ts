@@ -6,6 +6,7 @@ import { AxisConfig } from '../axis';
 import { DefaultizedProps, MakeOptional } from '../helpers';
 import { StackingGroupsType } from '../../internals/stackSeries';
 import { SeriesId } from './common';
+import type { HighlightScope } from '../../context';
 
 interface ChartsSeriesConfig {
   bar: {
@@ -102,6 +103,10 @@ export type LegendParams = {
    * Used for internal purpose such as `key` props
    */
   id: SeriesId;
+  /**
+   * The highlight scope configuration.
+   */
+  highlightScope: HighlightScope;
 };
 
 export type LegendGetter<T extends ChartSeriesType> = (
