@@ -144,13 +144,12 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
       ...dateRangeSections.endDate,
     ]);
   },
-  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
+  getV6InputValueFromSections: ({ sections, ...other }) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForV6InputFromSections(
-      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
-      localizedDigits,
-      isRTL,
-    );
+    return createDateStrForV6InputFromSections({
+      sections: [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      ...other,
+    });
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if some section have the same separator as the dateSeparator.

@@ -5,7 +5,9 @@ import {
   cleanLeadingZeros,
   doesSectionFormatHaveLeadingZeros,
   getDateSectionConfigFromFormatToken,
+  getCorrectSizeOfSectionWithTrailingZeroInInput,
   removeLocalizedDigits,
+  shouldSectionHaveLeadingZerosInInput,
 } from './useField.utils';
 
 interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
@@ -124,11 +126,9 @@ const createSection = <TDate extends PickerValidDate>({
   shouldRespectLeadingZeros,
   localeText,
   localizedDigits,
-  now,
   token,
   startSeparator,
 }: BuildSectionsFromFormatParams<TDate> & {
-  now: TDate;
   token: string;
   startSeparator: string;
 }): FieldSection => {
@@ -137,7 +137,8 @@ const createSection = <TDate extends PickerValidDate>({
   }
 
   const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
-
+  const isValidDate = date != null && utils.isValid(date);
+  const rawSectionValue = isValidDate ? utils.formatByString(date, token) : '';
   const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
     utils,
     timezone,
@@ -146,47 +147,45 @@ const createSection = <TDate extends PickerValidDate>({
     token,
   );
 
-  const hasLeadingZerosInInput = shouldRespectLeadingZeros
+  const deprecatedHasLeadingZerosInInput = shouldRespectLeadingZeros
     ? hasLeadingZerosInFormat
     : sectionConfig.contentType === 'digit';
 
-  const isValidDate = date != null && utils.isValid(date);
-  let sectionValue = isValidDate ? utils.formatByString(date, token) : '';
-  let maxLength: number | null = null;
+  const hasLeadingZerosInInput = shouldSectionHaveLeadingZerosInInput({
+    shouldRespectLeadingZeros,
+    hasLeadingZerosInFormat,
+    sectionValue: rawSectionValue,
+  });
 
-  if (hasLeadingZerosInInput) {
-    if (hasLeadingZerosInFormat) {
-      maxLength =
-        sectionValue === '' ? utils.formatByString(now, token).length : sectionValue.length;
-    } else {
-      if (sectionConfig.maxLength == null) {
-        throw new Error(
-          `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
-        );
-      }
+  const deprecatedMaxLength = hasLeadingZerosInInput
+    ? getCorrectSizeOfSectionWithTrailingZeroInInput({
+        utils,
+        formatToken: token,
+        hasLeadingZerosInFormat,
+      })
+    : null;
 
-      maxLength = sectionConfig.maxLength;
+  let sectionValue = rawSectionValue;
 
-      if (isValidDate) {
-        sectionValue = applyLocalizedDigits(
-          cleanLeadingZeros(removeLocalizedDigits(sectionValue, localizedDigits), maxLength),
-          localizedDigits,
-        );
-      }
-    }
+  if (hasLeadingZerosInInput && !hasLeadingZerosInFormat) {
+    sectionValue = applyLocalizedDigits(
+      cleanLeadingZeros(removeLocalizedDigits(sectionValue, localizedDigits), deprecatedMaxLength!),
+      localizedDigits,
+    );
   }
 
   return {
     ...sectionConfig,
     format: token,
-    maxLength,
     value: sectionValue,
     placeholder: getSectionPlaceholder(utils, timezone, localeText, sectionConfig, token),
     hasLeadingZerosInFormat,
-    hasLeadingZerosInInput,
     startSeparator,
     endSeparator: '',
     modified: false,
+
+    hasLeadingZerosInInput: deprecatedHasLeadingZerosInInput,
+    maxLength: deprecatedMaxLength,
   };
 };
 
@@ -198,7 +197,6 @@ const buildSections = <TDate extends PickerValidDate>(
 ) => {
   const { utils, expandedFormat, escapedParts } = params;
 
-  const now = utils.date(undefined);
   const sections: FieldSection[] = [];
   let startSeparator: string = '';
 
@@ -229,7 +227,7 @@ const buildSections = <TDate extends PickerValidDate>(
       while (word.length > 0) {
         const firstWord = regExpFirstTokenInWord.exec(word)![1];
         word = word.slice(firstWord.length);
-        sections.push(createSection({ ...params, now, token: firstWord, startSeparator }));
+        sections.push(createSection({ ...params, token: firstWord, startSeparator }));
         startSeparator = '';
       }
 

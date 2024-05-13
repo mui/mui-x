@@ -35,6 +35,7 @@ interface UseFieldCharacterEditingParams<
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
   localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
   setTempAndroidValueStr: (newValue: string | null) => void;
   timezone: PickersTimezone;
 }
@@ -94,6 +95,7 @@ export const useFieldCharacterEditing = <
   updateSectionValue,
   sectionsValueBoundaries,
   localizedDigits,
+  shouldRespectLeadingZeros,
   setTempAndroidValueStr,
   timezone,
 }: UseFieldCharacterEditingParams<TDate, TSection>): UseFieldCharacterEditingResponse => {
@@ -314,13 +316,14 @@ export const useFieldCharacterEditing = <
         queryValueNumber * 10 > sectionBoundaries.maximum ||
         cleanQueryValue.length === sectionBoundaries.maximum.toString().length;
 
-      const newSectionValue = cleanDigitSectionValue(
+      const newSectionValue = cleanDigitSectionValue({
         utils,
-        queryValueNumber,
+        value: queryValueNumber,
         sectionBoundaries,
         localizedDigits,
+        shouldRespectLeadingZeros,
         section,
-      );
+      });
 
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };

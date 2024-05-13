@@ -43,6 +43,13 @@ export interface FieldSection {
   /**
    * Maximum length of the value, only defined for "digit" sections.
    * Will be used to determine how many leading zeros should be added to the value.
+   * @deprecated Replace it with the following code:
+   * ```ts
+   * const adapter = new Adapter({}); // Whatever adapter you are using for your component.
+   * const maxLength = section.hasLeadingZerosInFormat
+   *   ? adapter.formatByString(adapter.date(undefined), section.format).length
+   *   : adapter.formatTokenMap[section.format]?.maxLength
+   * ```
    */
   maxLength: number | null;
   /**
@@ -66,6 +73,12 @@ export interface FieldSection {
   /**
    * If `true`, the value of this section is supposed to have leading zeroes when rendered in the input.
    * For example, the value `1` should be rendered as "01" instead of "1".
+   * @deprecated Replace it with the following code:
+   * ```ts
+   * const hasLeadingZerosInInput = props.shouldRespectLeadingZeros
+   *   ? section.hasLeadingZerosInFormat
+   *   : /^([0-9]+)$/.test(section.value);
+   * ```
    */
   hasLeadingZerosInInput: boolean;
   /**

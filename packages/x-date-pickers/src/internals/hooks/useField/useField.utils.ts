@@ -172,9 +172,48 @@ export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
   return !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
+export const shouldSectionHaveLeadingZerosInInput = ({
+  shouldRespectLeadingZeros,
+  hasLeadingZerosInFormat,
+  sectionValue,
+}: {
+  shouldRespectLeadingZeros: boolean;
+  hasLeadingZerosInFormat: boolean;
+  sectionValue: string;
+}) => {
+  if (shouldRespectLeadingZeros) {
+    return hasLeadingZerosInFormat;
+  }
+
+  return /^([0-9]+)$/.test(sectionValue);
+};
+
+export const getCorrectSizeOfSectionWithTrailingZeroInInput = <TDate extends PickerValidDate>({
+  utils,
+  formatToken,
+  hasLeadingZerosInFormat,
+}: {
+  utils: MuiPickersAdapter<TDate>;
+  formatToken: string;
+  hasLeadingZerosInFormat: boolean;
+}) => {
+  if (hasLeadingZerosInFormat) {
+    return utils.formatByString(utils.date(undefined), formatToken).length;
+  }
+
+  const sectionConfig = getDateSectionConfigFromFormatToken(utils, formatToken);
+  if (sectionConfig.maxLength == null) {
+    throw new Error(
+      `MUI X: The token ${formatToken} should have a 'maxDigitNumber' property on it's adapter`,
+    );
+  }
+
+  return sectionConfig.maxLength;
+};
+
 /**
- * Remove the leading zeroes to a digit section value.
- * E.g.: `03` => `3`
+ * Add the leading zeroes to a digit section value.
+ * E.g.: `3` => `03`
  * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
  */
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
@@ -191,21 +230,24 @@ export const cleanLeadingZeros = (valueStr: string, size: number) => {
   return cleanValueStr;
 };
 
-export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: number,
-  sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
-  localizedDigits: string[],
+export const cleanDigitSectionValue = <TDate extends PickerValidDate>({
+  utils,
+  value,
+  sectionBoundaries,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+  section,
+}: {
+  utils: MuiPickersAdapter<TDate>;
+  value: number;
+  sectionBoundaries: FieldSectionValueBoundaries<TDate, any>;
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
   section: Pick<
     FieldSection,
-    | 'format'
-    | 'type'
-    | 'contentType'
-    | 'hasLeadingZerosInFormat'
-    | 'hasLeadingZerosInInput'
-    | 'maxLength'
-  >,
-) => {
+    'format' | 'type' | 'contentType' | 'hasLeadingZerosInFormat' | 'maxLength'
+  >;
+}) => {
   if (process.env.NODE_ENV !== 'production') {
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
       throw new Error(
@@ -217,34 +259,57 @@ export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
     }
   }
 
+  let valueStr: string;
   if (section.type === 'day' && section.contentType === 'digit-with-letter') {
     const date = utils.setDate(
       (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
       value,
     );
-    return utils.formatByString(date, section.format);
+    valueStr = utils.formatByString(date, section.format);
+  } else {
+    // queryValue without leading `0` (`01` => `1`)
+    valueStr = value.toString();
   }
 
-  // queryValue without leading `0` (`01` => `1`)
-  let valueStr = value.toString();
-
-  if (section.hasLeadingZerosInInput) {
-    valueStr = cleanLeadingZeros(valueStr, section.maxLength!);
+  if (
+    shouldSectionHaveLeadingZerosInInput({
+      shouldRespectLeadingZeros,
+      hasLeadingZerosInFormat: section.hasLeadingZerosInFormat,
+      sectionValue: valueStr,
+    })
+  ) {
+    const size = getCorrectSizeOfSectionWithTrailingZeroInInput({
+      utils,
+      formatToken: section.format,
+      hasLeadingZerosInFormat: section.hasLeadingZerosInFormat,
+    });
+    valueStr = cleanLeadingZeros(valueStr, size);
   }
 
   return applyLocalizedDigits(valueStr, localizedDigits);
 };
 
-export const adjustSectionValue = <TDate extends PickerValidDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
-  section: TSection,
-  keyCode: AvailableAdjustKeyCode,
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
-  localizedDigits: string[],
-  activeDate: TDate | null,
-  stepsAttributes?: { minutesStep?: number },
-): string => {
+export const adjustSectionValue = <TDate extends PickerValidDate, TSection extends FieldSection>({
+  utils,
+  timezone,
+  section,
+  keyCode,
+  sectionsValueBoundaries,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+  activeDate,
+  stepsAttributes,
+}: {
+  utils: MuiPickersAdapter<TDate>;
+  timezone: PickersTimezone;
+  section: TSection;
+  keyCode: AvailableAdjustKeyCode;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
+  activeDate: TDate | null;
+  stepsAttributes?: { minutesStep?: number };
+}): string => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
@@ -259,7 +324,14 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
     });
 
     const getCleanValue = (value: number) =>
-      cleanDigitSectionValue(utils, value, sectionBoundaries, localizedDigits, section);
+      cleanDigitSectionValue({
+        utils,
+        value,
+        sectionBoundaries,
+        localizedDigits,
+        shouldRespectLeadingZeros,
+        section,
+      });
 
     const step =
       section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
@@ -334,21 +406,26 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
   return adjustLetterSection();
 };
 
-export const getSectionVisibleValue = (
-  section: FieldSection,
-  target: 'input-rtl' | 'input-ltr' | 'non-input',
-  localizedDigits: string[],
-) => {
+export const getSectionVisibleValue = ({
+  section,
+  target,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+}: {
+  section: FieldSection;
+  target: 'input-rtl' | 'input-ltr' | 'non-input';
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
+}) => {
   let value = section.value || section.placeholder;
 
-  const hasLeadingZeros =
-    target === 'non-input' ? section.hasLeadingZerosInFormat : section.hasLeadingZerosInInput;
+  const hasLeadingZerosInInput = shouldSectionHaveLeadingZerosInInput({
+    shouldRespectLeadingZeros,
+    hasLeadingZerosInFormat: section.hasLeadingZerosInFormat,
+    sectionValue: value,
+  });
 
-  if (
-    target === 'non-input' &&
-    section.hasLeadingZerosInInput &&
-    !section.hasLeadingZerosInFormat
-  ) {
+  if (target === 'non-input' && hasLeadingZerosInInput && !section.hasLeadingZerosInFormat) {
     value = Number(removeLocalizedDigits(value, localizedDigits)).toString();
   }
 
@@ -357,11 +434,7 @@ export const getSectionVisibleValue = (
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
-  const shouldAddInvisibleSpace =
-    ['input-rtl', 'input-ltr'].includes(target) &&
-    section.contentType === 'digit' &&
-    !hasLeadingZeros &&
-    value.length === 1;
+  const shouldAddInvisibleSpace = ['input-rtl', 'input-ltr'].includes(target) && value.length === 1;
 
   if (shouldAddInvisibleSpace) {
     value = `${value}\u200e`;
@@ -454,11 +527,17 @@ export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>
  * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
  * To make sure that the parsing works, we are building a format and a date without any separator.
  */
-export const getDateFromDateSections = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  sections: FieldSection[],
-  localizedDigits: string[],
-) => {
+export const getDateFromDateSections = <TDate extends PickerValidDate>({
+  utils,
+  sections,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+}: {
+  utils: MuiPickersAdapter<TDate>;
+  sections: FieldSection[];
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
+}) => {
   // If we have both a day and a weekDay section,
   // Then we skip the weekDay in the parsing because libraries like dayjs can't parse complicated formats containing a weekDay.
   // dayjs(dayjs().format('dddd MMMM D YYYY'), 'dddd MMMM D YYYY')) // returns `Invalid Date` even if the format is valid.
@@ -472,7 +551,14 @@ export const getDateFromDateSections = <TDate extends PickerValidDate>(
     const shouldSkip = shouldSkipWeekDays && section.type === 'weekDay';
     if (!shouldSkip) {
       sectionFormats.push(section.format);
-      sectionValues.push(getSectionVisibleValue(section, 'non-input', localizedDigits));
+      sectionValues.push(
+        getSectionVisibleValue({
+          section,
+          target: 'non-input',
+          localizedDigits,
+          shouldRespectLeadingZeros,
+        }),
+      );
     }
   }
 
@@ -491,17 +577,24 @@ export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection
     })
     .join('');
 
-export const createDateStrForV6InputFromSections = (
-  sections: FieldSection[],
-  localizedDigits: string[],
-  isRTL: boolean,
-) => {
+export const createDateStrForV6InputFromSections = ({
+  sections,
+  localizedDigits,
+  shouldRespectLeadingZeros,
+  isRTL,
+}: {
+  sections: FieldSection[];
+  localizedDigits: string[];
+  shouldRespectLeadingZeros: boolean;
+  isRTL: boolean;
+}) => {
   const formattedSections = sections.map((section) => {
-    const dateValue = getSectionVisibleValue(
+    const dateValue = getSectionVisibleValue({
       section,
-      isRTL ? 'input-rtl' : 'input-ltr',
+      target: isRTL ? 'input-rtl' : 'input-ltr',
       localizedDigits,
-    );
+      shouldRespectLeadingZeros,
+    });
 
     return `${section.startSeparator}${dateValue}${section.endSeparator}`;
   });

@@ -331,7 +331,12 @@ export const useFieldState = <
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
-    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
+    const newActiveDate = getDateFromDateSections({
+      utils,
+      sections: newActiveDateSections,
+      localizedDigits,
+      shouldRespectLeadingZeros,
+    });
 
     let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
