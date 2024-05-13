@@ -49,8 +49,15 @@ export interface ChartsOverlayProps {
    * @default false
    */
   loading?: boolean;
-
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChartsOverlaySlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChartsOverlaySlotProps;
 }
 
