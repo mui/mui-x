@@ -67,6 +67,18 @@ export interface UseTreeItem2LabelSlotOwnProps {
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2LabelSlotOwnProps;
 
+export interface UseTreeItem2CheckboxSlotOwnProps {
+  visible: boolean;
+  checked: boolean;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
+  ref: React.RefObject<HTMLButtonElement>;
+  tabIndex: -1;
+}
+
+export type UseTreeItem2CheckboxSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2CheckboxSlotOwnProps;
+
 export interface UseTreeItem2GroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
@@ -111,6 +123,14 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2LabelSlotProps<ExternalProps>;
+  /**
+   * Resolver for the checkbox slot's props.
+   * @param {ExternalProps} externalProps Additional props for the checkbox slot
+   * @returns {UseTreeItem2CheckboxSlotProps<ExternalProps>} Props that should be spread on the checkbox slot
+   */
+  getCheckboxProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItem2CheckboxSlotProps<ExternalProps>;
   /**
    * Resolver for the iconContainer slot's props.
    * @param {ExternalProps} externalProps Additional props for the iconContainer slot
