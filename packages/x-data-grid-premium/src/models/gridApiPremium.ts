@@ -10,6 +10,7 @@ import {
   GridRowProApi,
   GridDataSourceApi,
   GridServerSideCacheApi,
+  GridDataSourcePrivateApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
@@ -39,4 +40,5 @@ export interface GridApiPremium
 export interface GridPrivateApiPremium
   extends GridApiPremium,
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
+    GridDataSourcePrivateApi,
     GridDetailPanelPrivateApi {}

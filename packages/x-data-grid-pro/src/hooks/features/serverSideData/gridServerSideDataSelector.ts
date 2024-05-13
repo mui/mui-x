@@ -5,6 +5,7 @@ import {
   gridPaginationModelSelector,
 } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
+import { GridStatePro } from '../../../models/gridStatePro';
 
 const computeStartEnd = (paginationModel: GridPaginationModel) => {
   const start = paginationModel.page * paginationModel.pageSize;
@@ -27,4 +28,16 @@ export const gridGetRowsParamsSelector = createSelector(
       ...computeStartEnd(paginationModel),
     };
   },
+);
+
+export const gridServerSideDataStateSelector = (state: GridStatePro) => state.serverSideData;
+
+export const gridServerSideDataLoadingSelector = createSelector(
+  gridServerSideDataStateSelector,
+  (serverSideData) => serverSideData.loading,
+);
+
+export const gridServerSideDataErrorsSelector = createSelector(
+  gridServerSideDataStateSelector,
+  (serverSideData) => serverSideData.errors,
 );

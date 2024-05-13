@@ -63,9 +63,18 @@ const defaultColDef = getGridDefaultColumnTypes();
 export const useDemoDataSource = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
   serverOptions?: ServerOptions,
+  shouldRequestsFail?: boolean,
 ): UseDemoDataSourceResponse => {
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
+  const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
+
+  React.useEffect(() => {
+    if (shouldRequestsFail !== undefined) {
+      shouldRequestsFailRef.current = shouldRequestsFail;
+    }
+  }, [shouldRequestsFail]);
+
   const options = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
 
   const columns = React.useMemo(() => {
@@ -183,16 +192,12 @@ export const useDemoDataSource = (
       let getRowsResponse: GridGetRowsResponse;
       const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
 
-      const { successRate = 1 } = serverOptionsWithDefault;
-      if (successRate !== 1) {
-        const rate = random(0.01, 0.99);
-        if (rate > successRate) {
-          const { minDelay, maxDelay } = serverOptionsWithDefault;
-          const delay = randomInt(minDelay, maxDelay);
-          return new Promise<GridGetRowsResponse>((_, reject) => {
-            setTimeout(() => reject(new Error('Could not fetch the data')), delay);
-          });
-        }
+      if (shouldRequestsFailRef.current) {
+        const { minDelay, maxDelay } = serverOptionsWithDefault;
+        const delay = randomInt(minDelay, maxDelay);
+        return new Promise<GridGetRowsResponse>((_, reject) => {
+          setTimeout(() => reject(new Error('Could not fetch the data')), delay);
+        });
       }
 
       if (isTreeData /* || TODO: `isRowGrouping` */) {

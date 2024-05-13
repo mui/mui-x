@@ -116,10 +116,6 @@ export interface GridDataGroupNode extends GridBasicGroupNode {
 
 export interface GridServerSideGroupNode extends GridDataGroupNode {
   /**
-   * The children for this node are currently being fetched
-   */
-  isLoading: boolean;
-  /**
    * If true, this node is a server side group node.
    */
   isServerSide: boolean;

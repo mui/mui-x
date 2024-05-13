@@ -3,16 +3,19 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
 import {
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridServerSideGroupNode,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPrivateApiPro } from '../models/gridApiPro';
+import { GridStatePro } from '../models/gridStatePro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -50,16 +53,26 @@ const LoadingContainer = styled('div')({
 });
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const { rowNode, id, field, descendantCount } = props;
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
+  const { rowNode, id, field, descendantCount } = props;
+
+  const loadingSelector = React.useCallback(
+    (state: GridStatePro) => state.serverSideData.loading[id] ?? false,
+    [id],
+  );
+  const errorSelector = React.useCallback(
+    (state: GridStatePro) => state.serverSideData.errors[id] ?? null,
+    [id],
+  );
+  const isDataLoading = useGridSelector(apiRef, loadingSelector);
+  const error = useGridSelector(apiRef, errorSelector);
 
   const isServerSideNode = rowNode.isServerSide;
-  const isDataLoading = rowNode.isLoading;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (isServerSideNode && !rowNode.childrenExpanded) {
-      // always fetch/get from cache the children when the node is collapsed
+    if (!rowNode.childrenExpanded) {
+      // always fetch/get from cache the children when the node is expanded
       apiRef.current.enqueueChildrenFetch(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
@@ -91,7 +104,11 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       }
       {...rootProps?.slotProps?.baseIconButton}
     >
-      <Icon fontSize="inherit" />
+      <rootProps.slots.baseTooltip title={error?.message ?? null}>
+        <Badge variant="dot" color="error" invisible={!error}>
+          <Icon fontSize="inherit" />
+        </Badge>
+      </rootProps.slots.baseTooltip>
     </rootProps.slots.baseIconButton>
   ) : null;
 }

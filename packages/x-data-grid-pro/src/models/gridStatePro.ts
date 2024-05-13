@@ -9,6 +9,7 @@ import type {
   GridDetailPanelInitialState,
   GridColumnReorderState,
 } from '../hooks';
+import type { GridServerSideDataState } from '../hooks/features/serverSideData/interfaces';
 
 /**
  * The state of `DataGridPro`.
@@ -17,6 +18,7 @@ export interface GridStatePro extends GridStateCommunity {
   columnReorder: GridColumnReorderState;
   pinnedColumns: GridColumnPinningState;
   detailPanel: GridDetailPanelState;
+  serverSideData: GridServerSideDataState;
 }
 
 /**

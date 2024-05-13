@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
-import Slider from '@mui/material/Slider';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
+const serverOptions = { useCursorPagination: false };
 
 function getBorderColor(theme) {
   if (theme.palette.mode === 'light') {
@@ -32,21 +32,22 @@ const StyledDiv = styled('div')(({ theme: t }) => ({
 }));
 
 function ErrorOverlay({ error }) {
-  if (!error?.message) {
+  if (!error) {
     return null;
   }
-  return <StyledDiv>{error.message}</StyledDiv>;
+  return <StyledDiv>{error}</StyledDiv>;
 }
 
 export default function ServerSideErrorHandling() {
   const apiRef = useGridApiRef();
   const [error, setError] = React.useState();
-  const [serverOptions, setServerOptions] = React.useState({
-    useCursorPagination: false,
-    successRate: 0.5,
-  });
+  const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { getRows, ...props } = useDemoDataSource({}, serverOptions);
+  const { getRows, ...props } = useDemoDataSource(
+    {},
+    serverOptions,
+    shouldRequestsFail,
+  );
 
   const dataSource = React.useMemo(() => {
     return {
@@ -72,37 +73,28 @@ export default function ServerSideErrorHandling() {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button
           onClick={() => {
-            setError(null);
+            setError('');
             apiRef.current.fetchTopLevelRows();
           }}
         >
-          Refetch Rows
+          Refetch rows
         </Button>
-        <Box sx={{ width: 250 }}>
-          <Typography>Success Rate</Typography>
-          <Slider
-            size="small"
-            aria-label="Success Rate"
-            valueLabelDisplay="auto"
-            step={10}
-            marks
-            min={0}
-            max={100}
-            value={serverOptions.successRate * 100}
-            onChange={(_, value) =>
-              setServerOptions((prev) => ({
-                ...prev,
-                successRate: Number(value) / 100,
-              }))
-            }
-          />
-        </Box>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={shouldRequestsFail}
+              onChange={(e) => setShouldRequestsFail(e.target.checked)}
+            />
+          }
+          label="Make the requests fail"
+        />
       </div>
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPro
           {...props}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(e) => setError(e)}
+          unstable_onServerSideError={(e) => setError(e.message)}
+          disableServerSideCache
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}

@@ -67,6 +67,7 @@ import {
   useGridVirtualization,
   useGridServerSideTreeDataPreProcessors,
   useGridDataSource,
+  dataSourceStateInitializer,
   useGridServerSideCache,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -139,6 +140,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(dataSourceStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);

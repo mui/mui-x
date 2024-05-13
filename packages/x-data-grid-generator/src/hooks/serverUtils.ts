@@ -31,13 +31,6 @@ export interface DefaultServerOptions {
   minDelay: number;
   maxDelay: number;
   useCursorPagination?: boolean;
-  /*
-   * The success rate of the server response. It is a number between 0 and 1.
-   * 0 means that the server will always return an error.
-   * 1 means that the server will always return a success.
-   * `@default 1`
-   */
-  successRate?: number;
 }
 
 export type ServerOptions = Partial<DefaultServerOptions>;

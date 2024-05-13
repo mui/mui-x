@@ -6,18 +6,19 @@ import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
  */
 export interface GridDataSourceApi {
   /**
-   * Initiates the fetch of the children of a row.
-   * @param {string} id The id of the rowNode belonging to the group to be fetched.
-   */
-  fetchRowChildren: (id: GridRowId) => void;
-  /**
-   * Set the loading state of a row.
-   * @param {string} id The id of the rowNode.
+   * Set the loading state of a parent row.
+   * @param {string} parentId The id of the parent node.
    * @param {boolean} loading The loading state to set.
    */
-  setRowLoading: (id: GridRowId, loading: boolean) => void;
+  setChildrenLoading: (parentId: GridRowId, loading: boolean) => void;
   /**
-   * Fetches the top level rows.
+   * Set error occured while fetching the children of a row.
+   * @param {string} parentId The id of the parent node.
+   * @param {Error} error The error of type `Error` or `null`.
+   */
+  setChildrenFetchError: (parentId: GridRowId, error: Error | null) => void;
+  /**
+   * Fetch/refetch the top level rows.
    */
   fetchTopLevelRows: () => void;
   /**
@@ -25,6 +26,18 @@ export interface GridDataSourceApi {
    * @param {GridRowId} id The id of the rowNode belonging to the group to be fetched.
    */
   enqueueChildrenFetch: (id: GridRowId) => void;
+}
+
+export interface GridDataSourcePrivateApi {
+  /**
+   * Initiates the fetch of the children of a row.
+   * @param {string} id The id of the rowNode belonging to the group to be fetched.
+   */
+  fetchRowChildren: (id: GridRowId) => void;
+  /**
+   * Resets the server side state.
+   */
+  resetServerSideState: () => void;
 }
 
 /**

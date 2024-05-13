@@ -78,7 +78,10 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
-import { useGridDataSource } from '../hooks/features/serverSideData/useGridDataSource';
+import {
+  useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/serverSideData/useGridDataSource';
 import { useGridServerSideCache } from '../hooks/features/serverSideData/useGridServerSideCache';
 
 export const useDataGridProComponent = (
@@ -126,6 +129,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(dataSourceStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef);

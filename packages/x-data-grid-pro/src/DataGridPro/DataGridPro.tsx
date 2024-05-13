@@ -959,5 +959,5 @@ DataGridProRaw.propTypes = {
     getKey: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
-  unstable_onDataSourceError: PropTypes.func,
+  unstable_onServerSideError: PropTypes.func,
 } as any;

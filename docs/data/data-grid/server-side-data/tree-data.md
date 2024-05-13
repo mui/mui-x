@@ -40,6 +40,8 @@ Additionally, you must supply the following required props, listed and explained
 
   Used by the grid to determine the number of children of a row on server
 
+## Demo
+
 Following is a demo of the server-side tree data with the data source which supports filtering, sorting, and pagination on the server. It also caches the data by default.
 
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
@@ -47,3 +49,11 @@ Following is a demo of the server-side tree data with the data source which supp
 :::info
 The demo above uses a utility `useDemoDataSource` which uses a data generator service to generate data for testing of the application. Apart from providing the additional props, it exposes a function called `getRows` which could be used directly as `GridDataSource.getRows`.
 :::
+
+## Error handling
+
+For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `unstable_onServerSideError` is also triggered with the error and the fetch params.
+
+The demo below shows a toast apart from the default error message in the grouping cell. Cache has been disabled in this demo for simplicity.
+
+{{"demo": "ServerSideTreeDataErrorHandling.js", "bg": "inline"}}

@@ -198,10 +198,10 @@ The out-of-the-box cache is a simple in-memory cache that stores the data in a p
 
 ### Custom cache
 
-To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based out of another cache library. This prop accepts a generic interface of type `GridDataSourceCache`.
+To provide a custom cache, use `unstable_serverSideCache` prop, which could be either written from scratch or based out of another cache library. This prop accepts a generic interface of type `GridServerSideCache`.
 
 ```tsx
-interface GridDataSourceCache {
+interface GridServerSideCache {
   getKey(key: GridGetRowsParams): unknown;
   set(key: unknown, value: unknown): void;
   get(key: unknown): unknown;
@@ -229,7 +229,7 @@ To disable the caching on the server-side data, pass the `disableServerSideCache
 
 ## Error handling
 
-You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`. It will be called whenever there's an error in fetching the data.
+You could handle the errors with the data source by providing an error handler function using the `unstable_onServerSideError`. It will be called whenever there's an error in fetching the data.
 
 The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
 

@@ -50,11 +50,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "fetchRowChildren": {
-      "type": { "description": "(id: GridRowId) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "fetchTopLevelRows": {
       "type": { "description": "() =&gt; void" },
       "required": true,
@@ -328,6 +323,16 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "setChildrenFetchError": {
+      "type": { "description": "(parentId: GridRowId, error: Error | null) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "setChildrenLoading": {
+      "type": { "description": "(parentId: GridRowId, loading: boolean) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "setColumnHeaderFilterFocus": {
       "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" },
       "required": true
@@ -418,11 +423,6 @@
     },
     "setRowIndex": {
       "type": { "description": "(rowId: GridRowId, targetIndex: number) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
-    "setRowLoading": {
-      "type": { "description": "(id: GridRowId, loading: boolean) =&gt; void" },
       "required": true,
       "isProPlan": true
     },

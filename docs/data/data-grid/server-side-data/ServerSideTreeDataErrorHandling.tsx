@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  useGridApiRef,
-  GridInitialState,
-  GridToolbar,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridInitialState } from '@mui/x-data-grid-pro';
+import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -43,13 +39,18 @@ function ErrorOverlay({ error }: { error: string }) {
   return <StyledDiv>{error}</StyledDiv>;
 }
 
-export default function ServerSideErrorHandling() {
+export default function ServerSideTreeDataErrorHandling() {
   const apiRef = useGridApiRef();
-  const [error, setError] = React.useState<string>();
+  const [rootError, setRootError] = React.useState<string>();
+  const [childrenError, setChildrenError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { getRows, ...props } = useDemoDataSource(
-    {},
+    {
+      dataSet: 'Employee',
+      rowLength: 1000,
+      treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+    },
     serverOptions,
     shouldRequestsFail,
   );
@@ -78,7 +79,7 @@ export default function ServerSideErrorHandling() {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button
           onClick={() => {
-            setError('');
+            setRootError('');
             apiRef.current.fetchTopLevelRows();
           }}
         >
@@ -97,16 +98,30 @@ export default function ServerSideErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPro
           {...props}
+          treeData
           unstable_dataSource={dataSource}
-          unstable_onServerSideError={(e) => setError(e.message)}
+          unstable_onServerSideError={(e, params) => {
+            if (!params.groupKeys || params.groupKeys.length === 0) {
+              setRootError(e.message);
+            } else {
+              setChildrenError(
+                `${e.message} (Requested level: ${params.groupKeys.join(', ')})`,
+              );
+            }
+          }}
           disableServerSideCache
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
         />
-        {error && <ErrorOverlay error={error} />}
+        {rootError && <ErrorOverlay error={rootError} />}
+        <Snackbar
+          open={!!childrenError}
+          autoHideDuration={3000}
+          onClose={() => setChildrenError('')}
+          message={childrenError}
+        />
       </div>
     </div>
   );

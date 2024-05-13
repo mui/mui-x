@@ -246,6 +246,7 @@
   { "name": "GridDataSource", "kind": "Interface" },
   { "name": "GridDataSourceApi", "kind": "Interface" },
   { "name": "GridDataSourceCache", "kind": "Interface" },
+  { "name": "GridDataSourcePrivateApi", "kind": "Interface" },
   { "name": "gridDateComparator", "kind": "Variable" },
   { "name": "gridDateFormatter", "kind": "Variable" },
   { "name": "gridDateTimeFormatter", "kind": "Variable" },
