@@ -10,7 +10,12 @@ components: BarChart, ScatterChart, LineChart, PieChart
 
 ## Basic display
 
-In the most basic example, you can pass in a `string` as a series' label, and it will be rendered like that by all the different components that use it in order to differentiate each series.
+To set series' label, you can pass in a `string` as a series' property `label`.
+The provided label will be visible at different locations such as the legend, or the tooltip.
+
+:::info
+The Pie chart has some specificity described in its [own section](#pie).
+:::
 
 {{"demo": "BasicLabel.js"}}
 
