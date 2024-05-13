@@ -6,11 +6,11 @@ components: BarChart, ScatterChart, LineChart, PieChart
 
 # Charts - Label
 
-<p class="description">Label refers to the text reference of a series or data.</p>
+<p class="description">Label is the text reference of a series or data.</p>
 
 ## Basic display
 
-To set series' label, you can pass in a `string` as a series' property `label`.
+To set a series' label, you can pass in a `string` as a series' property `label`.
 The provided label will be visible at different locations such as the legend, or the tooltip.
 
 :::info
@@ -21,18 +21,12 @@ The Pie chart has some specificity described in its [own section](#pie).
 
 ## Conditional formatting
 
-The `label` property also accepts a function allowing you to change the label content based on location.
-
-### Bars, Lines and Scatter
-
-The [Bars](/x/react-charts/bars/), [Lines](/x/react-charts/lines/) and [Scatter](/x/react-charts/scatter/) charts all work in the same way regarding the `label` property.
-
-Each of the `series` can receive a different `function` or `string` as their `label`.
+The `label` property also accepts a `function` allowing you to change the label content based on location.
 
 The function receives `location` as its first argument which can have the following values:
 
 - `'legend'` to format the label in the [Legend](/x/react-charts/legend/)
-- `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
+- `'tooltip'` to format the label in the [Tooltip](/x/react-charts/tooltip/)
 
 {{"demo": "FunctionLabel.js"}}
 
@@ -47,8 +41,8 @@ It instead receives it as part of the `data` set inside a series.
 
 Its `location` argument can have the following values:
 
-- `'legend'` to format the label to display in the [Legend](/x/react-charts/legend/)
-- `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
+- `'legend'` to format the label in the [Legend](/x/react-charts/legend/)
+- `'tooltip'` to format the label in the [Tooltip](/x/react-charts/tooltip/)
 - `'arc'` to format the [Arc label](/x/react-charts/pie/#labels) when `arcLabel` is set to `'label'`
 
 {{"demo": "PieLabel.js"}}
