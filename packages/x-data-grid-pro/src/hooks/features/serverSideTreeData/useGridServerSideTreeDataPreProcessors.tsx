@@ -97,6 +97,9 @@ export const useGridServerSideTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      if (!props.unstable_dataSource) {
+        return columnsState;
+      }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
@@ -126,7 +129,7 @@ export const useGridServerSideTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, getGroupingColDef],
+    [props.treeData, props.unstable_dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
