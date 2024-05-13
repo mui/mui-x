@@ -42,7 +42,8 @@ The [Pie](/x/react-charts/pie/) chart behaves differently due to its nature.
 It has labels per slice instead of per series.
 It also has one more place where the label can be rendered.
 
-Instead of receiving the `label` as part of the series. It instead receives it as part of the `data` set inside a series.
+Instead of receiving the `label` as part of the series.
+It instead receives it as part of the `data` set inside a series.
 
 Its `location` argument can have the following values:
 
