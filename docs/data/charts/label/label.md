@@ -31,7 +31,7 @@ Each of the `series` can receive a different `function` or `string` as their `la
 
 The function receives `location` as its first argument which can have the following values:
 
-- `'legend'` in order to format the label to display in the [Legend](/x/react-charts/legend/)
+- `'legend'` to format the label in the [Legend](/x/react-charts/legend/)
 - `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
 
 {{"demo": "FunctionLabel.js"}}
