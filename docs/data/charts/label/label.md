@@ -38,7 +38,9 @@ The function receives `location` as its first argument which can have the follow
 
 ### Pie
 
-The [Pie](/x/react-charts/pie/) chart behaves a little differently due to its nature. It also has one more place where the label can be rendered.
+The [Pie](/x/react-charts/pie/) chart behaves differently due to its nature.
+It has labels per slice instead of per series.
+It also has one more place where the label can be rendered.
 
 Instead of receiving the `label` as part of the series. It instead receives it as part of the `data` set inside a series.
 
