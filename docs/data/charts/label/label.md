@@ -29,7 +29,7 @@ The [Bars](/x/react-charts/bars/), [Lines](/x/react-charts/lines/) and [Scatter]
 
 Each of the `series` can receive a different `function` or `string` as their `label`.
 
-The function receives `location` as its first argument, and it can have the following values:
+The function receives `location` as its first argument which can have the following values:
 
 - `'legend'` in order to format the label to display in the [Legend](/x/react-charts/legend/)
 - `'tooltip'` to format for displaying in the [Tooltip](/x/react-charts/tooltip/)
