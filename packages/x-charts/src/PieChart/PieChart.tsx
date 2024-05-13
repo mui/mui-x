@@ -266,6 +266,7 @@ PieChart.propTypes = {
   }),
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
