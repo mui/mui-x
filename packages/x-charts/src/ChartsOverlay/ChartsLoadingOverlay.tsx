@@ -18,7 +18,7 @@ export function ChartsLoadingOverlay(props: CommonOverlayProps) {
 
   return (
     <StyledText x={left + width / 2} y={top + height / 2} {...other}>
-      {message ?? 'Loading data ...'}
+      {message ?? 'Loading data…'}
     </StyledText>
   );
 }
