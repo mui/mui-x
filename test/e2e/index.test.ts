@@ -875,6 +875,29 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
       });
+
+      it('should correctly select hours section when there are no time renderers on v6', async () => {
+        await renderFixture(
+          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
+        );
+
+        await page.getByRole('button').click();
+        await page.getByRole('gridcell', { name: '11' }).click();
+
+        // assert that the hours section has been selected using two APIs
+        await waitFor(async () => {
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(
+                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
+              ),
+            ).to.equal(11);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          }
+        });
+      });
     });
 
     describe('<DateRangePicker />', () => {
