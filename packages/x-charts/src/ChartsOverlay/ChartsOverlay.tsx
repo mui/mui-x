@@ -46,6 +46,7 @@ export interface ChartsOverlaySlotProps {
 export interface ChartsOverlayProps {
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading?: boolean;
 
