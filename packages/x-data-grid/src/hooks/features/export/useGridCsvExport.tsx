@@ -48,12 +48,14 @@ export const useGridCsvExport = (
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
-        delimiterCharacter: options.delimiter || ',',
-        includeHeaders: options.includeHeaders ?? true,
-        includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+        csvOptions: {
+          delimiter: options.delimiter || ',',
+          shouldAppendQuotes: options.shouldAppendQuotes ?? true,
+          includeHeaders: options.includeHeaders ?? true,
+          includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+        },
         ignoreValueFormatter,
         apiRef,
-        shouldAppendQuotes: options.shouldAppendQuotes ?? true,
       });
     },
     [logger, apiRef, ignoreValueFormatter],

@@ -95,7 +95,6 @@ export const useGridClipboard = (
       if (selectedRows.size > 0) {
         textToCopy = apiRef.current.getDataAsCsv({
           includeHeaders: false,
-          // TODO: make it configurable
           delimiter: clipboardCopyCellDelimiter,
           shouldAppendQuotes: false,
         });
@@ -104,9 +103,11 @@ export const useGridClipboard = (
         if (focusedCell) {
           const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
           textToCopy = serializeCellValue(cellParams, {
-            delimiterCharacter: clipboardCopyCellDelimiter,
+            csvOptions: {
+              delimiter: clipboardCopyCellDelimiter,
+              shouldAppendQuotes: false,
+            },
             ignoreValueFormatter,
-            shouldAppendQuotes: false,
           });
         }
       }
