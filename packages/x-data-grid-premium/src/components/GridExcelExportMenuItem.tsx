@@ -34,6 +34,7 @@ GridExcelExportMenuItem.propTypes = {
     allColumns: PropTypes.bool,
     columnsStyles: PropTypes.object,
     disableToolbarButton: PropTypes.bool,
+    escapeFormulae: PropTypes.bool,
     exceljsPostProcess: PropTypes.func,
     exceljsPreProcess: PropTypes.func,
     fields: PropTypes.arrayOf(PropTypes.string),
