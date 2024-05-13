@@ -19,14 +19,34 @@ import constants from './constants.js';
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 
-const workspaceRoot = path.join(currentDirectory, '../');
+const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
+const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
+const MONOREPO_ALIASES = {
+  '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
+};
+
+const WORKSPACE_ALIASES = {
+  '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
+  '@mui/x-data-grid-generator': path.resolve(
+    WORKSPACE_ROOT,
+    './packages/x-data-grid-generator/src',
+  ),
+  '@mui/x-data-grid-pro': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-pro/src'),
+  '@mui/x-data-grid-premium': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-premium/src'),
+  '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers/src'),
+  '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro/src'),
+  '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts/src'),
+  '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
+  '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
+  '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
+};
 
 /**
  * @param {string} pkgPath
  * @returns {{version: string}}
  */
 function loadPkg(pkgPath) {
-  const pkgContent = fs.readFileSync(path.resolve(workspaceRoot, pkgPath, 'package.json'), 'utf8');
+  const pkgContent = fs.readFileSync(path.resolve(WORKSPACE_ROOT, pkgPath, 'package.json'), 'utf8');
   return JSON.parse(pkgContent);
 }
 
@@ -38,10 +58,18 @@ const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 let localSettings = {};
 try {
+  // eslint-disable-next-line import/no-unresolved
   localSettings = require('./next.config.local.js');
-} catch (_) {}
+} catch (_) {
+  // Ignore
+}
 
 export default withDocsInfra({
+  transpilePackages: [
+    // TODO, those shouldn't be needed in the first place
+    '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
+    '@mui/docs',
+  ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -73,20 +101,29 @@ export default withDocsInfra({
       );
     }
 
-    const includesMonorepo = [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/];
-
     return {
       ...config,
       plugins,
+      // TODO, this shouldn't be needed in the first place
+      // Migrate everything from @mui/monorepo to @mui/docs and embed @mui/internal-markdown in @mui/docs
+      resolveLoader: {
+        ...config.resolveLoader,
+        alias: {
+          ...config.resolveLoader.alias,
+          '@mui/internal-markdown/loader': path.resolve(
+            MONOREPO_PATH,
+            './packages/markdown/loader',
+          ),
+        },
+      },
       resolve: {
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          '@mui/docs': path.resolve(
-            currentDirectory,
-            '../node_modules/@mui/monorepo/packages/mui-docs/src',
-          ),
-          docs: path.resolve(currentDirectory, '../node_modules/@mui/monorepo/docs'),
+          ...MONOREPO_ALIASES,
+          ...WORKSPACE_ALIASES,
+          // TODO: get rid of this, replace with @mui/docs
+          docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
@@ -102,9 +139,9 @@ export default withDocsInfra({
                 use: [
                   options.defaultLoaders.babel,
                   {
-                    loader: require.resolve('@mui/internal-markdown/loader'),
+                    loader: '@mui/internal-markdown/loader',
                     options: {
-                      workspaceRoot,
+                      workspaceRoot: WORKSPACE_ROOT,
                       ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
                       languagesInProgress: LANGUAGES_IN_PROGRESS,
                       env: {
@@ -119,13 +156,7 @@ export default withDocsInfra({
           },
           {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
-            include: includesMonorepo,
-            use: options.defaultLoaders.babel,
-          },
-          {
-            test: /\.(js|mjs|ts|tsx)$/,
-            include: [workspaceRoot],
-            exclude: /node_modules/,
+            include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
             use: options.defaultLoaders.babel,
           },
           {
