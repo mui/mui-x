@@ -37,7 +37,7 @@
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"
     },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
         "name": "shape",
