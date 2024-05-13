@@ -66,6 +66,7 @@ export const serializeRow = (
   columns: GridStateColDef[],
   api: GridPrivateApiPremium,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
+  options: Pick<BuildExcelOptions, 'escapeFormulae'>,
 ): SerializedRow => {
   const row: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
@@ -96,6 +97,8 @@ export const serializeRow = (
 
     const cellParams = api.getCellParams(id, column.field);
 
+    let cellValue = '';
+
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
         const castColumn = cellParams.colDef as GridSingleSelectColDef;
@@ -116,6 +119,7 @@ export const serializeRow = (
           dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
+            // TODO: Is this escaped correctly?
             formulae: [
               `"${formattedValueOptions
                 .map((x) => x.toString().replaceAll(',', 'CHAR(44)'))
@@ -148,7 +152,7 @@ export const serializeRow = (
       }
       case 'boolean':
       case 'number':
-        row[column.field] = api.getCellParams(id, column.field).value as any;
+        cellValue = api.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
@@ -176,7 +180,7 @@ export const serializeRow = (
       case 'actions':
         break;
       default:
-        row[column.field] = api.getCellParams(id, column.field).formattedValue as any;
+        cellValue = api.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
@@ -184,6 +188,15 @@ export const serializeRow = (
         }
         break;
     }
+
+    if (options.escapeFormulae) {
+      // See https://owasp.org/www-community/attacks/CSV_Injection
+      if (['=', '+', '-', '@', '\t', '\r'].includes(cellValue[0])) {
+        cellValue = `'${cellValue}`;
+      }
+    }
+
+    row[column.field] = cellValue;
   });
 
   return {
@@ -367,7 +380,7 @@ interface BuildExcelOptions
   extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
     Pick<
       Required<GridExcelExportOptions>,
-      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders'
+      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulae'
     > {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
@@ -425,7 +438,7 @@ export async function buildExcel(
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
   rowIds.forEach((id) => {
-    const serializedRow = serializeRow(id, columns, api, valueOptionsData);
+    const serializedRow = serializeRow(id, columns, api, valueOptionsData, options);
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
 
