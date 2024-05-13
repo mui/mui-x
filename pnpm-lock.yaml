@@ -633,6 +633,9 @@ importers:
       '@mui/internal-scripts':
         specifier: ^1.0.3
         version: 1.0.3
+      '@types/chance':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@types/d3-scale':
         specifier: ^4.0.8
         version: 4.0.8
