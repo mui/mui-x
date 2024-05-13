@@ -74,3 +74,17 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
+
+## Parent / children selection relationship
+
+Automatically select an item when all of its children are selected and automatically select all children when the parent is selected.
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #12883](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built.
+Especially if you already have a use case for this component,
+or if you are facing a pain point with your current solution.
+:::
