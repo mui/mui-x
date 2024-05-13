@@ -16,11 +16,7 @@ import {
   GridColumnGroupLookup,
   isSingleSelectColDef,
 } from '@mui/x-data-grid/internals';
-import {
-  GridExceljsProcessInput,
-  ColumnsStylesInterface,
-  GridExcelExportOptions,
-} from '../gridExcelExportInterface';
+import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
@@ -367,14 +363,14 @@ async function createValueOptionsSheetIfNeeded(
   });
 }
 
-interface BuildExcelOptions {
+interface BuildExcelOptions
+  extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
+    Pick<
+      Required<GridExcelExportOptions>,
+      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders'
+    > {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
-  includeHeaders: boolean;
-  includeColumnGroupsHeaders: boolean;
-  valueOptionsSheetName: string;
-  exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
-  exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   columnsStyles?: ColumnsStylesInterface;
 }
 
