@@ -201,12 +201,11 @@ The out-of-the-box cache is a simple in-memory cache that stores the data in a p
 To provide a custom cache, use `unstable_serverSideCache` prop, which could be either written from scratch or based out of another cache library. This prop accepts a generic interface of type `GridServerSideCache`.
 
 ```tsx
-interface GridServerSideCache {
-  getKey(key: GridGetRowsParams): unknown;
-  set(key: unknown, value: unknown): void;
-  get(key: unknown): unknown;
-  clear(): void;
-}
+export interface GridServerSideCache {
+  getKey: (params: GridGetRowsParams) => any;
+  set: (key: any, value: GridGetRowsResponse) => void;
+  get: (key: any) => GridGetRowsResponse | undefined;
+  clear: () => void;
 ```
 
 The following demo uses cache used by a popular library [`swr`](https://github.com/vercel/swr) to cache the server-side data.
