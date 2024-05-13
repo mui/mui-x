@@ -716,7 +716,10 @@ async function initializeEnvironment(
         it('should focus the first field section after clearing a value in v6 input', async () => {
           await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
 
-          await page.getByRole('textbox').fill('2');
+          const textbox = page.getByRole('textbox');
+          // locator.fill('2') does not work reliably for this case in all browsers
+          await textbox.focus();
+          await textbox.press('2');
           await page.getByRole('button', { name: 'Clear value' }).click();
 
           // firefox does not support document.getSelection().toString() on input elements
@@ -734,6 +737,35 @@ async function initializeEnvironment(
             expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
           }
         });
+
+        it('should submit a form when clicking "Enter" key', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerForm');
+
+          const textbox = page.getByRole('textbox');
+          await textbox.focus();
+          await textbox.press('Enter');
+
+          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
+          const status = page.getByRole('status');
+          expect(await status.isVisible()).to.equal(true);
+          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        });
+
+        // TODO: enable when v7 fields form submitting is fixed
+        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
+        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
+
+        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
+        //   await monthSpinbutton.focus();
+        //   await monthSpinbutton.press('Enter');
+
+        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+        //     '04/17/2022',
+        //   );
+        //   const status = page.getByRole('status');
+        //   expect(await status.isVisible()).to.equal(true);
+        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        // });
       });
 
       describe('<MobileDatePicker />', () => {

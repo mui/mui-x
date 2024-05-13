@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "7.3.0",
+  "version": "7.4.0",
   "description": "The Premium plan edition of the Data Grid Components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -50,7 +50,7 @@
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@types/format-util": "^1.0.4",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
@@ -61,7 +61,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@types/prop-types": "^15.7.11",
+    "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
     "rimraf": "^5.0.5"
   },

@@ -153,10 +153,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -203,10 +200,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemIconContainerSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -217,10 +211,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,

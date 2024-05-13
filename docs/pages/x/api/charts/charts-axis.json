@@ -86,7 +86,7 @@
     {
       "key": "tickContainer",
       "className": "MuiChartsAxis-tickContainer",
-      "description": "Styles applied to group ingruding the tick and its label.",
+      "description": "Styles applied to group including the tick and its label.",
       "isGlobal": false
     },
     {
