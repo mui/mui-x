@@ -30,7 +30,7 @@ The function receives `location` as its first argument which can have the follow
 
 {{"demo": "FunctionLabel.js"}}
 
-### Pie
+## Pie
 
 The [Pie](/x/react-charts/pie/) chart behaves differently due to its nature.
 It has labels per slice instead of per series.
