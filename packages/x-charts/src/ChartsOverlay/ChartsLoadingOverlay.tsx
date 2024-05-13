@@ -4,6 +4,7 @@ import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { CommonOverlayProps } from './ChartsOverlay';
 
 const StyledText = styled('text')(({ theme }) => ({
+  ...theme.typography.body2,
   stroke: 'none',
   fill: theme.palette.text.primary,
   shapeRendering: 'crispEdges',
