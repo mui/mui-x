@@ -7,11 +7,17 @@ import { buildWarning } from '../../../../utils/warning';
 
 function sanitizeCellValue(value: any, csvOptions: CSVOptions) {
   if (typeof value === 'string') {
-    if (csvOptions.shouldAppendQuotes) {
+    if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulae) {
       const escapedValue = value.replace(/"/g, '""');
-      // Make sure value containing delimiter or line break won't be split into multiple rows
+      // Make sure value containing delimiter or line break won't be split into multiple cells
       if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
         return `"${escapedValue}"`;
+      }
+      if (csvOptions.escapeFormulae) {
+        // See https://owasp.org/www-community/attacks/CSV_Injection
+        if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
+          return `'${escapedValue}`;
+        }
       }
       return escapedValue;
     }
@@ -54,7 +60,9 @@ const objectFormattedValueWarning = buildWarning([
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
-type CSVOptions = Required<Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes'>>;
+type CSVOptions = Required<
+  Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes' | 'escapeFormulae'>
+>;
 
 type CSVRowOptions = {
   sanitizeCellValue?: (value: any, csvOptions: CSVOptions) => any;
@@ -129,7 +137,11 @@ interface BuildCSVOptions {
   csvOptions: Required<
     Pick<
       GridCsvExportOptions,
-      'delimiter' | 'includeColumnGroupsHeaders' | 'includeHeaders' | 'shouldAppendQuotes'
+      | 'delimiter'
+      | 'includeColumnGroupsHeaders'
+      | 'includeHeaders'
+      | 'shouldAppendQuotes'
+      | 'escapeFormulae'
     >
   >;
   ignoreValueFormatter: boolean;

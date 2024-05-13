@@ -562,6 +562,7 @@ export const useGridCellSelection = (
               csvOptions: {
                 delimiter: clipboardCopyCellDelimiter,
                 shouldAppendQuotes: false,
+                escapeFormulae: false,
               },
               ignoreValueFormatter,
             });

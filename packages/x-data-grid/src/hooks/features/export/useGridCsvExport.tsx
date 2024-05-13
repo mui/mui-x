@@ -53,6 +53,7 @@ export const useGridCsvExport = (
           shouldAppendQuotes: options.shouldAppendQuotes ?? true,
           includeHeaders: options.includeHeaders ?? true,
           includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+          escapeFormulae: options.escapeFormulae ?? false,
         },
         ignoreValueFormatter,
         apiRef,

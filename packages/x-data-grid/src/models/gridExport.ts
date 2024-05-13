@@ -40,6 +40,12 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
+  /**
+   * If `true`, the formulas in the cells will be escaped.
+   * It is recommended to set this to `true` for security reasons.
+   * @default false
+   */
+  escapeFormulae?: boolean;
 }
 
 export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
