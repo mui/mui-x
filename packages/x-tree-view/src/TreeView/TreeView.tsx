@@ -97,6 +97,11 @@ TreeView.propTypes = {
     }),
   }),
   /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
+  /**
    * The content of the component.
    */
   children: PropTypes.node,
@@ -138,7 +143,7 @@ TreeView.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,

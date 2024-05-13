@@ -24,6 +24,7 @@
   { "name": "SingleSelectTreeViewProps", "kind": "TypeAlias" },
   { "name": "TreeItem", "kind": "Variable" },
   { "name": "TreeItem2", "kind": "Variable" },
+  { "name": "TreeItem2Checkbox", "kind": "Variable" },
   { "name": "TreeItem2Content", "kind": "Variable" },
   { "name": "TreeItem2GroupTransition", "kind": "Variable" },
   { "name": "TreeItem2Icon", "kind": "Function" },

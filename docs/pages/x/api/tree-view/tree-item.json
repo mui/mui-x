@@ -48,6 +48,12 @@
   ],
   "classes": [
     {
+      "key": "checkbox",
+      "className": "MuiTreeItem-checkbox",
+      "description": "Styles applied to the checkbox element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiTreeItem-content",
       "description": "Styles applied to the content element.",

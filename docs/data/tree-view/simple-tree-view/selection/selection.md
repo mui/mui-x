@@ -23,6 +23,16 @@ Use the `disableSelection` prop if you don't want your items to be selectable:
 
 {{"demo": "DisableSelection.js"}}
 
+## Checkbox selection
+
+To activate checkbox selection set `checkboxSelection={true}`:
+
+{{"demo": "CheckboxSelection.js"}}
+
+This is also compatible with multi selection:
+
+{{"demo": "CheckboxMultiSelection.js"}}
+
 ## Controlled selection
 
 Use the `selectedItems` prop to control selected Tree View items.

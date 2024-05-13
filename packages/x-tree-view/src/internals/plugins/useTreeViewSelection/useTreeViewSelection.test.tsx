@@ -212,7 +212,7 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
     });
 
     describe('multi selection', () => {
-      it('should select un-selected item when clicking on an item content', () => {
+      it('should select un-selected item and remove other selected items when clicking on an item content', () => {
         const response = render({
           multiSelect: true,
           items: [{ id: '1' }, { id: '2' }],
@@ -453,6 +453,324 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         expect(response.isItemSelected('3')).to.equal(false);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(true);
+      });
+    });
+  });
+
+  describe('checkbox interaction', () => {
+    describe('render checkbox when needed', () => {
+      it('should not render a checkbox when checkboxSelection is not defined', () => {
+        const response = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(response.getItemCheckbox('1')).to.equal(null);
+      });
+
+      it('should not render a checkbox when checkboxSelection is false', () => {
+        const response = render({
+          checkboxSelection: false,
+          items: [{ id: '1' }],
+        });
+
+        expect(response.getItemCheckbox('1')).to.equal(null);
+      });
+
+      it('should render a checkbox when checkboxSelection is true', () => {
+        const response = render({
+          checkboxSelection: true,
+          items: [{ id: '1' }],
+        });
+
+        expect(response.getItemCheckbox('1')).not.to.equal(null);
+      });
+    });
+
+    describe('single selection', () => {
+      it('should not change selection when clicking on an item content', () => {
+        const response = render({
+          checkboxSelection: true,
+          items: [{ id: '1' }],
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+
+        fireEvent.click(response.getItemContent('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should select un-selected item when clicking on an item checkbox', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2' }],
+          checkboxSelection: true,
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(true);
+      });
+
+      it('should un-select selected item when clicking on an item checkbox', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2' }],
+          defaultSelectedItems: '1',
+          checkboxSelection: true,
+        });
+
+        expect(response.isItemSelected('1')).to.equal(true);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should not select an item when click and disableSelection', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2' }],
+          disableSelection: true,
+          checkboxSelection: true,
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should not select an item when clicking on a disabled item checkbox', () => {
+        const response = render({
+          items: [{ id: '1', disabled: true }, { id: '2' }],
+          checkboxSelection: true,
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+    });
+
+    describe('multi selection', () => {
+      it('should not change selection when clicking on an item content', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }],
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+
+        fireEvent.click(response.getItemContent('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should select un-selected item and keep other items selected when clicking on an item checkbox', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }],
+          defaultSelectedItems: ['2'],
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(true);
+      });
+
+      it('should un-select selected item when clicking on an item checkbox', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }],
+          defaultSelectedItems: ['1'],
+        });
+
+        expect(response.isItemSelected('1')).to.equal(true);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should not select an item when click and disableSelection', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }],
+          disableSelection: true,
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should not select an item when clicking on a disabled item content', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1', disabled: true }, { id: '2' }],
+        });
+
+        expect(response.isItemSelected('1')).to.equal(false);
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(false);
+      });
+
+      it('should expand the selection range when clicking on an item checkbox below the last selected item while holding Shift', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('2'));
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(true);
+        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.isItemSelected('4')).to.equal(false);
+      });
+
+      it('should expand the selection range when clicking on an item checkbox above the last selected item while holding Shift', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('3'));
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('2'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(true);
+        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.isItemSelected('4')).to.equal(false);
+      });
+
+      it('should expand the selection range when clicking on an item checkbox while holding Shift after un-selecting another item', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('2'));
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('2'));
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(true);
+        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.isItemSelected('4')).to.equal(false);
+      });
+
+      it('should not expand the selection range when clicking on a disabled item checkbox then clicking on an item checkbox while holding Shift', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [
+            { id: '1' },
+            { id: '2', disabled: true },
+            { id: '2.1' },
+            { id: '3' },
+            { id: '4' },
+          ],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('2'));
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+      });
+
+      it('should not expand the selection range when clicking on an item checkbox then clicking a disabled item checkbox while holding Shift', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [
+            { id: '1' },
+            { id: '2' },
+            { id: '2.1' },
+            { id: '3', disabled: true },
+            { id: '4' },
+          ],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('2'));
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
+        expect(response.isItemSelected('1')).to.equal(false);
+        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.isItemSelected('2.1')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.isItemSelected('4')).to.equal(false);
+      });
+
+      it('should not select disabled items that are part of the selected range', () => {
+        const response = render({
+          multiSelect: true,
+          checkboxSelection: true,
+          items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+        });
+
+        fireEvent.click(response.getItemCheckboxInput('1'));
+        expect(response.isItemSelected('1')).to.equal(true);
+        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.isItemSelected('3')).to.equal(false);
+
+        fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
         expect(response.isItemSelected('1')).to.equal(true);
         expect(response.isItemSelected('2')).to.equal(false);
         expect(response.isItemSelected('3')).to.equal(true);

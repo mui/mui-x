@@ -27,6 +27,11 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
    */
   iconContainer?: React.ElementType;
   /**
+   * The component that renders the item checkbox for selection.
+   * @default TreeItem2Checkbox
+   */
+  checkbox?: React.ElementType;
+  /**
    * The component that renders the item label.
    * @default TreeItem2Label
    */
@@ -38,6 +43,7 @@ export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentProps<'div', {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
+  checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
 }
 

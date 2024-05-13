@@ -6,6 +6,7 @@ import type { UseTreeItem2Status } from '../../useTreeItem2';
 interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
+  handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface UseTreeItem2UtilsReturnValue {
@@ -68,11 +69,24 @@ export const useTreeItem2Utils = ({
         instance.selectItem(event, itemId, true);
       }
     } else {
-      instance.selectItem(event, itemId);
+      instance.selectItem(event, itemId, false);
     }
   };
 
-  const interactions: UseTreeItem2Interactions = { handleExpansion, handleSelection };
+  const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
+    if (multiSelect && hasShift) {
+      instance.expandSelectionRange(event, itemId);
+    } else {
+      instance.selectItem(event, itemId, multiSelect, event.target.checked);
+    }
+  };
+
+  const interactions: UseTreeItem2Interactions = {
+    handleExpansion,
+    handleSelection,
+    handleCheckboxSelection,
+  };
 
   return { interactions, status };
 };
