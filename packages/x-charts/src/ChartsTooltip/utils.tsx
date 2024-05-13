@@ -52,22 +52,27 @@ export function useMouseTracker() {
       return () => {};
     }
 
-    const handleMouseOut = () => {
+    const handleOut = () => {
       setMousePosition(null);
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleMove = (event: MouseEvent | TouchEvent) => {
+      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
       setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
+        x: target.clientX,
+        y: target.clientY,
       });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('mouseout', handleOut);
+    element.addEventListener('mousemove', handleMove);
+    element.addEventListener('touchend', handleOut);
+    element.addEventListener('touchmove', handleMove);
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('mouseout', handleOut);
+      element.removeEventListener('mousemove', handleMove);
+      element.addEventListener('touchend', handleOut);
+      element.addEventListener('touchmove', handleMove);
     };
   }, [svgRef]);
 

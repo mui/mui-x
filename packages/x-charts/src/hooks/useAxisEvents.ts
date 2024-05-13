@@ -95,7 +95,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       };
     };
 
-    const handleMouseOut = () => {
+    const handleOut = () => {
       mousePosition.current = {
         x: -1,
         y: -1,
@@ -103,8 +103,9 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       dispatch({ type: 'exitChart' });
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const svgPoint = getSVGPoint(svgRef.current!, event);
+    const handleMove = (event: MouseEvent | TouchEvent) => {
+      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
+      const svgPoint = getSVGPoint(svgRef.current!, target);
 
       mousePosition.current = {
         x: svgPoint.x,
@@ -123,11 +124,15 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('mouseout', handleOut);
+    element.addEventListener('mousemove', handleMove);
+    element.addEventListener('touchend', handleOut);
+    element.addEventListener('touchmove', handleMove);
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('mouseout', handleOut);
+      element.removeEventListener('mousemove', handleMove);
+      element.removeEventListener('touchend', handleOut);
+      element.removeEventListener('touchmove', handleMove);
     };
   }, [
     svgRef,
