@@ -431,6 +431,9 @@ importers:
       '@mui/material':
         specifier: ^5.15.14
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/material-nextjs':
+        specifier: ^5.15.11
+        version: 5.15.11(@emotion/cache@11.11.0)(@emotion/server@11.11.0)(@mui/material@5.15.15)(@types/react@18.2.60)(next@14.2.3)(react@18.2.0)
       '@mui/styles':
         specifier: ^5.15.14
         version: 5.15.15(@types/react@18.2.60)(react@18.2.0)
@@ -3671,6 +3674,33 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@mui/material-nextjs@5.15.11(@emotion/cache@11.11.0)(@emotion/server@11.11.0)(@mui/material@5.15.15)(@types/react@18.2.60)(next@14.2.3)(react@18.2.0):
+    resolution: {integrity: sha512-cp5RWYbBngyi7NKP91R9QITllfxumCVPFjqe4AKzNROVuCot0VpgkafxXqfbv0uFsyUU0ROs0O2M3r17q604Aw==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@emotion/cache': ^11.11.0
+      '@emotion/server': ^11.11.0
+      '@mui/material': ^5.0.0
+      '@types/react': ^17.0.0 || ^18.0.0
+      next: ^13.0.0 || ^14.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/cache':
+        optional: true
+      '@emotion/server':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.24.4
+      '@emotion/cache': 11.11.0
+      '@emotion/server': 11.11.0
+      '@mui/material': 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.60
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@mui/material@5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
