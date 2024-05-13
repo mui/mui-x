@@ -172,6 +172,6 @@
   "muiName": "MuiBarChart",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li></ul>",
   "cssComponent": false
 }

@@ -11,6 +11,7 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
 import { CommonSeriesType } from '../models/seriesType/common';
+import { getLabel } from '../internals/getLabel';
 
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
@@ -24,14 +25,20 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
     series.type === 'pie'
       ? {
           color: getColor(itemData.dataIndex),
-          displayedLabel: series.data[itemData.dataIndex].label,
+          displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
           color: getColor(itemData.dataIndex) ?? series.color,
-          displayedLabel: series.label,
+          displayedLabel: getLabel(series.label, 'tooltip'),
         };
 
-  const value = series.data[itemData.dataIndex];
+  const value =
+    series.type === 'pie'
+      ? {
+          ...series.data[itemData.dataIndex],
+          label: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
+        }
+      : series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
   )?.(value, { dataIndex: itemData.dataIndex });
