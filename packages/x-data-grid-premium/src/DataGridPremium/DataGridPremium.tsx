@@ -1053,13 +1053,13 @@ DataGridPremiumRaw.propTypes = {
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
-  unstable_dataSourceCache: PropTypes.shape({
+  unstable_onServerSideError: PropTypes.func,
+  unstable_serverSideCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
     getKey: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
-  unstable_onServerSideError: PropTypes.func,
 } as any;
 
 interface DataGridPremiumComponent {

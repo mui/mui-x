@@ -65,27 +65,27 @@ export interface GridDataSource {
   updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 
-export interface GridDataSourceCache {
+export interface GridServerSideCache {
   /**
-   * Provides a key for the cache to be used in `set` and `get`
+   * Provide a key for the cache to be used in `set` and `get`
    * @param {GridGetRowsParams} params The parameters required to fetch the rows
-   * @returns {unknown} The key for the cache to be used in `set` and `get`
+   * @returns {any} The key for the cache to be used in `set` and `get`
    */
-  getKey: (params: GridGetRowsParams) => unknown;
+  getKey: (params: GridGetRowsParams) => any;
   /**
-   * Sets the cache entry for the given key
-   * @param {unknown} key The key for the cache
+   * Set the cache entry for the given key
+   * @param {any} key The key for the cache
    * @param {GridGetRowsResponse} value The value to be stored in the cache
    */
-  set: (key: unknown, value: GridGetRowsResponse) => void;
+  set: (key: any, value: GridGetRowsResponse) => void;
   /**
-   * Gets the cache entry for the given key
-   * @param {unknown} key The key for the cache
+   * Get the cache entry for the given key
+   * @param {any} key The key for the cache
    * @returns {GridGetRowsResponse} The value stored in the cache
    */
-  get: (key: unknown) => GridGetRowsResponse;
+  get: (key: any) => GridGetRowsResponse | undefined;
   /**
-   * Clears the cache
+   * Clear the cache
    */
   clear: () => void;
 }

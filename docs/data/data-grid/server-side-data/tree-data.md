@@ -57,3 +57,25 @@ For each row group expansion, the data source is called to fetch the children. I
 The demo below shows a toast apart from the default error message in the grouping cell. Cache has been disabled in this demo for simplicity.
 
 {{"demo": "ServerSideTreeDataErrorHandling.js", "bg": "inline"}}
+
+## Group expansion
+
+The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section. The difference is that the data is not readily available and is fetched automatically on Data Grid mount based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
+
+The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all the level of the tree by default.
+
+{{"demo": "ServerSideTreeDataGroupExpansion.js", "bg": "inline"}}
+
+## Custom cache
+
+The data source uses a cache by default to store the fetched data. Use `unstable_serverSideCache` to provide a custom cache to the data source to manage the cache as per your requirements. See more about caching in the [overview section](/x/react-data-grid/server-side-data/#data-caching).
+
+The following demo uses `QueryClient` from `@tanstack/react-core` to provide a custom cache to the Grid which could be manipulated on the userland.
+
+{{"demo": "ServerSideTreeDataCustomCache.js", "bg": "inline"}}
+
+## API
+
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

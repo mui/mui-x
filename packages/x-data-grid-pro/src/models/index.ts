@@ -2,7 +2,7 @@ export type {
   GridGetRowsParams,
   GridGetRowsResponse,
   GridDataSource,
-  GridDataSourceCache,
+  GridServerSideCache,
 } from '@mui/x-data-grid/internals';
 export * from './gridApiPro';
 export * from './gridGroupingColDefOverride';

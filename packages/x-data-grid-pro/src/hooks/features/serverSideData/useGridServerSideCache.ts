@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
+import { GridGetRowsParams, GridGetRowsResponse, GridServerSideCache } from '../../../models';
 import { GridServerSideCacheApi } from './serverSideInterfaces';
 
 class SimpleServerSideCache {
@@ -34,23 +34,25 @@ class SimpleServerSideCache {
   }
 }
 
-const cacheInstance = new SimpleServerSideCache();
-
-const defaultCache: GridDataSourceCache = {
+const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridServerSideCache => ({
   getKey: SimpleServerSideCache.getKey,
-  set: (key, value) => cacheInstance.set(key as string, value as GridGetRowsResponse),
-  get: (key) => cacheInstance.get(key as string),
+  set: (key: string, value: GridGetRowsResponse) =>
+    cacheInstance.set(key as string, value as GridGetRowsResponse),
+  get: (key: string) => cacheInstance.get(key as string),
   clear: () => cacheInstance.clear(),
-};
+});
 
 export const useGridServerSideCache = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'unstable_dataSource' | 'disableServerSideCache' | 'unstable_dataSourceCache'
+    'unstable_dataSource' | 'disableServerSideCache' | 'unstable_serverSideCache'
   >,
 ): void => {
-  const cache = React.useRef<GridDataSourceCache>(props.unstable_dataSourceCache || defaultCache);
+  const defaultCache = React.useRef(getDefaultCache(new SimpleServerSideCache()));
+  const cache = React.useRef<GridServerSideCache>(
+    props.unstable_serverSideCache || defaultCache.current,
+  );
 
   const getCacheData = React.useCallback(
     (params: GridGetRowsParams) => {
@@ -95,8 +97,8 @@ export const useGridServerSideCache = (
       isFirstRender.current = false;
       return;
     }
-    if (props.unstable_dataSourceCache) {
-      cache.current = props.unstable_dataSourceCache;
+    if (props.unstable_serverSideCache) {
+      cache.current = props.unstable_serverSideCache;
     }
-  }, [props.unstable_dataSourceCache]);
+  }, [props.unstable_serverSideCache]);
 };

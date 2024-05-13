@@ -54,7 +54,7 @@ function ServerSideDataGridWithSWR() {
       <DataGridPro
         columns={columns}
         unstable_dataSource={dataSource}
-        unstable_dataSourceCache={cache}
+        unstable_serverSideCache={cache}
         pagination
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}
