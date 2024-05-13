@@ -9,6 +9,11 @@
       "isPremiumPlan": true
     },
     "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
+    "escapeFormulae": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
     "exceljsPostProcess": {
       "type": {
         "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"

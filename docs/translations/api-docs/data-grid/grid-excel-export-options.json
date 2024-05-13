@@ -5,6 +5,9 @@
       "description": "If <code>true</code>, the hidden columns will also be exported."
     },
     "columnsStyles": { "description": "Object mapping column field to Exceljs style" },
+    "escapeFormulae": {
+      "description": "If <code>true</code>, the formulas in the cells will be escaped.<br />It is recommended to set this to <code>true</code> for security reasons."
+    },
     "exceljsPostProcess": {
       "description": "Method called after adding the rows to the workbook.<br />Not supported when <code>worker</code> is set.<br />To use with web workers, use the option in <code>setupExcelExportWebWorker</code>."
     },

@@ -5,6 +5,9 @@
       "description": "If <code>true</code>, the hidden columns will also be exported."
     },
     "delimiter": { "description": "The character used to separate fields." },
+    "escapeFormulae": {
+      "description": "If <code>true</code>, the formulas in the cells will be escaped.<br />It is recommended to set this to <code>true</code> for security reasons."
+    },
     "fields": {
       "description": "The columns exported.<br />This should only be used if you want to restrict the columns exports."
     },
