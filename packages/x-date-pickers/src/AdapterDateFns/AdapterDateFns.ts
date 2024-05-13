@@ -49,6 +49,12 @@ import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'date-fns': Date;
+  }
+}
+
 /**
  * Based on `@date-io/date-fns`
  *
