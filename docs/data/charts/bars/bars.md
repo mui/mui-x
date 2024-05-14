@@ -98,7 +98,15 @@ The bar charts use by priority:
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScaleNoSnap.js"}}
+{{"demo": "ColorScale.js"}}
+
+### Border Radius
+
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+
+It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
+
+{{"demo": "BorderRadius.js"}}
 
 ## Click event
 

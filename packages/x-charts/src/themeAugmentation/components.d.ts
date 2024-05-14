@@ -18,6 +18,10 @@ export interface ChartsComponents {
   MuiChartsClipPath?: {
     defaultProps?: ComponentsProps['MuiChartsClipPath'];
   };
+  MuiChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiChartsGrid'];
+    styleOverrides?: ComponentsOverrides['MuiChartsGrid'];
+  };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
     styleOverrides?: ComponentsOverrides['MuiChartsLegend'];

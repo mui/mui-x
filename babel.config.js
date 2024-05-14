@@ -58,12 +58,12 @@ module.exports = function getBabelConfig(api) {
 
   const plugins = [
     'babel-plugin-optimize-clsx',
-    // Need the following 3 proposals for all targets in .browserslistrc.
+    // Need the following 3 transforms for all targets in .browserslistrc.
     // With our usage the transpiled loose mode is equivalent to spec mode.
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['@babel/plugin-proposal-private-methods', { loose: true }],
-    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+    ['@babel/plugin-transform-class-properties', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }],
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+    ['@babel/plugin-transform-object-rest-spread', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -91,8 +91,19 @@ module.exports = function getBabelConfig(api) {
       {
         test: /date-fns/i,
         replacer: 'date-fns-v3',
-        ignoreFilenames: 'AdapterDateFns.ts',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsV3/',
       },
+    ]);
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns-jalali/i,
+        replacer: 'date-fns-jalali-v3',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+      },
+      'replace-date-fns-jalali-imports',
     ]);
   }
 

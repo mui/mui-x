@@ -9,6 +9,7 @@ import {
   UseTreeItem2GroupTransitionSlotProps,
   UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
+  UseTreeItem2CheckboxSlotProps,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
@@ -20,7 +21,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 ): UseTreeItem2ReturnValue<TPlugins> => {
   const {
     runItemPlugins,
-    selection: { multiSelect },
+    selection: { multiSelect, disableSelection, checkboxSelection },
     disabledItemsFocusable,
     instance,
     publicAPI,
@@ -32,6 +33,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
+  const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -72,12 +74,15 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      if (event.defaultMuiPrevented) {
+      if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
 
       interactions.handleExpansion(event);
-      interactions.handleSelection(event);
+
+      if (!checkboxSelection) {
+        interactions.handleSelection(event);
+      }
     };
 
   const createContentHandleMouseDown =
@@ -91,6 +96,21 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       if (event.shiftKey || event.ctrlKey || event.metaKey || status.disabled) {
         event.preventDefault();
       }
+    };
+
+  const createCheckboxHandleChange =
+    (otherHandlers: EventHandlers) =>
+    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onChange?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      if (disableSelection || status.disabled) {
+        return;
+      }
+
+      interactions.handleCheckboxSelection(event);
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -133,10 +153,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -145,6 +162,23 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
+    };
+  };
+
+  const getCheckboxProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItem2CheckboxSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      ...externalEventHandlers,
+      visible: checkboxSelection,
+      ref: checkboxRef,
+      checked: status.selected,
+      disabled: disableSelection || status.disabled,
+      tabIndex: -1,
+      ...externalProps,
+      onChange: createCheckboxHandleChange(externalEventHandlers),
     };
   };
 
@@ -166,10 +200,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemIconContainerSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -180,10 +211,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -201,6 +229,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     getContentProps,
     getGroupTransitionProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     rootRef: handleRootRef,
     status,
