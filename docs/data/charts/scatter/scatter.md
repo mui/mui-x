@@ -102,4 +102,6 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### Shape 🚧
 
+{{"demo": "CustomPoint.js"}}
+
 ### Size 🚧
