@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/base/utils';
-import { TreeViewModel } from './treeView';
+import { TreeViewExperimentalFeatures, TreeViewModel } from './treeView';
 import type { MergePluginsProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginsSignature } from '../corePlugins';
@@ -12,6 +12,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   state: TreeViewUsedState<TSignature>;
   slots: TSignature['slots'];
   slotProps: TSignature['slotProps'];
+  experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   models: TreeViewUsedModels<TSignature>;
   setState: React.Dispatch<React.SetStateAction<TreeViewUsedState<TSignature>>>;
   rootRef: React.RefObject<HTMLUListElement>;
@@ -45,6 +46,7 @@ export type TreeViewPluginSignature<
     slots?: { [key in keyof T['slots']]: React.ElementType };
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
     modelNames?: keyof T['defaultizedParams'];
+    experimentalFeatures?: string;
     dependantPlugins?: readonly TreeViewAnyPluginSignature[];
   },
 > = {
@@ -64,6 +66,7 @@ export type TreeViewPluginSignature<
         >;
       }
     : {};
+  experimentalFeatures: T['experimentalFeatures'];
   dependantPlugins: T extends { dependantPlugins: Array<any> } ? T['dependantPlugins'] : [];
 };
 
@@ -78,6 +81,7 @@ export type TreeViewAnyPluginSignature = {
   slots: any;
   slotProps: any;
   models: any;
+  experimentalFeatures: any;
   publicAPI: any;
 };
 
@@ -113,6 +117,9 @@ export type TreeViewUsedPublicAPI<TSignature extends TreeViewAnyPluginSignature>
 
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
   MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
+
+type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
+  TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependantPlugins']]>;
 
 type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
   [K in keyof Models]: Omit<Models[K], 'setValue'>;

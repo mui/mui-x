@@ -93,6 +93,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
       params,
       slots: params.slots,
       slotProps: params.slotProps,
+      experimentalFeatures: params.experimentalFeatures,
       state,
       setState,
       rootRef: innerRootRef,

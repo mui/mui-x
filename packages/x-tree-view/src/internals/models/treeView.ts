@@ -24,3 +24,7 @@ export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSigna
 
 export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   MergePluginsProperty<TSignatures, 'publicAPI'>;
+
+export type TreeViewExperimentalFeatures<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> = { [key in MergePluginsProperty<TSignatures, 'experimentalFeatures'>]?: boolean };

@@ -23,6 +23,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
     disabledItemsFocusable,
+    indentationAtItemLevel,
     instance,
     publicAPI,
   } = useTreeViewContext<TPlugins>();

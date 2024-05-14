@@ -12,7 +12,12 @@ import {
 import { TreeItemProps } from '../TreeItem';
 import { TreeItem2Props } from '../TreeItem2';
 import { TreeViewItemId } from '../models';
-import { SlotComponentPropsFromProps, TreeViewPublicAPI } from '../internals/models';
+import {
+  type MergePluginsProperty,
+  SlotComponentPropsFromProps,
+  TreeViewExperimentalFeatures,
+  TreeViewPublicAPI,
+} from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
   itemId: TreeViewItemId;
@@ -75,4 +80,8 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: RichTreeViewApiRef;
+  /**
+   * TEMP
+   */
+  experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewPlugins>;
 }

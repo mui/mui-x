@@ -104,6 +104,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   params,
   state,
   setState,
+  experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
     (itemId: string) => state.items.itemMetaMap[itemId],
@@ -233,7 +234,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
-    contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
+    contextValue: {
+      disabledItemsFocusable: params.disabledItemsFocusable,
+      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+    },
   };
 };
 
