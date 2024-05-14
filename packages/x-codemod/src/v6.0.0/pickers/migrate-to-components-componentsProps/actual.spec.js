@@ -1,4 +1,4 @@
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 <DatePicker PopperProps={{ onClick: handleClick }} />;
 
