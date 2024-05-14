@@ -48,7 +48,7 @@ const useAggregatedData = () => {
 
   return stackingGroups.flatMap(({ ids: groupIds }) => {
     return [...groupIds]
-      .reverse() // Revert staked area for a more pleasant animation
+      .reverse() // Revert stacked area for a more pleasant animation
       .map((seriesId) => {
         const {
           xAxisKey = defaultXAxisId,
