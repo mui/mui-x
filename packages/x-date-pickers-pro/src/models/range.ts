@@ -1,7 +1,51 @@
+import {
+  BaseDateValidationProps,
+  MakeOptional,
+  UseFieldInternalProps,
+} from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { RangeFieldSection, RangeFieldSeparatorProps } from './fields';
+import { DateRangeValidationError } from './validation';
 
 export type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
 
 export type NonEmptyDateRange<TDate extends PickerValidDate> = [TDate, TDate];
 
 export type RangePosition = 'start' | 'end';
+
+/**
+ * Props used to validate a day value in range pickers.
+ */
+export interface DayRangeValidationProps<TDate extends PickerValidDate> {
+  /**
+   * Disable specific date.
+   *
+   * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
+   *
+   * @template TDate
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
+   */
+  shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
+}
+
+export interface UseDateRangeFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
+      Omit<
+        UseFieldInternalProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          DateRangeValidationError
+        >,
+        'unstableFieldRef'
+      >,
+      'format'
+    >,
+    RangeFieldSeparatorProps,
+    DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
