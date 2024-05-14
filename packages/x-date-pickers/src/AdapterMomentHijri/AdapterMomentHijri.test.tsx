@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { expect } from 'chai';
-import { DateTimeField } from '@mui/x-date-pickers';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import {

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { DateTimeField } from '@mui/x-date-pickers';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import {
   createPickerRenderer,

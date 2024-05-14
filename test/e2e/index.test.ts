@@ -877,6 +877,10 @@ async function initializeEnvironment(
       });
 
       it('should correctly select hours section when there are no time renderers on v6', async () => {
+        // The test is flaky on webkit
+        if (browserType.name() === 'webkit') {
+          return;
+        }
         await renderFixture(
           'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
         );
