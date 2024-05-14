@@ -47,62 +47,66 @@ const useAggregatedData = () => {
   const defaultYAxisId = yAxisIds[0];
 
   return stackingGroups.flatMap(({ ids: groupIds }) => {
-    return groupIds.flatMap((seriesId) => {
-      const {
-        xAxisKey = defaultXAxisId,
-        yAxisKey = defaultYAxisId,
-        stackedData,
-        data,
-        connectNulls,
-      } = series[seriesId];
+    return [...groupIds]
+      .reverse() // Revert stacked area for a more pleasant animation
+      .map((seriesId) => {
+        const {
+          xAxisKey = defaultXAxisId,
+          yAxisKey = defaultYAxisId,
+          stackedData,
+          data,
+          connectNulls,
+        } = series[seriesId];
 
-      const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-      const yScale = yAxis[yAxisKey].scale;
-      const xData = xAxis[xAxisKey].data;
+        const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
+        const yScale = yAxis[yAxisKey].scale;
+        const xData = xAxis[xAxisKey].data;
 
-      const gradientUsed: [string, 'x' | 'y'] | undefined =
-        (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
-        (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
-        undefined;
+        const gradientUsed: [string, 'x' | 'y'] | undefined =
+          (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
+          (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
+          undefined;
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (xData === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should have data property to be able to display a line plot.`,
-          );
+        if (process.env.NODE_ENV !== 'production') {
+          if (xData === undefined) {
+            throw new Error(
+              `MUI X Charts: ${
+                xAxisKey === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisKey}"`
+              } should have data property to be able to display a line plot.`,
+            );
+          }
+          if (xData.length < stackedData.length) {
+            throw new Error(
+              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+            );
+          }
         }
-        if (xData.length < stackedData.length) {
-          throw new Error(
-            `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-          );
-        }
-      }
 
-      const areaPath = d3Area<{
-        x: any;
-        y: [number, number];
-      }>()
-        .x((d) => xScale(d.x))
-        .defined((_, i) => connectNulls || data[i] != null)
-        .y0((d) => d.y && yScale(d.y[0])!)
-        .y1((d) => d.y && yScale(d.y[1])!);
+        const areaPath = d3Area<{
+          x: any;
+          y: [number, number];
+        }>()
+          .x((d) => xScale(d.x))
+          .defined((_, i) => connectNulls || data[i] != null)
+          .y0((d) => d.y && yScale(d.y[0])!)
+          .y1((d) => d.y && yScale(d.y[1])!);
 
-      const curve = getCurveFactory(series[seriesId].curve);
-      const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
+        const curve = getCurveFactory(series[seriesId].curve);
+        const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+        const d3Data = connectNulls
+          ? formattedData.filter((_, i) => data[i] != null)
+          : formattedData;
 
-      const d = areaPath.curve(curve)(d3Data) || '';
-      return {
-        ...series[seriesId],
-        gradientUsed,
-        d,
-        seriesId,
-      };
-    });
+        const d = areaPath.curve(curve)(d3Data) || '';
+        return {
+          ...series[seriesId],
+          gradientUsed,
+          d,
+          seriesId,
+        };
+      });
   });
 };
 
@@ -125,25 +129,23 @@ function AreaPlot(props: AreaPlotProps) {
 
   return (
     <g {...other}>
-      {completedData
-        .reverse()
-        .map(
-          ({ d, seriesId, color, highlightScope, area, gradientUsed }) =>
-            !!area && (
-              <AreaElement
-                key={seriesId}
-                id={seriesId}
-                d={d}
-                color={color}
-                gradientId={gradientUsed && getGradientId(...gradientUsed)}
-                highlightScope={highlightScope}
-                slots={slots}
-                slotProps={slotProps}
-                onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
-                skipAnimation={skipAnimation}
-              />
-            ),
-        )}
+      {completedData.map(
+        ({ d, seriesId, color, highlightScope, area, gradientUsed }) =>
+          !!area && (
+            <AreaElement
+              key={seriesId}
+              id={seriesId}
+              d={d}
+              color={color}
+              gradientId={gradientUsed && getGradientId(...gradientUsed)}
+              highlightScope={highlightScope}
+              slots={slots}
+              slotProps={slotProps}
+              onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
+              skipAnimation={skipAnimation}
+            />
+          ),
+      )}
     </g>
   );
 }
