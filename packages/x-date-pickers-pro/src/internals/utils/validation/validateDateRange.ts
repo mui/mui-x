@@ -6,7 +6,8 @@ import {
   DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../date-utils';
-import { DateRangeValidationError, DateRange, DayRangeValidationProps } from '../../../models';
+import { DayRangeValidationProps } from '../../../models/dateRange';
+import { DateRangeValidationError, DateRange } from '../../../models';
 
 export interface DateRangeComponentValidationProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
