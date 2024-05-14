@@ -19,9 +19,8 @@ import {
   MultiInputFieldSlotTextFieldProps,
   DateRangeValidationError,
   DateRange,
+  UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
-// eslint-disable-next-line no-restricted-imports
-import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',

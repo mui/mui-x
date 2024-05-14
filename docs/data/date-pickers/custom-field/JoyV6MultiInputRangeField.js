@@ -23,8 +23,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
-// eslint-disable-next-line no-restricted-imports
-
 const joyTheme = extendJoyTheme();
 
 const JoyField = React.forwardRef((props, ref) => {
