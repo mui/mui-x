@@ -8,7 +8,7 @@ import {
   FieldSectionType,
   FieldSelectedSections,
   RangePosition,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers-pro/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 export default function ControlledSelectedSectionsMultiInputRangeField() {
