@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ResponsiveChartContainer, LinePlot, useDrawingArea } from '@mui/x-charts';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { useDrawingArea } from '@mui/x-charts/hooks';
 
 const StyledPath = styled('path')(({ theme }) => ({
   fill: 'none',
