@@ -68,7 +68,7 @@ export interface AreaElementSlotProps {
 export interface AreaElementProps
   extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**

@@ -58,7 +58,7 @@ const PieArcLabelRoot = styled(animated.text, {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
