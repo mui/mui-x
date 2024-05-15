@@ -13,7 +13,6 @@ import { TreeItemProps } from '../TreeItem';
 import { TreeItem2Props } from '../TreeItem2';
 import { TreeViewItemId } from '../models';
 import {
-  type MergePluginsProperty,
   SlotComponentPropsFromProps,
   TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
