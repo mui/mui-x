@@ -40,7 +40,7 @@ export interface UseTreeItem2RootSlotOwnProps {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
 }
 
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &

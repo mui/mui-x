@@ -7,9 +7,12 @@ export interface TreeViewItemMeta {
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
-  depth: number;
   /**
-   * Only defined for `RichTreeView`.
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   */
+  depth?: number;
+  /**
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
    */
   label?: string;
 }

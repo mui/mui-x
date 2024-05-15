@@ -8,6 +8,7 @@ import {
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -255,6 +256,15 @@ useTreeViewItems.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
 });
+
+useTreeViewItems.wrapRoot = ({ children, instance }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return (
+    <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
+      {children}
+    </TreeViewItemDepthContext.Provider>
+  );
+};
 
 useTreeViewItems.params = {
   disabledItemsFocusable: true,

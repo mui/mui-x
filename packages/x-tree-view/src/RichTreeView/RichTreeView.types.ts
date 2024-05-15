@@ -80,7 +80,9 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    */
   apiRef?: RichTreeViewApiRef;
   /**
-   * TEMP
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewPlugins>;
 }

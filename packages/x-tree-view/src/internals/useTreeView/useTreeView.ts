@@ -149,11 +149,11 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const itemWrappers = plugins
     .map((plugin) => plugin.wrapItem)
-    .filter((wrapItem): wrapItem is TreeItemWrapper => !!wrapItem);
+    .filter((wrapItem): wrapItem is TreeItemWrapper<any> => !!wrapItem);
   contextValue.wrapItem = ({ itemId, children }) => {
     let finalChildren: React.ReactNode = children;
     itemWrappers.forEach((itemWrapper) => {
-      finalChildren = itemWrapper({ itemId, children: finalChildren });
+      finalChildren = itemWrapper({ itemId, children: finalChildren, instance });
     });
 
     return finalChildren;
@@ -161,11 +161,14 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const rootWrappers = plugins
     .map((plugin) => plugin.wrapRoot)
-    .filter((wrapRoot): wrapRoot is TreeRootWrapper => !!wrapRoot);
+    .filter((wrapRoot): wrapRoot is TreeRootWrapper<any> => !!wrapRoot)
+    // The wrappers are reversed to ensure that the first wrapper is the outermost one.
+    .reverse();
+
   contextValue.wrapRoot = ({ children }) => {
     let finalChildren: React.ReactNode = children;
     rootWrappers.forEach((rootWrapper) => {
-      finalChildren = rootWrapper({ children: finalChildren });
+      finalChildren = rootWrapper({ children: finalChildren, instance });
     });
 
     return finalChildren;

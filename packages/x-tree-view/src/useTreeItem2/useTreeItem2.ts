@@ -15,6 +15,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
 export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
   parameters: UseTreeItem2Parameters,
@@ -27,6 +28,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     instance,
     publicAPI,
   } = useTreeViewContext<TPlugins>();
+  const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -35,7 +37,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
-  const itemMeta = instance.getItemMeta(itemId);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -136,7 +137,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ariaSelected = true;
     }
 
-    return {
+    const response: UseTreeItem2RootSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
@@ -149,10 +150,16 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
-      style: {
-        '--TreeView-itemDepth': itemMeta.depth,
-      } as React.CSSProperties,
     };
+
+    if (indentationAtItemLevel) {
+      response.style = {
+        '--TreeView-itemDepth':
+          typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+      } as React.CSSProperties;
+    }
+
+    return response;
   };
 
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
