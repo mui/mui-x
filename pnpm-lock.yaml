@@ -551,6 +551,9 @@ importers:
       moment-hijri:
         specifier: ^2.1.2
         version: 2.1.2
+      moment-jalaali:
+        specifier: ^0.10.0
+        version: 0.10.0
       moment-timezone:
         specifier: ^0.5.45
         version: 0.5.45
@@ -651,6 +654,9 @@ importers:
       '@types/moment-hijri':
         specifier: ^2.1.4
         version: 2.1.4
+      '@types/moment-jalaali':
+        specifier: ^0.7.9
+        version: 0.7.9
       '@types/react-dom':
         specifier: 18.2.19
         version: 18.2.19
