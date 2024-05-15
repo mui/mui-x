@@ -60,7 +60,7 @@ export const BarElementPath = styled(animated.rect, {
     : ownerState.color,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   opacity: (ownerState.isFaded && 0.3) || 1,
-})) as React.ElementType<BarProps>;
+}));
 
 interface BarProps
   extends Omit<
@@ -139,7 +139,7 @@ function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const Bar = slots?.bar ?? BarElementPath;
+  const Bar = slots?.bar ?? (BarElementPath as React.ElementType<BarProps>);
 
   const barProps = useSlotProps({
     elementType: Bar,
