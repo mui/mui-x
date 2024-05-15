@@ -28,7 +28,7 @@ const updateItemsState = ({
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
-  const processItem = (item: TreeViewBaseItem, parentId: string | null) => {
+  const processItem = (item: TreeViewBaseItem, depth: number, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -71,6 +71,7 @@ const updateItemsState = ({
       idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
+      depth,
     };
 
     itemMap[id] = item;
@@ -81,10 +82,10 @@ const updateItemsState = ({
     }
     itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
-    item.children?.forEach((child) => processItem(child, id));
+    item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
-  items.forEach((item) => processItem(item, null));
+  items.forEach((item) => processItem(item, 0, null));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
@@ -236,7 +237,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     },
     contextValue: {
       disabledItemsFocusable: params.disabledItemsFocusable,
-      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? true,
     },
   };
 };

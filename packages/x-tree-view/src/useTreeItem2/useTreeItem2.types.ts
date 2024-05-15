@@ -40,6 +40,7 @@ export interface UseTreeItem2RootSlotOwnProps {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
+  style: React.CSSProperties;
 }
 
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
@@ -50,6 +51,7 @@ export interface UseTreeItem2ContentSlotOwnProps {
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
+  indentationAtItemLevel: boolean;
 }
 
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
@@ -85,6 +87,7 @@ export interface UseTreeItem2GroupTransitionSlotOwnProps {
   component: 'ul';
   role: 'group';
   children: React.ReactNode;
+  indentationAtItemLevel: boolean;
 }
 
 export type UseTreeItem2GroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &

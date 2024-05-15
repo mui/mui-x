@@ -20,6 +20,7 @@ interface TreeViewChildrenItemProviderProps {
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
   const { children, itemId = null } = props;
 
+  const parentContext = React.useContext(TreeViewChildrenItemContext);
   const { instance, rootRef } =
     useTreeViewContext<
       [UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature, UseTreeViewIdSignature]
@@ -68,8 +69,9 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
         childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId),
       unregisterChild: (childIdAttribute) => childrenIdAttrToIdRef.current.delete(childIdAttribute),
       parentId: itemId,
+      depth: (parentContext?.depth ?? -1) + 1,
     }),
-    [itemId],
+    [itemId, parentContext?.depth],
   );
 
   return (
@@ -88,4 +90,5 @@ interface TreeViewChildrenItemContextValue {
   registerChild: (idAttribute: string, itemId: string) => void;
   unregisterChild: (idAttribute: string) => void;
   parentId: string | null;
+  depth: number;
 }

@@ -158,10 +158,11 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
       parentId,
       expandable,
       disabled,
+      depth: parentContext.depth,
     });
 
     return () => instance.removeJSXItem(itemId);
-  }, [instance, parentId, itemId, expandable, disabled, id]);
+  }, [instance, parentId, itemId, expandable, disabled, id, parentContext.depth]);
 
   React.useEffect(() => {
     if (label) {

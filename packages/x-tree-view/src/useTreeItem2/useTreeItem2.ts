@@ -35,6 +35,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+  const itemMeta = instance.getItemMeta(itemId);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -148,6 +149,9 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
+      style: {
+        '--TreeView-itemDepth': itemMeta.depth,
+      } as React.CSSProperties,
     };
   };
 
@@ -163,6 +167,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
+      indentationAtItemLevel,
     };
   };
 
@@ -220,6 +225,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       component: 'ul',
       role: 'group',
       in: status.expanded,
+      indentationAtItemLevel,
       children,
       ...externalProps,
     };
