@@ -6,6 +6,8 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
+moment.locale('en');
+
 export default function MomentUTC() {
   const [value, setValue] = React.useState(moment.utc('2022-04-17T15:30'));
 
