@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/base/utils';
-import { TreeViewExperimentalFeatures, TreeViewModel } from './treeView';
+import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
 import type { MergePluginsProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginsSignature } from '../corePlugins';
@@ -151,15 +151,15 @@ export type TreeViewItemPlugin<TProps extends {}> = (
   options: TreeViewItemPluginOptions<TProps>,
 ) => void | TreeViewItemPluginResponse;
 
-export type TreeItemWrapper<TSignature extends TreeViewAnyPluginSignature> = (params: {
+export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
   itemId: TreeViewItemId;
   children: React.ReactNode;
-  instance: TreeViewUsedInstance<TSignature>;
+  instance: TreeViewInstance<TSignatures>;
 }) => React.ReactNode;
 
-export type TreeRootWrapper<TSignature extends TreeViewAnyPluginSignature> = (params: {
+export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
   children: React.ReactNode;
-  instance: TreeViewUsedInstance<TSignature>;
+  instance: TreeViewInstance<TSignatures>;
 }) => React.ReactNode;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
@@ -176,11 +176,11 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the item.
    * @returns {React.ReactNode} The wrapped item.
    */
-  wrapItem?: TreeItemWrapper<TSignature>;
+  wrapItem?: TreeItemWrapper<[TSignature, ...TSignature['dependantPlugins']]>;
   /**
    * Render function used to add React wrappers around the TreeView.
    * @param {{ children: React.ReactNode; }} params The params of the root.
    * @returns {React.ReactNode} The wrapped root.
    */
-  wrapRoot?: TreeRootWrapper<TSignature>;
+  wrapRoot?: TreeRootWrapper<[TSignature, ...TSignature['dependantPlugins']]>;
 };

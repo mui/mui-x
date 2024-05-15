@@ -17,7 +17,7 @@ import {
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
 import { UseTreeViewIdSignature } from '../useTreeViewId';
-import { TreeViewItemDepthContext } from 'packages/x-tree-view/src/internals/TreeViewItemDepthContext';
+import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
