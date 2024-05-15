@@ -7,7 +7,7 @@ import {
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { DayRangeValidationProps } from '../../models/dateRange';
+import { DayRangeValidationProps } from './dateRange';
 import {
   DateTimeRangeValidationError,
   RangeFieldSection,
