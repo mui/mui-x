@@ -14,7 +14,11 @@ export default function MomentTimezone() {
   );
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment}>
+    <LocalizationProvider
+      dateAdapter={AdapterMoment}
+      dateLibInstance={moment}
+      adapterLocale="en"
+    >
       <Stack spacing={2}>
         <DateTimePicker value={value} onChange={setValue} />
         <Typography>

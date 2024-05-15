@@ -14,7 +14,7 @@ export default function MomentUTC() {
   );
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
+    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en">
       <Stack spacing={2}>
         <DateTimePicker value={value} onChange={setValue} />
         <Typography>

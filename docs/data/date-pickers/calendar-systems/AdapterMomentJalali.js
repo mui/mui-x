@@ -1,6 +1,5 @@
 import * as React from 'react';
 import moment from 'moment-jalaali';
-import 'moment/locale/fa';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -19,7 +18,7 @@ export default function AdapterMomentJalali() {
   return (
     <ThemeProvider theme={theme}>
       <div dir="rtl">
-        <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa">
+        <LocalizationProvider dateAdapter={AdapterMomentJalaali}>
           <DateTimePicker
             label="AdapterMomentJalaali"
             defaultValue={moment('2022-02-01T12:00:00')}
