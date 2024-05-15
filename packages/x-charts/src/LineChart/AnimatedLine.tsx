@@ -58,6 +58,8 @@ function AnimatedLine(props: AnimatedLineProps) {
     reset: false,
     immediate: skipAnimation || measurements.totalLength === 0,
     onChange: ({ value: { length } }) => {
+      measurements.ensure(length)
+
       if (ref.current && measurements.points.length > 1) {
         const start = measurements.points[0];
         let partialPath = `M${start.x},${start.y} `;
@@ -78,20 +80,24 @@ function AnimatedLine(props: AnimatedLineProps) {
   );
 }
 
-const element =
-  typeof document !== 'undefined'
-    ? document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    : undefined;
 function measurePath(path?: string) {
-  if (!element) {
-    return { totalLength: 0, points: [] };
+  if (typeof document === 'undefined') {
+    return { totalLength: 0, points: [], ensure: () => {} };
   }
+
+  const element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   element.setAttributeNS(null, 'd', path ?? '');
+
   const totalLength = element.getTotalLength();
-  const points = Array.from({ length: Math.ceil(totalLength / PATH_SAMPLING_INTERVAL) }).map(
-    (_, i) => element.getPointAtLength(i * PATH_SAMPLING_INTERVAL),
-  );
-  return { totalLength, points };
+  const points = [] as DOMPoint[];
+  const ensure = (length: number) => {
+    const maxIndex = Math.ceil(length / PATH_SAMPLING_INTERVAL);
+    for (let i = points.length; i < maxIndex; i += 1) {
+      points.push(element.getPointAtLength(i * PATH_SAMPLING_INTERVAL))
+    }
+  }
+
+  return { totalLength, points, ensure };
 }
 
 AnimatedLine.propTypes = {
