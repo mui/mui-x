@@ -1,7 +1,7 @@
 ---
 title: Charts - Axis
 productId: x-charts
-components: ChartsAxis, ChartsReferenceLine, ChartsText
+components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis, ChartsReferenceLine
 ---
 
 # Charts - Axis
