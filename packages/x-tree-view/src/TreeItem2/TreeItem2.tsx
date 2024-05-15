@@ -14,7 +14,7 @@ import {
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2Status,
 } from '../useTreeItem2';
-import { getTreeItemUtilityClass, treeItemClasses } from '../TreeItem';
+import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 
