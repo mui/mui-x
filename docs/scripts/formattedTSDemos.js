@@ -20,7 +20,8 @@ const yargs = require('yargs');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
-const tsConfigPath = path.resolve(__dirname, '../tsconfig.json');
+const DOCS_ROOT = path.resolve(__dirname, '..');
+const tsConfigPath = path.resolve(DOCS_ROOT, './tsconfig.json');
 const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
   fs.readFileSync(filePath).toString(),
 );
@@ -95,7 +96,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     if (enableJSXPreview) {
       transformOptions.plugins = transformOptions.plugins.concat([
         [
-          require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
+          path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
           { maxLines: 16, outputFilename: `${tsxPath}.preview` },
         ],
       ]);

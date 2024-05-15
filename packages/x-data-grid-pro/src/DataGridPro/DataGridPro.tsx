@@ -29,7 +29,9 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
-  validateProps(props, propValidatorsDataGridPro);
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidatorsDataGridPro);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -456,7 +458,7 @@ DataGridProRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * If `true`, a  loading overlay is displayed.
+   * If `true`, a loading overlay is displayed.
    */
   loading: PropTypes.bool,
   /**

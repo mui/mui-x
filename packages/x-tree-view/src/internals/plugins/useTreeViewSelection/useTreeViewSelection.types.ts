@@ -5,10 +5,18 @@ import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
   isItemSelected: (itemId: string) => boolean;
+  /**
+   * Select or deselect an item.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} itemId The id of the item to select or deselect.
+   * @param {boolean} keepExistingSelection If `true`, don't remove the other selected items.
+   * @param {boolean | undefined} newValue The new selection status of the item. If not defined, the new state will be the opposite of the current state.
+   */
   selectItem: (
     event: React.SyntheticEvent,
     itemId: string,
-    keepExistingSelection?: boolean,
+    keepExistingSelection: boolean,
+    newValue?: boolean,
   ) => void;
   /**
    * Select all the navigable items in the tree.
@@ -68,10 +76,15 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   selectedItems?: TreeViewSelectionValue<Multiple>;
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect?: Multiple;
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection?: boolean;
   /**
    * Callback fired when tree items are selected/deselected.
    * @param {React.SyntheticEvent} event The event source of the callback
@@ -97,11 +110,14 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelectedItems' | 'multiSelect'
+  'disableSelection' | 'defaultSelectedItems' | 'multiSelect' | 'checkboxSelection'
 >;
 
 interface UseTreeViewSelectionContextValue {
-  selection: Pick<UseTreeViewSelectionDefaultizedParameters<boolean>, 'multiSelect'>;
+  selection: Pick<
+    UseTreeViewSelectionDefaultizedParameters<boolean>,
+    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+  >;
 }
 
 export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{

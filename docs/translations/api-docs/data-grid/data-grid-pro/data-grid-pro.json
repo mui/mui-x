@@ -213,7 +213,7 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
-    "loading": { "description": "If <code>true</code>, a  loading overlay is displayed." },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
     },

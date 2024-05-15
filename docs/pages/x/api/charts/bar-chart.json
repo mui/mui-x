@@ -14,6 +14,7 @@
         "text": "highlight docs"
       }
     },
+    "borderRadius": { "type": { "name": "number" } },
     "bottomAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "xAxisIds[0] The id of the first provided axis"
@@ -36,6 +37,7 @@
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"
     },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
         "name": "shape",
@@ -152,12 +154,24 @@
       "description": "Custom component for displaying tooltip content when triggered by item event.",
       "default": "DefaultChartsItemTooltipContent",
       "class": null
+    },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
     }
   ],
   "classes": [],
   "muiName": "MuiBarChart",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li></ul>",
   "cssComponent": false
 }

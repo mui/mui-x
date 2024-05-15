@@ -3,6 +3,142 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.4.0
+
+_May 10, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add optional `id` attribute on shortcut items of the Date and Time Pickers
+- 🎁 Add support for `date-fns-jalali` v3 in the Date and Time Pickers
+- 🚀 Support rounded corners on `BarChart`
+- 🌍 Add accessibility page to TreeView docs
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.4.0`
+
+- [DataGrid] Fix error when focus moves from column header to `svg` element (#13028) @oukunan
+- [DataGrid] Fix error on column groups change (#12965) @romgrk
+
+#### `@mui/x-data-grid-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.4.0`.
+
+#### `@mui/x-data-grid-premium@7.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.4.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.4.0`
+
+- [fields] Fix regression preventing form submit on "Enter" click (#13065) @LukasTy
+- [pickers] Add `AdapterDateFnsJalaliV3` adapter (#12891) @smmoosavi
+- [pickers] Add optional `id` attribute on shortcut items (#12976) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.4.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.4.0`
+
+- [charts] Add `ChartsGrid` to `themeAugmentation` (#13026) @noraleonte
+- [charts] Support rounded corners on `BarChart` (#12834) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.4.0`
+
+- [TreeView] Fix props propagation and theme entry in `TreeItem2` (#12889) @flaviendelangle
+
+### Docs
+
+- [docs] Add accessibility page to TreeView docs (#12845) @noraleonte
+- [docs] Fix Charts styling typos (#13061) @oliviertassinari
+- [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
+- [docs] Update interface name in pinned columns docs (#13070) @cherniavskii
+
+### Core
+
+- [core] Improve release process docs (#12977) @JCQuintas
+- [core] Prepare React 19 (#12991) @oliviertassinari
+- [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
+- [infra] Automation: Add release PR reviewers (#12982) @michelengelen
+
+## 7.3.2
+
+_May 2, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add "no data" and "loading" states to charts, allowing users to create [custom visualizations for each state](https://mui.com/x/react-charts/styling/#overlay)
+- 🌍 Improve Hebrew (he-IL) and Hungarian (hu-HU) locales on the Date and Time Pickers
+- 🌍 Improve Danish (da-DK) and Slovak (sk-SK) locales on the Data Grid
+- 📝 Fix a [typo](https://github.com/mui/mui-x/pull/12941/files/4bf4bffbc2799a01a96bc7458a17318cf41c1722#diff-26c31cc69d6f51110f89e339578ef9b3d4a3551f79077fff73f7babb81c5099f) in the auto-generated Charts gradient `id` attribute.
+  It should not affect you, but if you were relying on the gradient `id` attribute, please update your usage.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.3.2`
+
+- [DataGrid] Allow to change reset text in the columns management panel (#12972) @MBilalShafi
+- [DataGrid] Derive `formattedValue` from the edit value when passing to `renderEditCell` (#12870) @cherniavskii
+- [DataGrid] Fix rows not being recomputed on `props.rowCount` change (#12833) @MBilalShafi
+- [l10n] Improve Danish (da-DK) locale (#12844) @fosterbuster
+- [l10n] Improve Slovak (sk-SK) locale (#12949) @stefikp
+
+#### `@mui/x-data-grid-pro@7.3.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.3.2`.
+
+#### `@mui/x-data-grid-premium@7.3.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.3.2`, plus:
+
+- [DataGridPremium] Fix print export not working with row grouping (#12957) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.3.2`
+
+- [l10n] Improve Hebrew (he-IL) locale (#12910) @michaelNXT1
+- [l10n] Improve Hungarian (hu-HU) locale (#12930) @noherczeg
+- [pickers] Fix typo on the `viewRenderers` prop description (#12915) @flaviendelangle
+- [pickers] Improve TypeScript performance in `PickersDay` (#12920) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.3.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.3.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.3.2`
+
+- [charts] Add an overlay for "no data" or "loading" states (#12817) @alexfauquette
+- [charts] Fix typos in documentation, translations and errors (#12941) @JCQuintas
+- [charts] Fix `prop.slots` and `prop.slotProps` not passed to `<ChartsTooltip />` (#12939) @JCQuintas
+
+### Docs
+
+- [docs] Improve Data Grid migration guide (#12969) @MBilalShafi
+- [docs] Polish references to the plans (#12922) @oliviertassinari
+
+### Core
+
+- [core] Fix dependencies (#12951) @LukasTy
+- [core] Remove inconsistent blank lines (#12966) @oliviertassinari
+- [code-infra] Bump node image used by CI in docker (#12961) @LukasTy
+- [docs-infra] Remove no longer needed `next.config` settings (#12861) @oliviertassinari
+- [docs-infra] Use the `@mui/docs/HighlightedCode` (#12848) @alexfauquette
+- [test] Restore `t` command (#12948) @LukasTy
+
 ## 7.3.1
 
 _Apr 26, 2024_
@@ -305,7 +441,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
 - [TreeView] Create `RichTreeViewPro` component (not released yet) (#12610) @flaviendelangle
-- [TreeView] Create pro package (not released yet) (#12240) @flaviendelangle
+- [TreeView] Create Pro package (not released yet) (#12240) @flaviendelangle
 - [TreeView] Fix typo in errors (#12623) @alissa-tung
 - [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
 
@@ -2517,7 +2653,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
 - [core] Remove blank lines, coding style @oliviertassinari
 - [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
-- [github] Do not add `plan: Pro` and `plan: Premium` labels on pro / premium issue templates (#10183) @flaviendelangle
+- [github] Do not add `plan: Pro` and `plan: Premium` labels on Pro / Premium issue templates (#10183) @flaviendelangle
 
 ## 7.0.0-alpha.2
 
@@ -3440,10 +3576,10 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 - [docs] Fix the Treemap illustration (#12189) @danilo-leal
 - [docs] Fix typo for `AdapterDateFnsV3` (#12037) @flaviendelangle
 - [docs] Improve performance on Charts entry point @oliviertassinari
-- [docs] Move Heatmap to pro (#12170) @alexfauquette
+- [docs] Move Heatmap to Pro (#12170) @alexfauquette
 - [docs] Remove Charts installation next tag call-out (#12133) @LukasTy
 - [docs] Removed `focused` prop from demo (#12126) @michelengelen
-- [docs] Add missing Heatmap pro icon @oliviertassinari
+- [docs] Add missing Heatmap Pro icon @oliviertassinari
 - [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
 - [docs] Avoid use of shorthand (#12009) @oliviertassinari
 
@@ -6170,7 +6306,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Create examples of pickers with custom fields (#8034) @flaviendelangle
 - [docs] Fix 301 redirections @oliviertassinari
 - [docs] Fix link to React's docs @oliviertassinari
-- [docs] Fix pro license links to point to the same page (#8303) @LukasTy
+- [docs] Fix Pro license links to point to the same page (#8303) @LukasTy
 - [docs] Give an incentive to upgrade (#8269) @oliviertassinari
 - [docs] Improve contrast on data grid navigation (#8239) @oliviertassinari
 - [docs] Update shortcuts page to use slotProps (#8288) @dcorb

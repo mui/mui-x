@@ -116,13 +116,8 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
   'locale'
 > & {
   longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
+  lib?: string;
 };
-
-declare module '@mui/x-date-pickers/models' {
-  interface PickerValidDateLookup {
-    'date-fns': Date;
-  }
-}
 
 /**
  * Based on `@date-io/date-fns`
@@ -168,7 +163,7 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public isTimezoneCompatible = false;
 
-  public lib = 'date-fns';
+  public lib: string;
 
   public locale: DateFnsLocale;
 
@@ -181,10 +176,11 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   public longFormatters: DateFnsAdapterBaseOptions<DateFnsLocale>['longFormatters'];
 
   constructor(props: DateFnsAdapterBaseOptions<DateFnsLocale>) {
-    const { locale, formats, longFormatters } = props;
+    const { locale, formats, longFormatters, lib } = props;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
     this.longFormatters = longFormatters;
+    this.lib = lib || 'date-fns';
   }
 
   public date = <T extends string | null | undefined>(
