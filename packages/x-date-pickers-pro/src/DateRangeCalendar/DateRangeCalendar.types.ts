@@ -19,7 +19,7 @@ import {
   DayCalendarProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import { DayRangeValidationProps } from '../internals/models';
+import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRange } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';

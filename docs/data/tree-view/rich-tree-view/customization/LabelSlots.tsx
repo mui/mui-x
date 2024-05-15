@@ -6,10 +6,8 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeItem2ContentSlotOwnProps,
-  useTreeItem2Utils,
-} from '@mui/x-tree-view';
+import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 interface CustomLabelProps {
   children: string;

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 // @ts-nocheck
 import { useTreeItem } from '@mui/x-tree-view';
 

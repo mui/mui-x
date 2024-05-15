@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { ScaleLinear } from 'd3-scale';
-import {
-  ResponsiveChartContainer,
-  LinePlot,
-  useDrawingArea,
-  useYScale,
-  useXScale,
-} from '@mui/x-charts';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 
 const x = Array.from({ length: 21 }, (_, index) => -1 + 0.2 * index);
 const linear = x.map((v) => -1 + v);

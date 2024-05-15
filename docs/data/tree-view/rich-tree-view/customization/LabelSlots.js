@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-import { useTreeItem2Utils } from '@mui/x-tree-view';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 function CustomLabel(props) {
   const { children, onChange, ...other } = props;
