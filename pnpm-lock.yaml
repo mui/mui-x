@@ -90,8 +90,8 @@ importers:
         specifier: ^5.15.14
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#40492b73c20822f2a6feba7a39aa0c43117828ff
-        version: github.com/mui/material-ui/40492b73c20822f2a6feba7a39aa0c43117828ff(@opentelemetry/api@1.8.0)
+        specifier: github:mui/material-ui#3c888ed6cf0774815c32c6309e8cea2d8b5e684b
+        version: github.com/mui/material-ui/3c888ed6cf0774815c32c6309e8cea2d8b5e684b(@opentelemetry/api@1.8.0)
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
@@ -18296,9 +18296,9 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/mui/material-ui/40492b73c20822f2a6feba7a39aa0c43117828ff(@opentelemetry/api@1.8.0):
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/40492b73c20822f2a6feba7a39aa0c43117828ff}
-    id: github.com/mui/material-ui/40492b73c20822f2a6feba7a39aa0c43117828ff
+  github.com/mui/material-ui/3c888ed6cf0774815c32c6309e8cea2d8b5e684b(@opentelemetry/api@1.8.0):
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/3c888ed6cf0774815c32c6309e8cea2d8b5e684b}
+    id: github.com/mui/material-ui/3c888ed6cf0774815c32c6309e8cea2d8b5e684b
     name: '@mui/monorepo'
     version: 6.0.0-alpha.6
     requiresBuild: true
