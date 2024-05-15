@@ -145,7 +145,6 @@ function BarElement(props: BarElementProps) {
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
       style,
       className: classes.root,
@@ -155,7 +154,7 @@ function BarElement(props: BarElementProps) {
     ownerState,
   });
 
-  return <Bar {...barProps} />;
+  return <Bar {...other} {...barProps} />;
 }
 
 BarElement.propTypes = {

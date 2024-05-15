@@ -128,7 +128,6 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
       onClick,
@@ -137,7 +136,7 @@ function LineElement(props: LineElementProps) {
     ownerState,
   });
 
-  return <Line {...lineProps} />;
+  return <Line {...other} {...lineProps} />;
 }
 
 LineElement.propTypes = {

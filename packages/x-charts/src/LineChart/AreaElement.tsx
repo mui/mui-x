@@ -129,7 +129,6 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
       className: classes.root,
       onClick,
@@ -138,7 +137,7 @@ function AreaElement(props: AreaElementProps) {
     ownerState,
   });
 
-  return <Area {...areaProps} />;
+  return <Area {...other} {...areaProps} />;
 }
 
 AreaElement.propTypes = {
