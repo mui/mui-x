@@ -1,23 +1,16 @@
 import * as React from 'react';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base';
+import clsx from 'clsx';
 import { SeriesId } from '../../models/seriesType/common';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
-import { HighlightScope } from '../../context';
 import type { BarItem, BarLabelContext } from '../types';
-
-export interface BarLabelClasses {
-  /** Styles applied to the root element. */
-  root: string;
-}
-
-export type BarLabelClassKey = keyof BarLabelClasses;
+import { BarLabelClasses, barLabelClasses, getBarLabelUtilityClass } from './barLabelClasses';
+import { HighlighContext } from '../../context/HighlightProvider';
 
 export interface BarLabelOwnerState {
   seriesId: SeriesId;
@@ -28,20 +21,12 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export function getBarLabelUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBarLabel', slot);
-}
-
-export const barElementLabelClasses: BarLabelClasses = generateUtilityClasses('MuiBarLabel', [
-  'root',
-  'highlighted',
-  'faded',
-]);
-
 const composeUtilityClasses = (ownerState: BarLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`],
+    highlighted: [isHighlighted && 'highlighted'],
+    faded: [isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarLabelUtilityClass, classes);
@@ -50,16 +35,24 @@ const composeUtilityClasses = (ownerState: BarLabelOwnerState) => {
 export const BarLabelRoot = styled(animated.text, {
   name: 'MuiBarLabel',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: BarLabelOwnerState }>(({ ownerState, theme }) => ({
+  overridesResolver: (_, styles) => [
+    { [`&.${barLabelClasses.faded}`]: styles.faded },
+    { [`&.${barLabelClasses.highlighted}`]: styles.highlighted },
+    styles.root,
+  ],
+})(({ theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: (ownerState.isFaded && 0.3) || 1,
   textAnchor: 'middle',
   dominantBaseline: 'central',
   pointerEvents: 'none',
+  opacity: 1,
+
+  [`&.${barLabelClasses.faded}`]: {
+    opacity: 0.3,
+  },
 }));
 
 export type BarLabelRootProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
@@ -90,7 +83,6 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
      * @default {}
      */
     slots?: BarLabelSlots;
-    highlightScope?: Partial<HighlightScope>;
     height: number;
     width: number;
     layout?: 'vertical' | 'horizontal';
@@ -105,7 +97,6 @@ function BarLabel(props: BarLabelProps) {
     color,
     style,
     dataIndex,
-    highlightScope,
     barLabel,
     slots,
     slotProps,
@@ -115,14 +106,10 @@ function BarLabel(props: BarLabelProps) {
     ...other
   } = props;
   const { item } = React.useContext(InteractionContext);
+  const { scope } = React.useContext(HighlighContext);
 
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'bar', seriesId, dataIndex },
-    highlightScope,
-  );
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId, dataIndex }, highlightScope);
+  const isHighlighted = getIsHighlighted(item, { type: 'bar', seriesId, dataIndex }, scope);
+  const isFaded = !isHighlighted && getIsFaded(item, { type: 'bar', seriesId, dataIndex }, scope);
 
   const ownerState = {
     seriesId,
@@ -142,7 +129,7 @@ function BarLabel(props: BarLabelProps) {
     additionalProps: {
       ...other,
       style,
-      className: classes.root,
+      className: clsx(classes.root, classes.highlighted, classes.faded),
     },
     ownerState,
   });

@@ -302,7 +302,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, ...other } = props;
+  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -358,8 +358,13 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
-      {props.barLabel && (
-        <BarLabelPlot bars={completedData} skipAnimation={skipAnimation} {...other} />
+      {barLabel && (
+        <BarLabelPlot
+          bars={completedData}
+          skipAnimation={skipAnimation}
+          barLabel={barLabel}
+          {...other}
+        />
       )}
     </React.Fragment>
   );

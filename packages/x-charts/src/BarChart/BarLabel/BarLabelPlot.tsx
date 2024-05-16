@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { to, useTransition } from '@react-spring/web';
-import type { AnimationData, CompletedBarData } from '../types';
+import type { AnimationData, BarItem, BarLabelContext, CompletedBarData } from '../types';
 import { BarLabel } from './BarLabel';
 
 const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
@@ -30,6 +30,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
 type BarLabelPlotProps = {
   bars: CompletedBarData[];
   skipAnimation?: boolean;
+  barLabel?: (item: BarItem, context: BarLabelContext) => string | null;
 };
 
 /**
