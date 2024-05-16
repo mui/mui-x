@@ -390,7 +390,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   });
 
   const placeholder = React.useMemo(() => {
-    if (inPlaceholder) {
+    if (inPlaceholder !== undefined) {
       return inPlaceholder;
     }
 

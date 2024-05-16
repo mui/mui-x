@@ -138,18 +138,34 @@ describe('<DesktopDatePicker /> - Field', () => {
       Component: DesktopDatePicker,
     });
 
-    it('should allow to override the placeholder (v6 only)', () => {
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: false,
-        slotProps: {
-          textField: {
-            placeholder: 'Custom placeholder',
+    describe('placeholder override (v6 only)', () => {
+      it('should allow to override the placeholder', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: 'Custom placeholder',
+            },
           },
-        },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, 'Custom placeholder');
       });
 
-      const input = getTextbox();
-      expectFieldPlaceholderV6(input, 'Custom placeholder');
+      it('should render blank placeholder when prop is an empty string', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: '',
+            },
+          },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, '');
+      });
     });
   });
 
