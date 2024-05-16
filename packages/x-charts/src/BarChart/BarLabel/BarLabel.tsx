@@ -10,6 +10,7 @@ import { SeriesId } from '../../models/seriesType/common';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { HighlightScope } from '../../context';
+import type { BarItem, BarLabelContext } from '../types';
 
 export interface BarLabelClasses {
   /** Styles applied to the root element. */
@@ -90,11 +91,11 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
      */
     slots?: BarLabelSlots;
     highlightScope?: Partial<HighlightScope>;
-    height?: number;
-    width?: number;
+    height: number;
+    width: number;
     layout?: 'vertical' | 'horizontal';
     value: number | null;
-    barLabel?: () => string;
+    barLabel?: (item: BarItem, context: BarLabelContext) => string | null;
   };
 
 function BarLabel(props: BarLabelProps) {

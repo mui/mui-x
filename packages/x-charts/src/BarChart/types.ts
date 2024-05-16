@@ -26,3 +26,31 @@ export interface MaskData extends AnimationData {
   hasNegative: boolean;
   hasPositive: boolean;
 }
+
+export type BarItem = {
+  /**
+   * The series id of the bar.
+   */
+  seriesId: SeriesId;
+  /**
+   * The index of the data point in the series.
+   */
+  dataIndex: number;
+  /**
+   * The value of the data point.
+   */
+  value: number | null;
+};
+
+export type BarLabelContext = {
+  bar: {
+    /**
+     * The height of the bar. Useful if you want to show the label only when the bar is big enough.
+     */
+    height: number;
+    /**
+     * The width of the bar. Useful if you want to show the label only when the bar is big enough.
+     */
+    width: number;
+  };
+};

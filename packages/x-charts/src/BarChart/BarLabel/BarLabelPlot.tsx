@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { to, useTransition } from '@react-spring/web';
-import type { CompletedBarData } from '../BarPlot';
+import type { AnimationData, CompletedBarData } from '../types';
 import { BarLabel } from './BarLabel';
 
-const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
+const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
@@ -20,7 +20,7 @@ const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Completed
       }),
 });
 
-const enterStyle = ({ x, width, y, height }: CompletedBarData) => ({
+const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   y,
   x,
   height,

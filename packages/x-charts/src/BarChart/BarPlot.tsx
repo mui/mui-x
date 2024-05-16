@@ -10,11 +10,10 @@ import { BarItemIdentifier } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
-import { AnimationData, CompletedBarData, MaskData } from './types';
+import { AnimationData, BarItem, BarLabelContext, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import { SeriesId } from '../models/seriesType/common';
 
 /**
  * Solution of the equations
@@ -47,34 +46,6 @@ function getBandSize({
     offset,
   };
 }
-
-type BarItem = {
-  /**
-   * The series id of the bar.
-   */
-  seriesId: SeriesId;
-  /**
-   * The index of the data point in the series.
-   */
-  dataIndex: number;
-  /**
-   * The value of the data point.
-   */
-  value: number | null;
-};
-
-type BarLabelContext = {
-  bar: {
-    /**
-     * The height of the bar. Useful if you want to show the label only when the bar is big enough.
-     */
-    height: number;
-    /**
-     * The width of the bar. Useful if you want to show the label only when the bar is big enough.
-     */
-    width: number;
-  };
-};
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
