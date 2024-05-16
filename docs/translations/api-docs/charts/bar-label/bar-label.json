@@ -1,7 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "barLabel": { "description": "The bar label type or formatter." },
+    "barLabel": {
+      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
+    },
     "height": { "description": "The height of the bar." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },

@@ -7,7 +7,7 @@ import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
-import { BarLabelFunction, BarLabelOwnerState, BarLabelComponentProps } from './types';
+import { BarLabelOwnerState, BarLabelComponentProps, BarItem, BarLabelContext } from './types';
 import { getBarLabel } from './getBarLabel';
 
 export const BarLabelComponent = styled(animated.text, {
@@ -69,9 +69,13 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
      */
     value: number | null;
     /**
-     * The bar label type or formatter.
+     * If provided, the function will be used to format the label of the bar.
+     * It can be set to 'value' to display the current value.
+     * @param {BarItem} item The item to format.
+     * @param {BarLabelContext} context data about the bar.
+     * @returns {string} The formatted label.
      */
-    barLabel?: 'value' | BarLabelFunction;
+    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   };
 
 function BarLabel(props: BarLabelProps) {
@@ -146,7 +150,11 @@ BarLabel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The bar label type or formatter.
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
    */
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   classes: PropTypes.object,

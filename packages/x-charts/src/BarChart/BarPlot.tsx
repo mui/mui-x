@@ -12,9 +12,8 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
+import { BarLabelProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import type { BarItem, BarLabelContext } from './BarLabel/types';
 
 /**
  * Solution of the equations
@@ -52,7 +51,7 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps {
+export interface BarPlotProps extends Pick<BarLabelProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default false
@@ -71,14 +70,6 @@ export interface BarPlotProps {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
-  /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The props used for each component slot.
    * @default {}
