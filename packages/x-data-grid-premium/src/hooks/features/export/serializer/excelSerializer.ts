@@ -97,7 +97,7 @@ export const serializeRow = (
 
     const cellParams = api.getCellParams(id, column.field);
 
-    let cellValue = '';
+    let cellValue: string | undefined;
 
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
@@ -189,14 +189,16 @@ export const serializeRow = (
         break;
     }
 
-    if (options.escapeFormulae) {
+    if (typeof cellValue === 'string' && options.escapeFormulae) {
       // See https://owasp.org/www-community/attacks/CSV_Injection
       if (['=', '+', '-', '@', '\t', '\r'].includes(cellValue[0])) {
         cellValue = `'${cellValue}`;
       }
     }
 
-    row[column.field] = cellValue;
+    if (typeof cellValue !== 'undefined') {
+      row[column.field] = cellValue;
+    }
   });
 
   return {
