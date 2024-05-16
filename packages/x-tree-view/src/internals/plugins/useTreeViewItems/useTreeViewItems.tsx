@@ -238,7 +238,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     },
     contextValue: {
       disabledItemsFocusable: params.disabledItemsFocusable,
-      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? true,
+      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
     },
   };
 };
