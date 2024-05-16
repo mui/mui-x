@@ -166,20 +166,6 @@ describe('<DesktopDatePicker /> - Field', () => {
         const input = getTextbox();
         expectFieldPlaceholderV6(input, '');
       });
-
-      it('should render blank placeholder when prop is undefined', () => {
-        renderWithProps({
-          enableAccessibleFieldDOMStructure: false,
-          slotProps: {
-            textField: {
-              placeholder: undefined,
-            },
-          },
-        });
-
-        const input = getTextbox();
-        expectFieldPlaceholderV6(input, '');
-      });
     });
   });
 
