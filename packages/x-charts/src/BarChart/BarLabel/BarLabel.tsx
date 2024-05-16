@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base/utils';
 import clsx from 'clsx';
