@@ -78,7 +78,7 @@ export interface BarPlotProps {
    * @param {BarLabelContext} context data about the bar.
    * @returns {string} The formatted label.
    */
-  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null);
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The props used for each component slot.
    * @default {}

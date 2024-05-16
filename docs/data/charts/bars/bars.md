@@ -108,6 +108,25 @@ It will work with any positive value and will be properly applied to horizontal 
 
 {{"demo": "BorderRadius.js"}}
 
+## Labels
+
+You can display labels on the bars.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+It can either get a function that gets the bar item and some context.
+Or you can pass `'value'` to display the raw value of the bar.
+
+{{"demo": "BarLabel.js"}}
+
+### Custom Labels
+
+You can display, change or hide labels based on conditional logic.
+To do so, provide a function to the `barLabel`.
+Labels are not displayed if the function returns `null`.
+
+In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+
+{{"demo": "CustomLabels.js"}}
+
 ## Click event
 
 Bar charts provides two click handlers:
