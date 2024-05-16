@@ -551,6 +551,9 @@ importers:
       moment-hijri:
         specifier: ^2.1.2
         version: 2.1.2
+      moment-jalaali:
+        specifier: ^0.10.0
+        version: 0.10.0
       moment-timezone:
         specifier: ^0.5.45
         version: 0.5.45
@@ -651,6 +654,9 @@ importers:
       '@types/moment-hijri':
         specifier: ^2.1.4
         version: 2.1.4
+      '@types/moment-jalaali':
+        specifier: ^0.7.9
+        version: 0.7.9
       '@types/react-dom':
         specifier: 18.2.19
         version: 18.2.19
@@ -1311,6 +1317,9 @@ importers:
       '@types/chai':
         specifier: ^4.3.16
         version: 4.3.16
+      '@types/moment-jalaali':
+        specifier: ^0.7.9
+        version: 0.7.9
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
@@ -1323,6 +1332,12 @@ importers:
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
+      moment-jalaali:
+        specifier: ^0.10.0
+        version: 0.10.0
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1

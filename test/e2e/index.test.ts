@@ -766,6 +766,17 @@ async function initializeEnvironment(
         //   expect(await status.isVisible()).to.equal(true);
         //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
         // });
+
+        it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
+          await renderFixture('DatePicker/MomentJalaliDateCalendar');
+
+          await page.getByRole('gridcell', { name: '11' }).click();
+
+          const day11 = page.getByRole('gridcell', { name: '11' });
+          expect(await day11.getAttribute('aria-selected')).to.equal('true');
+          // check that selecting a day doesn't change the day text
+          expect(await day11.textContent()).to.equal('11');
+        });
       });
 
       describe('<MobileDatePicker />', () => {
