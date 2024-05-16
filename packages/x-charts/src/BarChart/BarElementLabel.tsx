@@ -56,13 +56,14 @@ export const BarElementLabelRoot = styled(animated.text, {
   opacity: (ownerState.isFaded && 0.3) || 1,
   textAnchor: 'middle',
   textAlign: 'center',
-  dominantBaseline: 'middle',
+  dominantBaseline: 'central',
   pointerEvents: 'none',
 }));
 
 export type BarLabelProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
-  highlightScope?: Partial<HighlightScope>;
   ownerState: BarElementLabelOwnerState;
+  minWidth?: number;
+  minHeight?: number;
 };
 
 export interface BarElementLabelSlots {
@@ -78,8 +79,7 @@ export interface BarElementLabelSlotProps {
 }
 
 export type BarElementLabelProps = Omit<BarElementLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelProps, 'style' | 'highlightScope'> & {
-    barLabel?: Partial<BarLabelProps>;
+  Pick<BarLabelProps, 'style' | 'minWidth' | 'minHeight'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -91,6 +91,10 @@ export type BarElementLabelProps = Omit<BarElementLabelOwnerState, 'isFaded' | '
      */
     slots?: BarElementLabelSlots;
     labelText: string | null;
+    highlightScope?: Partial<HighlightScope>;
+    height?: number;
+    width?: number;
+    layout?: 'vertical' | 'horizontal';
   };
 
 function BarElementLabel(props: BarElementLabelProps) {
@@ -104,6 +108,10 @@ function BarElementLabel(props: BarElementLabelProps) {
     labelText,
     slots,
     slotProps,
+    minHeight,
+    minWidth,
+    height,
+    width,
     ...other
   } = props;
   const { item } = React.useContext(InteractionContext);
@@ -139,7 +147,7 @@ function BarElementLabel(props: BarElementLabelProps) {
     ownerState,
   });
 
-  if (!labelText) {
+  if (!labelText || (height ?? 0) < (minHeight ?? 0) || (width ?? 0) < (minWidth ?? 0)) {
     return null;
   }
 
