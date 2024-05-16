@@ -437,7 +437,10 @@ export const useGridColumnResize = (
 
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
-    const escapedColDefField = CSS.escape(colDef.field);
+    // HACK: The jsdom test is failing because CSS.escape doesn't exist in that context. 
+    // We have decided that we want to preserve the bug in jsdom
+    // https://github.com/mui/mui-x/pull/13069#discussion_r1603270444
+    const escapedColDefField = typeof CSS === 'undefined' ? colDef.field : CSS.escape(colDef.field);
 
     refs.initialColWidth = colDef.computedWidth;
     refs.initialTotalWidth = apiRef.current.getRootDimensions().rowWidth;
