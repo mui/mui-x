@@ -167,15 +167,20 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const response: UseTreeItem2ContentSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       ...externalProps,
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
-      indentationAtItemLevel,
     };
+
+    if (indentationAtItemLevel) {
+      response.indentationAtItemLevel = true;
+    }
+
+    return response;
   };
 
   const getCheckboxProps = <ExternalProps extends Record<string, any> = {}>(
@@ -226,16 +231,21 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const response: UseTreeItem2GroupTransitionSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
       role: 'group',
       in: status.expanded,
-      indentationAtItemLevel,
       children,
       ...externalProps,
     };
+
+    if (indentationAtItemLevel) {
+      response.indentationAtItemLevel = true;
+    }
+
+    return response;
   };
 
   return {
