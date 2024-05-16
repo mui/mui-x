@@ -17,7 +17,6 @@ export interface CompletedBarData extends AnimationData {
   dataIndex: number;
   color: string;
   value: number | null;
-  barLabel: string | null;
   highlightScope?: Partial<HighlightScope>;
   maskId: string;
 }

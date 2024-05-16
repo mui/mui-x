@@ -7,7 +7,7 @@ import {
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
-import type { BarSeriesType } from '../models/seriesType/bar';
+import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
@@ -138,6 +138,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     slots,
     slotProps,
     loading,
+    barLabel,
   } = props;
 
   const id = useId();
@@ -197,6 +198,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
           borderRadius={borderRadius}
+          barLabel={barLabel}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
