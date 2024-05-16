@@ -10,7 +10,7 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export type BarLabelComponentProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+export type BarLabelComponentProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> & {
   ownerState: BarLabelOwnerState;
 };
 
