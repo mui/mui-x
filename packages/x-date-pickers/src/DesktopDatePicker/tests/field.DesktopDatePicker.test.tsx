@@ -138,7 +138,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       Component: DesktopDatePicker,
     });
 
-    describe('Placeholder override (v6 only)', () => {
+    describe('placeholder override (v6 only)', () => {
       it('should allow to override the placeholder', () => {
         renderWithProps({
           enableAccessibleFieldDOMStructure: false,
