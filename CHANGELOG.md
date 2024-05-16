@@ -10,7 +10,7 @@ _May 16, 2024_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for checkbox selection on the Tree View components
-- 🌍 Improve Norwegian (nb-NO) and Spanish (es-SE) locales on the Data Grid
+- 🌍 Improve Norwegian (nb-NO) and Spanish (es-ES) locales on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
