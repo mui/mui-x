@@ -110,8 +110,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         dominantBaseline: 'central',
         ...tickLabelStyle,
       },
-      className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
+    className: classes.tickLabel,
     ownerState: {},
   });
 

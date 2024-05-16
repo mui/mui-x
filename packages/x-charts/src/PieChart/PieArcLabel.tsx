@@ -54,10 +54,11 @@ const PieArcLabelRoot = styled(animated.text, {
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
   dominantBaseline: 'middle',
+  pointerEvents: 'none',
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
@@ -153,6 +154,7 @@ PieArcLabel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
   formattedArcLabel: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,

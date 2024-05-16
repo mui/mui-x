@@ -1,5 +1,5 @@
-import { DatePicker } from '@mui/x-date-pickers';
-import { DateRangePicker } from '@mui/x-date-pickers-pro';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import TextField from '@mui/material/TextField';
 
 <div>
