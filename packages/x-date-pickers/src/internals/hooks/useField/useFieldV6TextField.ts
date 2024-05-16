@@ -400,7 +400,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       isRTL,
     );
   }, [
-    params.forwardedProps,
     inPlaceholder,
     fieldValueManager,
     getSectionsFromValue,
