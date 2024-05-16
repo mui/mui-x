@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
+import { to, useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
@@ -12,6 +12,7 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
+import { BarElementLabel } from './BarElementLabel';
 
 /**
  * Solution of the equations
@@ -329,6 +330,20 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
+      {transition((style, { seriesId, dataIndex, color, value }) => (
+        <BarElementLabel
+          id={seriesId}
+          dataIndex={dataIndex}
+          color={color}
+          style={{
+            ...style,
+            x: to([style.x, style.width], (x, width) => (x ?? 0) + width / 2),
+            y: to([style.y, style.height], (x, width) => (x ?? 0) + width / 2),
+          }}
+          // When value is 0 we don't want to show the label either
+          labelText={value ? value.toString() : null}
+        />
+      ))}
     </React.Fragment>
   );
 }
