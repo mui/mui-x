@@ -80,16 +80,6 @@ export interface BarPlotProps {
    */
   barLabel?: BarLabelFunction;
   /**
-   * The minimum width of the bar in which to show the label.
-   * @default 0
-   */
-  barLabelMinWidth?: number;
-  /**
-   * The minimum height of the bar in which to show the label.
-   * @default 0
-   */
-  barLabelMinHeight?: number;
-  /**
    * The props used for each component slot.
    * @default {}
    */
