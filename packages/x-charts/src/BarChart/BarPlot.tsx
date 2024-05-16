@@ -309,6 +309,7 @@ function BarPlot(props: BarPlotProps) {
     leave: leaveStyle,
     enter: enterStyle,
     update: enterStyle,
+    immediate: skipAnimation,
   });
 
   return (
