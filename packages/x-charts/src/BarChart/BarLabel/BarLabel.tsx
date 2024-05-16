@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base/utils';
-import clsx from 'clsx';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
@@ -105,7 +104,7 @@ function BarLabel(props: BarLabelProps) {
     additionalProps: {
       ...other,
       style,
-      className: clsx(classes.root),
+      className: classes.root,
     },
     ownerState,
   });
