@@ -50,7 +50,7 @@ const HighlightElement = styled('circle', {
 }));
 
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'circle'>, 'id'> & {};
+  Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>;
 
 /**
  * Demos:

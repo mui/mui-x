@@ -214,8 +214,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       reduceAnimations,
       timezone,
       labelId: gridLabelId,
-      slots,
-      slotProps,
     },
     ownerState: props,
   });
@@ -336,7 +334,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <CalendarHeader {...calendarHeaderProps} />
+      <CalendarHeader {...calendarHeaderProps} slots={slots} slotProps={slotProps} />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
         className={classes.viewTransitionContainer}

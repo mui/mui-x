@@ -59,7 +59,7 @@ const PieArcRoot = styled(animated.path, {
   strokeLinejoin: 'round',
 }));
 
-export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;

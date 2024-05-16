@@ -47,7 +47,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const { left, top, right, bottom, width, height } = useDrawingArea();
   const chartId = useChartId();
 
-  const path = useAnimatedPath(d!, skipAnimation);
+  const path = useAnimatedPath(d, skipAnimation);
 
   const { animatedWidth } = useSpring({
     from: { animatedWidth: left },
