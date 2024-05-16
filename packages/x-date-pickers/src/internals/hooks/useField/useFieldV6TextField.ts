@@ -391,7 +391,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
   const placeholder = React.useMemo(() => {
     if (params.forwardedProps.hasOwnProperty('placeholder')) {
-      return inPlaceholder ?? "";
+      return inPlaceholder ?? '';
     }
 
     return fieldValueManager.getV6InputValueFromSections(
@@ -400,6 +400,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       isRTL,
     );
   }, [
+    params.forwardedProps,
     inPlaceholder,
     fieldValueManager,
     getSectionsFromValue,

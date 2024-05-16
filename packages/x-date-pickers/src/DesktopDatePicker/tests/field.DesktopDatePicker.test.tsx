@@ -148,11 +148,11 @@ describe('<DesktopDatePicker /> - Field', () => {
             },
           },
         });
-  
+
         const input = getTextbox();
         expectFieldPlaceholderV6(input, 'Custom placeholder');
       });
-  
+
       it('should show blank placeholder when prop is an empty string', () => {
         renderWithProps({
           enableAccessibleFieldDOMStructure: false,
@@ -162,11 +162,11 @@ describe('<DesktopDatePicker /> - Field', () => {
             },
           },
         });
-  
+
         const input = getTextbox();
         expectFieldPlaceholderV6(input, '');
       });
-  
+
       it('should show blank placeholder when prop is undefined', () => {
         renderWithProps({
           enableAccessibleFieldDOMStructure: false,
@@ -176,16 +176,16 @@ describe('<DesktopDatePicker /> - Field', () => {
             },
           },
         });
-  
+
         const input = getTextbox();
         expectFieldPlaceholderV6(input, '');
       });
-  
+
       it('should show default placeholder when no prop is received', () => {
         renderWithProps({
           enableAccessibleFieldDOMStructure: false,
         });
-  
+
         const input = getTextbox();
         expectFieldPlaceholderV6(input, 'MM/DD/YYYY');
       });
