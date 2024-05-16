@@ -6,7 +6,7 @@
       "seeMoreText": "See {{link}} for more details."
     },
     "barLabel": {
-      "description": "Can be set to &#39;value&#39; to display the current value. If provided, the function will be used to format the label of the bar."
+      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
     },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "bottomAxis": {

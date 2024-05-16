@@ -235,8 +235,8 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * Can be set to 'value' to display the current value.
    * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
    * @param {BarLabelContext} context data about the bar.
    * @returns {string} The formatted label.
