@@ -26,10 +26,6 @@ const apiPages: MuiPage[] = [
     title: 'BarElement',
   },
   {
-    pathname: '/x/api/charts/bar-label',
-    title: 'BarLabel',
-  },
-  {
     pathname: '/x/api/charts/bar-plot',
     title: 'BarPlot',
   },

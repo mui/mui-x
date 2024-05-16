@@ -78,6 +78,9 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
     barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   };
 
+/**
+ * @ignore - internal component.
+ */
 function BarLabel(props: BarLabelProps) {
   const themeProps = useThemeProps({ props, name: 'MuiBarLabel' });
 
