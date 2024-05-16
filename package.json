@@ -59,7 +59,8 @@
     "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
-    "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn proptypes\" \"yarn docs:typescript:formatted\" \"yarn docs:api\""
+    "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn proptypes\" \"yarn docs:typescript:formatted\" \"yarn docs:api\"",
+    "clean:node_modules": "rimraf --glob \"**/node_modules\""
   },
   "devDependencies": {
     "@argos-ci/core": "^1.4.0",
