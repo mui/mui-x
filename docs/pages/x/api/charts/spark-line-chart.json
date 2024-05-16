@@ -77,7 +77,7 @@
     {
       "name": "barLabel",
       "description": "The component that renders the bar label.",
-      "default": "BarLabelComponent",
+      "default": "BarLabel",
       "class": null
     },
     {

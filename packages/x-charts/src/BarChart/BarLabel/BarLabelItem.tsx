@@ -12,7 +12,7 @@ import { BarLabel, BarLabelProps } from './BarLabel';
 export interface BarLabelSlots {
   /**
    * The component that renders the bar label.
-   * @default BarLabelComponent
+   * @default BarLabel
    */
   barLabel?: React.JSXElementConstructor<BarLabelProps>;
 }

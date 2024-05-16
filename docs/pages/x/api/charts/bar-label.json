@@ -1,16 +1,5 @@
 {
-  "props": {
-    "height": { "type": { "name": "number" }, "required": true },
-    "value": { "type": { "name": "number" }, "required": true },
-    "width": { "type": { "name": "number" }, "required": true },
-    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "additionalInfo": { "slotsApi": true }
-    }
-  },
+  "props": {},
   "name": "BarLabel",
   "imports": [
     "import { BarLabel } from '@mui/x-charts/BarChart';",
@@ -20,7 +9,7 @@
     {
       "name": "barLabel",
       "description": "The component that renders the bar label.",
-      "default": "BarLabelComponent",
+      "default": "BarLabel",
       "class": null
     }
   ],
