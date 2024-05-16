@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
-import { useSlotProps } from '@mui/base';
+import { useSlotProps } from '@mui/base/utils';
 import clsx from 'clsx';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
