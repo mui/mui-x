@@ -53,7 +53,7 @@ Same changes as in `@mui/x-date-pickers@7.5.0`.
 - [charts] Fix TypeScript performance bottleneck (#13137) @alexfauquette
 - [charts] Fix area order when overlapping (#13121) @alexfauquette
 - [charts] Improve `useSlotProps` types (#13141) @alexfauquette
-- [charts] Fix the font used in the overlay (#13107) @alexfauquette
+- [charts] Fix using the theme's font in the Overlay (#13107) @alexfauquette
 
 ### Tree View
 
