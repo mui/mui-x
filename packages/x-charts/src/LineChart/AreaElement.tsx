@@ -130,10 +130,10 @@ function AreaElement(props: AreaElementProps) {
     externalSlotProps: slotProps?.area,
     additionalProps: {
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 

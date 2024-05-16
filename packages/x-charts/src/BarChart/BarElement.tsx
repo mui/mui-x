@@ -147,10 +147,10 @@ function BarElement(props: BarElementProps) {
     additionalProps: {
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
       style,
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 

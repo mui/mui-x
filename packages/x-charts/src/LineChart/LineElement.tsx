@@ -129,10 +129,10 @@ function LineElement(props: LineElementProps) {
     externalSlotProps: slotProps?.line,
     additionalProps: {
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
