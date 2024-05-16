@@ -86,14 +86,6 @@ const apiPages: MuiPage[] = [
     title: 'ChartsVoronoiHandler',
   },
   {
-    pathname: '/x/api/charts/charts-x-axis',
-    title: 'ChartsXAxis',
-  },
-  {
-    pathname: '/x/api/charts/charts-y-axis',
-    title: 'ChartsYAxis',
-  },
-  {
     pathname: '/x/api/charts/default-charts-axis-tooltip-content',
     title: 'DefaultChartsAxisTooltipContent',
   },

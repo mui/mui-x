@@ -6,7 +6,7 @@ import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
@@ -35,7 +35,7 @@ export const TreeItem2Content = styled('div', {
   overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
-})<{ status: UseTreeItem2Status; indentationAtItemLevel: boolean }>(({ theme }) => ({
+})<{ status: UseTreeItem2Status; indentationAtItemLevel?: true }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
@@ -138,7 +138,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
-})<{ indentationAtItemLevel: boolean }>({
+})<{ indentationAtItemLevel?: true }>({
   margin: 0,
   padding: 0,
   paddingLeft: 12,
