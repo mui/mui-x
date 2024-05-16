@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { to, useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
@@ -12,7 +12,7 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
-import { BarElementLabel } from './BarElementLabel';
+import { BarElementLabel, BarElementLabelSlotProps, BarElementLabelSlots } from './BarElementLabel';
 
 /**
  * Solution of the equations
@@ -46,11 +46,11 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots extends BarElementSlots {}
+export interface BarPlotSlots extends BarElementSlots, BarElementLabelSlots {}
 
-export interface BarPlotSlotProps extends BarElementSlotProps {}
+export interface BarPlotSlotProps extends BarElementSlotProps, BarElementLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
+export interface BarPlotProps extends BarPlotSlotProps {
   /**
    * If `true`, animations are skipped.
    * @default false
