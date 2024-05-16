@@ -138,18 +138,57 @@ describe('<DesktopDatePicker /> - Field', () => {
       Component: DesktopDatePicker,
     });
 
-    it('should allow to override the placeholder (v6 only)', () => {
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: false,
-        slotProps: {
-          textField: {
-            placeholder: 'Custom placeholder',
+    describe('Placeholder override (v6 only)', () => {
+      it('should allow to override the placeholder', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: 'Custom placeholder',
+            },
           },
-        },
+        });
+  
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, 'Custom placeholder');
       });
-
-      const input = getTextbox();
-      expectFieldPlaceholderV6(input, 'Custom placeholder');
+  
+      it('should show blank placeholder when prop is an empty string', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: '',
+            },
+          },
+        });
+  
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, '');
+      });
+  
+      it('should show blank placeholder when prop is undefined', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: undefined,
+            },
+          },
+        });
+  
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, '');
+      });
+  
+      it('should show default placeholder when no prop is received', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+        });
+  
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, 'MM/DD/YYYY');
+      });
     });
   });
 
