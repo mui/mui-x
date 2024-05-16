@@ -9,6 +9,7 @@ import { alpha } from '@mui/material/styles';
 import { useTranslate, useUserLanguage } from 'docs/src/modules/utils/i18n';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { MarkdownElement } from '@mui/docs/MarkdownElement';
+import { SectionTitle } from '@mui/docs/SectionTitle';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
 import PropertiesSection from 'docs/src/modules/components/ApiPage/sections/PropertiesSection';
 import { DEFAULT_API_LAYOUT_STORAGE_KEYS } from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
@@ -32,21 +33,10 @@ export function getTranslatedHeader(t, header) {
 }
 
 function Heading(props) {
-  const { hash, level: Level = 'h2' } = props;
+  const { hash, level = 'h2' } = props;
   const t = useTranslate();
 
-  return (
-    <Level id={hash}>
-      <a aria-labelledby={hash} className="title-link-to-anchor" href={`#${hash}`} tabIndex={-1}>
-        {getTranslatedHeader(t, hash)}
-        <span className="anchor-icon">
-          <svg>
-            <use xlinkHref="#anchor-link-icon" />
-          </svg>
-        </span>
-      </a>
-    </Level>
-  );
+  return <SectionTitle title={getTranslatedHeader(t, hash)} hash={hash} level={level} />;
 }
 
 Heading.propTypes = {

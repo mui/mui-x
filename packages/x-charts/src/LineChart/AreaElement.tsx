@@ -68,7 +68,7 @@ export interface AreaElementSlotProps {
 export interface AreaElementProps
   extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
@@ -129,16 +129,15 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
-  return <Area {...areaProps} />;
+  return <Area {...other} {...areaProps} />;
 }
 
 AreaElement.propTypes = {

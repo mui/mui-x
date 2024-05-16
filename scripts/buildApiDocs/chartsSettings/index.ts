@@ -65,6 +65,8 @@ export default apiPages;
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',
       'x-charts/src/Gauge/GaugeValueText.tsx',
+      'x-charts/src/ChartsReferenceLine/ChartsXReferenceLine.tsx',
+      'x-charts/src/ChartsReferenceLine/ChartsYReferenceLine.tsx',
       'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',

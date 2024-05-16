@@ -249,6 +249,7 @@ export const usePickerViews = <
     if (currentViewMode === 'field' && open) {
       onClose();
       setTimeout(() => {
+        fieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
         // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
         fieldRef?.current?.focusField(view);
