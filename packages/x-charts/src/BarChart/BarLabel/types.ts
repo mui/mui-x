@@ -10,7 +10,7 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export type BarLabelRootProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+export type BarLabelComponentProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
   ownerState: BarLabelOwnerState;
 };
 
@@ -32,11 +32,13 @@ export type BarItem = {
 export type BarLabelContext = {
   bar: {
     /**
-     * The height of the bar. Useful if you want to show the label only when the bar is big enough.
+     * The height of the bar.
+     * It could be used to control the label based on the bar size.
      */
     height: number;
     /**
-     * The width of the bar. Useful if you want to show the label only when the bar is big enough.
+     * The width of the bar.
+     * It could be used to control the label based on the bar size.
      */
     width: number;
   };

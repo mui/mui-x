@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base/utils';
 import clsx from 'clsx';
@@ -8,9 +7,9 @@ import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
-import { BarLabelFunction, BarLabelOwnerState, BarLabelRootProps } from './types';
+import { BarLabelFunction, BarLabelOwnerState, BarLabelComponentProps } from './types';
 
-export const BarLabelRoot = styled(animated.text, {
+export const BarLabelComponent = styled(animated.text, {
   name: 'MuiBarLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => [
@@ -36,17 +35,17 @@ export const BarLabelRoot = styled(animated.text, {
 export interface BarLabelSlots {
   /**
    * The component that renders the bar label.
-   * @default BarLabelRoot
+   * @default BarLabelComponent
    */
-  barLabel?: React.JSXElementConstructor<BarLabelRootProps>;
+  barLabel?: React.JSXElementConstructor<BarLabelComponentProps>;
 }
 
 export interface BarLabelSlotProps {
-  barLabel?: Partial<BarLabelRootProps>;
+  barLabel?: Partial<BarLabelComponentProps>;
 }
 
 export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelRootProps, 'style'> & {
+  Pick<BarLabelComponentProps, 'style'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -97,7 +96,7 @@ function BarLabel(props: BarLabelProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const Component = slots?.barLabel ?? BarLabelRoot;
+  const Component = slots?.barLabel ?? BarLabelComponent;
 
   const barLabelProps = useSlotProps({
     elementType: Component,

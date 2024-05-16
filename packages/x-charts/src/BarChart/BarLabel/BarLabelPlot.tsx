@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { to, useTransition } from '@react-spring/web';
 import type { AnimationData, CompletedBarData } from '../types';
 import { BarLabel } from './BarLabel';
