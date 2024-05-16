@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base';
@@ -65,6 +65,8 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
   };
 
 function BarLabel(props: BarLabelProps) {
+  const themeProps = useThemeProps({ props, name: 'MuiBarLabel' });
+
   const {
     seriesId,
     classes: innerClasses,
@@ -78,7 +80,7 @@ function BarLabel(props: BarLabelProps) {
     width,
     value,
     ...other
-  } = props;
+  } = themeProps;
   const { item } = React.useContext(InteractionContext);
   const { scope } = React.useContext(HighlighContext);
 
