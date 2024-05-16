@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { to, useTransition } from '@react-spring/web';
+import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
@@ -13,6 +13,7 @@ import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarElementLabel, BarElementLabelSlotProps, BarElementLabelSlots } from './BarElementLabel';
+import { BarElementLabelPlot } from './BarElementLabelPlot';
 
 /**
  * Solution of the equations
@@ -50,7 +51,7 @@ export interface BarPlotSlots extends BarElementSlots, BarElementLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarElementLabelSlotProps {}
 
-export interface BarPlotProps extends BarPlotSlotProps {
+export interface BarPlotProps {
   /**
    * If `true`, animations are skipped.
    * @default false
@@ -69,6 +70,20 @@ export interface BarPlotProps extends BarPlotSlotProps {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
+  /**
+   * If `true`, displays the value labels on the bars.
+   */
+  showLabels?: boolean;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarPlotSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarPlotSlots;
 }
 
 const useAggregatedData = (): {

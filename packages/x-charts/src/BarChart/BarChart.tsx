@@ -138,6 +138,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     slots,
     slotProps,
     loading,
+    showLabels,
   } = props;
 
   const id = useId();
@@ -197,6 +198,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
           borderRadius={borderRadius}
+          showLabels={showLabels}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
