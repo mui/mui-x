@@ -50,12 +50,12 @@ export const BarElementLabelRoot = styled(animated.text, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: BarElementLabelOwnerState }>(({ ownerState, theme }) => ({
+  ...theme?.typography?.body2,
   stroke: 'none',
-  fill: (theme.vars || theme).palette.text.primary,
+  fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   opacity: (ownerState.isFaded && 0.3) || 1,
   textAnchor: 'middle',
-  textAlign: 'center',
   dominantBaseline: 'central',
   pointerEvents: 'none',
 }));
