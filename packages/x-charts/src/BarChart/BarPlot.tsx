@@ -14,7 +14,7 @@ import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import type { BarLabelFunction } from './BarLabel/types';
+import type { BarItem, BarLabelContext } from './BarLabel/types';
 
 /**
  * Solution of the equations
@@ -78,7 +78,7 @@ export interface BarPlotProps {
    * @param {BarLabelContext} context data about the bar.
    * @returns {string} The formatted label.
    */
-  barLabel?: BarLabelFunction;
+  barLabel?: (item: BarItem, context: BarLabelContext) => string | null | undefined;
   /**
    * The props used for each component slot.
    * @default {}
