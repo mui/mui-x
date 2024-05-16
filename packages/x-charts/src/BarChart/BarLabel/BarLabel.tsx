@@ -8,6 +8,7 @@ import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProp
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
 import { BarLabelFunction, BarLabelOwnerState, BarLabelComponentProps } from './types';
+import { getBarLabel } from './getBarLabel';
 
 export const BarLabelComponent = styled(animated.text, {
   name: 'MuiBarLabel',
@@ -60,7 +61,7 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
     width: number;
     layout?: 'vertical' | 'horizontal';
     value: number | null;
-    barLabel?: BarLabelFunction;
+    barLabel?: 'value' | BarLabelFunction;
   };
 
 function BarLabel(props: BarLabelProps) {
@@ -113,19 +114,14 @@ function BarLabel(props: BarLabelProps) {
     return null;
   }
 
-  const formattedLabelText = barLabel(
-    {
-      seriesId,
-      dataIndex,
-      value,
-    },
-    {
-      bar: {
-        height,
-        width,
-      },
-    },
-  );
+  const formattedLabelText = getBarLabel({
+    barLabel,
+    value,
+    dataIndex,
+    seriesId,
+    height,
+    width,
+  });
 
   if (!formattedLabelText) {
     return null;

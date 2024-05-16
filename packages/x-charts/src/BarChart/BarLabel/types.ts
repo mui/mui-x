@@ -44,7 +44,4 @@ export type BarLabelContext = {
   };
 };
 
-export type BarLabelFunction = (
-  item: BarItem,
-  context: BarLabelContext,
-) => string | null | undefined;
+export type BarLabelFunction = (item: BarItem, context: BarLabelContext) => string | null;

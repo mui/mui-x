@@ -30,7 +30,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
 type BarLabelPlotProps = {
   bars: CompletedBarData[];
   skipAnimation?: boolean;
-  barLabel?: BarLabelFunction;
+  barLabel?: 'value' | BarLabelFunction;
 };
 
 /**

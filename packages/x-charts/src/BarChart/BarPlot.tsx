@@ -72,13 +72,13 @@ export interface BarPlotProps {
    */
   borderRadius?: number;
   /**
-   * If `true`, displays the value labels on the bars.
+   * Can be set to 'value' to display the current value.
    * If provided, the function will be used to format the label of the bar.
    * @param {BarItem} item The item to format.
    * @param {BarLabelContext} context data about the bar.
    * @returns {string} The formatted label.
    */
-  barLabel?: (item: BarItem, context: BarLabelContext) => string | null | undefined;
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null);
   /**
    * The props used for each component slot.
    * @default {}
