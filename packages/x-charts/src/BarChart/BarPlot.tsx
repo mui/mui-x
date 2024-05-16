@@ -335,11 +335,13 @@ function BarPlot(props: BarPlotProps) {
           id={seriesId}
           dataIndex={dataIndex}
           color={color}
-          style={{
-            ...style,
-            x: to([style.x, style.width], (x, width) => (x ?? 0) + width / 2),
-            y: to([style.y, style.height], (x, width) => (x ?? 0) + width / 2),
-          }}
+          style={
+            {
+              ...style,
+              x: to([(style as any).x, (style as any).width], (x, width) => (x ?? 0) + width / 2),
+              y: to([(style as any).y, (style as any).height], (x, width) => (x ?? 0) + width / 2),
+            } as any
+          }
           // When value is 0 we don't want to show the label either
           labelText={value ? value.toString() : null}
         />
