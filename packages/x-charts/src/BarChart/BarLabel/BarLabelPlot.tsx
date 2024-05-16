@@ -4,7 +4,7 @@ import { to, useTransition } from '@react-spring/web';
 import type { CompletedBarData } from '../BarPlot';
 import { BarLabel } from './BarLabel';
 
-const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
+const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
@@ -20,7 +20,7 @@ const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Complete
       }),
 });
 
-const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
+const enterStyle = ({ x, width, y, height }: CompletedBarData) => ({
   y,
   x,
   height,
@@ -40,10 +40,10 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 
   const barLabelTransition = useTransition(bars, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: getOutStyle,
+    from: leaveStyle,
     leave: null,
-    enter: getInStyle,
-    update: getInStyle,
+    enter: enterStyle,
+    update: enterStyle,
     immediate: skipAnimation,
   });
 

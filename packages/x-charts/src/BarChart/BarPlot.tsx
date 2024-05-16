@@ -14,6 +14,7 @@ import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
+import { SeriesId } from '../models/seriesType/common';
 
 /**
  * Solution of the equations
@@ -386,7 +387,9 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
-      {showLabels && <BarLabelPlot bars={completedData} skipAnimation={skipAnimation} {...other} />}
+      {props.barLabel && (
+        <BarLabelPlot bars={completedData} skipAnimation={skipAnimation} {...other} />
+      )}
     </React.Fragment>
   );
 }
