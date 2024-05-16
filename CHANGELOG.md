@@ -21,7 +21,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Fix `rowModesModel` controlled prop (#13056) @Janpot
 - [DataGrid] Reduce bundle size with error messages (#12992) @oliviertassinari
 - [l10n] Improve Norwegian (nb-NO) locale (#13106) @oliverlaidma
-- [l10n] Improve Spanish (es-SE) locale (#13133) @Jucabel
+- [l10n] Improve Spanish (es-ES) locale (#13133) @Jucabel
 
 #### `@mui/x-data-grid-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
