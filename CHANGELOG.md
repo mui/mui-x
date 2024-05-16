@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### `@mui/x-date-pickers-pro@6.19.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@__VERSION__`.
+Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 ### Docs
 
