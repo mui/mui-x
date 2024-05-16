@@ -27,9 +27,7 @@ export const barLabelClasses = generateUtilityClasses('MuiBarLabel', [
 export const useUtilityClasses = (ownerState: BarLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${seriesId}`],
-    highlighted: [isHighlighted && 'highlighted'],
-    faded: [isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarLabelUtilityClass, classes);

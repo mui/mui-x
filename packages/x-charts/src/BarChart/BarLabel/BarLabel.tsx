@@ -105,7 +105,7 @@ function BarLabel(props: BarLabelProps) {
     additionalProps: {
       ...other,
       style,
-      className: clsx(classes.root, classes.highlighted, classes.faded),
+      className: clsx(classes.root),
     },
     ownerState,
   });
