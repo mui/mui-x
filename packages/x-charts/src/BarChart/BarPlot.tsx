@@ -289,7 +289,6 @@ function BarPlot(props: BarPlotProps) {
     leave: leaveStyle,
     enter: enterStyle,
     update: enterStyle,
-    immediate: skipAnimation,
   });
 
   return (
@@ -330,22 +329,6 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
-      {transition((style, { seriesId, dataIndex, color, value }) => (
-        <BarElementLabel
-          id={seriesId}
-          dataIndex={dataIndex}
-          color={color}
-          style={
-            {
-              ...style,
-              x: to([(style as any).x, (style as any).width], (x, width) => (x ?? 0) + width / 2),
-              y: to([(style as any).y, (style as any).height], (x, width) => (x ?? 0) + width / 2),
-            } as any
-          }
-          // When value is 0 we don't want to show the label either
-          labelText={value ? value.toString() : null}
-        />
-      ))}
     </React.Fragment>
   );
 }

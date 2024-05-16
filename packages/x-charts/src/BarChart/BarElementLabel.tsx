@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
+import { useSlotProps } from '@mui/base';
 import { SeriesId } from '../models/seriesType/common';
 import { InteractionContext } from '../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../hooks/useInteractionItemProps';
@@ -18,7 +19,7 @@ export interface BarElementLabelClasses {
 export type BarElementLabelClassKey = keyof BarElementLabelClasses;
 
 export interface BarElementLabelOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -35,10 +36,10 @@ export const barElementClasses: BarElementLabelClasses = generateUtilityClasses(
   ['root', 'highlighted', 'faded'],
 );
 
-const useUtilityClasses = (ownerState: BarElementLabelOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+const composeUtilityClasses = (ownerState: BarElementLabelOwnerState) => {
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementLabelUtilityClass, classes);
@@ -59,55 +60,90 @@ export const BarElementLabelRoot = styled(animated.text, {
   pointerEvents: 'none',
 }));
 
-export type BarElementLabelProps = Pick<
-  BarElementLabelOwnerState,
-  'id' | 'classes' | 'dataIndex' | 'color'
-> &
-  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+export type BarLabelProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  highlightScope?: Partial<HighlightScope>;
+  ownerState: BarElementLabelOwnerState;
+};
+
+export interface BarElementLabelSlots {
+  /**
+   * The component that renders the bar label.
+   * @default BarElementLabelRoot
+   */
+  barLabel?: React.JSXElementConstructor<BarLabelProps>;
+}
+
+export interface BarElementLabelSlotProps {
+  barLabel?: Partial<BarLabelProps>;
+}
+
+export type BarElementLabelProps = Omit<BarElementLabelOwnerState, 'isFaded' | 'isHighlighted'> &
+  Pick<BarLabelProps, 'style' | 'highlightScope'> & {
+    barLabel?: Partial<BarLabelProps>;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: BarElementLabelSlotProps;
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: BarElementLabelSlots;
     labelText: string | null;
-    highlightScope?: Partial<HighlightScope>;
   };
 
 function BarElementLabel(props: BarElementLabelProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     style,
     dataIndex,
     highlightScope,
     labelText,
+    slots,
+    slotProps,
     ...other
   } = props;
   const { item } = React.useContext(InteractionContext);
 
   const isHighlighted = getIsHighlighted(
     item,
-    { type: 'bar', seriesId: id, dataIndex },
+    { type: 'bar', seriesId, dataIndex },
     highlightScope,
   );
   const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId: id, dataIndex }, highlightScope);
+    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId, dataIndex }, highlightScope);
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     isFaded,
     isHighlighted,
     dataIndex,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = composeUtilityClasses(ownerState);
+
+  const Component = slots?.barLabel ?? BarElementLabelRoot;
+
+  const barLabelProps = useSlotProps({
+    elementType: Component,
+    externalSlotProps: slotProps?.barLabel,
+    additionalProps: {
+      ...other,
+      style,
+      className: classes.root,
+    },
+    ownerState,
+  });
 
   if (!labelText) {
     return null;
   }
 
-  return (
-    <BarElementLabelRoot className={classes.root} {...other} style={style} ownerState={ownerState}>
-      {labelText}
-    </BarElementLabelRoot>
-  );
+  return <Component {...barLabelProps}>{labelText}</Component>;
 }
 
 BarElementLabel.propTypes = {
