@@ -10,7 +10,7 @@ export default function CustomLabels() {
         { data: [14, 6, 5, 8, 9], label: 'Series B1' },
       ]}
       barLabel={(item, context) => {
-        if (item.value > 10) {
+        if ((item.value ?? 0) > 10) {
           return 'High';
         }
         return context.bar.height < 60 ? null : item.value?.toString();
