@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { to, useTransition } from '@react-spring/web';
+import { useTransition } from '@react-spring/web';
 import type { AnimationData, CompletedBarData } from '../types';
 import { BarLabel } from './BarLabel';
 import { BarLabelFunction } from './types';
@@ -9,12 +9,12 @@ const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Animation
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
-        x,
+        x: x + width / 2,
         height: 0,
         width,
       }
     : {
-        y,
+        y: y + height / 2,
         x: xOrigin,
         height,
         width: 0,
@@ -22,8 +22,8 @@ const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Animation
 });
 
 const enterStyle = ({ x, width, y, height }: AnimationData) => ({
-  y,
-  x,
+  x: x + width / 2,
+  y: y + height / 2,
   height,
   width,
 });
@@ -60,13 +60,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           width={width}
           height={height}
           {...other}
-          style={
-            {
-              ...style,
-              x: to([(style as any).x, (style as any).width], (x, w) => (x ?? 0) + w / 2),
-              y: to([(style as any).y, (style as any).height], (y, w) => (y ?? 0) + w / 2),
-            } as any
-          }
+          style={style}
         />
       ))}
     </React.Fragment>
