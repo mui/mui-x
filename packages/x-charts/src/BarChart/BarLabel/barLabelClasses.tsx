@@ -1,5 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import composeClasses from '@mui/utils/composeClasses';
+import type { BarLabelOwnerState } from './types';
 
 export interface BarLabelClasses {
   /** Styles applied to the root element. */
@@ -21,3 +23,14 @@ export const barLabelClasses = generateUtilityClasses('MuiBarLabel', [
   'highlighted',
   'faded',
 ]);
+
+export const useUtilityClasses = (ownerState: BarLabelOwnerState) => {
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
+  const slots = {
+    root: ['root', `series-${seriesId}`],
+    highlighted: [isHighlighted && 'highlighted'],
+    faded: [isFaded && 'faded'],
+  };
+
+  return composeClasses(slots, getBarLabelUtilityClass, classes);
+};

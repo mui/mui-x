@@ -10,10 +10,11 @@ import { BarItemIdentifier } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
-import { AnimationData, BarItem, BarLabelContext, CompletedBarData, MaskData } from './types';
+import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
+import type { BarLabelFunction } from './BarLabel/types';
 
 /**
  * Solution of the equations
@@ -77,7 +78,7 @@ export interface BarPlotProps {
    * @param {BarLabelContext} context data about the bar.
    * @returns {string} The formatted label.
    */
-  barLabel?: (item: BarItem, context: BarLabelContext) => string | null;
+  barLabel?: BarLabelFunction;
   /**
    * The minimum width of the bar in which to show the label.
    * @default 0

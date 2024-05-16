@@ -1,36 +1,14 @@
 import * as React from 'react';
-import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base';
 import clsx from 'clsx';
-import { SeriesId } from '../../models/seriesType/common';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
-import type { BarItem, BarLabelContext } from '../types';
-import { BarLabelClasses, barLabelClasses, getBarLabelUtilityClass } from './barLabelClasses';
+import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
-
-export interface BarLabelOwnerState {
-  seriesId: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<BarLabelClasses>;
-}
-
-const composeUtilityClasses = (ownerState: BarLabelOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${seriesId}`],
-    highlighted: [isHighlighted && 'highlighted'],
-    faded: [isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getBarLabelUtilityClass, classes);
-};
+import { BarLabelFunction, BarLabelOwnerState, BarLabelRootProps } from './types';
 
 export const BarLabelRoot = styled(animated.text, {
   name: 'MuiBarLabel',
@@ -54,10 +32,6 @@ export const BarLabelRoot = styled(animated.text, {
     opacity: 0.3,
   },
 }));
-
-export type BarLabelRootProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
-  ownerState: BarLabelOwnerState;
-};
 
 export interface BarLabelSlots {
   /**
@@ -87,7 +61,7 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
     width: number;
     layout?: 'vertical' | 'horizontal';
     value: number | null;
-    barLabel?: (item: BarItem, context: BarLabelContext) => string | null;
+    barLabel?: BarLabelFunction;
   };
 
 function BarLabel(props: BarLabelProps) {
@@ -119,7 +93,7 @@ function BarLabel(props: BarLabelProps) {
     isHighlighted,
     dataIndex,
   };
-  const classes = composeUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
 
   const Component = slots?.barLabel ?? BarLabelRoot;
 
