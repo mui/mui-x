@@ -151,7 +151,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         fontSize: tickFontSize ?? 12,
         ...tickLabelStyle,
       },
-      className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
     ownerState: {},

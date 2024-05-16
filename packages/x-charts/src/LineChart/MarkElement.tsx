@@ -85,7 +85,7 @@ MarkElementPath.propTypes = {
 } as any;
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
     /**
      * If `true`, animations are skipped.
      * @default false

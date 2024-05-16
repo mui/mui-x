@@ -90,7 +90,7 @@ export interface BarElementSlotProps {
 }
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
+  Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
@@ -144,14 +144,14 @@ function BarElement(props: BarElementProps) {
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
+    externalForwardedProps: other,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
       style,
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
