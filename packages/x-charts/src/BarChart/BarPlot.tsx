@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
+import { to, useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
@@ -12,9 +12,8 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
-import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import type { BarItem, BarLabelContext } from './BarLabel/types';
+import { BarLabel, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
+import { getBarLabel } from './BarLabel/getBarLabel';
 
 /**
  * Solution of the equations
@@ -71,14 +70,6 @@ export interface BarPlotProps {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
-  /**
-   * If `true`, displays the value labels on the bars.
-   * If provided, the function will be used to format the label of the bar.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel?: (item: BarItem, context: BarLabelContext) => string | null | undefined;
   /**
    * The props used for each component slot.
    * @default {}
@@ -203,6 +194,9 @@ const useAggregatedData = (): {
 
         const stackId = series[seriesId].stack;
 
+        const height = verticalLayout ? maxValueCoord - minValueCoord : barWidth;
+        const width = verticalLayout ? barWidth : maxValueCoord - minValueCoord;
+
         const result = {
           seriesId,
           dataIndex,
@@ -215,11 +209,20 @@ const useAggregatedData = (): {
             : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
           xOrigin: xScale(0)!,
           yOrigin: yScale(0)!,
-          height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
-          width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
+          height,
+          width,
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
+          barLabel: getBarLabel({
+            barLabel: series[seriesId].barLabel,
+            value: series[seriesId].data[dataIndex],
+            valueFormatter: series[seriesId].valueFormatter,
+            dataIndex,
+            seriesId,
+            height,
+            width,
+          }),
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
 
@@ -293,7 +296,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation, onItemClick, borderRadius, ...other } = props;
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -309,6 +312,15 @@ function BarPlot(props: BarPlotProps) {
     leave: leaveStyle,
     enter: enterStyle,
     update: enterStyle,
+  });
+
+  const barLabelTransition = useTransition(completedData, {
+    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
+    from: leaveStyle,
+    leave: null,
+    enter: enterStyle,
+    update: enterStyle,
+    immediate: skipAnimation,
   });
 
   return (
@@ -349,14 +361,23 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
-      {barLabel && (
-        <BarLabelPlot
-          bars={completedData}
-          skipAnimation={skipAnimation}
+      {barLabelTransition((style, { seriesId, dataIndex, color, value, barLabel }) => (
+        <BarLabel
+          seriesId={seriesId}
+          dataIndex={dataIndex}
+          value={value}
+          color={color}
           barLabel={barLabel}
           {...other}
+          style={
+            {
+              ...style,
+              x: to([(style as any).x, (style as any).width], (x, w) => (x ?? 0) + w / 2),
+              y: to([(style as any).y, (style as any).height], (y, w) => (y ?? 0) + w / 2),
+            } as any
+          }
         />
-      )}
+      ))}
     </React.Fragment>
   );
 }

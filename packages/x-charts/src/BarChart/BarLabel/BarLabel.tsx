@@ -8,9 +8,9 @@ import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
-import { BarLabelFunction, BarLabelOwnerState, BarLabelRootProps } from './types';
+import { BarLabelOwnerState, BarLabelComponentProps } from './types';
 
-export const BarLabelRoot = styled(animated.text, {
+export const BarLabelComponent = styled(animated.text, {
   name: 'MuiBarLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => [
@@ -36,17 +36,17 @@ export const BarLabelRoot = styled(animated.text, {
 export interface BarLabelSlots {
   /**
    * The component that renders the bar label.
-   * @default BarLabelRoot
+   * @default BarLabelComponent
    */
-  barLabel?: React.JSXElementConstructor<BarLabelRootProps>;
+  barLabel?: React.JSXElementConstructor<BarLabelComponentProps>;
 }
 
 export interface BarLabelSlotProps {
-  barLabel?: Partial<BarLabelRootProps>;
+  barLabel?: Partial<BarLabelComponentProps>;
 }
 
 export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelRootProps, 'style'> & {
+  Pick<BarLabelComponentProps, 'style'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -57,11 +57,8 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
      * @default {}
      */
     slots?: BarLabelSlots;
-    height: number;
-    width: number;
-    layout?: 'vertical' | 'horizontal';
     value: number | null;
-    barLabel?: BarLabelFunction;
+    barLabel: string | null;
   };
 
 function BarLabel(props: BarLabelProps) {
@@ -76,8 +73,6 @@ function BarLabel(props: BarLabelProps) {
     barLabel,
     slots,
     slotProps,
-    height,
-    width,
     value,
     ...other
   } = themeProps;
@@ -97,7 +92,7 @@ function BarLabel(props: BarLabelProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const Component = slots?.barLabel ?? BarLabelRoot;
+  const Component = slots?.barLabel ?? BarLabelComponent;
 
   const barLabelProps = useSlotProps({
     elementType: Component,
@@ -114,25 +109,7 @@ function BarLabel(props: BarLabelProps) {
     return null;
   }
 
-  const formattedLabelText = barLabel(
-    {
-      seriesId,
-      dataIndex,
-      value,
-    },
-    {
-      bar: {
-        height,
-        width,
-      },
-    },
-  );
-
-  if (!formattedLabelText) {
-    return null;
-  }
-
-  return <Component {...barLabelProps}>{formattedLabelText}</Component>;
+  return <Component {...barLabelProps}>{barLabel}</Component>;
 }
 
 BarLabel.propTypes = {
