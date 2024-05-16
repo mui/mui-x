@@ -12,8 +12,8 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
-import { BarElementLabel, BarElementLabelSlotProps, BarElementLabelSlots } from './BarElementLabel';
-import { BarElementLabelPlot } from './BarElementLabelPlot';
+import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
+import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 
 /**
  * Solution of the equations
@@ -47,9 +47,37 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots extends BarElementSlots, BarElementLabelSlots {}
+type BarItem = {
+  /**
+   * The series id of the bar.
+   */
+  seriesId: SeriesId;
+  /**
+   * The index of the data point in the series.
+   */
+  dataIndex: number;
+  /**
+   * The value of the data point.
+   */
+  value: number | null;
+};
 
-export interface BarPlotSlotProps extends BarElementSlotProps, BarElementLabelSlotProps {}
+type BarLabelContext = {
+  bar: {
+    /**
+     * The height of the bar. Useful if you want to show the label only when the bar is big enough.
+     */
+    height: number;
+    /**
+     * The width of the bar. Useful if you want to show the label only when the bar is big enough.
+     */
+    width: number;
+  };
+};
+
+export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
+
+export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
 export interface BarPlotProps {
   /**
@@ -72,8 +100,22 @@ export interface BarPlotProps {
   borderRadius?: number;
   /**
    * If `true`, displays the value labels on the bars.
+   * If provided, the function will be used to format the label of the bar.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
    */
-  showLabels?: boolean;
+  barLabel?: (item: BarItem, context: BarLabelContext) => string | null;
+  /**
+   * The minimum width of the bar in which to show the label.
+   * @default 0
+   */
+  barLabelMinWidth?: number;
+  /**
+   * The minimum height of the bar in which to show the label.
+   * @default 0
+   */
+  barLabelMinHeight?: number;
   /**
    * The props used for each component slot.
    * @default {}
@@ -344,6 +386,7 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
+      {showLabels && <BarLabelPlot bars={completedData} skipAnimation={skipAnimation} {...other} />}
     </React.Fragment>
   );
 }

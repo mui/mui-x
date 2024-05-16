@@ -6,50 +6,51 @@ import { styled } from '@mui/material/styles';
 
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base';
-import { SeriesId } from '../models/seriesType/common';
-import { InteractionContext } from '../context/InteractionProvider';
-import { getIsFaded, getIsHighlighted } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context';
+import { SeriesId } from '../../models/seriesType/common';
+import { InteractionContext } from '../../context/InteractionProvider';
+import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
+import { HighlightScope } from '../../context';
 
-export interface BarElementLabelClasses {
+export interface BarLabelClasses {
   /** Styles applied to the root element. */
   root: string;
 }
 
-export type BarElementLabelClassKey = keyof BarElementLabelClasses;
+export type BarLabelClassKey = keyof BarLabelClasses;
 
-export interface BarElementLabelOwnerState {
+export interface BarLabelOwnerState {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<BarElementLabelClasses>;
+  classes?: Partial<BarLabelClasses>;
 }
 
-export function getBarElementLabelUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBarElementLabel', slot);
+export function getBarLabelUtilityClass(slot: string) {
+  return generateUtilityClass('MuiBarLabel', slot);
 }
 
-export const barElementClasses: BarElementLabelClasses = generateUtilityClasses(
-  'MuiBarElementLabel',
-  ['root', 'highlighted', 'faded'],
-);
+export const barElementLabelClasses: BarLabelClasses = generateUtilityClasses('MuiBarLabel', [
+  'root',
+  'highlighted',
+  'faded',
+]);
 
-const composeUtilityClasses = (ownerState: BarElementLabelOwnerState) => {
+const composeUtilityClasses = (ownerState: BarLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
-  return composeClasses(slots, getBarElementLabelUtilityClass, classes);
+  return composeClasses(slots, getBarLabelUtilityClass, classes);
 };
 
-export const BarElementLabelRoot = styled(animated.text, {
-  name: 'MuiBarElementLabel',
+export const BarLabelRoot = styled(animated.text, {
+  name: 'MuiBarLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: BarElementLabelOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: BarLabelOwnerState }>(({ ownerState, theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
@@ -60,44 +61,42 @@ export const BarElementLabelRoot = styled(animated.text, {
   pointerEvents: 'none',
 }));
 
-export type BarLabelProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
-  ownerState: BarElementLabelOwnerState;
-  minWidth?: number;
-  minHeight?: number;
+export type BarLabelRootProps = Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  ownerState: BarLabelOwnerState;
 };
 
-export interface BarElementLabelSlots {
+export interface BarLabelSlots {
   /**
    * The component that renders the bar label.
-   * @default BarElementLabelRoot
+   * @default BarLabelRoot
    */
-  barLabel?: React.JSXElementConstructor<BarLabelProps>;
+  barLabel?: React.JSXElementConstructor<BarLabelRootProps>;
 }
 
-export interface BarElementLabelSlotProps {
-  barLabel?: Partial<BarLabelProps>;
+export interface BarLabelSlotProps {
+  barLabel?: Partial<BarLabelRootProps>;
 }
 
-export type BarElementLabelProps = Omit<BarElementLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelProps, 'style' | 'minWidth' | 'minHeight'> & {
+export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
+  Pick<BarLabelRootProps, 'style'> & {
     /**
      * The props used for each component slot.
      * @default {}
      */
-    slotProps?: BarElementLabelSlotProps;
+    slotProps?: BarLabelSlotProps;
     /**
      * Overridable component slots.
      * @default {}
      */
-    slots?: BarElementLabelSlots;
-    labelText: string | null;
+    slots?: BarLabelSlots;
     highlightScope?: Partial<HighlightScope>;
     height?: number;
     width?: number;
     layout?: 'vertical' | 'horizontal';
+    barLabel?: () => string;
   };
 
-function BarElementLabel(props: BarElementLabelProps) {
+function BarLabel(props: BarLabelProps) {
   const {
     seriesId,
     classes: innerClasses,
@@ -105,11 +104,9 @@ function BarElementLabel(props: BarElementLabelProps) {
     style,
     dataIndex,
     highlightScope,
-    labelText,
+    barLabel,
     slots,
     slotProps,
-    minHeight,
-    minWidth,
     height,
     width,
     ...other
@@ -134,7 +131,7 @@ function BarElementLabel(props: BarElementLabelProps) {
   };
   const classes = composeUtilityClasses(ownerState);
 
-  const Component = slots?.barLabel ?? BarElementLabelRoot;
+  const Component = slots?.barLabel ?? BarLabelRoot;
 
   const barLabelProps = useSlotProps({
     elementType: Component,
@@ -147,18 +144,24 @@ function BarElementLabel(props: BarElementLabelProps) {
     ownerState,
   });
 
-  if (!labelText || (height ?? 0) < (minHeight ?? 0) || (width ?? 0) < (minWidth ?? 0)) {
+  if (!barLabel) {
     return null;
   }
 
-  return <Component {...barLabelProps}>{labelText}</Component>;
+  const formattedLabelText = barLabel();
+
+  if (!formattedLabelText) {
+    return null;
+  }
+
+  return <Component {...barLabelProps}>{formattedLabelText}</Component>;
 }
 
-BarElementLabel.propTypes = {
+BarLabel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
 } as any;
 
-export { BarElementLabel };
+export { BarLabel };

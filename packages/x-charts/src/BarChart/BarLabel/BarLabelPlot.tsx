@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { to, useTransition } from '@react-spring/web';
-import type { CompletedBarData } from './BarPlot';
-import { BarElementLabel } from './BarElementLabel';
+import type { CompletedBarData } from '../BarPlot';
+import { BarLabel } from './BarLabel';
 
 const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
   ...(layout === 'vertical'
@@ -27,7 +27,7 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
   width,
 });
 
-type BarElementLabelPlotProps = {
+type BarLabelPlotProps = {
   bars: CompletedBarData[];
   skipAnimation?: boolean;
 };
@@ -35,7 +35,7 @@ type BarElementLabelPlotProps = {
 /**
  * @ignore - internal component.
  */
-function BarElementLabelPlot(props: BarElementLabelPlotProps) {
+function BarLabelPlot(props: BarLabelPlotProps) {
   const { bars, skipAnimation, ...other } = props;
 
   const barLabelTransition = useTransition(bars, {
@@ -50,7 +50,7 @@ function BarElementLabelPlot(props: BarElementLabelPlotProps) {
   return (
     <React.Fragment>
       {barLabelTransition((style, { seriesId, dataIndex, color, value, width, height }) => (
-        <BarElementLabel
+        <BarLabel
           seriesId={seriesId}
           dataIndex={dataIndex}
           color={color}
@@ -71,4 +71,4 @@ function BarElementLabelPlot(props: BarElementLabelPlotProps) {
   );
 }
 
-export { BarElementLabelPlot };
+export { BarLabelPlot };
