@@ -144,6 +144,7 @@ function BarElement(props: BarElementProps) {
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
+    externalForwardedProps: other,
     additionalProps: {
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
       style,
@@ -154,7 +155,7 @@ function BarElement(props: BarElementProps) {
     ownerState,
   });
 
-  return <Bar {...other} {...barProps} />;
+  return <Bar {...barProps} />;
 }
 
 BarElement.propTypes = {
