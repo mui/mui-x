@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
+## 6.19.12
+
+_May 16, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.12`
+
+- [pickers] Fix `AdapterMomentJalaali` regression (#13150) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@__VERSION__`.
+
+### Docs
+
+- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+
 ## 6.19.11
 
 _Apr 18, 2024_
