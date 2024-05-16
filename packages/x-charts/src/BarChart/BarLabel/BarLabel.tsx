@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
 import { useSlotProps } from '@mui/base/utils';
+import PropTypes from 'prop-types';
 import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { barLabelClasses, useUtilityClasses } from './barLabelClasses';
@@ -26,7 +27,6 @@ export const BarLabelComponent = styled(animated.text, {
   dominantBaseline: 'central',
   pointerEvents: 'none',
   opacity: 1,
-
   [`&.${barLabelClasses.faded}`]: {
     opacity: 0.3,
   },
@@ -56,10 +56,21 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
      * @default {}
      */
     slots?: BarLabelSlots;
+    /**
+     * The height of the bar.
+     */
     height: number;
+    /**
+     * The width of the bar.
+     */
     width: number;
-    layout?: 'vertical' | 'horizontal';
+    /**
+     * The value of the data point.
+     */
     value: number | null;
+    /**
+     * The bar label type or formatter.
+     */
     barLabel?: 'value' | BarLabelFunction;
   };
 
@@ -134,6 +145,36 @@ BarLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The bar label type or formatter.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  /**
+   * The height of the bar.
+   */
+  height: PropTypes.number.isRequired,
+  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The value of the data point.
+   */
+  value: PropTypes.number,
+  /**
+   * The width of the bar.
+   */
+  width: PropTypes.number.isRequired,
 } as any;
 
 export { BarLabel };
