@@ -102,15 +102,6 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
       $$signature: TSignature;
     };
 
-export type TreeViewUsedPublicAPI<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['publicAPI'] &
-    MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'publicAPI'> & {
-      /**
-       * Private property only defined in TypeScript to be able to access the plugin signature from the publicAPI object.
-       */
-      $$signature: TSignature;
-    };
-
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
   MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
 
