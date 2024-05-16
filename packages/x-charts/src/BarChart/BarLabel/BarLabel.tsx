@@ -93,6 +93,7 @@ export type BarLabelProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'
     height?: number;
     width?: number;
     layout?: 'vertical' | 'horizontal';
+    value: number | null;
     barLabel?: () => string;
   };
 
@@ -109,6 +110,7 @@ function BarLabel(props: BarLabelProps) {
     slotProps,
     height,
     width,
+    value,
     ...other
   } = props;
   const { item } = React.useContext(InteractionContext);
@@ -148,7 +150,19 @@ function BarLabel(props: BarLabelProps) {
     return null;
   }
 
-  const formattedLabelText = barLabel();
+  const formattedLabelText = barLabel(
+    {
+      seriesId,
+      dataIndex,
+      value,
+    },
+    {
+      bar: {
+        height,
+        width,
+      },
+    },
+  );
 
   if (!formattedLabelText) {
     return null;

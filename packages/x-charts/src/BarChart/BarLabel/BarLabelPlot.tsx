@@ -53,6 +53,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
         <BarLabel
           seriesId={seriesId}
           dataIndex={dataIndex}
+          value={value}
           color={color}
           width={width}
           height={height}
@@ -64,7 +65,6 @@ function BarLabelPlot(props: BarLabelPlotProps) {
               y: to([(style as any).y, (style as any).height], (y, w) => (y ?? 0) + w / 2),
             } as any
           }
-          labelText={value ? value.toString() : null}
         />
       ))}
     </React.Fragment>
