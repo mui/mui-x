@@ -1,4 +1,4 @@
-import { BarLabelProps } from '../BarChart/BarLabel/BarLabel';
+import { BarLabelProps } from '../BarChart/BarLabel';
 import { BarChartProps } from '../BarChart/BarChart';
 import { BarElementProps } from '../BarChart/BarElement';
 import { ChartsAxisProps } from '../ChartsAxis';

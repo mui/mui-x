@@ -1,17 +1,5 @@
-import { BarLabelComponent } from './BarLabel';
-import { barLabelClasses, getBarLabelUtilityClass } from './barLabelClasses';
-import type { BarLabelSlotProps, BarLabelSlots } from './BarLabel';
-import type { BarLabelComponentProps, BarLabelOwnerState, BarItem, BarLabelContext } from './types';
-import type { BarLabelClasses, BarLabelClassKey } from './barLabelClasses';
-
-export { BarLabelComponent, barLabelClasses, getBarLabelUtilityClass };
-export type {
-  BarLabelComponentProps,
-  BarLabelClasses,
-  BarLabelOwnerState,
-  BarItem,
-  BarLabelContext,
-  BarLabelClassKey,
-  BarLabelSlotProps,
-  BarLabelSlots,
-};
+export { BarLabelComponent } from './BarLabel';
+export { barLabelClasses, getBarLabelUtilityClass } from './barLabelClasses';
+export type { BarLabelSlotProps, BarLabelSlots, BarLabelProps } from './BarLabel';
+export type { BarLabelComponentProps, BarLabelOwnerState, BarItem, BarLabelContext } from './types';
+export type { BarLabelClasses, BarLabelClassKey } from './barLabelClasses';
