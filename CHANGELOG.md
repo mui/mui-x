@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.5.0
+
+_May 16, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for checkbox selection on the Tree View components
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.5.0`
+
+- [DataGrid] Fix `rowModesModel` controlled prop (#13056) @Janpot
+- [DataGrid] Reduce bundle size with error messages (#12992) @oliviertassinari
+- [l10n] Improve Norwegian (nb-NO) locale (#13106) @oliverlaidma
+- [l10n] Improve Spanish (es-SE) locale (#13133) @Jucabel
+
+#### `@mui/x-data-grid-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.5.0`.
+
+#### `@mui/x-data-grid-premium@7.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.5.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.5.0`
+
+- [fields] Allow empty `textField` slot placeholder value (#13148) @arthurbalduini
+- [pickers] Fix `AdapterMomentJalaali` regression (#13144) @LukasTy
+- [pickers] Fix field focusing when switching to view without a renderer (#13112) @LukasTy
+- [pickers] Reuse `AdapterDateFnsBase` in Jalali adapters (#13075) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.5.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.5.0`
+
+- [charts] Add support mobile tooltip (#13043) @wzdorowa
+- [charts] Allow `series.label` property to receive a function with the "location" it is going to be displayed on (#12830) @JCQuintas
+- [charts] Fix TypeScript performance bottleneck (#13137) @alexfauquette
+- [charts] Fix area order when overlapping (#13121) @alexfauquette
+- [charts] Fix some bad practices with `useSlotProps` (#13141) @alexfauquette
+- [charts] Fix the font used in the overlay (#13107) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.5.0`
+
+- [TreeView] Add support for checkbox selection (#11452) @flaviendelangle
+- [TreeView] Remove unused code (#12917) @flaviendelangle
+
+### Docs
+
+- [docs] Document missing Charts API's (#12875) @alexfauquette
+
+### Core
+
+- [core] Avoid root level `@mui/x-date-pickers` imports (#13120) @LukasTy
+- [core] Refactor ESLint config to disallow root level imports (#13130) @LukasTy
+- [core] Simplify Danger's config (#13062) @oliviertassinari
+- [core] Shift aliasing from babel to webpack (#13051) @Janpot
+- [core] Reuse the `SectionTitle` component in the doc (#13139) @alexfauquette
+
 ## 7.4.0
 
 _May 10, 2024_
