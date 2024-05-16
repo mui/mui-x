@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import type { AnimationData, CompletedBarData } from '../types';
-import { BarLabel, BarLabelProps } from './BarLabel';
+import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
 
 const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'
@@ -30,7 +30,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
 type BarLabelPlotProps = {
   bars: CompletedBarData[];
   skipAnimation?: boolean;
-  barLabel?: BarLabelProps['barLabel'];
+  barLabel?: BarLabelItemProps['barLabel'];
 };
 
 /**
@@ -51,7 +51,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
   return (
     <React.Fragment>
       {barLabelTransition((style, { seriesId, dataIndex, color, value, width, height }) => (
-        <BarLabel
+        <BarLabelItem
           seriesId={seriesId}
           dataIndex={dataIndex}
           value={value}

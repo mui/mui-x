@@ -12,7 +12,7 @@ import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabel';
+import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 
 /**
@@ -51,7 +51,7 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarLabelProps, 'barLabel'> {
+export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default false
