@@ -8,7 +8,7 @@ export const getBarLabel = (options: {
   seriesId: SeriesId;
   height: number;
   width: number;
-}): string | null => {
+}): string | null | undefined => {
   const { barLabel, value, dataIndex, seriesId, height, width } = options;
 
   if (barLabel === 'value') {
