@@ -405,9 +405,18 @@ export const createColumnsState = ({
   });
 
   if (columnsState.desiredOrderedFields) {
-    columnsState.orderedFields.sort((fieldA, fieldB) =>
-      columnsState.desiredOrderedFields!.indexOf(fieldA) - columnsState.desiredOrderedFields!.indexOf(fieldB)
-    );
+    columnsState.orderedFields.sort((fieldA, fieldB) => {
+      const indexA = columnsState.desiredOrderedFields!.indexOf(fieldA);
+      const indexB = columnsState.desiredOrderedFields!.indexOf(fieldB);
+      if (indexA === -1 && indexB !== -1) {
+        return 1;
+      }
+      if (indexB === -1 && indexA !== -1) {
+        return -1;
+      }
+
+      return indexA - indexB
+    });
 
     delete columnsState.desiredOrderedFields;
   }
