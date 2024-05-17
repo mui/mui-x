@@ -20,6 +20,7 @@ import {
   UseTreeItem2Parameters,
 } from '@mui/x-tree-view/useTreeItem2';
 import {
+  TreeItem2Checkbox,
   TreeItem2Content,
   TreeItem2IconContainer,
   TreeItem2Label,
@@ -247,6 +248,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
     status,
@@ -278,7 +280,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
-
+          <TreeItem2Checkbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />

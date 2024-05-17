@@ -186,7 +186,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 ChartsTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Component to override the tooltip content when trigger is set to 'axis'.

@@ -3,6 +3,144 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.5.0
+
+_May 17, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for checkbox selection on the Tree View components
+- 🌍 Improve Norwegian (nb-NO) and Spanish (es-ES) locales on the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.5.0`
+
+- [DataGrid] Fix `rowModesModel` controlled prop (#13056) @Janpot
+- [DataGrid] Reduce bundle size with error messages (#12992) @oliviertassinari
+- [l10n] Improve Norwegian (nb-NO) locale (#13106) @oliverlaidma
+- [l10n] Improve Spanish (es-ES) locale (#13133) @Jucabel
+
+#### `@mui/x-data-grid-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.5.0`.
+
+#### `@mui/x-data-grid-premium@7.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.5.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.5.0`
+
+- [fields] Allow empty `textField` slot placeholder value (#13148) @arthurbalduini
+- [pickers] Fix `AdapterMomentJalaali` regression (#13144) @LukasTy
+- [pickers] Fix field focusing when switching to view without a renderer (#13112) @LukasTy
+- [pickers] Reuse `AdapterDateFnsBase` in Jalali adapters (#13075) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.5.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.5.0`
+
+- [charts] Tooltip with `trigger=axis` now follow touch on mobile (#13043) @wzdorowa
+- [charts] Allow `series.label` property to receive a function with the "location" it is going to be displayed on (#12830) @JCQuintas
+- [charts] Improve TypeScript performance (#13137) @alexfauquette
+- [charts] Fix area order when overlapping (#13121) @alexfauquette
+- [charts] Improve `useSlotProps` types (#13141) @alexfauquette
+- [charts] Fix using the theme's font in the Overlay (#13107) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.5.0`
+
+- [TreeView] Add support for checkbox selection (#11452) @flaviendelangle
+- [TreeView] Remove unused code (#12917) @flaviendelangle
+
+### Docs
+
+- [docs] Document missing Charts API's (#12875) @alexfauquette
+
+### Core
+
+- [core] Avoid root level `@mui/x-date-pickers` imports (#13120) @LukasTy
+- [core] Refactor ESLint config to disallow root level imports (#13130) @LukasTy
+- [core] Simplify Danger's config (#13062) @oliviertassinari
+- [core] Shift aliasing from babel to webpack (#13051) @Janpot
+- [core] Reuse the `SectionTitle` component in the doc (#13139) @alexfauquette
+
+## 7.4.0
+
+_May 10, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add optional `id` attribute on shortcut items of the Date and Time Pickers
+- 🎁 Add support for `date-fns-jalali` v3 in the Date and Time Pickers
+- 🚀 Support rounded corners on `BarChart`
+- 🌍 Add accessibility page to TreeView docs
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.4.0`
+
+- [DataGrid] Fix error when focus moves from column header to `svg` element (#13028) @oukunan
+- [DataGrid] Fix error on column groups change (#12965) @romgrk
+
+#### `@mui/x-data-grid-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.4.0`.
+
+#### `@mui/x-data-grid-premium@7.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.4.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.4.0`
+
+- [fields] Fix regression preventing form submit on "Enter" click (#13065) @LukasTy
+- [pickers] Add `AdapterDateFnsJalaliV3` adapter (#12891) @smmoosavi
+- [pickers] Add optional `id` attribute on shortcut items (#12976) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.4.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.4.0`
+
+- [charts] Add `ChartsGrid` to `themeAugmentation` (#13026) @noraleonte
+- [charts] Support rounded corners on `BarChart` (#12834) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.4.0`
+
+- [TreeView] Fix props propagation and theme entry in `TreeItem2` (#12889) @flaviendelangle
+
+### Docs
+
+- [docs] Add accessibility page to TreeView docs (#12845) @noraleonte
+- [docs] Fix Charts styling typos (#13061) @oliviertassinari
+- [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
+- [docs] Update interface name in pinned columns docs (#13070) @cherniavskii
+
+### Core
+
+- [core] Improve release process docs (#12977) @JCQuintas
+- [core] Prepare React 19 (#12991) @oliviertassinari
+- [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
+- [infra] Automation: Add release PR reviewers (#12982) @michelengelen
+
 ## 7.3.2
 
 _May 2, 2024_
@@ -16,8 +154,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   It should not affect you, but if you were relying on the gradient `id` attribute, please update your usage.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -3280,6 +3416,28 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.12
+
+_May 17, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.12`
+
+- [pickers] Fix `AdapterMomentJalaali` regression (#13150) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.12`.
+
+### Docs
+
+- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 

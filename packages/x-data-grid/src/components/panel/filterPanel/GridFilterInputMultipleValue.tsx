@@ -97,7 +97,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
 GridFilterInputMultipleValue.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,

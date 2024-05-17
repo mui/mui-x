@@ -59,7 +59,7 @@ const PieArcRoot = styled(animated.path, {
   strokeLinejoin: 'round',
 }));
 
-export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;
@@ -128,7 +128,7 @@ function PieArc(props: PieArcProps) {
 PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,

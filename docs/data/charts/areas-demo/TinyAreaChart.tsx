@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChartContainer, AreaPlot } from '@mui/x-charts';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { AreaPlot } from '@mui/x-charts/LineChart';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const xLabels = [

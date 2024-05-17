@@ -5,7 +5,7 @@ import { DefaultTreeViewPlugins } from '../internals/plugins';
 export function useTreeItemState(itemId: string) {
   const {
     instance,
-    selection: { multiSelect },
+    selection: { multiSelect, checkboxSelection, disableSelection },
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
@@ -29,7 +29,7 @@ export function useTreeItemState(itemId: string) {
     }
   };
 
-  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelection = (event: React.MouseEvent) => {
     if (!disabled) {
       if (!focused) {
         instance.focusItem(event, itemId);
@@ -44,8 +44,21 @@ export function useTreeItemState(itemId: string) {
           instance.selectItem(event, itemId, true);
         }
       } else {
-        instance.selectItem(event, itemId);
+        instance.selectItem(event, itemId, false);
       }
+    }
+  };
+
+  const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disableSelection || disabled) {
+      return;
+    }
+
+    const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
+    if (multiSelect && hasShift) {
+      instance.expandSelectionRange(event, itemId);
+    } else {
+      instance.selectItem(event, itemId, multiSelect, event.target.checked);
     }
   };
 
@@ -61,8 +74,11 @@ export function useTreeItemState(itemId: string) {
     expanded,
     selected,
     focused,
+    disableSelection,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
   };
 }

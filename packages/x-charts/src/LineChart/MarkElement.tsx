@@ -85,7 +85,7 @@ MarkElementPath.propTypes = {
 } as any;
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -167,7 +167,7 @@ function MarkElement(props: MarkElementProps) {
 MarkElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   /**

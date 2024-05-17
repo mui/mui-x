@@ -276,12 +276,11 @@ jobs:
     steps:
       - checkout
       - install_js:
+          # TODO remove, no needed
           browsers: true
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_DISABLE_TRANSPILATION: 'true'
 workflows:
   version: 2
   pipeline:
