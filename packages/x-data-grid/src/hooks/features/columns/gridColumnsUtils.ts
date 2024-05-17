@@ -24,11 +24,18 @@ import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeade
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
+type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
 const COLUMN_TYPES = getGridDefaultColumnTypes();
+
+const columnDimensionProperties = (column: GridColDef): Partial<Pick<GridColDef, ArrayElement<typeof COLUMNS_DIMENSION_PROPERTIES>>> => COLUMNS_DIMENSION_PROPERTIES.reduce((columnDimensionPros, dimensionKey) => dimensionKey in column ?
+  Object.assign(columnDimensionPros, { [dimensionKey]: column[dimensionKey] })
+  : columnDimensionPros, {})
 
 /**
  * Computes width for flex columns.
@@ -380,6 +387,8 @@ export const createColumnsState = ({
     columnsState.lookup[field] = {
       ...existingState,
       ...newColumn,
+      // Do not override column dimension properties on re-render
+      ...(columnsState.lookup[field] ? columnDimensionProperties(columnsState.lookup[field]) : {}),
       hasBeenResized,
     };
   });
