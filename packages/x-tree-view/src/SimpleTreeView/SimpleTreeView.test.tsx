@@ -166,27 +166,6 @@ describe('<SimpleTreeView />', () => {
     expect(getByTestId('two')).toHaveFocus();
   });
 
-  it('should support conditional rendered tree items', () => {
-    function TestComponent() {
-      const [hide, setState] = React.useState(false);
-
-      return (
-        <React.Fragment>
-          <button type="button" onClick={() => setState(true)}>
-            Hide
-          </button>
-          <SimpleTreeView>{!hide && <TreeItem itemId="test" label="test" />}</SimpleTreeView>
-        </React.Fragment>
-      );
-    }
-
-    const { getByText, queryByText } = render(<TestComponent />);
-
-    expect(getByText('test')).not.to.equal(null);
-    fireEvent.click(getByText('Hide'));
-    expect(queryByText('test')).to.equal(null);
-  });
-
   it('should work in a portal', () => {
     const { getByTestId } = render(
       <Portal>
@@ -213,33 +192,6 @@ describe('<SimpleTreeView />', () => {
     fireEvent.keyDown(getByTestId('three'), { key: 'ArrowDown' });
 
     expect(getByTestId('four')).toHaveFocus();
-  });
-
-  it('should update indexes when two items are swapped', () => {
-    const onSelectedItemsChange = spy();
-
-    function TestComponent() {
-      const [items, setItems] = React.useState(['1', '2', '3']);
-
-      return (
-        <React.Fragment>
-          <button type="button" onClick={() => setItems(['1', '3', '2'])}>
-            Swap items
-          </button>
-          <SimpleTreeView onSelectedItemsChange={onSelectedItemsChange} multiSelect>
-            {items.map((itemId) => (
-              <TreeItem key={itemId} itemId={itemId} label={itemId} />
-            ))}
-          </SimpleTreeView>
-        </React.Fragment>
-      );
-    }
-
-    const { getByText } = render(<TestComponent />);
-    fireEvent.click(getByText('Swap items'));
-    fireEvent.click(getByText('1'));
-    fireEvent.click(getByText('3'), { shiftKey: true });
-    expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
   });
 
   describe('Accessibility', () => {

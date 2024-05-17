@@ -40,10 +40,10 @@ export interface DescribeTreeViewRendererReturnValue<
    */
   getFocusedItemId: () => string | null;
   /**
-   * Returns the `root` slot of all the items.
-   * @returns {HTMLElement[]} List of the `root` slot of all the items.
+   * Returns the item id of all the items currently rendered.
+   * @returns {HTMLElement[]} List of the item id of all the items currently rendered.
    */
-  getAllItemRoots: () => HTMLElement[];
+  getAllTreeItemIds: () => string[];
   /**
    * Returns the `root` slot of the item with the given id.
    * @param {string} id The id of the item to retrieve.
@@ -56,6 +56,18 @@ export interface DescribeTreeViewRendererReturnValue<
    * @returns {HTMLElement} `content` slot of the item with the given id.
    */
   getItemContent: (id: string) => HTMLElement;
+  /**
+   * Returns the `checkbox` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLElement} `checkbox` slot of the item with the given id.
+   */
+  getItemCheckbox: (id: string) => HTMLElement;
+  /**
+   * Returns the input element inside the `checkbox` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLInputElement} input element inside the `checkbox` slot of the item with the given id.
+   */
+  getItemCheckboxInput: (id: string) => HTMLInputElement;
   /**
    * Returns the `label` slot of the item with the given id.
    * @param {string} id The id of the item to retrieve.
@@ -115,7 +127,7 @@ interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSig
 
 export interface DescribeTreeViewItem {
   id: string;
-  label?: string;
+  label?: React.ReactNode;
   disabled?: boolean;
   children?: readonly DescribeTreeViewItem[];
 }

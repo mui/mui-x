@@ -13,7 +13,7 @@ import { PieItemId } from '../models';
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -59,7 +59,7 @@ const PieArcRoot = styled(animated.path, {
   strokeLinejoin: 'round',
 }));
 
-export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;

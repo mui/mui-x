@@ -26,7 +26,8 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
   ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'setItems' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
-    const getAllItemRoots = () => result.queryAllByRole('treeitem');
+    const getAllTreeItemIds = () =>
+      result.queryAllByRole('treeitem').map((item) => item.dataset.testid!);
 
     const getFocusedItemId = () => {
       const activeElement = document.activeElement;
@@ -42,6 +43,12 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     const getItemContent = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.content}`)!;
 
+    const getItemCheckbox = (id: string) =>
+      getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.checkbox}`)!;
+
+    const getItemCheckboxInput = (id: string) =>
+      getItemCheckbox(id).querySelector<HTMLInputElement>(`input`)!;
+
     const getItemLabel = (id: string) =>
       getItemRoot(id).querySelector<HTMLElement>(`.${treeItemClasses.label}`)!;
 
@@ -54,10 +61,12 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
     return {
       getRoot,
-      getAllItemRoots,
+      getAllTreeItemIds,
       getFocusedItemId,
       getItemRoot,
       getItemContent,
+      getItemCheckbox,
+      getItemCheckboxInput,
       getItemLabel,
       getItemIconContainer,
       isItemExpanded,
@@ -91,7 +100,17 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          getItemLabel={(item) => item.label ?? item.id}
+          getItemLabel={(item) => {
+            if (item.label) {
+              if (typeof item.label !== 'string') {
+                throw new Error('Only use string labels when testing RichTreeView(Pro)');
+              }
+
+              return item.label;
+            }
+
+            return item.id;
+          }}
           isItemDisabled={(item) => !!item.disabled}
           {...other}
         />

@@ -158,6 +158,11 @@ RichTreeView.propTypes = {
     }),
   }),
   /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -221,7 +226,7 @@ RichTreeView.propTypes = {
   isItemDisabled: PropTypes.func,
   items: PropTypes.array.isRequired,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,
