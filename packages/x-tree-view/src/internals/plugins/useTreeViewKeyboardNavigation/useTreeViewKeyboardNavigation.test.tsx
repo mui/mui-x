@@ -176,7 +176,7 @@ describeTreeView<
         expect(response.isItemExpanded('1')).to.equal(true);
       });
 
-      it("should move the focus to the item's  parent if the focus is on a child item that is closed", () => {
+      it("should move the focus to the item's parent if the focus is on a child item that is closed", () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
           defaultExpandedItems: ['1'],
@@ -231,7 +231,7 @@ describeTreeView<
     });
 
     describe('key: End', () => {
-      it('should live the focus to the last item in the tree when the last item is not expanded', () => {
+      it('should move the focus to the last item in the tree when the last item is not expanded', () => {
         const response = render({
           items: [
             { id: '1' },
@@ -248,7 +248,7 @@ describeTreeView<
         expect(response.getFocusedItemId()).to.equal('4');
       });
 
-      it('should live the focus to the last item in the tree when the last item is expanded', () => {
+      it('should move the focus to the last item in the tree when the last item is expanded', () => {
         const response = render({
           items: [
             { id: '1' },
