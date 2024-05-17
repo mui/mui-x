@@ -17,7 +17,7 @@ import { SeriesId } from '../models/seriesType/common';
 export interface LineElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -68,7 +68,7 @@ export interface LineElementSlotProps {
 export interface LineElementProps
   extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
@@ -128,16 +128,15 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
-  return <Line {...lineProps} />;
+  return <Line {...other} {...lineProps} />;
 }
 
 LineElement.propTypes = {

@@ -718,7 +718,9 @@ export const useGridRowEditing = (
     const copyOfPrevRowModesModel = prevRowModesModel.current;
     prevRowModesModel.current = deepClone(rowModesModel); // Do a deep-clone because the attributes might be changed later
 
-    Object.entries(rowModesModel).forEach(([id, params]) => {
+    const ids = new Set([...Object.keys(rowModesModel), ...Object.keys(copyOfPrevRowModesModel)]);
+    Array.from(ids).forEach((id) => {
+      const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
       const originalId = idToIdLookup[id] ?? id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {

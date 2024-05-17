@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "borderRadius": { "description": "Defines the border radius of the bar element." },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
       "typeDescriptions": {

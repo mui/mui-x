@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import Checkbox from '@mui/material/Checkbox';
 import { useTreeItemState } from './useTreeItemState';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
@@ -23,6 +24,8 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     iconContainer: string;
     /** Styles applied to the label element. */
     label: string;
+    /** Styles applied to the checkbox element. */
+    checkbox: string;
   };
   /**
    * The tree item label.
@@ -73,12 +76,16 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     expanded,
     selected,
     focused,
+    disableSelection,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
   } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
+  const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     preventSelection(event);
@@ -89,8 +96,15 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (checkboxRef.current?.contains(event.target as HTMLElement)) {
+      return;
+    }
+
     handleExpansion(event);
-    handleSelection(event);
+
+    if (!checkboxSelection) {
+      handleSelection(event);
+    }
 
     if (onClick) {
       onClick(event);
@@ -112,6 +126,17 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       ref={ref}
     >
       <div className={classes.iconContainer}>{icon}</div>
+      {checkboxSelection && (
+        <Checkbox
+          className={classes.checkbox}
+          checked={selected}
+          onChange={handleCheckboxSelection}
+          disabled={disabled || disableSelection}
+          ref={checkboxRef}
+          tabIndex={-1}
+        />
+      )}
+
       <div className={classes.label}>{label}</div>
     </div>
   );

@@ -4,6 +4,9 @@
     "apiRef": {
       "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
     },
+    "checkboxSelection": {
+      "description": "If <code>true</code>, the tree view renders a checkbox at the left of its label that allows selecting it."
+    },
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
@@ -23,7 +26,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "multiSelect": {
-      "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
     "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",

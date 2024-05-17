@@ -19,7 +19,7 @@ import { SeriesId } from '../models/seriesType/common';
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -85,7 +85,7 @@ MarkElementPath.propTypes = {
 } as any;
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
     /**
      * If `true`, animations are skipped.
      * @default false
