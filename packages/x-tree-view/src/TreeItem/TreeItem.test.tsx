@@ -112,46 +112,6 @@ describe('<TreeItem />', () => {
     expect(handleClick.callCount).to.equal(1);
   });
 
-  it('should allow conditional child', () => {
-    function TestComponent() {
-      const [hide, setState] = React.useState(false);
-
-      return (
-        <React.Fragment>
-          <button data-testid="button" type="button" onClick={() => setState(true)}>
-            Hide
-          </button>
-          <SimpleTreeView defaultExpandedItems={['1']}>
-            <TreeItem itemId="1" data-testid="1">
-              {!hide && <TreeItem itemId="2" data-testid="2" />}
-            </TreeItem>
-          </SimpleTreeView>
-        </React.Fragment>
-      );
-    }
-    const { getByTestId, queryByTestId } = render(<TestComponent />);
-
-    expect(getByTestId('1')).to.have.attribute('aria-expanded', 'true');
-    expect(getByTestId('2')).not.to.equal(null);
-    fireEvent.click(getByTestId('button'));
-    expect(getByTestId('1')).not.to.have.attribute('aria-expanded');
-    expect(queryByTestId('2')).to.equal(null);
-  });
-
-  it('should treat an empty array equally to no children', () => {
-    const { getByTestId } = render(
-      <SimpleTreeView defaultExpandedItems={['1']}>
-        <TreeItem itemId="1" label="1" data-testid="1">
-          <TreeItem itemId="2" label="2" data-testid="2">
-            {[]}
-          </TreeItem>
-        </TreeItem>
-      </SimpleTreeView>,
-    );
-
-    expect(getByTestId('2')).not.to.have.attribute('aria-expanded');
-  });
-
   it('should treat multiple empty conditional arrays as empty', () => {
     const { getByTestId } = render(
       <SimpleTreeView defaultExpandedItems={['1']}>
@@ -218,16 +178,6 @@ describe('<TreeItem />', () => {
     expect(handleClick.callCount).to.equal(0);
   });
 
-  it('should be able to use a custom id', () => {
-    const { getByRole } = render(
-      <SimpleTreeView>
-        <TreeItem id="customId" itemId="one" data-testid="one" />
-      </SimpleTreeView>,
-    );
-
-    expect(getByRole('treeitem')).to.have.attribute('id', 'customId');
-  });
-
   describe('Accessibility', () => {
     it('should have the role `treeitem`', () => {
       const { getByTestId } = render(
@@ -249,28 +199,6 @@ describe('<TreeItem />', () => {
       );
 
       expect(getByRole('group')).to.contain(getByText('test2'));
-    });
-
-    describe('aria-disabled', () => {
-      it('should not have the attribute `aria-disabled` if disabled is false', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="one" label="one" data-testid="one" />
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('one')).not.to.have.attribute('aria-disabled');
-      });
-
-      it('should have the attribute `aria-disabled={true}` if disabled', () => {
-        const { getByTestId } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="one" label="one" disabled data-testid="one" />
-          </SimpleTreeView>,
-        );
-
-        expect(getByTestId('one')).to.have.attribute('aria-disabled', 'true');
-      });
     });
 
     describe('Navigation', () => {
@@ -1531,21 +1459,6 @@ describe('<TreeItem />', () => {
 
         expect(handleClick.callCount).to.equal(1);
       });
-    });
-
-    it('should disable child items when parent item is disabled', () => {
-      const { getByTestId } = render(
-        <SimpleTreeView defaultExpandedItems={['one']}>
-          <TreeItem itemId="one" label="one" disabled data-testid="one">
-            <TreeItem itemId="two" label="two" data-testid="two" />
-            <TreeItem itemId="three" label="three" data-testid="three" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      expect(getByTestId('one')).to.have.attribute('aria-disabled', 'true');
-      expect(getByTestId('two')).to.have.attribute('aria-disabled', 'true');
-      expect(getByTestId('three')).to.have.attribute('aria-disabled', 'true');
     });
   });
 
