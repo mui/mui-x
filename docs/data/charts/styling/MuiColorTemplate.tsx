@@ -10,7 +10,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Chance } from 'chance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { ScatterValueType } from '@mui/x-charts';
+import { ScatterValueType } from '@mui/x-charts/models';
 import {
   blueberryTwilightPalette,
   mangoFusionPalette,

@@ -237,12 +237,10 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 interface CreateGroupingColDefSeveralCriteriaParams {
   apiRef: React.MutableRefObject<GridApiPremium>;
   columnsLookup: GridColumnRawLookup;
-
   /**
    * The fields from which we are grouping the rows.
    */
   rowGroupingModel: string[];
-
   /**
    * The col def properties the user wants to override.
    * This value comes `prop.groupingColDef`.

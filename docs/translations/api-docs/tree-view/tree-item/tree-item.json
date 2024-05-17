@@ -21,6 +21,10 @@
     }
   },
   "classDescriptions": {
+    "checkbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the checkbox element"
+    },
     "content": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content element"

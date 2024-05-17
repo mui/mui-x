@@ -3,8 +3,9 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, fireEvent, userEvent, act, getByRole } from '@mui-internal/test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,

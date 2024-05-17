@@ -64,7 +64,7 @@ export interface UsePickerViewsBaseProps<
   disabled?: boolean;
   /**
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
   /**
@@ -249,6 +249,7 @@ export const usePickerViews = <
     if (currentViewMode === 'field' && open) {
       onClose();
       setTimeout(() => {
+        fieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
         // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
         fieldRef?.current?.focusField(view);

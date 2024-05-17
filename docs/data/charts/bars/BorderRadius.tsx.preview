@@ -1,9 +1,0 @@
-<BarChart
-  dataset={dataset}
-  {...chartSetting}
-  slotProps={{
-    bar: {
-      clipPath: `inset(0px round 10px 10px 0px 0px)`,
-    },
-  }}
-/>

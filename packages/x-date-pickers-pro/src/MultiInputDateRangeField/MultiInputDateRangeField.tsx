@@ -22,8 +22,7 @@ import {
   MultiInputDateRangeFieldSlotProps,
 } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
-import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { MultiInputRangeFieldClasses, RangePosition } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition, UseDateRangeFieldProps } from '../models';
 
 export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputDateRangeField',

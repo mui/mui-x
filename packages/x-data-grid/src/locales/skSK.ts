@@ -46,9 +46,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Stiahnuť ako Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Vyhľadať',
+  columnsManagementNoColumns: 'Žiadne stĺpce',
+  columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
