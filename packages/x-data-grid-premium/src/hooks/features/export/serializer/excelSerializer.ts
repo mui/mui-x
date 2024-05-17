@@ -119,7 +119,6 @@ export const serializeRow = (
           dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
-            // TODO: Is this escaped correctly?
             formulae: [
               `"${formattedValueOptions
                 .map((x) => x.toString().replaceAll(',', 'CHAR(44)'))
