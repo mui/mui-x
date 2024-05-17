@@ -268,7 +268,7 @@ describeTreeView<
     });
 
     describe('key: * (asterisk)', () => {
-      it('should expand all items that are at the same level as the current item', () => {
+      it('should expand all items that are at the same depth as the current item (depth = 0)', () => {
         const response = render({
           items: [
             { id: '1', children: [{ id: '1.1' }] },
@@ -291,6 +291,42 @@ describeTreeView<
         expect(response.isItemExpanded('2')).to.equal(true);
         expect(response.isItemExpanded('3')).to.equal(true);
         expect(response.isItemExpanded('3.1')).to.equal(false);
+      });
+
+      it('should expand all items that are at the same depth as the current item (depth = 1)', () => {
+        const response = render({
+          items: [
+            { id: '1', children: [{ id: '1.1' }] },
+            { id: '2', children: [{ id: '2.1' }] },
+            {
+              id: '3',
+              children: [
+                {
+                  id: '3.1',
+                  children: [{ id: '3.1.1' }, { id: '3.1.2', children: [{ id: '3.1.2.1' }] }],
+                },
+              ],
+            },
+            { id: '4' },
+          ],
+          defaultExpandedItems: ['3'],
+        });
+
+        act(() => {
+          response.getItemRoot('3.1').focus();
+        });
+
+        expect(response.isItemExpanded('1')).to.equal(false);
+        expect(response.isItemExpanded('2')).to.equal(false);
+        expect(response.isItemExpanded('3')).to.equal(true);
+        expect(response.isItemExpanded('3.1')).to.equal(false);
+
+        fireEvent.keyDown(response.getItemRoot('3.1'), { key: '*' });
+        expect(response.isItemExpanded('1')).to.equal(false);
+        expect(response.isItemExpanded('2')).to.equal(false);
+        expect(response.isItemExpanded('3')).to.equal(true);
+        expect(response.isItemExpanded('3.1')).to.equal(true);
+        expect(response.isItemExpanded('3.1.2')).to.equal(false);
       });
     });
 
