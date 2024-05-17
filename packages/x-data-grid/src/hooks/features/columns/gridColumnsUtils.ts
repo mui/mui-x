@@ -331,11 +331,18 @@ export const createColumnsState = ({
     };
   } else {
     const currentState = gridColumnsStateSelector(apiRef.current.state);
+
+    const pinnedColumns = apiRef.current.state.pinnedColumns;
+    // Remove pinned columns
+    const desiredOrderedFields = currentState.orderedFields.filter(field => {
+      return !(pinnedColumns.left?.includes(field) || pinnedColumns.right?.includes(field))
+    });
+
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
-      desiredOrderedFields: currentState.orderedFields, // Will be cleaned later
+      desiredOrderedFields, // Will be cleaned later
     };
   }
 
