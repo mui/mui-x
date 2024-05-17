@@ -384,11 +384,22 @@ export const createColumnsState = ({
       }
     });
 
+    // Do not override column dimension properties on re-render if not desired
+    const previousDimensions = columnsState.lookup[field]
+      ? columnDimensionProperties(columnsState.lookup[field])
+      : {};
+
+    // check if new dimensions are specified
+    const newDimensions = {
+      ...previousDimensions,
+      ...columnDimensionProperties(newColumn),
+    }
+
+
     columnsState.lookup[field] = {
       ...existingState,
       ...newColumn,
-      // Do not override column dimension properties on re-render
-      ...(columnsState.lookup[field] ? columnDimensionProperties(columnsState.lookup[field]) : {}),
+      ...newDimensions,
       hasBeenResized,
     };
   });
