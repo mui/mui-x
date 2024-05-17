@@ -231,7 +231,7 @@ describeTreeView<
     });
 
     describe('key: End', () => {
-      it('should live the focus to the last item in the tree when the last item is not expanded', () => {
+      it('should move the focus to the last item in the tree when the last item is not expanded', () => {
         const response = render({
           items: [
             { id: '1' },
