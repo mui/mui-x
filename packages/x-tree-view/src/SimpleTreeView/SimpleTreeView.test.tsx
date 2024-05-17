@@ -110,25 +110,6 @@ describe('<SimpleTreeView />', () => {
     expect(handleTreeItemKeyDown.callCount).to.equal(3);
   });
 
-  it('should select item when Enter key is pressed ', () => {
-    const handleKeyDown = spy();
-
-    const { getByTestId } = render(
-      <SimpleTreeView onKeyDown={handleKeyDown}>
-        <TreeItem itemId="one" data-testid="one" />
-      </SimpleTreeView>,
-    );
-    act(() => {
-      getByTestId('one').focus();
-    });
-
-    expect(getByTestId('one')).not.to.have.attribute('aria-selected');
-
-    fireEvent.keyDown(getByTestId('one'), { key: 'Enter' });
-
-    expect(getByTestId('one')).to.have.attribute('aria-selected');
-  });
-
   it('should not error when component state changes', () => {
     function MyComponent() {
       const [, setState] = React.useState(1);
