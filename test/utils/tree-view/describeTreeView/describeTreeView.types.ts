@@ -94,6 +94,11 @@ export interface DescribeTreeViewRendererReturnValue<
    * @returns {boolean} `true` if the item is selected, `false` otherwise.
    */
   isItemSelected: (id: string) => boolean;
+  /**
+   * Returns the item id of all the items currently selected.
+   * @returns {HTMLElement[]} List of the item id of all the items currently selected.
+   */
+  getSelectedTreeItems: () => string[];
 }
 
 export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature[]> = <
