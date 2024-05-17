@@ -258,9 +258,9 @@ export const applyInitialState = (
     cleanOrderedFields.length === 0
       ? columnsState.orderedFields
       : [
-          ...cleanOrderedFields,
-          ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
-        ];
+        ...cleanOrderedFields,
+        ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
+      ];
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
@@ -310,9 +310,12 @@ export const createColumnsState = ({
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
+
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
+    desiredOrderedFields?: string[];
   };
+
   if (isInsideStateInitializer) {
     columnsState = {
       orderedFields: [],
@@ -325,6 +328,7 @@ export const createColumnsState = ({
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      desiredOrderedFields: currentState.orderedFields, // Will be cleaned later
     };
   }
 
@@ -379,6 +383,14 @@ export const createColumnsState = ({
       hasBeenResized,
     };
   });
+
+  if (columnsState.desiredOrderedFields) {
+    columnsState.orderedFields.sort((fieldA, fieldB) =>
+      columnsState.desiredOrderedFields!.indexOf(fieldA) - columnsState.desiredOrderedFields!.indexOf(fieldB)
+    );
+
+    delete columnsState.desiredOrderedFields;
+  }
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
