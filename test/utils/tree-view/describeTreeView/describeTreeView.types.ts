@@ -43,7 +43,7 @@ export interface DescribeTreeViewRendererReturnValue<
    * Returns the item id of all the items currently rendered.
    * @returns {HTMLElement[]} List of the item id of all the items currently rendered.
    */
-  getAllItemId: () => string[];
+  getAllTreeItemIds: () => string[];
   /**
    * Returns the `root` slot of the item with the given id.
    * @param {string} id The id of the item to retrieve.

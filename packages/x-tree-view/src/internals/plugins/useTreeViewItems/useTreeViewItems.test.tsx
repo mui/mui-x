@@ -56,7 +56,7 @@ describeTreeView<
       });
 
       response.setItems([{ id: '1' }]);
-      expect(response.getAllItemId()).to.deep.equal(['1']);
+      expect(response.getAllTreeItemIds()).to.deep.equal(['1']);
     });
 
     it('should support adding an item at the end', () => {
@@ -65,7 +65,7 @@ describeTreeView<
       });
 
       response.setItems([{ id: '1' }, { id: '2' }]);
-      expect(response.getAllItemId()).to.deep.equal(['1', '2']);
+      expect(response.getAllTreeItemIds()).to.deep.equal(['1', '2']);
     });
 
     it('should support adding an item at the beginning', () => {
@@ -74,7 +74,7 @@ describeTreeView<
       });
 
       response.setItems([{ id: '1' }, { id: '2' }]);
-      expect(response.getAllItemId()).to.deep.equal(['1', '2']);
+      expect(response.getAllTreeItemIds()).to.deep.equal(['1', '2']);
     });
 
     it('should update indexes when two items are swapped', () => {
@@ -87,7 +87,7 @@ describeTreeView<
       });
 
       response.setItems([{ id: '1' }, { id: '3' }, { id: '2' }]);
-      expect(response.getAllItemId()).to.deep.equal(['1', '3', '2']);
+      expect(response.getAllTreeItemIds()).to.deep.equal(['1', '3', '2']);
 
       // Check if the internal state is updated by running a range selection
       fireEvent.click(response.getItemContent('1'));

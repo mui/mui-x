@@ -26,7 +26,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
   ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'setItems' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
-    const getAllItemId = () =>
+    const getAllTreeItemIds = () =>
       result.queryAllByRole('treeitem').map((item) => item.dataset.testid!);
 
     const getFocusedItemId = () => {
@@ -61,7 +61,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
     return {
       getRoot,
-      getAllItemId,
+      getAllTreeItemIds,
       getFocusedItemId,
       getItemRoot,
       getItemContent,
