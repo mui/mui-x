@@ -248,7 +248,7 @@ describeTreeView<
         expect(response.getFocusedItemId()).to.equal('4');
       });
 
-      it('should live the focus to the last item in the tree when the last item is expanded', () => {
+      it('should move the focus to the last item in the tree when the last item is expanded', () => {
         const response = render({
           items: [
             { id: '1' },
