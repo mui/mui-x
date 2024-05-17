@@ -106,7 +106,7 @@ export const useGridClipboard = (
             csvOptions: {
               delimiter: clipboardCopyCellDelimiter,
               shouldAppendQuotes: false,
-              escapeFormulae: false,
+              escapeFormulas: false,
             },
             ignoreValueFormatter,
           });

@@ -5,7 +5,7 @@
       "description": "If <code>true</code>, the hidden columns will also be exported."
     },
     "delimiter": { "description": "The character used to separate fields." },
-    "escapeFormulae": {
+    "escapeFormulas": {
       "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
     },
     "fields": {

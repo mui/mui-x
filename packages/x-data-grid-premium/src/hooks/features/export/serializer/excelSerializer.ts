@@ -66,7 +66,7 @@ export const serializeRow = (
   columns: GridStateColDef[],
   api: GridPrivateApiPremium,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
-  options: Pick<BuildExcelOptions, 'escapeFormulae'>,
+  options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
   const row: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
@@ -188,7 +188,7 @@ export const serializeRow = (
         break;
     }
 
-    if (typeof cellValue === 'string' && options.escapeFormulae) {
+    if (typeof cellValue === 'string' && options.escapeFormulas) {
       // See https://owasp.org/www-community/attacks/CSV_Injection
       if (['=', '+', '-', '@', '\t', '\r'].includes(cellValue[0])) {
         cellValue = `'${cellValue}`;
@@ -381,7 +381,7 @@ interface BuildExcelOptions
   extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
     Pick<
       Required<GridExcelExportOptions>,
-      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulae'
+      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulas'
     > {
   columns: GridStateColDef[];
   rowIds: GridRowId[];

@@ -46,7 +46,7 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    * See https://owasp.org/www-community/attacks/CSV_Injection for more information.
    * @default true
    */
-  escapeFormulae?: boolean;
+  escapeFormulas?: boolean;
 }
 
 export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {

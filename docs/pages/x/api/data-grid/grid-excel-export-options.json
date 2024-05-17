@@ -9,7 +9,7 @@
       "isPremiumPlan": true
     },
     "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
-    "escapeFormulae": {
+    "escapeFormulas": {
       "type": { "description": "boolean" },
       "default": "true",
       "isPremiumPlan": true

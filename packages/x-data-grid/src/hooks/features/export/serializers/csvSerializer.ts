@@ -7,13 +7,13 @@ import { buildWarning } from '../../../../utils/warning';
 
 function sanitizeCellValue(value: any, csvOptions: CSVOptions) {
   if (typeof value === 'string') {
-    if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulae) {
+    if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
       const escapedValue = value.replace(/"/g, '""');
       // Make sure value containing delimiter or line break won't be split into multiple cells
       if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
         return `"${escapedValue}"`;
       }
-      if (csvOptions.escapeFormulae) {
+      if (csvOptions.escapeFormulas) {
         // See https://owasp.org/www-community/attacks/CSV_Injection
         if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
           return `'${escapedValue}`;
@@ -61,7 +61,7 @@ const objectFormattedValueWarning = buildWarning([
 ]);
 
 type CSVOptions = Required<
-  Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes' | 'escapeFormulae'>
+  Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes' | 'escapeFormulas'>
 >;
 
 type CSVRowOptions = {
@@ -141,7 +141,7 @@ interface BuildCSVOptions {
       | 'includeColumnGroupsHeaders'
       | 'includeHeaders'
       | 'shouldAppendQuotes'
-      | 'escapeFormulae'
+      | 'escapeFormulas'
     >
   >;
   ignoreValueFormatter: boolean;
