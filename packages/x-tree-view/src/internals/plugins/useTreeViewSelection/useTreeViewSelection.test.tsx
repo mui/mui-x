@@ -155,8 +155,7 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
 
       expect(() => {
         response.setProps({ defaultSelectedItems: ['2'] });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
       }).toErrorDev(
         'MUI X: A component is changing the default selectedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
       );
@@ -219,12 +218,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
           defaultSelectedItems: ['2'],
         });
 
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemContent('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
       });
 
       it('should not un-select selected item when clicking on an item content', () => {
@@ -247,11 +244,9 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
           defaultSelectedItems: ['1', '2'],
         });
 
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
         fireEvent.click(response.getItemContent('1'), { ctrlKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
       });
 
       it('should un-select selected item when clicking on its content while holding Meta', () => {
@@ -261,12 +256,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
           defaultSelectedItems: ['1', '2'],
         });
 
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
         fireEvent.click(response.getItemContent('1'), { metaKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
       });
 
       it('should not select an item when click and disableSelection', () => {
@@ -300,14 +293,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
           defaultSelectedItems: ['1'],
         });
 
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemContent('3'), { ctrlKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
       });
 
       it('should expand the selection range when clicking on an item content below the last selected item while holding Shift', () => {
@@ -317,18 +306,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
       });
 
       it('should expand the selection range when clicking on an item content above the last selected item while holding Shift', () => {
@@ -338,18 +319,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('3'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['3']);
 
         fireEvent.click(response.getItemContent('2'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
       });
 
       it('should expand the selection range when clicking on an item content while holding Shift after un-selecting another item', () => {
@@ -359,32 +332,16 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemContent('2'), { ctrlKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
         fireEvent.click(response.getItemContent('2'), { ctrlKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
       });
 
       it('should not expand the selection range when clicking on a disabled item content then clicking on an item content while holding Shift', () => {
@@ -400,18 +357,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal([]);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal([]);
       });
 
       it('should not expand the selection range when clicking on an item content then clicking a disabled item content while holding Shift', () => {
@@ -427,18 +376,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
       });
 
       it('should not select disabled items that are part of the selected range', () => {
@@ -448,14 +389,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemContent('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemContent('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
       });
     });
   });
@@ -574,12 +511,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
           defaultSelectedItems: ['2'],
         });
 
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemCheckboxInput('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
       });
 
       it('should un-select selected item when clicking on an item checkbox', () => {
@@ -630,18 +565,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
       });
 
       it('should expand the selection range when clicking on an item checkbox above the last selected item while holding Shift', () => {
@@ -652,18 +579,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('3'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['3']);
 
         fireEvent.click(response.getItemCheckboxInput('2'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
       });
 
       it('should expand the selection range when clicking on an item checkbox while holding Shift after un-selecting another item', () => {
@@ -674,32 +593,16 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemCheckboxInput('2'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
         fireEvent.click(response.getItemCheckboxInput('2'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(true);
-        expect(response.isItemSelected('3')).to.equal(true);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
       });
 
       it('should not expand the selection range when clicking on a disabled item checkbox then clicking on an item checkbox while holding Shift', () => {
@@ -716,18 +619,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal([]);
 
         fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal([]);
       });
 
       it('should not expand the selection range when clicking on an item checkbox then clicking a disabled item checkbox while holding Shift', () => {
@@ -744,18 +639,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('2'));
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
 
         fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(false);
-        expect(response.isItemSelected('2')).to.equal(true);
-        expect(response.isItemSelected('2.1')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
-        expect(response.isItemSelected('4')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
       });
 
       it('should not select disabled items that are part of the selected range', () => {
@@ -766,14 +653,10 @@ describeTreeView<[UseTreeViewSelectionSignature]>('useTreeViewSelection plugin',
         });
 
         fireEvent.click(response.getItemCheckboxInput('1'));
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(false);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
 
         fireEvent.click(response.getItemCheckboxInput('3'), { shiftKey: true });
-        expect(response.isItemSelected('1')).to.equal(true);
-        expect(response.isItemSelected('2')).to.equal(false);
-        expect(response.isItemSelected('3')).to.equal(true);
+        expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
       });
     });
   });
