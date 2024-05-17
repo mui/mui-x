@@ -6,10 +6,16 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewKeyboardNavigationSignature,
+  UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
 
 describeTreeView<
-  [UseTreeViewKeyboardNavigationSignature, UseTreeViewItemsSignature, UseTreeViewExpansionSignature]
+  [
+    UseTreeViewKeyboardNavigationSignature,
+    UseTreeViewItemsSignature,
+    UseTreeViewExpansionSignature,
+    UseTreeViewSelectionSignature,
+  ]
 >('useTreeViewKeyboardNavigation', ({ render, treeViewComponent }) => {
   describe('Navigation (focus and expansion)', () => {
     describe('key: ArrowDown', () => {
@@ -358,6 +364,391 @@ describeTreeView<
     });
   });
 
+  describe('Selection', () => {
+    describe('single selection', () => {
+      describe('key: Space', () => {
+        it('should select the focused item when Space is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+
+        it('should not un-select the focused item when Space is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+
+        it('should not select the focused item when Space is pressed and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+      });
+
+      describe('key: Enter', () => {
+        it('should select the focused item when Enter is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+
+        it('should not un-select the focused item when Enter is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+
+        it('should not select the focused item when Enter is pressed and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+      });
+    });
+
+    describe('multi selection', () => {
+      describe('key: Space', () => {
+        it('should select the focused item without un-selecting the other selected items when Space is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: ' ' });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
+        });
+
+        it('should un-select the focused item when Space is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1', '2'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
+        });
+
+        it('should select the focused item without un-selecting the other selected items when Space is pressed while holding Ctrl', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: ' ', ctrlKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
+        });
+
+        it('should un-select the focused item when Space is pressed while holding Ctrl', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1', '2'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ', ctrlKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
+        });
+
+        it('should not select the focused item when Space is pressed and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+
+      describe('key: ArrowDown', () => {
+        it('should expand the selection range when ArrowDown is pressed while holding Shift from a selected item', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+        });
+
+        it('should not un-select the item below the focused item when ArrowDown is pressed while holding Shift from a selected item', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['2', '3'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+        });
+
+        it('should un-select the focused item when ArrowDown is pressed while holding Shift and the item below have been selected in the same range', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['3'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+
+          fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['3']);
+        });
+
+        it('should not select any item when ArrowDown is pressed while holding Shift and disabledSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+
+      describe('key: ArrowUp', () => {
+        it('should expand the selection range when ArrowUp is pressed while holding Shift from a selected item', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['3'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+        });
+
+        it('should not un-select the item above the focused item when ArrowUp is pressed while holding Shift from a selected item', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['2', '3'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+        });
+
+        it('should un-select the focused item when ArrowUp is pressed while holding Shift and the item above have been selected in the same range', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultSelectedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '3']);
+
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
+        });
+
+        it('should not select any item when ArrowUp is pressed while holding Shift and disabledSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+
+      describe('key: Home', () => {
+        it('should select select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultExpandedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), {
+            key: 'Home',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
+        });
+
+        it('should not select any item when Home is pressed while holding Shift + Ctrl and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), {
+            key: 'Home',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+
+      describe('key: End', () => {
+        it('should select select the focused item and all the items below when End is pressed while holding Shift + Ctrl', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            defaultExpandedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), {
+            key: 'End',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3', '4']);
+        });
+
+        it('should not select any item when End is pressed while holding Shift + Ctrl and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), {
+            key: 'End',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+
+      describe('key: Ctrl + A', () => {
+        it('should select all items when Ctrl + A is pressed', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2', '3', '4']);
+        });
+
+        it('should not select any item when Ctrl + A is pressed and disableSelection={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
+            multiSelect: true,
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+      });
+    });
+  });
+
   describe('Type-ahead', () => {
     it('should move the focus to the next item with a name that starts with the typed character', () => {
       const response = render({
@@ -487,7 +878,7 @@ describeTreeView<
       expect(response.getFocusedItemId()).to.equal('4');
     });
 
-    it('should not move focus when pressing a modifier key and a letter', () => {
+    it('should not move focus when a modifier key and a letter are pressed', () => {
       const response = render({
         items: [
           { id: '1', label: 'one' },

@@ -59,6 +59,12 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
     const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-selected') === 'true';
 
+    const getSelectedTreeItems = () =>
+      result
+        .queryAllByRole('treeitem')
+        .filter((item) => item.getAttribute('aria-selected') === 'true')
+        .map((item) => item.dataset.testid!);
+
     return {
       getRoot,
       getAllTreeItemIds,
@@ -71,6 +77,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
       getItemIconContainer,
       isItemExpanded,
       isItemSelected,
+      getSelectedTreeItems,
     };
   };
 
