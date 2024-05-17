@@ -89,7 +89,7 @@ describeTreeView<
       response.setItems([{ id: '1' }, { id: '3' }, { id: '2' }]);
       expect(response.getAllItemId()).to.deep.equal(['1', '3', '2']);
 
-      // Check if the internal state is updates by running a range selection
+      // Check if the internal state is updated by running a range selection
       fireEvent.click(response.getItemContent('1'));
       fireEvent.click(response.getItemContent('3'), { shiftKey: true });
       expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
