@@ -10,6 +10,7 @@ _May 17, 2024_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for checkbox selection on the Tree View components
+- 🌍 Improve Norwegian (nb-NO) and Spanish (es-ES) locales on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -20,7 +21,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Fix `rowModesModel` controlled prop (#13056) @Janpot
 - [DataGrid] Reduce bundle size with error messages (#12992) @oliviertassinari
 - [l10n] Improve Norwegian (nb-NO) locale (#13106) @oliverlaidma
-- [l10n] Improve Spanish (es-SE) locale (#13133) @Jucabel
+- [l10n] Improve Spanish (es-ES) locale (#13133) @Jucabel
 
 #### `@mui/x-data-grid-pro@7.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -49,10 +50,10 @@ Same changes as in `@mui/x-date-pickers@7.5.0`.
 
 - [charts] Add support mobile tooltip (#13043) @wzdorowa
 - [charts] Allow `series.label` property to receive a function with the "location" it is going to be displayed on (#12830) @JCQuintas
-- [charts] Fix TypeScript performance bottleneck (#13137) @alexfauquette
+- [charts] Improve TypeScript performance (#13137) @alexfauquette
 - [charts] Fix area order when overlapping (#13121) @alexfauquette
-- [charts] Fix some bad practices with `useSlotProps` (#13141) @alexfauquette
-- [charts] Fix the font used in the overlay (#13107) @alexfauquette
+- [charts] Improve `useSlotProps` types (#13141) @alexfauquette
+- [charts] Fix using the theme's font in the Overlay (#13107) @alexfauquette
 
 ### Tree View
 
