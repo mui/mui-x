@@ -48,7 +48,7 @@ Same changes as in `@mui/x-date-pickers@7.5.0`.
 
 #### `@mui/x-charts@7.5.0`
 
-- [charts] Add support mobile tooltip (#13043) @wzdorowa
+- [charts] Tooltip with `trigger=axis` now follow touch on mobile (#13043) @wzdorowa
 - [charts] Allow `series.label` property to receive a function with the "location" it is going to be displayed on (#12830) @JCQuintas
 - [charts] Improve TypeScript performance (#13137) @alexfauquette
 - [charts] Fix area order when overlapping (#13121) @alexfauquette
