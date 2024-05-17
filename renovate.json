@@ -36,11 +36,6 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "raw-loader",
-      "matchPackageNames": ["raw-loader"],
-      "allowedVersions": "< 2.0.0"
-    },
-    {
       "groupName": "React",
       "matchPackageNames": [
         "react",

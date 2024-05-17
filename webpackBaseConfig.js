@@ -49,10 +49,6 @@ module.exports = {
         },
       },
       {
-        test: /\.md$/,
-        loader: 'raw-loader',
-      },
-      {
         test: /\.(ts|tsx)$/,
         loader: 'string-replace-loader',
         options: {
