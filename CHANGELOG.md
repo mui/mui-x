@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## v7.5.0
 
-_May 16, 2024_
+_May 17, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
@@ -3415,6 +3415,28 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [core] Merge `master` into `next` (#10929) @cherniavskii
 - [core] Update release instructions as per v7 configuration (#10962) @MBilalShafi
 - [license] Correctly throw errors (#10924) @oliviertassinari
+
+## 6.19.12
+
+_May 17, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.12`
+
+- [pickers] Fix `AdapterMomentJalaali` regression (#13150) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.12`.
+
+### Docs
+
+- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 
