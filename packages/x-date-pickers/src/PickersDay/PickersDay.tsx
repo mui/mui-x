@@ -353,7 +353,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
 PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * A ref for imperative actions.

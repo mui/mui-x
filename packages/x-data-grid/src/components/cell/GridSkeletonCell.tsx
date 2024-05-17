@@ -51,7 +51,7 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
 GridSkeletonCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.string.isRequired,
   field: PropTypes.string.isRequired,

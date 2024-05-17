@@ -294,7 +294,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
 GridColumnsManagement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the column search field will be focused automatically.

@@ -59,7 +59,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
 GridColumnHeaders.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   columnGroupHeaderFocus: PropTypes.shape({
     depth: PropTypes.number.isRequired,

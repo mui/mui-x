@@ -88,7 +88,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{ overlayType: string
 GridOverlayWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   overlayType: PropTypes.string.isRequired,
 } as any;

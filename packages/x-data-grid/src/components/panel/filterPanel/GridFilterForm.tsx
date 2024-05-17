@@ -615,7 +615,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 GridFilterForm.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback called when the operator, column field or value is changed.

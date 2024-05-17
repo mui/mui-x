@@ -99,7 +99,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       comment: [
         '----------------------------- Warning --------------------------------',
         '| These PropTypes are generated from the TypeScript type definitions |',
-        '| To update them edit the TypeScript types and run "yarn proptypes"  |',
+        '| To update them edit the TypeScript types and run "pnpm proptypes"  |',
         '----------------------------------------------------------------------',
       ].join('\n'),
       reconcilePropTypes: (prop, previous, generated) => {

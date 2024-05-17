@@ -144,7 +144,7 @@ function Scatter(props: ScatterProps) {
 Scatter.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,
