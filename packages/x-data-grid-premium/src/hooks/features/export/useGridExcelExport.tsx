@@ -60,7 +60,7 @@ export const useGridExcelExport = (
           columnsStyles: options?.columnsStyles,
           exceljsPreProcess: options?.exceljsPreProcess,
           exceljsPostProcess: options?.exceljsPostProcess,
-          escapeFormulae: options.escapeFormulae ?? false,
+          escapeFormulae: options.escapeFormulae ?? true,
         },
         apiRef.current,
       );
@@ -143,7 +143,7 @@ export const useGridExcelExport = (
 
       const serializedRows = exportedRowIds.map((id) =>
         serializeRow(id, exportedColumns, apiRef.current, valueOptionsData, {
-          escapeFormulae: options.escapeFormulae ?? false,
+          escapeFormulae: options.escapeFormulae ?? true,
         }),
       );
 

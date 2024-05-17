@@ -9,7 +9,7 @@
   "properties": {
     "allColumns": { "type": { "description": "boolean" }, "default": "false" },
     "delimiter": { "type": { "description": "string" }, "default": "','" },
-    "escapeFormulae": { "type": { "description": "boolean" }, "default": "false" },
+    "escapeFormulae": { "type": { "description": "boolean" }, "default": "true" },
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {

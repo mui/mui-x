@@ -93,7 +93,6 @@ describe('<DataGrid /> - Export', () => {
               { id: 7, name: 'value,=1+1' },
             ]}
             slots={{ toolbar: GridToolbar }}
-            slotProps={{ toolbar: { csvOptions: { escapeFormulae: true } } }}
           />
         </div>,
       );

@@ -6,7 +6,7 @@
     },
     "columnsStyles": { "description": "Object mapping column field to Exceljs style" },
     "escapeFormulae": {
-      "description": "If <code>true</code>, the formulas in the cells will be escaped.<br />It is recommended to set this to <code>true</code> for security reasons."
+      "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
     },
     "exceljsPostProcess": {
       "description": "Method called after adding the rows to the workbook.<br />Not supported when <code>worker</code> is set.<br />To use with web workers, use the option in <code>setupExcelExportWebWorker</code>."

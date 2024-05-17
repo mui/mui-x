@@ -379,7 +379,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel({ escapeFormulae: true });
+      const workbook = await apiRef.current.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('name');

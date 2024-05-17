@@ -41,9 +41,10 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
   /**
-   * If `true`, the formulas in the cells will be escaped.
-   * It is recommended to set this to `true` for security reasons.
-   * @default false
+   * If `false`, the formulas in the cells will not be escaped.
+   * It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.
+   * See https://owasp.org/www-community/attacks/CSV_Injection for more information.
+   * @default true
    */
   escapeFormulae?: boolean;
 }
