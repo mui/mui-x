@@ -176,7 +176,7 @@ describeTreeView<
         expect(response.isItemExpanded('1')).to.equal(true);
       });
 
-      it("should move the focus to the item's  parent if the focus is on a child item that is closed", () => {
+      it("should move the focus to the item's parent if the focus is on a child item that is closed", () => {
         const response = render({
           items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
           defaultExpandedItems: ['1'],
