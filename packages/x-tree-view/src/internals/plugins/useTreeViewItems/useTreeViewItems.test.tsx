@@ -108,26 +108,12 @@ describeTreeView<
   describe('disabled prop', () => {
     it('should not have the attribute `aria-disabled` if disabled is not defined', () => {
       const response = render({
-        items: [{ id: '1' }],
+        items: [{ id: '1' }, { id: '2', disabled: false }, { id: '3', disabled: true }],
       });
 
       expect(response.getItemRoot('1')).not.to.have.attribute('aria-disabled');
-    });
-
-    it('should not have the attribute `aria-disabled` if disabled is false', () => {
-      const response = render({
-        items: [{ id: '1', disabled: false }],
-      });
-
-      expect(response.getItemRoot('1')).not.to.have.attribute('aria-disabled');
-    });
-
-    it('should have the attribute `aria-disabled` if disabled is true', () => {
-      const response = render({
-        items: [{ id: '1', disabled: true }],
-      });
-
-      expect(response.getItemRoot('1')).to.have.attribute('aria-disabled');
+      expect(response.getItemRoot('2')).not.to.have.attribute('aria-disabled');
+      expect(response.getItemRoot('3')).to.have.attribute('aria-disabled');
     });
 
     it('should disable all descendants of a disabled item', () => {
