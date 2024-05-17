@@ -83,7 +83,7 @@ export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremium
 DataGridPremiumRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
