@@ -95,7 +95,7 @@ describeTreeView<
       expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
     });
 
-    it('should not mark an item as expandable if its children are an empty array', () => {
+    it('should not mark an item as expandable if its children is an empty array', () => {
       const response = render({
         items: [{ id: '1', children: [] }],
         defaultExpandedItems: ['1'],
