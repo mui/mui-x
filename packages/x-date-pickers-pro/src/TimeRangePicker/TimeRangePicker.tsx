@@ -16,6 +16,16 @@ type TimePickerComponent = (<
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [TimeRangePicker](https://mui.com/x/react-date-pickers/time-range-picker/)
+ * - [Validation](https://mui.com/x/react-date-pickers/validation/)
+ *
+ * API:
+ *
+ * - [TimeRangePicker API](https://mui.com/x/api/date-pickers/time-range-picker/)
+ */
 const TimeRangePicker = React.forwardRef(function TimeRangePicker<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
