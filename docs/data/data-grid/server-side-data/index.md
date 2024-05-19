@@ -120,22 +120,32 @@ const customDataSource: GridDataSource = {
 
 The code has been significantly reduced, the need for managing the controlled states is removed, and data fetching logic is centralized.
 
-The following demo uses a public testing API `dummyjson.com` to fetch products data with server side pagination.
-
-{{"demo": "ServerSideDataGridDummyJson.js", "bg": "inline"}}
-
 :::info
 
-For the following examples, a utility `useDemoDataSource` is used to simulate the server-side data fetching based on the package `@mui/x-data-grid-generator`. It returns a function `getRows` apart from other props that could be used to create a custom data source.
+For the following examples, a utility `useDemoDataSource` is used to simulate the server-side data fetching based on the package `@mui/x-data-grid-generator`. It creates a dummy server based on the mock service worker. You can replace this with your actual server-side data fetching logic.
 
 ```tsx
-const { getRows, columns, initialState } = useDemoDataSource(
+const { loading, columns, initialState } = useDemoDataSource(
   dataSetOptions,
   serverOptions,
 );
 
 const customDataSource: GridDataSource = {
-  getRows,
+  getRows: async (params: GridGetRowsParams): GetRowsResponse => {
+    const requestParams = new URLSearchParams({
+      page: params.page.toString(),
+      pageSize: params.pageSize.toString(),
+      sortModel: JSON.stringify(params.sortModel),
+      filterModel: JSON.stringify(params.filterModel),
+    });
+    const response = await fetch(`https://api-url?${requestParams.toString()}`);
+    const data = await response.json();
+
+    return {
+      rows: data.rows,
+      rowCount: data.totalCount,
+    };
+  },
 };
 
 <DataGridPro columns={columns} pagination unstable_dataSource={customDataSource} />;

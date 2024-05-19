@@ -7,10 +7,13 @@ import {
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
 import { useSWRConfig } from 'swr';
 
+const serverOptions = { useCursorPagination: false };
+const dataSetOptions = {};
+
 function ServerSideDataGridWithSWR() {
   const { getRows, columns, initialState } = useDemoDataSource(
-    {},
-    { useCursorPagination: false },
+    dataSetOptions,
+    serverOptions,
   );
   const { cache: swrCache } = useSWRConfig();
 

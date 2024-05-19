@@ -4,10 +4,13 @@ import { useDemoDataSource } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
 
+const serverOptions = { useCursorPagination: false };
+const dataSetOptions = {};
+
 export default function ServerSideDataGridNoCache() {
   const { getRows, columns, initialState } = useDemoDataSource(
-    {},
-    { useCursorPagination: false },
+    dataSetOptions,
+    serverOptions,
   );
 
   const dataSource = React.useMemo(() => {

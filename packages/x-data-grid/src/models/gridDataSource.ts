@@ -24,7 +24,7 @@ export interface GridGetRowsParams {
   /**
    * List of grouped columns (only applicable with `rowGrouping`).
    */
-  groupFields: GridColDef['field'][];
+  groupFields?: GridColDef['field'][];
   /**
    * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
    * `getGroupKey` prop must be implemented to use this.

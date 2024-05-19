@@ -8,6 +8,7 @@ import { useDemoDataSource } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
+const datasetOptions = {};
 
 function getBorderColor(theme) {
   if (theme.palette.mode === 'light') {
@@ -44,7 +45,7 @@ export default function ServerSideErrorHandling() {
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { getRows, ...props } = useDemoDataSource(
-    {},
+    datasetOptions,
     serverOptions,
     shouldRequestsFail,
   );
