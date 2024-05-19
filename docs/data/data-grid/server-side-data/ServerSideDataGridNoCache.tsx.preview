@@ -1,8 +1,12 @@
-<DataGridPro
-  initialState={initialStateWithPagination}
-  columns={columns}
-  unstable_dataSource={dataSource}
-  disableServerSideCache
-  pagination
-  pageSizeOptions={pageSizeOptions}
-/>
+{isInitialized ? (
+  <DataGridPro
+    initialState={initialStateWithPagination}
+    columns={columns}
+    unstable_dataSource={dataSource}
+    disableServerSideCache
+    pagination
+    pageSizeOptions={pageSizeOptions}
+  />
+) : (
+  <LoadingSlate />
+)}

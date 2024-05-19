@@ -4,16 +4,41 @@ import {
   useGridApiRef,
   GridInitialState,
   GridToolbar,
+  GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import LoadingSlate from './LoadingSlate';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
 const datasetOptions = {};
+
+const dataSource: GridDataSource = {
+  getRows: async (params) => {
+    const urlParams = new URLSearchParams({
+      paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
+      filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+      sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+    });
+    const serverResponse = await fetch(
+      `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+    );
+    if (!serverResponse.ok) {
+      const body = await serverResponse.json();
+      throw new Error(body.error ?? 'An error occurred while fetching the data');
+    }
+    const getRowsResponse = await serverResponse.json();
+    return {
+      rows: getRowsResponse.rows,
+      rowCount: getRowsResponse.rowCount,
+    };
+  },
+};
 
 function getBorderColor(theme: Theme) {
   if (theme.palette.mode === 'light') {
@@ -49,17 +74,11 @@ export default function ServerSideErrorHandling() {
   const [error, setError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { getRows, ...props } = useDemoDataSource(
+  const { isInitialized, ...props } = useDemoDataSource(
     datasetOptions,
     serverOptions,
     shouldRequestsFail,
   );
-
-  const dataSource = React.useMemo(() => {
-    return {
-      getRows,
-    };
-  }, [getRows]);
 
   const initialState: GridInitialState = React.useMemo(
     () => ({
@@ -80,7 +99,7 @@ export default function ServerSideErrorHandling() {
         <Button
           onClick={() => {
             setError('');
-            apiRef.current.fetchTopLevelRows();
+            apiRef.current?.fetchTopLevelRows();
           }}
         >
           Refetch rows
@@ -96,17 +115,21 @@ export default function ServerSideErrorHandling() {
         />
       </div>
       <div style={{ height: 400, position: 'relative' }}>
-        <DataGridPro
-          {...props}
-          unstable_dataSource={dataSource}
-          unstable_onServerSideError={(e) => setError(e.message)}
-          disableServerSideCache
-          apiRef={apiRef}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
-        />
+        {isInitialized ? (
+          <DataGridPro
+            {...props}
+            unstable_dataSource={dataSource}
+            unstable_onServerSideError={(e) => setError(e.message)}
+            disableServerSideCache
+            apiRef={apiRef}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            initialState={initialState}
+            slots={{ toolbar: GridToolbar }}
+          />
+        ) : (
+          <LoadingSlate />
+        )}
         {error && <ErrorOverlay error={error} />}
       </div>
     </div>

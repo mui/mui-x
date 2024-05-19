@@ -44,7 +44,7 @@ type UseDemoDataSourceResponse = {
   hasChildren?: (row: GridRowModel) => boolean;
   getChildrenCount?: (row: GridRowModel) => number;
   getRows: GridDataSource['getRows'];
-  loading: boolean;
+  isInitialized: boolean;
   loadNewData: () => void;
 };
 
@@ -85,6 +85,7 @@ export const useDemoDataSource = (
   serverOptions?: ServerOptions,
   shouldRequestsFail?: boolean,
 ): UseDemoDataSourceResponse => {
+  const [isInitialized, setIsInitialized] = React.useState(false);
   const [worker, setWorker] = React.useState<SetupWorkerApi>();
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
@@ -262,6 +263,12 @@ export const useDemoDataSource = (
         }
         const params = decodeParams(request.url);
         try {
+          if (shouldRequestsFail) {
+            const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
+            const { minDelay, maxDelay } = serverOptionsWithDefault;
+            const delay = randomInt(minDelay, maxDelay);
+            return HttpResponse.json({ error: 'Could not fetch the data' }, { status: 500 });
+          }
           const response = await getRows(params);
           return HttpResponse.json(response);
         } catch (error) {
@@ -269,7 +276,7 @@ export const useDemoDataSource = (
         }
       }),
     ];
-  }, [getRows, data]);
+  }, [getRows, data, shouldRequestsFail]);
 
   React.useEffect(() => {
     async function startServer() {
@@ -300,6 +307,12 @@ export const useDemoDataSource = (
     };
   }, [handlers]);
 
+  React.useEffect(() => {
+    if (data && worker && !isInitialized) {
+      setIsInitialized(true);
+    }
+  }, [data, worker, isInitialized]);
+
   return {
     columns: columnsWithDefaultColDef,
     initialState,
@@ -307,7 +320,7 @@ export const useDemoDataSource = (
     hasChildren,
     getChildrenCount,
     getRows,
-    loading: !data || !worker,
+    isInitialized,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },

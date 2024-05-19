@@ -1,26 +1,9 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GridDataSource,
-  GridGetRowsResponse,
-} from '@mui/x-data-grid-pro';
-import CircularProgress from '@mui/material/CircularProgress';
-import { lighten, darken, alpha, styled, Theme } from '@mui/material/styles';
+import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import LoadingSlate from './LoadingSlate';
 
-function getBorderColor(theme: Theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-function getBorderRadius(theme: Theme) {
-  const radius = theme.shape.borderRadius;
-  return typeof radius === 'number' ? `${radius}px` : radius;
-}
-
-const serverOptions = { useCursorPagination: false };
+const serverOptions = { useCursorPagination: false, minDelay: 1000, maxDelay: 3000 };
 const dataSetOptions = {};
 
 const dataSource: GridDataSource = {
@@ -34,7 +17,7 @@ const dataSource: GridDataSource = {
     const serverResponse = await fetch(
       `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
     );
-    const getRowsResponse = (await serverResponse.json()) as GridGetRowsResponse;
+    const getRowsResponse = await serverResponse.json();
     return {
       rows: getRowsResponse.rows,
       rowCount: getRowsResponse.rowCount,
@@ -42,30 +25,11 @@ const dataSource: GridDataSource = {
   },
 };
 
-const Div = styled('div')(({ theme }) => ({
-  height: 400,
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  border: `1px solid ${getBorderColor(theme)}`,
-  borderRadius: getBorderRadius(theme),
-}));
-
-function LoadingSlate() {
-  return (
-    <Div>
-      <CircularProgress />
-    </Div>
-  );
-}
-
 function ServerSideDataGrid() {
-  const {
-    loading: serverConfiguring,
-    columns,
-    initialState,
-  } = useDemoDataSource(dataSetOptions, serverOptions);
+  const { isInitialized, columns, initialState } = useDemoDataSource(
+    dataSetOptions,
+    serverOptions,
+  );
 
   const initialStateWithPagination = React.useMemo(
     () => ({
@@ -78,19 +42,19 @@ function ServerSideDataGrid() {
     [initialState],
   );
 
-  if (serverConfiguring) {
-    return <LoadingSlate />;
-  }
-
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        columns={columns}
-        unstable_dataSource={dataSource}
-        pagination
-        initialState={initialStateWithPagination}
-        pageSizeOptions={[10, 20, 50]}
-      />
+      {isInitialized ? (
+        <DataGridPro
+          columns={columns}
+          unstable_dataSource={dataSource}
+          pagination
+          initialState={initialStateWithPagination}
+          pageSizeOptions={[10, 20, 50]}
+        />
+      ) : (
+        <LoadingSlate />
+      )}
     </div>
   );
 }
