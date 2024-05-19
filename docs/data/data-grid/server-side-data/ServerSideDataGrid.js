@@ -28,7 +28,7 @@ const dataSource = {
       groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
     });
     const serverResponse = await fetch(
-      `https://mui.com/x/api/x-grid?${urlParams.toString()}`,
+      `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
     );
     const getRowsResponse = await serverResponse.json();
     return {

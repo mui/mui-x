@@ -35,7 +35,7 @@ const dataCache = new LRUCache<string, GridDemoData>({
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
-export const API_URL = 'https://mui.com/x/api/x-grid';
+export const API_URL = 'https://mui.com/x/api/data-grid';
 
 type UseDemoDataSourceResponse = {
   columns: GridColDef[];
