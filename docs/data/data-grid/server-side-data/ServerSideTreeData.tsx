@@ -4,26 +4,41 @@ import {
   useGridApiRef,
   GridInitialState,
   GridToolbar,
+  GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import LoadingSlate from './LoadingSlate';
 
 const pageSizeOptions = [5, 10, 50];
+
+const dataSource: GridDataSource = {
+  getRows: async (params) => {
+    const urlParams = new URLSearchParams({
+      paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
+      filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+      sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+    });
+    const serverResponse = await fetch(
+      `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+    );
+    const getRowsResponse = await serverResponse.json();
+    return {
+      rows: getRowsResponse.rows,
+      rowCount: getRowsResponse.rowCount,
+    };
+  },
+};
 
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { getRows, ...props } = useDemoDataSource({
+  const { isInitialized, ...props } = useDemoDataSource({
     dataSet: 'Employee',
     rowLength: 1000,
     treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
   });
-
-  const dataSource = React.useMemo(() => {
-    return {
-      getRows,
-    };
-  }, [getRows]);
 
   const initialState: GridInitialState = React.useMemo(
     () => ({
@@ -40,19 +55,23 @@ export default function ServerSideTreeData() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.clearCache()}>Reset cache</Button>
+      <Button onClick={() => apiRef.current?.clearCache()}>Reset cache</Button>
       <div style={{ height: 400 }}>
-        <DataGridPro
-          {...props}
-          unstable_dataSource={dataSource}
-          treeData
-          apiRef={apiRef}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
-        />
+        {isInitialized ? (
+          <DataGridPro
+            {...props}
+            unstable_dataSource={dataSource}
+            treeData
+            apiRef={apiRef}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            initialState={initialState}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true } }}
+          />
+        ) : (
+          <LoadingSlate />
+        )}
       </div>
     </div>
   );
