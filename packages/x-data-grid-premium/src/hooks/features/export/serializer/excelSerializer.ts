@@ -75,7 +75,7 @@ export const serializeRow = (
 
   const firstCellParams = apiRef.current.getCellParams(id, columns[0].field);
   const outlineLevel = firstCellParams.rowNode.depth;
-  const hasColSpan = gridHasColSpanSelector(apiRef)
+  const hasColSpan = gridHasColSpanSelector(apiRef);
 
   if (hasColSpan) {
     // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
@@ -88,7 +88,9 @@ export const serializeRow = (
   }
 
   columns.forEach((column, colIndex) => {
-    const colSpanInfo = hasColSpan ? apiRef.current.unstable_getCellColSpanInfo(id, colIndex) : undefined;
+    const colSpanInfo = hasColSpan
+      ? apiRef.current.unstable_getCellColSpanInfo(id, colIndex)
+      : undefined;
     if (colSpanInfo && colSpanInfo.spannedByColSpan) {
       return;
     }
@@ -439,7 +441,11 @@ export async function buildExcel(
     worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
-  const valueOptionsData = await getDataForValueOptionsSheet(columns, valueOptionsSheetName, apiRef.current);
+  const valueOptionsData = await getDataForValueOptionsSheet(
+    columns,
+    valueOptionsSheetName,
+    apiRef.current,
+  );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
   rowIds.forEach((id) => {
