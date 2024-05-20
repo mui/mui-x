@@ -1,7 +1,7 @@
-import { GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
+import { GridRowId, GridRowTreeConfig, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import { getTreeNodeDescendants } from '@mui/x-data-grid/internals';
 
-export const skipFiltering = (params: { rowTree: GridRowTreeConfig }) => {
-  const { rowTree } = params;
+export function skipFiltering(rowTree: GridRowTreeConfig) {
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
@@ -15,4 +15,8 @@ export const skipFiltering = (params: { rowTree: GridRowTreeConfig }) => {
     filteredRowsLookup,
     filteredDescendantCountLookup,
   };
-};
+}
+
+export function skipSorting(rowTree: GridRowTreeConfig) {
+  return getTreeNodeDescendants(rowTree, GRID_ROOT_GROUP_ID, false);
+}

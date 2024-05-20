@@ -19,7 +19,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { skipFiltering } from './utils';
+import { skipFiltering, skipSorting } from './utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -199,21 +199,14 @@ export const useGridServerSideTreeDataPreProcessors = (
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {
     const rowTree = gridRowTreeSelector(privateApiRef);
 
-    return skipFiltering({
-      rowTree,
-    });
+    return skipFiltering(rowTree);
   }, [privateApiRef]);
 
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
-    (params) => {
+    () => {
       const rowTree = gridRowTreeSelector(privateApiRef);
 
-      return sortRowTree({
-        rowTree,
-        sortRowList: params.sortRowList,
-        disableChildrenSorting: props.disableChildrenSorting,
-        shouldRenderGroupBelowLeaves: false,
-      });
+      return skipSorting(rowTree);
     },
     [privateApiRef, props.disableChildrenSorting],
   );
