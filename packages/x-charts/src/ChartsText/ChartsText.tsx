@@ -41,7 +41,7 @@ function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  const transforms = [];
+  const transforms: string[] = [];
   // if (scaleToFit) {
   //   const lineWidth = wordsByLines[0].width;
   //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
