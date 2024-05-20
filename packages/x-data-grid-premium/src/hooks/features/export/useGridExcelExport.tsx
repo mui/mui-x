@@ -62,7 +62,7 @@ export const useGridExcelExport = (
           exceljsPostProcess: options?.exceljsPostProcess,
           escapeFormulas: options.escapeFormulas ?? true,
         },
-        apiRef.current,
+        apiRef,
       );
     },
     [logger, apiRef],
@@ -141,11 +141,18 @@ export const useGridExcelExport = (
 
       const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
 
+      /*
+       * HACK: serializeRow() mutates the colspan info with the list of `exportedColumns`, which
+       * doesn't always match the list of rendered columns. We reset the colspan info to avoid that
+       * issue.
+       */
+      apiRef.current.resetColSpan();
       const serializedRows = exportedRowIds.map((id) =>
-        serializeRow(id, exportedColumns, apiRef.current, valueOptionsData, {
+        serializeRow(id, exportedColumns, apiRef, valueOptionsData, {
           escapeFormulas: options.escapeFormulas ?? true,
         }),
       );
+      apiRef.current.resetColSpan();
 
       const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
         acc[column.field] = apiRef.current.getColumnGroupPath(column.field);

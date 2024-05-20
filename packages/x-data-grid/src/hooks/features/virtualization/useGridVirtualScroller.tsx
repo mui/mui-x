@@ -85,7 +85,7 @@ const createScrollCache = (
 });
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
-const isJSDOM = typeof window !== 'undefined' ? /jsdom/.test(window.navigator.userAgent) : false;
+const isJSDOM = typeof navigator !== 'undefined' ? /jsdom/.test(navigator.userAgent) : false;
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
