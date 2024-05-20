@@ -17,7 +17,7 @@ describeTreeView<
     UseTreeViewSelectionSignature,
   ]
 >('useTreeViewKeyboardNavigation', ({ render, treeViewComponentName }) => {
-  describe.only('Navigation (focus and expansion)', () => {
+  describe('Navigation (focus and expansion)', () => {
     describe('key: ArrowDown', () => {
       it('should move the focus to a sibling item', () => {
         const response = render({

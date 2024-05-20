@@ -22,7 +22,7 @@ const getLastNavigableItemInArray = (
 export const getPreviousNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
-) => {
+): string | null => {
   const itemMeta = instance.getItemMeta(itemId);
   const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
   const itemIndex = instance.getItemIndex(itemId);
