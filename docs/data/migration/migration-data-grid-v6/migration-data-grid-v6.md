@@ -340,7 +340,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
   ```diff
   -groupingValueGetter: (params) => params.value.name,
-  +groupingValueGetter: (value: { name: string }) => value.name,
+  +groupingValueGetter: (value: { name: string }, row, column, apiRef) => value.name,
   ```
 
 ### Density

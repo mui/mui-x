@@ -16,7 +16,7 @@ interface CircularConfig {
    */
   endAngle?: number;
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '80%'
@@ -59,7 +59,7 @@ interface ProcessedCircularConfig {
    */
   endAngle: number;
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    */
   innerRadius: number;
   /**
@@ -160,7 +160,7 @@ export function GaugeProvider(props: GaugeProviderProps) {
 
   const maxRadius = getAvailableRadius(innerCx, innerCy, width, height, ratios);
 
-  // If the center is not defined, after computation of the available radius, udpate the center to use the remaining space.
+  // If the center is not defined, after computation of the available radius, update the center to use the remaining space.
   if (cxParam === undefined) {
     const usedWidth = maxRadius * (ratios.maxX - ratios.minX);
     cx = left + (width - usedWidth) / 2 + ratios.cx * usedWidth;

@@ -17,7 +17,7 @@ import { SeriesId } from '../models/seriesType/common';
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -68,7 +68,7 @@ export interface AreaElementSlotProps {
 export interface AreaElementProps
   extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
   highlightScope?: Partial<HighlightScope>;
   /**
@@ -129,22 +129,21 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
-  return <Area {...areaProps} />;
+  return <Area {...other} {...areaProps} />;
 }
 
 AreaElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,

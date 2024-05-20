@@ -6,6 +6,7 @@
         "description": "{ current?: { focusItem: func, getItem: func, setItemExpansion: func } }"
       }
     },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedItems": {

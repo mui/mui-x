@@ -151,7 +151,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         fontSize: tickFontSize ?? 12,
         ...tickLabelStyle,
       },
-      className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
     ownerState: {},
@@ -250,7 +249,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 ChartsXAxis.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The id of the axis to render.

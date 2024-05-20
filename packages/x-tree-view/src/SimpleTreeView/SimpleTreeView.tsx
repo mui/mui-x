@@ -108,7 +108,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 SimpleTreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
@@ -120,6 +120,11 @@ SimpleTreeView.propTypes = {
       setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
   /**
    * The content of the component.
    */
@@ -162,7 +167,7 @@ SimpleTreeView.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,

@@ -3,7 +3,7 @@
 import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers/DateCalendar';
 
 const props: DateCalendarSlotsComponent = {};
 const slotProps: DateCalendarSlotsComponentsProps = {};
