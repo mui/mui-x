@@ -16,12 +16,26 @@ import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
 
 interface GetDataGridProPropsDefaultValues extends DataGridProProps {}
 
+type DataGridProForcedProps = { [key in keyof DataGridProProps]?: DataGridProProcessedProps[key] };
+type GetDataGridProForcedProps = (
+  themedProps: GetDataGridProPropsDefaultValues,
+) => DataGridProForcedProps;
+
+const GET_DATA_GRID_PRO_FORCED_PROPS: GetDataGridProForcedProps = (themedProps) => ({
+  signature: 'DataGridPro',
+  ...(themedProps.unstable_dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
+
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
-export const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
-  themedProps: GetDataGridProPropsDefaultValues,
-) => DataGridProPropsWithDefaultValue = (themedProps) => ({
+export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
   disableServerSideCache: false,
   scrollEndThreshold: 80,
@@ -37,10 +51,13 @@ export const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
   rowsLoadingMode: 'client',
   getDetailPanelHeight: () => 500,
   headerFilters: false,
-  filterMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
-  sortingMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
-  paginationMode: themedProps.unstable_dataSource?.getRows ? 'server' : 'client',
-  filterDebounceMs: themedProps.unstable_dataSource?.getRows
+};
+
+const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
+  themedProps: GetDataGridProPropsDefaultValues,
+) => DataGridProPropsWithDefaultValue = (themedProps) => ({
+  ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  filterDebounceMs: themedProps.unstable_dataSource
     ? 1000
     : DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs,
 });
@@ -76,7 +93,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       ...themedProps,
       localeText,
       slots,
-      signature: 'DataGridPro',
+      ...GET_DATA_GRID_PRO_FORCED_PROPS(themedProps),
     }),
     [themedProps, localeText, slots],
   );

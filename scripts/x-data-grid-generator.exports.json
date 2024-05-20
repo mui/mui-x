@@ -1,4 +1,5 @@
 [
+  { "name": "BASE_URL", "kind": "Variable" },
   { "name": "ColumnsOptions", "kind": "Interface" },
   { "name": "createFakeServer", "kind": "Variable" },
   { "name": "currencyPairs", "kind": "Variable" },
@@ -78,6 +79,6 @@
   { "name": "useBasicDemoData", "kind": "Variable" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
-  { "name": "useDemoDataSource", "kind": "Variable" },
+  { "name": "useMockServer", "kind": "Variable" },
   { "name": "useMovieData", "kind": "Variable" }
 ]

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import {
-  GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
@@ -17,13 +17,26 @@ import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGri
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
+type DataGridProForcedProps = { [key in keyof DataGridProProps]?: DataGridPremiumProcessedProps[key] };
+type GetDataGridProForcedProps = (
+  themedProps: GetDataGridPremiumPropsDefaultValues,
+) => DataGridProForcedProps;
+
+const GET_DATA_GRID_PREMIUM_FORCED_PROPS: GetDataGridProForcedProps = (themedProps) => ({
+  signature: 'DataGridPremium',
+  ...(themedProps.unstable_dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
-export const GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: (
-  themedProps: GetDataGridPremiumPropsDefaultValues,
-) => DataGridPremiumPropsWithDefaultValue = (themedProps) => ({
-  ...GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES(themedProps as DataGridProProps),
+export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
+  ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   cellSelection: false,
   disableAggregation: false,
   disableRowGrouping: false,
@@ -38,6 +51,15 @@ export const GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: (
     const text = pastedText.replace(/\r?\n$/, '');
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
+};
+
+const GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: (
+  themedProps: GetDataGridPremiumPropsDefaultValues,
+) => DataGridPremiumPropsWithDefaultValue = (themedProps) => ({
+  ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
+  filterDebounceMs: themedProps.unstable_dataSource
+    ? 1000
+    : DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES.filterDebounceMs,
 });
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
@@ -71,7 +93,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
       ...themedProps,
       localeText,
       slots,
-      signature: 'DataGridPremium',
+      ...GET_DATA_GRID_PREMIUM_FORCED_PROPS(themedProps),
     }),
     [themedProps, localeText, slots],
   );
