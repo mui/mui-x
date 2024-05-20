@@ -11,11 +11,31 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Learn how to enable item selection for the Tree View component.</p>
 
+## Single selection
+
+By default, the Tree View allows selecting a single item.
+
+{{"demo": "SingleSelectTreeView.js"}}
+
+:::success
+When the Tree View uses single selection, you can select an item by clicking it,
+or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+:::
+
 ## Multi selection
 
-Apply the `multiSelect` prop on the Tree View to let users select multiple items.
+Use the `multiSelect` prop to enable multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
+
+:::success
+When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
+
+- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
+- To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
+
+You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
+:::
 
 ## Disable selection
 
