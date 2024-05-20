@@ -26,7 +26,8 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
   ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'setItems' | 'apiRef'> => {
     const getRoot = () => result.getByRole('tree');
 
-    const getAllItemRoots = () => result.queryAllByRole('treeitem');
+    const getAllTreeItemIds = () =>
+      result.queryAllByRole('treeitem').map((item) => item.dataset.testid!);
 
     const getFocusedItemId = () => {
       const activeElement = document.activeElement;
@@ -58,9 +59,15 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 
     const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-selected') === 'true';
 
+    const getSelectedTreeItems = () =>
+      result
+        .queryAllByRole('treeitem')
+        .filter((item) => item.getAttribute('aria-selected') === 'true')
+        .map((item) => item.dataset.testid!);
+
     return {
       getRoot,
-      getAllItemRoots,
+      getAllTreeItemIds,
       getFocusedItemId,
       getItemRoot,
       getItemContent,
@@ -70,6 +77,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
       getItemIconContainer,
       isItemExpanded,
       isItemSelected,
+      getSelectedTreeItems,
     };
   };
 
