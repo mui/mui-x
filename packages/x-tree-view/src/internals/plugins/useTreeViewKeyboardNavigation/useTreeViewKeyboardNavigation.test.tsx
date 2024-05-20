@@ -16,7 +16,7 @@ describeTreeView<
     UseTreeViewExpansionSignature,
     UseTreeViewSelectionSignature,
   ]
->('useTreeViewKeyboardNavigation', ({ render, treeViewComponent }) => {
+>('useTreeViewKeyboardNavigation', ({ render, treeViewComponentName }) => {
   describe('Navigation (focus and expansion)', () => {
     describe('key: ArrowDown', () => {
       it('should move the focus to a sibling item', () => {
@@ -825,7 +825,7 @@ describeTreeView<
 
     it('should work with ReactElement label', function test() {
       // Only the SimpleTreeView can have React Element labels.
-      if (treeViewComponent !== 'SimpleTreeView') {
+      if (treeViewComponentName !== 'SimpleTreeView') {
         this.skip();
       }
 
