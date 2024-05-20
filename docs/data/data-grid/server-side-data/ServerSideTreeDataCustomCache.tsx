@@ -10,7 +10,7 @@ import {
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { QueryClient } from '@tanstack/query-core';
-import LoadingSlate from './LoadingSlate';
+import LoadingSlate from './LoadingSlateNoSnap';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlate';
+import LoadingSlate from './LoadingSlateNoSnap';
 
 const serverOptions = { useCursorPagination: false, startServer: true };
 const dataSetOptions = {};

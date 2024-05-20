@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlate';
+import LoadingSlate from './LoadingSlateNoSnap';
 
 const serverOptions = { useCursorPagination: false, startServer: true };
 const dataSetOptions = {};
@@ -12,7 +12,6 @@ const dataSource = {
       paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
       filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
       sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
     });
     const serverResponse = await fetch(
       `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
