@@ -61,6 +61,11 @@ When a single-select tree receives focus:
 - If none of the items are selected when the tree receives focus, focus is set on the first item.
 - If an item is selected before the tree receives focus, focus is set on the selected item.
 
+|                         Keys | Description                                                  |
+| ---------------------------: | :----------------------------------------------------------- |
+| <kbd class="key">Space</kbd> | Selects the focused item.                                    |
+| <kbd class="key">Enter</kbd> | Selects the focused item if the item does not have children. |
+
 ### On multi-select trees
 
 When a multi-select tree receives focus:

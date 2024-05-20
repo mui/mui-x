@@ -11,11 +11,31 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Handle how users can select items.</p>
 
+## Single selection
+
+By default, the Tree View allows selecting a single item.
+
+{{"demo": "SingleSelectTreeView.js"}}
+
+:::success
+When the Tree View uses single selection, you can select an item by clicking it,
+or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+:::
+
 ## Multi selection
 
-The Tree View also supports multi-selection:
+Use the `multiSelect` prop to enable multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
+
+:::success
+When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
+
+- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
+- To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
+
+You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
+:::
 
 ## Disable selection
 
@@ -54,3 +74,23 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
+
+## Parent / children selection relationship
+
+Automatically select an item when all of its children are selected and automatically select all children when the parent is selected.
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #12883](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built.
+Especially if you already have a use case for this component,
+or if you are facing a pain point with your current solution.
+:::
+
+If you cannot wait for the official implementation,
+you can create your own custom solution using the `selectedItems`,
+`onSelectedItemsChange` and `onItemSelectionToggle` props:
+
+{{"demo": "ParentChildrenSelectionRelationship.js"}}
