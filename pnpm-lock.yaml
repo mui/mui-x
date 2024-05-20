@@ -899,6 +899,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.24.5
         version: 7.24.5
+      '@formkit/auto-animate':
+        specifier: ^0.8.1
+        version: 0.8.2
       '@mui/material':
         specifier: ^5.15.14
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
