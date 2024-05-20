@@ -11,8 +11,9 @@ import { MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
   DescribeTreeViewRenderer,
-  DescribeTreeViewRendererReturnValue,
+  DescribeTreeViewJSXRenderer,
   DescribeTreeViewItem,
+  DescribeTreeViewRendererUtils,
 } from './describeTreeView.types';
 
 const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
@@ -21,9 +22,7 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
 ): void => {
   const { render } = createRenderer();
 
-  const getUtils = (
-    result: MuiRenderResult,
-  ): Omit<DescribeTreeViewRendererReturnValue<TPlugins>, 'setProps' | 'setItems' | 'apiRef'> => {
+  const getUtils = (result: MuiRenderResult): DescribeTreeViewRendererUtils => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllTreeItemIds = () =>
@@ -81,11 +80,16 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
     };
   };
 
+  const jsxRenderer: DescribeTreeViewJSXRenderer = (element) => {
+    const result = render(element);
+    return getUtils(result);
+  };
+
   const createRendererForComponentWithItemsProp = (
     TreeViewComponent: typeof RichTreeView,
     TreeItemComponent: typeof TreeItem | typeof TreeItem2,
   ) => {
-    const wrappedRenderer: DescribeTreeViewRenderer<TPlugins> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TPlugins> = ({
       items: rawItems,
       withErrorBoundary,
       slotProps,
@@ -133,14 +137,17 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
       };
     };
 
-    return wrappedRenderer;
+    return {
+      render: objectRenderer,
+      renderFromJSX: jsxRenderer,
+    };
   };
 
-  const createRendererForComponentWithJSXItems = (
+  const createRenderersForComponentWithJSXItems = (
     TreeViewComponent: typeof SimpleTreeView,
     TreeItemComponent: typeof TreeItem | typeof TreeItem2,
   ) => {
-    const wrappedRenderer: DescribeTreeViewRenderer<TPlugins> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TPlugins> = ({
       items: rawItems,
       withErrorBoundary,
       slots,
@@ -180,61 +187,76 @@ const innerDescribeTreeView = <TPlugins extends TreeViewAnyPluginSignature[]>(
       };
     };
 
-    return wrappedRenderer;
+    return {
+      render: objectRenderer,
+      renderFromJSX: jsxRenderer,
+    };
   };
 
   describe(message, () => {
     describe('RichTreeView + TreeItem', () => {
       testRunner({
-        render: createRendererForComponentWithItemsProp(RichTreeView, TreeItem),
+        ...createRendererForComponentWithItemsProp(RichTreeView, TreeItem),
         setup: 'RichTreeView + TreeItem',
-        treeViewComponent: 'RichTreeView',
-        treeItemComponent: 'TreeItem',
+        treeViewComponentName: 'RichTreeView',
+        treeItemComponentName: 'TreeItem',
+        TreeViewComponent: RichTreeView,
+        TreeItemComponent: TreeItem,
       });
     });
 
     describe('RichTreeView + TreeItem2', () => {
       testRunner({
-        render: createRendererForComponentWithItemsProp(RichTreeView, TreeItem2),
+        ...createRendererForComponentWithItemsProp(RichTreeView, TreeItem2),
         setup: 'RichTreeView + TreeItem2',
-        treeViewComponent: 'RichTreeView',
-        treeItemComponent: 'TreeItem2',
+        treeViewComponentName: 'RichTreeView',
+        treeItemComponentName: 'TreeItem2',
+        TreeViewComponent: RichTreeView,
+        TreeItemComponent: TreeItem2,
       });
     });
 
     describe('RichTreeViewPro + TreeItem', () => {
       testRunner({
-        render: createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem),
+        ...createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem),
         setup: 'RichTreeViewPro + TreeItem',
-        treeViewComponent: 'RichTreeViewPro',
-        treeItemComponent: 'TreeItem',
+        treeViewComponentName: 'RichTreeViewPro',
+        treeItemComponentName: 'TreeItem',
+        TreeViewComponent: RichTreeViewPro,
+        TreeItemComponent: TreeItem,
       });
     });
 
     describe('RichTreeViewPro + TreeItem2', () => {
       testRunner({
-        render: createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem2),
+        ...createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem2),
         setup: 'RichTreeViewPro + TreeItem2',
-        treeViewComponent: 'RichTreeViewPro',
-        treeItemComponent: 'TreeItem2',
+        treeViewComponentName: 'RichTreeViewPro',
+        treeItemComponentName: 'TreeItem2',
+        TreeViewComponent: RichTreeViewPro,
+        TreeItemComponent: TreeItem2,
       });
     });
 
     describe('SimpleTreeView + TreeItem', () => {
       testRunner({
-        render: createRendererForComponentWithJSXItems(SimpleTreeView, TreeItem),
+        ...createRenderersForComponentWithJSXItems(SimpleTreeView, TreeItem),
         setup: 'SimpleTreeView + TreeItem',
-        treeViewComponent: 'SimpleTreeView',
-        treeItemComponent: 'TreeItem',
+        treeViewComponentName: 'SimpleTreeView',
+        treeItemComponentName: 'TreeItem',
+        TreeViewComponent: SimpleTreeView,
+        TreeItemComponent: TreeItem,
       });
     });
 
     describe('SimpleTreeView + TreeItem2', () => {
       testRunner({
-        render: createRendererForComponentWithJSXItems(SimpleTreeView, TreeItem2),
+        ...createRenderersForComponentWithJSXItems(SimpleTreeView, TreeItem2),
         setup: 'SimpleTreeView + TreeItem2',
-        treeViewComponent: 'SimpleTreeView',
-        treeItemComponent: 'TreeItem2',
+        treeViewComponentName: 'SimpleTreeView',
+        treeItemComponentName: 'TreeItem2',
+        TreeViewComponent: SimpleTreeView,
+        TreeItemComponent: TreeItem2,
       });
     });
   });

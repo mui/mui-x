@@ -13,7 +13,7 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
   'useTreeViewIcons plugin',
   ({ render }) => {
     describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {
-      const getIconTestId = (response: DescribeTreeViewRendererReturnValue<[]>, itemId: string) =>
+      const getIconTestId = (response: DescribeTreeViewRendererReturnValue<any>, itemId: string) =>
         response.getItemIconContainer(itemId).querySelector(`div`)?.dataset.testid;
 
       it('should render the expandIcon slot defined on the tree if no icon slot is defined on the item and the item is collapsed', () => {
