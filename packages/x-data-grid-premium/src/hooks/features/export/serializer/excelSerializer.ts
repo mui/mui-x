@@ -16,11 +16,7 @@ import {
   GridColumnGroupLookup,
   isSingleSelectColDef,
 } from '@mui/x-data-grid/internals';
-import {
-  GridExceljsProcessInput,
-  ColumnsStylesInterface,
-  GridExcelExportOptions,
-} from '../gridExcelExportInterface';
+import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
@@ -70,6 +66,7 @@ export const serializeRow = (
   columns: GridStateColDef[],
   api: GridPrivateApiPremium,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
+  options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
   const row: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
@@ -99,6 +96,8 @@ export const serializeRow = (
     }
 
     const cellParams = api.getCellParams(id, column.field);
+
+    let cellValue: string | undefined;
 
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
@@ -152,7 +151,7 @@ export const serializeRow = (
       }
       case 'boolean':
       case 'number':
-        row[column.field] = api.getCellParams(id, column.field).value as any;
+        cellValue = api.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
@@ -180,13 +179,24 @@ export const serializeRow = (
       case 'actions':
         break;
       default:
-        row[column.field] = api.getCellParams(id, column.field).formattedValue as any;
+        cellValue = api.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
           }
         }
         break;
+    }
+
+    if (typeof cellValue === 'string' && options.escapeFormulas) {
+      // See https://owasp.org/www-community/attacks/CSV_Injection
+      if (['=', '+', '-', '@', '\t', '\r'].includes(cellValue[0])) {
+        cellValue = `'${cellValue}`;
+      }
+    }
+
+    if (typeof cellValue !== 'undefined') {
+      row[column.field] = cellValue;
     }
   });
 
@@ -367,14 +377,14 @@ async function createValueOptionsSheetIfNeeded(
   });
 }
 
-interface BuildExcelOptions {
+interface BuildExcelOptions
+  extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
+    Pick<
+      Required<GridExcelExportOptions>,
+      'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulas'
+    > {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
-  includeHeaders: boolean;
-  includeColumnGroupsHeaders: boolean;
-  valueOptionsSheetName: string;
-  exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
-  exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   columnsStyles?: ColumnsStylesInterface;
 }
 
@@ -429,7 +439,7 @@ export async function buildExcel(
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
   rowIds.forEach((id) => {
-    const serializedRow = serializeRow(id, columns, api, valueOptionsData);
+    const serializedRow = serializeRow(id, columns, api, valueOptionsData, options);
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
 
