@@ -31,7 +31,7 @@ Use the `multiSelect` prop to enable multi-selection.
 :::success
 When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
 
-- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">Enter</kbd> on macOS) and click the items.
+- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
 - To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
 
 You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
