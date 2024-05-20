@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
@@ -170,14 +169,4 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   );
 }
 
-GridScrollAreaRaw.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  scrollDirection: PropTypes.oneOf(['left', 'right']).isRequired,
-} as any;
-
-const GridScrollArea = fastMemo(GridScrollAreaRaw);
-
-export { GridScrollArea };
+export const GridScrollArea = fastMemo(GridScrollAreaRaw);

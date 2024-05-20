@@ -19,7 +19,7 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-const PickersLayoutRoot = styled('div', {
+export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -51,24 +51,6 @@ const PickersLayoutRoot = styled('div', {
     },
   ],
 }));
-
-PickersLayoutRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    isLandscape: PropTypes.bool.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
-export { PickersLayoutRoot };
 
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',

@@ -92,28 +92,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   ],
 }));
 
-DateTimePickerToolbarRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  classes: PropTypes.object,
-  className: PropTypes.string,
-  isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
-  landscapeDirection: PropTypes.oneOf(['column', 'row']),
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  toggleMobileKeyboardView: PropTypes.func,
-  toolbarTitle: PropTypes.node,
-  viewType: PropTypes.oneOf(['date', 'time']),
-} as any;
-
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
@@ -174,20 +152,6 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
     },
   ],
 }));
-
-DateTimePickerToolbarTimeContainer.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
 
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
