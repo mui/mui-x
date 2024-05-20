@@ -375,11 +375,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       })
       .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
-    // TODO: investigate why it's an empty array
-    if (visibleColumnGroupHeader.length === 0) {
-      return null;
-    }
-
     const firstVisibleColumnIndex =
       visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
     const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
