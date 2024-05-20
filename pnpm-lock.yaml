@@ -774,6 +774,101 @@ importers:
         version: 5.0.5
     publishDirectory: build
 
+  packages/x-charts-pro:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.5
+        version: 7.24.5
+      '@emotion/react':
+        specifier: ^11.9.0
+        version: 11.11.4(@types/react@18.2.60)(react@18.2.0)
+      '@emotion/styled':
+        specifier: ^11.8.1
+        version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.60)(react@18.2.0)
+      '@mui/base':
+        specifier: ^5.0.0-beta.40
+        version: 5.0.0-beta.40(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/material':
+        specifier: ^5.15.14
+        version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system':
+        specifier: ^5.15.14
+        version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.60)(react@18.2.0)
+      '@mui/utils':
+        specifier: ^5.15.14
+        version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../x-charts/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../x-license/build
+      '@react-spring/rafz':
+        specifier: ^9.7.3
+        version: 9.7.3
+      '@react-spring/web':
+        specifier: ^9.7.3
+        version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      d3-color:
+        specifier: ^3.1.0
+        version: 3.1.0
+      d3-delaunay:
+        specifier: ^6.0.4
+        version: 6.0.4
+      d3-interpolate:
+        specifier: ^3.0.1
+        version: 3.0.1
+      d3-scale:
+        specifier: ^4.0.2
+        version: 4.0.2
+      d3-shape:
+        specifier: ^3.2.0
+        version: 3.2.0
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
+      react:
+        specifier: ^17.0.0 || ^18.0.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^17.0.0 || ^18.0.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@react-spring/core':
+        specifier: ^9.7.3
+        version: 9.7.3(react@18.2.0)
+      '@react-spring/shared':
+        specifier: ^9.7.3
+        version: 9.7.3(react@18.2.0)
+      '@types/d3-color':
+        specifier: ^3.1.3
+        version: 3.1.3
+      '@types/d3-delaunay':
+        specifier: ^6.0.4
+        version: 6.0.4
+      '@types/d3-interpolate':
+        specifier: ^3.0.4
+        version: 3.0.4
+      '@types/d3-scale':
+        specifier: ^4.0.8
+        version: 4.0.8
+      '@types/d3-shape':
+        specifier: ^3.1.6
+        version: 3.1.6
+      '@types/prop-types':
+        specifier: ^15.7.12
+        version: 15.7.12
+      csstype:
+        specifier: ^3.1.3
+        version: 3.1.3
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+    publishDirectory: build
+
   packages/x-codemod:
     dependencies:
       '@babel/core':
