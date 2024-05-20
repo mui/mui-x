@@ -95,7 +95,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
   overridesResolver: (_, styles) => styles.item,
-})<{ ownerState: MultiSectionDigitalClockSectionProps<any> }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
   width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
@@ -217,7 +217,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               aria-disabled={readOnly || isDisabled || undefined}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
-              ownerState={ownerState}
               tabIndex={tabIndex}
               className={classes.item}
               {...slotProps?.digitalClockSectionItem}
