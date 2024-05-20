@@ -159,7 +159,7 @@ interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSig
    * (most likely to advanced testing of the children rendering aspect on the SimpleTreeView)
    *
    * Warning: If you want to use the utils returned by the `renderFromJSX` function,
-   * each item should receive a `label` and a `data-testid` equals to its `id`.
+   * each item should receive a `label` and a `data-testid` equal to its `id`.
    */
   renderFromJSX: DescribeTreeViewJSXRenderer;
   setup: `${TreeViewComponentName} + ${TreeItemComponentName}`;
