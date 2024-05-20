@@ -20,16 +20,6 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
     getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
-    getJSXItemsChildrenIndexes: () => {},
-    setJSXItemsChildrenIndexes: () => {},
-    getNode: () => ({
-      parentId: null,
-      id: 'one',
-      idAttribute: undefined,
-      disabled: false,
-      expandable: false,
-      depth: 0,
-    }),
   } as any,
   publicAPI: {
     focusItem: () => {},
