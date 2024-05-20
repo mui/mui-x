@@ -89,7 +89,7 @@ Especially if you already have a use case for this component,
 or if you are facing a pain point with your current solution.
 :::
 
-If you cannot wait for the official implementation, 
+If you cannot wait for the official implementation,
 you can create your own custom solution using the `selectedItems`,
 `onSelectedItemsChange` and `onItemSelectionToggle` props:
 
