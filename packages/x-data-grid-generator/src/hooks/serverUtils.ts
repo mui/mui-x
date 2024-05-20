@@ -39,7 +39,6 @@ export interface QueryOptions {
   cursor?: GridRowId;
   page?: number;
   pageSize?: number;
-  // TODO: implement the behavior liked to following models
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
   firstRowToRender?: number;
@@ -50,7 +49,6 @@ export interface ServerSideQueryOptions {
   cursor?: GridRowId;
   paginationModel?: GridPaginationModel;
   groupKeys?: string[];
-  // TODO: implement the behavior liked to following models
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
   firstRowToRender?: number;

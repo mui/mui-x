@@ -10,7 +10,6 @@ import {
   GridColDef,
   GridInitialState,
   GridColumnVisibilityModel,
-  GridDataSource,
 } from '@mui/x-data-grid-pro';
 import {
   UseDemoDataOptions,
@@ -35,15 +34,15 @@ const dataCache = new LRUCache<string, GridDemoData>({
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
-export const API_URL = 'https://mui.com/x/api/data-grid';
+export const BASE_URL = 'https://mui.com/x/api/data-grid';
 
-type UseDemoDataSourceResponse = {
+type UseMockServerResponse = {
   columns: GridColDef[];
   initialState: GridInitialState;
   getGroupKey?: (row: GridRowModel) => string;
   hasChildren?: (row: GridRowModel) => boolean;
   getChildrenCount?: (row: GridRowModel) => number;
-  getRows: GridDataSource['getRows'];
+  fetchRows: (url: string) => Promise<GridGetRowsResponse>;
   isInitialized: boolean;
   loadNewData: () => void;
 };
@@ -80,11 +79,11 @@ const getInitialState = (columns: GridColDefGenerator[], groupingField?: string)
 
 const defaultColDef = getGridDefaultColumnTypes();
 
-export const useDemoDataSource = (
+export const useMockServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
-  serverOptions?: ServerOptions,
+  serverOptions?: ServerOptions & { startServer?: boolean },
   shouldRequestsFail?: boolean,
-): UseDemoDataSourceResponse => {
+): UseMockServerResponse => {
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [worker, setWorker] = React.useState<SetupWorkerApi>();
   const [data, setData] = React.useState<GridDemoData>();
@@ -204,15 +203,21 @@ export const useDemoDataSource = (
     index,
   ]);
 
-  const getRows = React.useCallback(
-    async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
-      if (!data) {
+  const fetchRows = React.useCallback(
+    async (requestUrl: string): Promise<GridGetRowsResponse> => {
+      if (!data || !requestUrl) {
         return new Promise<GridGetRowsResponse>((resolve) => {
           resolve({ rows: [], rowCount: 0 });
         });
       }
+      const params = decodeParams(requestUrl);
       let getRowsResponse: GridGetRowsResponse;
-      const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
+      const serverOptionsWithDefault = {
+        minDelay: serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay,
+        maxDelay: serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay,
+        useCursorPagination:
+          serverOptions?.useCursorPagination ?? DEFAULT_SERVER_OPTIONS.useCursorPagination,
+      };
 
       if (shouldRequestsFailRef.current) {
         const { minDelay, maxDelay } = serverOptionsWithDefault;
@@ -223,12 +228,19 @@ export const useDemoDataSource = (
       }
 
       if (isTreeData /* || TODO: `isRowGrouping` */) {
+        console.log('requested tree data for groupKeys', params.groupKeys);
+
         const { rows, rootRowCount } = await processTreeDataRows(
           data.rows,
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
         );
+
+        console.log('processed tree data for groupKeys', {
+          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+          rowCount: rootRowCount,
+        });
 
         getRowsResponse = {
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
@@ -249,42 +261,42 @@ export const useDemoDataSource = (
         resolve(getRowsResponse);
       });
     },
-    [data, columnsWithDefaultColDef, isTreeData, serverOptions],
+    [
+      data,
+      columnsWithDefaultColDef,
+      isTreeData,
+      serverOptions?.minDelay,
+      serverOptions?.maxDelay,
+      serverOptions?.useCursorPagination,
+    ],
   );
 
-  const handlers = React.useMemo(() => {
-    if (!data) {
-      return [];
-    }
-    return [
-      http.get(API_URL, async ({ request }) => {
-        if (!request.url) {
-          return HttpResponse.json({ error: 'Bad request.' }, { status: 400 });
-        }
-        const params = decodeParams(request.url);
-        try {
-          if (shouldRequestsFail) {
-            const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
-            const { minDelay, maxDelay } = serverOptionsWithDefault;
-            const delay = randomInt(minDelay, maxDelay);
-            return HttpResponse.json({ error: 'Could not fetch the data' }, { status: 500 });
-          }
-          const response = await getRows(params);
-          return HttpResponse.json(response);
-        } catch (error) {
-          return HttpResponse.json({ error }, { status: 500 });
-        }
-      }),
-    ];
-  }, [getRows, data, shouldRequestsFail]);
-
   React.useEffect(() => {
+    if (!data || !serverOptions?.startServer) {
+      return;
+    }
     async function startServer() {
       if (typeof window !== 'undefined') {
         const { setupWorker } = require('msw/browser');
         if (!setupWorker) {
           return;
         }
+        const handlers = [
+          http.get(BASE_URL, async ({ request }) => {
+            if (!request.url) {
+              return HttpResponse.json({ error: 'Bad request.' }, { status: 400 });
+            }
+            try {
+              if (shouldRequestsFail) {
+                return HttpResponse.json({ error: 'Could not fetch the data' }, { status: 500 });
+              }
+              const response = await fetchRows(request.url);
+              return HttpResponse.json(response);
+            } catch (error) {
+              return HttpResponse.json({ error }, { status: 500 });
+            }
+          }),
+        ];
         const w = setupWorker(...handlers);
         try {
           await w.start({ quiet: true });
@@ -294,9 +306,7 @@ export const useDemoDataSource = (
         }
       }
     }
-    if (handlers.length > 0) {
-      startServer();
-    }
+    startServer();
     return () => {
       if (worker) {
         setWorker((prev) => {
@@ -305,10 +315,10 @@ export const useDemoDataSource = (
         });
       }
     };
-  }, [handlers]);
+  }, [fetchRows, data, shouldRequestsFail]);
 
   React.useEffect(() => {
-    if (data && worker && !isInitialized) {
+    if (data && (!serverOptions?.startServer || worker) && !isInitialized) {
       setIsInitialized(true);
     }
   }, [data, worker, isInitialized]);
@@ -319,7 +329,7 @@ export const useDemoDataSource = (
     getGroupKey,
     hasChildren,
     getChildrenCount,
-    getRows,
+    fetchRows,
     isInitialized,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);

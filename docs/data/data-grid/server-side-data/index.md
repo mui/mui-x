@@ -120,39 +120,6 @@ const customDataSource: GridDataSource = {
 
 The code has been significantly reduced, the need for managing the controlled states is removed, and data fetching logic is centralized.
 
-:::info
-
-For the following examples, a utility `useDemoDataSource` is used to simulate the server-side data fetching based on the package `@mui/x-data-grid-generator`. It creates a dummy server based on the mock service worker. You can replace this with your actual server-side data fetching logic.
-
-```tsx
-const { loading, columns, initialState } = useDemoDataSource(
-  dataSetOptions,
-  serverOptions,
-);
-
-const customDataSource: GridDataSource = {
-  getRows: async (params: GridGetRowsParams): GetRowsResponse => {
-    const requestParams = new URLSearchParams({
-      page: params.page.toString(),
-      pageSize: params.pageSize.toString(),
-      sortModel: JSON.stringify(params.sortModel),
-      filterModel: JSON.stringify(params.filterModel),
-    });
-    const response = await fetch(`https://api-url?${requestParams.toString()}`);
-    const data = await response.json();
-
-    return {
-      rows: data.rows,
-      rowCount: data.totalCount,
-    };
-  },
-};
-
-<DataGridPro columns={columns} pagination unstable_dataSource={customDataSource} />;
-```
-
-:::
-
 ## Server-side filtering, sorting, and pagination
 
 The data source changes how the existing server-side features like `filtering`, `sorting`, and `pagination` work.
@@ -197,6 +164,10 @@ When the corresponding models update, the data grid calls the `getRows` method w
 The following demo showcases this behavior.
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+
+:::info
+The demo above uses a utility `msw` to create a mock server that intercepts the actual Network calls and provide data. Open Network tab in the browser's developer tools to see the requests and corresponding responses.
+:::
 
 ## Data caching
 

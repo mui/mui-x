@@ -4,35 +4,12 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 import LoadingSlate from './LoadingSlate';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
 const datasetOptions = {};
-
-const dataSource = {
-  getRows: async (params) => {
-    const urlParams = new URLSearchParams({
-      paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
-      filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-      sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
-    });
-    const serverResponse = await fetch(
-      `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-    );
-    if (!serverResponse.ok) {
-      const body = await serverResponse.json();
-      throw new Error(body.error ?? 'An error occurred while fetching the data');
-    }
-    const getRowsResponse = await serverResponse.json();
-    return {
-      rows: getRowsResponse.rows,
-      rowCount: getRowsResponse.rowCount,
-    };
-  },
-};
 
 function getBorderColor(theme) {
   if (theme.palette.mode === 'light') {
@@ -68,10 +45,32 @@ export default function ServerSideErrorHandling() {
   const [error, setError] = React.useState();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { isInitialized, ...props } = useDemoDataSource(
+  const { isInitialized, fetchRows, ...props } = useMockServer(
     datasetOptions,
     serverOptions,
     shouldRequestsFail,
+  );
+
+  const dataSource = React.useMemo(
+    () => ({
+      getRows: async (params) => {
+        const urlParams = new URLSearchParams({
+          paginationModel: encodeURIComponent(
+            JSON.stringify(params.paginationModel),
+          ),
+          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+        });
+        const getRowsResponse = await fetchRows(
+          `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+        );
+        return {
+          rows: getRowsResponse.rows,
+          rowCount: getRowsResponse.rowCount,
+        };
+      },
+    }),
+    [fetchRows],
   );
 
   const initialState = React.useMemo(

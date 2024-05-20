@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 import LoadingSlate from './LoadingSlate';
 
-const serverOptions = { useCursorPagination: false, minDelay: 1000, maxDelay: 3000 };
+const serverOptions = { useCursorPagination: false, startServer: true };
 const dataSetOptions = {};
 
 const dataSource = {
@@ -26,7 +26,7 @@ const dataSource = {
 };
 
 function ServerSideDataGrid() {
-  const { isInitialized, columns, initialState } = useDemoDataSource(
+  const { isInitialized, columns, initialState } = useMockServer(
     dataSetOptions,
     serverOptions,
   );

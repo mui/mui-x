@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 import LoadingSlate from './LoadingSlate';
 
-const serverOptions = { useCursorPagination: false, minDelay: 1000, maxDelay: 3000 };
+const serverOptions = { useCursorPagination: false, startServer: true };
 const dataSetOptions = {};
 
 const dataSource: GridDataSource = {
@@ -12,7 +12,6 @@ const dataSource: GridDataSource = {
       paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
       filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
       sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
     });
     const serverResponse = await fetch(
       `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -26,7 +25,7 @@ const dataSource: GridDataSource = {
 };
 
 function ServerSideDataGrid() {
-  const { isInitialized, columns, initialState } = useDemoDataSource(
+  const { isInitialized, columns, initialState } = useMockServer(
     dataSetOptions,
     serverOptions,
   );

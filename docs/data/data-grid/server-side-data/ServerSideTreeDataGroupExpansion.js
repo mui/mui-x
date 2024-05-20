@@ -1,28 +1,52 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
 
 export default function ServerSideTreeDataGroupExpansion() {
   const apiRef = useGridApiRef();
 
-  const { getRows, ...props } = useDemoDataSource({
+  const {
+    fetchRows,
+    columns,
+    initialState,
+    getGroupKey,
+    getChildrenCount,
+    hasChildren,
+  } = useMockServer({
     dataSet: 'Employee',
     rowLength: 1000,
     treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
   });
 
-  const dataSource = React.useMemo(() => {
-    return {
-      getRows,
-    };
-  }, [getRows]);
-
-  const initialState = React.useMemo(
+  const dataSource = React.useMemo(
     () => ({
-      ...props.initialState,
+      getRows: async (params) => {
+        const urlParams = new URLSearchParams({
+          paginationModel: encodeURIComponent(
+            JSON.stringify(params.paginationModel),
+          ),
+          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+          groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+        });
+        const getRowsResponse = await fetchRows(
+          `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+        );
+        return {
+          rows: getRowsResponse.rows,
+          rowCount: getRowsResponse.rowCount,
+        };
+      },
+    }),
+    [fetchRows],
+  );
+
+  const initialStateWithPagination = React.useMemo(
+    () => ({
+      ...initialState,
       pagination: {
         paginationModel: {
           pageSize: 5,
@@ -30,7 +54,7 @@ export default function ServerSideTreeDataGroupExpansion() {
         rowCount: 0,
       },
     }),
-    [props.initialState],
+    [initialState],
   );
 
   return (
@@ -38,13 +62,16 @@ export default function ServerSideTreeDataGroupExpansion() {
       <Button onClick={() => apiRef.current.clearCache()}>Reset cache</Button>
       <div style={{ height: 400 }}>
         <DataGridPro
-          {...props}
+          columns={columns}
           unstable_dataSource={dataSource}
+          getGroupKey={getGroupKey}
+          hasChildren={hasChildren}
+          getChildrenCount={getChildrenCount}
           treeData
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
-          initialState={initialState}
+          initialState={initialStateWithPagination}
           slots={{ toolbar: GridToolbar }}
           slotProps={{ toolbar: { showQuickFilter: true } }}
           defaultGroupingExpansionDepth={-1}

@@ -47,7 +47,7 @@ Following is a demo of the server-side tree data with the data source which supp
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The demo above uses a utility `useDemoDataSource` which uses a data generator service to generate data for testing of the application. Apart from providing the additional props, it exposes a function called `getRows` which could be used directly as `GridDataSource.getRows`.
+The demo above uses a utility `msw` to create a mock server that intercepts the actual Network calls and provide data. Open Network tab in the browser's developer tools to see the requests and corresponding responses.
 :::
 
 ## Error handling

@@ -5,39 +5,11 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
+import LoadingSlate from './LoadingSlate';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
-
-function getBorderColor(theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-const StyledDiv = styled('div')(({ theme: t }) => ({
-  position: 'absolute',
-  zIndex: 10,
-  fontSize: '0.875em',
-  top: 0,
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
-  backgroundColor: t.palette.background.default,
-}));
-
-function ErrorOverlay({ error }) {
-  if (!error) {
-    return null;
-  }
-  return <StyledDiv>{error}</StyledDiv>;
-}
 
 export default function ServerSideTreeDataErrorHandling() {
   const apiRef = useGridApiRef();
@@ -45,7 +17,7 @@ export default function ServerSideTreeDataErrorHandling() {
   const [childrenError, setChildrenError] = React.useState();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { getRows, ...props } = useDemoDataSource(
+  const { isInitialized, fetchRows, ...props } = useMockServer(
     {
       dataSet: 'Employee',
       rowLength: 1000,
@@ -55,11 +27,28 @@ export default function ServerSideTreeDataErrorHandling() {
     shouldRequestsFail,
   );
 
-  const dataSource = React.useMemo(() => {
-    return {
-      getRows,
-    };
-  }, [getRows]);
+  const dataSource = React.useMemo(
+    () => ({
+      getRows: async (params) => {
+        const urlParams = new URLSearchParams({
+          paginationModel: encodeURIComponent(
+            JSON.stringify(params.paginationModel),
+          ),
+          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+          groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+        });
+        const getRowsResponse = await fetchRows(
+          `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+        );
+        return {
+          rows: getRowsResponse.rows,
+          rowCount: getRowsResponse.rowCount,
+        };
+      },
+    }),
+    [fetchRows],
+  );
 
   const initialState = React.useMemo(
     () => ({
@@ -96,33 +85,68 @@ export default function ServerSideTreeDataErrorHandling() {
         />
       </div>
       <div style={{ height: 400, position: 'relative' }}>
-        <DataGridPro
-          {...props}
-          treeData
-          unstable_dataSource={dataSource}
-          unstable_onServerSideError={(e, params) => {
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(e.message);
-            } else {
-              setChildrenError(
-                `${e.message} (Requested level: ${params.groupKeys.join(', ')})`,
-              );
-            }
-          }}
-          disableServerSideCache
-          apiRef={apiRef}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          initialState={initialState}
-        />
-        {rootError && <ErrorOverlay error={rootError} />}
-        <Snackbar
-          open={!!childrenError}
-          autoHideDuration={3000}
-          onClose={() => setChildrenError('')}
-          message={childrenError}
-        />
+        {isInitialized ? (
+          <React.Fragment>
+            <DataGridPro
+              {...props}
+              treeData
+              unstable_dataSource={dataSource}
+              unstable_onServerSideError={(e, params) => {
+                if (!params.groupKeys || params.groupKeys.length === 0) {
+                  setRootError(e.message);
+                } else {
+                  setChildrenError(
+                    `${e.message} (Requested level: ${params.groupKeys.join(', ')})`,
+                  );
+                }
+              }}
+              disableServerSideCache
+              apiRef={apiRef}
+              pagination
+              pageSizeOptions={pageSizeOptions}
+              initialState={initialState}
+            />
+            {rootError && <ErrorOverlay error={rootError} />}
+            <Snackbar
+              open={!!childrenError}
+              autoHideDuration={3000}
+              onClose={() => setChildrenError('')}
+              message={childrenError}
+            />
+          </React.Fragment>
+        ) : (
+          <LoadingSlate />
+        )}
       </div>
     </div>
   );
+}
+
+function getBorderColor(theme) {
+  if (theme.palette.mode === 'light') {
+    return lighten(alpha(theme.palette.divider, 1), 0.88);
+  }
+  return darken(alpha(theme.palette.divider, 1), 0.68);
+}
+
+const StyledDiv = styled('div')(({ theme: t }) => ({
+  position: 'absolute',
+  zIndex: 10,
+  fontSize: '0.875em',
+  top: 0,
+  height: '100%',
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  border: `1px solid ${getBorderColor(t)}`,
+  backgroundColor: t.palette.background.default,
+}));
+
+function ErrorOverlay({ error }) {
+  if (!error) {
+    return null;
+  }
+  return <StyledDiv>{error}</StyledDiv>;
 }

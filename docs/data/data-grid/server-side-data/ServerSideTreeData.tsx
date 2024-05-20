@@ -7,7 +7,7 @@ import {
   GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
-import { useDemoDataSource } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 import LoadingSlate from './LoadingSlate';
 
 const pageSizeOptions = [5, 10, 50];
@@ -34,11 +34,16 @@ const dataSource: GridDataSource = {
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, ...props } = useDemoDataSource({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-  });
+  const { isInitialized, ...props } = useMockServer(
+    {
+      dataSet: 'Employee',
+      rowLength: 1000,
+      treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+    },
+    {
+      startServer: true,
+    },
+  );
 
   const initialState: GridInitialState = React.useMemo(
     () => ({

@@ -2,5 +2,5 @@ export * from './useDemoData';
 export * from './useBasicDemoData';
 export * from './useMovieData';
 export * from './useQuery';
-export * from './useDemoDataSource';
+export * from './useMockServer';
 export { loadServerRows } from './serverUtils';
