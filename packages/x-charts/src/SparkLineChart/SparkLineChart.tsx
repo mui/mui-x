@@ -214,7 +214,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 SparkLineChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Set to `true` to fill spark line area.
