@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+import { useTreeViewApiRef } from '@mui/x-tree-view/hooks/useTreeViewApiRef';
+
+const MUI_X_PRODUCTS = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -24,26 +23,30 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
-export default function ChangeItemExpansion() {
+export default function ApiMethodFocusItem() {
   const apiRef = useTreeViewApiRef();
-
-  const handleExpandClick = (event: React.MouseEvent) => {
-    apiRef.current!.setItemExpansion(event, 'grid', true);
-  };
-
-  const handleCollapseClick = (event: React.MouseEvent) => {
-    apiRef.current!.setItemExpansion(event, 'grid', false);
+  const handleButtonClick = (event) => {
+    apiRef.current?.focusItem(event, 'pickers');
   };
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Stack sx={{ mb: 1 }} spacing={2} direction="row">
-        <Button onClick={handleExpandClick}>Expand Data Grid</Button>
-        <Button onClick={handleCollapseClick}>Collapse Data Grid</Button>
-      </Stack>
-      <Box sx={{ minHeight: 220, flexGrow: 1 }}>
+      <Box sx={{ mb: 1 }}>
+        <Button onClick={handleButtonClick}>Focus pickers item</Button>
+      </Box>
+      <Box sx={{ height: 264, flexGrow: 1 }}>
         <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
       </Box>
     </Box>

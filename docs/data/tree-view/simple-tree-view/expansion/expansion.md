@@ -32,8 +32,34 @@ Use the `onItemExpansionToggle` prop to trigger an action upon an item being exp
 
 {{"demo": "TrackItemExpansionToggle.js"}}
 
-## Change item expansion
+## Imperative API
 
-You can use the `setItemExpansion` API method to imperatively change the expansion of an item:
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
 
-{{"demo": "ChangeItemExpansion.js"}}
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Change an item expansion
+
+Use the `setItemExpansion` API method to change the expansion of an item.
+
+```ts
+apiRef.current.setItemExpansion(
+  // The DOM event that triggered the change
+  event,
+  // The ID of the item to expand or collapse
+  itemId,
+  // `true` if the item should be expanded, `false` if it should be collapsed
+  isExpanded,
+);
+```
+
+{{"demo": "ApiMethodSetItemExpansion.js"}}
