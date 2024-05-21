@@ -14,6 +14,7 @@ import {
   ExportedBaseToolbarProps,
   resolveTimeFormat,
   WrapperVariant,
+  TimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
@@ -33,29 +34,39 @@ const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
 };
 
 export interface TimeRangePickerToolbarProps<TDate extends PickerValidDate>
-  extends BaseToolbarProps<DateRange<TDate>, TimeView>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+  extends BaseToolbarProps<DateRange<TDate>, TimeViewWithMeridiem>,
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
+    ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
-  ampmInClock: boolean;
   toolbarVariant?: WrapperVariant;
-  classes?: Partial<TimeRangePickerToolbarClasses>;
 }
 
 export interface ExportedTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
-  ampm?: boolean;
-  ampmInClock?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<TimeRangePickerToolbarClasses>;
 }
 
 const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{
-  ownerState: TimeRangePickerToolbarProps<any>;
-}>(({ theme, ownerState }) => ({
-  ...(ownerState.toolbarVariant === 'mobile'
-    ? { borderBottom: `1px solid ${(theme.vars || theme).palette.divider}` }
-    : { padding: 0 }),
+})<{ ownerState: TimeRangePickerToolbarProps<any> }>(({ theme }) => ({
+  variants: [
+    {
+      props: { toolbarVariant: 'mobile' },
+      style: {
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        padding: 0,
+      },
+    },
+  ],
 }));
 
 const TimeRangePickerToolbarContainer = styled('div', {
@@ -87,7 +98,6 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     toolbarFormat,
     className,
     ampm,
-    ampmInClock,
     views,
     toolbarVariant = 'mobile',
     toolbarPlaceholder = '--:--',
