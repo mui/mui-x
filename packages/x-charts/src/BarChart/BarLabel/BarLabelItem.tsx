@@ -129,7 +129,7 @@ function BarLabelItem(props: BarLabelItemProps) {
 BarLabelItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If provided, the function will be used to format the label of the bar.
