@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "barLabel": {
+      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
+    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
@@ -14,5 +17,8 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "bar": "The component that renders the bar." }
+  "slotDescriptions": {
+    "bar": "The component that renders the bar.",
+    "barLabel": "The component that renders the bar label."
+  }
 }

@@ -14,6 +14,7 @@
         "text": "highlight docs"
       }
     },
+    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
     "borderRadius": { "type": { "name": "number" } },
     "bottomAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
@@ -129,6 +130,12 @@
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
       "class": null
     },
     {

@@ -1,3 +1,4 @@
+import { BarLabelProps } from '../BarChart/BarLabel';
 import { BarChartProps } from '../BarChart/BarChart';
 import { BarElementProps } from '../BarChart/BarElement';
 import { ChartsAxisProps } from '../ChartsAxis';
@@ -27,6 +28,7 @@ export interface ChartsComponentsPropsList {
   // BarChart components
   MuiBarChart: BarChartProps;
   MuiBarElement: BarElementProps;
+  MuiBarLabel: BarLabelProps;
   // LineChart components
   MuiLineChart: LineChartProps;
   MuiAreaElement: AreaElementProps;

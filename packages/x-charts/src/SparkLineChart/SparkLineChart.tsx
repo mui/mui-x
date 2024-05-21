@@ -29,7 +29,7 @@ export interface SparkLineChartSlots
     LinePlotSlots,
     MarkPlotSlots,
     LineHighlightPlotSlots,
-    BarPlotSlots,
+    Omit<BarPlotSlots, 'barLabel'>,
     ChartsTooltipSlots {}
 export interface SparkLineChartSlotProps
   extends AreaPlotSlotProps,

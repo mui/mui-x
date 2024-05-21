@@ -138,6 +138,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     slots,
     slotProps,
     loading,
+    barLabel,
   } = props;
 
   const id = useId();
@@ -197,6 +198,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
           borderRadius={borderRadius}
+          barLabel={barLabel}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
@@ -232,6 +234,14 @@ BarChart.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   /**
    * Defines the border radius of the bar element.
    */
