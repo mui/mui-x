@@ -30,7 +30,7 @@ return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 Use the `focusItem` API method to focus a specific item.
 
 ```ts
-apiRef.current.focusedItem(
+apiRef.current.focusItem(
   // The DOM event that triggered the change
   event,
   // The ID of the item to focus
