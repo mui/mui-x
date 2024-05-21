@@ -2,26 +2,111 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
+  DefaultizedProps,
+  DIALOG_WIDTH,
   extractValidationProps,
+  isInternalTimeView,
+  PickerViewRenderer,
+  PickerViewsRendererProps,
   resolveTimeFormat,
   TimeViewWithMeridiem,
   useUtils,
+  VIEW_HEIGHT,
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import refType from '@mui/utils/refType';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import {
   TimeRangePickerRenderers,
   useTimeRangePickerDefaultizedProps,
 } from '../TimeRangePicker/shared';
-import {
-  renderDigitalClockTimeRangeView,
-  renderMultiSectionDigitalClockTimeRangeView,
-} from '../timeRangeViewRenderers';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
-import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
+import {
+  useMobileRangePicker,
+  UseMobileRangePickerProps,
+} from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { DateRange } from '../models';
+import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+
+const rendererInterceptor = function rendererInterceptor<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inViewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any>,
+  popperView: TimeViewWithMeridiem,
+  rendererProps: PickerViewsRendererProps<
+    DateRange<TDate>,
+    TimeViewWithMeridiem,
+    DefaultizedProps<
+      UseMobileRangePickerProps<
+        TDate,
+        TimeViewWithMeridiem,
+        TEnableAccessibleFieldDOMStructure,
+        any,
+        any
+      >,
+      'rangePosition' | 'onRangePositionChange' | 'openTo'
+    >,
+    {}
+  >,
+) {
+  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
+  const finalProps = {
+    ...otherRendererProps,
+    rangePosition,
+    focusedView: null,
+    sx: [
+      {
+        width: DIALOG_WIDTH,
+        [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+          flex: 1,
+          // account for the border on `MultiSectionDigitalClock`
+          maxHeight: VIEW_HEIGHT - 1,
+          [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+            width: 'auto',
+          },
+        },
+        [`&.${digitalClockClasses.root}`]: {
+          maxHeight: RANGE_VIEW_HEIGHT,
+          [`.${digitalClockClasses.item}`]: {
+            justifyContent: 'center',
+          },
+        },
+        [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}`]:
+          {
+            maxHeight: RANGE_VIEW_HEIGHT - 1,
+          },
+      },
+    ],
+  };
+  const viewRenderer = inViewRenderers[popperView];
+  if (!viewRenderer) {
+    return null;
+  }
+  return (
+    <DateTimeRangePickerTimeWrapper
+      {...finalProps}
+      viewRenderer={
+        viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
+      }
+      view={view && isInternalTimeView(view) ? view : 'hours'}
+      views={finalProps.views as TimeViewWithMeridiem[]}
+      openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
+    />
+  );
+};
 
 type MobileTimeRangePickerComponent = (<
   TDate extends PickerValidDate,
@@ -46,15 +131,15 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimeRangePicker');
 
-  const renderTimeRangeView = defaultizedProps.shouldRenderTimeInASingleColumn
-    ? renderDigitalClockTimeRangeView
-    : renderMultiSectionDigitalClockTimeRangeView;
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any> = {
-    hours: renderTimeRangeView,
-    minutes: renderTimeRangeView,
-    seconds: renderTimeRangeView,
-    meridiem: renderTimeRangeView,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 
@@ -93,6 +178,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     valueManager: rangeValueManager,
     valueType: 'time',
     validator: validateTimeRange,
+    rendererInterceptor,
   });
 
   return renderPicker();
