@@ -5,6 +5,9 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
+    "barLabel": {
+      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
+    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "bottomAxis": {
       "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
@@ -76,6 +79,7 @@
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
     "bar": "The component that renders the bar.",
+    "barLabel": "The component that renders the bar label.",
     "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

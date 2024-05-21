@@ -40,6 +40,10 @@ export interface ChartsComponents {
     defaultProps?: ComponentsProps['MuiBarElement'];
     styleOverrides?: ComponentsOverrides['MuiBarElement'];
   };
+  MuiBarLabel?: {
+    defaultProps?: ComponentsProps['MuiBarLabel'];
+    styleOverrides?: ComponentsOverrides['MuiBarLabel'];
+  };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
