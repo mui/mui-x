@@ -43,7 +43,6 @@
     "area": "The component that renders the area.",
     "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
     "bar": "The component that renders the bar.",
-    "barLabel": "The component that renders the bar label.",
     "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "line": "The component that renders the line.",
     "lineHighlight": "",

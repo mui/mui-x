@@ -75,12 +75,6 @@
       "class": null
     },
     {
-      "name": "barLabel",
-      "description": "The component that renders the bar label.",
-      "default": "BarLabel",
-      "class": null
-    },
-    {
       "name": "popper",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
