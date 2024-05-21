@@ -12,6 +12,7 @@ import {
   gridColumnLookupSelector,
   GridLogicOperator,
   GridSingleSelectColDef,
+  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
 import * as remoteControl from '../hooks/features/remoteControl/api';
@@ -51,13 +52,15 @@ function GridToolbarRemoteControl() {
 
   const sendRequest = React.useCallback(() => {
     const context = generateContext(apiRef, rootProps);
-    const columns = gridColumnLookupSelector(apiRef);
+    const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
     apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: true } }));
     remoteControl
       .controls(context, query)
       .then((result) => {
+        const interestColumns = [] as string[];
+
         apiRef.current.setFilterModel({
           items: result.filters.map((f, i) => {
             const item = {
@@ -66,7 +69,7 @@ function GridToolbarRemoteControl() {
               operator: f.operator,
               value: f.value,
             };
-            const column = columns[f.column];
+            const column = columnsByField[f.column];
             if (column.type === 'singleSelect') {
               const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
               const found = options.find((o) => typeof o === 'object' && o.label === f.value);
@@ -102,6 +105,15 @@ function GridToolbarRemoteControl() {
               return apiRef.current.getRowId(r);
             });
         apiRef.current.setRowSelectionModel(selectedRowIds);
+
+        const columns = apiRef.current.getAllColumns();
+        const targetIndex =
+          Number(columns.find(c => c.field === GRID_CHECKBOX_SELECTION_FIELD) !== undefined)
+          + Number(result.grouping.length)
+
+        interestColumns.push(...Object.keys(result.aggregation))
+        interestColumns.push(...result.filters.map(f => f.column))
+        interestColumns.reverse().forEach(c => apiRef.current.setColumnIndex(c, targetIndex))
       })
       .catch((error) => {
         // eslint-disable-next-line no-alert
