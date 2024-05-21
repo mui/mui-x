@@ -42,14 +42,11 @@ BarLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  ownerState: PropTypes.shape({
-    classes: PropTypes.object,
-    color: PropTypes.string.isRequired,
-    dataIndex: PropTypes.number.isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  }).isRequired,
+  classes: PropTypes.object,
+  dataIndex: PropTypes.number.isRequired,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 } as any;
 
 export { BarLabel };
