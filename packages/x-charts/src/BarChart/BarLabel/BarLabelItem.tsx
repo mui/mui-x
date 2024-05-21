@@ -5,7 +5,7 @@ import { InteractionContext } from '../../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
 import { useUtilityClasses } from './barLabelClasses';
 import { HighlighContext } from '../../context/HighlightProvider';
-import { BarLabelOwnerState, BarItem, BarLabelContext } from './types';
+import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, BarLabelProps } from './BarLabel';
 

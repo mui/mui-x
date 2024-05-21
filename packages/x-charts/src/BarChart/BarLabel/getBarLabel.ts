@@ -1,5 +1,5 @@
 import { SeriesId } from '../../models/seriesType/common';
-import { BarLabelFunction } from './types';
+import { BarLabelFunction } from './BarLabel.types';
 
 export const getBarLabel = (options: {
   barLabel: 'value' | BarLabelFunction;

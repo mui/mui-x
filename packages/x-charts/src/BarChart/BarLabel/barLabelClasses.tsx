@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import type { BarLabelOwnerState } from './types';
+import type { BarLabelOwnerState } from './BarLabel.types';
 
 export interface BarLabelClasses {
   /** Styles applied to the root element. */
