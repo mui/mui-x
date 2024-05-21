@@ -189,7 +189,9 @@ TimeRangePickerToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool.isRequired,
-  ampmInClock: PropTypes.bool.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
@@ -232,11 +234,12 @@ TimeRangePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired,
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
   /**
    * Available views.
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
+    .isRequired,
 } as any;
 
 export { TimeRangePickerToolbar };
