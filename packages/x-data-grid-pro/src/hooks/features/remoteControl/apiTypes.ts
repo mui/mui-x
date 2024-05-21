@@ -13,9 +13,16 @@ export type Filter = {
   column: string;
 };
 
+export type AggregationFunction = 'avg' | 'sum' | 'min' | 'max' | 'size';
+export type Aggregation = {
+  [column: string]: AggregationFunction;
+};
+
 export type Response = {
+  select: number;
   filters: Filter[];
   filterOperator?: 'and' | 'or';
+  aggregation: Aggregation;
   sorting: Sort[];
   grouping: Grouping[];
   error: string | null;

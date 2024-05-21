@@ -13,7 +13,7 @@ import {
   GridLogicOperator,
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
-import { getValueOptions } from '@mui/x-data-grid/internals';
+import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
 import * as remoteControl from '../hooks/features/remoteControl/api';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridApiPro } from '../models';
@@ -83,9 +83,25 @@ function GridToolbarRemoteControl() {
         apiRef.current.setSortModel(
           result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
         );
+
+        // XXX: This requires premium.
         if ((apiRef.current as any).setRowGroupingModel) {
           (apiRef.current as any).setRowGroupingModel(result.grouping.map((g) => g.column));
         }
+        // XXX: This requires premium.
+        if ((apiRef.current as any).setAggregationModel) {
+          // XXX: Custom aggregation functions not supported here.
+          (apiRef.current as any).setAggregationModel(result.aggregation);
+        }
+
+        const rows = getVisibleRows(apiRef, rootProps);
+        const selectedRowIds =
+          result.select === -1
+            ? []
+            : rows.rows.slice(0, result.select).map((r) => {
+              return apiRef.current.getRowId(r);
+            });
+        apiRef.current.setRowSelectionModel(selectedRowIds);
       })
       .catch((error) => {
         // eslint-disable-next-line no-alert
