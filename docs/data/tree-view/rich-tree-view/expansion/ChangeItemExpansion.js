@@ -3,28 +3,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
-
-const MUI_X_PRODUCTS = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
-    ],
-  },
-  {
-    id: 'pickers',
-    label: 'Date and Time Pickers',
-    children: [
-      { id: 'pickers-community', label: '@mui/x-date-pickers' },
-      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
-    ],
-  },
-];
+import MUI_X_PRODUCTS from '../../datasets/mui-x-products';
 
 export default function ChangeItemExpansion() {
   const apiRef = useTreeViewApiRef();
