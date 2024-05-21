@@ -35,7 +35,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function FocusedRichTreeView() {
+export default function ApiMethodFocusItem() {
   const apiRef = useTreeViewApiRef();
   const handleButtonClick = (event: React.SyntheticEvent) => {
     apiRef.current?.focusItem(event, 'pickers');

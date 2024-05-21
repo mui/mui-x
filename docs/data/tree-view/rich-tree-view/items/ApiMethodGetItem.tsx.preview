@@ -1,0 +1,11 @@
+<Typography>
+  Selected item: {selectedItem == null ? 'none' : selectedItem.label}
+</Typography>
+<Box sx={{ minHeight: 220, minWidth: 320, flexGrow: 1 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    apiRef={apiRef}
+    selectedItems={selectedItem?.id ?? null}
+    onSelectedItemsChange={handleSelectedItemsChange}
+  />
+</Box>
