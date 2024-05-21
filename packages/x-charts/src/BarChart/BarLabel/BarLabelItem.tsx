@@ -91,7 +91,7 @@ function BarLabelItem(props: BarLabelItemProps) {
 
   const Component = slots?.barLabel ?? BarLabel;
 
-  const barLabelProps = useSlotProps({
+  const { ownerState: barLabelOwnerState, ...barLabelProps } = useSlotProps({
     elementType: Component,
     externalSlotProps: slotProps?.barLabel,
     additionalProps: {
@@ -119,7 +119,11 @@ function BarLabelItem(props: BarLabelItemProps) {
     return null;
   }
 
-  return <Component {...barLabelProps}>{formattedLabelText}</Component>;
+  return (
+    <Component {...barLabelProps} {...barLabelOwnerState}>
+      {formattedLabelText}
+    </Component>
+  );
 }
 
 BarLabelItem.propTypes = {
