@@ -145,7 +145,7 @@ When it's set to true:
 
 ### Get an item by ID
 
-Use the `getItem` method to get an item by its ID.
+Use the `getItem` API method to get an item by its ID.
 
 ```ts
 const item = apiRef.current.getItem(
