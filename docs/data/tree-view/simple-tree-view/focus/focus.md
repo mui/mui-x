@@ -22,7 +22,8 @@ const apiRef = useTreeViewApiRef();
 return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
 ```
 
-`apiRef` will be undefined during the first render and will then contain methods allowing you to imperatively interact with the Tree View.
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
 ### Focus a specific item
