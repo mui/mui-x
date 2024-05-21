@@ -27,7 +27,7 @@ The component comes in three different versions, one available under MIT license
 
 ## MIT license (free forever)
 
-The MIT licensed version is a stronger alternative to [plain data tables](/material-ui/react-table/#sorting-amp-selecting).
+The MIT licensed version (also referred to as the "Community version") is a stronger alternative to [plain data tables](/material-ui/react-table/#sorting-amp-selecting).
 It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
 
 ```js
@@ -42,7 +42,7 @@ The commercially licensed versions are available in two plans: Pro and Premium.
 
 ### Pro plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The Pro plan includes and extends the features available in the MIT version to support more complex use cases.
+The Pro plan includes and extends the features available in the Community version to support more complex use cases.
 It adds new features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle bigger datasets.
 
 The demo below displays 31 columns and 100,000 rows—over 3 million cells in total.
