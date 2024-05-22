@@ -185,11 +185,23 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         this.skip();
       }
 
-      render(<ElementToTest disableOpenPicker {...propsToOpen} />);
+      render(
+        <ElementToTest
+          disableOpenPicker
+          {...propsToOpen}
+          slotProps={{
+            layout: {
+              classes: {
+                contentWrapper: 'test-pickers-content-wrapper',
+              },
+            },
+          }}
+        />,
+      );
 
       expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
       // check if anything has been rendered inside the layout content wrapper
-      expect(document.querySelector('.MuiPickersLayout-contentWrapper')?.hasChildNodes()).to.equal(
+      expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
         true,
       );
     });
