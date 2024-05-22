@@ -148,7 +148,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       }
     });
 
-    it.skip('should render toolbar when `hidden` is `false`', function test() {
+    it('should render toolbar when `hidden` is `false`', function test() {
       if (hasNoView) {
         this.skip();
       }
