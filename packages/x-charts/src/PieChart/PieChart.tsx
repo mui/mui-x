@@ -143,6 +143,7 @@ function PieChart(props: PieChartProps) {
     slotProps,
     onItemClick,
     loading,
+    highlightedItem,
   } = props;
   const isRTL = useIsRTL();
 
@@ -176,6 +177,7 @@ function PieChart(props: PieChartProps) {
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
+      highlightedItem={highlightedItem}
     >
       <ChartsAxis
         topAxis={topAxis}

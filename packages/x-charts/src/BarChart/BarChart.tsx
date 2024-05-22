@@ -139,6 +139,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     slotProps,
     loading,
     barLabel,
+    highlightedItem,
   } = props;
 
   const id = useId();
@@ -188,6 +189,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         axisHighlight?.y === 'none' &&
         !onAxisClick
       }
+      highlightedItem={highlightedItem}
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}

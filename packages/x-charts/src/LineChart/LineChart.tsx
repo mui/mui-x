@@ -165,6 +165,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     slotProps,
     skipAnimation,
     loading,
+    highlightedItem,
   } = props;
 
   const id = useId();
@@ -203,6 +204,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         axisHighlight?.y === 'none' &&
         !onAxisClick
       }
+      highlightedItem={highlightedItem}
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
