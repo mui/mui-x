@@ -9,11 +9,11 @@ import { highlightedReducer } from './highlightedReducer';
 
 type HighlightedProviderProps = {
   children: React.ReactNode;
-  options: HighlightedOptions;
-  highlightedItem: HighlightedItemData;
+  options?: HighlightedOptions;
+  highlightedItem?: HighlightedItemData;
 };
 
-export function HighlightProvider({
+export function HighlightedProvider({
   children,
   options: optionsProps,
   highlightedItem: highlightedItemProps,
