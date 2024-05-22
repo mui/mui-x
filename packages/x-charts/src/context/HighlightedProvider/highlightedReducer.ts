@@ -89,7 +89,7 @@ const createIsFaded =
   };
 
 export const highlightedReducer: React.Reducer<
-  Omit<HighlightedState, 'setHighlighted' | 'clearHighlighted' | 'setOptions' | 'clearOptions'>,
+  Omit<HighlightedState, 'setHighlighted' | 'clearHighlighted'>,
   HighlightedAction
 > = (state, action) => {
   switch (action.type) {
