@@ -213,7 +213,7 @@ describe('highlightedReducer', () => {
         ...defaultItemData,
       } as const;
 
-      it('should return false when input series and item are same as faded', () => {
+      it('should return false when input series and item are same as highlighted', () => {
         const action = {
           type: 'set-highlighted',
           options: optionsSameSeries,
@@ -221,7 +221,7 @@ describe('highlightedReducer', () => {
         expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
       });
 
-      it('should return true when input series is same as faded but with different item', () => {
+      it('should return true when input series is same as highlighted but with different item', () => {
         const action = {
           type: 'set-highlighted',
           options: optionsSameSeries,
@@ -234,7 +234,7 @@ describe('highlightedReducer', () => {
         ).to.equal(true);
       });
 
-      it('should return false when input series is different than faded', () => {
+      it('should return false when input series is different than highlighted', () => {
         const action = {
           type: 'set-highlighted',
           options: optionsSameSeries,
@@ -255,7 +255,7 @@ describe('highlightedReducer', () => {
         ...defaultItemData,
       } as const;
 
-      it('should return false when input series is same as faded', () => {
+      it('should return false when input series is same as highlighted', () => {
         const action = {
           type: 'set-highlighted',
           options: optionsOtherSeries,
@@ -263,7 +263,7 @@ describe('highlightedReducer', () => {
         expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
       });
 
-      it('should return true when input series is different than faded', () => {
+      it('should return true when input series is different than highlighted', () => {
         const action = {
           type: 'set-highlighted',
           options: optionsOtherSeries,
