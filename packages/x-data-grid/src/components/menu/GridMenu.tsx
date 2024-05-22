@@ -56,7 +56,7 @@ const GridMenuRoot = styled(Popper, {
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
   open: boolean;
-  target: HTMLElement | null | { current: HTMLElement | null };
+  target: HTMLElement | null;
   onClose: (event?: Event) => void;
   position?: MenuPosition;
   onExited?: GrowProps['onExited'];
@@ -88,7 +88,7 @@ function GridMenu(props: GridMenuProps) {
   React.useEffect(() => {
     // Emit menuOpen or menuClose events
     const eventName = open ? 'menuOpen' : 'menuClose';
-    apiRef.current.publishEvent(eventName, { target: getTarget(target) });
+    apiRef.current.publishEvent(eventName, { target });
   }, [apiRef, open, target]);
 
   const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
@@ -102,7 +102,7 @@ function GridMenu(props: GridMenuProps) {
   };
 
   const handleClickAway: ClickAwayListenerProps['onClickAway'] = (event) => {
-    if (event.target && (getTarget(target) === event.target || getTarget(target)?.contains(event.target as Node))) {
+    if (event.target && (target === event.target || target?.contains(event.target as Node))) {
       return;
     }
     onClose(event);
@@ -133,11 +133,6 @@ function GridMenu(props: GridMenuProps) {
       )}
     </GridMenuRoot>
   );
-}
-
-// TODO(v8): Simplify the type of `target` to just a ref
-export function getTarget(target: HTMLElement | null | { current: HTMLElement | null }) {
-  return (target as any)?.current ?? target;
 }
 
 GridMenu.propTypes = {
