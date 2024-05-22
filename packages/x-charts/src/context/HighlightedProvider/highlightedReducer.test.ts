@@ -46,18 +46,50 @@ describe('highlightedReducer', () => {
       ).to.equal(false);
     });
 
-    it('should return true for series same-series', () => {
-      const action = {
-        type: 'set-highlighted',
-        options: optionsSeriesSameSeries,
-      } as const;
-      expect(
-        highlightedReducer(defaultState, action).isHighlighted({
-          seriesId: '1',
-          itemId: '1',
-          value: '1',
-        }),
-      ).to.equal(true);
+    describe('type=series', () => {
+      describe('highlighted=same-series', () => {
+        it('should return true when input series is same as highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '1',
+              itemId: '1',
+              value: '1',
+            }),
+          ).to.equal(true);
+        });
+
+        it('should return false when input series is different than highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '2',
+              itemId: '1',
+              value: '1',
+            }),
+          ).to.equal(false);
+        });
+
+        it('should return true when input item is different than highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '1',
+              itemId: '2',
+              value: '1',
+            }),
+          ).to.equal(true);
+        });
+      });
     });
   });
 });
