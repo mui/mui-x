@@ -8,7 +8,7 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
 import { SeriesId } from '../models/seriesType/common';
-import { useHighlighted } from '../context';
+import { useItemHighlighted } from '../context';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -103,18 +103,17 @@ function AreaElement(props: AreaElementProps) {
   } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useHighlighted();
-  const currentItem = {
+  const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
-  };
+  });
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
     gradientId,
-    isFaded: isFaded(currentItem),
-    isHighlighted: isHighlighted(currentItem),
+    isFaded,
+    isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
 

@@ -49,7 +49,7 @@ export function useTransformData(
         itemId: dataIndex,
       };
       const isHighlighted = isItemHighlighted(currentItem);
-      const isFaded = isItemFaded(currentItem);
+      const isFaded = !isHighlighted && isItemFaded(currentItem);
 
       return { isHighlighted, isFaded };
     },

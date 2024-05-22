@@ -11,7 +11,7 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
-import { useHighlighted } from '../context';
+import { useItemHighlighted } from '../context';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -105,21 +105,17 @@ function MarkElement(props: MarkElementProps) {
   } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useHighlighted();
-  const { axis } = React.useContext(InteractionContext);
-  const currentItem = {
+  const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
-  };
-
-  const isMarkHighlighted = axis.x?.index === dataIndex || isHighlighted(currentItem);
-  const isMarkFaded = isFaded(currentItem);
+  });
+  const { axis } = React.useContext(InteractionContext);
 
   const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: isMarkHighlighted,
-    isFaded: isMarkFaded,
+    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
+    isFaded,
     color,
   };
   const classes = useUtilityClasses(ownerState);

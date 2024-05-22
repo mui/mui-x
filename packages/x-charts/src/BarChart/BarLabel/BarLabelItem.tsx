@@ -5,7 +5,7 @@ import { useUtilityClasses } from './barLabelClasses';
 import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, BarLabelProps } from './BarLabel';
-import { useHighlighted } from '../../context';
+import { useItemHighlighted } from '../../context';
 
 export interface BarLabelSlots {
   /**
@@ -71,18 +71,17 @@ function BarLabelItem(props: BarLabelItemProps) {
     value,
     ...other
   } = props;
-  const { isFaded, isHighlighted } = useHighlighted();
-  const currentItem = {
+  const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId,
     itemId: dataIndex,
-  };
+  });
 
   const ownerState = {
     seriesId,
     classes: innerClasses,
     color,
-    isFaded: isFaded(currentItem),
-    isHighlighted: isHighlighted(currentItem),
+    isFaded,
+    isHighlighted,
     dataIndex,
   };
   const classes = useUtilityClasses(ownerState);

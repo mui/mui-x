@@ -10,7 +10,7 @@ import { AnimatedProps, animated } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { SeriesId } from '../models/seriesType/common';
-import { useHighlighted } from '../context';
+import { useItemHighlighted } from '../context';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -114,19 +114,18 @@ function BarElement(props: BarElementProps) {
     ...other
   } = props;
   const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useHighlighted();
-  const currentItem = {
+  const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
     itemId: dataIndex,
-  };
+  });
 
   const ownerState = {
     id,
     dataIndex,
     classes: innerClasses,
     color,
-    isFaded: isFaded(currentItem),
-    isHighlighted: isHighlighted(currentItem),
+    isFaded,
+    isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
 

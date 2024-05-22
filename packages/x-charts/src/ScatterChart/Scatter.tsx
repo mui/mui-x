@@ -82,11 +82,12 @@ function Scatter(props: ScatterProps) {
           seriesId: pointCtx.seriesId,
           itemId: pointCtx.dataIndex,
         };
+        const isItemHighlighted = isHighlighted(currentItem);
         temp.push({
           x,
           y,
-          isHighlighted: isHighlighted(currentItem),
-          isFaded: isFaded(currentItem),
+          isHighlighted: isItemHighlighted,
+          isFaded: !isItemHighlighted && isFaded(currentItem),
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
           dataIndex: i,
