@@ -195,6 +195,9 @@
     "@types/node": "^18.19.33"
   },
   "packageManager": "pnpm@8.15.8",
+  "engines": {
+    "pnpm": "8.15.8"
+  },
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
