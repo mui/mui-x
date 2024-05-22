@@ -371,7 +371,7 @@ describe('highlightedReducer', () => {
       it('should return false when item is same as highlighted', () => {
         const action = {
           type: 'set-highlighted',
-          options: optionsOtherValue,
+          options: optionsGlobal,
         } as const;
         expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
       });
@@ -379,7 +379,7 @@ describe('highlightedReducer', () => {
       it('should return true when item is different than highlighted', () => {
         const action = {
           type: 'set-highlighted',
-          options: optionsOtherValue,
+          options: optionsGlobal,
         } as const;
         expect(
           highlightedReducer(defaultState, action).isFaded({
@@ -392,7 +392,7 @@ describe('highlightedReducer', () => {
       it('should return true when series is different than highlighted', () => {
         const action = {
           type: 'set-highlighted',
-          options: optionsOtherValue,
+          options: optionsGlobal,
         } as const;
         expect(
           highlightedReducer(defaultState, action).isFaded({
@@ -405,7 +405,7 @@ describe('highlightedReducer', () => {
       it('should return true when value is different than highlighted', () => {
         const action = {
           type: 'set-highlighted',
-          options: optionsOtherValue,
+          options: optionsGlobal,
         } as const;
         expect(
           highlightedReducer(defaultState, action).isFaded({
