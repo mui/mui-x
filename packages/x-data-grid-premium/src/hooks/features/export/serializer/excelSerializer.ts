@@ -62,7 +62,13 @@ interface SerializedRow {
   mergedCells: { leftIndex: number; rightIndex: number }[];
 }
 
-export const serializeRow = (
+/**
+ * FIXME: This function mutates the colspan info, but colspan info assumes that the columns
+ * passed to it are always consistent. In this case, the exported columns may differ from the
+ * actual rendered columns.
+ * The caller of this function MUST call `resetColSpan()` before and after usage.
+ */
+export const serializeRowUnsafe = (
   id: GridRowId,
   columns: GridStateColDef[],
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
@@ -448,10 +454,12 @@ export async function buildExcel(
   );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
+  apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
-    const serializedRow = serializeRow(id, columns, apiRef, valueOptionsData, options);
+    const serializedRow = serializeRowUnsafe(id, columns, apiRef, valueOptionsData, options);
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
+  apiRef.current.resetColSpan();
 
   if (exceljsPostProcess) {
     await exceljsPostProcess({
