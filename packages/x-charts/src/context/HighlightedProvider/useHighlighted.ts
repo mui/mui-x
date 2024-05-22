@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { HighlightedContext, HighlightedState } from './HighlightedContext';
 
+/**
+ * A hook to get the highlighted state of the chart.
+ *
+ * Please consider using the `useItemHighlighted` hook if you need to check the state of a specific item.
+ *
+ * @returns {HighlightedState} the state of the chart
+ */
 export function useHighlighted(): HighlightedState {
   const highlighted = React.useContext(HighlightedContext);
 

@@ -1,10 +1,27 @@
 import * as React from 'react';
 import { HighlightedContext, HighlightItemData } from './HighlightedContext';
 
-export function useItemHighlighted(item: HighlightItemData | null): {
+export type ItemHighlightedState = {
+  /**
+   * Whether the item is highlighted.
+   */
   isHighlighted: boolean;
+  /**
+   * Whether the item is faded.
+   */
   isFaded: boolean;
-} {
+};
+
+/**
+ * A hook to check the highlighted state of the item.
+ * This functions already calculates that a item is not faded if it is highlighted.
+ *
+ * if you need fine control over the state, use the `useHighlighted` hook instead.
+ *
+ * @param {HighlightItemData} item is the item to check
+ * @returns {ItemHighlightedState} the state of the item
+ */
+export function useItemHighlighted(item: HighlightItemData | null): ItemHighlightedState {
   const highlighted = React.useContext(HighlightedContext);
 
   if (highlighted === undefined) {
