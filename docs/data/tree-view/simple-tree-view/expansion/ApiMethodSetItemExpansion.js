@@ -6,7 +6,7 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
-export default function ChangeItemExpansion() {
+export default function ApiMethodSetItemExpansion() {
   const apiRef = useTreeViewApiRef();
 
   const handleExpandClick = (event) => {
