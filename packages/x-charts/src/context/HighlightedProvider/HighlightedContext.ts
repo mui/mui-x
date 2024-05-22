@@ -1,21 +1,27 @@
 import * as React from 'react';
+import { SeriesId } from '../../models/seriesType/common';
 
 export type HighlightedItemData = {
-  seriesId: string;
-  itemId: string;
-  value: string;
+  seriesId: SeriesId;
+  itemId?: number;
+  value?: string;
 };
 
 export type HighlightedScope = {
-  highlighted?: 'same-series' | 'same-value' | 'item' | 'none';
-  faded?: 'same-series' | 'other-series' | 'same-value' | 'other-value' | 'global' | 'none';
+  highlighted?: 'series' | 'same-series' | 'same-value' | 'item' | 'none';
+  faded?:
+    | 'series'
+    | 'same-series'
+    | 'other-series'
+    | 'same-value'
+    | 'other-value'
+    | 'global'
+    | 'none';
 } | null;
 
 export type HighlightedState = {
   options: HighlightedScope | null;
   highlightedItem: HighlightedItemData | null;
-  setOptions: (options: Omit<HighlightedScope, 'itemData'>) => void;
-  clearOptions: () => void;
   setHighlighted: (options: NonNullable<HighlightedItemData>) => void;
   clearHighlighted: () => void;
   isHighlighted: (input: HighlightedItemData) => boolean;
@@ -25,8 +31,6 @@ export type HighlightedState = {
 export const HighlightedContext = React.createContext<HighlightedState>({
   options: null,
   highlightedItem: null,
-  setOptions: () => {},
-  clearOptions: () => {},
   setHighlighted: () => {},
   clearHighlighted: () => {},
   isHighlighted: () => false,
@@ -34,5 +38,5 @@ export const HighlightedContext = React.createContext<HighlightedState>({
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  HighlightedContext.displayName = 'HighlightContext';
+  HighlightedContext.displayName = 'HighlightedContext';
 }

@@ -32,7 +32,10 @@ const createIsHighlighted =
       return false;
     }
 
-    if (highlightedScope.highlighted === 'same-series') {
+    if (
+      highlightedScope.highlighted === 'same-series' ||
+      highlightedScope.highlighted === 'series'
+    ) {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
@@ -56,7 +59,7 @@ const createIsFaded =
       return false;
     }
 
-    if (highlightedScope.faded === 'same-series') {
+    if (highlightedScope.faded === 'same-series' || highlightedScope.highlighted === 'series') {
       return (
         input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
       );
