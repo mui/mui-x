@@ -69,7 +69,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 BarLabelPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   bars: PropTypes.arrayOf(
