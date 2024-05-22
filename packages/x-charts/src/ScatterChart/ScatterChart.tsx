@@ -144,6 +144,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     slotProps,
     loading,
     highlightedItem,
+    onHighlightChange,
   } = props;
   return (
     <ResponsiveChartContainer
@@ -157,6 +158,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
       highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       <ZAxisContextProvider zAxis={zAxis}>
         {!disableVoronoi && (

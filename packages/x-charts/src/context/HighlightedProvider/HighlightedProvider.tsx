@@ -15,6 +15,7 @@ import { SeriesId } from '../../models/seriesType/common';
 export type HighlightedProviderProps = {
   children: React.ReactNode;
   highlightedItem?: HighlightItemData | null;
+  onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
 const mergeDeprecatedOptions = (
@@ -32,6 +33,7 @@ const mergeDeprecatedOptions = (
 export function HighlightedProvider({
   children,
   highlightedItem: highlightedItemProps,
+  onHighlightChange,
 }: HighlightedProviderProps) {
   const [highlightedItem, setHighlightedItem] = useControlled({
     controlled: highlightedItemProps,
@@ -83,10 +85,16 @@ export function HighlightedProvider({
   const providerValue: HighlightedState = React.useMemo(
     () => ({
       ...state,
-      setHighlighted: (itemData: HighlightItemData) => setHighlightedItem(itemData),
-      clearHighlighted: () => setHighlightedItem(null),
+      setHighlighted: (itemData: HighlightItemData) => {
+        onHighlightChange?.(itemData);
+        setHighlightedItem(itemData);
+      },
+      clearHighlighted: () => {
+        onHighlightChange?.(null);
+        setHighlightedItem(null);
+      },
     }),
-    [state, setHighlightedItem],
+    [state, setHighlightedItem, onHighlightChange],
   );
 
   return (

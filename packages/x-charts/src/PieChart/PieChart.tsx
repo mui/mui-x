@@ -144,6 +144,7 @@ function PieChart(props: PieChartProps) {
     onItemClick,
     loading,
     highlightedItem,
+    onHighlightChange,
   } = props;
   const isRTL = useIsRTL();
 
@@ -178,6 +179,7 @@ function PieChart(props: PieChartProps) {
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
       highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       <ChartsAxis
         topAxis={topAxis}
