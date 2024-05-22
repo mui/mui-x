@@ -31,3 +31,15 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 ## LineChartConnectNulls
 
 {{"demo": "LineChartConnectNulls.js"}}
+
+## Line with predicition
+
+To show that some part of the data have a different status, you can vary the rendering.
+
+In the following example, the chart shows some prediction.
+To do so, the `slots.line` is set with a custom components that render the default line twice.
+
+- The first one is clipped to show known values (from the left of the chart to the limit).
+- The second one is clipped to show predictions (from the limit to the right of the chart) with dash styling.
+
+{{"demo": "LineWithPrediction.js"}}
