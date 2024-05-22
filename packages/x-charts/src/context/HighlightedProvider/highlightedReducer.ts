@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedOptions, HighlightedState } from './HighlightedContext';
+import { HighlightItemData, HighlightedOptions, HighlightedState } from './HighlightedContext';
 
 export type HighlightedActionSet = {
   type: 'set-highlighted';
