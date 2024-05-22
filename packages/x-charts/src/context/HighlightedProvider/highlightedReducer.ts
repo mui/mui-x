@@ -8,7 +8,7 @@ export type HighlightedActionSetHighlighted = {
 
 export type HighlightedActionSetOptions = {
   type: 'set-options';
-  options: Pick<NonNullable<HighlightedScope>, 'highlighted' | 'faded'>;
+  options: NonNullable<HighlightedScope>;
 };
 
 export type HighlightedActionClearHighlighted = {
