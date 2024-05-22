@@ -56,8 +56,8 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   ({ theme }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
     width: 56,
-    overflow: 'hidden',
     padding: 0,
+    overflow: 'hidden',
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: 'auto',
     },
