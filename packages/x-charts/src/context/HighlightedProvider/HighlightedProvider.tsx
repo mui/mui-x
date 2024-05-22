@@ -5,6 +5,7 @@ import {
   HighlightedContext,
   HighlightScope,
   HighlightedState,
+  DeprecatedHighlightScope,
 } from './HighlightedContext';
 import { highlightedReducer } from './highlightedReducer';
 import { useSeries } from '../../hooks/useSeries';
@@ -14,6 +15,18 @@ import { SeriesId } from '../../models/seriesType/common';
 export type HighlightedProviderProps = {
   children: React.ReactNode;
   highlightedItem?: HighlightItemData | null;
+};
+
+const mergeDeprecatedOptions = (
+  options?: Partial<HighlightScope> | Partial<DeprecatedHighlightScope>,
+): HighlightScope => {
+  // @ts-expect-error deprecated behavior.
+  const { highlighted, faded, ...rest } = options ?? {};
+  return {
+    highlight: highlighted === 'series' ? 'same-series' : highlighted,
+    fade: faded === 'series' ? 'same-series' : faded,
+    ...rest,
+  };
 };
 
 export function HighlightedProvider({
@@ -42,7 +55,7 @@ export function HighlightedProvider({
       const seriesData = series[seriesType as ChartSeriesType];
       Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, seriesItem?.highlightScope);
+        map.set(seriesId, mergeDeprecatedOptions(seriesItem?.highlightScope));
       });
     });
     return map;
