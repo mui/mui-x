@@ -68,6 +68,8 @@ const createIsFaded =
         input.value !== highlightedOptions.value
       );
     }
+
+    return false;
   };
 
 export const highlightedReducer: React.Reducer<

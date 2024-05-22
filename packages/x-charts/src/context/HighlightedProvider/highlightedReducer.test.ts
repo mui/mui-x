@@ -362,7 +362,7 @@ describe('highlightedReducer', () => {
     });
 
     describe('faded=global', () => {
-      const optionsOtherValue = {
+      const optionsGlobal = {
         highlighted: 'same-value',
         faded: 'global',
         ...defaultItemData,
@@ -413,6 +413,22 @@ describe('highlightedReducer', () => {
             value: '2',
           }),
         ).to.equal(true);
+      });
+    });
+
+    describe('faded=none', () => {
+      const optionsNone = {
+        highlighted: 'same-value',
+        faded: 'none',
+        ...defaultItemData,
+      } as const;
+
+      it('should return false', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsNone,
+        } as const;
+        expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
       });
     });
   });
