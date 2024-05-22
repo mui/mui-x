@@ -8,13 +8,11 @@ export type HighlightItemData = {
 };
 
 export type HighlightedSeries = {
-  type: 'series';
   highlighted: 'same-series' | 'item' | 'none';
   faded: 'same-series' | 'other-series' | 'global' | 'none';
 } & MakeOptional<HighlightItemData, 'value'>;
 
 export type HighlightedValue = {
-  type: 'value';
   highlighted: 'same-value' | 'item' | 'none';
   faded: 'same-value' | 'other-value' | 'global' | 'none';
 } & HighlightItemData;

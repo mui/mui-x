@@ -19,12 +19,14 @@ const createIsHighlighted =
       return false;
     }
 
-    if (highlightedOptions.type === 'series' && highlightedOptions.highlighted === 'same-series') {
+    if (highlightedOptions.highlighted === 'same-series') {
       return input.seriesId === highlightedOptions.seriesId;
     }
 
-    if (highlightedOptions.type === 'series' && highlightedOptions.highlighted === 'item') {
-      return input.itemId === highlightedOptions.itemId;
+    if (highlightedOptions.highlighted === 'item') {
+      return (
+        input.itemId === highlightedOptions.itemId && input.seriesId === highlightedOptions.seriesId
+      );
     }
 
     return false;
