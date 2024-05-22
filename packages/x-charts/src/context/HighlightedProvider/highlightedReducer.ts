@@ -14,7 +14,13 @@ export type HighlightedAction = HighlightedActionSet | HighlightedActionClear;
 
 const createIsHighlighted =
   (highlightedOptions: HighlightedOptions) =>
-  (input: HighlightItemData): boolean => {};
+  (input: HighlightItemData): boolean => {
+    if (!highlightedOptions) {
+      return false;
+    }
+
+    return false;
+  };
 
 const createIsFaded =
   (highlightedOptions: HighlightedOptions) =>
