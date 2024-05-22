@@ -205,5 +205,47 @@ describe('highlightedReducer', () => {
         highlightedReducer(defaultState, { type: 'clear-highlighted' }).isFaded(defaultItemData),
       ).to.equal(false);
     });
+
+    describe('faded=same-series', () => {
+      const optionsSameSeries = {
+        highlighted: 'same-series',
+        faded: 'same-series',
+        ...defaultItemData,
+      } as const;
+
+      it('should return false when input series and item are same as faded', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsSameSeries,
+        } as const;
+        expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
+      });
+
+      it('should return true when input series is same as faded but with different item', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsSameSeries,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            itemId: '2',
+          }),
+        ).to.equal(true);
+      });
+
+      it('should return false when input series is different than faded', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsSameSeries,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            seriesId: '2',
+          }),
+        ).to.equal(false);
+      });
+    });
   });
 });
