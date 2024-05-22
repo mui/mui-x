@@ -102,10 +102,7 @@ function GridMenu(props: GridMenuProps) {
   };
 
   const handleClickAway: ClickAwayListenerProps['onClickAway'] = (event) => {
-    if (
-      event.target &&
-      (getTarget(target) === event.target || getTarget(target)?.contains(event.target as Node))
-    ) {
+    if (event.target && (getTarget(target) === event.target || getTarget(target)?.contains(event.target as Node))) {
       return;
     }
     onClose(event);
