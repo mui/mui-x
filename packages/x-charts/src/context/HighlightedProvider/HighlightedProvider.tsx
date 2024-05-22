@@ -2,20 +2,20 @@ import * as React from 'react';
 import {
   HighlightedItemData,
   HighlightedContext,
-  HighlightedOptions,
+  HighlightedScope,
   HighlightedState,
 } from './HighlightedContext';
 import { highlightedReducer } from './highlightedReducer';
 
-type HighlightedProviderProps = {
+export type HighlightedProviderProps = {
   children: React.ReactNode;
-  options?: HighlightedOptions;
+  highlightedScope?: HighlightedScope;
   highlightedItem?: HighlightedItemData;
 };
 
 export function HighlightedProvider({
   children,
-  options: optionsProps,
+  highlightedScope: optionsProps,
   highlightedItem: highlightedItemProps,
 }: HighlightedProviderProps) {
   const [state, dispatch] = React.useReducer(highlightedReducer, {
@@ -42,7 +42,7 @@ export function HighlightedProvider({
   const providerValue: HighlightedState = React.useMemo(
     () => ({
       ...state,
-      setOptions: (options: NonNullable<HighlightedOptions>) =>
+      setOptions: (options: NonNullable<HighlightedScope>) =>
         dispatch({ type: 'set-options', options }),
       clearOptions: () => dispatch({ type: 'clear-options' }),
       setHighlighted: (itemData: NonNullable<HighlightedItemData>) =>

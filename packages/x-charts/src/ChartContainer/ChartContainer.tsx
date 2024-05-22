@@ -13,14 +13,15 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { HighlightProvider } from '../context/HighlightProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { HighlightedProvider, HighlightedProviderProps } from '../context';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     SeriesContextProviderProps &
     Omit<DrawingProviderProps, 'svgRef'> &
-    CartesianContextProviderProps,
+    CartesianContextProviderProps &
+    HighlightedProviderProps,
   'children'
 > & {
   children?: React.ReactNode;
@@ -40,6 +41,8 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     title,
     desc,
     disableAxisListener,
+    highlightedItem,
+    highlightedScope,
     children,
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -52,7 +55,10 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
       <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
           <InteractionProvider>
-            <HighlightProvider>
+            <HighlightedProvider
+              highlightedItem={highlightedItem}
+              highlightedScope={highlightedScope}
+            >
               <ChartsSurface
                 width={width}
                 height={height}
@@ -65,7 +71,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 <ChartsAxesGradients />
                 {children}
               </ChartsSurface>
-            </HighlightProvider>
+            </HighlightedProvider>
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>

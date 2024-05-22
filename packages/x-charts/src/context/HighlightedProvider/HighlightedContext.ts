@@ -6,15 +6,15 @@ export type HighlightedItemData = {
   value: string;
 };
 
-export type HighlightedOptions = {
+export type HighlightedScope = {
   highlighted?: 'same-series' | 'same-value' | 'item' | 'none';
   faded?: 'same-series' | 'other-series' | 'same-value' | 'other-value' | 'global' | 'none';
 } | null;
 
 export type HighlightedState = {
-  options: HighlightedOptions | null;
+  options: HighlightedScope | null;
   highlightedItem: HighlightedItemData | null;
-  setOptions: (options: Omit<HighlightedOptions, 'itemData'>) => void;
+  setOptions: (options: Omit<HighlightedScope, 'itemData'>) => void;
   clearOptions: () => void;
   setHighlighted: (options: NonNullable<HighlightedItemData>) => void;
   clearHighlighted: () => void;

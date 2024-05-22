@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedItemData, HighlightedOptions, HighlightedState } from './HighlightedContext';
+import { HighlightedItemData, HighlightedScope, HighlightedState } from './HighlightedContext';
 
 export type HighlightedActionSetHighlighted = {
   type: 'set-highlighted';
@@ -8,7 +8,7 @@ export type HighlightedActionSetHighlighted = {
 
 export type HighlightedActionSetOptions = {
   type: 'set-options';
-  options: Pick<NonNullable<HighlightedOptions>, 'highlighted' | 'faded'>;
+  options: Pick<NonNullable<HighlightedScope>, 'highlighted' | 'faded'>;
 };
 
 export type HighlightedActionClearHighlighted = {
@@ -26,23 +26,23 @@ export type HighlightedAction =
   | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightedItemData | null) =>
+  (highlightedScope: HighlightedScope, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
-    if (!highlightedOptions) {
+    if (!highlightedScope) {
       return false;
     }
 
-    if (highlightedOptions.highlighted === 'same-series') {
+    if (highlightedScope.highlighted === 'same-series') {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
-    if (highlightedOptions.highlighted === 'item') {
+    if (highlightedScope.highlighted === 'item') {
       return (
         input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
       );
     }
 
-    if (highlightedOptions.highlighted === 'same-value') {
+    if (highlightedScope.highlighted === 'same-value') {
       return input.value === highlightedItem?.value;
     }
 
@@ -50,31 +50,31 @@ const createIsHighlighted =
   };
 
 const createIsFaded =
-  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightedItemData | null) =>
+  (highlightedScope: HighlightedScope, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
-    if (!highlightedOptions) {
+    if (!highlightedScope) {
       return false;
     }
 
-    if (highlightedOptions.faded === 'same-series') {
+    if (highlightedScope.faded === 'same-series') {
       return (
         input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
       );
     }
 
-    if (highlightedOptions.faded === 'other-series') {
+    if (highlightedScope.faded === 'other-series') {
       return input.seriesId !== highlightedItem?.seriesId;
     }
 
-    if (highlightedOptions.faded === 'same-value') {
+    if (highlightedScope.faded === 'same-value') {
       return input.value === highlightedItem?.value && input.itemId !== highlightedItem?.itemId;
     }
 
-    if (highlightedOptions.faded === 'other-value') {
+    if (highlightedScope.faded === 'other-value') {
       return input.value !== highlightedItem?.value;
     }
 
-    if (highlightedOptions.faded === 'global') {
+    if (highlightedScope.faded === 'global') {
       return (
         input.seriesId !== highlightedItem?.seriesId ||
         input.itemId !== highlightedItem?.itemId ||
