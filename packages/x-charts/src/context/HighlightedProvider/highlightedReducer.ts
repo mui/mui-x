@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { HighlightedItemData, HighlightedScope, HighlightedState } from './HighlightedContext';
+import { HighlightItemData, HighlightScope, HighlightedState } from './HighlightedContext';
 
 export type HighlightedActionSetHighlighted = {
   type: 'set-highlighted';
-  itemData: NonNullable<HighlightedItemData>;
+  itemData: NonNullable<HighlightItemData>;
 };
 
 export type HighlightedActionSetOptions = {
   type: 'set-options';
-  options: NonNullable<HighlightedScope>;
+  options: NonNullable<HighlightScope>;
 };
 
 export type HighlightedActionClearHighlighted = {
@@ -26,21 +26,21 @@ export type HighlightedAction =
   | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
-  (input: HighlightedItemData): boolean => {
+  (highlightScope: HighlightScope | undefined, highlightedItem: HighlightItemData | null) =>
+  (input: HighlightItemData): boolean => {
     if (!highlightScope) {
       return false;
     }
 
     if (
-      highlightScope.highlighted === 'same-series' ||
+      highlightScope.highlight === 'same-series' ||
       // @ts-expect-error backward compatibility
-      highlightScope.highlighted === 'series'
+      highlightScope.highlight === 'series'
     ) {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
-    if (highlightScope.highlighted === 'item') {
+    if (highlightScope.highlight === 'item') {
       return (
         input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
       );
@@ -50,21 +50,21 @@ const createIsHighlighted =
   };
 
 const createIsFaded =
-  (highlightScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
-  (input: HighlightedItemData): boolean => {
+  (highlightScope: HighlightScope | undefined, highlightedItem: HighlightItemData | null) =>
+  (input: HighlightItemData): boolean => {
     if (!highlightScope) {
       return false;
     }
 
     if (
-      highlightScope.faded === 'same-series' ||
+      highlightScope.fade === 'same-series' ||
       // @ts-expect-error backward compatibility
-      highlightScope.faded === 'series'
+      highlightScope.fade === 'series'
     ) {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
-    if (highlightScope.faded === 'global') {
+    if (highlightScope.fade === 'global') {
       return (
         input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
       );

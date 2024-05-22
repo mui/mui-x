@@ -1,4 +1,4 @@
-import type { HighlightedScope } from '../../context';
+import type { HighlightScope } from '../../context';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
@@ -28,7 +28,7 @@ export type CommonSeriesType<TValue> = {
   /**
    * The scope to apply when the series is highlighted.
    */
-  highlightScope?: Partial<HighlightedScope>;
+  highlightScope?: Partial<HighlightScope>;
 };
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';

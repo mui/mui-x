@@ -1,9 +1,9 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import {
-  HighlightedItemData,
+  HighlightItemData,
   HighlightedContext,
-  HighlightedScope,
+  HighlightScope,
   HighlightedState,
 } from './HighlightedContext';
 import { highlightedReducer } from './highlightedReducer';
@@ -13,7 +13,7 @@ import { SeriesId } from '../../models/seriesType/common';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;
-  highlightedItem?: HighlightedItemData;
+  highlightedItem?: HighlightItemData | null;
 };
 
 export function HighlightedProvider({
@@ -36,7 +36,7 @@ export function HighlightedProvider({
 
   const series = useSeries();
   const seriesById = React.useMemo(() => {
-    const map: Map<SeriesId, Partial<HighlightedScope> | undefined> = new Map();
+    const map: Map<SeriesId, Partial<HighlightScope> | undefined> = new Map();
 
     Object.keys(series).forEach((seriesType) => {
       const seriesData = series[seriesType as ChartSeriesType];
@@ -48,7 +48,10 @@ export function HighlightedProvider({
     return map;
   }, [series]);
 
-  const highlightScope = highlightedItem ? seriesById.get(highlightedItem.seriesId) ?? null : null;
+  const highlightScope =
+    highlightedItem && highlightedItem.seriesId
+      ? seriesById.get(highlightedItem.seriesId) ?? null
+      : null;
 
   React.useEffect(() => {
     dispatch(
@@ -67,7 +70,7 @@ export function HighlightedProvider({
   const providerValue: HighlightedState = React.useMemo(
     () => ({
       ...state,
-      setHighlighted: (itemData: HighlightedItemData) => setHighlightedItem(itemData),
+      setHighlighted: (itemData: HighlightItemData) => setHighlightedItem(itemData),
       clearHighlighted: () => setHighlightedItem(null),
     }),
     [state, setHighlightedItem],

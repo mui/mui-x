@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SeriesId } from '../../models/seriesType/common';
 
-export type HighlightedItemData = {
+export type HighlightItemData = {
   /**
    * The series id of the highlighted item.
    */
@@ -12,32 +12,47 @@ export type HighlightedItemData = {
   itemId?: number;
 };
 
-export type HighlightedScope = {
+export type HighlightOptions = 'none' | 'item' | 'same-series';
+
+export type FadeOptions = 'none' | 'same-series' | 'global';
+
+export type DeprecatedHighlightScope = {
+  /**
+   * @deprecated Use `highlight` instead.
+   */
+  highlighted: 'none' | 'item' | 'series';
+  /**
+   * @deprecated Use `fade` instead.
+   */
+  faded: 'none' | 'series' | 'global';
+};
+
+export type HighlightScope = {
   /**
    * The scope of highlighted elements.
    * - 'none': no highlight.
    * - 'item': only highlight the item.
-   * - 'series': highlight all elements of the same series.
+   * - 'same-series': highlight all elements of the same series.
    * @default 'none'
    */
-  highlighted?: 'same-series' | 'item' | 'none';
+  highlight?: HighlightOptions;
   /**
    * The scope of faded elements.
    * - 'none': no fading.
-   * - 'series': only fade element of the same series.
+   * - 'same-series': only fade element of the same series.
    * - 'global': fade all elements that are not highlighted.
    * @default 'none'
    */
-  faded?: 'same-series' | 'global' | 'none';
+  fade?: FadeOptions;
 };
 
 export type HighlightedState = {
-  options?: HighlightedScope;
-  highlightedItem: HighlightedItemData | null;
-  setHighlighted: (options: NonNullable<HighlightedItemData>) => void;
+  options?: HighlightScope;
+  highlightedItem: HighlightItemData | null;
+  setHighlighted: (options: NonNullable<HighlightItemData>) => void;
   clearHighlighted: () => void;
-  isHighlighted: (input: HighlightedItemData) => boolean;
-  isFaded: (input: HighlightedItemData) => boolean;
+  isHighlighted: (input: HighlightItemData) => boolean;
+  isFaded: (input: HighlightItemData) => boolean;
 };
 
 export const HighlightedContext = React.createContext<HighlightedState>({

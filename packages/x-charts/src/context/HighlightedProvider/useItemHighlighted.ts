@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { HighlightedContext, HighlightedItemData } from './HighlightedContext';
+import { HighlightedContext, HighlightItemData } from './HighlightedContext';
 
-export function useItemHighlighted(item: HighlightedItemData | null): {
+export function useItemHighlighted(item: HighlightItemData | null): {
   isHighlighted: boolean;
   isFaded: boolean;
 } {
