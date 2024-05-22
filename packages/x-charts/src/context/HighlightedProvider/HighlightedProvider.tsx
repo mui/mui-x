@@ -25,7 +25,7 @@ export function HighlightProvider({ children, options: optionsProps }: Highlight
   const providerValue = React.useMemo(
     () => ({
       ...state,
-      setHighlighted: (options: HighlightedOptions) =>
+      setHighlighted: (options: NonNullable<HighlightedOptions>) =>
         dispatch({ type: 'set-highlighted', options }),
       clearHighlighted: () => dispatch({ type: 'clear-highlighted' }),
     }),

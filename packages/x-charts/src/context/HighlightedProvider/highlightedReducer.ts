@@ -3,7 +3,7 @@ import { HighlightedOptions, HighlightedState } from './HighlightedContext';
 
 export type HighlightedActionSet = {
   type: 'set-highlighted';
-  options: HighlightedOptions;
+  options: NonNullable<HighlightedOptions>;
 };
 
 export type HighlightedActionClear = {

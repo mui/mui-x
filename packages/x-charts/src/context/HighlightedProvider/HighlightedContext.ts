@@ -23,7 +23,7 @@ export type HighlightedOptions = HighlightedValue | HighlightedSeries | null;
 
 export type HighlightedState = {
   options: HighlightedOptions;
-  setHighlighted: (options: HighlightedOptions) => void;
+  setHighlighted: (options: NonNullable<HighlightedOptions>) => void;
   clearHighlighted: () => void;
   isHighlighted: (input: HighlightItemData) => boolean;
   isFaded: (input: HighlightItemData) => boolean;
