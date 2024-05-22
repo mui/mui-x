@@ -100,7 +100,7 @@ function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
 
   return (
     <PieArcRoot

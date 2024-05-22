@@ -42,24 +42,15 @@ export function useTransformData(
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlighted();
 
-  const getHighlightStatus = React.useCallback(
-    (dataIndex: number) => {
-      const currentItem = {
-        seriesId,
-        itemId: dataIndex,
-      };
-      const isHighlighted = isItemHighlighted(currentItem);
-      const isFaded = !isHighlighted && isItemFaded(currentItem);
-
-      return { isHighlighted, isFaded };
-    },
-    [seriesId, isItemFaded, isItemHighlighted],
-  );
-
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
+        const currentItem = {
+          seriesId,
+          itemId: itemIndex,
+        };
+        const isHighlighted = isItemHighlighted(currentItem);
+        const isFaded = !isHighlighted && isItemFaded(currentItem);
 
         const attributesOverride = {
           additionalRadius: 0,
@@ -102,8 +93,10 @@ export function useTransformData(
       baseArcLabelRadius,
       data,
       faded,
-      getHighlightStatus,
       highlighted,
+      isItemFaded,
+      isItemHighlighted,
+      seriesId,
     ],
   );
 
