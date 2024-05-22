@@ -29,7 +29,11 @@
         "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
       }
     },
-    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "highlightScope": {
+      "type": {
+        "description": "Partial&lt;HighlightScope&gt; | Partial&lt;DeprecatedHighlightScope&gt;"
+      }
+    },
     "id": { "type": { "description": "SeriesId" } },
     "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
     "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
