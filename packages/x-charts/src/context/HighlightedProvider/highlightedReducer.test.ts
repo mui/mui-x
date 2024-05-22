@@ -1,9 +1,17 @@
 import { expect } from 'chai';
 import { highlightedReducer } from './highlightedReducer';
 
-const optionsSeriesSameSeries = {
+const optionsSeriesSameSeriesSameSeries = {
   type: 'series',
   highlighted: 'same-series',
+  faded: 'same-series',
+  seriesId: '1',
+  itemId: '1',
+} as const;
+
+const optionsSeriesItemSameSeries = {
+  type: 'series',
+  highlighted: 'item',
   faded: 'same-series',
   seriesId: '1',
   itemId: '1',
@@ -19,15 +27,17 @@ describe('highlightedReducer', () => {
   it('set-highlighted should store the correct options', () => {
     const action = {
       type: 'set-highlighted',
-      options: optionsSeriesSameSeries,
+      options: optionsSeriesSameSeriesSameSeries,
     } as const;
-    expect(highlightedReducer(defaultState, action).options).to.deep.equal(optionsSeriesSameSeries);
+    expect(highlightedReducer(defaultState, action).options).to.deep.equal(
+      optionsSeriesSameSeriesSameSeries,
+    );
   });
 
   it('clear-highlighted should clear the options', () => {
     const state = {
       ...defaultState,
-      options: optionsSeriesSameSeries,
+      options: optionsSeriesSameSeriesSameSeries,
     } as const;
     const action = {
       type: 'clear-highlighted',
@@ -51,7 +61,7 @@ describe('highlightedReducer', () => {
         it('should return true when input series is same as highlighted', () => {
           const action = {
             type: 'set-highlighted',
-            options: optionsSeriesSameSeries,
+            options: optionsSeriesSameSeriesSameSeries,
           } as const;
           expect(
             highlightedReducer(defaultState, action).isHighlighted({
@@ -65,7 +75,7 @@ describe('highlightedReducer', () => {
         it('should return false when input series is different than highlighted', () => {
           const action = {
             type: 'set-highlighted',
-            options: optionsSeriesSameSeries,
+            options: optionsSeriesSameSeriesSameSeries,
           } as const;
           expect(
             highlightedReducer(defaultState, action).isHighlighted({
@@ -79,7 +89,7 @@ describe('highlightedReducer', () => {
         it('should return true when input item is different than highlighted', () => {
           const action = {
             type: 'set-highlighted',
-            options: optionsSeriesSameSeries,
+            options: optionsSeriesSameSeriesSameSeries,
           } as const;
           expect(
             highlightedReducer(defaultState, action).isHighlighted({
@@ -93,7 +103,7 @@ describe('highlightedReducer', () => {
         it('should return true when input value is different than highlighted', () => {
           const action = {
             type: 'set-highlighted',
-            options: optionsSeriesSameSeries,
+            options: optionsSeriesSameSeriesSameSeries,
           } as const;
           expect(
             highlightedReducer(defaultState, action).isHighlighted({
@@ -102,6 +112,36 @@ describe('highlightedReducer', () => {
               value: '2',
             }),
           ).to.equal(true);
+        });
+      });
+
+      describe('highlighted=item', () => {
+        it('should return true when input item is same as highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesItemSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '1',
+              itemId: '1',
+              value: '1',
+            }),
+          ).to.equal(true);
+        });
+
+        it('should return false when input item is different than highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesItemSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '1',
+              itemId: '2',
+              value: '1',
+            }),
+          ).to.equal(false);
         });
       });
     });

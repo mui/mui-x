@@ -19,8 +19,12 @@ const createIsHighlighted =
       return false;
     }
 
-    if (highlightedOptions.type === 'series') {
+    if (highlightedOptions.type === 'series' && highlightedOptions.highlighted === 'same-series') {
       return input.seriesId === highlightedOptions.seriesId;
+    }
+
+    if (highlightedOptions.type === 'series' && highlightedOptions.highlighted === 'item') {
+      return input.itemId === highlightedOptions.itemId;
     }
 
     return false;
