@@ -38,7 +38,11 @@ const createIsHighlighted =
 
 const createIsFaded =
   (highlightedOptions: HighlightedOptions) =>
-  (input: HighlightItemData): boolean => {};
+  (input: HighlightItemData): boolean => {
+    if (!highlightedOptions) {
+      return false;
+    }
+  };
 
 export const highlightedReducer: React.Reducer<
   Omit<HighlightedState, 'setHighlighted' | 'clearHighlighted'>,

@@ -198,4 +198,12 @@ describe('highlightedReducer', () => {
       });
     });
   });
+
+  describe('isFaded', () => {
+    it('should return false when no options are set', () => {
+      expect(
+        highlightedReducer(defaultState, { type: 'clear-highlighted' }).isFaded(defaultItemData),
+      ).to.equal(false);
+    });
+  });
 });
