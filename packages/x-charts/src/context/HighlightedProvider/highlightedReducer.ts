@@ -48,6 +48,10 @@ const createIsFaded =
         input.seriesId === highlightedOptions.seriesId && input.itemId !== highlightedOptions.itemId
       );
     }
+
+    if (highlightedOptions.faded === 'other-series') {
+      return input.seriesId !== highlightedOptions.seriesId;
+    }
   };
 
 export const highlightedReducer: React.Reducer<

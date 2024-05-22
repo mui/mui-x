@@ -247,5 +247,34 @@ describe('highlightedReducer', () => {
         ).to.equal(false);
       });
     });
+
+    describe('faded=other-series', () => {
+      const optionsOtherSeries = {
+        highlighted: 'same-series',
+        faded: 'other-series',
+        ...defaultItemData,
+      } as const;
+
+      it('should return false when input series is same as faded', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherSeries,
+        } as const;
+        expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
+      });
+
+      it('should return true when input series is different than faded', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherSeries,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            seriesId: '2',
+          }),
+        ).to.equal(true);
+      });
+    });
   });
 });
