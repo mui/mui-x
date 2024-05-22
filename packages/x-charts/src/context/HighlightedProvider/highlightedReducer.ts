@@ -20,9 +20,7 @@ const createIsHighlighted =
     }
 
     if (highlightedOptions.type === 'series') {
-      return (
-        input.seriesId === highlightedOptions.seriesId && input.itemId === highlightedOptions.itemId
-      );
+      return input.seriesId === highlightedOptions.seriesId;
     }
 
     return false;
