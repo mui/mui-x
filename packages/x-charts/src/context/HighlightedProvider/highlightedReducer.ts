@@ -60,6 +60,14 @@ const createIsFaded =
     if (highlightedOptions.faded === 'other-value') {
       return input.value !== highlightedOptions.value;
     }
+
+    if (highlightedOptions.faded === 'global') {
+      return (
+        input.seriesId !== highlightedOptions.seriesId ||
+        input.itemId !== highlightedOptions.itemId ||
+        input.value !== highlightedOptions.value
+      );
+    }
   };
 
 export const highlightedReducer: React.Reducer<

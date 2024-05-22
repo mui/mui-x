@@ -360,5 +360,60 @@ describe('highlightedReducer', () => {
         ).to.equal(false);
       });
     });
+
+    describe('faded=global', () => {
+      const optionsOtherValue = {
+        highlighted: 'same-value',
+        faded: 'global',
+        ...defaultItemData,
+      } as const;
+
+      it('should return false when item is same as highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherValue,
+        } as const;
+        expect(highlightedReducer(defaultState, action).isFaded(defaultItemData)).to.equal(false);
+      });
+
+      it('should return true when item is different than highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherValue,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            itemId: '2',
+          }),
+        ).to.equal(true);
+      });
+
+      it('should return true when series is different than highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherValue,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            seriesId: '2',
+          }),
+        ).to.equal(true);
+      });
+
+      it('should return true when value is different than highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsOtherValue,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isFaded({
+            ...defaultItemData,
+            value: '2',
+          }),
+        ).to.equal(true);
+      });
+    });
   });
 });
