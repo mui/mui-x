@@ -39,6 +39,14 @@ describe('highlightedReducer', () => {
     expect(highlightedReducer(state, action).options).to.equal(null);
   });
 
+  it('should return the same state when no action is matched', () => {
+    const action = {
+      type: 'unknown',
+    } as const;
+    // @ts-expect-error
+    expect(highlightedReducer(defaultState, action)).to.equal(defaultState);
+  });
+
   describe('isHighlighted', () => {
     it('should return false when no options are set', () => {
       expect(
