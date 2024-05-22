@@ -8,6 +8,10 @@ export interface TimeRangePickerToolbarClasses {
   root: string;
   /** Styles applied to the container element. */
   container: string;
+  /** Styles applied to the separator element. */
+  separator: string;
+  /** Styles applied to the time container element. */
+  timeContainer: string;
 }
 
 export type TimeRangePickerToolbarClassKey = keyof TimeRangePickerToolbarClasses;
@@ -18,5 +22,5 @@ export function getTimeRangePickerToolbarUtilityClass(slot: string) {
 
 export const timeRangePickerToolbarClasses: TimeRangePickerToolbarClasses = generateUtilityClasses(
   'MuiTimeRangePickerToolbar',
-  ['root', 'container'],
+  ['root', 'container', 'separator', 'timeContainer'],
 );

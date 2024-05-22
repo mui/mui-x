@@ -24,6 +24,7 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
+export { PickersToolbarText } from './components/PickersToolbarText';
 export type {
   PickersToolbarTextProps,
   ExportedPickersToolbarTextProps,
@@ -144,7 +145,7 @@ export {
 export { resolveTimeViewsResponse } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
-export { isTimeView, isInternalTimeView, resolveTimeFormat } from './utils/time-utils';
+export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
 export { resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
