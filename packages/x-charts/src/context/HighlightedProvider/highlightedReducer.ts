@@ -59,7 +59,7 @@ const createIsFaded =
       return false;
     }
 
-    if (highlightedScope.faded === 'same-series' || highlightedScope.highlighted === 'series') {
+    if (highlightedScope.faded === 'same-series' || highlightedScope.faded === 'series') {
       return (
         input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
       );
