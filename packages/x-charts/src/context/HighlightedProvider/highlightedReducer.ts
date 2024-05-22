@@ -1,19 +1,32 @@
 import * as React from 'react';
 import { HighlightItemData, HighlightedOptions, HighlightedState } from './HighlightedContext';
 
-export type HighlightedActionSet = {
+export type HighlightedActionSetHighlighted = {
   type: 'set-highlighted';
-  options: NonNullable<HighlightedOptions>;
+  itemData: NonNullable<HighlightItemData>;
 };
 
-export type HighlightedActionClear = {
+export type HighlightedActionSetOptions = {
+  type: 'set-options';
+  options: Pick<NonNullable<HighlightedOptions>, 'highlighted' | 'faded'>;
+};
+
+export type HighlightedActionClearHighlighted = {
   type: 'clear-highlighted';
 };
 
-export type HighlightedAction = HighlightedActionSet | HighlightedActionClear;
+export type HighlightedActionClearOptions = {
+  type: 'clear-options';
+};
+
+export type HighlightedAction =
+  | HighlightedActionSetHighlighted
+  | HighlightedActionClearHighlighted
+  | HighlightedActionSetOptions
+  | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightedOptions: HighlightedOptions) =>
+  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightItemData | null) =>
   (input: HighlightItemData): boolean => {
     if (!highlightedOptions) {
       return false;
@@ -37,7 +50,7 @@ const createIsHighlighted =
   };
 
 const createIsFaded =
-  (highlightedOptions: HighlightedOptions) =>
+  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightItemData | null) =>
   (input: HighlightItemData): boolean => {
     if (!highlightedOptions) {
       return false;
@@ -73,24 +86,40 @@ const createIsFaded =
   };
 
 export const highlightedReducer: React.Reducer<
-  Omit<HighlightedState, 'setHighlighted' | 'clearHighlighted'>,
+  Omit<HighlightedState, 'setHighlighted' | 'clearHighlighted' | 'setOptions' | 'clearOptions'>,
   HighlightedAction
 > = (state, action) => {
   switch (action.type) {
-    case 'set-highlighted':
+    case 'set-options':
       return {
         ...state,
         options: action.options,
-        isFaded: createIsFaded(action.options),
-        isHighlighted: createIsHighlighted(action.options),
+        isFaded: createIsFaded(action.options, state.highlightedItem),
+        isHighlighted: createIsHighlighted(action.options, state.highlightedItem),
+      };
+
+    case 'clear-options':
+      return {
+        ...state,
+        options: null,
+        isFaded: createIsFaded(null, state.highlightedItem),
+        isHighlighted: createIsHighlighted(null, state.highlightedItem),
+      };
+
+    case 'set-highlighted':
+      return {
+        ...state,
+        highlightedItem: action.itemData,
+        isFaded: createIsFaded(state.options, action.itemData),
+        isHighlighted: createIsHighlighted(state.options, action.itemData),
       };
 
     case 'clear-highlighted':
       return {
         ...state,
         options: null,
-        isFaded: createIsFaded(null),
-        isHighlighted: createIsHighlighted(null),
+        isFaded: createIsFaded(state.options, null),
+        isHighlighted: createIsHighlighted(state.options, null),
       };
 
     default:

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MakeOptional } from '../../models/helpers';
 
 export type HighlightItemData = {
   seriesId: string;
@@ -7,21 +6,17 @@ export type HighlightItemData = {
   value: string;
 };
 
-export type HighlightedSeries = {
-  highlighted: 'same-series' | 'item' | 'none';
-  faded: 'same-series' | 'other-series' | 'global' | 'none';
-} & MakeOptional<HighlightItemData, 'value'>;
-
-export type HighlightedValue = {
-  highlighted: 'same-value' | 'item' | 'none';
-  faded: 'same-value' | 'other-value' | 'global' | 'none';
-} & HighlightItemData;
-
-export type HighlightedOptions = HighlightedValue | HighlightedSeries | null;
+export type HighlightedOptions = {
+  highlighted?: 'same-series' | 'same-value' | 'item' | 'none';
+  faded?: 'same-series' | 'other-series' | 'same-value' | 'other-value' | 'global' | 'none';
+} | null;
 
 export type HighlightedState = {
-  options: HighlightedOptions;
-  setHighlighted: (options: NonNullable<HighlightedOptions>) => void;
+  options: HighlightedOptions | null;
+  highlightedItem: HighlightItemData | null;
+  setOptions: (options: Omit<HighlightedOptions, 'itemData'>) => void;
+  clearOptions: () => void;
+  setHighlighted: (options: NonNullable<HighlightItemData>) => void;
   clearHighlighted: () => void;
   isHighlighted: (input: HighlightItemData) => boolean;
   isFaded: (input: HighlightItemData) => boolean;
@@ -29,6 +24,9 @@ export type HighlightedState = {
 
 export const HighlightedContext = React.createContext<HighlightedState>({
   options: null,
+  highlightedItem: null,
+  setOptions: () => {},
+  clearOptions: () => {},
   setHighlighted: () => {},
   clearHighlighted: () => {},
   isHighlighted: () => false,
