@@ -28,7 +28,6 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "name": "TimeRangePickerToolbar",
@@ -47,6 +46,18 @@
       "key": "root",
       "className": "MuiTimeRangePickerToolbar-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiTimeRangePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "timeContainer",
+      "className": "MuiTimeRangePickerToolbar-timeContainer",
+      "description": "Styles applied to the time container element.",
       "isGlobal": false
     }
   ],

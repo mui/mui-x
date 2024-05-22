@@ -300,10 +300,6 @@ TimeRangePickerToolbar.propTypes = {
   ]),
   titleId: PropTypes.string,
   /**
-   * Toolbar date format.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
    * Toolbar value placeholder—it is displayed when the value is empty.
    * @default "––"
    */
