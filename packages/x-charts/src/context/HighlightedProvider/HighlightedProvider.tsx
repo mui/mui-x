@@ -28,7 +28,7 @@ export function HighlightedProvider({
   });
 
   const [state, dispatch] = React.useReducer(highlightedReducer, {
-    options: null,
+    options: undefined,
     highlightedItem,
     isFaded: () => false,
     isHighlighted: () => false,
@@ -36,13 +36,13 @@ export function HighlightedProvider({
 
   const series = useSeries();
   const seriesById = React.useMemo(() => {
-    const map: Map<SeriesId, Partial<HighlightedScope>> = new Map();
+    const map: Map<SeriesId, Partial<HighlightedScope> | undefined> = new Map();
 
     Object.keys(series).forEach((seriesType) => {
       const seriesData = series[seriesType as ChartSeriesType];
       Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, seriesItem?.highlightScope ?? null);
+        map.set(seriesId, seriesItem?.highlightedScope ?? seriesItem?.highlightScope);
       });
     });
     return map;
@@ -71,7 +71,7 @@ export function HighlightedProvider({
   const providerValue: HighlightedState = React.useMemo(
     () => ({
       ...state,
-      setHighlighted: (itemData: NonNullable<HighlightedItemData>) => setHighlightedItem(itemData),
+      setHighlighted: (itemData: HighlightedItemData) => setHighlightedItem(itemData),
       clearHighlighted: () => setHighlightedItem(null),
     }),
     [state, setHighlightedItem],

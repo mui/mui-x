@@ -1,4 +1,4 @@
-import type { HighlightScope } from '../../context/HighlightProvider';
+import type { HighlightedScope } from '../../context';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
@@ -25,7 +25,11 @@ export type CommonSeriesType<TValue> = {
    * @returns {string} The string to display.
    */
   valueFormatter?: SeriesValueFormatter<TValue>;
-  highlightScope?: Partial<HighlightScope>;
+  /**
+   * @deprecated use `highlightedScope` instead.
+   */
+  highlightScope?: Partial<HighlightedScope>;
+  highlightedScope?: Partial<HighlightedScope>;
 };
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';

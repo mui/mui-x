@@ -1,15 +1,16 @@
-import * as React from 'react';
-import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
-
-export interface HighlightProviderProps {
-  children: React.ReactNode;
-}
-
-export type ItemHighlighData<T extends ChartSeriesType> = ChartItemIdentifier<T>;
-
+/**
+ * @deprecated Use `HighlightedScope` instead. If using `'series'` change it to `'same-series'`.
+ */
 export type HighlightOptions = 'none' | 'item' | 'series';
+
+/**
+ * @deprecated Use `HighlightedScope` instead. If using `'series'` change it to `'same-series'`.
+ */
 export type FadeOptions = 'none' | 'series' | 'global';
 
+/**
+ * @deprecated Use `HighlightedScope` instead. If using `'series'` change it to `'same-series'`.
+ */
 export type HighlightScope = {
   /**
    * The scope of highlighted elements.
@@ -28,83 +29,3 @@ export type HighlightScope = {
    */
   faded: FadeOptions;
 };
-type HighlighActions<T extends ChartSeriesType = ChartSeriesType> =
-  | {
-      type: 'enterItem';
-      item: ItemHighlighData<T>;
-      scope?: Partial<HighlightScope>;
-    }
-  | {
-      type: 'leaveItem';
-      item: ItemHighlighData<T>;
-    };
-
-type HighlighState = {
-  /**
-   * The item that triggers the highlight state.
-   */
-  item: null | ItemHighlighData<ChartSeriesType>;
-  scope: HighlightScope;
-  dispatch: React.Dispatch<HighlighActions>;
-};
-
-const defaultScope: HighlightScope = { highlighted: 'none', faded: 'none' };
-
-export const HighlighContext = React.createContext<HighlighState>({
-  item: null,
-  scope: defaultScope,
-  dispatch: () => null,
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  HighlighContext.displayName = 'HighlighContext';
-}
-
-const dataReducer: React.Reducer<Omit<HighlighState, 'dispatch'>, HighlighActions> = (
-  prevState,
-  action,
-) => {
-  switch (action.type) {
-    case 'enterItem':
-      return {
-        ...prevState,
-        item: action.item,
-        scope: { ...defaultScope, ...action.scope },
-      };
-
-    case 'leaveItem':
-      if (
-        prevState.item === null ||
-        (Object.keys(action.item) as (keyof ItemHighlighData<ChartSeriesType>)[]).some(
-          (key) => action.item[key] !== prevState.item![key],
-        )
-      ) {
-        // The item is already something else
-        return prevState;
-      }
-      return { ...prevState, item: null };
-
-    default:
-      return prevState;
-  }
-};
-
-function HighlightProvider(props: HighlightProviderProps) {
-  const { children } = props;
-  const [data, dispatch] = React.useReducer(dataReducer, {
-    item: null,
-    scope: defaultScope,
-  });
-
-  const value = React.useMemo(
-    () => ({
-      ...data,
-      dispatch,
-    }),
-    [data],
-  );
-
-  return <HighlighContext.Provider value={value}>{children}</HighlighContext.Provider>;
-}
-
-export { HighlightProvider };

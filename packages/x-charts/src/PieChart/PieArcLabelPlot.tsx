@@ -66,6 +66,7 @@ export interface PieArcLabelPlotProps
       | 'arcLabelMinAngle'
       | 'id'
       | 'highlightScope'
+      | 'highlightedScope'
     >,
     ComputedPieRadius {
   /**
@@ -99,7 +100,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
     faded = { additionalRadius: -5 },
     highlighted,
-    highlightScope,
     id,
     innerRadius,
     outerRadius,
@@ -117,7 +117,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     cornerRadius,
     paddingAngle,
     id,
-    highlightScope,
     highlighted,
     faded,
     data,
@@ -237,10 +236,6 @@ PieArcLabelPlot.propTypes = {
     innerRadius: PropTypes.number,
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
-  }),
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**

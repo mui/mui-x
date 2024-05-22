@@ -5,7 +5,6 @@ import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
@@ -66,7 +65,6 @@ export interface LineElementProps
     Pick<AnimatedLineProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
-  highlightScope?: Partial<HighlightScope>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -95,7 +93,6 @@ function LineElement(props: LineElementProps) {
     classes: innerClasses,
     color,
     gradientId,
-    highlightScope,
     slots,
     slotProps,
     onClick,
@@ -141,10 +138,6 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.

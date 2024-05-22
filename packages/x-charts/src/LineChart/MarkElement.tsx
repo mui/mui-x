@@ -8,7 +8,6 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
-import { HighlightScope } from '../context/HighlightProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
@@ -76,7 +75,6 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
-    highlightScope?: Partial<HighlightScope>;
   };
 
 /**
@@ -98,7 +96,6 @@ function MarkElement(props: MarkElementProps) {
     color,
     shape,
     dataIndex,
-    highlightScope,
     onClick,
     skipAnimation,
     ...other
@@ -147,10 +144,6 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The shape of the marker.

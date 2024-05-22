@@ -26,7 +26,7 @@ export type HighlightedAction =
   | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightedScope: HighlightedScope, highlightedItem: HighlightedItemData | null) =>
+  (highlightedScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
     if (!highlightedScope) {
       return false;
@@ -34,6 +34,7 @@ const createIsHighlighted =
 
     if (
       highlightedScope.highlighted === 'same-series' ||
+      // @ts-expect-error backward compatibility
       highlightedScope.highlighted === 'series'
     ) {
       return input.seriesId === highlightedItem?.seriesId;
@@ -45,43 +46,27 @@ const createIsHighlighted =
       );
     }
 
-    if (highlightedScope.highlighted === 'same-value') {
-      return input.value === highlightedItem?.value;
-    }
-
     return false;
   };
 
 const createIsFaded =
-  (highlightedScope: HighlightedScope, highlightedItem: HighlightedItemData | null) =>
+  (highlightedScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
     if (!highlightedScope) {
       return false;
     }
 
-    if (highlightedScope.faded === 'same-series' || highlightedScope.faded === 'series') {
-      return (
-        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
-      );
-    }
-
-    if (highlightedScope.faded === 'other-series') {
-      return input.seriesId !== highlightedItem?.seriesId;
-    }
-
-    if (highlightedScope.faded === 'same-value') {
-      return input.value === highlightedItem?.value && input.itemId !== highlightedItem?.itemId;
-    }
-
-    if (highlightedScope.faded === 'other-value') {
-      return input.value !== highlightedItem?.value;
+    if (
+      highlightedScope.faded === 'same-series' ||
+      // @ts-expect-error backward compatibility
+      highlightedScope.faded === 'series'
+    ) {
+      return input.seriesId === highlightedItem?.seriesId;
     }
 
     if (highlightedScope.faded === 'global') {
       return (
-        input.seriesId !== highlightedItem?.seriesId ||
-        input.itemId !== highlightedItem?.itemId ||
-        input.value !== highlightedItem?.value
+        input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
       );
     }
 
@@ -104,9 +89,9 @@ export const highlightedReducer: React.Reducer<
     case 'clear-options':
       return {
         ...state,
-        options: null,
-        isFaded: createIsFaded(null, state.highlightedItem),
-        isHighlighted: createIsHighlighted(null, state.highlightedItem),
+        options: undefined,
+        isFaded: createIsFaded(undefined, state.highlightedItem),
+        isHighlighted: createIsHighlighted(undefined, state.highlightedItem),
       };
 
     case 'set-highlighted':

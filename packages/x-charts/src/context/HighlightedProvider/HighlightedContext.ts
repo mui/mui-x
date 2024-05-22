@@ -2,25 +2,37 @@ import * as React from 'react';
 import { SeriesId } from '../../models/seriesType/common';
 
 export type HighlightedItemData = {
+  /**
+   * The series id of the highlighted item.
+   */
   seriesId: SeriesId;
+  /**
+   * The item id of the highlighted item. Usually, it is the index of the data.
+   */
   itemId?: number;
-  value?: string;
 };
 
 export type HighlightedScope = {
-  highlighted?: 'series' | 'same-series' | 'same-value' | 'item' | 'none';
-  faded?:
-    | 'series'
-    | 'same-series'
-    | 'other-series'
-    | 'same-value'
-    | 'other-value'
-    | 'global'
-    | 'none';
-} | null;
+  /**
+   * The scope of highlighted elements.
+   * - 'none': no highlight.
+   * - 'item': only highlight the item.
+   * - 'series': highlight all elements of the same series.
+   * @default 'none'
+   */
+  highlighted?: 'same-series' | 'item' | 'none';
+  /**
+   * The scope of faded elements.
+   * - 'none': no fading.
+   * - 'series': only fade element of the same series.
+   * - 'global': fade all elements that are not highlighted.
+   * @default 'none'
+   */
+  faded?: 'same-series' | 'global' | 'none';
+};
 
 export type HighlightedState = {
-  options: HighlightedScope | null;
+  options?: HighlightedScope;
   highlightedItem: HighlightedItemData | null;
   setHighlighted: (options: NonNullable<HighlightedItemData>) => void;
   clearHighlighted: () => void;
@@ -29,7 +41,7 @@ export type HighlightedState = {
 };
 
 export const HighlightedContext = React.createContext<HighlightedState>({
-  options: null,
+  options: undefined,
   highlightedItem: null,
   setHighlighted: () => {},
   clearHighlighted: () => {},

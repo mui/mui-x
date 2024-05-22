@@ -8,7 +8,6 @@ import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { AnimatedProps, animated } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
 
@@ -69,7 +68,6 @@ interface BarProps
       height?: string | number | undefined;
       width?: string | number | undefined;
     }> {
-  highlightScope?: Partial<HighlightScope>;
   ownerState: BarElementOwnerState;
 }
 
@@ -87,7 +85,6 @@ export interface BarElementSlotProps {
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
-    highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
@@ -106,7 +103,6 @@ function BarElement(props: BarElementProps) {
     dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,
     slots,
     slotProps,
     style,
@@ -155,10 +151,6 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The props used for each component slot.
