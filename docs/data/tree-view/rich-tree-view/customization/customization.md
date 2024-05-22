@@ -82,3 +82,10 @@ You can learn more about this new component in the [Overview page](/x/react-tree
 The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
 
 {{"demo": "FileExplorer.js", "defaultCodeOpen": false}}
+
+
+### 3D Canvas
+
+This example is built using the new `useTreeItem`.
+
+{{"demo": "ThreeDCanvas.js", "defaultCodeOpen": false}}
