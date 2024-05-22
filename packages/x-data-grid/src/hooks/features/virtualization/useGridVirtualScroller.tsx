@@ -90,7 +90,9 @@ try {
   if (typeof window !== 'undefined') {
     isJSDOM = /jsdom/.test(window.navigator.userAgent);
   }
-} catch (_) {}
+} catch (_) {
+  /* ignore */
+}
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
