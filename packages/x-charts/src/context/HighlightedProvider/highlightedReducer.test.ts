@@ -89,6 +89,20 @@ describe('highlightedReducer', () => {
             }),
           ).to.equal(true);
         });
+
+        it('should return true when input value is different than highlighted', () => {
+          const action = {
+            type: 'set-highlighted',
+            options: optionsSeriesSameSeries,
+          } as const;
+          expect(
+            highlightedReducer(defaultState, action).isHighlighted({
+              seriesId: '1',
+              itemId: '1',
+              value: '2',
+            }),
+          ).to.equal(true);
+        });
       });
     });
   });
