@@ -9,7 +9,7 @@ export type HighlightItemData = {
   /**
    * The item id of the highlighted item. Usually, it is the index of the data.
    */
-  itemId?: number;
+  itemId?: number | string;
 };
 
 export type HighlightOptions = 'none' | 'item' | 'same-series';

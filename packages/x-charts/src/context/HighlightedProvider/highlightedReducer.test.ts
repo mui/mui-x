@@ -8,13 +8,13 @@ const itemData = {
 };
 
 const noneOptions = {
-  highlighted: 'none',
-  faded: 'none',
+  highlight: 'none',
+  fade: 'none',
 } as const;
 
 const createDefaultState = () =>
   ({
-    options: null,
+    options: undefined,
     highlightedItem: null,
     isFaded: () => false,
     isHighlighted: () => false,
@@ -43,7 +43,8 @@ describe('highlightedReducer', () => {
     const action = {
       type: 'clear-options',
     } as const;
-    expect(highlightedReducer(state, action).options).to.equal(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    expect(highlightedReducer(state, action).options).to.be.undefined;
   });
 
   it('set-highlighted should store the correct highlightedItem', () => {
@@ -85,7 +86,7 @@ describe('highlightedReducer', () => {
     describe('highlighted=same-series', () => {
       const optionsSameSeries = {
         ...createDefaultState(),
-        options: { highlighted: 'same-series' },
+        options: { highlight: 'same-series' },
       } as const;
 
       it('should return true when input series is same as highlighted', () => {
@@ -111,21 +112,12 @@ describe('highlightedReducer', () => {
           }),
         ).to.equal(true);
       });
-
-      it('should return true when input value is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameSeries, setHighlightedAction).isHighlighted({
-            ...itemData,
-            value: '2',
-          }),
-        ).to.equal(true);
-      });
     });
 
     describe('highlighted=item', () => {
       const optionsItem = {
         ...createDefaultState(),
-        options: { highlighted: 'item' },
+        options: { highlight: 'item' },
       } as const;
 
       it('should return true when input item is same as highlighted', () => {
@@ -156,34 +148,12 @@ describe('highlightedReducer', () => {
     describe('highlighted=none', () => {
       const optionsNone = {
         ...createDefaultState(),
-        options: { highlighted: 'none' },
+        options: { highlight: 'none' },
       } as const;
 
       it('should return false', () => {
         expect(
           highlightedReducer(optionsNone, setHighlightedAction).isHighlighted(itemData),
-        ).to.equal(false);
-      });
-    });
-
-    describe('highlighted=same-value', () => {
-      const optionsSameValue = {
-        ...createDefaultState(),
-        options: { highlighted: 'same-value' },
-      } as const;
-
-      it('should return true when input is same as highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameValue, setHighlightedAction).isHighlighted(itemData),
-        ).to.equal(true);
-      });
-
-      it('should return false when input is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameValue, setHighlightedAction).isHighlighted({
-            ...itemData,
-            value: '2',
-          }),
         ).to.equal(false);
       });
     });
@@ -199,16 +169,10 @@ describe('highlightedReducer', () => {
     describe('faded=same-series', () => {
       const optionsSameSeries = {
         ...createDefaultState(),
-        options: { faded: 'same-series' },
+        options: { fade: 'same-series' },
       } as const;
 
-      it('should return false when input series and item are same as highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameSeries, setHighlightedAction).isFaded(itemData),
-        ).to.equal(false);
-      });
-
-      it('should return true when input series is same as highlighted but with different item', () => {
+      it('should return true when input series is same as highlighted', () => {
         expect(
           highlightedReducer(optionsSameSeries, setHighlightedAction).isFaded({
             ...itemData,
@@ -227,94 +191,10 @@ describe('highlightedReducer', () => {
       });
     });
 
-    describe('faded=other-series', () => {
-      const optionsOtherSeries = {
-        ...createDefaultState(),
-        options: { faded: 'other-series' },
-      } as const;
-
-      it('should return false when input series is same as highlighted', () => {
-        expect(
-          highlightedReducer(optionsOtherSeries, setHighlightedAction).isFaded(itemData),
-        ).to.equal(false);
-      });
-
-      it('should return true when input series is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsOtherSeries, setHighlightedAction).isFaded({
-            ...itemData,
-            seriesId: '2',
-          }),
-        ).to.equal(true);
-      });
-    });
-
-    describe('faded=same-value', () => {
-      const optionsSameValue = {
-        ...createDefaultState(),
-        options: { faded: 'same-value' },
-      } as const;
-
-      it('should return false when input is same as highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameValue, setHighlightedAction).isFaded(itemData),
-        ).to.equal(false);
-      });
-
-      it('should return true when input is same as highlighted but with different item', () => {
-        expect(
-          highlightedReducer(optionsSameValue, setHighlightedAction).isFaded({
-            ...itemData,
-            itemId: '2',
-          }),
-        ).to.equal(true);
-      });
-
-      it('should return false when input is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsSameValue, setHighlightedAction).isFaded({
-            ...itemData,
-            value: '2',
-          }),
-        ).to.equal(false);
-      });
-    });
-
-    describe('faded=other-value', () => {
-      const optionsOtherValue = {
-        ...createDefaultState(),
-        options: { faded: 'other-value' },
-      } as const;
-
-      it('should return false when input is same as highlighted', () => {
-        expect(
-          highlightedReducer(optionsOtherValue, setHighlightedAction).isFaded(itemData),
-        ).to.equal(false);
-      });
-
-      it('should return true when input is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsOtherValue, setHighlightedAction).isFaded({
-            ...itemData,
-            value: '2',
-          }),
-        ).to.equal(true);
-      });
-
-      it('should return false when input is same as highlighted but with different item', () => {
-        expect(
-          highlightedReducer(optionsOtherValue, setHighlightedAction).isFaded({
-            ...itemData,
-            itemId: '2',
-          }),
-        ).to.equal(false);
-      });
-    });
-
     describe('faded=global', () => {
       const optionsGlobal = {
         ...createDefaultState(),
-        options: { faded: 'global' },
+        options: { fade: 'global' },
       } as const;
 
       it('should return false when item is same as highlighted', () => {
@@ -340,21 +220,12 @@ describe('highlightedReducer', () => {
           }),
         ).to.equal(true);
       });
-
-      it('should return true when value is different than highlighted', () => {
-        expect(
-          highlightedReducer(optionsGlobal, setHighlightedAction).isFaded({
-            ...itemData,
-            value: '2',
-          }),
-        ).to.equal(true);
-      });
     });
 
     describe('faded=none', () => {
       const optionsNone = {
         ...createDefaultState(),
-        options: { faded: 'none' },
+        options: { fade: 'none' },
       } as const;
 
       it('should return false', () => {
