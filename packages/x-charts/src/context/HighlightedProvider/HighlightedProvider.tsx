@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import useControlled from '@mui/utils/useControlled';
 import {
   HighlightItemData,
@@ -14,7 +15,15 @@ import { SeriesId } from '../../models/seriesType/common';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;
+  /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
   highlightedItem?: HighlightItemData | null;
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
   onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
@@ -30,7 +39,7 @@ const mergeDeprecatedOptions = (
   };
 };
 
-export function HighlightedProvider({
+function HighlightedProvider({
   children,
   highlightedItem: highlightedItemProps,
   onHighlightChange,
@@ -101,3 +110,26 @@ export function HighlightedProvider({
     <HighlightedContext.Provider value={providerValue}>{children}</HighlightedContext.Provider>
   );
 }
+
+HighlightedProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
+} as any;
+
+export { HighlightedProvider };

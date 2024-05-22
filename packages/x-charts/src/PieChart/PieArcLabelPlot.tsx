@@ -65,7 +65,6 @@ export interface PieArcLabelPlotProps
       | 'arcLabel'
       | 'arcLabelMinAngle'
       | 'id'
-      | 'highlightScope'
     >,
     ComputedPieRadius {
   /**
