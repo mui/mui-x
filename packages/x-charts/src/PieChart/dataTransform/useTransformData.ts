@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { InteractionContext } from '../../context/InteractionProvider';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
+import { useHighlighted } from '../../context';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -31,7 +30,6 @@ export function useTransformData(
 ) {
   const {
     id: seriesId,
-    highlightScope,
     data,
     faded,
     highlighted,
@@ -42,22 +40,20 @@ export function useTransformData(
     cornerRadius: baseCornerRadius = 0,
   } = series;
 
-  const { item: highlightedItem } = React.useContext(InteractionContext);
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlighted();
 
   const getHighlightStatus = React.useCallback(
     (dataIndex: number) => {
-      const isHighlighted = getIsHighlighted(
-        highlightedItem,
-        { type: 'pie', seriesId, dataIndex },
-        highlightScope,
-      );
-      const isFaded =
-        !isHighlighted &&
-        getIsFaded(highlightedItem, { type: 'pie', seriesId, dataIndex }, highlightScope);
+      const currentItem = {
+        seriesId,
+        itemId: dataIndex,
+      };
+      const isHighlighted = isItemHighlighted(currentItem);
+      const isFaded = isItemFaded(currentItem);
 
       return { isHighlighted, isFaded };
     },
-    [highlightScope, highlightedItem, seriesId],
+    [seriesId, isItemFaded, isItemHighlighted],
   );
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(

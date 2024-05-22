@@ -9,12 +9,9 @@ import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
+import { useHighlighted } from '../context';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -107,22 +104,22 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useHighlighted();
+  const { axis } = React.useContext(InteractionContext);
+  const currentItem = {
+    seriesId: id,
+  };
 
-  const { item, axis } = React.useContext(InteractionContext);
-
-  const isHighlighted =
-    axis.x?.index === dataIndex ||
-    getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+  const isMarkHighlighted = axis.x?.index === dataIndex || isHighlighted(currentItem);
+  const isMarkFaded = isFaded(currentItem);
 
   const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted,
-    isFaded,
+    isHighlighted: isMarkHighlighted,
+    isFaded: isMarkFaded,
     color,
   };
   const classes = useUtilityClasses(ownerState);

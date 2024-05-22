@@ -42,7 +42,6 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     desc,
     disableAxisListener,
     highlightedItem,
-    highlightedScope,
     children,
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -55,10 +54,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
       <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
           <InteractionProvider>
-            <HighlightedProvider
-              highlightedItem={highlightedItem}
-              highlightedScope={highlightedScope}
-            >
+            <HighlightedProvider highlightedItem={highlightedItem}>
               <ChartsSurface
                 width={width}
                 height={height}

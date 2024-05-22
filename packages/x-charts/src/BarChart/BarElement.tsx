@@ -7,14 +7,10 @@ import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { AnimatedProps, animated } from '@react-spring/web';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { SeriesId } from '../models/seriesType/common';
+import { useHighlighted } from '../context';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -117,25 +113,20 @@ function BarElement(props: BarElementProps) {
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'bar', seriesId: id, dataIndex },
-    highlightScope,
-  );
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId: id, dataIndex }, highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useHighlighted();
+  const currentItem = {
+    seriesId: id,
+    itemId: dataIndex,
+  };
 
   const ownerState = {
     id,
     dataIndex,
     classes: innerClasses,
     color,
-    isFaded,
-    isHighlighted,
+    isFaded: isFaded(currentItem),
+    isHighlighted: isHighlighted(currentItem),
   };
   const classes = useUtilityClasses(ownerState);
 

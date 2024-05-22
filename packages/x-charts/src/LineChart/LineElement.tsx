@@ -4,15 +4,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { InteractionContext } from '../context/InteractionProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
 import { SeriesId } from '../models/seriesType/common';
+import { useHighlighted } from '../context';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -105,21 +101,19 @@ function LineElement(props: LineElementProps) {
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useHighlighted();
+  const currentItem = {
+    seriesId: id,
+  };
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
     gradientId,
-    isFaded,
-    isHighlighted,
+    isFaded: isFaded(currentItem),
+    isHighlighted: isHighlighted(currentItem),
   };
   const classes = useUtilityClasses(ownerState);
 
