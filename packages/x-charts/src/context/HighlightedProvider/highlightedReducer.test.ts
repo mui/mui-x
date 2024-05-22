@@ -1,11 +1,16 @@
 import { expect } from 'chai';
 import { highlightedReducer } from './highlightedReducer';
 
+const defaultItemData = {
+  seriesId: '1s',
+  itemId: '1i',
+  value: '1v',
+};
+
 const defaultOptions = {
   highlighted: 'none',
   faded: 'none',
-  seriesId: '1',
-  itemId: '1',
+  ...defaultItemData,
 } as const;
 
 const defaultState = {
@@ -37,11 +42,9 @@ describe('highlightedReducer', () => {
   describe('isHighlighted', () => {
     it('should return false when no options are set', () => {
       expect(
-        highlightedReducer(defaultState, { type: 'clear-highlighted' }).isHighlighted({
-          seriesId: '1',
-          itemId: '1',
-          value: '1',
-        }),
+        highlightedReducer(defaultState, { type: 'clear-highlighted' }).isHighlighted(
+          defaultItemData,
+        ),
       ).to.equal(false);
     });
 
@@ -49,8 +52,7 @@ describe('highlightedReducer', () => {
       const optionsSameSeries = {
         highlighted: 'same-series',
         faded: 'same-series',
-        seriesId: '1',
-        itemId: '1',
+        ...defaultItemData,
       } as const;
 
       it('should return true when input series is same as highlighted', () => {
@@ -58,13 +60,9 @@ describe('highlightedReducer', () => {
           type: 'set-highlighted',
           options: optionsSameSeries,
         } as const;
-        expect(
-          highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
-            itemId: '1',
-            value: '1',
-          }),
-        ).to.equal(true);
+        expect(highlightedReducer(defaultState, action).isHighlighted(defaultItemData)).to.equal(
+          true,
+        );
       });
 
       it('should return false when input series is different than highlighted', () => {
@@ -74,9 +72,8 @@ describe('highlightedReducer', () => {
         } as const;
         expect(
           highlightedReducer(defaultState, action).isHighlighted({
+            ...defaultItemData,
             seriesId: '2',
-            itemId: '1',
-            value: '1',
           }),
         ).to.equal(false);
       });
@@ -88,9 +85,8 @@ describe('highlightedReducer', () => {
         } as const;
         expect(
           highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
+            ...defaultItemData,
             itemId: '2',
-            value: '1',
           }),
         ).to.equal(true);
       });
@@ -102,8 +98,7 @@ describe('highlightedReducer', () => {
         } as const;
         expect(
           highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
-            itemId: '1',
+            ...defaultItemData,
             value: '2',
           }),
         ).to.equal(true);
@@ -114,8 +109,7 @@ describe('highlightedReducer', () => {
       const optionsItem = {
         highlighted: 'item',
         faded: 'same-series',
-        seriesId: '1',
-        itemId: '1',
+        ...defaultItemData,
       } as const;
 
       it('should return true when input item is same as highlighted', () => {
@@ -123,13 +117,9 @@ describe('highlightedReducer', () => {
           type: 'set-highlighted',
           options: optionsItem,
         } as const;
-        expect(
-          highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
-            itemId: '1',
-            value: '1',
-          }),
-        ).to.equal(true);
+        expect(highlightedReducer(defaultState, action).isHighlighted(defaultItemData)).to.equal(
+          true,
+        );
       });
 
       it('should return false when input item is different than highlighted', () => {
@@ -139,9 +129,8 @@ describe('highlightedReducer', () => {
         } as const;
         expect(
           highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
+            ...defaultItemData,
             itemId: '2',
-            value: '1',
           }),
         ).to.equal(false);
       });
@@ -153,9 +142,8 @@ describe('highlightedReducer', () => {
         } as const;
         expect(
           highlightedReducer(defaultState, action).isHighlighted({
+            ...defaultItemData,
             seriesId: '2',
-            itemId: '1',
-            value: '1',
           }),
         ).to.equal(false);
       });
@@ -165,8 +153,7 @@ describe('highlightedReducer', () => {
       const optionsNone = {
         highlighted: 'none',
         faded: 'same-series',
-        seriesId: '1',
-        itemId: '1',
+        ...defaultItemData,
       } as const;
 
       it('should return false', () => {
@@ -174,13 +161,9 @@ describe('highlightedReducer', () => {
           type: 'set-highlighted',
           options: optionsNone,
         } as const;
-        expect(
-          highlightedReducer(defaultState, action).isHighlighted({
-            seriesId: '1',
-            itemId: '1',
-            value: '1',
-          }),
-        ).to.equal(false);
+        expect(highlightedReducer(defaultState, action).isHighlighted(defaultItemData)).to.equal(
+          false,
+        );
       });
     });
   });
