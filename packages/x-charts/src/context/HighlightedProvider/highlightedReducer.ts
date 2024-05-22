@@ -52,6 +52,10 @@ const createIsFaded =
     if (highlightedOptions.faded === 'other-series') {
       return input.seriesId !== highlightedOptions.seriesId;
     }
+
+    if (highlightedOptions.faded === 'same-value') {
+      return input.value === highlightedOptions.value && input.itemId !== highlightedOptions.itemId;
+    }
   };
 
 export const highlightedReducer: React.Reducer<
