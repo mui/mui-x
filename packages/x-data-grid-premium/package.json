@@ -67,5 +67,17 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "overrides": {
+    "exceljs": {
+      "archiver": "7.0.1",
+      "unzipper": {
+        ".": "0.10.14",
+        "fstream": {
+          ".": "1.0.12",
+          "rimraf": "4.4.1"
+        }
+      }
+    }
   }
 }
