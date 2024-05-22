@@ -33,17 +33,17 @@ const createIsHighlighted =
     }
 
     if (highlightedOptions.highlighted === 'same-series') {
-      return input.seriesId === highlightedOptions.seriesId;
+      return input.seriesId === highlightedItem?.seriesId;
     }
 
     if (highlightedOptions.highlighted === 'item') {
       return (
-        input.itemId === highlightedOptions.itemId && input.seriesId === highlightedOptions.seriesId
+        input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
       );
     }
 
     if (highlightedOptions.highlighted === 'same-value') {
-      return input.value === highlightedOptions.value;
+      return input.value === highlightedItem?.value;
     }
 
     return false;
@@ -58,27 +58,27 @@ const createIsFaded =
 
     if (highlightedOptions.faded === 'same-series') {
       return (
-        input.seriesId === highlightedOptions.seriesId && input.itemId !== highlightedOptions.itemId
+        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
       );
     }
 
     if (highlightedOptions.faded === 'other-series') {
-      return input.seriesId !== highlightedOptions.seriesId;
+      return input.seriesId !== highlightedItem?.seriesId;
     }
 
     if (highlightedOptions.faded === 'same-value') {
-      return input.value === highlightedOptions.value && input.itemId !== highlightedOptions.itemId;
+      return input.value === highlightedItem?.value && input.itemId !== highlightedItem?.itemId;
     }
 
     if (highlightedOptions.faded === 'other-value') {
-      return input.value !== highlightedOptions.value;
+      return input.value !== highlightedItem?.value;
     }
 
     if (highlightedOptions.faded === 'global') {
       return (
-        input.seriesId !== highlightedOptions.seriesId ||
-        input.itemId !== highlightedOptions.itemId ||
-        input.value !== highlightedOptions.value
+        input.seriesId !== highlightedItem?.seriesId ||
+        input.itemId !== highlightedItem?.itemId ||
+        input.value !== highlightedItem?.value
       );
     }
 
@@ -117,7 +117,7 @@ export const highlightedReducer: React.Reducer<
     case 'clear-highlighted':
       return {
         ...state,
-        options: null,
+        highlightedItem: null,
         isFaded: createIsFaded(state.options, null),
         isHighlighted: createIsHighlighted(state.options, null),
       };
