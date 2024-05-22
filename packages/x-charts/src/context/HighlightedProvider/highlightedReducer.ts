@@ -29,6 +29,10 @@ const createIsHighlighted =
       );
     }
 
+    if (highlightedOptions.highlighted === 'same-value') {
+      return input.value === highlightedOptions.value;
+    }
+
     return false;
   };
 

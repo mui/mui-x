@@ -166,5 +166,36 @@ describe('highlightedReducer', () => {
         );
       });
     });
+
+    describe('highlighted=same-value', () => {
+      const optionsSameValue = {
+        highlighted: 'same-value',
+        faded: 'same-value',
+        ...defaultItemData,
+      } as const;
+
+      it('should return true when input is same as highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsSameValue,
+        } as const;
+        expect(highlightedReducer(defaultState, action).isHighlighted(defaultItemData)).to.equal(
+          true,
+        );
+      });
+
+      it('should return false when input is different than highlighted', () => {
+        const action = {
+          type: 'set-highlighted',
+          options: optionsSameValue,
+        } as const;
+        expect(
+          highlightedReducer(defaultState, action).isHighlighted({
+            ...defaultItemData,
+            value: '2',
+          }),
+        ).to.equal(false);
+      });
+    });
   });
 });
