@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { HighlightItemData, HighlightedOptions, HighlightedState } from './HighlightedContext';
+import { HighlightedItemData, HighlightedOptions, HighlightedState } from './HighlightedContext';
 
 export type HighlightedActionSetHighlighted = {
   type: 'set-highlighted';
-  itemData: NonNullable<HighlightItemData>;
+  itemData: NonNullable<HighlightedItemData>;
 };
 
 export type HighlightedActionSetOptions = {
@@ -26,8 +26,8 @@ export type HighlightedAction =
   | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightItemData | null) =>
-  (input: HighlightItemData): boolean => {
+  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightedItemData | null) =>
+  (input: HighlightedItemData): boolean => {
     if (!highlightedOptions) {
       return false;
     }
@@ -50,8 +50,8 @@ const createIsHighlighted =
   };
 
 const createIsFaded =
-  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightItemData | null) =>
-  (input: HighlightItemData): boolean => {
+  (highlightedOptions: HighlightedOptions, highlightedItem: HighlightedItemData | null) =>
+  (input: HighlightedItemData): boolean => {
     if (!highlightedOptions) {
       return false;
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export type HighlightItemData = {
+export type HighlightedItemData = {
   seriesId: string;
   itemId: string;
   value: string;
@@ -13,13 +13,13 @@ export type HighlightedOptions = {
 
 export type HighlightedState = {
   options: HighlightedOptions | null;
-  highlightedItem: HighlightItemData | null;
+  highlightedItem: HighlightedItemData | null;
   setOptions: (options: Omit<HighlightedOptions, 'itemData'>) => void;
   clearOptions: () => void;
-  setHighlighted: (options: NonNullable<HighlightItemData>) => void;
+  setHighlighted: (options: NonNullable<HighlightedItemData>) => void;
   clearHighlighted: () => void;
-  isHighlighted: (input: HighlightItemData) => boolean;
-  isFaded: (input: HighlightItemData) => boolean;
+  isHighlighted: (input: HighlightedItemData) => boolean;
+  isFaded: (input: HighlightedItemData) => boolean;
 };
 
 export const HighlightedContext = React.createContext<HighlightedState>({
