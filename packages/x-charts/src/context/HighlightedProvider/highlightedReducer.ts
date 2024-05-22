@@ -19,6 +19,12 @@ const createIsHighlighted =
       return false;
     }
 
+    if (highlightedOptions.type === 'series') {
+      return (
+        input.seriesId === highlightedOptions.seriesId && input.itemId === highlightedOptions.itemId
+      );
+    }
+
     return false;
   };
 
