@@ -26,14 +26,7 @@ export interface PieArcPlotSlotProps {
 export interface PieArcPlotProps
   extends Pick<
       DefaultizedPieSeriesType,
-      | 'data'
-      | 'faded'
-      | 'highlighted'
-      | 'cornerRadius'
-      | 'paddingAngle'
-      | 'id'
-      | 'highlightScope'
-      | 'highlightedScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
     >,
     ComputedPieRadius {
   /**

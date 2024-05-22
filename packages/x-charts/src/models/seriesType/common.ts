@@ -26,10 +26,9 @@ export type CommonSeriesType<TValue> = {
    */
   valueFormatter?: SeriesValueFormatter<TValue>;
   /**
-   * @deprecated use `highlightedScope` instead.
+   * The scope to apply when the series is highlighted.
    */
   highlightScope?: Partial<HighlightedScope>;
-  highlightedScope?: Partial<HighlightedScope>;
 };
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';

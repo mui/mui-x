@@ -42,15 +42,13 @@ export function HighlightedProvider({
       const seriesData = series[seriesType as ChartSeriesType];
       Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, seriesItem?.highlightedScope ?? seriesItem?.highlightScope);
+        map.set(seriesId, seriesItem?.highlightScope);
       });
     });
     return map;
   }, [series]);
 
-  const highlightedScope = highlightedItem
-    ? seriesById.get(highlightedItem.seriesId) ?? null
-    : null;
+  const highlightScope = highlightedItem ? seriesById.get(highlightedItem.seriesId) ?? null : null;
 
   React.useEffect(() => {
     dispatch(
@@ -62,11 +60,9 @@ export function HighlightedProvider({
 
   React.useEffect(() => {
     dispatch(
-      highlightedScope
-        ? { type: 'set-options', options: highlightedScope }
-        : { type: 'clear-options' },
+      highlightScope ? { type: 'set-options', options: highlightScope } : { type: 'clear-options' },
     );
-  }, [highlightedScope]);
+  }, [highlightScope]);
 
   const providerValue: HighlightedState = React.useMemo(
     () => ({

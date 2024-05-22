@@ -24,14 +24,7 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
 export function useTransformData(
   series: Pick<
     DefaultizedPieSeriesType,
-    | 'cornerRadius'
-    | 'paddingAngle'
-    | 'id'
-    | 'highlightScope'
-    | 'highlighted'
-    | 'faded'
-    | 'data'
-    | 'highlightedScope'
+    'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
   > &
     ComputedPieRadius,
 ) {

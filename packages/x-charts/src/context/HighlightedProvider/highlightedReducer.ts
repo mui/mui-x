@@ -26,21 +26,21 @@ export type HighlightedAction =
   | HighlightedActionClearOptions;
 
 const createIsHighlighted =
-  (highlightedScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
+  (highlightScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
-    if (!highlightedScope) {
+    if (!highlightScope) {
       return false;
     }
 
     if (
-      highlightedScope.highlighted === 'same-series' ||
+      highlightScope.highlighted === 'same-series' ||
       // @ts-expect-error backward compatibility
-      highlightedScope.highlighted === 'series'
+      highlightScope.highlighted === 'series'
     ) {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
-    if (highlightedScope.highlighted === 'item') {
+    if (highlightScope.highlighted === 'item') {
       return (
         input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
       );
@@ -50,21 +50,21 @@ const createIsHighlighted =
   };
 
 const createIsFaded =
-  (highlightedScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
+  (highlightScope: HighlightedScope | undefined, highlightedItem: HighlightedItemData | null) =>
   (input: HighlightedItemData): boolean => {
-    if (!highlightedScope) {
+    if (!highlightScope) {
       return false;
     }
 
     if (
-      highlightedScope.faded === 'same-series' ||
+      highlightScope.faded === 'same-series' ||
       // @ts-expect-error backward compatibility
-      highlightedScope.faded === 'series'
+      highlightScope.faded === 'series'
     ) {
       return input.seriesId === highlightedItem?.seriesId;
     }
 
-    if (highlightedScope.faded === 'global') {
+    if (highlightScope.faded === 'global') {
       return (
         input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
       );
