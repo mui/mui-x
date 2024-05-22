@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useControlled from '@mui/utils/useControlled';
 import {
   HighlightedItemData,
   HighlightedContext,
@@ -6,50 +7,74 @@ import {
   HighlightedState,
 } from './HighlightedContext';
 import { highlightedReducer } from './highlightedReducer';
+import { useSeries } from '../../hooks/useSeries';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { SeriesId } from '../../models/seriesType/common';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;
-  highlightedScope?: HighlightedScope;
   highlightedItem?: HighlightedItemData;
 };
 
 export function HighlightedProvider({
   children,
-  highlightedScope: optionsProps,
   highlightedItem: highlightedItemProps,
 }: HighlightedProviderProps) {
+  const [highlightedItem, setHighlightedItem] = useControlled({
+    controlled: highlightedItemProps,
+    default: null,
+    name: 'HighlightedProvider',
+    state: 'highlightedItem',
+  });
+
   const [state, dispatch] = React.useReducer(highlightedReducer, {
     options: null,
-    highlightedItem: null,
+    highlightedItem,
     isFaded: () => false,
     isHighlighted: () => false,
   });
 
-  React.useEffect(() => {
-    dispatch(
-      optionsProps ? { type: 'set-options', options: optionsProps } : { type: 'clear-options' },
-    );
-  }, [optionsProps]);
+  const series = useSeries();
+  const seriesById = React.useMemo(() => {
+    const map: Map<SeriesId, Partial<HighlightedScope>> = new Map();
+
+    Object.keys(series).forEach((seriesType) => {
+      const seriesData = series[seriesType as ChartSeriesType];
+      Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
+        const seriesItem = seriesData?.series[seriesId];
+        map.set(seriesId, seriesItem?.highlightScope ?? null);
+      });
+    });
+    return map;
+  }, [series]);
+
+  const highlightedScope = highlightedItem
+    ? seriesById.get(highlightedItem.seriesId) ?? null
+    : null;
 
   React.useEffect(() => {
     dispatch(
-      highlightedItemProps
-        ? { type: 'set-highlighted', itemData: highlightedItemProps }
+      highlightedItem
+        ? { type: 'set-highlighted', itemData: highlightedItem }
         : { type: 'clear-highlighted' },
     );
-  }, [highlightedItemProps]);
+  }, [highlightedItem]);
+
+  React.useEffect(() => {
+    dispatch(
+      highlightedScope
+        ? { type: 'set-options', options: highlightedScope }
+        : { type: 'clear-options' },
+    );
+  }, [highlightedScope]);
 
   const providerValue: HighlightedState = React.useMemo(
     () => ({
       ...state,
-      setOptions: (options: NonNullable<HighlightedScope>) =>
-        dispatch({ type: 'set-options', options }),
-      clearOptions: () => dispatch({ type: 'clear-options' }),
-      setHighlighted: (itemData: NonNullable<HighlightedItemData>) =>
-        dispatch({ type: 'set-highlighted', itemData }),
-      clearHighlighted: () => dispatch({ type: 'clear-highlighted' }),
+      setHighlighted: (itemData: NonNullable<HighlightedItemData>) => setHighlightedItem(itemData),
+      clearHighlighted: () => setHighlightedItem(null),
     }),
-    [state],
+    [state, setHighlightedItem],
   );
 
   return (
