@@ -30,6 +30,7 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
   disabledItemsFocusable: false,
+  indentationAtItemLevel: false,
   icons: {
     slots: {},
     slotProps: {},
