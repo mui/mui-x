@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
@@ -16,6 +17,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -61,6 +63,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
       },
     ];
   },
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
@@ -132,16 +135,31 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   [`& .${treeItemClasses.checkbox}`]: {
     padding: 0,
   },
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: {
+        paddingLeft: `calc(${theme.spacing(1)} + 12px * var(--TreeView-itemDepth))`,
+      },
+    },
+  ],
 }));
 
 const TreeItemGroup = styled(Collapse, {
   name: 'MuiTreeItem',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
 })({
   margin: 0,
   padding: 0,
   paddingLeft: 12,
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: { paddingLeft: 0 },
+    },
+  ],
 });
 
 /**
@@ -163,8 +181,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
     runItemPlugins,
     selection: { multiSelect },
     disabledItemsFocusable,
+    indentationAtItemLevel,
     instance,
   } = useTreeViewContext<DefaultTreeViewPlugins>();
+  const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
@@ -216,6 +236,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     focused,
     selected,
     disabled,
+    indentationAtItemLevel,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -230,6 +251,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
       in: expanded,
       component: 'ul',
       role: 'group',
+      ...(indentationAtItemLevel ? { indentationAtItemLevel: true } : {}),
     },
     className: classes.groupTransition,
   });
@@ -329,6 +351,15 @@ export const TreeItem = React.forwardRef(function TreeItem(
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         ref={handleRootRef}
+        style={
+          indentationAtItemLevel
+            ? ({
+                ...other.style,
+                '--TreeView-itemDepth':
+                  typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+              } as React.CSSProperties)
+            : other.style
+        }
       >
         <StyledTreeItemContent
           as={ContentComponent}

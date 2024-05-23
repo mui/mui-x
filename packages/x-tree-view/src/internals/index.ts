@@ -9,6 +9,7 @@ export type {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
   TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from './models';
 
 // Plugins

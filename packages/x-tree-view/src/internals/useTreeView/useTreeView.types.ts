@@ -8,6 +8,7 @@ import {
   MergePluginsProperty,
   TreeViewInstance,
   TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from '../models';
 
 export type UseTreeViewParameters<
@@ -25,6 +26,7 @@ export interface UseTreeViewBaseParameters<
   plugins: TPlugins;
   slots: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slots'>;
   slotProps: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slotProps'>;
+  experimentalFeatures: TreeViewExperimentalFeatures<ConvertPluginsIntoSignatures<TPlugins>>;
 }
 
 export type UseTreeViewDefaultizedParameters<
