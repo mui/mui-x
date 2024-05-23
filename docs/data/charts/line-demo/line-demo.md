@@ -34,9 +34,9 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 ## Line with predicition
 
-To show that some part of the data have a different status, you can vary the rendering.
+To show that parts of the data have different meanings, you can render stylised lines for each of them.
 
-In the following example, the chart shows some prediction.
+In the following example, the chart shows a dotted line to exemplify that the data is estimated.
 To do so, the `slots.line` is set with a custom components that render the default line twice.
 
 - The first one is clipped to show known values (from the left of the chart to the limit).
