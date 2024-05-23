@@ -32,7 +32,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 {{"demo": "LineChartConnectNulls.js"}}
 
-## Line with predicition
+## Line with forecast
 
 To show that parts of the data have different meanings, you can render stylised lines for each of them.
 
