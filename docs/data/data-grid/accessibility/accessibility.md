@@ -113,10 +113,6 @@ On macOS replace:
 
 - <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
 - <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
-- <kbd class="key">Home</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Right</kbd>
-- <kbd class="key">Page Up</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Up</kbd>
-- <kbd class="key">Page Down</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Down</kbd>
 :::
 
 |                                                               Keys | Description                                                 |
