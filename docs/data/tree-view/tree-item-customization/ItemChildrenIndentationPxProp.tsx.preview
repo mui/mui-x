@@ -1,2 +1,5 @@
-<RichTreeView items={MUI_X_PRODUCTS} itemChildrenIndentationPx={24}         defaultExpandedItems={['grid']}
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  itemChildrenIndentationPx={24}
+  defaultExpandedItems={['grid']}
 />

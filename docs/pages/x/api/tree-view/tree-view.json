@@ -21,6 +21,7 @@
       "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
     },
     "id": { "type": { "name": "string" } },
+    "itemChildrenIndentationPx": { "type": { "name": "number" }, "default": "12" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },

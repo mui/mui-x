@@ -42,6 +42,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "itemChildrenIndentationPx": {
+      "description": "Indentation in pixels between two an item and its children."
+    },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },

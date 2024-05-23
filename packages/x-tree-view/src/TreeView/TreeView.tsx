@@ -151,6 +151,11 @@ TreeView.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * Indentation in pixels between two an item and its children.
+   * @default 12
+   */
+  itemChildrenIndentationPx: PropTypes.number,
+  /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */

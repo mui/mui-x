@@ -232,6 +232,11 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,
+  /**
+   * Indentation in pixels between two an item and its children.
+   * @default 12
+   */
+  itemChildrenIndentationPx: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
