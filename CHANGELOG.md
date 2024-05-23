@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.5.1
+
+_May 23, 2024_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧰 Improve tree view testing
+- 📊 Add `label` to be displayed in BarChart
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.5.1`
+
+- [DataGrid] Escape formulas in CSV and Excel export (#13115) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.5.1`.
+
+#### `@mui/x-data-grid-premium@7.5.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.5.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.5.1`
+
+- [pickers] Fix `disableOpenPicker` prop behavior (#13212) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.5.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.5.1`
+
+- [charts] Add `label` to be displayed inside bars in BarChart (#12988) @JCQuintas
+- [charts] Setup the repository for charts-pro (#13182) @alexfauquette
+
+### Docs
+
+- [docs] Clean the pages in the navbar (#13192) @flaviendelangle
+- [docs] Improve Tree View selection doc (#13105) @flaviendelangle
+- [docs] Unify Tree View `apiRef` methods doc examples (#13193) @flaviendelangle
+
+### Core
+
+- [core] Remove `raw-loader` package (#13160) @LukasTy
+- [core] Remove outdated prop-types (#13181) @flaviendelangle
+- [core] Rename `yarn` to `pnpm` in `PropTypes` comment (#13167) @LukasTy
+- [core] Use `describeTreeView` for items test (partial) (#12893) @flaviendelangle
+- [core] Use `describeTreeView` for keyboard selection tests (#13164) @flaviendelangle
+- [core] Use `describeTreeView` for navigation tests (#12907) @flaviendelangle
+- [core] Use `describeTreeView` for items rendering edge-case tests (#13168) @flaviendelangle
+- [core] Add `test:coverage:inspect` to allow easier debugging (#13198) @JCQuintas
+- [core] Fix `yarn proptypes` vs `pnpm proptypes` (#13199) @JCQuintas
+- [code-infra] Run corepack enable on all CI jobs (#13205) @Janpot
+- [code-infra] Use `nx` for lerna tasks (#13166) @LukasTy
+
 ## v7.5.0
 
 _May 17, 2024_
