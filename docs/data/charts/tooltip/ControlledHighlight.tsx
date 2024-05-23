@@ -14,9 +14,10 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
 export default function ControlledHighlight() {
-  const [highlightedItem, setHighLightedItem] = React.useState<HighlightItemData>(
-    {},
-  );
+  const [highlightedItem, setHighLightedItem] = React.useState<HighlightItemData>({
+    seriesId: 'A',
+    itemId: 0,
+  });
   const [highlighted, setHighlighted] = React.useState('item');
   const [faded, setFaded] = React.useState('global');
 
