@@ -9,7 +9,6 @@ import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
-import { TreeViewItemId } from '../../../models';
 
 const useDefaultFocusableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
@@ -20,15 +19,8 @@ const useDefaultFocusableItemId = (
       return false;
     }
 
-    let ancestorId: TreeViewItemId | null = itemId;
-    while (ancestorId != null) {
-      ancestorId = instance.getItemMeta(ancestorId)?.parentId;
-      if (ancestorId != null && !instance.isItemExpanded(ancestorId)) {
-        return false;
-      }
-    }
-
-    return true;
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
   });
 
   if (tabbableItemId == null) {
