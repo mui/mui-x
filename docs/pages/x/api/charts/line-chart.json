@@ -33,7 +33,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ itemId?: number<br>&#124;&nbsp;string, seriesId: number<br>&#124;&nbsp;string }"
+        "description": "{ itemId?: number<br>&#124;&nbsp;string, seriesId?: number<br>&#124;&nbsp;string }"
       }
     },
     "leftAxis": {
@@ -59,7 +59,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemData) => void",
         "describedArgs": ["highlightedItem"]
       }
     },

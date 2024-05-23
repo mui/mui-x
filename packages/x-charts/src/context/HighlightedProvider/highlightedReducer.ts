@@ -61,7 +61,9 @@ const createIsFaded =
       // @ts-expect-error backward compatibility
       highlightScope.fade === 'series'
     ) {
-      return input.seriesId === highlightedItem?.seriesId;
+      return (
+        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
+      );
     }
 
     if (highlightScope.fade === 'global') {
