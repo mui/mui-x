@@ -49,7 +49,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   isItemDisabled: (itemId: TreeViewItemId) => boolean;
   /**
    * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
-   * An item is disabled if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
+   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
    * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item is navigable, `false` otherwise.
    */
