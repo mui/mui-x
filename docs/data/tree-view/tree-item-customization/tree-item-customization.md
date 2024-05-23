@@ -50,7 +50,8 @@ By default, the indentation of nested items is applied by the `groupTransition` 
 This approach is not compatible with upcoming features like the reordering of items using drag & drop.
 
 To apply the indentation at the item level (i.e.: have each item responsible for setting its own indentation using the `padding-left` CSS property on its `content` slot),
-you can use the `indentationAtItemLevel` experimental feature:
+you can use the `indentationAtItemLevel` experimental feature.
+It will become the default behavior in the next major version of the Tree View component.
 
 {{"demo": "IndentationAtItemLevel.js"}}
 
