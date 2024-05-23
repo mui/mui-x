@@ -5,7 +5,7 @@ export type HighlightItemData = {
   /**
    * The series id of the highlighted item.
    */
-  seriesId: SeriesId;
+  seriesId?: SeriesId;
   /**
    * The item id of the highlighted item. Usually, it is the index of the data.
    */

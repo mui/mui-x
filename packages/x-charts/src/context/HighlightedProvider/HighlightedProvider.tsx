@@ -18,13 +18,13 @@ export type HighlightedProviderProps = {
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
-  highlightedItem?: HighlightItemData | null;
+  highlightedItem?: HighlightItemData;
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
    */
-  onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
+  onHighlightChange?: (highlightedItem: HighlightItemData) => void;
 };
 
 const mergeDeprecatedOptions = (
@@ -99,7 +99,7 @@ function HighlightedProvider({
         setHighlightedItem(itemData);
       },
       clearHighlighted: () => {
-        onHighlightChange?.(null);
+        onHighlightChange?.({});
         setHighlightedItem(null);
       },
     }),
@@ -122,12 +122,12 @@ HighlightedProvider.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
 } as any;

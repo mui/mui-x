@@ -290,7 +290,7 @@ BarChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
    * The direction of the bar elements.
@@ -344,7 +344,7 @@ BarChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

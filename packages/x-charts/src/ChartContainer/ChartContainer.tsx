@@ -111,7 +111,7 @@ ChartContainer.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
    * The margin between the SVG and the drawing area.
@@ -128,7 +128,7 @@ ChartContainer.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
