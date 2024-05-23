@@ -21,13 +21,13 @@ function DesktopDateTimePickerLayout<
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TDate, TView>) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref } = props;
+  const { sx, className, isLandscape, ref, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
 
   return (
     <PickersLayoutRoot
       ref={ref}
-      className={clsx(className, pickersLayoutClasses.root)}
+      className={clsx(className, pickersLayoutClasses.root, classes?.root)}
       sx={[
         {
           [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },
@@ -40,7 +40,7 @@ function DesktopDateTimePickerLayout<
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper
-        className={pickersLayoutClasses.contentWrapper}
+        className={clsx(pickersLayoutClasses.contentWrapper, classes?.contentWrapper)}
         sx={{ display: 'grid' }}
       >
         {content}
