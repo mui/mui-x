@@ -352,11 +352,13 @@ export const TreeItem = React.forwardRef(function TreeItem(
         onKeyDown={handleKeyDown}
         ref={handleRootRef}
         style={
-          {
-            ...other.style,
-            '--TreeView-itemDepth':
-              typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
-          } as React.CSSProperties
+          indentationAtItemLevel
+            ? ({
+                ...other.style,
+                '--TreeView-itemDepth':
+                  typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+              } as React.CSSProperties)
+            : other.style
         }
       >
         <StyledTreeItemContent
