@@ -23,7 +23,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function BasicRichTreeView() {
+export default function IndentationAtItemLevel() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView
