@@ -99,8 +99,7 @@ export interface UsePickerViewsProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {
+> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps> {
   className?: string;
   sx?: SxProps<Theme>;
 }
