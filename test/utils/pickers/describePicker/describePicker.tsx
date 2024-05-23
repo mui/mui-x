@@ -163,6 +163,34 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       expect(screen.queryByMuiTest('picker-toolbar')).to.equal(null);
     });
   });
+
+  describe('prop: disableOpenPicker', () => {
+    it('should not render the open picker button, but still render the picker if its open', function test() {
+      if (variant === 'static') {
+        this.skip();
+      }
+
+      render(
+        <ElementToTest
+          disableOpenPicker
+          {...propsToOpen}
+          slotProps={{
+            layout: {
+              classes: {
+                contentWrapper: 'test-pickers-content-wrapper',
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
+      // check if anything has been rendered inside the layout content wrapper
+      expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
+        true,
+      );
+    });
+  });
 }
 
 /**
