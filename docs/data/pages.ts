@@ -506,6 +506,13 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-tree-view/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-tree-view/tree-item-customization', title: 'Item customization' },
+        ],
+      },
+      {
         pathname: '/x/api/tree-view-group',
         title: 'API Reference',
         children: [...treeViewComponentApi],
