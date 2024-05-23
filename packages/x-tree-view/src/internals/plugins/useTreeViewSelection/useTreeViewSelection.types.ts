@@ -4,6 +4,11 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
+  /**
+   * Check if an item is selected.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is selected, `false` otherwise.
+   */
   isItemSelected: (itemId: string) => boolean;
   /**
    * Select or deselect an item.
