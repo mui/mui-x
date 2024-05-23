@@ -17,6 +17,7 @@ import {
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
 import { UseTreeViewIdSignature } from '../useTreeViewId';
+import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -181,12 +182,23 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, itemId }) => (
-  <TreeViewChildrenItemProvider itemId={itemId}>{children}</TreeViewChildrenItemProvider>
-);
+useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const depthContext = React.useContext(TreeViewItemDepthContext);
+
+  return (
+    <TreeViewChildrenItemProvider itemId={itemId}>
+      <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
+        {children}
+      </TreeViewItemDepthContext.Provider>
+    </TreeViewChildrenItemProvider>
+  );
+};
 
 useTreeViewJSXItems.wrapRoot = ({ children }) => (
-  <TreeViewChildrenItemProvider>{children}</TreeViewChildrenItemProvider>
+  <TreeViewChildrenItemProvider>
+    <TreeViewItemDepthContext.Provider value={0}>{children}</TreeViewItemDepthContext.Provider>
+  </TreeViewChildrenItemProvider>
 );
 
 useTreeViewJSXItems.params = {};

@@ -93,7 +93,9 @@ export interface UseTreeViewItemsState<R extends {}> {
 }
 
 interface UseTreeViewItemsContextValue
-  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {}
+  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {
+  indentationAtItemLevel: boolean;
+}
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
@@ -103,6 +105,7 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
+  experimentalFeatures: 'indentationAtItemLevel';
 }>;
 
 export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };

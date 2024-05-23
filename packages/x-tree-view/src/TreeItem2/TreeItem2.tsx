@@ -6,14 +6,15 @@ import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2Status,
 } from '../useTreeItem2';
-import { getTreeItemUtilityClass, treeItemClasses } from '../TreeItem';
+import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 
@@ -32,8 +33,9 @@ export const TreeItem2Content = styled('div', {
   name: 'MuiTreeItem2',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
+})<{ status: UseTreeItem2Status; indentationAtItemLevel?: true }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
@@ -50,12 +52,13 @@ export const TreeItem2Content = styled('div', {
       backgroundColor: 'transparent',
     },
   },
-  [`& .${treeItemClasses.groupTransition}`]: {
-    margin: 0,
-    padding: 0,
-    paddingLeft: 12,
-  },
   variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: {
+        paddingLeft: `calc(${theme.spacing(1)} + 12px * var(--TreeView-itemDepth))`,
+      },
+    },
     {
       props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.disabled,
       style: {
@@ -134,10 +137,17 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   name: 'MuiTreeItem2',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
-})({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
+})<{ indentationAtItemLevel?: true }>({
   margin: 0,
   padding: 0,
   paddingLeft: 12,
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: { paddingLeft: 0 },
+    },
+  ],
 });
 
 export const TreeItem2Checkbox = styled(
@@ -250,7 +260,6 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
       [classes.disabled]: status.disabled,
     }),
   });
-
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItem2IconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
