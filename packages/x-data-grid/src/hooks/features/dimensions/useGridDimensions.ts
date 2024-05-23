@@ -100,7 +100,14 @@ export function useGridDimensions(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
-  const [savedSize, setSavedSize] = React.useState<ElementSize>();
+  const [_, setSavedSizeInternal] = React.useState<ElementSize>();
+
+  const setSavedSize = (size: ElementSize) => {
+    setSavedSizeInternal(size);
+    updateDimensions();
+    apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
+  };
+
   const debouncedSetSavedSize = React.useMemo(
     () => throttle(setSavedSize, props.resizeThrottleMs),
     [props.resizeThrottleMs],
@@ -298,13 +305,6 @@ export function useGridDimensions(
 
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
-
-  useEnhancedEffect(() => {
-    if (savedSize) {
-      updateDimensions();
-      apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
-    }
-  }, [apiRef, savedSize, updateDimensions]);
 
   const root = apiRef.current.rootElementRef.current;
   const dimensions = apiRef.current.state.dimensions;
