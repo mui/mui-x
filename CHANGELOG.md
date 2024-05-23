@@ -51,8 +51,6 @@ Same changes as in `@mui/x-date-pickers@7.5.1`.
 
 ### Core
 
-- [core] Fix version in root package.json (#13159) @flaviendelangle
-- [core] Move the v6 changelogs to a dedicated file (#13183) @flaviendelangle
 - [core] Remove `raw-loader` package (#13160) @LukasTy
 - [core] Remove outdated prop-types (#13181) @flaviendelangle
 - [core] Rename `yarn` to `pnpm` in `PropTypes` comment (#13167) @LukasTy
