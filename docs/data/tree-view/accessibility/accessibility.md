@@ -33,8 +33,6 @@ The following key assignments apply to Windows and Linux users.
 
 On macOS replace:
 - <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
-- <kbd class="key">Home</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">fn</kbd>+<kbd class="key">Arrow Right</kbd>
 :::
 
 |                                                                                          Keys | Description                                                                                                                                                                                                          |
