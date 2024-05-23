@@ -22,7 +22,7 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
   isItemExpanded: (itemId: TreeViewItemId) => boolean;
   /**
    * Check if an item is expandable.
-   * Currently, an item is expandable if it has some children.
+   * Currently, an item is expandable if it has children.
    * In the future, the user should be able to flag an item as expandable even if it has no loaded children to support children lazy loading.
    * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be expanded, `false` otherwise.
