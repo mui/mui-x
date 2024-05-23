@@ -46,6 +46,24 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         },
       };
     });
+
+    return () => {
+      setState((prevState) => {
+        const newItemMetaMap = { ...prevState.items.itemMetaMap };
+        const newItemMap = { ...prevState.items.itemMap };
+        delete newItemMetaMap[item.id];
+        delete newItemMap[item.id];
+        return {
+          ...prevState,
+          items: {
+            ...prevState.items,
+            itemMetaMap: newItemMetaMap,
+            itemMap: newItemMap,
+          },
+        };
+      });
+      publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+    };
   });
 
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
@@ -67,24 +85,6 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     }));
   };
 
-  const removeJSXItem = useEventCallback((itemId: string) => {
-    setState((prevState) => {
-      const newItemMetaMap = { ...prevState.items.itemMetaMap };
-      const newItemMap = { ...prevState.items.itemMap };
-      delete newItemMetaMap[itemId];
-      delete newItemMap[itemId];
-      return {
-        ...prevState,
-        items: {
-          ...prevState.items,
-          itemMetaMap: newItemMetaMap,
-          itemMap: newItemMap,
-        },
-      };
-    });
-    publishTreeViewEvent(instance, 'removeItem', { id: itemId });
-  });
-
   const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
     instance.updateFirstCharMap((firstCharMap) => {
       firstCharMap[itemId] = firstChar;
@@ -103,7 +103,6 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   return {
     instance: {
       insertJSXItem,
-      removeJSXItem,
       setJSXItemsOrderedChildrenIds,
       mapFirstCharFromJSX,
     },
@@ -152,15 +151,13 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   }, [instance, registerChild, unregisterChild, itemId, id]);
 
   React.useEffect(() => {
-    instance.insertJSXItem({
+    return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
       parentId,
       expandable,
       disabled,
     });
-
-    return () => instance.removeJSXItem(itemId);
   }, [instance, parentId, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {

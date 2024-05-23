@@ -34,7 +34,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    */
   getItemsToRender: () => TreeViewItemProps[];
   /**
-   * Get the id of a given item's children.
+   * Get the ids of a given item's children.
    * Those ids are returned in the order they should be rendered.
    * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
    * @returns {TreeViewItemId[]} The ids of the item's children.
