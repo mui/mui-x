@@ -16,6 +16,9 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",

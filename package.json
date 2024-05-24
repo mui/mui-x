@@ -1,5 +1,5 @@
 {
-  "version": "7.5.0",
+  "version": "7.5.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -95,7 +95,7 @@
     "@octokit/plugin-retry": "^6.0.1",
     "@octokit/rest": "^20.0.2",
     "@playwright/test": "^1.43.1",
-    "@testing-library/react": "^14.2.1",
+    "@testing-library/react": "^14.3.1",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.16",
     "@types/chai-dom": "^1.11.3",
@@ -195,6 +195,9 @@
     "@types/node": "^18.19.33"
   },
   "packageManager": "pnpm@8.15.8",
+  "engines": {
+    "pnpm": "8.15.8"
+  },
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
