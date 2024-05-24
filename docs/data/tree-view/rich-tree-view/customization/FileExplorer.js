@@ -17,6 +17,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import {
+  TreeItem2Checkbox,
   TreeItem2Content,
   TreeItem2IconContainer,
   TreeItem2Label,
@@ -211,6 +212,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
     status,
@@ -242,7 +244,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
-
+          <TreeItem2Checkbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />

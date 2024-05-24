@@ -1,0 +1,18 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is highlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": { "barLabel": "The component that renders the bar label." }
+}
