@@ -90,6 +90,24 @@ In this demo, you can see:
 
 {{"demo": "AxisFormatter.js"}}
 
+### Label formatting
+
+The label text inside the tooltip can also be formatted conditionally by providing a function to the series' `label` property.
+
+```jsx
+<LineChart
+  // ...
+  series={[
+    {
+      data: [ ... ],
+      label: (location) => location === 'tooltip' ? 'BR' : 'Brazil'
+    }
+  ]}
+/>
+```
+
+To know more, head out to the [label page](/x/react-charts/label/#conditional-formatting)
+
 ### Hiding values
 
 You can hide the axis value with `hideTooltip` in the `xAxis` props.
