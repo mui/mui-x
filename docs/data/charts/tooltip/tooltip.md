@@ -92,7 +92,7 @@ In this demo, you can see:
 
 ### Label formatting
 
-The label text inside the tooltip can also be formatted conditionally by providing a function to the series' `label` property.
+The label text inside the tooltip can also be formatted conditionally by providing a function to the series `label` property.
 
 ```jsx
 <LineChart
