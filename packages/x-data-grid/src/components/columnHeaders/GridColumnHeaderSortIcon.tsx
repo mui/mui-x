@@ -93,7 +93,7 @@ const GridColumnHeaderSortIcon = React.memo(GridColumnHeaderSortIconRaw);
 GridColumnHeaderSortIconRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
   disabled: PropTypes.bool,

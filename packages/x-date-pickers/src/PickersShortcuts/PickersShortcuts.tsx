@@ -105,7 +105,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
 PickersShortcuts.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Importance of the change when picking a shortcut:

@@ -6,12 +6,20 @@ import type { UseTreeItem2Status } from '../../useTreeItem2';
 interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
+  handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface UseTreeItem2UtilsReturnValue {
   interactions: UseTreeItem2Interactions;
   status: UseTreeItem2Status;
 }
+
+const isItemExpandable = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+  }
+  return Boolean(reactChildren);
+};
 
 export const useTreeItem2Utils = ({
   itemId,
@@ -26,7 +34,7 @@ export const useTreeItem2Utils = ({
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const status: UseTreeItem2Status = {
-    expandable: Boolean(Array.isArray(children) ? children.length : children),
+    expandable: isItemExpandable(children),
     expanded: instance.isItemExpanded(itemId),
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
@@ -68,11 +76,24 @@ export const useTreeItem2Utils = ({
         instance.selectItem(event, itemId, true);
       }
     } else {
-      instance.selectItem(event, itemId);
+      instance.selectItem(event, itemId, false);
     }
   };
 
-  const interactions: UseTreeItem2Interactions = { handleExpansion, handleSelection };
+  const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
+    if (multiSelect && hasShift) {
+      instance.expandSelectionRange(event, itemId);
+    } else {
+      instance.selectItem(event, itemId, multiSelect, event.target.checked);
+    }
+  };
+
+  const interactions: UseTreeItem2Interactions = {
+    handleExpansion,
+    handleSelection,
+    handleCheckboxSelection,
+  };
 
   return { interactions, status };
 };

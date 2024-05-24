@@ -153,7 +153,7 @@ function PieArcPlot(props: PieArcPlotProps) {
 PieArcPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The radius between circle center and the arc label in px.
@@ -172,7 +172,7 @@ PieArcPlot.propTypes = {
       formattedValue: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks/useTreeViewApiRef';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -35,20 +33,10 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function FocusedRichTreeView() {
-  const apiRef = useTreeViewApiRef();
-  const handleButtonClick = (event: React.SyntheticEvent) => {
-    apiRef.current?.focusItem(event, 'pickers');
-  };
-
+export default function CheckboxMultiSelection() {
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button onClick={handleButtonClick}>Focus pickers item</Button>
-      </Box>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
-        <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
-      </Box>
+    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+      <RichTreeView multiSelect checkboxSelection items={MUI_X_PRODUCTS} />
     </Box>
   );
 }

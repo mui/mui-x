@@ -84,7 +84,7 @@ const TreeView = React.forwardRef(function TreeView<
 TreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
@@ -96,6 +96,11 @@ TreeView.propTypes = {
       setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
   /**
    * The content of the component.
    */
@@ -133,12 +138,20 @@ TreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
+  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,
