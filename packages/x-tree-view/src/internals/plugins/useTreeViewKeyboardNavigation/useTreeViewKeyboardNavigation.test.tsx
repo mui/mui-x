@@ -71,6 +71,31 @@ describeTreeView<
         fireEvent.keyDown(response.getItemRoot('1.1'), { key: 'ArrowDown' });
         expect(response.getFocusedItemId()).to.equal('2');
       });
+
+      it('should skip disabled items', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+        });
+
+        act(() => {
+          response.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown' });
+        expect(response.getFocusedItemId()).to.equal('3');
+      });
+
+      it('should not skip disabled items if disabledItemsFocusable={true}', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+          disabledItemsFocusable: true,
+        });
+
+        act(() => {
+          response.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown' });
+        expect(response.getFocusedItemId()).to.equal('2');
+      });
     });
 
     describe('key: ArrowUp', () => {
@@ -110,6 +135,31 @@ describeTreeView<
         });
         fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowUp' });
         expect(response.getFocusedItemId()).to.equal('1.1');
+      });
+
+      it('should skip disabled items', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+        });
+
+        act(() => {
+          response.getItemRoot('3').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp' });
+        expect(response.getFocusedItemId()).to.equal('1');
+      });
+
+      it('should not skip disabled items if disabledItemsFocusable={true}', () => {
+        const response = render({
+          items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+          disabledItemsFocusable: true,
+        });
+
+        act(() => {
+          response.getItemRoot('3').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp' });
+        expect(response.getFocusedItemId()).to.equal('2');
       });
     });
 
@@ -151,6 +201,19 @@ describeTreeView<
         });
         fireEvent.keyDown(response.getItemRoot('1.1'), { key: 'ArrowRight' });
         expect(response.getFocusedItemId()).to.equal('1.1');
+      });
+
+      it('should not expand an item with children if it is collapsed but disabled even if disabledItemsFocusable={true}', () => {
+        const response = render({
+          items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }],
+          disabledItemsFocusable: true,
+        });
+
+        act(() => {
+          response.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowRight' });
+        expect(response.isItemExpanded('1')).to.equal(false);
       });
     });
 
@@ -219,6 +282,20 @@ describeTreeView<
         });
         fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowLeft' });
         expect(response.getFocusedItemId()).to.equal('1');
+      });
+
+      it('should not collapse an item with children if it is collapsed but disabled even if disabledItemsFocusable={true}', () => {
+        const response = render({
+          items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          disabledItemsFocusable: true,
+        });
+
+        act(() => {
+          response.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowLeft' });
+        expect(response.isItemExpanded('1')).to.equal(true);
       });
     });
 
@@ -361,6 +438,19 @@ describeTreeView<
         fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
         expect(response.isItemExpanded('1')).to.equal(false);
       });
+
+      it('should not expand an item with children if it is collapsed but disabled even if disabledItemsFocusable={true}', () => {
+        const response = render({
+          items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }],
+          disabledItemsFocusable: true,
+        });
+
+        act(() => {
+          response.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
+        expect(response.isItemExpanded('1')).to.equal(false);
+      });
     });
   });
 
@@ -404,6 +494,31 @@ describeTreeView<
           fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
           expect(response.isItemSelected('1')).to.equal(false);
         });
+
+        it('should not select the focused item when Space is pressed and the item is disabled', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+
+        it('should not select the focused item when Space is pressed and the item is disabled even if disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+            disabledItemsFocusable: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
       });
 
       describe('key: Enter', () => {
@@ -436,6 +551,19 @@ describeTreeView<
           const response = render({
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'Enter' });
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+
+        it('should not select the focused item when Enter is pressed and the item is disabled even if disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+            disabledItemsFocusable: true,
           });
 
           act(() => {
@@ -518,6 +646,33 @@ describeTreeView<
           fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
         });
+
+        it('should not select the focused item when Space is pressed and the item is disabled', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+            multiSelect: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should not select the focused item when Space is pressed and the item is disabled even if disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+            multiSelect: true,
+            disabledItemsFocusable: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: ' ' });
+          expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
       });
 
       describe('key: ArrowDown', () => {
@@ -578,6 +733,50 @@ describeTreeView<
           });
           fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should select the next non-disabled item when ArrowDown is pressed while holding Shift', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+        });
+
+        it('should not select the next item when ArrowDown is pressed while holding Shift if the next item is disabled and disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+            multiSelect: true,
+            disabledItemsFocusable: true,
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
+          expect(response.getFocusedItemId()).to.equal('2');
+        });
+
+        it('should select the next item when ArrowDown is pressed while holding Shift if the focused item is disabled and disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1', disabled: true }, { id: '2' }, { id: '3' }],
+            multiSelect: true,
+            disabledItemsFocusable: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
         });
       });
 
@@ -640,6 +839,50 @@ describeTreeView<
           fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowUp', shiftKey: true });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
         });
+
+        it('should select the next non-disabled item when ArrowUp is pressed while holding Shift', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+            multiSelect: true,
+            defaultSelectedItems: ['3'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+        });
+
+        it('should not select the next item when ArrowUp is pressed while holding Shift if the next item is disabled and disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
+            multiSelect: true,
+            disabledItemsFocusable: true,
+            defaultSelectedItems: ['3'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['3']);
+          expect(response.getFocusedItemId()).to.equal('2');
+        });
+
+        it('should select the previous item when ArrowUp is pressed while holding Shift if the focused item is disabled and disabledItemsFocusable={true}', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3', disabled: true }],
+            multiSelect: true,
+            disabledItemsFocusable: true,
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2']);
+        });
       });
 
       describe('key: Home', () => {
@@ -677,6 +920,29 @@ describeTreeView<
             ctrlKey: true,
           });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should not select disabled items when Home is pressed while holding Shift + Ctrl', () => {
+          const response = render({
+            items: [
+              { id: '1' },
+              { id: '2', disabled: true, children: [{ id: '2.1' }] },
+              { id: '3' },
+              { id: '4' },
+            ],
+            multiSelect: true,
+            defaultExpandedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('3'), {
+            key: 'Home',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
       });
 
@@ -716,6 +982,29 @@ describeTreeView<
           });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
         });
+
+        it('should not select disabled items when End is pressed while holding Shift + Ctrl', () => {
+          const response = render({
+            items: [
+              { id: '1' },
+              { id: '2' },
+              { id: '3', disabled: true, children: [{ id: '3.1' }] },
+              { id: '4' },
+            ],
+            multiSelect: true,
+            defaultExpandedItems: ['2'],
+          });
+
+          act(() => {
+            response.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('2'), {
+            key: 'End',
+            shiftKey: true,
+            ctrlKey: true,
+          });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['2', '4']);
+        });
       });
 
       describe('key: Ctrl + A', () => {
@@ -744,6 +1033,24 @@ describeTreeView<
           });
           fireEvent.keyDown(response.getItemRoot('1'), { key: 'a', ctrlKey: true });
           expect(response.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should not select disabled items when Ctrl + A is pressed', () => {
+          const response = render({
+            items: [
+              { id: '1' },
+              { id: '2', disabled: true, children: [{ id: '2.1' }] },
+              { id: '3' },
+              { id: '4' },
+            ],
+            multiSelect: true,
+          });
+
+          act(() => {
+            response.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(response.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '3', '4']);
         });
       });
     });

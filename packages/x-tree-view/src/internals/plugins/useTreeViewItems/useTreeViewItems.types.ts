@@ -15,16 +15,51 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @param {string} itemId The id of the item to return.
    * @returns {R} The item with the given id.
    */
-  getItem: (itemId: string) => R;
+  getItem: (itemId: TreeViewItemId) => R;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  getItemMeta: (itemId: string) => TreeViewItemMeta;
+  /**
+   * Get the meta-information of an item.
+   * Check the `TreeViewItemMeta` type for more information.
+   * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
+   * @returns {TreeViewItemMeta} The meta-information of the item.
+   */
+  getItemMeta: (itemId: TreeViewItemId) => TreeViewItemMeta;
+  /**
+   * Get the item that should be rendered.
+   * This method is only used on Rich Tree View components.
+   * Check the `TreeViewItemProps` type for more information.
+   * @returns {TreeViewItemProps[]} The items to render.
+   */
   getItemsToRender: () => TreeViewItemProps[];
-  getItemOrderedChildrenIds: (parentId: string | null) => string[];
-  isItemDisabled: (itemId: string) => itemId is string;
-  isItemNavigable: (itemId: string) => boolean;
-  getItemIndex: (itemId: string) => number;
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
+  /**
+   * Check if a given item is disabled.
+   * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is disabled, `false` otherwise.
+   */
+  isItemDisabled: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
+   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is navigable, `false` otherwise.
+   */
+  isItemNavigable: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Get the index of a given item in its parent's children list.
+   * @param {TreeViewItemId} itemId The id of the item to get the index of.
+   * @returns {number} The index of the item in its parent's children list.
+   */
+  getItemIndex: (itemId: TreeViewItemId) => number;
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
