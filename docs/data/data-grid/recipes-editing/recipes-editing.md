@@ -116,6 +116,8 @@ These changes are saved or discarded when the user clicks the **Save** or **Disc
 
 {{"demo": "BulkEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### With commercial features [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
 When using [`DataGridPremium`](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
 
 {{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
