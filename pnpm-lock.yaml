@@ -108,8 +108,8 @@ importers:
         specifier: ^1.43.1
         version: 1.43.1
       '@testing-library/react':
-        specifier: ^14.2.1
-        version: 14.2.2(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^14.3.1
+        version: 14.3.1(react-dom@18.2.0)(react@18.2.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -5185,8 +5185,8 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@14.2.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-SOUuM2ysCvjUWBXTNfQ/ztmnKDmqaiPV3SvoIuyxMUca45rbSWWAT/qB8CUs/JQ/ux/8JFs9DNdFQ3f6jH3crA==}
+  /@testing-library/react@14.3.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-H99XjUhWQw0lTgyMN05W3xQG1Nh4lq574D8keFf1dDoNTJgp66VbJozRaczoF+wsiaPJNt/TcnfpLGufGxSrZQ==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^18.0.0
