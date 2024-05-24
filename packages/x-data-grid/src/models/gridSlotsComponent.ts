@@ -100,7 +100,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
   columnMenu: React.JSXElementConstructor<GridSlotProps['columnMenu']>;
   /**
    * Component responsible for rendering the column headers.
-   * @default DataGridColumnHeaders
+   * @default GridColumnHeaders
    */
   columnHeaders: React.JSXElementConstructor<GridSlotProps['columnHeaders']>;
   /**
