@@ -106,17 +106,20 @@ renderCell: (params) => (
 
 ### Navigation
 
+:::info
 The following key assignments apply to Windows and Linux users.
 
-On macOS:
+On macOS replace:
 
-- replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
-- replace <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+- <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
+- <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+
+:::
 
 |                                                               Keys | Description                                                 |
 | -----------------------------------------------------------------: | :---------------------------------------------------------- |
 |                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                              |
-|                                <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                              |
+|                                  <kbd class="key">Arrow Down</kbd> | Navigate between cell elements                              |
 |                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                              |
 |                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
 |                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |
