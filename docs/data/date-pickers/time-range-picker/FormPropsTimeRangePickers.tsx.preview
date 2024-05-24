@@ -1,0 +1,6 @@
+<DemoItem label="disabled" component="TimeRangePicker">
+  <TimeRangePicker disabled />
+</DemoItem>
+<DemoItem label="readOnly" component="TimeRangePicker">
+  <TimeRangePicker readOnly />
+</DemoItem>

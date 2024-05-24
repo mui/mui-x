@@ -114,6 +114,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: FieldProps;
   anchorRef?: React.Ref<HTMLDivElement>;
+  anchorRefEndDate?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
@@ -141,6 +142,7 @@ const useMultiInputFieldSlotProps = <
   pickerSlots,
   fieldProps,
   anchorRef,
+  anchorRefEndDate,
   currentView,
   initialView,
   onViewChange,
@@ -242,7 +244,8 @@ const useMultiInputFieldSlotProps = <
     textField: (ownerState) => {
       const resolvedComponentProps = resolveComponentProps(pickerSlotProps?.textField, ownerState);
       let textFieldProps: MultiInputFieldSlotTextFieldProps;
-      let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
+      let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'] =
+        resolvedComponentProps?.InputProps;
       if (ownerState.position === 'start') {
         textFieldProps = {
           label: inLocaleText?.start ?? localeText.start,
@@ -271,13 +274,18 @@ const useMultiInputFieldSlotProps = <
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
-        InputProps = resolvedComponentProps?.InputProps;
+        if (anchorRefEndDate) {
+          InputProps = {
+            ...resolvedComponentProps?.InputProps,
+            ref: anchorRefEndDate,
+          };
+        }
       }
 
       return {
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
         ...textFieldProps,
-        ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
+        ...resolvedComponentProps,
         InputProps,
       };
     },

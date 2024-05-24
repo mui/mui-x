@@ -201,12 +201,6 @@
       "class": null
     },
     {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
-      "class": null
-    },
-    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",
@@ -249,6 +243,12 @@
       "name": "clearButton",
       "description": "Button to clear the value.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
       "class": null
     },
     {

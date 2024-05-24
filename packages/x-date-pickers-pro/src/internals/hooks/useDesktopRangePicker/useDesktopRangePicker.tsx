@@ -10,8 +10,8 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
@@ -40,6 +40,7 @@ export const useDesktopRangePicker = <
   >,
 >({
   props,
+  shouldMovePopperToFocusedInput,
   ...pickerParams
 }: UseDesktopRangePickerParams<
   TDate,
@@ -73,6 +74,7 @@ export const useDesktopRangePicker = <
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+  const anchorRefEndDate = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
   const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
@@ -196,6 +198,7 @@ export const useDesktopRangePicker = <
     pickerSlots: slots,
     fieldProps,
     anchorRef,
+    anchorRefEndDate,
     startFieldRef,
     endFieldRef,
     currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
@@ -225,7 +228,11 @@ export const useDesktopRangePicker = <
         role="tooltip"
         placement="bottom-start"
         containerRef={popperRef}
-        anchorEl={anchorRef.current}
+        anchorEl={
+          shouldMovePopperToFocusedInput && rangePosition === 'end'
+            ? anchorRefEndDate.current
+            : anchorRef.current
+        }
         onBlur={handleBlur}
         {...actions}
         open={open}

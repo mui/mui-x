@@ -28,6 +28,11 @@ export interface PickersComponentSpecificLocaleText {
    * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
    */
   dateRangePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `TimeRangePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  timeRangePickerToolbarTitle: string;
 }
 
 export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDate> {
@@ -53,6 +58,10 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   startTime: string;
   endDate: string;
   endTime: string;
+
+  // Generic range placeholders
+  from: string;
+  to: string;
 
   // Action bar
   cancelButtonLabel: string;

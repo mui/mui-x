@@ -14,7 +14,11 @@ import { DefaultizedProps } from '../models/helpers';
 
 export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  { views, format, ...other }: { format?: string; views: readonly DateOrTimeView[]; ampm: boolean },
+  {
+    views,
+    format,
+    ...other
+  }: { format?: string; views: readonly DateOrTimeViewWithMeridiem[]; ampm: boolean },
 ) => {
   if (format) {
     return format;
