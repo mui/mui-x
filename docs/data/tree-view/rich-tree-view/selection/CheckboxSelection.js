@@ -34,7 +34,7 @@ const MUI_X_PRODUCTS = [
 
 export default function CheckboxSelection() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 290 }}>
       <RichTreeView checkboxSelection items={MUI_X_PRODUCTS} />
     </Box>
   );
