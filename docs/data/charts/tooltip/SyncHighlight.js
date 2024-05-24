@@ -5,7 +5,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function SyncHighlight() {
-  const [highlightedItem, setHighLightedItem] = React.useState({});
+  const [highlightedItem, setHighLightedItem] = React.useState(null);
 
   return (
     <Stack

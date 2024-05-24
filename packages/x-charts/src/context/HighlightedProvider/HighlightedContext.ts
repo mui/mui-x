@@ -63,16 +63,14 @@ export type HighlightScope = {
 };
 
 export type HighlightedState = {
-  options?: HighlightScope;
   highlightedItem: HighlightItemData | null;
-  setHighlighted: (options: NonNullable<HighlightItemData>) => void;
+  setHighlighted: (item: HighlightItemData) => void;
   clearHighlighted: () => void;
   isHighlighted: (input: HighlightItemData) => boolean;
   isFaded: (input: HighlightItemData) => boolean;
 };
 
 export const HighlightedContext = React.createContext<HighlightedState>({
-  options: undefined,
   highlightedItem: null,
   setHighlighted: () => {},
   clearHighlighted: () => {},

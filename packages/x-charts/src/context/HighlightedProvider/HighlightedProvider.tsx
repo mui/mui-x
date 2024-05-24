@@ -8,7 +8,8 @@ import {
   HighlightedState,
   DeprecatedHighlightScope,
 } from './HighlightedContext';
-import { highlightedReducer } from './highlightedReducer';
+import { createIsFaded } from './createIsFaded';
+import { createIsHighlighted } from './createIsHighlighted';
 import { useSeries } from '../../hooks/useSeries';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { SeriesId } from '../../models/seriesType/common';
@@ -18,13 +19,13 @@ export type HighlightedProviderProps = {
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
-  highlightedItem?: HighlightItemData;
+  highlightedItem?: HighlightItemData | null;
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
-  onHighlightChange?: (highlightedItem: HighlightItemData) => void;
+  onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
 const mergeDeprecatedOptions = (
@@ -51,13 +52,6 @@ function HighlightedProvider({
     state: 'highlightedItem',
   });
 
-  const [state, dispatch] = React.useReducer(highlightedReducer, {
-    options: undefined,
-    highlightedItem,
-    isFaded: () => false,
-    isHighlighted: () => false,
-  });
-
   const series = useSeries();
   const seriesById = React.useMemo(() => {
     const map: Map<SeriesId, Partial<HighlightScope> | undefined> = new Map();
@@ -77,34 +71,21 @@ function HighlightedProvider({
       ? seriesById.get(highlightedItem.seriesId) ?? null
       : null;
 
-  React.useEffect(() => {
-    dispatch(
-      highlightedItem
-        ? { type: 'set-highlighted', itemData: highlightedItem }
-        : { type: 'clear-highlighted' },
-    );
-  }, [highlightedItem]);
-
-  React.useEffect(() => {
-    dispatch(
-      highlightScope ? { type: 'set-options', options: highlightScope } : { type: 'clear-options' },
-    );
-  }, [highlightScope]);
-
-  const providerValue: HighlightedState = React.useMemo(
-    () => ({
-      ...state,
-      setHighlighted: (itemData: HighlightItemData) => {
-        onHighlightChange?.(itemData);
+  const providerValue = React.useMemo<HighlightedState>(() => {
+    return {
+      highlightedItem,
+      setHighlighted: (itemData) => {
         setHighlightedItem(itemData);
+        onHighlightChange?.(itemData);
       },
       clearHighlighted: () => {
-        onHighlightChange?.({});
         setHighlightedItem(null);
+        onHighlightChange?.(null);
       },
-    }),
-    [state, setHighlightedItem, onHighlightChange],
-  );
+      isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
+      isFaded: createIsFaded(highlightScope, highlightedItem),
+    };
+  }, [highlightedItem, highlightScope, setHighlightedItem, onHighlightChange]);
 
   return (
     <HighlightedContext.Provider value={providerValue}>{children}</HighlightedContext.Provider>
@@ -127,7 +108,7 @@ HighlightedProvider.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
 } as any;

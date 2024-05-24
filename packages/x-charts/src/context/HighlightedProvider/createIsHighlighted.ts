@@ -1,0 +1,25 @@
+import { HighlightItemData, HighlightScope } from './HighlightedContext';
+
+export const createIsHighlighted =
+  (highlightScope: HighlightScope | null, highlightedItem: HighlightItemData | null) =>
+  (input: HighlightItemData): boolean => {
+    if (!highlightScope) {
+      return false;
+    }
+
+    if (
+      highlightScope.highlight === 'same-series' ||
+      // @ts-expect-error backward compatibility
+      highlightScope.highlight === 'series'
+    ) {
+      return input.seriesId === highlightedItem?.seriesId;
+    }
+
+    if (highlightScope.highlight === 'item') {
+      return (
+        input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
+      );
+    }
+
+    return false;
+  };

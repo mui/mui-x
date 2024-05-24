@@ -14,10 +14,11 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
 export default function ControlledHighlight() {
-  const [highlightedItem, setHighLightedItem] = React.useState<HighlightItemData>({
-    seriesId: 'A',
-    itemId: 0,
-  });
+  const [highlightedItem, setHighLightedItem] =
+    React.useState<HighlightItemData | null>({
+      seriesId: 'A',
+      itemId: 0,
+    });
   const [highlighted, setHighlighted] = React.useState('item');
   const [faded, setFaded] = React.useState('global');
 
@@ -46,7 +47,7 @@ export default function ControlledHighlight() {
       <Box sx={{ flexGrow: 1 }}>
         <Stack spacing={2} alignItems={'center'}>
           <ToggleButtonGroup
-            value={highlightedItem.seriesId ?? null}
+            value={highlightedItem?.seriesId ?? null}
             exclusive
             onChange={handleHighLightedSeries}
             aria-label="highlighted series"
@@ -63,7 +64,7 @@ export default function ControlledHighlight() {
             <RadioGroup
               aria-labelledby="item-id-radio-group"
               name="radio-buttons-group"
-              value={highlightedItem.itemId ?? null}
+              value={highlightedItem?.itemId ?? null}
               onChange={handleHighLightedItem}
               row
             >
