@@ -106,7 +106,9 @@ The label text inside the tooltip can also be formatted conditionally by providi
 />
 ```
 
-To know more, head out to the [label page](/x/react-charts/label/#conditional-formatting)
+:::info
+See [Label—Conditional formatting](/x/react-charts/label/#conditional-formatting) for more details.
+:::
 
 ### Hiding values
 
