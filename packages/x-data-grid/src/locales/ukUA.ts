@@ -8,18 +8,19 @@ type PluralForm = {
   many: string;
 };
 
-const getPluralForm = (count: number, options: PluralForm) => {
-  let pluralForm = options.many;
+function getPluralForm(count: number, options: PluralForm) {
+  const penultimateDigit = Math.floor(count / 10) % 10;
   const lastDigit = count % 10;
 
-  if (lastDigit > 1 && lastDigit < 5) {
+  let pluralForm = options.many;
+  if (penultimateDigit !== 1 && lastDigit > 1 && lastDigit < 5) {
     pluralForm = options.few;
-  } else if (lastDigit === 1) {
+  } else if (penultimateDigit !== 1 && lastDigit === 1) {
     pluralForm = options.one;
   }
 
   return `${count} ${pluralForm}`;
-};
+}
 
 const ukUAGrid: Partial<GridLocaleText> = {
   // Root
