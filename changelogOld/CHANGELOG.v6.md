@@ -20,7 +20,7 @@ Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 ### Docs
 
-- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 
@@ -314,7 +314,7 @@ Same changes as in `@mui/x-date-pickers@6.19.4`.
 ### Docs
 
 - [docs] Add a note about `AdapterDateFnsV3` on the Getting Started page (#11987) @flaviendelangle
-- [docs] Avoid the use of MUI Core @oliviertassinari
+- [docs] Avoid the use of MUI Core @oliviertassinari
 - [docs] Fix API links (#11930) @alexfauquette
 - [docs] Fix `ChartsTooltip` typo (#11967) @thisisharsh7
 - [docs] Refactor `Localization` documentation sections (#11997) @LukasTy
