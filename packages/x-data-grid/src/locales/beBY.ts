@@ -4,16 +4,16 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 
 type PluralForm = {
   one: string;
-  twoToFour: string;
-  other: string;
+  few: string;
+  many: string;
 };
 
 const getPluralForm = (count: number, options: PluralForm) => {
-  let pluralForm = options.other;
+  let pluralForm = options.many;
   const lastDigit = count % 10;
 
   if (lastDigit > 1 && lastDigit < 5 && (count < 10 || count > 20)) {
-    pluralForm = options.twoToFour;
+    pluralForm = options.few;
   } else if (lastDigit === 1 && count % 100 !== 11) {
     pluralForm = options.one;
   }
@@ -45,8 +45,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     getPluralForm(count, {
       one: 'актыўны фільтр',
-      twoToFour: 'актыўных фільтра',
-      other: 'актыўных фільтраў',
+      few: 'актыўных фільтра',
+      many: 'актыўных фільтраў',
     }),
 
   // Quick filter toolbar field
@@ -140,8 +140,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) =>
     getPluralForm(count, {
       one: 'актыўны фільтр',
-      twoToFour: 'актыўных фільтра',
-      other: 'актыўных фільтраў',
+      few: 'актыўных фільтра',
+      many: 'актыўных фільтраў',
     }),
   columnHeaderFiltersLabel: 'Паказаць фільтры',
   columnHeaderSortIconLabel: 'Сартыраваць',
@@ -150,8 +150,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) =>
     getPluralForm(count, {
       one: 'абраны радок',
-      twoToFour: 'абраных радка',
-      other: 'абраных радкоў',
+      few: 'абраных радка',
+      many: 'абраных радкоў',
     }),
 
   // Total row amount footer text
