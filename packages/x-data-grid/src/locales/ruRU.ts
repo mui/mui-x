@@ -154,6 +154,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
       few: 'строки выбраны',
       many: 'строк выбрано',
     }),
+
   // Total row amount footer text
   footerTotalRows: 'Всего строк:',
 
