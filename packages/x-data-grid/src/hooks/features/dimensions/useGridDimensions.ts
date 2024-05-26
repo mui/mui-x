@@ -410,5 +410,5 @@ function roundToDecimalPlaces(value: number, decimals: number) {
 }
 
 function areElementSizesEqual(a: ElementSize, b: ElementSize) {
-  return a.width === b.width && a.height == b.height;
+  return a.width === b.width && a.height === b.height;
 }
