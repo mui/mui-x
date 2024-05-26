@@ -120,3 +120,23 @@ A few common use-cases are:
 - Formatting a boolean value to `Yes` or `No`
 
 It only impacts the rendering part and does not impact the internal calculations like filtering or sorting. You can know more about it in the [value formatter](/x/react-data-grid/column-definition/#value-formatter) section.
+
+## What is purpose of useDemoData hook used in the documentation examples?
+
+The `useDemoData` hook is a utility hook coming from package `@mui/x-data-grid-generator` that generates random data for the Data Grid. It is used frequently in the documentation examples to provide realistic data in the documentation examples without polluting the code with data generation logic.
+
+Here's an example of how to use it:
+
+```tsx
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+export default function Demo() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  return <DataGrid {...data} />;
+}
+```
+
+It comes with two datasets `Commodity` and `Employee`. You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
