@@ -19,6 +19,7 @@ import {
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
   findRightPinnedHeadersBeforeCol,
+  escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
 import {
   GridAutosizeOptions,
@@ -437,10 +438,6 @@ export const useGridColumnResize = (
 
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
-    // HACK: The jsdom test is failing because CSS.escape doesn't exist in that context. 
-    // We have decided that we want to preserve the bug in jsdom
-    // https://github.com/mui/mui-x/pull/13069#discussion_r1603270444
-    const escapedColDefField = typeof CSS === 'undefined' ? colDef.field : CSS.escape(colDef.field);
 
     refs.initialColWidth = colDef.computedWidth;
     refs.initialTotalWidth = apiRef.current.getRootDimensions().rowWidth;
@@ -449,11 +446,11 @@ export const useGridColumnResize = (
 
     refs.columnHeaderElement = findHeaderElementFromField(
       apiRef.current.columnHeadersContainerRef!.current!,
-      escapedColDefField,
+      colDef.field,
     );
 
     const headerFilterElement = root.querySelector(
-      `.${gridClasses.headerFilterRow} [data-field="${escapedColDefField}"]`,
+      `.${gridClasses.headerFilterRow} [data-field="${escapeOperandAttributeSelector(colDef.field)}"]`,
     );
     if (headerFilterElement) {
       refs.headerFilterElement = headerFilterElement as HTMLDivElement;
@@ -461,7 +458,7 @@ export const useGridColumnResize = (
 
     refs.groupHeaderElements = findGroupHeaderElementsFromField(
       apiRef.current.columnHeadersContainerRef?.current!,
-      escapedColDefField,
+      colDef.field,
     );
 
     refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
