@@ -297,12 +297,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isNoInputOperator = currentOperator.requiresFilterValue === false;
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
-    if (item.operator === 'between') {
-      console.log(currentOperator, item);
-    }
+
     const label =
       currentOperator.headerLabel ??
-      currentOperator.label ??
       apiRef.current.getLocaleText(
         `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
