@@ -20,6 +20,10 @@ export interface GridAggregationApi {
    * @param {GridAggregationModel} model The aggregation model.
    */
   setAggregationModel: (model: GridAggregationModel) => void;
+  /**
+   * Reapplies the aggregation operation.
+   */
+  applyAggregation: () => void;
 }
 
 export interface GridAggregationGetCellValueParams {

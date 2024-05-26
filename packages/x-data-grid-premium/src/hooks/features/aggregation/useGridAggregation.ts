@@ -90,6 +90,7 @@ export const useGridAggregation = (
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
+    applyAggregation,
   };
 
   useGridApiMethod(apiRef, aggregationApi, 'public');
