@@ -1,3 +1,4 @@
+import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { lighten, darken, alpha, styled } from '@mui/material/styles';
 
@@ -23,7 +24,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
   borderRadius: getBorderRadius(theme),
 }));
 
-export default function LoadingSlate() {
+export default function LoadingSlateNoSnap() {
   return (
     <StyledDiv>
       <CircularProgress />

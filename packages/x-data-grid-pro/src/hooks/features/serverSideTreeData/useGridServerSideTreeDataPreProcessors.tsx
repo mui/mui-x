@@ -31,7 +31,6 @@ import {
   GridTreePathDuplicateHandler,
   RowTreeBuilderGroupingCriterion,
 } from '../../../utils/tree/models';
-import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 

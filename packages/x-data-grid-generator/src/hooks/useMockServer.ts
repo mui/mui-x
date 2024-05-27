@@ -51,6 +51,7 @@ function decodeParams(url: string): GridGetRowsParams {
   const params = new URL(url).searchParams;
   const decodedParams = {} as any;
   const array = Array.from(params.entries());
+  // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of array) {
     try {
       decodedParams[key] = JSON.parse(decodeURIComponent(value));
@@ -228,19 +229,12 @@ export const useMockServer = (
       }
 
       if (isTreeData /* || TODO: `isRowGrouping` */) {
-        console.log('requested tree data for groupKeys', params.groupKeys);
-
         const { rows, rootRowCount } = await processTreeDataRows(
           data.rows,
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
         );
-
-        console.log('processed tree data for groupKeys', {
-          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
-          rowCount: rootRowCount,
-        });
 
         getRowsResponse = {
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
@@ -277,6 +271,7 @@ export const useMockServer = (
     }
     async function startServer() {
       if (typeof window !== 'undefined') {
+        // eslint-disable-next-line global-require
         const { setupWorker } = require('msw/browser');
         if (!setupWorker) {
           return;
@@ -307,6 +302,7 @@ export const useMockServer = (
       }
     }
     startServer();
+    // eslint-disable-next-line consistent-return
     return () => {
       if (worker) {
         setWorker((prev) => {
@@ -315,13 +311,14 @@ export const useMockServer = (
         });
       }
     };
-  }, [fetchRows, data, shouldRequestsFail]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchRows, data, shouldRequestsFail, serverOptions?.startServer]);
 
   React.useEffect(() => {
     if (data && (!serverOptions?.startServer || worker) && !isInitialized) {
       setIsInitialized(true);
     }
-  }, [data, worker, isInitialized]);
+  }, [data, worker, isInitialized, serverOptions?.startServer]);
 
   return {
     columns: columnsWithDefaultColDef,
