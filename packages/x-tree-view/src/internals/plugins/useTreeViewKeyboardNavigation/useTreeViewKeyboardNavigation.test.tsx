@@ -8,6 +8,7 @@ import {
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { spy } from 'sinon';
 
 describeTreeView<
   [
@@ -1248,6 +1249,31 @@ describeTreeView<
 
       fireEvent.keyDown(response.getItemRoot('1'), { key: 't' });
       expect(response.getFocusedItemId()).to.equal('1');
+    });
+  });
+
+  describe('onKeyDown prop', () => {
+    it('should call onKeyDown on the Tree View and the Tree Item when a key is pressed', () => {
+      const handleTreeViewKeyDown = spy();
+      const handleTreeItemKeyDown = spy();
+
+      const response = render({
+        items: [{ id: '1' }],
+        onKeyDown: handleTreeViewKeyDown,
+        slotProps: { item: { onKeyDown: handleTreeItemKeyDown } },
+      } as any);
+
+      const itemRoot = response.getItemRoot('1');
+      act(() => {
+        itemRoot.focus();
+      });
+
+      fireEvent.keyDown(itemRoot, { key: 'Enter' });
+      fireEvent.keyDown(itemRoot, { key: 'A' });
+      fireEvent.keyDown(itemRoot, { key: ']' });
+
+      expect(handleTreeViewKeyDown.callCount).to.equal(3);
+      expect(handleTreeItemKeyDown.callCount).to.equal(3);
     });
   });
 });

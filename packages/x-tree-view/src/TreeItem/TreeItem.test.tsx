@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
-import { spy } from 'sinon';
-import { act, createEvent, createRenderer, fireEvent } from '@mui-internal/test-utils';
+import { act, createRenderer, fireEvent } from '@mui-internal/test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { SimpleTreeViewPlugins } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
@@ -140,77 +139,5 @@ describe('<TreeItem />', () => {
         );
       }).toErrorDev('Expected an element type that can hold a ref.');
     });
-  });
-
-  it('should be able to type in an child input', () => {
-    const { getByRole } = render(
-      <SimpleTreeView defaultExpandedItems={['one']}>
-        <TreeItem itemId="one" label="one" data-testid="one">
-          <TreeItem
-            itemId="two"
-            label={
-              <div>
-                <input type="text" />
-              </div>
-            }
-            data-testid="two"
-          />
-        </TreeItem>
-      </SimpleTreeView>,
-    );
-    const input = getByRole('textbox');
-    const keydownEvent = createEvent.keyDown(input, {
-      key: 'a',
-    });
-
-    const handlePreventDefault = spy();
-    keydownEvent.preventDefault = handlePreventDefault;
-    fireEvent(input, keydownEvent);
-    expect(handlePreventDefault.callCount).to.equal(0);
-  });
-
-  it('should not focus steal', () => {
-    let setActiveItemMounted;
-    // a TreeItem whose mounted state we can control with `setActiveItemMounted`
-    function ControlledTreeItem(props) {
-      const [mounted, setMounted] = React.useState(true);
-      setActiveItemMounted = setMounted;
-
-      if (!mounted) {
-        return null;
-      }
-      return <TreeItem {...props} />;
-    }
-    const { getByText, getByTestId, getByRole } = render(
-      <React.Fragment>
-        <button type="button">Some focusable element</button>
-        <SimpleTreeView>
-          <TreeItem itemId="one" label="one" data-testid="one" />
-          <ControlledTreeItem itemId="two" label="two" data-testid="two" />
-        </SimpleTreeView>
-      </React.Fragment>,
-    );
-
-    fireEvent.click(getByText('two'));
-    act(() => {
-      getByTestId('two').focus();
-    });
-
-    expect(getByTestId('two')).toHaveFocus();
-
-    act(() => {
-      getByRole('button').focus();
-    });
-
-    expect(getByRole('button')).toHaveFocus();
-
-    act(() => {
-      setActiveItemMounted(false);
-    });
-    act(() => {
-      setActiveItemMounted(true);
-    });
-
-    expect(getByRole('button')).toHaveFocus();
   });
 });

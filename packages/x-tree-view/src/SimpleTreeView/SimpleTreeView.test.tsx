@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
 import { act, createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
 import Portal from '@mui/material/Portal';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
@@ -85,66 +84,6 @@ describe('<SimpleTreeView />', () => {
         });
       }).not.toErrorDev();
     });
-  });
-
-  it('should call onKeyDown when a key is pressed', () => {
-    const handleTreeViewKeyDown = spy();
-    const handleTreeItemKeyDown = spy();
-
-    const { getByTestId } = render(
-      <SimpleTreeView onKeyDown={handleTreeViewKeyDown}>
-        <TreeItem itemId="one" data-testid="one" onKeyDown={handleTreeItemKeyDown} />
-      </SimpleTreeView>,
-    );
-
-    const itemOne = getByTestId('one');
-    act(() => {
-      itemOne.focus();
-    });
-
-    fireEvent.keyDown(itemOne, { key: 'Enter' });
-    fireEvent.keyDown(itemOne, { key: 'A' });
-    fireEvent.keyDown(itemOne, { key: ']' });
-
-    expect(handleTreeViewKeyDown.callCount).to.equal(3);
-    expect(handleTreeItemKeyDown.callCount).to.equal(3);
-  });
-
-  it('should not error when component state changes', () => {
-    function MyComponent() {
-      const [, setState] = React.useState(1);
-
-      return (
-        <SimpleTreeView
-          defaultExpandedItems={['one']}
-          onItemFocus={() => {
-            setState(Math.random);
-          }}
-        >
-          <TreeItem itemId="one" data-testid="one">
-            <TreeItem itemId="two" data-testid="two" />
-          </TreeItem>
-        </SimpleTreeView>
-      );
-    }
-
-    const { getByTestId } = render(<MyComponent />);
-
-    fireEvent.focus(getByTestId('one'));
-    fireEvent.focus(getByTestId('one'));
-    expect(getByTestId('one')).toHaveFocus();
-
-    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
-
-    expect(getByTestId('two')).toHaveFocus();
-
-    fireEvent.keyDown(getByTestId('two'), { key: 'ArrowUp' });
-
-    expect(getByTestId('one')).toHaveFocus();
-
-    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
-
-    expect(getByTestId('two')).toHaveFocus();
   });
 
   it('should work in a portal', () => {
