@@ -118,6 +118,12 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         ).to.be.lessThan(5);
       }
     });
+
+    it('should work without args', () => {
+      const date = adapter.date().valueOf();
+
+      expect(Math.abs(date - Date.now())).to.be.lessThan(5);
+    });
   });
 
   it('Method: getTimezone', () => {
