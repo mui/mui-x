@@ -12,8 +12,8 @@ describe('createIsHighlighted', () => {
     expect(createIsHighlighted(null, null)(itemData)).to.equal(false);
   });
 
-  describe('highlighted=same-series', () => {
-    const isHighlightedSameSeries = createIsHighlighted({ highlight: 'same-series' }, itemData);
+  describe('highlighted=series', () => {
+    const isHighlightedSameSeries = createIsHighlighted({ highlight: 'series' }, itemData);
 
     it('should return true when input series is same as highlighted', () => {
       expect(isHighlightedSameSeries(itemData)).to.equal(true);

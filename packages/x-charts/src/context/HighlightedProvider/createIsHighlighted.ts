@@ -8,11 +8,7 @@ export const createIsHighlighted =
       return false;
     }
 
-    if (
-      highlightScope.highlight === 'same-series' ||
-      // @ts-expect-error backward compatibility
-      highlightScope.highlight === 'series'
-    ) {
+    if (highlightScope.highlight === 'series') {
       return input.seriesId === highlightedItem?.seriesId;
     }
 

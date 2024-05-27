@@ -30,31 +30,31 @@ export type HighlightItemData = {
   path?: string | string[];
 };
 
-export type HighlightOptions = 'none' | 'item' | 'same-series';
+export type HighlightOptions = 'none' | 'item' | 'series';
 
-export type FadeOptions = 'none' | 'same-series' | 'global';
+export type FadeOptions = 'none' | 'series' | 'global';
 
 export type HighlightScope = {
   /**
    * @deprecated Use `highlight` instead.
    */
-  highlighted?: 'none' | 'item' | 'series';
+  highlighted?: HighlightOptions;
   /**
    * The scope of highlighted elements.
    * - 'none': no highlight.
    * - 'item': only highlight the item.
-   * - 'same-series': highlight all elements of the same series.
+   * - 'series': highlight all elements of the same series.
    * @default 'none'
    */
   highlight?: HighlightOptions;
   /**
    * @deprecated Use `fade` instead.
    */
-   faded?: 'none' | 'series' | 'global';
-   /**
+  faded?: FadeOptions;
+  /**
    * The scope of faded elements.
    * - 'none': no fading.
-   * - 'same-series': only fade element of the same series.
+   * - 'series': only fade element of the same series.
    * - 'global': fade all elements that are not highlighted.
    * @default 'none'
    */

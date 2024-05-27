@@ -139,9 +139,9 @@ PieArc.propTypes = {
    * @deprecated Use the `isFaded` or `isHighlighted` props instead.
    */
   highlightScope: PropTypes.shape({
-    fade: PropTypes.oneOf(['global', 'none', 'same-series']),
+    fade: PropTypes.oneOf(['global', 'none', 'series']),
     faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlight: PropTypes.oneOf(['item', 'none', 'same-series']),
+    highlight: PropTypes.oneOf(['item', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

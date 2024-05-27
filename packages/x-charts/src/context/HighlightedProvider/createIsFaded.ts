@@ -8,11 +8,7 @@ export const createIsFaded =
       return false;
     }
 
-    if (
-      highlightScope.fade === 'same-series' ||
-      // @ts-expect-error backward compatibility
-      highlightScope.fade === 'series'
-    ) {
+    if (highlightScope.fade === 'series') {
       return (
         input.seriesId === highlightedItem?.seriesId &&
         !isPathEqual(input.path, highlightedItem?.path)

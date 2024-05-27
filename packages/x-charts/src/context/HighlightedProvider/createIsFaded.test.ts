@@ -12,8 +12,8 @@ describe('createIsFaded', () => {
     expect(createIsFaded(null, null)(itemData)).to.equal(false);
   });
 
-  describe('faded=same-series', () => {
-    const isFadedSameSeries = createIsFaded({ fade: 'same-series' }, itemData);
+  describe('faded=series', () => {
+    const isFadedSameSeries = createIsFaded({ fade: 'series' }, itemData);
 
     it('should return true when input series is same as highlighted', () => {
       expect(isFadedSameSeries({ ...itemData, path: '2' })).to.equal(true);

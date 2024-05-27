@@ -30,8 +30,8 @@ export type HighlightedProviderProps = {
 const mergeDeprecatedOptions = (options?: Partial<HighlightScope>): HighlightScope => {
   const { highlighted, faded, ...rest } = options ?? {};
   return {
-    highlight: highlighted === 'series' ? 'same-series' : highlighted,
-    fade: faded === 'series' ? 'same-series' : faded,
+    highlight: highlighted,
+    fade: faded,
     ...rest,
   };
 };
