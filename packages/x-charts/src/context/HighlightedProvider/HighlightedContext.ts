@@ -63,6 +63,7 @@ export type HighlightScope = {
 };
 
 export type HighlightedState = {
+  highlightScope?: Partial<HighlightScope>;
   highlightedItem: HighlightItemData | null;
   setHighlighted: (item: HighlightItemData) => void;
   clearHighlighted: () => void;

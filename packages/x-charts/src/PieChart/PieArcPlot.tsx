@@ -14,6 +14,7 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
+import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -93,6 +94,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...defaultTransitionConfig,
     immediate: skipAnimation,
   });
+  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -130,6 +132,7 @@ function PieArcPlot(props: PieArcPlotProps) {
               id={id}
               color={item.color}
               dataIndex={index}
+              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
               onClick={
