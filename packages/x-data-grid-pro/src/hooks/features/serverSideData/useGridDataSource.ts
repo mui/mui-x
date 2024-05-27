@@ -185,7 +185,7 @@ export const useGridDataSource = (
         nestedDataManager.setRequestSettled(id);
         privateApiRef.current.setChildrenLoading(id, false);
         privateApiRef.current.setChildrenFetchError(id, e);
-        onError?.(e as Error, fetchParams);
+        onError?.(e, fetchParams);
       }
     },
     [nestedDataManager, onError, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],

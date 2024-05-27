@@ -17,7 +17,9 @@ import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGri
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
-type DataGridProForcedProps = { [key in keyof DataGridProProps]?: DataGridPremiumProcessedProps[key] };
+type DataGridProForcedProps = {
+  [key in keyof DataGridProProps]?: DataGridPremiumProcessedProps[key];
+};
 type GetDataGridProForcedProps = (
   themedProps: GetDataGridPremiumPropsDefaultValues,
 ) => DataGridProForcedProps;

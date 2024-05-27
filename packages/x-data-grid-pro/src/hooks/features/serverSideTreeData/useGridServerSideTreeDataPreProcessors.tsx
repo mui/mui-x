@@ -202,14 +202,11 @@ export const useGridServerSideTreeDataPreProcessors = (
     return skipFiltering(rowTree);
   }, [privateApiRef]);
 
-  const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
-    () => {
-      const rowTree = gridRowTreeSelector(privateApiRef);
+  const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(() => {
+    const rowTree = gridRowTreeSelector(privateApiRef);
 
-      return skipSorting(rowTree);
-    },
-    [privateApiRef, props.disableChildrenSorting],
-  );
+    return skipSorting(rowTree);
+  }, [privateApiRef, props.disableChildrenSorting]);
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
