@@ -339,7 +339,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 ### Core
 
 - [core] Fix `l10n` GH workflow (#12895) @LukasTy
-- [core] Match Base UI and Toolpad @oliviertassinari
+- [core] Match Base UI and Toolpad @oliviertassinari
 - [core] Remove redundant `setupFiles` entries in `package.json` (#12899) @LukasTy
 - [core] Use `describeTreeView` for focus tests (#12698) @flaviendelangle
 - [core] Use `describeTreeView` for type-ahead tests (#12811) @flaviendelangle
