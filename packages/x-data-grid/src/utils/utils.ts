@@ -190,9 +190,9 @@ function mulberry32(a: number): () => number {
   };
 }
 
-export function randomNumberBetween(seed: number, min: number, max: number): () => number {
+export function seededRandomNumberGenerator(seed: number): (min: number, max: number) => number {
   const random = mulberry32(seed);
-  return () => min + (max - min) * random();
+  return (min: number, max: number) => min + (max - min) * random();
 }
 
 export function deepClone(obj: Record<string, any>) {

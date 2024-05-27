@@ -6,12 +6,12 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { fastMemo } from '../../utils/fastMemo';
-import { randomNumberBetween } from '../../utils/utils';
+import { seededRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-const randomWidth = randomNumberBetween(10000, 20, 80);
+const randomWidth = seededRandomNumberGenerator(10000);
 
 export interface GridSkeletonCellProps {
   width: number;
@@ -39,7 +39,7 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, align };
   const classes = useUtilityClasses(ownerState);
-  const contentWidth = Math.round(randomWidth());
+  const contentWidth = Math.round(randomWidth(20, 80));
 
   return (
     <div className={classes.root} style={{ height, maxWidth: width, minWidth: width }} {...other}>

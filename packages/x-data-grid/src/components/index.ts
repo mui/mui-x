@@ -18,3 +18,4 @@ export { GridPagination } from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
+export * from './GridSkeletonLoadingOverlay';
