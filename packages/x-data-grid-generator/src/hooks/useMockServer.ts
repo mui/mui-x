@@ -82,7 +82,7 @@ const defaultColDef = getGridDefaultColumnTypes();
 
 export const useMockServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
-  serverOptions?: ServerOptions & { startServer?: boolean },
+  serverOptions?: ServerOptions & { startServer?: boolean; verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse => {
   const [isInitialized, setIsInitialized] = React.useState(false);
@@ -212,6 +212,12 @@ export const useMockServer = (
         });
       }
       const params = decodeParams(requestUrl);
+      const verbose = serverOptions?.verbose ?? false;
+      // eslint-disable-next-line no-console
+      const print = console.info;
+      if (verbose) {
+        print('MUI X: SERVER REQUEST RECIEVED WITH PARAMS', params);
+      }
       let getRowsResponse: GridGetRowsResponse;
       const serverOptionsWithDefault = {
         minDelay: serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay,
@@ -224,6 +230,9 @@ export const useMockServer = (
         const { minDelay, maxDelay } = serverOptionsWithDefault;
         const delay = randomInt(minDelay, maxDelay);
         return new Promise<GridGetRowsResponse>((_, reject) => {
+          if (verbose) {
+            print('MUI X: SERVER REQUEST FAILURE WITH PARAMS', params);
+          }
           setTimeout(() => reject(new Error('Could not fetch the data')), delay);
         });
       }
@@ -252,16 +261,20 @@ export const useMockServer = (
       }
 
       return new Promise<GridGetRowsResponse>((resolve) => {
+        if (verbose) {
+          print('MUI X: SERVER RESPONSE WITH PARAMS', params, getRowsResponse);
+        }
         resolve(getRowsResponse);
       });
     },
     [
       data,
-      columnsWithDefaultColDef,
-      isTreeData,
+      serverOptions?.verbose,
       serverOptions?.minDelay,
       serverOptions?.maxDelay,
       serverOptions?.useCursorPagination,
+      isTreeData,
+      columnsWithDefaultColDef,
     ],
   );
 

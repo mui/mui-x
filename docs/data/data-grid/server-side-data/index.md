@@ -166,7 +166,9 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The demo above uses a utility `msw` to create a mock server that intercepts the actual Network calls and provide data. Open Network tab in the browser's developer tools to see the requests and corresponding responses.
+The demos used with server-side data use a utility `useMockServer` coming from the `@mui/x-data-grid-generator` package to simulate the server-side data fetching.
+
+It supports a property called `verbose`, in the demos below, you can set it using a checkbox. Set it checked to observe the request parameters and the response data coming from the `useMockServer` in the info section of the browser console.
 :::
 
 ## Data caching
