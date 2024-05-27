@@ -408,6 +408,9 @@ export const useGridColumnResize = (
       apiRef.current.setColumnWidth(refs.colDef.field, refs.colDef.width!);
       logger.debug(`Updating col ${refs.colDef.field} with new width: ${refs.colDef.width}`);
 
+      // Since during resizing we update the columns width outside of React, React is unable to
+      // reapply the right style properties. We need to sync the state manually.
+      // So we reapply the same logic as in https://github.com/mui/mui-x/blob/0511bf65543ca05d2602a5a3e0a6156f2fc8e759/packages/x-data-grid/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx#L405
       const columnsState = gridColumnsStateSelector(apiRef.current.state);
       refs.groupHeaderElements!.forEach((element) => {
         const fields = getFieldsFromGroupHeaderElem(element);
