@@ -28,10 +28,11 @@ export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
 const releaseInfo = getReleaseInfo();
 
-const dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[] = [
-  ...propValidatorsDataGrid,
-  ...propValidatorsDataGridPro,
-];
+let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
+
+if (process.env.NODE_ENV !== 'production') {
+  dataGridPremiumPropValidators = [...propValidatorsDataGrid, ...propValidatorsDataGridPro];
+}
 
 const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
@@ -42,7 +43,9 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  validateProps(props, dataGridPremiumPropValidators);
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, dataGridPremiumPropValidators);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -80,7 +83,7 @@ export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremium
 DataGridPremiumRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
@@ -113,7 +116,7 @@ DataGridPremiumRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,

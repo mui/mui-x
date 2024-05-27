@@ -43,7 +43,7 @@ A custom plugins contains 2 required elements:
 
 ### Params default value
 
-You can use the `getDefaultizedParams` property to set a default value to your plugin params:
+Use the `getDefaultizedParams` property to set a default value to your plugin params:
 
 ```ts
 const useCustomPlugin = ({ params }) => {
@@ -203,7 +203,7 @@ If you are using TypeScript, you need to define your dependencies in your plugin
 
 ### Pass props to your root element
 
-You can use the `getRootProps` property of your returned value to pass props to your root element:
+Use the `getRootProps` property of your returned value to pass props to your root element:
 
 ```ts
 const useCustomPlugin = ({ params }) => {
@@ -217,7 +217,7 @@ const useCustomPlugin = ({ params }) => {
 
 ### Pass elements to the Tree Item
 
-You can use the `contextValue` property in the returned object to pass elements to the Tree Item:
+Use the `contextValue` property in the returned object to pass elements to the Tree Item:
 
 :::warning
 The context is private for now and cannot be accessed outside the provided plugins.

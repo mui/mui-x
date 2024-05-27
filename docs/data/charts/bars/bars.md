@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
 ---
 
 # Charts - Bars
@@ -102,24 +102,30 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 ### Border Radius
 
-The border radius can be set by using a [clipPath](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) with
-[inset](https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape/inset) on the BarChart's `bar` [slot](/x/api/charts/bar-chart/#bar-chart-prop-slots)
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
-You can customize any of properties inside `inset`, the first property is "distance from border" and should be left at `0px` else it might break the bars alignment.
-
-```css
-inset(0px round <top-left> <top-right> <bottom-right> <bottom-left>)
-```
+It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
 
 {{"demo": "BorderRadius.js"}}
 
-:::warning
-There are few limitations to this method though.
+## Labels
 
-- [Stacking](/x/react-charts/bars/#stacking) won't look right with border radius.
-- On charts containing `Negative` and `Positive` values, rounding will apply to all of them in the same way, which might be undesirable.
+You can display labels on the bars.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+It can either get a function that gets the bar item and some context.
+Or you can pass `'value'` to display the raw value of the bar.
 
-:::
+{{"demo": "BarLabel.js"}}
+
+### Custom Labels
+
+You can display, change or hide labels based on conditional logic.
+To do so, provide a function to the `barLabel`.
+Labels are not displayed if the function returns `null`.
+
+In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+
+{{"demo": "CustomLabels.js"}}
 
 ## Click event
 

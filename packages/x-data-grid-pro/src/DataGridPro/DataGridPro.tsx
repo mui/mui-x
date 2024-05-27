@@ -29,7 +29,9 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
-  validateProps(props, propValidatorsDataGridPro);
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidatorsDataGridPro);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -68,7 +70,7 @@ export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 DataGridProRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -85,7 +87,7 @@ DataGridProRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,

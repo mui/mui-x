@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
-import { HighlightScope } from '../context/HighlightProvider';
-import { BarItemIdentifier, BarSeriesType } from '../models';
+import { BarItemIdentifier } from '../models';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { SeriesId } from '../models/seriesType/common';
 import getColor from './getColor';
+import { useChartId } from '../hooks';
+import { AnimationData, CompletedBarData, MaskData } from './types';
+import { BarClipPath } from './BarClipPath';
+import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 
 /**
  * Solution of the equations
@@ -44,11 +47,11 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots extends BarElementSlots {}
+export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
-export interface BarPlotSlotProps extends BarElementSlotProps {}
+export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
+export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default false
@@ -63,32 +66,38 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
     event: React.MouseEvent<SVGElement, MouseEvent>,
     barItemIdentifier: BarItemIdentifier,
   ) => void;
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius?: number;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarPlotSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarPlotSlots;
 }
 
-interface CompletedBarData {
-  seriesId: SeriesId;
-  dataIndex: number;
-  layout: BarSeriesType['layout'];
-  x: number;
-  y: number;
-  xOrigin: number;
-  yOrigin: number;
-  height: number;
-  width: number;
-  color: string;
-  highlightScope?: Partial<HighlightScope>;
-}
-
-const useAggregatedData = (): CompletedBarData[] => {
+const useAggregatedData = (): {
+  completedData: CompletedBarData[];
+  masksData: MaskData[];
+} => {
   const seriesData =
     React.useContext(SeriesContext).bar ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
+  const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
+
+  const masks: Record<string, MaskData> = {};
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
     return groupIds.flatMap((seriesId) => {
@@ -183,13 +192,15 @@ const useAggregatedData = (): CompletedBarData[] => {
         const minValueCoord = Math.round(Math.min(...valueCoordinates));
         const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
-        return {
+        const stackId = series[seriesId].stack;
+
+        const result = {
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
           x: verticalLayout
             ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : minValueCoord!,
+            : minValueCoord,
           y: verticalLayout
             ? minValueCoord
             : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
@@ -199,15 +210,45 @@ const useAggregatedData = (): CompletedBarData[] => {
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
           highlightScope: series[seriesId].highlightScope,
+          value: series[seriesId].data[dataIndex],
+          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
+
+        if (!masks[result.maskId]) {
+          masks[result.maskId] = {
+            id: result.maskId,
+            width: 0,
+            height: 0,
+            hasNegative: false,
+            hasPositive: false,
+            layout: result.layout,
+            xOrigin: xScale(0)!,
+            yOrigin: yScale(0)!,
+            x: 0,
+            y: 0,
+          };
+        }
+
+        const mask = masks[result.maskId];
+        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
+        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
+        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
+        mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
+        mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+
+        return result;
       });
     });
   });
 
-  return data;
+  return {
+    completedData: data,
+    masksData: Object.values(masks),
+  };
 };
 
-const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: CompletedBarData) => ({
+const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'
     ? {
         y: yOrigin,
@@ -223,7 +264,7 @@ const getOutStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: Complete
       }),
 });
 
-const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
+const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   y,
   x,
   height,
@@ -242,35 +283,72 @@ const getInStyle = ({ x, width, y, height }: CompletedBarData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const completedData = useAggregatedData();
-  const { skipAnimation, onItemClick, ...other } = props;
-
+  const { completedData, masksData } = useAggregatedData();
+  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: getOutStyle,
-    leave: getOutStyle,
-    enter: getInStyle,
-    update: getInStyle,
+    from: leaveStyle,
+    leave: leaveStyle,
+    enter: enterStyle,
+    update: enterStyle,
     immediate: skipAnimation,
   });
+
+  const maskTransition = useTransition(masksData, {
+    keys: (v) => v.id,
+    from: leaveStyle,
+    leave: leaveStyle,
+    enter: enterStyle,
+    update: enterStyle,
+    immediate: skipAnimation,
+  });
+
   return (
     <React.Fragment>
-      {transition((style, { seriesId, dataIndex, color, highlightScope }) => (
-        <BarElement
-          id={seriesId}
-          dataIndex={dataIndex}
-          highlightScope={highlightScope}
-          color={color}
+      {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
+        return (
+          <BarClipPath
+            maskId={id}
+            borderRadius={borderRadius}
+            hasNegative={hasNegative}
+            hasPositive={hasPositive}
+            layout={layout}
+            style={style}
+          />
+        );
+      })}
+      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+        const barElement = (
+          <BarElement
+            id={seriesId}
+            dataIndex={dataIndex}
+            color={color}
+            highlightScope={highlightScope}
+            {...other}
+            onClick={
+              onItemClick &&
+              ((event) => {
+                onItemClick(event, { type: 'bar', seriesId, dataIndex });
+              })
+            }
+            style={style}
+          />
+        );
+
+        if (!borderRadius || borderRadius <= 0) {
+          return barElement;
+        }
+
+        return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
+      })}
+      {barLabel && (
+        <BarLabelPlot
+          bars={completedData}
+          skipAnimation={skipAnimation}
+          barLabel={barLabel}
           {...other}
-          onClick={
-            onItemClick &&
-            ((event) => {
-              onItemClick(event, { type: 'bar', seriesId, dataIndex });
-            })
-          }
-          style={style}
         />
-      ))}
+      )}
     </React.Fragment>
   );
 }
@@ -278,8 +356,20 @@ function BarPlot(props: BarPlotProps) {
 BarPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

@@ -31,8 +31,8 @@ import {
   DateRangeValidationError,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
+  UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
-import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const joyTheme = extendJoyTheme();
 

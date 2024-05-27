@@ -15,6 +15,7 @@ const defaultAlias = {
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
+  '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
@@ -91,8 +92,19 @@ module.exports = function getBabelConfig(api) {
       {
         test: /date-fns/i,
         replacer: 'date-fns-v3',
-        ignoreFilenames: 'AdapterDateFns.ts',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsV3/',
       },
+    ]);
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns-jalali/i,
+        replacer: 'date-fns-jalali-v3',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+      },
+      'replace-date-fns-jalali-imports',
     ]);
   }
 

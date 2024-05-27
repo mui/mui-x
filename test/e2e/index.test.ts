@@ -737,6 +737,46 @@ async function initializeEnvironment(
             expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
           }
         });
+
+        it('should submit a form when clicking "Enter" key', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerForm');
+
+          const textbox = page.getByRole('textbox');
+          await textbox.focus();
+          await textbox.press('Enter');
+
+          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
+          const status = page.getByRole('status');
+          expect(await status.isVisible()).to.equal(true);
+          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        });
+
+        // TODO: enable when v7 fields form submitting is fixed
+        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
+        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
+
+        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
+        //   await monthSpinbutton.focus();
+        //   await monthSpinbutton.press('Enter');
+
+        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+        //     '04/17/2022',
+        //   );
+        //   const status = page.getByRole('status');
+        //   expect(await status.isVisible()).to.equal(true);
+        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        // });
+
+        it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
+          await renderFixture('DatePicker/MomentJalaliDateCalendar');
+
+          await page.getByRole('gridcell', { name: '11' }).click();
+
+          const day11 = page.getByRole('gridcell', { name: '11' });
+          expect(await day11.getAttribute('aria-selected')).to.equal('true');
+          // check that selecting a day doesn't change the day text
+          expect(await day11.textContent()).to.equal('11');
+        });
       });
 
       describe('<MobileDatePicker />', () => {
@@ -844,6 +884,33 @@ async function initializeEnvironment(
         await waitFor(async () => {
           expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        });
+      });
+
+      it('should correctly select hours section when there are no time renderers on v6', async () => {
+        // The test is flaky on webkit
+        if (browserType.name() === 'webkit') {
+          return;
+        }
+        await renderFixture(
+          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
+        );
+
+        await page.getByRole('button').click();
+        await page.getByRole('gridcell', { name: '11' }).click();
+
+        // assert that the hours section has been selected using two APIs
+        await waitFor(async () => {
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(
+                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
+              ),
+            ).to.equal(11);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          }
         });
       });
     });

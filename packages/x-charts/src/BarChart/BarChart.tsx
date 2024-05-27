@@ -131,12 +131,14 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     rightAxis,
     bottomAxis,
     skipAnimation,
+    borderRadius,
     onItemClick,
     onAxisClick,
     children,
     slots,
     slotProps,
     loading,
+    barLabel,
   } = props;
 
   const id = useId();
@@ -195,6 +197,8 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
           slotProps={slotProps}
           skipAnimation={skipAnimation}
           onItemClick={onItemClick}
+          borderRadius={borderRadius}
+          barLabel={barLabel}
         />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
@@ -218,7 +222,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
 BarChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
@@ -230,6 +234,18 @@ BarChart.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
@@ -292,6 +308,7 @@ BarChart.propTypes = {
   }),
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -390,6 +407,15 @@ BarChart.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -404,15 +430,6 @@ BarChart.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -461,6 +478,15 @@ BarChart.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -475,15 +501,6 @@ BarChart.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
