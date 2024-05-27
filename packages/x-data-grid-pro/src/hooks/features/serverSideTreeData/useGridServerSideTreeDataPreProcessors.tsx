@@ -205,7 +205,7 @@ export const useGridServerSideTreeDataPreProcessors = (
     const rowTree = gridRowTreeSelector(privateApiRef);
 
     return skipSorting(rowTree);
-  }, [privateApiRef, props.disableChildrenSorting]);
+  }, [privateApiRef]);
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
