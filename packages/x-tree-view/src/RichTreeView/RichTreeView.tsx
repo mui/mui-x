@@ -233,7 +233,7 @@ RichTreeView.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
-   * Indentation in pixels between two an item and its children.
+   * Indentation in pixels between an item and its children.
    * @default 12
    */
   itemChildrenIndentationPx: PropTypes.number,
