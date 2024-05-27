@@ -9,10 +9,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # MUI X Date and Time Pickers
 
-<p class="description">These react date picker and time picker components let users select date or time values.</p>
-
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
-## Overview
+<p class="description">An intuitive component library that allows users to select dates and times without confusion</p>
 
 {{"component": "modules/components/Keyboard.tsx"}}

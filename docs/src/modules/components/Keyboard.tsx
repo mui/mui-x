@@ -1,12 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
+// @ts-ignore
+import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { FieldSelectedSections } from '@mui/x-date-pickers/models';
-import dayjs from 'dayjs';
 
 type KeyType = {
   label: string;
@@ -441,22 +444,39 @@ export default function Keyboard() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack>
-        <DateField
-          defaultValue={dayjs('12/12/2023')}
-          ref={ref}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            setSelectedKey({ key: e.key, code: e.code, location: e.location, keyCode: e.keyCode });
-          }}
-          onKeyUp={() => {
-            setSelectedKey(null);
-          }}
-          enableAccessibleFieldDOMStructure
-          onSelectedSectionsChange={(newSelectedSection) => {
-            selectedSection.current = newSelectedSection;
-          }}
-        />
-        <KeyboardSvg handleKeySelection={handleKeySelection} selectedKey={selectedKey} />
+      <Stack direction="row" spacing={6} py={4}>
+        <Stack spacing={2}>
+          <SectionHeadline
+            overline="Accessibility"
+            title={
+              <Typography variant="h2" fontSize="1.625rem">
+                Keyboard navigation and screen reader support
+              </Typography>
+            }
+            description="Built with accessibility in mind, the date and time pickers ensures all users can navigate effectively using advanced keyboard support, making it fully compliant with accessibility standards like WCAG and ARIA."
+          />
+        </Stack>
+        <Stack spacing={2}>
+          <DateField
+            defaultValue={dayjs('12/12/2023')}
+            ref={ref}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              setSelectedKey({
+                key: e.key,
+                code: e.code,
+                location: e.location,
+              });
+            }}
+            onKeyUp={() => {
+              setSelectedKey(null);
+            }}
+            enableAccessibleFieldDOMStructure
+            onSelectedSectionsChange={(newSelectedSection) => {
+              selectedSection.current = newSelectedSection;
+            }}
+          />
+          <KeyboardSvg handleKeySelection={handleKeySelection} selectedKey={selectedKey} />
+        </Stack>
       </Stack>
     </LocalizationProvider>
   );
