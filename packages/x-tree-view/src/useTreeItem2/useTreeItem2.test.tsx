@@ -12,7 +12,7 @@ import {
 } from '@mui/x-tree-view/internals';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-describeTreeView.only<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
+describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
   'useTreeItem2 hook',
   ({
     render,

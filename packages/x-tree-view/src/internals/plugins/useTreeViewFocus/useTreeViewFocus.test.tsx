@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui-internal/test-utils';
@@ -7,7 +8,6 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
-import * as React from 'react';
 
 /**
  * All tests related to keyboard navigation (e.g.: type-ahead when using `props.disabledItemsFocusable`)
