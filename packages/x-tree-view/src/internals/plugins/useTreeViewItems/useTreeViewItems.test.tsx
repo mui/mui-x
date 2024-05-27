@@ -13,7 +13,14 @@ describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
 >(
   'useTreeViewItems plugin',
-  ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
+  ({
+    render,
+    renderFromJSX,
+    treeViewComponentName,
+    TreeViewComponent,
+    treeItemComponentName,
+    TreeItemComponent,
+  }) => {
     it('should throw an error when two items have the same ID', function test() {
       // TODO is this fixed?
       if (!/jsdom/.test(window.navigator.userAgent)) {
@@ -50,6 +57,46 @@ describeTreeView<
       });
 
       expect(response.getItemRoot('1')).to.have.attribute('id', 'customId');
+    });
+
+    describe.only('ContentComponent / ContentProps props (TreeItem only)', () => {
+      it('should use the ContentComponent prop when defined', function test() {
+        if (treeItemComponentName === 'TreeItem2') {
+          this.skip();
+        }
+
+        const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
+          <div className={props.classes.root} ref={ref}>
+            MOCK CONTENT COMPONENT
+          </div>
+        ));
+
+        const response = render({
+          items: [{ id: '1' }],
+          slotProps: { item: { ContentComponent } },
+        });
+
+        expect(response.getItemContent('1').textContent).to.equal('MOCK CONTENT COMPONENT');
+      });
+
+      it('should use the ContentProps prop when defined', function test() {
+        if (treeItemComponentName === 'TreeItem2') {
+          this.skip();
+        }
+
+        const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
+          <div className={props.classes.root} ref={ref}>
+            {props.customProp}
+          </div>
+        ));
+
+        const response = render({
+          items: [{ id: '1' }],
+          slotProps: { item: { ContentComponent, ContentProps: { customProp: 'ABCDEF' } as any } },
+        });
+
+        expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
+      });
     });
 
     describe('items prop / JSX Tree Item', () => {

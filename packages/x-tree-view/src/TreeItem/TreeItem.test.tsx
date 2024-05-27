@@ -171,36 +171,6 @@ describe('<TreeItem />', () => {
     });
   });
 
-  describe('content customisation', () => {
-    it('should allow a custom ContentComponent', () => {
-      const mockContent = React.forwardRef((props: {}, ref: React.Ref<HTMLDivElement>) => (
-        <div ref={ref}>MOCK CONTENT COMPONENT</div>
-      ));
-      const { container } = render(
-        <SimpleTreeView>
-          <TreeItem itemId="one" ContentComponent={mockContent as any} />
-        </SimpleTreeView>,
-      );
-      expect(container.textContent).to.equal('MOCK CONTENT COMPONENT');
-    });
-
-    it('should allow props to be passed to a custom ContentComponent', () => {
-      const mockContent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
-        <div ref={ref}>{props.customProp}</div>
-      ));
-      const { container } = render(
-        <SimpleTreeView>
-          <TreeItem
-            itemId="one"
-            ContentComponent={mockContent as any}
-            ContentProps={{ customProp: 'ABCDEF' } as any}
-          />
-        </SimpleTreeView>,
-      );
-      expect(container.textContent).to.equal('ABCDEF');
-    });
-  });
-
   it('should be able to type in an child input', () => {
     const { getByRole } = render(
       <SimpleTreeView defaultExpandedItems={['one']}>
