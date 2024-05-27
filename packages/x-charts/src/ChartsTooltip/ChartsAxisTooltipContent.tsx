@@ -78,12 +78,12 @@ function ChartsAxisTooltipContent(props: {
 
             let getColor: (index: number) => string;
             switch (seriesToAdd.type) {
-              case 'scatter':
+              case 'line':
+              case 'bar':
                 getColor = colorGetter(
                   seriesToAdd,
                   xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
                   yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
                 );
                 break;
               default:
@@ -91,6 +91,7 @@ function ChartsAxisTooltipContent(props: {
                   seriesToAdd,
                   xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
                   yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
                 );
                 break;
             }

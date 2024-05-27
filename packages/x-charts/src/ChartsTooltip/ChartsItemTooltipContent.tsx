@@ -58,12 +58,12 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
     case 'pie':
       getColor = colorGetter(series);
       break;
-    case 'scatter':
+    case 'line':
+    case 'bar':
       getColor = colorGetter(
         series,
         xAxis[series.xAxisKey ?? defaultXAxisId],
         yAxis[series.yAxisKey ?? defaultYAxisId],
-        zAxis[series.zAxisKey ?? defaultZAxisId],
       );
       break;
     default:
@@ -71,6 +71,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
         series,
         xAxis[series.xAxisKey ?? defaultXAxisId],
         yAxis[series.yAxisKey ?? defaultYAxisId],
+        zAxis[series.zAxisKey ?? defaultZAxisId],
       );
       break;
   }

@@ -2,33 +2,31 @@ import getBarColor from '../BarChart/getColor';
 import getLineColor from '../LineChart/getColor';
 import getScatterColor from '../ScatterChart/getColor';
 import getPieColor from '../PieChart/getColor';
-import {
-  DefaultizedBarSeriesType,
-  DefaultizedLineSeriesType,
-  DefaultizedPieSeriesType,
-  DefaultizedScatterSeriesType,
-} from '../models';
+import { DefaultizedSeriesType } from '../models';
 import { AxisDefaultized } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
 
-function getColor(series: DefaultizedPieSeriesType): (dataIndex: number) => string;
+export type ColorGetterType = (
+  series: DefaultizedSeriesType,
+  xAxis?: AxisDefaultized,
+  yAxis?: AxisDefaultized,
+  zAxis?: ZAxisDefaultized,
+) => string;
+
+function getColor(series: DefaultizedSeriesType<'pie'>): (dataIndex: number) => string;
 function getColor(
-  series: DefaultizedBarSeriesType | DefaultizedLineSeriesType,
+  series: DefaultizedSeriesType<'line' | 'bar'>,
   xAxis: AxisDefaultized,
   yAxis: AxisDefaultized,
 ): (dataIndex: number) => string;
 function getColor(
-  series: DefaultizedScatterSeriesType,
+  series: DefaultizedSeriesType<'scatter'>,
   xAxis: AxisDefaultized,
   yAxis: AxisDefaultized,
   zAxis?: ZAxisDefaultized,
 ): (dataIndex: number) => string;
 function getColor(
-  series:
-    | DefaultizedBarSeriesType
-    | DefaultizedLineSeriesType
-    | DefaultizedScatterSeriesType
-    | DefaultizedPieSeriesType,
+  series: DefaultizedSeriesType,
   xAxis?: AxisDefaultized,
   yAxis?: AxisDefaultized,
   zAxis?: ZAxisDefaultized,
@@ -48,6 +46,20 @@ function getColor(
   }
   if (series.type === 'pie') {
     return getPieColor(series);
+  }
+
+  if (series.type === 'heatmap') {
+    const colorScale = zAxis?.colorScale;
+
+    if (colorScale) {
+      return (dataIndex: number) => {
+        const value = series.data[dataIndex][2];
+        if (value !== undefined) {
+          return colorScale(value) ?? '';
+        }
+        return '';
+      };
+    }
   }
 
   throw Error(
