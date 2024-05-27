@@ -3,7 +3,7 @@ import { createIsHighlighted } from './createIsHighlighted';
 
 const itemData = {
   seriesId: '1s',
-  itemId: '1i',
+  path: '1i',
   value: '1v',
 };
 
@@ -24,7 +24,7 @@ describe('createIsHighlighted', () => {
     });
 
     it('should return true when input item is different than highlighted', () => {
-      expect(isHighlightedSameSeries({ ...itemData, itemId: '2' })).to.equal(true);
+      expect(isHighlightedSameSeries({ ...itemData, path: '2' })).to.equal(true);
     });
   });
 
@@ -36,7 +36,7 @@ describe('createIsHighlighted', () => {
     });
 
     it('should return false when input item is different than highlighted', () => {
-      expect(isHighlightedItem({ ...itemData, itemId: '2' })).to.equal(false);
+      expect(isHighlightedItem({ ...itemData, path: '2' })).to.equal(false);
     });
 
     it('should return false when input series is different than highlighted', () => {

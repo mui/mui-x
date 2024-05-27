@@ -37,7 +37,7 @@ export function useInteractionItemProps(
       });
       setHighlighted({
         seriesId: data.seriesId,
-        itemId: data.dataIndex,
+        path: data.dataIndex?.toString(),
       });
     };
     const onMouseLeave = () => {

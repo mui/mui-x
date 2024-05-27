@@ -16,9 +16,7 @@ export const createIsHighlighted =
     }
 
     if (highlightScope.highlight === 'item') {
-      return (
-        input.itemId === highlightedItem?.itemId && input.seriesId === highlightedItem?.seriesId
-      );
+      return input.path === highlightedItem?.path && input.seriesId === highlightedItem?.seriesId;
     }
 
     return false;

@@ -8,8 +8,8 @@ import { SeriesId } from '../../models/seriesType/common';
  * To clear the highlight, set the value to an empty object.
  *
  * @example
- * // Highlight the item with the series id 'london' and the item id 0.
- * { seriesId: 'london', itemId: 0 }
+ * // Highlight the item with the series id 'london' and the item at 0.
+ * { seriesId: 'london', path: '0' }
  *
  * // Highlight the whole series with the series id 'london'.
  * { seriesId: 'london' }
@@ -23,9 +23,11 @@ export type HighlightItemData = {
    */
   seriesId?: SeriesId;
   /**
-   * The item id of the highlighted item. Usually, it is the index of the data.
+   * The path to access the data.
+   * - On Cartesian charts, the path is the dataIndex of the series.
+   * - On Pie charts, the path is the index of the data.
    */
-  itemId?: number | string;
+  path?: string;
 };
 
 export type HighlightOptions = 'none' | 'item' | 'same-series';

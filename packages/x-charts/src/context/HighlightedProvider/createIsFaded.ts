@@ -12,15 +12,11 @@ export const createIsFaded =
       // @ts-expect-error backward compatibility
       highlightScope.fade === 'series'
     ) {
-      return (
-        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
-      );
+      return input.seriesId === highlightedItem?.seriesId && input.path !== highlightedItem?.path;
     }
 
     if (highlightScope.fade === 'global') {
-      return (
-        input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
-      );
+      return input.seriesId !== highlightedItem?.seriesId || input.path !== highlightedItem?.path;
     }
 
     return false;

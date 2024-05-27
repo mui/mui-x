@@ -289,7 +289,7 @@ BarChart.propTypes = {
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
-    itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    path: PropTypes.string,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**

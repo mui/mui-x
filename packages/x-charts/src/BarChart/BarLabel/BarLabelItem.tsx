@@ -73,7 +73,7 @@ function BarLabelItem(props: BarLabelItemProps) {
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId,
-    itemId: dataIndex,
+    path: dataIndex.toString(),
   });
 
   const ownerState = {
