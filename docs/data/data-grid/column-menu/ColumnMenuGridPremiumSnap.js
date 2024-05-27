@@ -36,7 +36,7 @@ export default function ColumnMenuGridPremiumSnap() {
     setTimeout(() => {
       apiRef.current.showColumnMenu('gross');
       console.log('after showColumnMenu');
-    }, 0);
+    }, 50);
   }, [apiRef]);
 
   return (
