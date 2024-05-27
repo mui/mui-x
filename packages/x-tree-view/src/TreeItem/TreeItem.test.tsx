@@ -9,6 +9,7 @@ import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem'
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 
 const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> = {
   instance: {
@@ -45,6 +46,48 @@ const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPlugins> 
   },
 };
 
+describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) => {
+  describe('ContentComponent / ContentProps props (TreeItem only)', () => {
+    it('should use the ContentComponent prop when defined', function test() {
+      if (treeItemComponentName === 'TreeItem2') {
+        this.skip();
+      }
+
+      const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
+        <div className={props.classes.root} ref={ref}>
+          MOCK CONTENT COMPONENT
+        </div>
+      ));
+
+      const response = render({
+        items: [{ id: '1' }],
+        slotProps: { item: { ContentComponent } },
+      });
+
+      expect(response.getItemContent('1').textContent).to.equal('MOCK CONTENT COMPONENT');
+    });
+
+    it('should use the ContentProps prop when defined', function test() {
+      if (treeItemComponentName === 'TreeItem2') {
+        this.skip();
+      }
+
+      const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
+        <div className={props.classes.root} ref={ref}>
+          {props.customProp}
+        </div>
+      ));
+
+      const response = render({
+        items: [{ id: '1' }],
+        slotProps: { item: { ContentComponent, ContentProps: { customProp: 'ABCDEF' } as any } },
+      });
+
+      expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
+    });
+  });
+});
+
 describe('<TreeItem />', () => {
   const { render } = createRenderer();
 
@@ -71,7 +114,7 @@ describe('<TreeItem />', () => {
     skip: ['reactTestRenderer', 'componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describe('warnings', () => {
+  describe('PropTypes warnings', () => {
     beforeEach(() => {
       PropTypes.resetWarningCache();
     });
@@ -96,78 +139,6 @@ describe('<TreeItem />', () => {
           'TreeItem',
         );
       }).toErrorDev('Expected an element type that can hold a ref.');
-    });
-  });
-
-  it('should call onClick when clicked', () => {
-    const handleClick = spy();
-
-    const { getByText } = render(
-      <SimpleTreeView>
-        <TreeItem itemId="test" label="test" onClick={handleClick} />
-      </SimpleTreeView>,
-    );
-
-    fireEvent.click(getByText('test'));
-
-    expect(handleClick.callCount).to.equal(1);
-  });
-
-  it('should not call onClick when children are clicked', () => {
-    const handleClick = spy();
-
-    const { getByText } = render(
-      <SimpleTreeView defaultExpandedItems={['one']}>
-        <TreeItem itemId="one" label="one" onClick={handleClick}>
-          <TreeItem itemId="two" label="two" />
-        </TreeItem>
-      </SimpleTreeView>,
-    );
-
-    fireEvent.click(getByText('two'));
-
-    expect(handleClick.callCount).to.equal(0);
-  });
-
-  describe('Accessibility', () => {
-    it('should have the role `treeitem`', () => {
-      const { getByTestId } = render(
-        <SimpleTreeView>
-          <TreeItem itemId="test" label="test" data-testid="test" />
-        </SimpleTreeView>,
-      );
-
-      expect(getByTestId('test')).to.have.attribute('role', 'treeitem');
-    });
-
-    it('should add the role `group` to a component containing children', () => {
-      const { getByRole, getByText } = render(
-        <SimpleTreeView defaultExpandedItems={['test']}>
-          <TreeItem itemId="test" label="test">
-            <TreeItem itemId="test2" label="test2" />
-          </TreeItem>
-        </SimpleTreeView>,
-      );
-
-      expect(getByRole('group')).to.contain(getByText('test2'));
-    });
-  });
-
-  describe('prop: disabled', () => {
-    describe('event bindings', () => {
-      it('should not prevent onClick being fired', () => {
-        const handleClick = spy();
-
-        const { getByText } = render(
-          <SimpleTreeView>
-            <TreeItem itemId="test" label="test" disabled onClick={handleClick} />
-          </SimpleTreeView>,
-        );
-
-        fireEvent.click(getByText('test'));
-
-        expect(handleClick.callCount).to.equal(1);
-      });
     });
   });
 
