@@ -34,18 +34,11 @@ export type HighlightOptions = 'none' | 'item' | 'same-series';
 
 export type FadeOptions = 'none' | 'same-series' | 'global';
 
-export type DeprecatedHighlightScope = {
+export type HighlightScope = {
   /**
    * @deprecated Use `highlight` instead.
    */
-  highlighted: 'none' | 'item' | 'series';
-  /**
-   * @deprecated Use `fade` instead.
-   */
-  faded: 'none' | 'series' | 'global';
-};
-
-export type HighlightScope = {
+  highlighted?: 'none' | 'item' | 'series';
   /**
    * The scope of highlighted elements.
    * - 'none': no highlight.
@@ -55,6 +48,10 @@ export type HighlightScope = {
    */
   highlight?: HighlightOptions;
   /**
+   * @deprecated Use `fade` instead.
+   */
+   faded?: 'none' | 'series' | 'global';
+   /**
    * The scope of faded elements.
    * - 'none': no fading.
    * - 'same-series': only fade element of the same series.
