@@ -35,6 +35,10 @@ describe('createIsHighlighted', () => {
       expect(isHighlightedItem(itemData)).to.equal(true);
     });
 
+    it('should return true when input item is same as highlighted but in array format', () => {
+      expect(isHighlightedItem({ ...itemData, path: ['1i'] })).to.equal(true);
+    });
+
     it('should return false when input item is different than highlighted', () => {
       expect(isHighlightedItem({ ...itemData, path: '2' })).to.equal(false);
     });
