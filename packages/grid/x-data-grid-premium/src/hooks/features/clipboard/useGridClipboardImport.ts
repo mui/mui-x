@@ -220,8 +220,8 @@ function defaultPasteResolver({
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
-  const cellSelectionModel = apiRef.current.getCellSelectionModel();
-  const selectedCellsArray = apiRef.current.getSelectedCellsAsArray();
+  const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+  const selectedCellsArray = apiRef.current.unstable_getSelectedCellsAsArray();
   if (cellSelectionModel && selectedCellsArray.length > 1) {
     Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
       const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
