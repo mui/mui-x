@@ -14,19 +14,33 @@ import {
 } from '../models/seriesType/config';
 import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 
-export type SeriesContextProviderProps = {
+export type SeriesFormatterType<T extends ChartSeriesType> = (
+  series: AllSeriesType<T>[],
+  colors: string[],
+  dataset?: DatasetType,
+) => { [type in T]?: FormatterResult<type> };
+
+export type SeriesContextProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
   dataset?: DatasetType;
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series: AllSeriesType[];
+  series: AllSeriesType<T>[];
   /**
    * Color palette used to colorize multiple series.
    * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
+  /**
+   * Preprocess series before saving them in the context.
+   * @param series
+   * @param colors
+   * @param dataset
+   * @returns
+   */
+  formatSeries?: SeriesFormatterType<T>;
   children: React.ReactNode;
 };
 
@@ -55,7 +69,7 @@ const seriesTypeFormatter: {
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type.
  */
-const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
+const defaultFormatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
@@ -87,8 +101,14 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
   return formattedSeries;
 };
 
-function SeriesContextProvider(props: SeriesContextProviderProps) {
-  const { series, dataset, colors = blueberryTwilightPalette, children } = props;
+function SeriesContextProvider<T extends ChartSeriesType>(props: SeriesContextProviderProps<T>) {
+  const {
+    series,
+    dataset,
+    colors = blueberryTwilightPalette,
+    formatSeries = defaultFormatSeries,
+    children,
+  } = props;
 
   const theme = useTheme();
 
@@ -99,7 +119,7 @@ function SeriesContextProvider(props: SeriesContextProviderProps) {
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
         dataset as DatasetType<number>,
       ),
-    [series, colors, theme.palette.mode, dataset],
+    [series, colors, theme.palette.mode, formatSeries, dataset],
   );
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;

@@ -15,12 +15,13 @@ import {
 } from '../context/CartesianContextProvider';
 import { HighlightProvider } from '../context/HighlightProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { xExtremumGetters, yExtremumGetters } from './defaultExtremumGetters';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
-    SeriesContextProviderProps &
+    Omit<SeriesContextProviderProps, 'formatSeries'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    CartesianContextProviderProps,
+    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'>,
   'children'
 > & {
   children?: React.ReactNode;
@@ -50,7 +51,13 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
       <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
-        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
+        <CartesianContextProvider
+          xAxis={xAxis}
+          yAxis={yAxis}
+          dataset={dataset}
+          xExtremumGetters={xExtremumGetters}
+          yExtremumGetters={yExtremumGetters}
+        >
           <InteractionProvider>
             <HighlightProvider>
               <ChartsSurface
@@ -96,6 +103,14 @@ ChartContainer.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * Preprocess series before saving them in the context.
+   * @param series
+   * @param colors
+   * @param dataset
+   * @returns
+   */
+  formatSeries: PropTypes.func,
   /**
    * The height of the chart in px.
    */

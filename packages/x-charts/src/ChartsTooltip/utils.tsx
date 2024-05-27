@@ -96,7 +96,7 @@ export function getTooltipHasData(
 }
 
 export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return ['bar', 'line', 'scatter'].includes(seriesType);
+  return ['bar', 'line', 'scatter', 'heatmap'].includes(seriesType);
 }
 
 export function isCartesianSeries(
