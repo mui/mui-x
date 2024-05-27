@@ -104,14 +104,6 @@ ChartContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * Preprocess series before saving them in the context.
-   * @param series
-   * @param colors
-   * @param dataset
-   * @returns
-   */
-  formatSeries: PropTypes.func,
-  /**
    * The height of the chart in px.
    */
   height: PropTypes.number.isRequired,

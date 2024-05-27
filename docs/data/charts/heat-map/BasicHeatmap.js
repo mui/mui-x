@@ -1,11 +1,15 @@
 import * as React from 'react';
 import '@mui/x-charts-pro/typeOverloads';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { HeatmapContainer, HeatmapPlot } from '@mui/x-charts-pro/Heatmap';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import {
+  UnstableHeatmapContainer,
+  UnstableHeatmapPlot,
+} from '@mui/x-charts-pro/Heatmap';
 
 export default function BasicHeatmap() {
   return (
-    <HeatmapContainer
+    <UnstableHeatmapContainer
       height={400}
       width={600}
       xAxis={[{ scaleType: 'band', data: [1, 2, 3, 4, 5] }]}
@@ -14,6 +18,7 @@ export default function BasicHeatmap() {
       ]}
       zAxis={[
         {
+          id: 'color-map-id',
           colorMap: {
             type: 'continuous',
             min: -2,
@@ -66,7 +71,11 @@ export default function BasicHeatmap() {
       ]}
     >
       <ChartsAxis />
-      <HeatmapPlot />
-    </HeatmapContainer>
+      <UnstableHeatmapPlot />
+      <ChartsTooltip
+        trigger="item"
+        //   {...tooltip} slots={slots} slotProps={slotProps}
+      />
+    </UnstableHeatmapContainer>
   );
 }
