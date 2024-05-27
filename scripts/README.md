@@ -23,6 +23,8 @@ The following steps must be proposed as a pull request.
      --release       The branch to release (default: master)
   ```
 
+  For the v6 release pass the last released version to `--lastRelease`: `yarn release:changelog --lastRelease v6.19.10 --release v6.x`
+
   You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
 
   In case of a problem, another method to generate the changelog is available at the end of this page.

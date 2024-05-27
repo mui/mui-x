@@ -19,6 +19,10 @@ The following demo shows how to use the date-fns plugin:
 
 {{"demo": "AdapterJalali.js"}}
 
+The following demo shows how to use the `moment-jalaali` adapter:
+
+{{"demo": "AdapterMomentJalali.js"}}
+
 ## Hijri
 
 :::error
