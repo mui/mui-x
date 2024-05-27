@@ -27,7 +27,7 @@ export type HighlightItemData = {
    * - On Cartesian charts, the path is the dataIndex of the series.
    * - On Pie charts, the path is the index of the data.
    */
-  path?: string;
+  path?: string | string[];
 };
 
 export type HighlightOptions = 'none' | 'item' | 'same-series';

@@ -269,7 +269,7 @@ SparkLineChart.propTypes = {
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
-    path: PropTypes.string,
+    path: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
