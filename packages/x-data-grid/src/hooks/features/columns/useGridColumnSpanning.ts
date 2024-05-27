@@ -26,6 +26,10 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
     return lookup.current[rowId]?.[columnIndex];
   };
 
+  const resetColSpan: GridColumnSpanningPrivateApi['resetColSpan'] = () => {
+    lookup.current = {};
+  };
+
   // Calculate `colSpan` for each cell in the row
   const calculateColSpan = React.useCallback<GridColumnSpanningPrivateApi['calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn, columns }) => {
@@ -52,18 +56,14 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
   };
 
   const columnSpanningPrivateApi: GridColumnSpanningPrivateApi = {
+    resetColSpan,
     calculateColSpan,
   };
 
   useGridApiMethod(apiRef, columnSpanningPublicApi, 'public');
   useGridApiMethod(apiRef, columnSpanningPrivateApi, 'private');
 
-  const handleColumnReorderChange = React.useCallback(() => {
-    // `colSpan` needs to be recalculated after column reordering
-    lookup.current = {};
-  }, []);
-
-  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', resetColSpan);
 };
 
 function calculateCellColSpan(params: {
