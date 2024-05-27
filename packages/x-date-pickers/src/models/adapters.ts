@@ -155,7 +155,7 @@ export type AdapterOptions<TLocale, TInstance> = {
   locale?: TLocale;
 } & PropertyIfNotNever<'instance', TInstance>;
 
-export type DateBuilderReturnType<T extends string | null | undefined, TDate> = T extends null
+export type DateBuilderReturnType<T extends string | null | undefined, TDate> = [T] extends [null]
   ? null
   : TDate;
 
