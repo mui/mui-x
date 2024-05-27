@@ -36,11 +36,6 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "raw-loader",
-      "matchPackageNames": ["raw-loader"],
-      "allowedVersions": "< 2.0.0"
-    },
-    {
       "groupName": "React",
       "matchPackageNames": [
         "react",
@@ -110,7 +105,7 @@
       "matchManagers": ["github-actions"]
     }
   ],
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "postUpdateOptions": ["pnpmDedupe"],
   "prConcurrentLimit": 30,
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",

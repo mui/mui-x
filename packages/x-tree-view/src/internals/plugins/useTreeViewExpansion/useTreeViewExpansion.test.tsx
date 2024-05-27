@@ -22,7 +22,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>(
         });
 
         expect(response.isItemExpanded('1')).to.equal(false);
-        expect(response.getAllItemRoots()).to.have.length(2);
+        expect(response.getAllTreeItemIds()).to.deep.equal(['1', '2']);
       });
 
       it('should use the default state when defined', () => {
@@ -32,7 +32,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>(
         });
 
         expect(response.isItemExpanded('1')).to.equal(true);
-        expect(response.getAllItemRoots()).to.have.length(3);
+        expect(response.getAllTreeItemIds()).to.deep.equal(['1', '1.1', '2']);
       });
 
       it('should use the controlled state when defined', () => {

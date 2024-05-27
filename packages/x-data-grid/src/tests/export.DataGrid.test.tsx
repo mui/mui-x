@@ -76,6 +76,47 @@ describe('<DataGrid /> - Export', () => {
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
+
+    it('should escape formulas in the cells', async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'name' }]}
+            rows={[
+              { id: 0, name: '=1+1' },
+              { id: 1, name: '+1+1' },
+              { id: 2, name: '-1+1' },
+              { id: 3, name: '@1+1' },
+              { id: 4, name: '\t1+1' },
+              { id: 5, name: '\r1+1' },
+              { id: 6, name: ',=1+1' },
+              { id: 7, name: 'value,=1+1' },
+            ]}
+            slots={{ toolbar: GridToolbar }}
+          />
+        </div>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
+      expect(spyCreateObjectURL.callCount).to.equal(1);
+      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+
+      expect(csv).to.equal(
+        [
+          'name',
+          "'=1+1",
+          "'+1+1",
+          "'-1+1",
+          "'@1+1",
+          "'\t1+1",
+          '"\r1+1"',
+          '",=1+1"',
+          '"value,=1+1"',
+        ].join('\r\n'),
+      );
+    });
   });
 
   describe('component: GridToolbarExport', () => {

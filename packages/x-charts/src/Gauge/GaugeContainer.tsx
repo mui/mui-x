@@ -119,7 +119,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
 GaugeContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
@@ -158,7 +158,7 @@ GaugeContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '80%'

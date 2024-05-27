@@ -48,6 +48,7 @@ export default apiPages;
       rootPath: path.join(process.cwd(), 'packages/x-charts'),
       entryPointPath: 'src/index.ts',
     },
+    // TODO x-charts-pro
     // {
     //   name: 'charts-pro',
     //   rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
@@ -65,6 +66,11 @@ export default apiPages;
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',
       'x-charts/src/Gauge/GaugeValueText.tsx',
+      'x-charts/src/ChartsReferenceLine/ChartsXReferenceLine.tsx',
+      'x-charts/src/ChartsReferenceLine/ChartsYReferenceLine.tsx',
+      'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
+      'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
+      'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

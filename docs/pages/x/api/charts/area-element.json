@@ -31,7 +31,7 @@
     {
       "key": "highlighted",
       "className": "MuiAreaElement-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {

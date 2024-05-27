@@ -18,7 +18,7 @@
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
     "copy-files": "cpy README.md build && cpy package.json build",
-    "build": "node ../../scripts/build.mjs node --ignore 'src/types.ts' && yarn copy-files"
+    "build": "node ../../scripts/build.mjs node --ignore 'src/types.ts' && pnpm copy-files"
   },
   "repository": {
     "type": "git",
@@ -32,19 +32,23 @@
     "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.24.0",
-    "@babel/runtime": "^7.24.0",
-    "@babel/traverse": "^7.24.0",
+    "@babel/core": "^7.24.5",
+    "@babel/runtime": "^7.24.5",
+    "@babel/traverse": "^7.24.5",
     "jscodeshift": "0.13.1",
     "jscodeshift-add-imports": "^1.0.10",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.11.5"
+    "@types/jscodeshift": "^0.11.5",
+    "dayjs": "^1.11.11",
+    "moment-timezone": "^0.5.45",
+    "rimraf": "^5.0.5"
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "engines": {
     "node": ">=14.0.0"

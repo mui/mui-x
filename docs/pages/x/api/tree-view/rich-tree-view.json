@@ -6,6 +6,7 @@
         "description": "{ current?: { focusItem: func, getItem: func, setItemExpansion: func } }"
       }
     },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
@@ -15,6 +16,9 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",

@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "mocha",
+      "@mui/material/themeCssVarsAugmentation",
+      "dayjs/plugin/utc.d.ts",
+      "dayjs/plugin/timezone.d.ts",
+      "moment-timezone"
+    ]
+  },
+  "include": ["e2e/**/*", "e2e-website/**/*", "regressions/**/*"],
+  "exclude": ["regressions/build/**/*", "regressions/screenshots/**/*"]
+}
