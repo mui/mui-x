@@ -674,7 +674,7 @@
     {
       "name": "columnHeaders",
       "description": "Component responsible for rendering the column headers.",
-      "default": "DataGridColumnHeaders",
+      "default": "GridColumnHeaders",
       "class": "MuiDataGridPremium-columnHeaders"
     },
     {
