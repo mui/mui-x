@@ -220,11 +220,7 @@ describeTreeView<
               item: (ownerState) => ({ 'data-testid': ownerState.itemId }) as any,
             }}
             getItemLabel={(item) => item.id}
-          >
-            <TreeItemComponent itemId="1" data-testid="1">
-              <TreeItemComponent itemId="1.1" data-testid="1.1" />
-            </TreeItemComponent>
-          </TreeViewComponent>
+          />
         );
       }
 
