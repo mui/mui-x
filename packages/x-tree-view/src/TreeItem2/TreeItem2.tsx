@@ -150,6 +150,14 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
+export function TreeItem2LabelInput({ value: label }: { value: string }) {
+  const [value, setValue] = React.useState(label as string);
+
+  return (
+    <input tabIndex={0} type="text" value={value} onChange={(e) => setValue(e.target.value)} />
+  );
+}
+
 export const TreeItem2Checkbox = styled(
   React.forwardRef(
     (props: CheckboxProps & { visible: boolean }, ref: React.Ref<HTMLButtonElement>) => {
@@ -317,7 +325,11 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-          {isBeingEdited ? <input type="text" value={label} /> : <Label {...labelProps} />}
+          {isBeingEdited ? (
+            <TreeItem2LabelInput value={label as string} />
+          ) : (
+            <Label {...labelProps} />
+          )}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

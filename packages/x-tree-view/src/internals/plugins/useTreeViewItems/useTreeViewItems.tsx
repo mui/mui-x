@@ -13,9 +13,9 @@ import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 interface UpdateNodesStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
-    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'isItemEditable'
   > {
-  isItemBeingEdited: () => boolean;
+  isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
 }
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -25,6 +25,7 @@ const updateItemsState = ({
   getItemLabel,
   getItemId,
   isItemBeingEdited,
+  isItemEditable,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
@@ -68,13 +69,14 @@ const updateItemsState = ({
       );
     }
 
-    const isBeingEdited = isItemBeingEdited ? isItemBeingEdited(id) : false;
+    const editable = isItemEditable ? isItemEditable(item) : false;
 
     itemMetaMap[id] = {
       id,
       label,
       parentId,
-      isBeingEdited,
+      isBeingEdited: isItemBeingEdited ? isItemBeingEdited(id) && editable : false,
+      editable,
       idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
@@ -153,6 +155,27 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [instance],
   );
 
+  const isItemEditable = React.useCallback(
+    (itemId: string | null): itemId is string => {
+      if (itemId == null) {
+        return false;
+      }
+      const itemMeta = instance.getItemMeta(itemId);
+
+      // This can be called before the item has been added to the item map.
+      if (!itemMeta) {
+        return false;
+      }
+
+      if (itemMeta.editable) {
+        return true;
+      }
+
+      return false;
+    },
+    [instance],
+  );
+
   const getItemIndex = React.useCallback(
     (itemId: string) => {
       const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
@@ -193,6 +216,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
         isItemBeingEdited: instance.isItemBeingEdited,
+        isItemEditable: params.isItemEditable,
       });
 
       Object.values(prevState.items.itemMetaMap).forEach((item) => {
@@ -210,6 +234,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.isItemDisabled,
     params.getItemId,
     params.getItemLabel,
+    params.isItemEditable,
+    state.editedItemId,
   ]);
 
   const getItemsToRender = () => {
@@ -243,6 +269,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
+      isItemEditable,
     },
     contextValue: {
       disabledItemsFocusable: params.disabledItemsFocusable,
@@ -258,6 +285,7 @@ useTreeViewItems.getInitialState = (params) => ({
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
     isItemBeingEdited: () => false,
+    isItemEditable: params.isItemEditable,
   }),
 });
 
@@ -280,4 +308,5 @@ useTreeViewItems.params = {
   isItemDisabled: true,
   getItemLabel: true,
   getItemId: true,
+  isItemEditable: true,
 };

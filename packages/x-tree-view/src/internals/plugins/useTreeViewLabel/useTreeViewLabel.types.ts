@@ -13,7 +13,7 @@ export interface UseTreeViewLabelInstance {
    * @param {TreeViewItemId} itemId The item to check.
    * @returns {void}.
    */
-  isItemBeingEdited: (itemId: TreeViewItemId | null) => boolean;
+  isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
 }
 
 export interface UseTreeViewLabelParameters {

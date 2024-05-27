@@ -73,6 +73,13 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  /**
+   * Used to determine if a given item is editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable: (item: R) => boolean;
 }
 
 export interface UseTreeViewItemsParameters<R extends {}> {
@@ -107,6 +114,13 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
+  /**
+   * Used to determine if a given item is editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable?: (item: R) => boolean;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<

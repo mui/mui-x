@@ -16,6 +16,7 @@ export interface TreeViewItemMeta {
    */
   label?: string;
   isBeingEdited: boolean;
+  editable: boolean;
 }
 
 export interface TreeViewModel<TValue> {
