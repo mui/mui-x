@@ -140,7 +140,9 @@ PieArc.propTypes = {
    */
   highlightScope: PropTypes.shape({
     fade: PropTypes.oneOf(['global', 'none', 'same-series']),
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlight: PropTypes.oneOf(['item', 'none', 'same-series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,

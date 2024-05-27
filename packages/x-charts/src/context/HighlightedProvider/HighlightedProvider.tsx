@@ -6,7 +6,6 @@ import {
   HighlightedContext,
   HighlightScope,
   HighlightedState,
-  DeprecatedHighlightScope,
 } from './HighlightedContext';
 import { createIsFaded } from './createIsFaded';
 import { createIsHighlighted } from './createIsHighlighted';
@@ -28,10 +27,7 @@ export type HighlightedProviderProps = {
   onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
-const mergeDeprecatedOptions = (
-  options?: Partial<HighlightScope> | Partial<DeprecatedHighlightScope>,
-): HighlightScope => {
-  // @ts-expect-error deprecated behavior.
+const mergeDeprecatedOptions = (options?: Partial<HighlightScope>): HighlightScope => {
   const { highlighted, faded, ...rest } = options ?? {};
   return {
     highlight: highlighted === 'series' ? 'same-series' : highlighted,
