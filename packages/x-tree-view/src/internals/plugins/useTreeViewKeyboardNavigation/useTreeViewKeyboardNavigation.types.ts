@@ -6,6 +6,7 @@ import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewKeyboardNavigationInstance {
   /**
@@ -34,6 +35,7 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
     UseTreeViewSelectionSignature,
     UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,
+    UseTreeViewLabelSignature,
   ];
 }>;
 

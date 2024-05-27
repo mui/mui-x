@@ -27,6 +27,7 @@ export interface UseTreeItem2Parameters {
    * The content of the component.
    */
   children?: React.ReactNode;
+  isBeingEdited: boolean;
 }
 
 export interface UseTreeItem2RootSlotOwnProps {

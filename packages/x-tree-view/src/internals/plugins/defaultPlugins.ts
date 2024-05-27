@@ -5,6 +5,7 @@ import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeV
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { useTreeViewIcons, UseTreeViewIconsParameters } from './useTreeViewIcons';
+import { useTreeViewLabel } from './useTreeViewLabel';
 import { ConvertPluginsIntoSignatures, MergePluginsProperty } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
@@ -15,6 +16,7 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewLabel,
 ] as const;
 
 export type DefaultTreeViewPlugins = ConvertPluginsIntoSignatures<typeof DEFAULT_TREE_VIEW_PLUGINS>;

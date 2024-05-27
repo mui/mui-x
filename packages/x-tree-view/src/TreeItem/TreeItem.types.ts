@@ -91,6 +91,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  isBeingEdited: boolean;
 }
 
 export interface TreeItemOwnerState extends TreeItemProps {

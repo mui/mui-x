@@ -1,10 +1,12 @@
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 interface TreeViewItemProps {
   label: string;
   itemId: string;
   id: string | undefined;
+  isBeingEdited: boolean;
   children?: TreeViewItemProps[];
 }
 
@@ -141,6 +143,7 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
   experimentalFeatures: 'indentationAtItemLevel';
+  dependantPlugins: [UseTreeViewLabelSignature];
 }>;
 
 export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };

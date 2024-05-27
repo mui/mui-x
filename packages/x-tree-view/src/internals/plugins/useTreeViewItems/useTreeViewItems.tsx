@@ -14,7 +14,9 @@ interface UpdateNodesStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
-  > {}
+  > {
+  isItemBeingEdited: () => boolean;
+}
 
 type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
@@ -22,6 +24,7 @@ const updateItemsState = ({
   isItemDisabled,
   getItemLabel,
   getItemId,
+  isItemBeingEdited,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
@@ -65,10 +68,13 @@ const updateItemsState = ({
       );
     }
 
+    const isBeingEdited = isItemBeingEdited ? isItemBeingEdited(id) : false;
+
     itemMetaMap[id] = {
       id,
       label,
       parentId,
+      isBeingEdited,
       idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
@@ -186,6 +192,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
+        isItemBeingEdited: instance.isItemBeingEdited,
       });
 
       Object.values(prevState.items.itemMetaMap).forEach((item) => {
@@ -214,6 +221,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
+        isBeingEdited: item.isBeingEdited,
         children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
       };
     };
@@ -249,6 +257,7 @@ useTreeViewItems.getInitialState = (params) => ({
     isItemDisabled: params.isItemDisabled,
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
+    isItemBeingEdited: () => false,
   }),
 });
 

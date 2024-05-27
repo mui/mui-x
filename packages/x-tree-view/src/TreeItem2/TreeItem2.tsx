@@ -209,7 +209,17 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    isBeingEdited,
+    children,
+    slots = {},
+    slotProps = {},
+    ...other
+  } = props;
 
   const {
     getRootProps,
@@ -225,7 +235,10 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     children,
     label,
     disabled,
+    isBeingEdited,
   });
+
+  console.log(isBeingEdited, itemId);
 
   const ownerState: TreeItem2OwnerState = {
     ...props,
@@ -304,7 +317,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-          <Label {...labelProps} />
+          {isBeingEdited ? <input type="text" value={label} /> : <Label {...labelProps} />}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>
