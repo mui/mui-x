@@ -23,7 +23,7 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function ItemChildrenIndentationPxProp() {
+export default function ItemChildrenIndentationProp() {
   return (
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView

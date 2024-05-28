@@ -21,7 +21,10 @@
       "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
     },
     "id": { "type": { "name": "string" } },
-    "itemChildrenIndentation": { "type": { "name": "number" }, "default": "12" },
+    "itemChildrenIndentation": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "12px"
+    },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },

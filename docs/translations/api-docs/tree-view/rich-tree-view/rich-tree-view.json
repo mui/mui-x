@@ -43,7 +43,7 @@
       }
     },
     "itemChildrenIndentation": {
-      "description": "Indentation in pixels between an item and its children."
+      "description": "Indentation in pixels between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
