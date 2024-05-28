@@ -232,7 +232,7 @@ describeTreeView<
       fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown' });
       expect(response.getFocusedItemId()).to.equal('1.1');
 
-      fireEvent.keyDown(response.getItemRoot('2'), { key: 'ArrowUp' });
+      fireEvent.keyDown(response.getItemRoot('1.1'), { key: 'ArrowUp' });
       expect(response.getFocusedItemId()).to.equal('1');
 
       fireEvent.keyDown(response.getItemRoot('1'), { key: 'ArrowDown' });
