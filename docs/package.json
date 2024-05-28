@@ -104,7 +104,7 @@
     "@types/chance": "^1.1.6",
     "@types/d3-scale": "^4.0.8",
     "@types/doctrine": "^0.0.9",
-    "@types/lodash": "^4.17.1",
+    "@types/lodash": "^4.17.4",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
