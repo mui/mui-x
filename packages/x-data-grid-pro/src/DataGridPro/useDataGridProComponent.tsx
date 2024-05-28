@@ -132,7 +132,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
-  useGridTreeData(apiRef);
+  useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
