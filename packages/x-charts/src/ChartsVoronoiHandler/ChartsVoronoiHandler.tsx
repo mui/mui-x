@@ -161,7 +161,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       dispatch({ type: 'enterItem', data: { type: 'scatter', seriesId, dataIndex } });
       setHighlighted({
         seriesId,
-        dataIndex: dataIndex,
+        dataIndex,
       });
     };
 
