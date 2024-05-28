@@ -56,24 +56,24 @@ The following table describes the keyboard support for all [field components](/x
 
 All the available [views](/x/react-date-pickers/date-calendar/#views) implement the same basic keyboard support:
 
-|                                                      Keys | Description                                  |
-| --------------------------------------------------------: | :------------------------------------------- |
-|                              <kbd class="key">Tab</kbd>   | Moves focus to the next element              |
-| <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd>   | Moves focus to the previous element          |
-| <kbd class="key">Arrow Keys (Left, Right, Up, Down)</kbd> | Moves focus among the available values       |
+|                                                      Keys | Description                            |
+| --------------------------------------------------------: | :------------------------------------- |
+|                                <kbd class="key">Tab</kbd> | Moves focus to the next element        |
+|   <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus to the previous element    |
+| <kbd class="key">Arrow Keys (Left, Right, Up, Down)</kbd> | Moves focus among the available values |
 
 In addition to the basic keyboard support above, the day view component implements its own keyboard interactions:
 
-|                                                    Keys | Description                                                                        |
-| ------------------------------------------------------: | :--------------------------------------------------------------------------------- |
-|                          <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day                        |
-|                        <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day                    |
-|                             <kbd class="key">Home</kbd> | Moves focus to first day of the week, tresspassing to previous month if necessary  |
-|                              <kbd class="key">End</kbd> | Moves focus to last day of the week, tresspassing to next month if necessary       |
+|                             Keys | Description                                                                       |
+| -------------------------------: | :-------------------------------------------------------------------------------- |
+|   <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day                       |
+| <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day                   |
+|      <kbd class="key">Home</kbd> | Moves focus to first day of the week, tresspassing to previous month if necessary |
+|       <kbd class="key">End</kbd> | Moves focus to last day of the week, tresspassing to next month if necessary      |
 
 ### Date Picker
 
-The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components. 
+The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
 
 Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [DateField](/x/react-date-pickers/accessibility/#fields) or [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) and any changes made to the value will be consistently reflected across both components.
 
