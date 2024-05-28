@@ -112,7 +112,7 @@ export const insertDataRowInTree = ({
             children: [],
             childrenFromPath: {},
             childrenExpanded: false,
-            isServerSide: true,
+            hasServerChildren: true,
           };
           const shouldFetchChildren = checkGroupChildrenExpansion(
             node,

@@ -116,9 +116,9 @@ export interface GridDataGroupNode extends GridBasicGroupNode {
 
 export interface GridServerSideGroupNode extends GridDataGroupNode {
   /**
-   * If true, this node is a server side group node.
+   * If true, this node has children on server.
    */
-  isServerSide: boolean;
+  hasServerChildren: boolean;
   /**
    * The cached path to be passed on as `groupKey` to the server.
    */
