@@ -76,6 +76,8 @@ export interface UseTreeItem2LabelSlotOwnProps {
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2LabelSlotOwnProps;
 
+export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps;
+
 export interface UseTreeItem2CheckboxSlotOwnProps {
   visible: boolean;
   checked: boolean;
@@ -136,6 +138,14 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2LabelSlotProps<ExternalProps>;
+  /**
+   * Resolver for the labelInput slot's props.
+   * @param {ExternalProps} externalProps Additional props for the label slot
+   * @returns {UseTreeItem2LabelInputSlotProps<ExternalProps>} Props that should be spread on the label slot
+   */
+  getLabelInputProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItem2LabelInputSlotProps<ExternalProps>;
   /**
    * Resolver for the checkbox slot's props.
    * @param {ExternalProps} externalProps Additional props for the checkbox slot

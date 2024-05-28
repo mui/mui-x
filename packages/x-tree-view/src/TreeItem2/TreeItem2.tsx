@@ -150,13 +150,30 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-export function TreeItem2LabelInput({ value: label }: { value: string }) {
+export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
+  {
+    value: label,
+    visible = false,
+    ...props
+  }: React.InputHTMLAttributes<any> & { visible: boolean },
+  ref: React.Ref<HTMLInputElement>,
+) {
   const [value, setValue] = React.useState(label as string);
-
+  if (!visible) {
+    return null;
+  }
   return (
-    <input tabIndex={0} type="text" value={value} onChange={(e) => setValue(e.target.value)} />
+    <input
+      tabIndex={0}
+      type="text"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      autoFocus
+      {...props}
+      ref={ref}
+    />
   );
-}
+});
 
 export const TreeItem2Checkbox = styled(
   React.forwardRef(
@@ -192,6 +209,7 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    labelInput: ['labelInput'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -236,6 +254,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getLabelInputProps,
     status,
   } = useTreeItem2({
     id,
@@ -246,7 +265,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     isBeingEdited,
   });
 
-  console.log(isBeingEdited, itemId);
+  // console.log(isBeingEdited, itemId);
 
   const ownerState: TreeItem2OwnerState = {
     ...props,
@@ -317,6 +336,15 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.groupTransition,
   });
 
+  const LabelInput: React.ElementType = slots.labelInput ?? TreeItem2LabelInput;
+  const labelInputProps = useSlotProps({
+    elementType: LabelInput,
+    getSlotProps: getLabelInputProps,
+    externalSlotProps: slotProps.labelInput,
+    ownerState: {},
+    className: classes.labelInput,
+  });
+
   return (
     <TreeItem2Provider itemId={itemId}>
       <Root {...rootProps}>
@@ -325,11 +353,10 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-          {isBeingEdited ? (
-            <TreeItem2LabelInput value={label as string} />
-          ) : (
-            <Label {...labelProps} />
-          )}
+
+          <LabelInput value={label as string} {...labelInputProps} />
+
+          {labelProps.visible && <Label {...labelProps} />}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

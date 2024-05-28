@@ -122,6 +122,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   contextValue.runItemPlugins = (itemPluginProps) => {
     let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
     let finalContentRef: React.RefCallback<HTMLElement> | null = null;
+    let finalInputRef: React.RefCallback<HTMLInputElement> | null = null;
 
     plugins.forEach((plugin) => {
       if (!plugin.itemPlugin) {
@@ -132,6 +133,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
         props: itemPluginProps,
         rootRef: finalRootRef,
         contentRef: finalContentRef,
+        inputRef: finalInputRef,
       });
       if (itemPluginResponse?.rootRef) {
         finalRootRef = itemPluginResponse.rootRef;
@@ -139,11 +141,15 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
       if (itemPluginResponse?.contentRef) {
         finalContentRef = itemPluginResponse.contentRef;
       }
+      if (itemPluginResponse?.inputRef) {
+        finalInputRef = itemPluginResponse.inputRef;
+      }
     });
 
     return {
       contentRef: finalContentRef,
       rootRef: finalRootRef,
+      inputRef: finalInputRef,
     };
   };
 

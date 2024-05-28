@@ -10,6 +10,7 @@ import {
   UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
+  UseTreeItem2LabelInputSlotProps,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
@@ -30,13 +31,20 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   } = useTreeViewContext<TPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const { id, itemId, label, children, rootRef } = parameters;
+  const { id, itemId, label, children, rootRef, isBeingEdited } = parameters;
 
-  const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
+  const {
+    rootRef: pluginRootRef,
+    contentRef,
+    inputRef: pluginInputRef,
+  } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+  const inputRef = React.useRef<HTMLButtonElement>(null);
+
+  console.log(inputRef);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -57,6 +65,9 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
       if (event.defaultMuiPrevented) {
+        return;
+      }
+      if (event.relatedTarget?.nodeName === 'INPUT') {
         return;
       }
 
@@ -211,7 +222,21 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     return {
       ...externalEventHandlers,
       children: label,
+      visible: !isBeingEdited,
       ...externalProps,
+    };
+  };
+
+  const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItem2LabelInputSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      ...externalEventHandlers,
+      ...externalProps,
+      ref: inputRef,
+      visible: isBeingEdited,
     };
   };
 
@@ -255,6 +280,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     getIconContainerProps,
     getCheckboxProps,
     getLabelProps,
+    getLabelInputProps,
     rootRef: handleRootRef,
     status,
     publicAPI,

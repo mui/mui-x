@@ -36,6 +36,11 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
    * @default TreeItem2Label
    */
   label?: React.ElementType;
+  /**
+   * The component that renders the input to edit the label when the item is editable and is currently being edited.
+   * @default TreeItem2LabelInput
+   */
+  labelInput?: React.ElementType;
 }
 
 export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
@@ -45,6 +50,7 @@ export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
   iconContainer?: SlotComponentProps<'div', {}, {}>;
   checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
+  labelInput?: SlotComponentProps<'input', {}, {}>;
 }
 
 export interface TreeItem2Props

@@ -136,6 +136,10 @@ export interface TreeViewItemPluginResponse {
    * Ref of the `root` slot enriched by the plugin
    */
   rootRef?: React.RefCallback<HTMLLIElement> | null;
+  /**
+   * Ref of the `labelInput` slot enriched by the plugin
+   */
+  inputRef?: React.RefCallback<HTMLInputElement> | null;
 }
 
 export type TreeViewItemPlugin<TProps extends {}> = (
