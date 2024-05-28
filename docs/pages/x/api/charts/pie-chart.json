@@ -29,7 +29,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ path?: Array&lt;string&gt;<br>&#124;&nbsp;string, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ path?: string, seriesId?: number<br>&#124;&nbsp;string }"
       }
     },
     "leftAxis": {
