@@ -1,5 +1,4 @@
 import { HighlightItemData, HighlightScope } from './HighlightedContext';
-import { isPathEqual } from './isPathEqual';
 
 export const createIsHighlighted =
   (highlightScope: HighlightScope | null | undefined, highlightedItem: HighlightItemData | null) =>
@@ -13,10 +12,7 @@ export const createIsHighlighted =
     }
 
     if (highlightScope.highlight === 'item') {
-      return (
-        isPathEqual(input.path, highlightedItem?.path) &&
-        input.seriesId === highlightedItem?.seriesId
-      );
+      return input.path === highlightedItem?.path && input.seriesId === highlightedItem?.seriesId;
     }
 
     return false;
