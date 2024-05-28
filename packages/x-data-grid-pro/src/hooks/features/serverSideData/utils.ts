@@ -57,9 +57,11 @@ export class NestedDataManager {
       return;
     }
     const fetchQueue = Array.from(this.queuedRequests);
-    for (let i = 0; i < this.maxConcurrentRequests; i += 1) {
+
+    const availableSlots = this.maxConcurrentRequests - this.pendingRequests.size;
+    for (let i = 0; i < availableSlots; i += 1) {
       const nextId = fetchQueue[i];
-      if (!nextId) {
+      if (typeof nextId === 'undefined') {
         clearInterval(this.timer);
         return;
       }
