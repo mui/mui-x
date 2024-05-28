@@ -18,7 +18,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 Use the `itemChildrenIndentation` prop to change the indentation of the nested items.
 By default, a nested item is indented by `12px` from its parent item.
 
-{{"demo": "ItemChildrenIndentationPxProp.js"}}
+{{"demo": "ItemChildrenIndentationProp.js"}}
 
 :::success
 This feature is compatible with both the `TreeItem` and `TreeItem2` components
