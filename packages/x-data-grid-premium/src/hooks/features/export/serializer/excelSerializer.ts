@@ -15,6 +15,7 @@ import {
   isObject,
   GridColumnGroupLookup,
   isSingleSelectColDef,
+  gridHasColSpanSelector,
 } from '@mui/x-data-grid/internals';
 import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
@@ -61,10 +62,16 @@ interface SerializedRow {
   mergedCells: { leftIndex: number; rightIndex: number }[];
 }
 
-export const serializeRow = (
+/**
+ * FIXME: This function mutates the colspan info, but colspan info assumes that the columns
+ * passed to it are always consistent. In this case, the exported columns may differ from the
+ * actual rendered columns.
+ * The caller of this function MUST call `resetColSpan()` before and after usage.
+ */
+export const serializeRowUnsafe = (
   id: GridRowId,
   columns: GridStateColDef[],
-  api: GridPrivateApiPremium,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
@@ -72,19 +79,24 @@ export const serializeRow = (
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
 
-  const firstCellParams = api.getCellParams(id, columns[0].field);
+  const firstCellParams = apiRef.current.getCellParams(id, columns[0].field);
   const outlineLevel = firstCellParams.rowNode.depth;
+  const hasColSpan = gridHasColSpanSelector(apiRef);
 
-  // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
-  api.calculateColSpan({
-    rowId: id,
-    minFirstColumn: 0,
-    maxLastColumn: columns.length,
-    columns,
-  });
+  if (hasColSpan) {
+    // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
+    apiRef.current.calculateColSpan({
+      rowId: id,
+      minFirstColumn: 0,
+      maxLastColumn: columns.length,
+      columns,
+    });
+  }
 
   columns.forEach((column, colIndex) => {
-    const colSpanInfo = api.unstable_getCellColSpanInfo(id, colIndex);
+    const colSpanInfo = hasColSpan
+      ? apiRef.current.unstable_getCellColSpanInfo(id, colIndex)
+      : undefined;
     if (colSpanInfo && colSpanInfo.spannedByColSpan) {
       return;
     }
@@ -95,7 +107,7 @@ export const serializeRow = (
       });
     }
 
-    const cellParams = api.getCellParams(id, column.field);
+    const cellParams = apiRef.current.getCellParams(id, column.field);
 
     let cellValue: string | undefined;
 
@@ -114,7 +126,7 @@ export const serializeRow = (
             castColumn,
             row,
             valueOptions,
-            api,
+            apiRef.current,
           );
           dataValidation[castColumn.field] = {
             type: 'list',
@@ -136,7 +148,7 @@ export const serializeRow = (
           };
         }
 
-        const formattedValue = api.getCellParams(id, castColumn.field).formattedValue;
+        const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
@@ -151,14 +163,14 @@ export const serializeRow = (
       }
       case 'boolean':
       case 'number':
-        cellValue = api.getCellParams(id, column.field).value as any;
+        cellValue = apiRef.current.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const value = api.getCellParams<any, Date>(id, column.field).value;
+        const value = apiRef.current.getCellParams<any, Date>(id, column.field).value;
         // value may be `undefined` in auto-generated grouping rows
         if (!value) {
           break;
@@ -179,7 +191,7 @@ export const serializeRow = (
       case 'actions':
         break;
       default:
-        cellValue = api.getCellParams(id, column.field).formattedValue as any;
+        cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
@@ -390,7 +402,7 @@ interface BuildExcelOptions
 
 export async function buildExcel(
   options: BuildExcelOptions,
-  api: GridPrivateApiPremium,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
 ): Promise<Excel.Workbook> {
   const {
     columns,
@@ -419,7 +431,7 @@ export async function buildExcel(
 
   if (includeColumnGroupsHeaders) {
     const columnGroupPaths = columns.reduce<Record<string, string[]>>((acc, column) => {
-      acc[column.field] = api.getColumnGroupPath(column.field);
+      acc[column.field] = apiRef.current.getColumnGroupPath(column.field);
       return acc;
     }, {});
 
@@ -427,7 +439,7 @@ export async function buildExcel(
       worksheet,
       serializedColumns,
       columnGroupPaths,
-      api.getAllGroupDetails(),
+      apiRef.current.getAllGroupDetails(),
     );
   }
 
@@ -435,13 +447,19 @@ export async function buildExcel(
     worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
-  const valueOptionsData = await getDataForValueOptionsSheet(columns, valueOptionsSheetName, api);
+  const valueOptionsData = await getDataForValueOptionsSheet(
+    columns,
+    valueOptionsSheetName,
+    apiRef.current,
+  );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
+  apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
-    const serializedRow = serializeRow(id, columns, api, valueOptionsData, options);
+    const serializedRow = serializeRowUnsafe(id, columns, apiRef, valueOptionsData, options);
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
+  apiRef.current.resetColSpan();
 
   if (exceljsPostProcess) {
     await exceljsPostProcess({

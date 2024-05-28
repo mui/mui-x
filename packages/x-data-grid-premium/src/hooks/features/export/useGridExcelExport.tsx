@@ -24,7 +24,7 @@ import {
   ExcelExportInitEvent,
   getDataForValueOptionsSheet,
   serializeColumns,
-  serializeRow,
+  serializeRowUnsafe,
 } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 
@@ -62,7 +62,7 @@ export const useGridExcelExport = (
           exceljsPostProcess: options?.exceljsPostProcess,
           escapeFormulas: options.escapeFormulas ?? true,
         },
-        apiRef.current,
+        apiRef,
       );
     },
     [logger, apiRef],
@@ -141,11 +141,13 @@ export const useGridExcelExport = (
 
       const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
 
+      apiRef.current.resetColSpan();
       const serializedRows = exportedRowIds.map((id) =>
-        serializeRow(id, exportedColumns, apiRef.current, valueOptionsData, {
+        serializeRowUnsafe(id, exportedColumns, apiRef, valueOptionsData, {
           escapeFormulas: options.escapeFormulas ?? true,
         }),
       );
+      apiRef.current.resetColSpan();
 
       const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
         acc[column.field] = apiRef.current.getColumnGroupPath(column.field);
