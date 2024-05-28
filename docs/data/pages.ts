@@ -482,7 +482,6 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       { pathname: '/x/react-tree-view/getting-started' },
-      { pathname: '/x/react-tree-view/accessibility' },
       {
         pathname: '/x/react-tree-view/simple-tree-view',
         subheader: 'Simple Tree View',
@@ -503,6 +502,14 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+        ],
+      },
+      {
+        pathname: '/x/react-tree-view/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-tree-view/accessibility' },
+          { pathname: '/x/react-tree-view/tree-item-customization', title: 'Item customization' },
         ],
       },
       {
