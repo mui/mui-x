@@ -191,6 +191,9 @@ describeTreeView<
     });
 
     it('should not error when component state changes', () => {
+      const items = [{ id: '1', children: [{ id: '1.1' }] }];
+      const getItemLabel = (item) => item.id;
+
       function MyComponent() {
         const [, setState] = React.useState(1);
 
@@ -211,15 +214,15 @@ describeTreeView<
 
         return (
           <TreeViewComponent
-            items={[{ id: '1', children: [{ id: '1.1' }] }]}
-            defaultExpandedItems={['one']}
+            items={items}
+            defaultExpandedItems={['1']}
             onItemFocus={() => {
               setState(Math.random);
             }}
             slotProps={{
               item: (ownerState) => ({ 'data-testid': ownerState.itemId }) as any,
             }}
-            getItemLabel={(item) => item.id}
+            getItemLabel={getItemLabel}
           />
         );
       }
