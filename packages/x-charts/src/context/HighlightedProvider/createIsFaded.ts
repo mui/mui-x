@@ -8,11 +8,15 @@ export const createIsFaded =
     }
 
     if (highlightScope.fade === 'series') {
-      return input.seriesId === highlightedItem?.seriesId && input.path !== highlightedItem?.path;
+      return (
+        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
+      );
     }
 
     if (highlightScope.fade === 'global') {
-      return input.seriesId !== highlightedItem?.seriesId || input.path !== highlightedItem?.path;
+      return (
+        input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
+      );
     }
 
     return false;

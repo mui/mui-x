@@ -3,7 +3,7 @@ import { createIsFaded } from './createIsFaded';
 
 const itemData = {
   seriesId: '1s',
-  path: '1i',
+  itemId: '1i',
   value: '1v',
 };
 
@@ -16,7 +16,7 @@ describe('createIsFaded', () => {
     const isFadedSameSeries = createIsFaded({ fade: 'series' }, itemData);
 
     it('should return true when input series is same as highlighted', () => {
-      expect(isFadedSameSeries({ ...itemData, path: '2' })).to.equal(true);
+      expect(isFadedSameSeries({ ...itemData, itemId: '2' })).to.equal(true);
     });
 
     it('should return false when input series is different than highlighted', () => {
@@ -32,7 +32,7 @@ describe('createIsFaded', () => {
     });
 
     it('should return true when item is different than highlighted', () => {
-      expect(isFadedGlobal({ ...itemData, path: '2' })).to.equal(true);
+      expect(isFadedGlobal({ ...itemData, itemId: '2' })).to.equal(true);
     });
 
     it('should return true when series is different than highlighted', () => {

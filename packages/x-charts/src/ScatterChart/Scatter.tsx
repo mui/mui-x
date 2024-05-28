@@ -80,7 +80,7 @@ function Scatter(props: ScatterProps) {
       if (isInRange) {
         const currentItem = {
           seriesId: pointCtx.seriesId,
-          path: pointCtx.dataIndex.toString(),
+          itemId: pointCtx.dataIndex,
         };
         const isItemHighlighted = isHighlighted(currentItem);
         temp.push({

@@ -82,7 +82,7 @@ ResponsiveChartContainer.propTypes = {
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
-    path: PropTypes.string,
+    itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
