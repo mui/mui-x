@@ -32,7 +32,7 @@
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "tc": "node test/cli.js",
     "test": "node scripts/test.mjs",
-    "test:coverage": "cross-env NODE_ENV=test TZ=UTC BABEL_ENV=coverage nyc mocha --exclude '**/node_modules/**' && nyc report -r lcovonly",
+    "test:coverage": "cross-env NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=test TZ=UTC BABEL_ENV=coverage nyc mocha --exclude '**/node_modules/**' && nyc report -r lcovonly",
     "test:coverage:html": "cross-env NODE_ENV=test TZ=UTC BABEL_ENV=coverage nyc mocha --exclude '**/node_modules/**' && nyc report --reporter=html",
     "test:coverage:inspect": "cross-env NODE_ENV=test TZ=UTC BABEL_ENV=coverage mocha --inspect-brk --exclude '**/node_modules/**' ",
     "test:karma": "cross-env NODE_ENV=test TZ=UTC karma start test/karma.conf.js",
