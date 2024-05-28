@@ -121,7 +121,7 @@ function LinePlot(props: LinePlotProps) {
   const completedData = useAggregatedData();
   return (
     <g {...other}>
-      {completedData.map(({ d, seriesId, color, highlightScope, gradientUsed }) => {
+      {completedData.map(({ d, seriesId, color, gradientUsed }) => {
         return (
           <LineElement
             key={seriesId}
@@ -129,7 +129,6 @@ function LinePlot(props: LinePlotProps) {
             d={d}
             color={color}
             gradientId={gradientUsed && getGradientId(...gradientUsed)}
-            highlightScope={highlightScope}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}

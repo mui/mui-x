@@ -15,8 +15,15 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "plotType": { "description": "Type of plot used." },
     "showHighlight": {

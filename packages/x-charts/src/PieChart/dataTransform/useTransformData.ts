@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { InteractionContext } from '../../context/InteractionProvider';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
+import { useHighlighted } from '../../context';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -25,13 +24,12 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
 export function useTransformData(
   series: Pick<
     DefaultizedPieSeriesType,
-    'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
+    'cornerRadius' | 'paddingAngle' | 'id' | 'highlighted' | 'faded' | 'data'
   > &
     ComputedPieRadius,
 ) {
   const {
     id: seriesId,
-    highlightScope,
     data,
     faded,
     highlighted,
@@ -42,28 +40,17 @@ export function useTransformData(
     cornerRadius: baseCornerRadius = 0,
   } = series;
 
-  const { item: highlightedItem } = React.useContext(InteractionContext);
-
-  const getHighlightStatus = React.useCallback(
-    (dataIndex: number) => {
-      const isHighlighted = getIsHighlighted(
-        highlightedItem,
-        { type: 'pie', seriesId, dataIndex },
-        highlightScope,
-      );
-      const isFaded =
-        !isHighlighted &&
-        getIsFaded(highlightedItem, { type: 'pie', seriesId, dataIndex }, highlightScope);
-
-      return { isHighlighted, isFaded };
-    },
-    [highlightScope, highlightedItem, seriesId],
-  );
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlighted();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
+        const currentItem = {
+          seriesId,
+          dataIndex: itemIndex,
+        };
+        const isHighlighted = isItemHighlighted(currentItem);
+        const isFaded = !isHighlighted && isItemFaded(currentItem);
 
         const attributesOverride = {
           additionalRadius: 0,
@@ -106,8 +93,10 @@ export function useTransformData(
       baseArcLabelRadius,
       data,
       faded,
-      getHighlightStatus,
       highlighted,
+      isItemFaded,
+      isItemHighlighted,
+      seriesId,
     ],
   );
 

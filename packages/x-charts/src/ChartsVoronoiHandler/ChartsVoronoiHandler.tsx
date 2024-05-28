@@ -10,6 +10,7 @@ import { getSVGPoint } from '../internals/utils';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { useDrawingArea, useSvgRef } from '../hooks';
+import { useHighlighted } from '../context';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -37,6 +38,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { series, seriesOrder } = React.useContext(SeriesContext).scatter ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
+
+  const { setHighlighted, clearHighlighted } = useHighlighted();
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -136,6 +139,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
     const handleMouseOut = () => {
       dispatch({ type: 'exitChart' });
+      clearHighlighted();
     };
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -143,16 +147,22 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
       if (closestPoint === 'outside-chart') {
         dispatch({ type: 'exitChart' });
+        clearHighlighted();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
         dispatch({ type: 'leaveItem', data: { type: 'scatter' } });
+        clearHighlighted();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
       dispatch({ type: 'enterItem', data: { type: 'scatter', seriesId, dataIndex } });
+      setHighlighted({
+        seriesId,
+        dataIndex,
+      });
     };
 
     const handleMouseClick = (event: MouseEvent) => {
@@ -178,7 +188,20 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       element.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [svgRef, dispatch, left, width, top, height, yAxis, xAxis, voronoiMaxRadius, onItemClick]);
+  }, [
+    svgRef,
+    dispatch,
+    left,
+    width,
+    top,
+    height,
+    yAxis,
+    xAxis,
+    voronoiMaxRadius,
+    onItemClick,
+    setHighlighted,
+    clearHighlighted,
+  ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <React.Fragment />;

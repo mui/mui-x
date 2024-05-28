@@ -6,14 +6,10 @@ import {
   ScatterValueType,
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { D3Scale } from '../models/axis';
-import { HighlightScope } from '../context';
+import { useHighlighted } from '../context';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -46,15 +42,11 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const highlightScope: HighlightScope = React.useMemo(
-    () => ({ highlighted: 'item', faded: 'global', ...series.highlightScope }),
-    [series.highlightScope],
-  );
-
-  const { item, useVoronoiInteraction } = React.useContext(InteractionContext);
+  const { useVoronoiInteraction } = React.useContext(InteractionContext);
 
   const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope, skipInteractionHandlers);
+  const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
+  const { isFaded, isHighlighted } = useHighlighted();
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
@@ -86,12 +78,16 @@ function Scatter(props: ScatterProps) {
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
       if (isInRange) {
-        const isHighlighted = getIsHighlighted(item, pointCtx, highlightScope);
+        const currentItem = {
+          seriesId: pointCtx.seriesId,
+          dataIndex: pointCtx.dataIndex,
+        };
+        const isItemHighlighted = isHighlighted(currentItem);
         temp.push({
           x,
           y,
-          isHighlighted,
-          isFaded: !isHighlighted && getIsFaded(item, pointCtx, highlightScope),
+          isHighlighted: isItemHighlighted,
+          isFaded: !isItemHighlighted && isFaded(currentItem),
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
           dataIndex: i,
@@ -106,11 +102,11 @@ function Scatter(props: ScatterProps) {
     yScale,
     series.data,
     series.id,
-    item,
-    highlightScope,
     getInteractionItemProps,
     color,
     colorGetter,
+    isFaded,
+    isHighlighted,
   ]);
 
   return (

@@ -139,6 +139,8 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     slotProps,
     loading,
     barLabel,
+    highlightedItem,
+    onHighlightChange,
   } = props;
 
   const id = useId();
@@ -188,6 +190,8 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         axisHighlight?.y === 'none' &&
         !onAxisClick
       }
+      highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
@@ -282,6 +286,13 @@ BarChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * The direction of the bar elements.
    * @default 'vertical'
    */
@@ -330,6 +341,12 @@ BarChart.propTypes = {
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

@@ -14,6 +14,7 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
+import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -26,7 +27,7 @@ export interface PieArcPlotSlotProps {
 export interface PieArcPlotProps
   extends Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
     ComputedPieRadius {
   /**
@@ -71,7 +72,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius = 0,
     paddingAngle = 0,
     id,
-    highlightScope,
     highlighted,
     faded = { additionalRadius: -5 },
     data,
@@ -86,7 +86,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius,
     paddingAngle,
     id,
-    highlightScope,
     highlighted,
     faded,
     data,
@@ -95,6 +94,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...defaultTransitionConfig,
     immediate: skipAnimation,
   });
+  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -202,10 +202,6 @@ PieArcPlot.propTypes = {
     innerRadius: PropTypes.number,
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
-  }),
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**

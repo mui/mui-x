@@ -22,6 +22,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
@@ -36,6 +39,10 @@
         "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
         "data": "The data about the clicked axis and items associated with it."
       }
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
