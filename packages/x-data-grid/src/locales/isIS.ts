@@ -175,4 +175,4 @@ const isISGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'stærð',
 };
 
-export const daDK: Localization = getGridLocalization(isISGrid, isISCore);
+export const isIS: Localization = getGridLocalization(isISGrid, isISCore);
