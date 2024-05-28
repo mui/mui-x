@@ -14,7 +14,7 @@ export type ItemHighlightedState = {
 
 /**
  * A hook to check the highlighted state of the item.
- * This functions already calculates that a item is not faded if it is highlighted.
+ * This function already calculates that an item is not faded if it is highlighted.
  *
  * if you need fine control over the state, use the `useHighlighted` hook instead.
  *
