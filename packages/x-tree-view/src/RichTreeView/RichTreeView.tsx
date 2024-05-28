@@ -236,7 +236,7 @@ RichTreeView.propTypes = {
    * Indentation in pixels between an item and its children.
    * @default 12
    */
-  itemChildrenIndentationPx: PropTypes.number,
+  itemChildrenIndentation: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.

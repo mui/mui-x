@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ### Change nested item's indentation
 
-Use the `itemChildrenIndentationPx` prop to change the indentation of the nested items.
+Use the `itemChildrenIndentation` prop to change the indentation of the nested items.
 By default, a nested item is indented by `12px` from its parent item.
 
 {{"demo": "ItemChildrenIndentationPxProp.js"}}
@@ -28,7 +28,7 @@ then apply the following padding to your `groupTransition` element:
 ```ts
 const CustomTreeItem2GroupTransition = styled(TreeItem2GroupTransition)(({ theme }) => ({
   // ...other styles
-  paddingLeft: `var(--TreeView-itemChildrenIndentationPx)`,
+  paddingLeft: `var(--TreeView-itemChildrenIndentation)`,
 }
 ```
 
@@ -38,7 +38,7 @@ If you are using the `indentationAtItemLevel` prop, then instead apply the follo
 const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
   // ...other styles
   paddingLeft:
-      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentationPx) * var(--TreeView-itemDepth))`,
+      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
 }
 ```
 
@@ -56,7 +56,7 @@ It will become the default behavior in the next major version of the Tree View c
 {{"demo": "IndentationAtItemLevel.js"}}
 
 :::success
-This feature is compatible with both the `TreeItem` and `TreeItem2` components and with the `itemChildrenIndentationPx` prop.
+This feature is compatible with both the `TreeItem` and `TreeItem2` components and with the `itemChildrenIndentation` prop.
 If you are using a custom Tree Item component, and you want to override the padding,
 then apply the following padding to your `content` element:
 
@@ -64,7 +64,7 @@ then apply the following padding to your `content` element:
 const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
   // ...other styles
   paddingLeft:
-      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentationPx) * var(--TreeView-itemDepth))`,
+      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
 }
 ```
 

@@ -28,7 +28,7 @@
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "itemChildrenIndentationPx": {
+    "itemChildrenIndentation": {
       "description": "Indentation in pixels between an item and its children."
     },
     "multiSelect": {

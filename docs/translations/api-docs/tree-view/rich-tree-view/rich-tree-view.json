@@ -42,7 +42,7 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
-    "itemChildrenIndentationPx": {
+    "itemChildrenIndentation": {
       "description": "Indentation in pixels between an item and its children."
     },
     "multiSelect": {

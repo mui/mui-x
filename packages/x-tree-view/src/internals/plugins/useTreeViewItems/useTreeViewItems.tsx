@@ -224,7 +224,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   return {
     getRootProps: () => ({
       style: {
-        '--TreeView-itemChildrenIndentationPx': `${params.itemChildrenIndentationPx}px`,
+        '--TreeView-itemChildrenIndentation':
+          typeof params.itemChildrenIndentation === 'number'
+            ? `${params.itemChildrenIndentation}px`
+            : params.itemChildrenIndentation,
       } as React.CSSProperties,
     }),
     publicAPI: {
@@ -260,7 +263,7 @@ useTreeViewItems.getInitialState = (params) => ({
 useTreeViewItems.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
-  itemChildrenIndentationPx: params.itemChildrenIndentationPx ?? 12,
+  itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
 });
 
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
@@ -277,5 +280,5 @@ useTreeViewItems.params = {
   isItemDisabled: true,
   getItemLabel: true,
   getItemId: true,
-  itemChildrenIndentationPx: true,
+  itemChildrenIndentation: true,
 };

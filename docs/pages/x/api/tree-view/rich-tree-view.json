@@ -46,7 +46,7 @@
         "returned": "boolean"
       }
     },
-    "itemChildrenIndentationPx": { "type": { "name": "number" }, "default": "12" },
+    "itemChildrenIndentation": { "type": { "name": "number" }, "default": "12" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },

@@ -107,14 +107,15 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   getItemId?: (item: R) => TreeViewItemId;
   /**
    * Indentation in pixels between an item and its children.
-   * @default 12
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
    */
-  itemChildrenIndentationPx?: number;
+  itemChildrenIndentation?: string | number;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
-  'disabledItemsFocusable' | 'itemChildrenIndentationPx'
+  'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
 interface UseTreeViewItemsEventLookup {

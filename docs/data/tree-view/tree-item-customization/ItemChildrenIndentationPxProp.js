@@ -28,7 +28,7 @@ export default function ItemChildrenIndentationPxProp() {
     <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        itemChildrenIndentationPx={24}
+        itemChildrenIndentation={24}
         defaultExpandedItems={['grid']}
       />
     </Box>
