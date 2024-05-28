@@ -21,6 +21,10 @@
       "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
     },
     "id": { "type": { "name": "string" } },
+    "itemChildrenIndentation": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "12px"
+    },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
@@ -104,5 +108,6 @@
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li></ul>",
-  "cssComponent": false
+  "cssComponent": false,
+  "deprecated": true
 }

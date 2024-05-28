@@ -13,7 +13,7 @@
     "disableHighlight": {
       "description": "Do not render the line highlight item if set to <code>true</code>."
     },
-    "highlightScope": { "description": "" },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
     "id": { "description": "" },
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."

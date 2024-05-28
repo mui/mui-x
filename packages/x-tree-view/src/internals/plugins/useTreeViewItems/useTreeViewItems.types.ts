@@ -105,11 +105,17 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
+  /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation?: string | number;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
-  'disabledItemsFocusable'
+  'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
 interface UseTreeViewItemsEventLookup {

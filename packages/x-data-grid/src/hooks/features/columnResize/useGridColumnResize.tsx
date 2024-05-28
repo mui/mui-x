@@ -57,28 +57,6 @@ type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
 
-// TODO: remove support for Safari < 13.
-// https://caniuse.com/#search=touch-action
-//
-// Safari, on iOS, supports touch action since v13.
-// Over 80% of the iOS phones are compatible
-// in August 2020.
-// Utilizing the CSS.supports method to check if touch-action is supported.
-// Since CSS.supports is supported on all but Edge@12 and IE and touch-action
-// is supported on both Edge@12 and IE if CSS.supports is not available that means that
-// touch-action will be supported
-let cachedSupportsTouchActionNone = false;
-function doesSupportTouchActionNone(): boolean {
-  if (cachedSupportsTouchActionNone === undefined) {
-    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
-      cachedSupportsTouchActionNone = CSS.supports('touch-action', 'none');
-    } else {
-      cachedSupportsTouchActionNone = true;
-    }
-  }
-  return cachedSupportsTouchActionNone;
-}
-
 function trackFinger(event: any, currentTouchId: number | undefined): CursorCoordinates | boolean {
   if (currentTouchId !== undefined && event.changedTouches) {
     for (let i = 0; i < event.changedTouches.length; i += 1) {
@@ -430,6 +408,9 @@ export const useGridColumnResize = (
       apiRef.current.setColumnWidth(refs.colDef.field, refs.colDef.width!);
       logger.debug(`Updating col ${refs.colDef.field} with new width: ${refs.colDef.width}`);
 
+      // Since during resizing we update the columns width outside of React, React is unable to
+      // reapply the right style properties. We need to sync the state manually.
+      // So we reapply the same logic as in https://github.com/mui/mui-x/blob/0511bf65543ca05d2602a5a3e0a6156f2fc8e759/packages/x-data-grid/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx#L405
       const columnsState = gridColumnsStateSelector(apiRef.current.state);
       refs.groupHeaderElements!.forEach((element) => {
         const fields = getFieldsFromGroupHeaderElem(element);
@@ -592,10 +573,6 @@ export const useGridColumnResize = (
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) {
       return;
-    }
-    // If touch-action: none; is not supported we need to prevent the scroll manually.
-    if (!doesSupportTouchActionNone()) {
-      event.preventDefault();
     }
 
     const touch = event.changedTouches[0];
@@ -812,7 +789,7 @@ export const useGridColumnResize = (
     () => apiRef.current.columnHeadersContainerRef?.current,
     'touchstart',
     handleTouchStart,
-    { passive: doesSupportTouchActionNone() },
+    { passive: true },
   );
 
   useGridApiMethod(

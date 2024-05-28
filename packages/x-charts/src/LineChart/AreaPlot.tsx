@@ -130,7 +130,7 @@ function AreaPlot(props: AreaPlotProps) {
   return (
     <g {...other}>
       {completedData.map(
-        ({ d, seriesId, color, highlightScope, area, gradientUsed }) =>
+        ({ d, seriesId, color, area, gradientUsed }) =>
           !!area && (
             <AreaElement
               key={seriesId}
@@ -138,7 +138,6 @@ function AreaPlot(props: AreaPlotProps) {
               d={d}
               color={color}
               gradientId={gradientUsed && getGradientId(...gradientUsed)}
-              highlightScope={highlightScope}
               slots={slots}
               slotProps={slotProps}
               onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}

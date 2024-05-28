@@ -143,6 +143,8 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     slots,
     slotProps,
     loading,
+    highlightedItem,
+    onHighlightChange,
   } = props;
   return (
     <ResponsiveChartContainer
@@ -155,6 +157,8 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       xAxis={xAxis}
       yAxis={yAxis}
       sx={sx}
+      highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       <ZAxisContextProvider zAxis={zAxis}>
         {!disableVoronoi && (
@@ -245,6 +249,13 @@ ScatterChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -281,6 +292,12 @@ ScatterChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
