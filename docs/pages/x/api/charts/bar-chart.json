@@ -30,6 +30,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+      }
+    },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
@@ -51,6 +57,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | AxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "onItemClick": {

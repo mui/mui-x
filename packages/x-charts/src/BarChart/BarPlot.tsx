@@ -209,7 +209,6 @@ const useAggregatedData = (): {
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
-          highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
@@ -317,13 +316,12 @@ function BarPlot(props: BarPlotProps) {
           />
         );
       })}
-      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+      {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
-            highlightScope={highlightScope}
             {...other}
             onClick={
               onItemClick &&
