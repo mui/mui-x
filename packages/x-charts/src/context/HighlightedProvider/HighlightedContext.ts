@@ -23,7 +23,7 @@ export type HighlightItemData = {
    */
   seriesId?: SeriesId;
   /**
-   * The index of the data.
+   * The index of the item in series data.
    */
   dataIndex?: number;
 };
