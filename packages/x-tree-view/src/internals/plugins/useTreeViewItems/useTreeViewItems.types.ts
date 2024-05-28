@@ -106,7 +106,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
-   * Indentation in pixels between an item and its children.
+   * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
    */
