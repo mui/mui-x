@@ -9,7 +9,7 @@ import { SeriesId } from '../../models/seriesType/common';
  *
  * @example
  * // Highlight the item with the series id 'london' and the item id 0.
- * { seriesId: 'london', itemId: 0 }
+ * { seriesId: 'london', dataIndex: 0 }
  *
  * // Highlight the whole series with the series id 'london'.
  * { seriesId: 'london' }
@@ -23,9 +23,9 @@ export type HighlightItemData = {
    */
   seriesId?: SeriesId;
   /**
-   * The item id of the highlighted item. Usually, it is the index of the data.
+   * The index of the data.
    */
-  itemId?: number | string;
+  dataIndex?: number;
 };
 
 export type HighlightOptions = 'none' | 'item' | 'series';

@@ -112,7 +112,7 @@ function BarElement(props: BarElementProps) {
   const getInteractionItemProps = useInteractionItemProps();
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
-    itemId: dataIndex,
+    dataIndex,
   });
 
   const ownerState = {

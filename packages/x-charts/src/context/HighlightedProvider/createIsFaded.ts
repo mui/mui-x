@@ -9,13 +9,15 @@ export const createIsFaded =
 
     if (highlightScope.fade === 'series') {
       return (
-        input.seriesId === highlightedItem?.seriesId && input.itemId !== highlightedItem?.itemId
+        input.seriesId === highlightedItem?.seriesId &&
+        input.dataIndex !== highlightedItem?.dataIndex
       );
     }
 
     if (highlightScope.fade === 'global') {
       return (
-        input.seriesId !== highlightedItem?.seriesId || input.itemId !== highlightedItem?.itemId
+        input.seriesId !== highlightedItem?.seriesId ||
+        input.dataIndex !== highlightedItem?.dataIndex
       );
     }
 

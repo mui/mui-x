@@ -18,7 +18,7 @@ export const useInteractionItemProps = (skip?: boolean) => {
       });
       setHighlighted({
         seriesId: data.seriesId,
-        itemId: data.dataIndex,
+        dataIndex: data.dataIndex,
       });
     };
     const onMouseLeave = () => {

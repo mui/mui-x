@@ -110,7 +110,7 @@ ChartContainer.propTypes = {
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
-    itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**

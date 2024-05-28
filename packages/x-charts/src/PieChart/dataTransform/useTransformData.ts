@@ -47,7 +47,7 @@ export function useTransformData(
       data.map((item, itemIndex) => {
         const currentItem = {
           seriesId,
-          itemId: itemIndex,
+          dataIndex: itemIndex,
         };
         const isHighlighted = isItemHighlighted(currentItem);
         const isFaded = !isHighlighted && isItemFaded(currentItem);

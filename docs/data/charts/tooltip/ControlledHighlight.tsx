@@ -17,7 +17,7 @@ export default function ControlledHighlight() {
   const [highlightedItem, setHighLightedItem] =
     React.useState<HighlightItemData | null>({
       seriesId: 'A',
-      itemId: 0,
+      dataIndex: 0,
     });
   const [highlighted, setHighlighted] = React.useState('item');
   const [faded, setFaded] = React.useState('global');
@@ -34,7 +34,7 @@ export default function ControlledHighlight() {
   const handleHighLightedItem = (event: any) => {
     setHighLightedItem((prev) => ({
       ...prev,
-      itemId: Number(event.target.value),
+      dataIndex: Number(event.target.value),
     }));
   };
 
@@ -64,7 +64,7 @@ export default function ControlledHighlight() {
             <RadioGroup
               aria-labelledby="item-id-radio-group"
               name="radio-buttons-group"
-              value={highlightedItem?.itemId ?? null}
+              value={highlightedItem?.dataIndex ?? null}
               onChange={handleHighLightedItem}
               row
             >
