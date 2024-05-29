@@ -13,7 +13,7 @@ import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import { checkScale } from './checkScale';
+import { checkScaleErrors } from './checkScaleErrors';
 
 /**
  * Solution of the equations
@@ -109,7 +109,7 @@ const useAggregatedData = (): {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScale(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
+      checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
 
       const baseScaleConfig = (
         verticalLayout ? xAxisConfig : yAxisConfig

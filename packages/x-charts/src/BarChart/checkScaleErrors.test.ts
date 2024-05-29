@@ -1,14 +1,14 @@
 import { expect } from 'chai';
-import { checkScale } from './checkScale';
+import { checkScaleErrors } from './checkScaleErrors';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
-describe('BarChart - checkScale', () => {
+describe('BarChart - checkScaleErrors', () => {
   describe('verticalLayout: true', () => {
     it('should throw an error when the x-axis is not a band scale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           true,
           'seriesId',
           xKey,
@@ -30,7 +30,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           true,
           'seriesId',
           xKey,
@@ -50,7 +50,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           true,
           'seriesId',
           xKey,
@@ -72,7 +72,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           true,
           'seriesId',
           xKey,
@@ -94,7 +94,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           false,
           'seriesId',
           xKey,
@@ -116,7 +116,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           false,
           'seriesId',
           xKey,
@@ -136,7 +136,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           false,
           'seriesId',
           xKey,
@@ -158,7 +158,7 @@ describe('BarChart - checkScale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
         const yKey = DEFAULT_Y_AXIS_KEY;
-        checkScale(
+        checkScaleErrors(
           false,
           'seriesId',
           xKey,
@@ -179,7 +179,7 @@ describe('BarChart - checkScale', () => {
     expect(() => {
       const xKey = 'x-test';
       const yKey = 'y-test';
-      checkScale(
+      checkScaleErrors(
         true,
         'seriesId',
         xKey,
@@ -201,7 +201,7 @@ describe('BarChart - checkScale', () => {
     expect(() => {
       const xKey = 'x-test';
       const yKey = 'y-test';
-      checkScale(
+      checkScaleErrors(
         false,
         'seriesId',
         xKey,

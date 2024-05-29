@@ -19,7 +19,7 @@ const getAxisMessage = (isVertical: boolean, axisKey: string, isContinuous: bool
     : `The ${axisName} with id "${axisKey}"`;
 };
 
-export function checkScale(
+export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
   xAxisKey: string,
