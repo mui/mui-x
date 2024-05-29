@@ -165,8 +165,8 @@ importers:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
       axe-core:
-        specifier: 4.8.4
-        version: 4.8.4
+        specifier: 4.9.1
+        version: 4.9.1
       babel-loader:
         specifier: ^9.1.3
         version: 9.1.3(@babel/core@7.24.5)(webpack@5.91.0)
@@ -6594,8 +6594,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axe-core@4.8.4:
-    resolution: {integrity: sha512-CZLSKisu/bhJ2awW4kJndluz2HLZYIHh5Uy1+ZwDRkJi69811xgIXXfdU9HSLX0Th+ILrHj8qfL/5wzamsFtQg==}
+  /axe-core@4.9.1:
+    resolution: {integrity: sha512-QbUdXJVTpvUTHU7871ppZkdOLBeGUKBQWHkHrvN2V9IQWGMt61zf3B45BtzjxEJzYuj0JBjBZP/hmYS/R9pmAw==}
     engines: {node: '>=4'}
     dev: true
 
