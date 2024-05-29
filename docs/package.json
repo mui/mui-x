@@ -14,14 +14,14 @@
     "serve": "serve ./export -l 3010",
     "create-playground": "cpy --cwd=scripts playground.template.tsx ../../pages/playground --rename=index.tsx",
     "typescript": "tsc -p tsconfig.json",
-    "typescript:transpile": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos",
+    "typescript:transpile": "cross-env BABEL_ENV=development node scripts/formattedTSDemos",
     "typescript:transpile:dev": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos --watch",
     "populate:demos": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/populatePickersDemos"
   },
   "dependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/runtime": "^7.24.5",
-    "@babel/runtime-corejs2": "^7.24.5",
+    "@babel/core": "^7.24.6",
+    "@babel/runtime": "^7.24.6",
+    "@babel/runtime-corejs2": "^7.24.6",
     "@docsearch/react": "^3.6.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
@@ -97,8 +97,8 @@
     "webpack-bundle-analyzer": "^4.10.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-constant-elements": "^7.24.1",
-    "@babel/preset-typescript": "^7.24.1",
+    "@babel/plugin-transform-react-constant-elements": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
     "@mui/internal-docs-utils": "^1.0.4",
     "@mui/internal-scripts": "^1.0.3",
     "@types/chance": "^1.1.6",
