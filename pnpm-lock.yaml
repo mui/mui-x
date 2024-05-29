@@ -144,8 +144,8 @@ importers:
         specifier: ^18.2.19
         version: 18.2.19
       '@types/react-test-renderer':
-        specifier: ^18.0.7
-        version: 18.0.7
+        specifier: ^18.3.0
+        version: 18.3.0
       '@types/requestidlecallback':
         specifier: ^0.3.7
         version: 0.3.7
@@ -5543,8 +5543,8 @@ packages:
       '@types/react': 18.2.60
     dev: true
 
-  /@types/react-test-renderer@18.0.7:
-    resolution: {integrity: sha512-1+ANPOWc6rB3IkSnElhjv6VLlKg2dSv/OWClUyZimbLsQyBn8Js9Vtdsi3UICJ2rIQ3k2la06dkB+C92QfhKmg==}
+  /@types/react-test-renderer@18.3.0:
+    resolution: {integrity: sha512-HW4MuEYxfDbOHQsVlY/XtOvNHftCVEPhJF2pQXXwcUiUF+Oyb0usgp48HSgpK5rt8m9KZb22yqOeZm+rrVG8gw==}
     dependencies:
       '@types/react': 18.2.60
     dev: true
