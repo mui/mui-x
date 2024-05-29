@@ -2,6 +2,7 @@
   "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
+    "moduleResolution": "bundler",
     // Already tested with eslint
     "noUnusedLocals": false,
     "strict": true,
@@ -32,8 +33,6 @@
       "@mui/x-license/*": ["./packages/x-license/src/*"],
       "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
       "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],
-      "@mui-internal/test-utils": ["./node_modules/@mui/monorepo/packages/test-utils/src"],
-      "@mui-internal/test-utils/*": ["./node_modules/@mui/monorepo/packages/test-utils/src/*"],
       "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
       "@mui-internal/api-docs-builder/*": [
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"

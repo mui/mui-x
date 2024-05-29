@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { SimpleTreeViewPlugins } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';

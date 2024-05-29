@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { describeConformance } from 'test/utils/describeConformance';
 

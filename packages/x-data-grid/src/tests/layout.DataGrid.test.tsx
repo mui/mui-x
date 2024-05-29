@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {

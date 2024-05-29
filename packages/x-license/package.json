@@ -34,14 +34,15 @@
     "directory": "packages/x-license"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/utils": "^5.15.14"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "rimraf": "^5.0.5"
+    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
+    "rimraf": "^5.0.7"
   },
   "engines": {
     "node": ">=14.0.0"
