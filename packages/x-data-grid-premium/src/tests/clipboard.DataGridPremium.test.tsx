@@ -7,7 +7,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent, waitFor } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';

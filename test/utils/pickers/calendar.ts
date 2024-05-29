@@ -1,4 +1,4 @@
-import { fireEvent, createEvent } from '@mui-internal/test-utils';
+import { fireEvent, createEvent } from '@mui/internal-test-utils';
 
 export const rangeCalendarDayTouches = {
   '2018-01-01': {

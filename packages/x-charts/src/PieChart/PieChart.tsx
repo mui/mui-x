@@ -143,6 +143,8 @@ function PieChart(props: PieChartProps) {
     slotProps,
     onItemClick,
     loading,
+    highlightedItem,
+    onHighlightChange,
   } = props;
   const isRTL = useIsRTL();
 
@@ -176,6 +178,8 @@ function PieChart(props: PieChartProps) {
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
+      highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       <ChartsAxis
         topAxis={topAxis}
@@ -243,6 +247,13 @@ PieChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -281,6 +292,12 @@ PieChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a pie arc is clicked.
    */

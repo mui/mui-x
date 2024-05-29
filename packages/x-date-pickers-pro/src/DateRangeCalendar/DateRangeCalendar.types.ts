@@ -20,13 +20,11 @@ import {
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from '../internals/models/dateRange';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
-
-export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlots<TDate extends PickerValidDate>
   extends PickersArrowSwitcherSlots,
@@ -155,7 +153,7 @@ export interface DateRangeCalendarProps<TDate extends PickerValidDate>
    * Used on Date Time Range pickers with current `rangePosition` to force a `finish` selection after just one range position selection.
    * @default ['start', 'end']
    */
-  availableRangePositions?: DateRangePosition[];
+  availableRangePositions?: RangePosition[];
 }
 
 export interface DateRangeCalendarOwnerState<TDate extends PickerValidDate>

@@ -8,6 +8,7 @@ import {
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -28,7 +29,7 @@ const updateItemsState = ({
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
-  const processItem = (item: TreeViewBaseItem, parentId: string | null) => {
+  const processItem = (item: TreeViewBaseItem, depth: number, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
 
     if (id == null) {
@@ -71,6 +72,7 @@ const updateItemsState = ({
       idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
+      depth,
     };
 
     itemMap[id] = item;
@@ -81,10 +83,10 @@ const updateItemsState = ({
     }
     itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
-    item.children?.forEach((child) => processItem(child, id));
+    item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
-  items.forEach((item) => processItem(item, null));
+  items.forEach((item) => processItem(item, 0, null));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
@@ -104,6 +106,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   params,
   state,
   setState,
+  experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
     (itemId: string) => state.items.itemMetaMap[itemId],
@@ -219,6 +222,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   };
 
   return {
+    getRootProps: () => ({
+      style: {
+        '--TreeView-itemChildrenIndentation':
+          typeof params.itemChildrenIndentation === 'number'
+            ? `${params.itemChildrenIndentation}px`
+            : params.itemChildrenIndentation,
+      } as React.CSSProperties,
+    }),
     publicAPI: {
       getItem,
     },
@@ -233,7 +244,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
-    contextValue: { disabledItemsFocusable: params.disabledItemsFocusable },
+    contextValue: {
+      disabledItemsFocusable: params.disabledItemsFocusable,
+      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+    },
   };
 };
 
@@ -249,7 +263,16 @@ useTreeViewItems.getInitialState = (params) => ({
 useTreeViewItems.getDefaultizedParams = (params) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
+  itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
 });
+
+useTreeViewItems.wrapRoot = ({ children, instance }) => {
+  return (
+    <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
+      {children}
+    </TreeViewItemDepthContext.Provider>
+  );
+};
 
 useTreeViewItems.params = {
   disabledItemsFocusable: true,
@@ -257,4 +280,5 @@ useTreeViewItems.params = {
   isItemDisabled: true,
   getItemLabel: true,
   getItemId: true,
+  itemChildrenIndentation: true,
 };

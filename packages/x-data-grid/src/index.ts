@@ -20,6 +20,7 @@ export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExp
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 export { GridColumnHeaders } from './components/GridColumnHeaders';
+export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
 /**
  * Reexportable components.

@@ -7,7 +7,7 @@ import {
   GridApi,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

@@ -9,7 +9,7 @@
       "description": "The id of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follow the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui-internal/test-utils';
+import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   wrapPickerMount,

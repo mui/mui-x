@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewExpansionPublicAPI {
   /**
@@ -13,10 +14,33 @@ export interface UseTreeViewExpansionPublicAPI {
 }
 
 export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
-  isItemExpanded: (itemId: string) => boolean;
-  isItemExpandable: (itemId: string) => boolean;
-  toggleItemExpansion: (event: React.SyntheticEvent, itemId: string) => void;
-  expandAllSiblings: (event: React.KeyboardEvent, itemId: string) => void;
+  /**
+   * Check if an item is expanded.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is expanded, `false` otherwise.
+   */
+  isItemExpanded: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Check if an item is expandable.
+   * Currently, an item is expandable if it has children.
+   * In the future, the user should be able to flag an item as expandable even if it has no loaded children to support children lazy loading.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item can be expanded, `false` otherwise.
+   */
+  isItemExpandable: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Toggle the current expansion of an item.
+   * If it is expanded, it will be collapsed, and vice versa.
+   * @param {React.SyntheticEvent} event The UI event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item to toggle.
+   */
+  toggleItemExpansion: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
+  /**
+   * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
+   * @param {React.SyntheticEvent} event The UI event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
+   */
+  expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
 }
 
 export interface UseTreeViewExpansionParameters {
