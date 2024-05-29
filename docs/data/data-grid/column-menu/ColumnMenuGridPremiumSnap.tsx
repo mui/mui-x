@@ -32,11 +32,11 @@ export default function ColumnMenuGridPremiumSnap() {
   });
 
   React.useEffect(() => {
-    // Timeout to avoid an issue around Popper being open before the ref is set.
-    setTimeout(() => {
+    // To avoid an issue around Popper being open before the ref is set.
+    Promise.resolve().then(() => {
       apiRef.current.showColumnMenu('gross');
       console.log('after showColumnMenu');
-    }, 50);
+    });
   }, [apiRef]);
 
   return (
