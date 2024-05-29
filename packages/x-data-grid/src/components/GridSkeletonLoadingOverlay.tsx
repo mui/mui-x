@@ -9,6 +9,7 @@ import {
   gridColumnsTotalWidthSelector,
   gridDimensionsSelector,
   gridVisibleColumnDefinitionsSelector,
+  useGridApiEventHandler,
   useGridSelector,
 } from '../hooks';
 import { GridColType, GridEventListener } from '../models';
@@ -104,22 +105,20 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     [{} as Record<string, string>, ''],
   );
 
-  React.useEffect(() => {
-    const handleScrollChange: GridEventListener<'scrollPositionChange'> = (params) => {
-      if (ref.current) {
-        ref.current.scrollLeft = params.left;
-      }
-    };
-    return apiRef.current.subscribeEvent('scrollPositionChange', handleScrollChange);
-  }, [apiRef]);
+  // Sync the horizontal scroll of the overlay with the grid
+  const handleScrollChange: GridEventListener<'scrollPositionChange'> = (params) => {
+    if (ref.current) {
+      ref.current.scrollLeft = params.left;
+    }
+  };
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrollChange);
 
-  React.useEffect(() => {
-    const handleScrollChange: GridEventListener<'columnResize'> = (params) => {
-      const columnIndex = columns.findIndex((column) => column.field === params.colDef.field);
-      ref.current?.style.setProperty(colWidthVar(columnIndex), `${params.width}px`);
-    };
-    return apiRef.current.subscribeEvent('columnResize', handleScrollChange);
-  }, [apiRef, columns]);
+  // Sync the column resize of the overlay columns with the grid
+  const handleColumnResize: GridEventListener<'columnResize'> = (params) => {
+    const columnIndex = columns.findIndex((column) => column.field === params.colDef.field);
+    ref.current?.style.setProperty(colWidthVar(columnIndex), `${params.width}px`);
+  };
+  useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
 
   return (
     <SkeletonOverlay
