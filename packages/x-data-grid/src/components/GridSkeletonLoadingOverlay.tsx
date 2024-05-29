@@ -4,7 +4,13 @@ import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/system';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { gridColumnPositionsSelector, gridColumnsTotalWidthSelector } from '../hooks';
+import {
+  gridColumnPositionsSelector,
+  gridColumnsTotalWidthSelector,
+  gridDimensionsSelector,
+  gridVisibleColumnDefinitionsSelector,
+  useGridSelector,
+} from '../hooks';
 import { GridColType, GridEventListener } from '../models';
 import { seededRandomNumberGenerator } from '../utils/utils';
 
@@ -41,20 +47,19 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
 
   const apiRef = useGridApiContext();
 
-  const dimensions = apiRef.current?.getRootDimensions();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
 
-  // @ts-expect-error Function signature expects to be called with parameters, but the implementation suggests otherwise
-  const rowHeight = apiRef.current.unstable_getRowHeight();
-  const skeletonRowsCount = Math.ceil(viewportHeight / rowHeight);
+  const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
 
-  const totalWidth = gridColumnsTotalWidthSelector(apiRef);
-  const positions = gridColumnPositionsSelector(apiRef);
+  const totalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const positions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const inViewportCount = React.useMemo(
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const columns = apiRef.current.getVisibleColumns().slice(0, inViewportCount);
+  const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const columns = allVisibleColumns.slice(0, inViewportCount);
 
   const children = React.useMemo(() => {
     // reseed random number generator to create stable lines betwen renders
@@ -122,7 +127,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
       {...props}
       style={{
         gridTemplateColumns: `${gridTemplateColumns} 1fr`,
-        gridAutoRows: rowHeight,
+        gridAutoRows: dimensions.rowHeight,
         ...initialColWidthVariables,
         ...props.style,
       }}
