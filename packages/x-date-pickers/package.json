@@ -45,7 +45,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/system": "^5.15.14",
     "@mui/utils": "^5.15.14",
