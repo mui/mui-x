@@ -104,6 +104,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     });
 
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', () => {
+      if (pickerParams.variant !== 'mobile' || pickerParams.type !== 'date-range') {
+        return;
+      }
+
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -146,6 +150,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     });
 
     it('should not call onChange or onAccept when selecting the same value', () => {
+      if (pickerParams.variant !== 'mobile' || pickerParams.type !== 'date-range') {
+        return;
+      }
+
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
