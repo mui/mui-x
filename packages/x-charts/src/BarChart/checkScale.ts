@@ -2,6 +2,23 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { SeriesId } from '../models/seriesType/common';
 
+const getXOrY = (isVertical: boolean, isContinuous: boolean, x: string, y: string) => {
+  if (isVertical) {
+    return isContinuous ? y : x;
+  }
+  return isContinuous ? x : y;
+};
+
+const getAxisMessage = (isVertical: boolean, axisKey: string, isContinuous: boolean = false) => {
+  const axisName = getXOrY(isVertical, isContinuous, 'x-axis', 'y-axis');
+  const axisKeyName = getXOrY(isVertical, isContinuous, 'xAxis', 'yAxis');
+  const axisDefaultKey = getXOrY(isVertical, isContinuous, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY);
+
+  return axisKey === axisDefaultKey
+    ? `The first \`${axisKeyName}\``
+    : `The ${axisName} with id "${axisKey}"`;
+};
+
 export function checkScale(
   verticalLayout: boolean,
   seriesId: SeriesId,
@@ -13,50 +30,25 @@ export function checkScale(
   const xAxisConfig = xAxis[xAxisKey];
   const yAxisConfig = yAxis[yAxisKey];
 
-  if (verticalLayout) {
-    if (!isBandScaleConfig(xAxisConfig)) {
-      throw new Error(
-        `MUI X Charts: ${
-          xAxisKey === DEFAULT_X_AXIS_KEY ? 'The first `xAxis`' : `The x-axis with id "${xAxisKey}"`
-        } should be of type "band" to display the bar series of id "${seriesId}".`,
-      );
-    }
-    if (xAxis[xAxisKey].data === undefined) {
-      throw new Error(
-        `MUI X Charts: ${
-          xAxisKey === DEFAULT_X_AXIS_KEY ? 'The first `xAxis`' : `The x-axis with id "${xAxisKey}"`
-        } should have data property.`,
-      );
-    }
-    if (isBandScaleConfig(yAxisConfig) || isPointScaleConfig(yAxisConfig)) {
-      throw new Error(
-        `MUI X Charts: ${
-          yAxisKey === DEFAULT_Y_AXIS_KEY ? 'The first `yAxis`' : `The y-axis with id "${yAxisKey}"`
-        } should be a continuous type to display the bar series of id "${seriesId}".`,
-      );
-    }
-  } else {
-    if (!isBandScaleConfig(yAxisConfig)) {
-      throw new Error(
-        `MUI X Charts: ${
-          yAxisKey === DEFAULT_Y_AXIS_KEY ? 'The first `yAxis`' : `The y-axis with id "${yAxisKey}"`
-        } should be of type "band" to display the bar series of id "${seriesId}".`,
-      );
-    }
+  const discreteAxisConfig = verticalLayout ? xAxisConfig : yAxisConfig;
+  const continuousAxisConfig = verticalLayout ? yAxisConfig : xAxisConfig;
 
-    if (yAxis[yAxisKey].data === undefined) {
-      throw new Error(
-        `MUI X Charts: ${
-          yAxisKey === DEFAULT_Y_AXIS_KEY ? 'The first `yAxis`' : `The y-axis with id "${yAxisKey}"`
-        } should have data property.`,
-      );
-    }
-    if (isBandScaleConfig(xAxisConfig) || isPointScaleConfig(xAxisConfig)) {
-      throw new Error(
-        `MUI X Charts: ${
-          xAxisKey === DEFAULT_X_AXIS_KEY ? 'The first `xAxis`' : `The x-axis with id "${xAxisKey}"`
-        } should be a continuous type to display the bar series of id "${seriesId}".`,
-      );
-    }
+  const discreteAxisKey = verticalLayout ? xAxisKey : yAxisKey;
+  const continuousAxisKey = verticalLayout ? yAxisKey : xAxisKey;
+
+  if (!isBandScaleConfig(discreteAxisConfig)) {
+    throw new Error(
+      `MUI X Charts: ${getAxisMessage(verticalLayout, discreteAxisKey)} should be of type "band" to display the bar series of id "${seriesId}".`,
+    );
+  }
+  if (discreteAxisConfig.data === undefined) {
+    throw new Error(
+      `MUI X Charts: ${getAxisMessage(verticalLayout, discreteAxisKey)} should have data property.`,
+    );
+  }
+  if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
+    throw new Error(
+      `MUI X Charts: ${getAxisMessage(verticalLayout, continuousAxisKey, true)} should be a continuous type to display the bar series of id "${seriesId}".`,
+    );
   }
 }
