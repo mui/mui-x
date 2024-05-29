@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, act } from '@mui-internal/test-utils';
+import { fireEvent, act } from '@mui/internal-test-utils';
 import {
   describeTreeView,
   DescribeTreeViewRendererUtils,
