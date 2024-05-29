@@ -15,8 +15,8 @@
     "create-playground": "cpy --cwd=scripts playground.template.tsx ../../pages/playground --rename=index.tsx",
     "typescript": "tsc -p tsconfig.json",
     "typescript:transpile": "cross-env BABEL_ENV=development node scripts/formattedTSDemos",
-    "typescript:transpile:dev": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos --watch",
-    "populate:demos": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/populatePickersDemos"
+    "typescript:transpile:dev": "cross-env BABEL_ENV=development node scripts/formattedTSDemos --watch",
+    "populate:demos": "tsx scripts/populatePickersDemos"
   },
   "dependencies": {
     "@babel/core": "^7.24.6",
