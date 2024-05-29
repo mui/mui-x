@@ -63,7 +63,7 @@
   "devDependencies": {
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "engines": {
     "node": ">=14.0.0"
