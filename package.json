@@ -19,7 +19,7 @@
     "docs:deploy": "pnpm --filter docs deploy",
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
-    "l10n": "babel-node -x .ts ./scripts/l10n.ts",
+    "l10n": "tsx ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.mjs",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
