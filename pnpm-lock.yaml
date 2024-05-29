@@ -84,8 +84,8 @@ importers:
         specifier: ^5.15.14
         version: 5.15.15(@mui/material@5.15.15)(@types/react@18.2.60)(react@18.2.0)
       '@mui/internal-markdown':
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^1.0.4
+        version: 1.0.4
       '@mui/internal-test-utils':
         specifier: 1.0.0-dev.20240529-082515-213b5e33ab
         version: 1.0.0-dev.20240529-082515-213b5e33ab(@babel/core@7.24.5)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -3725,8 +3725,8 @@ packages:
       typescript: 5.4.5
     dev: true
 
-  /@mui/internal-markdown@1.0.3:
-    resolution: {integrity: sha512-b+8T8S1raSuaOXaNyKiChyw1Lb/nEY1ITGsw6oygVLacsN6mZ7EB5cmvEbHA4EQiNwqCn7BgI9OoBTTr0GdZtg==}
+  /@mui/internal-markdown@1.0.4:
+    resolution: {integrity: sha512-wG9J76LpfknM5g30+xbaRmOYjxIJwt/d5S4qEniohcNp8cQuovPP0c3AhAhPTXsCyIn9xCsrc+qQwDne9kvxFg==}
     dependencies:
       '@babel/runtime': 7.24.6
       lodash: 4.17.21
