@@ -6,7 +6,7 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["jsdom"],
+  "ignoreDeps": [],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,

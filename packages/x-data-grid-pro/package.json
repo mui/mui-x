@@ -59,6 +59,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.7"
   },

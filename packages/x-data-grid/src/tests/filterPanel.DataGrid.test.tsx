@@ -9,7 +9,7 @@ import {
   GridFilterOperator,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {

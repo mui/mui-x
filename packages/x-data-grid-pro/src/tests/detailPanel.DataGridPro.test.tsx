@@ -18,7 +18,7 @@ import {
   waitFor,
   act,
   userEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

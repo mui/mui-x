@@ -1,4 +1,4 @@
-import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
+import { screen, userEvent, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,

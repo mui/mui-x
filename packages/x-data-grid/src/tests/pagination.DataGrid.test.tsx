@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,

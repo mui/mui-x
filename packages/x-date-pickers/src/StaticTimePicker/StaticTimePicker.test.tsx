@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui-internal/test-utils';
+import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   wrapPickerMount,

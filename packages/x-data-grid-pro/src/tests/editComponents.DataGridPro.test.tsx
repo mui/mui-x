@@ -10,7 +10,7 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui-internal/test-utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';

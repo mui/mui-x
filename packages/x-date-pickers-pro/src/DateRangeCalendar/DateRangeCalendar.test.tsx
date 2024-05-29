@@ -7,7 +7,7 @@ import {
   getByRole,
   fireTouchChangedEvent,
   userEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,

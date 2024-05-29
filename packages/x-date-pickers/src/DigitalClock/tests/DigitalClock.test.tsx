@@ -8,7 +8,7 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();

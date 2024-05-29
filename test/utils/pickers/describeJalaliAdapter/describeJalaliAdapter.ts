@@ -1,4 +1,4 @@
-import createDescribe from '@mui-internal/test-utils/createDescribe';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';

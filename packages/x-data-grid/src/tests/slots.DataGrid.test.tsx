@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';

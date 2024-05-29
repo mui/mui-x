@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, fireEvent } from '@mui-internal/test-utils';
+import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 
 describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });

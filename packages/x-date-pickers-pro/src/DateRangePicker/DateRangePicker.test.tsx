@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { fireEvent, screen } from '@mui-internal/test-utils/createRenderer';
+import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { expect } from 'chai';
 import {
   buildFieldInteractions,

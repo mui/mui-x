@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';

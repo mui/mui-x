@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewSelectionSignature } from '@mui/x-tree-view/internals';
 

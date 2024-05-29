@@ -5,7 +5,7 @@ import {
   GridApi,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 

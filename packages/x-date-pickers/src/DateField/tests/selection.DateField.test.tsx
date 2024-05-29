@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui-internal/test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValueV7,

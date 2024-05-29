@@ -6,7 +6,7 @@ import {
   within,
   act,
   fireEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';

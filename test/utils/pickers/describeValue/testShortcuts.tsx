@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { userEvent, screen } from '@mui-internal/test-utils';
+import { userEvent, screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {

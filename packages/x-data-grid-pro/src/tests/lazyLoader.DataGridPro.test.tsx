@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
