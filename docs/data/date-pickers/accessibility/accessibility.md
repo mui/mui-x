@@ -21,7 +21,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what we aims to support very well.
+This is the most common target for organizations so it is what we aim to support.
 
 <!-- Those examples do not cover the clock component -->
 
@@ -33,7 +33,7 @@ Date and Time Pickers provide support to ARIA roles and a robust focus managemen
 
 ## Keyboard support
 
-The Date and Time Pickers consist on different associations of Fields, Calendar, Time and Digital Clock components, each of them designed to respond intuitively to keyboard interactions, providing a better experience for users who rely on keyboard navigation.
+The Date and Time Pickers consist of different associations of Fields, Calendar, Time and Digital Clock components. Each of these are designed to respond intuitively to keyboard interactions, providing a better experience for users who rely on keyboard navigation.
 
 Each available component presents its own keyboard support, detailed on the following section:
 
@@ -79,7 +79,7 @@ Depending on which component is in focus, the Picker will provide the correspond
 
 ### Date Range Calendar
 
-The Date Range Calendar implements a similar keyboard support as day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the auxiliar arrows.
+The Date Range Calendar implements a similar keyboard support as the day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the auxiliar arrows.
 
 |                                                      Keys | Description                               |
 | --------------------------------------------------------: | :---------------------------------------- |
@@ -93,4 +93,4 @@ The Date Range Calendar implements a similar keyboard support as day view of the
 
 The [Date Range Picker](/x/react-date-pickers/date-range-picker/) integrates the features of both the Date Range Field and Date Range Calendar components. However it doesn't inherently provides every keyboard support implemented in these components.
 
-To ensure a more fluid and more accessible user experience, Date Range Picker support the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes being consistently displayed on the calendar component.
+To ensure a more fluid and accessible user experience, Date Range Picker supports the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes being consistently displayed on the calendar component.
