@@ -41,7 +41,7 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "engines": {
     "node": ">=14.0.0"
