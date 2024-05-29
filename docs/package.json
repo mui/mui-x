@@ -29,7 +29,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/icons-material": "^5.15.19",
-    "@mui/joy": "^5.0.0-beta.36",
+    "@mui/joy": "5.0.0-beta.32",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.19",
     "@mui/material-nextjs": "^5.15.11",
