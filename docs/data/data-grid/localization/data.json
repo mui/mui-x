@@ -131,8 +131,8 @@
     "languageTag": "is-IS",
     "importName": "isIS",
     "localeName": "Icelandic",
-    "missingKeysCount": 3,
-    "totalKeysCount": 117,
+    "missingKeysCount": 4,
+    "totalKeysCount": 118,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/isIS.ts"
   },
   {
