@@ -16,9 +16,9 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
       }
 
       const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
-          <div className={props.classes.root} ref={ref}>
-            MOCK CONTENT COMPONENT
-          </div>
+        <div className={props.classes.root} ref={ref}>
+          MOCK CONTENT COMPONENT
+        </div>
       ));
 
       const response = render({
@@ -35,9 +35,9 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
       }
 
       const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
-          <div className={props.classes.root} ref={ref}>
-            {props.customProp}
-          </div>
+        <div className={props.classes.root} ref={ref}>
+          {props.customProp}
+        </div>
       ));
 
       const response = render({
@@ -58,13 +58,13 @@ describe('<TreeItem />', () => {
     inheritComponent: 'li',
     wrapMount: (mount) => (item: React.ReactNode) => {
       const wrapper = mount(
-          <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
+        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
       );
       return wrapper.childAt(0);
     },
     render: (item) => {
       return render(
-          <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
+        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
       );
     },
     muiName: 'MuiTreeItem',
@@ -80,10 +80,10 @@ describe('<TreeItem />', () => {
     it('should warn if an onFocus callback is supplied', () => {
       expect(() => {
         PropTypes.checkPropTypes(
-            TreeItem.propTypes,
-            { itemId: 'one', onFocus: () => {} },
-            'prop',
-            'TreeItem',
+          TreeItem.propTypes,
+          { itemId: 'one', onFocus: () => {} },
+          'prop',
+          'TreeItem',
         );
       }).toErrorDev('Failed prop type: The prop `onFocus` is not supported.');
     });
@@ -91,10 +91,10 @@ describe('<TreeItem />', () => {
     it('should warn if an `ContentComponent` that does not hold a ref is used', () => {
       expect(() => {
         PropTypes.checkPropTypes(
-            TreeItem.propTypes,
-            { itemId: 'one', ContentComponent: () => {} },
-            'prop',
-            'TreeItem',
+          TreeItem.propTypes,
+          { itemId: 'one', ContentComponent: () => {} },
+          'prop',
+          'TreeItem',
         );
       }).toErrorDev('Expected an element type that can hold a ref.');
     });
