@@ -76,7 +76,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
   const handleRef = useForkRef(headerCellRef, ref);
 
@@ -84,12 +83,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   if (sortDirection != null) {
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
-
-  React.useEffect(() => {
-    if (!showColumnMenuIcon) {
-      setShowColumnMenuIcon(columnMenuOpen);
-    }
-  }, [showColumnMenuIcon, columnMenuOpen]);
 
   React.useLayoutEffect(() => {
     const columnMenuState = apiRef.current.state.columnMenu;

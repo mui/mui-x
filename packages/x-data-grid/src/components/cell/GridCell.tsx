@@ -146,7 +146,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
+const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,
