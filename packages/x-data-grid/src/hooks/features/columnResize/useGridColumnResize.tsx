@@ -400,6 +400,7 @@ export const useGridColumnResize = (
         nativeEvent.clientY === prevClientY
       ) {
         refs.previousMouseClickEvent = undefined;
+        apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
         return;
       }
     }
