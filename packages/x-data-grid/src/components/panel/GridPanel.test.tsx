@@ -33,7 +33,13 @@ describe('<GridPanel />', () => {
     classes: classes as any,
     inheritComponent: Popper,
     muiName: 'MuiGridPanel',
-    render: (node: React.ReactElement) => render(<Wrapper>{node}</Wrapper>),
+    render: (node: React.ReactElement) =>
+      render(
+        <Wrapper>
+          <div data-id="gridPanelAnchor" />
+          {node}
+        </Wrapper>,
+      ),
     wrapMount:
       (baseMount: (node: React.ReactElement) => import('enzyme').ReactWrapper) =>
       (node: React.ReactNode) => {
