@@ -46,8 +46,8 @@ The following table describes the keyboard support for all [field components](/x
 |                                     <kbd class="key">Arrow Down</kbd> | Decreases focused section value section by 1 |
 |                                        <kbd class="key">Page Up</kbd> | Increases focused section value section by 5 |
 |                                      <kbd class="key">Page Down</kbd> | Decreases focused section value section by 5 |
-|                                           <kbd class="key">Home</kbd> | Sets focused section to the first value      |
-|                                            <kbd class="key">End</kbd> | Sets focused section to the last value       |
+|                                           <kbd class="key">Home</kbd> | Sets focused section to the minimal value    |
+|                                            <kbd class="key">End</kbd> | Sets focused section to the maximal value    |
 
 ### Date Calendar
 
@@ -61,22 +61,22 @@ All the available [views](/x/react-date-pickers/date-calendar/#views) implement 
 
 In addition to the basic keyboard support above, the day view component implements its own keyboard interactions:
 
-|                             Keys | Description                                                                       |
-| -------------------------------: | :-------------------------------------------------------------------------------- |
-|   <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day                       |
-| <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day                   |
-|      <kbd class="key">Home</kbd> | Moves focus to first day of the week, tresspassing to previous month if necessary |
-|       <kbd class="key">End</kbd> | Moves focus to last day of the week, tresspassing to next month if necessary      |
+|                             Keys | Description                                                       |
+| -------------------------------: | :---------------------------------------------------------------- |
+|   <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day       |
+| <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day   |
+|      <kbd class="key">Home</kbd> | Moves focus to the first day of the week within the current month |
+|       <kbd class="key">End</kbd> | Moves focus to the last day of the week within the current month  |
 
 ### Date Picker
 
 The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
 
-Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [DateField](/x/react-date-pickers/accessibility/#fields) or [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar).
+Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [Date Field](/x/react-date-pickers/accessibility/#fields) or [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar).
 
 ### Date Range Calendar
 
-The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements a similar keyboard support as the day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the arrows in the calendar header.
+The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements a similar keyboard support as the day view of the [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the arrows in the calendar header.
 
 |                                                                                                                                          Keys | Description                               |
 | --------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------- |
