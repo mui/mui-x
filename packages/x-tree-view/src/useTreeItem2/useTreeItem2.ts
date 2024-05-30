@@ -33,11 +33,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
   const { id, itemId, label, children, rootRef, isBeingEdited } = parameters;
 
-  const {
-    rootRef: pluginRootRef,
-    contentRef,
-    inputRef: pluginInputRef,
-  } = runItemPlugins(parameters);
+  const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
