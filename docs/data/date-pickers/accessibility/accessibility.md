@@ -39,26 +39,25 @@ The following sections explain in detail the keyboard support for various compon
 
 The following table describes the keyboard support for all [field components](/x/react-date-pickers/fields/)
 
-|                               Keys | Description                                  |
-| ---------------------------------: | :------------------------------------------- |
-|  <kbd class="key">Arrow Left</kbd> | Moves focus among date/time sections         |
-| <kbd class="key">Arrow Right</kbd> | Moves focus among date/time sections         |
-|    <kbd class="key">Arrow Up</kbd> | Increases focused section value by 1         |
-|  <kbd class="key">Arrow Down</kbd> | Decreases focused section value section by 1 |
-|     <kbd class="key">Page Up</kbd> | Increases focused section value section by 5 |
-|   <kbd class="key">Page Down</kbd> | Decreases focused section value section by 5 |
-|        <kbd class="key">Home</kbd> | Sets focused section to the first value      |
-|         <kbd class="key">End</kbd> | Sets focused section to the last value       |
+|                                                                  Keys | Description                                  |
+| --------------------------------------------------------------------: | :------------------------------------------- |
+| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among date/time sections         |
+|                                       <kbd class="key">Arrow Up</kbd> | Increases focused section value by 1         |
+|                                     <kbd class="key">Arrow Down</kbd> | Decreases focused section value section by 1 |
+|                                        <kbd class="key">Page Up</kbd> | Increases focused section value section by 5 |
+|                                      <kbd class="key">Page Down</kbd> | Decreases focused section value section by 5 |
+|                                           <kbd class="key">Home</kbd> | Sets focused section to the first value      |
+|                                            <kbd class="key">End</kbd> | Sets focused section to the last value       |
 
 ### Date Calendar
 
 All the available [views](/x/react-date-pickers/date-calendar/#views) implement the same basic keyboard support:
 
-|                                                      Keys | Description                            |
-| --------------------------------------------------------: | :------------------------------------- |
-|                                <kbd class="key">Tab</kbd> | Moves focus to the next element        |
-|   <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus to the previous element    |
-| <kbd class="key">Arrow Keys (Left, Right, Up, Down)</kbd> | Moves focus among the available values |
+|                                                                                                                                          Keys | Description                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------- |
+|                                                                                                                    <kbd class="key">Tab</kbd> | Moves focus to the next element        |
+|                                                                                       <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus to the previous element    |
+| <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values |
 
 In addition to the basic keyboard support above, the day view component implements its own keyboard interactions:
 
@@ -79,13 +78,13 @@ Depending on which component is in focus, the Picker will provide the correspond
 
 The Date Range Calendar implements a similar keyboard support as the day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the auxiliar arrows.
 
-|                                                      Keys | Description                               |
-| --------------------------------------------------------: | :---------------------------------------- |
-| <kbd class="key">Arrow Keys (Left, Right, Up, Down)</kbd> | Moves focus among the available values    |
-|                            <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month  |
-|                          <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month |
-|                               <kbd class="key">Home</kbd> | Moves focus to the first day of the week within the current month     |
-|                                <kbd class="key">End</kbd> | Moves focus to the last day of the week within the current month      |
+|                                                                                                                                          Keys | Description                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------- |
+| <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values    |
+|                                                                                                                <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month  |
+|                                                                                                              <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month |
+|                                                                                                                   <kbd class="key">Home</kbd> | Moves focus to first day of the week      |
+|                                                                                                                    <kbd class="key">End</kbd> | Moves focus to last day of the week       |
 
 ### Date Range Picker
 
