@@ -5,7 +5,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { useTreeViewContext } from '../../TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../../TreeViewProvider';
 import {
   TreeViewChildrenItemContext,
   TreeViewChildrenItemProvider,

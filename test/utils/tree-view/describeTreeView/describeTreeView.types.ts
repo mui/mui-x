@@ -2,14 +2,21 @@ import * as React from 'react';
 import {
   MergePluginsProperty,
   TreeViewAnyPluginSignature,
+  TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 export type DescribeTreeViewTestRunner<TPlugins extends TreeViewAnyPluginSignature[]> = (
   params: DescribeTreeViewTestRunnerParams<TPlugins>,
 ) => void;
+
+export interface TreeViewItemIdTreeElement {
+  id: TreeViewItemId;
+  children?: TreeViewItemIdTreeElement[];
+}
 
 export interface DescribeTreeViewRendererUtils {
   /**
@@ -83,6 +90,7 @@ export interface DescribeTreeViewRendererUtils {
    * @returns {HTMLElement[]} List of the item id of all the items currently selected.
    */
   getSelectedTreeItems: () => string[];
+  getItemIdTree: () => TreeViewItemIdTreeElement[];
 }
 
 export interface DescribeTreeViewRendererReturnValue<TPlugins extends TreeViewAnyPluginSignature[]>
@@ -119,6 +127,7 @@ export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature
       slotProps?: MergePluginsProperty<TPlugins, 'slotProps'> & {
         item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
       };
+      experimentalFeatures?: TreeViewExperimentalFeatures<TPlugins>;
     },
 ) => DescribeTreeViewRendererReturnValue<TPlugins>;
 

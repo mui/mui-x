@@ -15,6 +15,10 @@ import {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
 } from '@mui/x-tree-view/internals';
+import {
+  useTreeViewItemsReordering,
+  UseTreeViewItemsReorderingParameters,
+} from './useTreeViewItemsReordering';
 
 export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewId,
@@ -24,6 +28,7 @@ export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewItemsReordering,
 ] as const;
 
 export type DefaultTreeViewProPlugins = ConvertPluginsIntoSignatures<
@@ -49,4 +54,5 @@ export interface DefaultTreeViewProPluginParameters<
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters {}
+    UseTreeViewIconsParameters,
+    UseTreeViewItemsReorderingParameters {}

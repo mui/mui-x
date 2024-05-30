@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { TreeViewInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
@@ -258,4 +259,15 @@ export const getAllNavigableItems = (
   }
 
   return navigableItems;
+};
+
+/**
+ * Checks if the event target is in a descendant of this item.
+ * This can prevent from firing some logic on the ancestors on the interacted item when the event handler is on the root.
+ * @param {React.UIEvent} event The event to check
+ * @param {HTMLElement | null} itemRoot The root of the item to check if the event target is in its descendants
+ * @returns {boolean} Whether the event target is in a descendant of this item
+ */
+export const isEventTargetInDescendants = (event: React.UIEvent, itemRoot: HTMLElement | null) => {
+  return itemRoot !== (event.target as HTMLElement).closest('*[role="treeitem"]');
 };

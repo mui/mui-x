@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { TreeViewItemId } from '../models';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
+import {
+  TreeViewAnyPluginSignature,
+  TreeViewPublicAPI,
+  MuiCancellableEventHandler,
+} from '../internals/models';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -29,7 +32,7 @@ export interface UseTreeItem2Parameters {
   children?: React.ReactNode;
 }
 
-export interface UseTreeItem2RootSlotOwnProps {
+export interface UseTreeItem2RootSlotPropsFromUseTreeItem {
   role: 'treeitem';
   tabIndex: 0 | -1;
   id: string;
@@ -46,10 +49,12 @@ export interface UseTreeItem2RootSlotOwnProps {
   style?: React.CSSProperties;
 }
 
+export interface UseTreeItem2RootSlotOwnProps extends UseTreeItem2RootSlotPropsFromUseTreeItem {}
+
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2RootSlotOwnProps;
 
-export interface UseTreeItem2ContentSlotOwnProps {
+export interface UseTreeItem2ContentSlotPropsFromUseTreeItem {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
@@ -59,6 +64,9 @@ export interface UseTreeItem2ContentSlotOwnProps {
    */
   indentationAtItemLevel?: true;
 }
+
+export interface UseTreeItem2ContentSlotOwnProps
+  extends UseTreeItem2ContentSlotPropsFromUseTreeItem {}
 
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2ContentSlotOwnProps;
@@ -101,6 +109,11 @@ export interface UseTreeItem2GroupTransitionSlotOwnProps {
 
 export type UseTreeItem2GroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2GroupTransitionSlotOwnProps;
+
+export interface UseTreeItem2DragAndDropOverlaySlotOwnProps {}
+
+export type UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2DragAndDropOverlaySlotOwnProps;
 
 export interface UseTreeItem2Status {
   expandable: boolean;
@@ -159,6 +172,15 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   getGroupTransitionProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2GroupTransitionSlotProps<ExternalProps>;
+  /**
+   * Resolver for the DragAndDropOverlay slot's props.
+   * Warning: This slot is only useful when using the `RichTreeViewPro` component.
+   * @param {ExternalProps} externalProps Additional props for the DragAndDropOverlay slot
+   * @returns {UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps>} Props that should be spread on the DragAndDropOverlay slot
+   */
+  getDragAndDropOverlayProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps>;
   /**
    * A ref to the component's root DOM element.
    */

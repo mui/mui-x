@@ -117,6 +117,8 @@ SimpleTreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
     }),
   }),

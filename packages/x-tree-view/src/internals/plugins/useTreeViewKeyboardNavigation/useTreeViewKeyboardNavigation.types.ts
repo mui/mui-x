@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { TreeViewPluginSignature } from '../../models';
+import { TreeViewPluginSignature, MuiCancellableEvent } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewKeyboardNavigationInstance {

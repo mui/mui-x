@@ -1,5 +1,5 @@
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
   label: string;
@@ -16,6 +16,18 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {R} The item with the given id.
    */
   getItem: (itemId: TreeViewItemId) => R;
+  /**
+   * Get the children of the item with the given id.
+   * To get the root items, pass `null` as the `itemId`.
+   * @param {string | null} itemId The id of the item to return the children of.
+   * @returns {string[]} The children of the item with the given id.
+   */
+  getItemOrderedChildrenIds: (itemId: string | null) => string[];
+  /**
+   * Get all the items in the same provided as provided by `props.items`.
+   * @returns {TreeViewItemProps[]} The items in the tree.
+   */
+  getItemTree: () => TreeViewBaseItem[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
@@ -73,7 +85,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   areItemUpdatesPrevented: () => boolean;
 }
 
-export interface UseTreeViewItemsParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -113,7 +125,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;

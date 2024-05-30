@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 export function useTreeItemState(itemId: string) {

@@ -16,6 +16,7 @@ import {
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
+import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 
 export const TreeItem2Root = styled('li', {
@@ -40,6 +41,7 @@ export const TreeItem2Content = styled('div', {
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -184,6 +186,7 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    dragAndDropOverlay: ['dragAndDropOverlay'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -218,6 +221,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getDragAndDropOverlayProps,
     status,
   } = useTreeItem2({
     id,
@@ -296,6 +300,16 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.groupTransition,
   });
 
+  const DragAndDropOverlay: React.ElementType | undefined =
+    slots.dragAndDropOverlay ?? TreeItem2DragAndDropOverlay;
+  const dragAndDropOverlayProps = useSlotProps({
+    elementType: DragAndDropOverlay,
+    getSlotProps: getDragAndDropOverlayProps,
+    externalSlotProps: slotProps.dragAndDropOverlay,
+    ownerState: {},
+    className: classes.dragAndDropOverlay,
+  });
+
   return (
     <TreeItem2Provider itemId={itemId}>
       <Root {...rootProps}>
@@ -305,6 +319,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
           </IconContainer>
           <Checkbox {...checkboxProps} />
           <Label {...labelProps} />
+          <DragAndDropOverlay {...dragAndDropOverlayProps} />
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

@@ -4,6 +4,7 @@ import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from '.
 import type { MergePluginsProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginsSignature } from '../corePlugins';
+import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
@@ -122,25 +123,6 @@ export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergePluginsProperty<TreeViewUsedPlugins<TSignature>, 'events'>;
-
-export interface TreeViewItemPluginOptions<TProps extends {}> extends TreeViewItemPluginResponse {
-  props: TProps;
-}
-
-export interface TreeViewItemPluginResponse {
-  /**
-   * Root of the `content` slot enriched by the plugin.
-   */
-  contentRef?: React.RefCallback<HTMLElement> | null;
-  /**
-   * Ref of the `root` slot enriched by the plugin
-   */
-  rootRef?: React.RefCallback<HTMLLIElement> | null;
-}
-
-export type TreeViewItemPlugin<TProps extends {}> = (
-  options: TreeViewItemPluginOptions<TProps>,
-) => void | TreeViewItemPluginResponse;
 
 export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
   itemId: TreeViewItemId;

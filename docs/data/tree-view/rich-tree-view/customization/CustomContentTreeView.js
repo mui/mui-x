@@ -15,6 +15,7 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
 
 const ITEMS = [
   {
@@ -50,6 +51,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getDragAndDropOverlayProps,
     status,
   } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
@@ -74,6 +76,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             <TreeItem2Checkbox {...getCheckboxProps()} />
             <TreeItem2Label {...getLabelProps()} />
           </Box>
+          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
