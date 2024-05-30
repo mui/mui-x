@@ -13,16 +13,16 @@ export default function ResponsiveDateTimeRangePickers() {
       <DemoContainer
         components={[
           'DateTimeRangePicker',
-          'DateTimeRangePicker',
-          'DateTimeRangePicker',
+          'MobileDateTimeRangePicker',
+          'DesktopDateTimeRangePicker',
         ]}
       >
-        <DemoItem label="Desktop variant" component="DateTimeRangePicker">
+        <DemoItem label="Desktop variant" component="DesktopDateTimeRangePicker">
           <DesktopDateTimeRangePicker
             defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant" component="DateTimeRangePicker">
+        <DemoItem label="Mobile variant" component="MobileDateTimeRangePicker">
           <MobileDateTimeRangePicker
             defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
