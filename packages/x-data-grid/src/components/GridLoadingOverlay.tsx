@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Theme, SystemStyleObject } from '@mui/system';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -21,10 +22,28 @@ export interface GridLoadingOverlayProps extends GridOverlayProps {
   noRowsVariant?: GridLoadingOverlayVariant;
 }
 
-const LOADING_COMPONENTS: Record<GridLoadingOverlayVariant, React.ComponentType> = {
-  'circular-progress': CircularProgress,
-  'linear-progress': LinearProgress,
-  skeleton: GridSkeletonLoadingOverlay,
+const LOADING_VARIANTS: Record<
+  GridLoadingOverlayVariant,
+  {
+    component: React.ComponentType;
+    sx: SystemStyleObject<Theme>;
+  }
+> = {
+  'circular-progress': {
+    component: CircularProgress,
+    sx: {},
+  },
+  'linear-progress': {
+    component: LinearProgress,
+    sx: { display: 'block' },
+  },
+  skeleton: {
+    component: GridSkeletonLoadingOverlay,
+    sx: {
+      display: 'block',
+      background: 'var(--DataGrid-containerBackground)',
+    },
+  },
 };
 
 const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
@@ -34,19 +53,11 @@ const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayPr
   ) {
     const apiRef = useGridApiContext();
     const rowsCount = apiRef.current.getRowsCount();
-    const loadingVariant = rowsCount === 0 ? noRowsVariant : variant;
-    const LoadingComponent = LOADING_COMPONENTS[loadingVariant];
+    const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
 
     return (
-      <GridOverlay
-        ref={ref}
-        sx={{
-          display: loadingVariant === 'circular-progress' ? 'flex' : 'block',
-          ...sx,
-        }}
-        {...props}
-      >
-        <LoadingComponent />
+      <GridOverlay ref={ref} sx={{ ...activeVariant.sx, ...sx }} {...props}>
+        <activeVariant.component />
       </GridOverlay>
     );
   },
