@@ -6,12 +6,12 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { fastMemo } from '../../utils/fastMemo';
-import { seededRandomNumberGenerator } from '../../utils/utils';
+import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-const randomWidth = seededRandomNumberGenerator(10000);
+const randomWidth = createRandomNumberGenerator(10000);
 
 export interface GridSkeletonCellProps {
   width: number;

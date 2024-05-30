@@ -190,7 +190,7 @@ function mulberry32(a: number): () => number {
   };
 }
 
-export function seededRandomNumberGenerator(seed: number): (min: number, max: number) => number {
+export function createRandomNumberGenerator(seed: number): (min: number, max: number) => number {
   const random = mulberry32(seed);
   return (min: number, max: number) => min + (max - min) * random();
 }

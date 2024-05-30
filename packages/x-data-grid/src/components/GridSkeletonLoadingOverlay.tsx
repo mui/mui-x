@@ -13,7 +13,7 @@ import {
   useGridSelector,
 } from '../hooks';
 import { GridColType, GridEventListener } from '../models';
-import { seededRandomNumberGenerator } from '../utils/utils';
+import { createRandomNumberGenerator } from '../utils/utils';
 
 const DEFAULT_COLUMN_WIDTH_RANGE = [40, 80] as const;
 
@@ -63,9 +63,11 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   const columns = allVisibleColumns.slice(0, inViewportCount);
 
   const children = React.useMemo(() => {
-    // reseed random number generator to create stable lines betwen renders
+    // We use a seeded random number generator to determine the width of each skeleton element.
+    // The seed ensures that the random number generator produces the same sequence of 'random' numbers on every render.
+    // It prevents the skeleton overlay from appearing to flicker when the component re-renders.
+    const randomNumberBetween = createRandomNumberGenerator(12345);
     const array: React.ReactNode[] = [];
-    const randomNumberBetween = seededRandomNumberGenerator(12345);
 
     for (let i = 0; i < skeletonRowsCount; i += 1) {
       // eslint-disable-next-line no-restricted-syntax
