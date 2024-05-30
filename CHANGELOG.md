@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.5.2
+## 7.6.0
 
 _May 30, 2024_
 
@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.5.2`
+#### `@mui/x-data-grid@7.6.0`
 
 - [DataGrid] Avoid re-rendering all cells on column change (#12980) @romgrk
 - [DataGrid] Export `GridColumnHeadersProps` (#13229) @cherniavskii
@@ -27,36 +27,36 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Remove dead logic to support Safari < 13 (#13249) @oliviertassinari
 - [l10n] Improve Persian (fa-IR) locale (#12994) @amiryxe
 
-#### `@mui/x-data-grid-pro@7.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.5.2`.
+Same changes as in `@mui/x-data-grid@7.6.0`.
 
-#### `@mui/x-data-grid-premium@7.5.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.5.2`, plus:
+Same changes as in `@mui/x-data-grid-pro@7.6.0`, plus:
 
 - [DataGridPremium] Fix excel export causing column with wrong width (#13191) @romgrk
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.5.2`
+#### `@mui/x-date-pickers@7.6.0`
 
 - [pickers] Fix `DateBuilderReturnType` when the date is `undefined` (#13244) @alexey-kozlenkov
 
-#### `@mui/x-date-pickers-pro@7.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.5.2`.
+Same changes as in `@mui/x-date-pickers@7.6.0`.
 
 ### Charts
 
-#### `@mui/x-charts@7.5.2`
+#### `@mui/x-charts@7.6.0`
 
 - [charts] Allow charts highlights to be controlled (#12828) @JCQuintas
 - [charts] Refactor axis band scaleType check (#13295) @JCQuintas
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.5.2`
+#### `@mui/x-tree-view@7.6.0`
 
 - [TreeView] Add JSDoc to every instance method (#13219) @flaviendelangle
 - [TreeView] Allow to customize the indentation of nested items (#13225) @flaviendelangle
