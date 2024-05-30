@@ -76,7 +76,11 @@ export function getFieldsFromGroupHeaderElem(colCellEl: Element): string[] {
 }
 
 export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
-  return Array.from(elem.querySelectorAll<HTMLDivElement>(`[data-fields*="|-${escapeOperandAttributeSelector(field)}-|"]`) ?? []);
+  return Array.from(
+    elem.querySelectorAll<HTMLDivElement>(
+      `[data-fields*="|-${escapeOperandAttributeSelector(field)}-|"]`,
+    ) ?? [],
+  );
 }
 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateApiCommunity) {
@@ -234,7 +238,9 @@ export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, co
 
 export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
   const headers = api.columnHeadersContainerRef!.current!;
-  return headers.querySelector(`:scope > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="columnheader"]`);
+  return headers.querySelector(
+    `:scope > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="columnheader"]`,
+  );
 }
 
 export function findGridCells(api: GridPrivateApiCommunity, field: string) {
