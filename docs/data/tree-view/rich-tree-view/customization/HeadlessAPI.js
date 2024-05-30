@@ -84,12 +84,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   );
 });
 
-export default function CustomContentTreeView() {
+export default function HeadlessAPI() {
   return (
-    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
+    <Box sx={{ minHeight: 200, minWidth: 250 }}>
       <RichTreeView
-        aria-label="icon expansion"
-        sx={{ position: 'relative' }}
         defaultExpandedItems={['3']}
         items={ITEMS}
         slots={{ item: CustomTreeItem }}
