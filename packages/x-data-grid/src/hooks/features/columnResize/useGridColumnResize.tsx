@@ -523,7 +523,7 @@ export const useGridColumnResize = (
       return;
     }
 
-    let newWidth = computeNewWidth(
+    const newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       nativeEvent.clientX,
       refs.columnHeaderElement!.getBoundingClientRect(),
@@ -562,7 +562,7 @@ export const useGridColumnResize = (
       return;
     }
 
-    let newWidth = computeNewWidth(
+    const newWidth = computeNewWidth(
       initialOffsetToSeparator.current!,
       (finger as CursorCoordinates).x,
       refs.columnHeaderElement!.getBoundingClientRect(),
