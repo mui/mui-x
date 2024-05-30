@@ -9,6 +9,7 @@ _May 30, 2024_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎁 Allow to define and customize the indentation of nested items in the Tree View
 - ✨ Allow charts highlights to be controlled
 - 🌍 Improve Persian (fa-IR) locale on the Data Grid
 - 🐞 Bugfixes
