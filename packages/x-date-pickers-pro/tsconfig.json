@@ -2,9 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [
+      "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
+      "chai-dom",
+      "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
-      "dayjs/plugin/timezone.d.ts"
+      "mocha"
     ],
     "noImplicitAny": false
   },

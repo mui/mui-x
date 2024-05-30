@@ -45,9 +45,9 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.14",
+    "@mui/system": "^5.15.15",
     "@mui/utils": "^5.15.14",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.1",
@@ -98,6 +98,7 @@
     }
   },
   "devDependencies": {
+    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
@@ -110,7 +111,7 @@
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.10.0",
     "moment-timezone": "^0.5.45",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "engines": {
     "node": ">=14.0.0"

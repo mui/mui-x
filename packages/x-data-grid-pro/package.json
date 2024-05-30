@@ -43,8 +43,8 @@
     "directory": "packages/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
-    "@mui/system": "^5.15.14",
+    "@babel/runtime": "^7.24.6",
+    "@mui/system": "^5.15.15",
     "@mui/utils": "^5.15.14",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -59,8 +59,9 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "engines": {
     "node": ">=14.0.0"

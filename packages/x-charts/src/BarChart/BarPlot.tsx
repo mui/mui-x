@@ -4,16 +4,16 @@ import { useTransition } from '@react-spring/web';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { AxisDefaultized } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
+import { checkScaleErrors } from './checkScaleErrors';
 
 /**
  * Solution of the equations
@@ -108,68 +108,12 @@ const useAggregatedData = (): {
       const yAxisConfig = yAxis[yAxisKey];
 
       const verticalLayout = series[seriesId].layout === 'vertical';
-      let baseScaleConfig: AxisDefaultized<'band'>;
 
-      if (verticalLayout) {
-        if (!isBandScaleConfig(xAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should be of type "band" to display the bar series of id "${seriesId}".`,
-          );
-        }
-        if (xAxis[xAxisKey].data === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should have data property.`,
-          );
-        }
-        baseScaleConfig = xAxisConfig as AxisDefaultized<'band'>;
-        if (isBandScaleConfig(yAxisConfig) || isPointScaleConfig(yAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should be a continuous type to display the bar series of id "${seriesId}".`,
-          );
-        }
-      } else {
-        if (!isBandScaleConfig(yAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should be of type "band" to display the bar series of id "${seriesId}".`,
-          );
-        }
+      checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
 
-        if (yAxis[yAxisKey].data === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should have data property.`,
-          );
-        }
-        baseScaleConfig = yAxisConfig as AxisDefaultized<'band'>;
-        if (isBandScaleConfig(xAxisConfig) || isPointScaleConfig(xAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should be a continuous type to display the bar series of id "${seriesId}".`,
-          );
-        }
-      }
+      const baseScaleConfig = (
+        verticalLayout ? xAxisConfig : yAxisConfig
+      ) as AxisDefaultized<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
@@ -209,7 +153,6 @@ const useAggregatedData = (): {
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
-          highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
@@ -317,13 +260,12 @@ function BarPlot(props: BarPlotProps) {
           />
         );
       })}
-      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+      {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
-            highlightScope={highlightScope}
             {...other}
             onClick={
               onItemClick &&

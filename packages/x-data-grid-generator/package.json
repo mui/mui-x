@@ -33,7 +33,7 @@
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/x-data-grid-premium": "workspace:*",
     "chance": "^1.1.11",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/chance": "^1.1.6",
     "@types/lru-cache": "^7.10.10",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "peerDependencies": {
     "@mui/icons-material": "^5.4.1",

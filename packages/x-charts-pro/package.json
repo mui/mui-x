@@ -39,9 +39,9 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.14",
+    "@mui/system": "^5.15.15",
     "@mui/utils": "^5.15.14",
     "@mui/x-charts": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -80,7 +80,7 @@
     "@types/d3-shape": "^3.1.6",
     "@types/prop-types": "^15.7.12",
     "csstype": "^3.1.3",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   },
   "exports": {
     ".": {

@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const faIRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'بدون سطر',
-  noResultsOverlayLabel: 'نتیجه ای پیدا نشد.',
+  noResultsOverlayLabel: 'نتیجه‌ای پیدا نشد.',
 
   // Density selector toolbar button text
   toolbarDensity: 'تراکم',
@@ -110,14 +110,14 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuFilter: 'فیلتر',
   columnMenuHideColumn: 'مخفی',
   columnMenuUnsort: 'نامرتب‌کردن',
-  columnMenuSortAsc: 'مرتب‌کردن صعودی',
-  columnMenuSortDesc: 'مرتب‌کردن نزولی',
+  columnMenuSortAsc: 'مرتب‌سازی صعودی',
+  columnMenuSortDesc: 'مرتب‌سازی نزولی',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} فیلتر‌های فعال` : `${count} فیلتر فعال`,
   columnHeaderFiltersLabel: 'نمایش فیلترها',
-  columnHeaderSortIconLabel: 'مرتب‌کردن',
+  columnHeaderSortIconLabel: 'مرتب‌سازی',
 
   // Rows selected footer text
   footerRowSelected: (count) =>

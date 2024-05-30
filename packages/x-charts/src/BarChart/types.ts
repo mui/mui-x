@@ -1,4 +1,3 @@
-import type { HighlightScope } from '../context';
 import type { BarSeriesType } from '../models';
 import type { SeriesId } from '../models/seriesType/common';
 
@@ -17,7 +16,6 @@ export interface CompletedBarData extends AnimationData {
   dataIndex: number;
   color: string;
   value: number | null;
-  highlightScope?: Partial<HighlightScope>;
   maskId: string;
 }
 
