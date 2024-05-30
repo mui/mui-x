@@ -23,6 +23,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Avoid re-rendering all cells on column change (#12980) @romgrk
 - [DataGrid] Export `GridColumnHeadersProps` (#13229) @cherniavskii
 - [DataGrid] Fix header filters' issue with custom filters (#13255) @MBilalShafi
+- [DataGrid] Remove dead logic to support Safari < 13 (#13249) @oliviertassinari
 - [l10n] Improve Persian (fa-IR) locale (#12994) @amiryxe
 
 #### `@mui/x-data-grid-pro@7.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -79,7 +80,6 @@ Same changes as in `@mui/x-date-pickers@7.5.2`.
 - [core] Add comment on why logic to sync column header (#13248) @oliviertassinari
 - [core] Fix `l10n` script execution with arguments (#13297) @LukasTy
 - Prevent "Add reviewers" workflow from triggering since it doesn't work (#13236) @JCQuintas
-- [data grid] Remove dead logic to support Safari < 13 (#13249) @oliviertassinari
 - [docs-infra] Fix `@mui/material` version used in sandboxes (#13260) @LukasTy
 - [test] Use `describeTreeView` for keyboard navigation tests on disabled items (#13184) @flaviendelangle
 - [test] Use `describeTreeView` for remaining items tests (#13262) @flaviendelangle
