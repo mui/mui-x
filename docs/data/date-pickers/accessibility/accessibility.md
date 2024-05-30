@@ -72,11 +72,11 @@ In addition to the basic keyboard support above, the day view component implemen
 
 The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
 
-Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [DateField](/x/react-date-pickers/accessibility/#fields) or [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) and any changes made to the value will be consistently reflected across both components.
+Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [DateField](/x/react-date-pickers/accessibility/#fields) or [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar).
 
 ### Date Range Calendar
 
-The Date Range Calendar implements a similar keyboard support as the day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the auxiliar arrows.
+The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements a similar keyboard support as the day view of the [DateCalendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the arrows in the calendar header.
 
 |                                                                                                                                          Keys | Description                               |
 | --------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------- |
@@ -88,6 +88,6 @@ The Date Range Calendar implements a similar keyboard support as the day view of
 
 ### Date Range Picker
 
-The [Date Range Picker](/x/react-date-pickers/date-range-picker/) integrates the features of both the Date Range Field and Date Range Calendar components. However it doesn't inherently provides every keyboard support implemented in these components.
+The [Date Range Picker](/x/react-date-pickers/date-range-picker/) keeps the focus on the field all the time and thus has the same keyboard navigation as Date Range [Field](/x/react-date-pickers/accessibility/#fields).
 
 To ensure a more fluid and accessible user experience, Date Range Picker supports the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes consistently updated on the calendar component.
