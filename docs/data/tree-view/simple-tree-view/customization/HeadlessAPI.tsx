@@ -70,14 +70,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   );
 });
 
-export default function CustomContentTreeView() {
+export default function HeadlessAPI() {
   return (
-    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <SimpleTreeView
-        aria-label="icon expansion"
-        sx={{ position: 'relative' }}
-        defaultExpandedItems={['3']}
-      >
+    <Box sx={{ minHeight: 200, minWidth: 250 }}>
+      <SimpleTreeView defaultExpandedItems={['3']}>
         <CustomTreeItem itemId="1" label="Amelia Hart">
           <CustomTreeItem itemId="2" label="Jane Fisher" />
         </CustomTreeItem>
