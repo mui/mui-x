@@ -295,7 +295,11 @@ export const useGridColumnResize = (
   const touchId = React.useRef<number>();
 
   const updateWidth = (requestWidth: number) => {
-    const newWidth = clamp(requestWidth, refs.colDef!.minWidth ?? 50, refs.colDef!.maxWidth ?? Infinity);
+    const newWidth = clamp(
+      requestWidth,
+      refs.colDef!.minWidth ?? 50,
+      refs.colDef!.maxWidth ?? Infinity,
+    );
 
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
 
@@ -318,8 +322,7 @@ export const useGridColumnResize = (
     refs.colDef!.width = newWidth;
     refs.colDef!.flex = 0;
 
-    refs.scrollerContentElement!.style.width =
-      `${parseInt(refs.scrollerContentElement!.style.width) + widthDiff}px`;
+    refs.scrollerContentElement!.style.width = `${parseInt(refs.scrollerContentElement!.style.width, 10) + widthDiff}px`;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
     refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
@@ -457,7 +460,9 @@ export const useGridColumnResize = (
 
     refs.colDef = colDef as GridStateColDef;
 
-    refs.scrollerContentElement = root.querySelector(`.${gridClasses.virtualScrollerContent}`) as HTMLDivElement;
+    refs.scrollerContentElement = root.querySelector(
+      `.${gridClasses.virtualScrollerContent}`,
+    ) as HTMLDivElement;
 
     refs.columnHeaderElement = findHeaderElementFromField(
       apiRef.current.columnHeadersContainerRef!.current!,
