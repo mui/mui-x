@@ -68,6 +68,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 - [docs] Add Bulk editing demo for the Community plan (#12800) @cherniavskii
 - [docs] Add conditional label formatting on tooltip page and link to label page (#13235) @JCQuintas
 - [docs] Add information about key combinations on a11y sections (#13234) @arthurbalduini
+- [docs] Cleanup of the Tree View demos (#13237) @flaviendelangle
 - [docs] Document how to customize a subsection of a line chart (#13210) @alexfauquette
 - [docs] Fix Pickers FAQ callout (#13238) @LukasTy
 - [docs] Fix Vale errors @oliviertassinari
