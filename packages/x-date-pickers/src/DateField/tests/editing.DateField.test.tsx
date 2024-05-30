@@ -524,7 +524,7 @@ describe('<DateField /> - Editing', () => {
         expectedValue: 'January',
       });
     });
-    
+
     it('should increment month by 5 when value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.month,
@@ -543,7 +543,7 @@ describe('<DateField /> - Editing', () => {
         expectedValue: 'December',
       });
     });
-    
+
     it('should decrement month by 5 when value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.month,
