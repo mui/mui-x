@@ -79,7 +79,7 @@ Same changes as in `@mui/x-date-pickers@7.5.2`.
 
 - [core] Add comment on why logic to sync column header (#13248) @oliviertassinari
 - [core] Fix `l10n` script execution with arguments (#13297) @LukasTy
-- Prevent "Add reviewers" workflow from triggering since it doesn't work (#13236) @JCQuintas
+- [core] Prevent "Add reviewers" workflow from triggering since it doesn't work (#13236) @JCQuintas
 - [docs-infra] Fix `@mui/material` version used in sandboxes (#13260) @LukasTy
 - [test] Use `describeTreeView` for keyboard navigation tests on disabled items (#13184) @flaviendelangle
 - [test] Use `describeTreeView` for remaining items tests (#13262) @flaviendelangle
