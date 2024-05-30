@@ -160,7 +160,6 @@ export default function LabelSlots() {
           items={products}
           aria-label="customized"
           defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
-          sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
           slots={{ item: CustomTreeItem }}
         />
       </TreeItemContext.Provider>
