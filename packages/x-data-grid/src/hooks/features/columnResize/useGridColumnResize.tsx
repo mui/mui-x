@@ -273,6 +273,7 @@ function createResizeRefs() {
     initialColWidth: 0,
     initialTotalWidth: 0,
     previousMouseClickEvent: undefined as undefined | MouseEvent,
+    scrollerContentElement: undefined as undefined | HTMLDivElement,
     columnHeaderElement: undefined as undefined | HTMLDivElement,
     headerFilterElement: undefined as undefined | HTMLDivElement,
     groupHeaderElements: [] as Element[],
@@ -315,7 +316,9 @@ export const useGridColumnResize = (
   const stopResizeEventTimeout = useTimeout();
   const touchId = React.useRef<number>();
 
-  const updateWidth = (newWidth: number) => {
+  const updateWidth = (requestWidth: number) => {
+    const newWidth = clamp(requestWidth, refs.colDef!.minWidth ?? 50, refs.colDef!.maxWidth ?? Infinity);
+
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
 
     const dimensions = apiRef.current.getRootDimensions();
@@ -336,6 +339,9 @@ export const useGridColumnResize = (
     refs.colDef!.computedWidth = newWidth;
     refs.colDef!.width = newWidth;
     refs.colDef!.flex = 0;
+
+    refs.scrollerContentElement!.style.width =
+      `${parseInt(refs.scrollerContentElement!.style.width) + widthDiff}px`;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
     refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
@@ -365,6 +371,7 @@ export const useGridColumnResize = (
       div.style.maxWidth = finalWidth;
     });
 
+    refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement!, apiRef.current);
     refs.cellElements!.forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
@@ -412,6 +419,8 @@ export const useGridColumnResize = (
   const finishResize = (nativeEvent: MouseEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
+
+    apiRef.current.setVirtualScrollerLock(false);
 
     // Prevent double-clicks from being interpreted as two separate clicks
     if (refs.previousMouseClickEvent) {
@@ -466,6 +475,8 @@ export const useGridColumnResize = (
     refs.initialTotalWidth = apiRef.current.getRootDimensions().rowWidth;
 
     refs.colDef = colDef as GridStateColDef;
+
+    refs.scrollerContentElement = root.querySelector(`.${gridClasses.virtualScrollerContent}`) as HTMLDivElement;
 
     refs.columnHeaderElement = findHeaderElementFromField(
       apiRef.current.columnHeadersContainerRef!.current!,
@@ -538,7 +549,6 @@ export const useGridColumnResize = (
       resizeDirection.current!,
     );
 
-    newWidth = clamp(newWidth, refs.colDef!.minWidth ?? 50, refs.colDef!.maxWidth ?? Infinity);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
@@ -578,7 +588,6 @@ export const useGridColumnResize = (
       resizeDirection.current!,
     );
 
-    newWidth = clamp(newWidth, refs.colDef!.minWidth!, refs.colDef!.maxWidth!);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
@@ -624,6 +633,8 @@ export const useGridColumnResize = (
     const doc = ownerDocument(event.currentTarget as HTMLElement);
     doc.addEventListener('touchmove', handleTouchMove);
     doc.addEventListener('touchend', handleTouchEnd);
+
+    apiRef.current.setVirtualScrollerLock(true);
   });
 
   const stopListening = React.useCallback(() => {
@@ -693,6 +704,8 @@ export const useGridColumnResize = (
       // Prevent the click event if we have resized the column.
       // Fixes https://github.com/mui/mui-x/issues/4777
       doc.addEventListener('click', preventClick, true);
+
+      apiRef.current.setVirtualScrollerLock(true);
     });
 
   const handleColumnSeparatorDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
