@@ -58,7 +58,7 @@ export default function TrackItemExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
-      <Box sx={{ minHeight: 200, minWidth: 300, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           onItemExpansionToggle={handleItemExpansionToggle}

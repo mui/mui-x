@@ -37,16 +37,22 @@ const CustomTreeItem = React.forwardRef(function MyTreeItem(
 
 export default function IconExpansionTreeView() {
   return (
-    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <SimpleTreeView aria-label="icon expansion">
-        <CustomTreeItem itemId="1" label="Applications">
-          <CustomTreeItem itemId="2" label="Calendar" />
+        <CustomTreeItem itemId="grid" label="Data Grid">
+          <CustomTreeItem itemId="grid-community" label="@mui/x-data-grid" />
+          <CustomTreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          <CustomTreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
         </CustomTreeItem>
-        <CustomTreeItem itemId="5" label="Documents">
-          <CustomTreeItem itemId="10" label="OSS" />
-          <CustomTreeItem itemId="6" label="MUI">
-            <CustomTreeItem itemId="8" label="index.js" />
-          </CustomTreeItem>
+        <CustomTreeItem itemId="pickers" label="Date and Time Pickers">
+          <CustomTreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+          <CustomTreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="charts" label="Charts">
+          <CustomTreeItem itemId="charts-community" label="@mui/x-charts" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="tree-view" label="Tree View">
+          <CustomTreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
         </CustomTreeItem>
       </SimpleTreeView>
     </Box>

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
@@ -60,13 +61,13 @@ export default function ControlledSelection() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
+    <Stack spacing={2}>
+      <div>
         <Button onClick={handleSelectClick}>
           {selectedItems.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
-      </Box>
-      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
+      </div>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           selectedItems={selectedItems}
@@ -74,6 +75,6 @@ export default function ControlledSelection() {
           multiSelect
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }

@@ -1,12 +1,10 @@
 <RichTreeView
-  aria-label="customized"
-  defaultExpandedItems={['1']}
+  defaultExpandedItems={['grid']}
   slots={{
     expandIcon: AddBoxIcon,
     collapseIcon: IndeterminateCheckBoxIcon,
     endIcon: CloseSquare,
     item: CustomTreeItem,
   }}
-  sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
-  items={ITEMS}
+  items={MUI_X_PRODUCTS}
 />

@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function BasicSimpleTreeView() {
   return (
-    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <SimpleTreeView>
         <TreeItem itemId="grid" label="Data Grid">
           <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
@@ -15,6 +15,12 @@ export default function BasicSimpleTreeView() {
         <TreeItem itemId="pickers" label="Date and Time Pickers">
           <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
           <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        </TreeItem>
+        <TreeItem itemId="charts" label="Charts">
+          <TreeItem itemId="charts-community" label="@mui/x-charts" />
+        </TreeItem>
+        <TreeItem itemId="tree-view" label="Tree View">
+          <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
         </TreeItem>
       </SimpleTreeView>
     </Box>

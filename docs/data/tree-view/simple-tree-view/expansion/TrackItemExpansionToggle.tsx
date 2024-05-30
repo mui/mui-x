@@ -28,7 +28,7 @@ export default function TrackItemExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
-      <Box sx={{ minHeight: 200, minWidth: 300, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <SimpleTreeView onItemExpansionToggle={handleItemExpansionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function MultiSelectTreeView() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <SimpleTreeView multiSelect>
         <TreeItem itemId="grid" label="Data Grid">
           <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

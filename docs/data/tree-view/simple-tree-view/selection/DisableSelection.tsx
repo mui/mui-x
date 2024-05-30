@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function DisableSelection() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <SimpleTreeView disableSelection>
         <TreeItem itemId="grid" label="Data Grid">
           <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

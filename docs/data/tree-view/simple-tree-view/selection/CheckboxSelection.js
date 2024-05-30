@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function CheckboxSelection() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 290 }}>
       <SimpleTreeView checkboxSelection>
         <TreeItem itemId="grid" label="Data Grid">
           <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

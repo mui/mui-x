@@ -29,8 +29,8 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
 
 export default function LabelSlots() {
   return (
-    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-      <SimpleTreeView defaultExpandedItems={['pickers']}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <SimpleTreeView defaultExpandedItems={['grid']}>
         <CustomTreeItem itemId="grid" label="Data Grid">
           <CustomTreeItem
             itemId="grid-community"
@@ -58,6 +58,20 @@ export default function LabelSlots() {
             itemId="pickers-pro"
             label="@mui/x-date-pickers-pro"
             labelTooltip="Pro version (commercial) of the Date and Time Pickers"
+          />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="charts" label="Charts">
+          <CustomTreeItem
+            itemId="charts-community"
+            label="@mui/x-charts"
+            labelTooltip="Community version (MIT) of the Charts"
+          />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="tree-view" label="Tree View">
+          <CustomTreeItem
+            itemId="tree-view-community"
+            label="@mui/x-tree-view"
+            labelTooltip="Community version (MIT) of the Tree View"
           />
         </CustomTreeItem>
       </SimpleTreeView>

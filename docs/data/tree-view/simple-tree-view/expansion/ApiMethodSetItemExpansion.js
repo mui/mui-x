@@ -18,12 +18,12 @@ export default function ApiMethodSetItemExpansion() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Stack sx={{ mb: 1 }} spacing={2} direction="row">
+    <Stack spacing={2}>
+      <Stack spacing={2} direction="row">
         <Button onClick={handleExpandClick}>Expand Data Grid</Button>
         <Button onClick={handleCollapseClick}>Collapse Data Grid</Button>
       </Stack>
-      <Box sx={{ minHeight: 220, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <SimpleTreeView apiRef={apiRef}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
@@ -34,8 +34,14 @@ export default function ApiMethodSetItemExpansion() {
             <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
             <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
           </TreeItem>
+          <TreeItem itemId="charts" label="Charts">
+            <TreeItem itemId="charts-community" label="@mui/x-charts" />
+          </TreeItem>
+          <TreeItem itemId="tree-view" label="Tree View">
+            <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+          </TreeItem>
         </SimpleTreeView>
       </Box>
-    </Box>
+    </Stack>
   );
 }

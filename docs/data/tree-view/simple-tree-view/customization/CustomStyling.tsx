@@ -1,9 +1,10 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { styled, alpha } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
+const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   color:
     theme.palette.mode === 'light'
       ? theme.palette.grey[800]
@@ -27,29 +28,33 @@ const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
     color: theme.palette.mode === 'dark' && theme.palette.primary.contrastText,
     padding: theme.spacing(0, 1.2),
   },
+  [`& .${treeItemClasses.groupTransition}`]: {
+    marginLeft: 15,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
 }));
 
 export default function CustomStyling() {
   return (
-    <SimpleTreeView
-      aria-label="customized"
-      defaultExpandedItems={['1']}
-      sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
-    >
-      <StyledTreeItem itemId="1" label="Main">
-        <StyledTreeItem itemId="2" label="Hello" />
-        <StyledTreeItem itemId="3" label="Subtree with children">
-          <StyledTreeItem itemId="6" label="Hello" />
-          <StyledTreeItem itemId="7" label="Sub-subtree with children">
-            <StyledTreeItem itemId="9" label="Child 1" />
-            <StyledTreeItem itemId="10" label="Child 2" />
-            <StyledTreeItem itemId="11" label="Child 3" />
-          </StyledTreeItem>
-          <StyledTreeItem itemId="8" label="Hello" />
-        </StyledTreeItem>
-        <StyledTreeItem itemId="4" label="World" />
-        <StyledTreeItem itemId="5" label="Something something" />
-      </StyledTreeItem>
-    </SimpleTreeView>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <SimpleTreeView defaultExpandedItems={['grid']}>
+        <CustomTreeItem itemId="grid" label="Data Grid">
+          <CustomTreeItem itemId="grid-community" label="@mui/x-data-grid" />
+          <CustomTreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          <CustomTreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="pickers" label="Date and Time Pickers">
+          <CustomTreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+          <CustomTreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="charts" label="Charts">
+          <CustomTreeItem itemId="charts-community" label="@mui/x-charts" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="tree-view" label="Tree View">
+          <CustomTreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+        </CustomTreeItem>
+      </SimpleTreeView>
+    </Box>
   );
 }
