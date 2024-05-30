@@ -53,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 
 - [charts] Allow charts highlights to be controlled (#12828) @JCQuintas
 - [charts] Refactor axis band scaleType check (#13295) @JCQuintas
+- [charts] Refactor checkScaleErrors to improve readability and simplify axis message logic (#13305) @JCQuintas
 
 ### Tree View
 
