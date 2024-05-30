@@ -61,7 +61,8 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (event.relatedTarget?.nodeName === 'INPUT') {
+      if (event.relatedTarget === inputRef.current) {
+        console.log('blur');
         return;
       }
 

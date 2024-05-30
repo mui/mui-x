@@ -341,6 +341,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getSlotProps: getLabelInputProps,
     externalSlotProps: slotProps.labelInput,
     ownerState: {},
+
     className: classes.labelInput,
   });
 
