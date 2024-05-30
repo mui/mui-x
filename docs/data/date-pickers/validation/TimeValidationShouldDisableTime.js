@@ -30,7 +30,7 @@ export default function TimeValidationShouldDisableTime() {
             shouldDisableTime={shouldDisableTime}
           />
         </DemoItem>
-        <DemoItem label="DateTimeRangePicker">
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker
             defaultValue={[defaultValue, defaultValue.add(30, 'minutes')]}
             shouldDisableTime={shouldDisableTime}

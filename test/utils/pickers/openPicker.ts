@@ -1,4 +1,4 @@
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui/internal-test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 

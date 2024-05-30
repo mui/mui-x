@@ -47,7 +47,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
 GridColumnMenuContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,

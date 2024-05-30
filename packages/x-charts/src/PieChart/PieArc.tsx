@@ -6,9 +6,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { HighlightScope } from '../context/HighlightProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
+import { HighlightScope } from '../context';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -59,10 +59,13 @@ const PieArcRoot = styled(animated.path, {
   strokeLinejoin: 'round',
 }));
 
-export type PieArcProps = Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;
+    /**
+     * @deprecated Use the `isFaded` or `isHighlighted` props instead.
+     */
     highlightScope?: Partial<HighlightScope>;
     innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
@@ -78,7 +81,6 @@ function PieArc(props: PieArcProps) {
     cornerRadius,
     dataIndex,
     endAngle,
-    highlightScope,
     id,
     innerRadius,
     isFaded,
@@ -87,6 +89,7 @@ function PieArc(props: PieArcProps) {
     outerRadius,
     paddingAngle,
     startAngle,
+    highlightScope,
     ...other
   } = props;
 
@@ -100,7 +103,7 @@ function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
 
   return (
     <PieArcRoot
@@ -128,12 +131,17 @@ function PieArc(props: PieArcProps) {
 PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * @deprecated Use the `isFaded` or `isHighlighted` props instead.
+   */
   highlightScope: PropTypes.shape({
+    fade: PropTypes.oneOf(['global', 'none', 'series']),
     faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlight: PropTypes.oneOf(['item', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

@@ -74,7 +74,7 @@ The `color` property can either be an array of two colors to interpolate, or an 
 The [d3-scale-chromatic](https://d3js.org/d3-scale-chromatic) offers a lot of those functions.
 
 Values lower than the `min` get the color of the `min` value; similarly, values higher than the `max` get the color of the `max` value.
-By default the `min`/`max` range is set to 0 / 100.
+By default, the `min`/`max` range is set to 0 / 100.
 
 ```ts
 {
@@ -104,7 +104,7 @@ This configuration can be used in Bar Charts to set colors according to string c
 
 ## Overlay
 
-Charts have a _loading_ and _noData_ overlays that appears if
+Charts have a _loading_ and _noData_ overlays that appear if:
 
 - `loading` prop is set to `true`.
 - There is no data to display.
@@ -113,13 +113,13 @@ Charts have a _loading_ and _noData_ overlays that appears if
 
 ### Axis display
 
-You can provide the axes data in order to display them while loading the data.
+You can provide the axes data to display them while loading the data.
 
 {{"demo": "OverlayWithAxis.js"}}
 
 ### Custom overlay
 
-To modify the overly message, you can use the `message` props as follow.
+To modify the overlay message, you can use the `message` props as follows:
 
 ```jsx
 <BarChart
