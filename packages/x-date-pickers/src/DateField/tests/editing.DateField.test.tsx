@@ -210,7 +210,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters(`key: Delete`, DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
+  describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
     it('should clear the selected section when only this section is completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
@@ -513,6 +513,44 @@ describe('<DateField /> - Editing', () => {
 
       userEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
+    });
+  });
+
+  describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
+    it('should set month to January when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        key: 'PageUp',
+        expectedValue: 'January',
+      });
+    });
+    
+    it('should increment month by 5 when value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        defaultValue: adapter.date('2022-01-15'),
+        key: 'PageUp',
+        expectedValue: 'June',
+      });
+    });
+  });
+
+  describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
+    it('should set month to December when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        key: 'PageDown',
+        expectedValue: 'December',
+      });
+    });
+    
+    it('should decrement month by 5 when value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        defaultValue: adapter.date('2022-01-15'),
+        key: 'PageDown',
+        expectedValue: 'August',
+      });
     });
   });
 

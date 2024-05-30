@@ -204,6 +204,30 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
+  describeAdapters('key: PageDown', TimeField, ({ adapter, testFieldKeyPress }) => {
+    it('should set meridiem to PM when current value is AM', () => {
+      testFieldKeyPress({
+        format: adapter.formats.meridiem,
+        defaultValue: adapter.date('2024-05-30T02:12:25'),
+        key: 'PageDown',
+        expectedValue: 'PM',
+        selectedSection: 'meridiem',
+      });
+    });
+  });
+
+  describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
+    it('should set meridiem to AM when current value is PM', () => {
+      testFieldKeyPress({
+        format: adapter.formats.meridiem,
+        defaultValue: adapter.date('2024-05-30T14:12:25'),
+        key: 'PageUp',
+        expectedValue: 'AM',
+        selectedSection: 'meridiem',
+      });
+    });
+  });
+
   describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
     it('should set the minute to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
