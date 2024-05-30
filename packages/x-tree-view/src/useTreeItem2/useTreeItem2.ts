@@ -44,8 +44,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
   const inputRef = React.useRef<HTMLButtonElement>(null);
 
-  console.log(inputRef);
-
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
@@ -126,6 +124,13 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
       interactions.handleCheckboxSelection(event);
     };
+
+  const createInputHandleKeydown = (event: any) => {
+    event.stopPropagation();
+    if (event.key === 'Enter' && event.target?.value) {
+      instance.updateItemLabel(itemId, event.target.value);
+    }
+  };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
@@ -222,7 +227,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     return {
       ...externalEventHandlers,
       children: label,
-      visible: !isBeingEdited,
       ...externalProps,
     };
   };
@@ -237,6 +241,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalProps,
       ref: inputRef,
       visible: isBeingEdited,
+      onKeyDown: createInputHandleKeydown,
     };
   };
 

@@ -1,4 +1,4 @@
-export { useTreeViewLabel } from './useTreeViewLabel';
+export { useTreeViewLabel } from './useTreeViewLabel.itemPlugin';
 export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,

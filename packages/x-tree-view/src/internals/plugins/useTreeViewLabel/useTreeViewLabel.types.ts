@@ -16,17 +16,18 @@ export interface UseTreeViewLabelInstance {
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
 }
 
-export interface UseTreeViewLabelParameters {
-  label?: string;
+export interface UseTreeViewLabelParameters<R extends {}> {
+  items: readonly R[];
 }
 
 export interface UseTreeViewLabelState {
   editedItemId: string | null;
+  labels: { [key: TreeViewItemId]: string };
 }
 
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
-  params: UseTreeViewLabelParameters;
-  defaultizedParams: UseTreeViewLabelParameters;
+  params: UseTreeViewLabelParameters<any>;
+  defaultizedParams: UseTreeViewLabelParameters<any>;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
 }>;

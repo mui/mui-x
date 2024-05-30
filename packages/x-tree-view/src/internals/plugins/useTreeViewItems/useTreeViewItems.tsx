@@ -22,7 +22,6 @@ type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
-  getItemLabel,
   getItemId,
   isItemBeingEdited,
   isItemEditable,
@@ -57,23 +56,10 @@ const updateItemsState = ({
       );
     }
 
-    const label = getItemLabel ? getItemLabel(item) : (item as { label: string }).label;
-    if (label == null) {
-      throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a `label` property.',
-          'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
-          'An item was provided without label in the `items` prop:',
-          JSON.stringify(item),
-        ].join('\n'),
-      );
-    }
-
     const editable = isItemEditable ? isItemEditable(item) : false;
 
     itemMetaMap[id] = {
       id,
-      label,
       parentId,
       isBeingEdited: isItemBeingEdited ? isItemBeingEdited(id) && editable : false,
       editable,
@@ -117,13 +103,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
-    (itemId: string) => state.items.itemMetaMap[itemId],
-    [state.items.itemMetaMap],
+    (itemId: string) => ({ ...state.items.itemMetaMap[itemId], label: state.labels[itemId] }),
+    [state.items.itemMetaMap, state.labels],
   );
 
   const getItem = React.useCallback(
-    (itemId: string) => state.items.itemMap[itemId],
-    [state.items.itemMap],
+    (itemId: string) => ({ ...state.items.itemMap[itemId], label: state.labels[itemId] }),
+    [state.items.itemMap, state.labels],
   );
 
   const isItemDisabled = React.useCallback(
@@ -214,7 +200,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         items: params.items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
-        getItemLabel: params.getItemLabel,
         isItemBeingEdited: instance.isItemBeingEdited,
         isItemEditable: params.isItemEditable,
       });
@@ -233,8 +218,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.items,
     params.isItemDisabled,
     params.getItemId,
-    params.getItemLabel,
     params.isItemEditable,
+    state.labels,
     state.editedItemId,
   ]);
 
@@ -244,7 +229,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     ): ReturnType<typeof instance.getItemsToRender>[number] => {
       const item = state.items.itemMetaMap[id];
       return {
-        label: item.label!,
+        label: state.labels[item.id]!,
         itemId: item.id,
         id: item.idAttribute,
         isBeingEdited: item.isBeingEdited,

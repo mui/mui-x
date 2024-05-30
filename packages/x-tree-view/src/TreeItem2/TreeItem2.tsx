@@ -162,14 +162,15 @@ export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput
   if (!visible) {
     return null;
   }
+
   return (
     <input
+      {...props}
       tabIndex={0}
       type="text"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       autoFocus
-      {...props}
       ref={ref}
     />
   );
@@ -265,8 +266,6 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     isBeingEdited,
   });
 
-  // console.log(isBeingEdited, itemId);
-
   const ownerState: TreeItem2OwnerState = {
     ...props,
     ...status,
@@ -356,7 +355,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
 
           <LabelInput value={label as string} {...labelInputProps} />
 
-          {labelProps.visible && <Label {...labelProps} />}
+          {!labelInputProps.visible && <Label {...labelProps} />}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

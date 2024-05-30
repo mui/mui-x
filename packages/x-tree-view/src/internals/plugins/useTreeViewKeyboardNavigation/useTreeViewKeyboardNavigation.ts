@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
+import { TreeViewPlugin } from '../../models';
+import { TreeViewItemId } from '../../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -36,15 +37,15 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    const newFirstCharMap: { [itemId: string]: string } = {};
+    const newFirstCharMap: { [itemId: TreeViewItemId]: string } = {};
 
-    const processItem = (item: TreeViewItemMeta) => {
-      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
+    const processItem = (itemId: TreeViewItemId) => {
+      newFirstCharMap[itemId] = state.labels[itemId]!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.items.itemMetaMap).forEach(processItem);
+    Object.keys(state.labels).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.items.itemMetaMap, params.getItemId, instance]);
+  }, [state.labels, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, query: string) => {
     const cleanQuery = query.toLowerCase();
@@ -88,6 +89,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     itemId: string,
   ) => {
     if (event.defaultMuiPrevented) {
+      console.log('prevent');
       return;
     }
 
@@ -119,12 +121,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has children, we expand it.
       // If the focused item has no children, we select it.
       case key === 'Enter': {
-        if (instance.isItemEditable(itemId)) {
-          if (instance.isItemBeingEdited(itemId)) {
-            instance.setEditedItemId(null);
-          } else {
-            instance.setEditedItemId(itemId);
-          }
+        if (instance.isItemEditable(itemId) && !instance.isItemBeingEdited(itemId)) {
+          instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
