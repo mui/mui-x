@@ -1,11 +1,11 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Date format and localization
+title: Date and Time Pickers - Accessibility
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date and Time Pickers - Accessibility
+# Accessibility
 
 <p class="description">The Date and Time Pickers have complete accessibility support, including built-in keyboard navigation that follows international standards.</p>
 
@@ -23,19 +23,17 @@ WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
 This is the most common target for organizations so it is what we aim to support.
 
-<!-- Those examples do not cover the clock component -->
-
 The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) that provide valuable information on how to optimize the accessibility of the Date and Time Pickers.
 
 ## Screen reader compatibility
 
-Date and Time Pickers provide support to ARIA roles and a robust focus management across the interactive elements to convey the necessary information to users, being optimized for use with assistive technologies.
+Date and Time Pickers use ARIA roles and robust focus management across the interactive elements to convey the necessary information to users, being optimized for use with assistive technologies.
 
 ## Keyboard support
 
-The Date and Time Pickers consist of different associations of Fields, Calendar, Time and Digital Clock components. Each of these are designed to respond intuitively to keyboard interactions, providing a better experience for users who rely on keyboard navigation.
+The Date and Time Pickers consist of different associations of Fields, Calendar, and Clock components. Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
 
-Each available component presents its own keyboard support, detailed on the following section:
+The following sections explain in detail the keyboard support for various components:
 
 ### Fields
 
@@ -86,11 +84,11 @@ The Date Range Calendar implements a similar keyboard support as the day view of
 | <kbd class="key">Arrow Keys (Left, Right, Up, Down)</kbd> | Moves focus among the available values    |
 |                            <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month  |
 |                          <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month |
-|                               <kbd class="key">Home</kbd> | Moves focus to first day of the week      |
-|                                <kbd class="key">End</kbd> | Moves focus to last day of the week       |
+|                               <kbd class="key">Home</kbd> | Moves focus to the first day of the week within the current month     |
+|                                <kbd class="key">End</kbd> | Moves focus to the last day of the week within the current month      |
 
 ### Date Range Picker
 
 The [Date Range Picker](/x/react-date-pickers/date-range-picker/) integrates the features of both the Date Range Field and Date Range Calendar components. However it doesn't inherently provides every keyboard support implemented in these components.
 
-To ensure a more fluid and accessible user experience, Date Range Picker supports the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes being consistently displayed on the calendar component.
+To ensure a more fluid and accessible user experience, Date Range Picker supports the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes consistently updated on the calendar component.
