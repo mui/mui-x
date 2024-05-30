@@ -27,7 +27,7 @@ export function HeatmapPlot() {
             height={yScale.bandwidth()}
             x={xScale(xDomain[xIndex])}
             y={yScale(yDomain[yIndex])}
-            fill={colorScale(value) ?? undefined}
+            fill={colorScale?.(value) ?? undefined}
           />
         );
       })}

@@ -34,6 +34,9 @@
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
+    "plugins": {
+      "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },

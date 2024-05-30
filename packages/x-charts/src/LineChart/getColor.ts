@@ -3,11 +3,11 @@ import { DefaultizedLineSeriesType } from '../models/seriesType/line';
 
 export default function getColor(
   series: DefaultizedLineSeriesType,
-  xAxis: AxisDefaultized,
-  yAxis: AxisDefaultized,
+  xAxis?: AxisDefaultized,
+  yAxis?: AxisDefaultized,
 ) {
-  const yColorScale = yAxis.colorScale;
-  const xColorScale = xAxis.colorScale;
+  const yColorScale = yAxis?.colorScale;
+  const xColorScale = xAxis?.colorScale;
 
   if (yColorScale) {
     return (dataIndex: number) => {

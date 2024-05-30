@@ -73,8 +73,8 @@ export default function BasicHeatmap() {
       <ChartsAxis />
       <UnstableHeatmapPlot />
       <ChartsTooltip
-        trigger="item"
-        //   {...tooltip} slots={slots} slotProps={slotProps}
+      // trigger="item"
+      //   {...tooltip} slots={slots} slotProps={slotProps}
       />
     </UnstableHeatmapContainer>
   );

@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import barSeriesFormatter from '../BarChart/formatter';
-import scatterSeriesFormatter from '../ScatterChart/formatter';
-import lineSeriesFormatter from '../LineChart/formatter';
-import pieSeriesFormatter from '../PieChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
 import {
@@ -34,13 +30,9 @@ export type SeriesContextProviderProps<T extends ChartSeriesType = ChartSeriesTy
    */
   colors?: ChartsColorPalette;
   /**
-   * Preprocess series before saving them in the context.
-   * @param series
-   * @param colors
-   * @param dataset
-   * @returns
+   * Preprocessors for each series types.
    */
-  formatSeries?: SeriesFormatterType<T>;
+  seriesFormatters: SeriesFormatterConfig<T>;
   children: React.ReactNode;
 };
 
@@ -52,13 +44,9 @@ if (process.env.NODE_ENV !== 'production') {
   SeriesContext.displayName = 'SeriesContext';
 }
 
-const seriesTypeFormatter: {
-  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
-} = {
-  bar: barSeriesFormatter,
-  scatter: scatterSeriesFormatter,
-  line: lineSeriesFormatter,
-  pie: pieSeriesFormatter,
+export type SeriesFormatterConfig<T extends ChartSeriesType = ChartSeriesType> = {
+  // TODO replace the function type by Formatter<K>
+  [K in T]?: (series: FormatterParams<K>, dataset?: DatasetType) => any;
 };
 
 /**
@@ -69,7 +57,12 @@ const seriesTypeFormatter: {
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type.
  */
-const defaultFormatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
+const preprocessSeries = <T extends ChartSeriesType>(
+  series: AllSeriesType<T>[],
+  colors: string[],
+  seriesFormatters: SeriesFormatterConfig<T>,
+  dataset?: DatasetType,
+) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
@@ -91,10 +84,10 @@ const defaultFormatSeries = (series: AllSeriesType[], colors: string[], dataset?
 
   const formattedSeries: FormattedSeries = {};
   // Apply formatter on a type group
-  (Object.keys(seriesTypeFormatter) as ChartSeriesType[]).forEach((type) => {
-    if (seriesGroups[type] !== undefined) {
-      formattedSeries[type] =
-        seriesTypeFormatter[type]?.(seriesGroups[type], dataset) ?? seriesGroups[type];
+  (Object.keys(seriesFormatters) as T[]).forEach((type) => {
+    const group = seriesGroups[type];
+    if (group !== undefined) {
+      formattedSeries[type] = seriesFormatters[type]?.(group, dataset) ?? seriesGroups[type];
     }
   });
 
@@ -102,24 +95,19 @@ const defaultFormatSeries = (series: AllSeriesType[], colors: string[], dataset?
 };
 
 function SeriesContextProvider<T extends ChartSeriesType>(props: SeriesContextProviderProps<T>) {
-  const {
-    series,
-    dataset,
-    colors = blueberryTwilightPalette,
-    formatSeries = defaultFormatSeries,
-    children,
-  } = props;
+  const { series, dataset, colors = blueberryTwilightPalette, seriesFormatters, children } = props;
 
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
     () =>
-      formatSeries(
+      preprocessSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
+        seriesFormatters,
         dataset as DatasetType<number>,
       ),
-    [series, colors, theme.palette.mode, formatSeries, dataset],
+    [series, colors, theme.palette.mode, seriesFormatters, dataset],
   );
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;

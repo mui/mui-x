@@ -52,7 +52,7 @@ export interface PieChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {

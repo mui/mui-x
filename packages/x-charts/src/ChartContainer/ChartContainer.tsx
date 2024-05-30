@@ -14,18 +14,25 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { xExtremumGetters, yExtremumGetters } from './defaultExtremumGetters';
 import { HighlightedProvider, HighlightedProviderProps } from '../context';
+import { ChartsPluginTypes } from '../models/plugin';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { usePluginsMerge } from './usePluginsMerge';
 
-export type ChartContainerProps = Omit<
+export type ChartContainerProps<T extends ChartSeriesType = ChartSeriesType> = Omit<
   ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'formatSeries'> &
+    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
     Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
     HighlightedProviderProps,
   'children'
 > & {
   children?: React.ReactNode;
+  /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins?: ChartsPluginTypes<T>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
@@ -44,16 +51,23 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
+    plugins,
     children,
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
   const handleRef = useForkRef(ref, svgRef);
 
+  const { xExtremumGetters, yExtremumGetters, seriesFormatters } = usePluginsMerge(plugins);
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
+      <SeriesContextProvider
+        series={series}
+        colors={colors}
+        dataset={dataset}
+        seriesFormatters={seriesFormatters}
+      >
         <CartesianContextProvider
           xAxis={xAxis}
           yAxis={yAxis}
@@ -138,6 +152,42 @@ ChartContainer.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['bar']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['line']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['scatter']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['pie']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+    ]).isRequired,
+  ),
   /**
    * The array of series to display.
    * Each type of series has its own specificity.

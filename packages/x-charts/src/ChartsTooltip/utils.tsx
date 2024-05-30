@@ -5,6 +5,7 @@ import {
   CartesianChartSeriesType,
   ChartSeriesDefaultized,
   ChartSeriesType,
+  isCartesianSeriesType,
 } from '../models/seriesType/config';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
@@ -93,10 +94,6 @@ export function getTooltipHasData(
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
 
   return hasAxisXData || hasAxisYData;
-}
-
-export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return ['bar', 'line', 'scatter', 'heatmap'].includes(seriesType);
 }
 
 export function isCartesianSeries(
