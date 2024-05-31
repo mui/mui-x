@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.6",
-    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
     "@mui/system": "^5.15.15",
     "@mui/utils": "^5.15.14",
     "clsx": "^2.1.1",
@@ -61,6 +60,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@mui/internal-test-utils": "1.0.0",
     "@mui/joy": "5.0.0-beta.32",
     "@mui/types": "^7.2.14",
     "@types/prop-types": "^15.7.12",
