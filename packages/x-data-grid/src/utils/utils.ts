@@ -190,6 +190,13 @@ function mulberry32(a: number): () => number {
   };
 }
 
+/**
+ * Create a random number generator from a seed. The seed
+ * ensures that the random number generator produces the
+ * same sequence of 'random' numbers on every render. It
+ * returns a function that generates a random number between
+ * a specified min and max.
+ */
 export function createRandomNumberGenerator(seed: number): (min: number, max: number) => number {
   const random = mulberry32(seed);
   return (min: number, max: number) => min + (max - min) * random();

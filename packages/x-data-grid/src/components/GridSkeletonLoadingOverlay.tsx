@@ -62,9 +62,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   const columns = allVisibleColumns.slice(0, inViewportCount);
 
   const children = React.useMemo(() => {
-    // We use a seeded random number generator to determine the width of each skeleton element.
-    // The seed ensures that the random number generator produces the same sequence of 'random' numbers on every render.
-    // It prevents the skeleton overlay from appearing to flicker when the component re-renders.
+    // The random number generator is used to determine the width of each skeleton element.
+    // The seed ensures the width of each skeleton element width remains the same across renders and does not flicker.
     const randomNumberBetween = createRandomNumberGenerator(12345);
     const array: React.ReactNode[] = [];
 
