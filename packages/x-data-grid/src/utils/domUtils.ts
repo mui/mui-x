@@ -10,6 +10,8 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest(`.${className}`);
 }
 
+// TODO, eventually replaces this function with CSS.escape, once available in jsdom, either added manually or built in
+// https://github.com/jsdom/jsdom/issues/1550#issuecomment-236734471
 export function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
