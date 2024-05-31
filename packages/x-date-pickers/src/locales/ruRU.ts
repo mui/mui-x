@@ -78,24 +78,24 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'ДН',
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(д|п)п',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Год',
+  month: 'Месяц',
+  day: 'День',
+  weekDay: 'День недели',
+  hours: 'Часы',
+  minutes: 'Минуты',
+  seconds: 'Секунды',
+  meridiem: 'Меридием',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Пусто',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);
