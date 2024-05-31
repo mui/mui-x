@@ -1,8 +1,11 @@
 import * as React from 'react';
-import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/system';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridColumnPositionsSelector,
   gridColumnsTotalWidthSelector,
@@ -11,37 +14,42 @@ import {
   useGridApiEventHandler,
   useGridSelector,
 } from '../hooks';
-import { GridColType, GridEventListener } from '../models';
-import { createRandomNumberGenerator } from '../utils/utils';
-
-const DEFAULT_COLUMN_WIDTH_RANGE = [40, 80] as const;
-
-const COLUMN_WIDTH_RANGE_BY_TYPE: Partial<Record<GridColType, [number, number]>> = {
-  number: [40, 60],
-  string: [40, 80],
-  date: [40, 60],
-  dateTime: [60, 80],
-  singleSelect: [40, 80],
-} as const;
+import { GridEventListener } from '../models';
+import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { getDataGridUtilityClass } from '../constants/gridClasses';
 
 const colWidthVar = (index: number) => `--colWidth-${index}`;
 
-const SkeletonOverlay = styled('div')({
+const SkeletonOverlay = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'SkeletonLoadingOverlay',
+  overridesResolver: (props, styles) => styles.skeletonLoadingOverlay,
+})({
   display: 'grid',
   overflow: 'hidden',
+  '& .MuiDataGrid-cellSkeleton': {
+    borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
+  },
 });
 
-const SkeletonCell = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-});
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['skeletonLoadingOverlay'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const GridSkeletonLoadingOverlay = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridSkeletonLoadingOverlay(props, forwardedRef) {
+  const rootProps = useGridRootProps();
+  const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
   const ref = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
 
@@ -61,39 +69,25 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = allVisibleColumns.slice(0, inViewportCount);
 
+  const { slots } = rootProps;
   const children = React.useMemo(() => {
-    // The random number generator is used to determine the width of each skeleton element.
-    // The seed ensures the width of each skeleton element remains the same across renders and does not flicker.
-    const randomNumberBetween = createRandomNumberGenerator(12345);
     const array: React.ReactNode[] = [];
 
     for (let i = 0; i < skeletonRowsCount; i += 1) {
       // eslint-disable-next-line no-restricted-syntax
       for (const column of columns) {
-        const [min, max] = column.type
-          ? COLUMN_WIDTH_RANGE_BY_TYPE[column.type] ?? DEFAULT_COLUMN_WIDTH_RANGE
-          : DEFAULT_COLUMN_WIDTH_RANGE;
-        const width = Math.round(randomNumberBetween(min, max));
-        const isCircular = column.type === 'boolean' || column.type === 'actions';
-
         array.push(
-          <SkeletonCell
+          <slots.skeletonCell
             key={`skeleton-column-${i}-${column.field}`}
-            sx={{ justifyContent: column.align }}
-          >
-            <Skeleton
-              width={isCircular ? '1.3em' : `${width}%`}
-              height={isCircular ? '1.3em' : '1.2em'}
-              variant={isCircular ? 'circular' : 'text'}
-              sx={{ mx: 1 }}
-            />
-          </SkeletonCell>,
+            type={column.type}
+            align={column.align}
+          />,
         );
       }
-      array.push(<SkeletonCell key={`skeleton-filler-column-${i}`} />);
+      array.push(<slots.skeletonCell key={`skeleton-filler-column-${i}`} empty />);
     }
     return array;
-  }, [skeletonRowsCount, columns]);
+  }, [skeletonRowsCount, columns, slots]);
 
   const [initialColWidthVariables, gridTemplateColumns] = columns.reduce(
     ([initialSize, templateColumn], column, i) => {
@@ -122,9 +116,11 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
 
   return (
     <SkeletonOverlay
+      className={classes.root}
       ref={handleRef}
       {...props}
       style={{
+        // the filler column is set to `1fr` to take up the remaining space in a row
         gridTemplateColumns: `${gridTemplateColumns} 1fr`,
         gridAutoRows: dimensions.rowHeight,
         ...initialColWidthVariables,
