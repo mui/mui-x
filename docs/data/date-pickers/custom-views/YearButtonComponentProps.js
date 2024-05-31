@@ -4,13 +4,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-export default function MonthButtonComponentProps() {
+export default function YearButtonComponentProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar']}>
         <DateCalendar
+          openTo="year"
           slotProps={{
-            monthButton: {
+            yearButton: {
               sx: {
                 borderWidth: '1px',
                 borderStyle: 'solid',
@@ -18,8 +19,6 @@ export default function MonthButtonComponentProps() {
               },
             },
           }}
-          views={['month', 'day']}
-          openTo="month"
         />
       </DemoContainer>
     </LocalizationProvider>

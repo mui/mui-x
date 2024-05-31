@@ -186,6 +186,7 @@
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "textField": "Form control with an input to render the value inside the default field.",
-    "toolbar": "Custom component for the toolbar rendered above the views."
+    "toolbar": "Custom component for the toolbar rendered above the views.",
+    "yearButton": "Button displayed to render a single month in the &quot;month&quot; view ."
   }
 }

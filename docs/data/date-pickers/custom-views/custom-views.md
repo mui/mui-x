@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom views
-components: PickersCalendarHeader, PickersRangeCalendarHeader, PickersMonth
+components: PickersCalendarHeader, PickersRangeCalendarHeader, PickersMonth, PickersYear
 ---
 
 # Custom views
@@ -35,6 +35,20 @@ you receive three additional props to let you handle scenarios where multiple mo
 The demo below shows how to navigate the months two by two:
 
 {{"demo": "CalendarHeaderComponentRange.js", "defaultCodeOpen": false}}
+
+## Year button
+
+### Component props
+
+You can pass props to the year button as shown below:
+
+{{"demo": "YearButtonComponentProps.js"}}
+
+### Component
+
+You can pass custom components to replace the year button, as shown below:
+
+{{"demo": "YearButtonComponent.js"}}
 
 ## Month button
 

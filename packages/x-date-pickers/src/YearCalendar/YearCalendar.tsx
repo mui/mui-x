@@ -114,6 +114,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     yearsPerRow,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -305,11 +307,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && yearNumber === focusedYear}
             disabled={isDisabled}
-            tabIndex={yearNumber === focusedYear ? 0 : -1}
+            tabIndex={yearNumber === focusedYear && !isDisabled ? 0 : -1}
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
             yearsPerRow={yearsPerRow}
+            slots={slots}
+            slotProps={slotProps}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -388,6 +392,16 @@ YearCalendar.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

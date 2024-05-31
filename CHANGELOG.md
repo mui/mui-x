@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.6.1
+
+_May 31, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+🐞 Address the `@mui/internal-test-utils` added as a direct dependency to `@mui/x-data-grid` by mistake.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.6.1`
+
+- [DataGrid] Fix column resize not working with special character (#13069) @oukunan
+- [DataGrid] Move `@mui/internal-test-utils` to dev dependency (#13318) @LukasTy
+
+#### `@mui/x-data-grid-pro@7.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.6.1`.
+
+#### `@mui/x-data-grid-premium@7.6.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.6.1`.
+
 ## 7.6.0
 
 _May 30, 2024_

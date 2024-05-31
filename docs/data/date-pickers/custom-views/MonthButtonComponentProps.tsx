@@ -10,9 +10,13 @@ export default function MonthButtonComponentProps() {
       <DemoContainer components={['DateCalendar']}>
         <DateCalendar
           slotProps={{
-            monthButton: (ownerState) => ({
-              title: ownerState['aria-label'],
-            }),
+            monthButton: {
+              sx: {
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                borderColor: 'primary.main',
+              },
+            },
           }}
           views={['month', 'day']}
           openTo="month"

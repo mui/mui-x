@@ -1,6 +1,7 @@
 <DateCalendar
+  openTo="year"
   slotProps={{
-    monthButton: {
+    yearButton: {
       sx: {
         borderWidth: '1px',
         borderStyle: 'solid',
@@ -8,6 +9,4 @@
       },
     },
   }}
-  views={['month', 'day']}
-  openTo="month"
 />

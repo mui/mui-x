@@ -237,6 +237,7 @@
   { "name": "PickersTextFieldProps", "kind": "TypeAlias" },
   { "name": "PickersTimezone", "kind": "TypeAlias" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
+  { "name": "PickersYearButton", "kind": "Variable" },
   { "name": "pickersYearClasses", "kind": "Variable" },
   { "name": "PickersYearClasses", "kind": "Interface" },
   { "name": "PickersYearClassKey", "kind": "TypeAlias" },
@@ -305,5 +306,7 @@
   { "name": "yearCalendarClasses", "kind": "Variable" },
   { "name": "YearCalendarClasses", "kind": "Interface" },
   { "name": "YearCalendarClassKey", "kind": "TypeAlias" },
-  { "name": "YearCalendarProps", "kind": "Interface" }
+  { "name": "YearCalendarProps", "kind": "Interface" },
+  { "name": "YearCalendarSlotProps", "kind": "Interface" },
+  { "name": "YearCalendarSlots", "kind": "Interface" }
 ]

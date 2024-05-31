@@ -1,10 +1,9 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,
@@ -21,6 +20,7 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-label'?: React.AriaAttributes['aria-label'];
   autoFocus: boolean;
   children: React.ReactNode;
+  className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, month: number) => void;
   onKeyDown: (event: React.KeyboardEvent, month: number) => void;
@@ -116,6 +116,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   });
   const {
     autoFocus,
+    className,
     children,
     disabled,
     selected,
@@ -137,8 +138,10 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   const ref = React.useRef<HTMLButtonElement>(null);
   const classes = useUtilityClasses(props);
 
+  // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
   useEnhancedEffect(() => {
     if (autoFocus) {
+      // `ref.current` being `null` would be a bug in MUI.
       ref.current?.focus();
     }
   }, [autoFocus]);
@@ -167,7 +170,12 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   });
 
   return (
-    <PickersMonthRoot data-mui-test="month" className={classes.root} ownerState={props} {...other}>
+    <PickersMonthRoot
+      data-mui-test="month"
+      className={clsx(classes.root, className)}
+      ownerState={props}
+      {...other}
+    >
       <MonthButton {...monthButtonProps} />
     </PickersMonthRoot>
   );

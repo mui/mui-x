@@ -25,6 +25,12 @@
         "returned": "boolean"
       }
     },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -51,6 +57,14 @@
     "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
     "import { YearCalendar } from '@mui/x-date-pickers';",
     "import { YearCalendar } from '@mui/x-date-pickers-pro';"
+  ],
+  "slots": [
+    {
+      "name": "yearButton",
+      "description": "Button displayed to render a single month in the \"month\" view .",
+      "default": "YearCalendarButton",
+      "class": null
+    }
   ],
   "classes": [
     {
