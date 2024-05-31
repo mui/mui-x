@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
-
 import { styled } from '@mui/system';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
