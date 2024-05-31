@@ -1173,6 +1173,9 @@ importers:
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
+      date-fns-v3:
+        specifier: npm:date-fns@3.6.0
+        version: /date-fns@3.6.0
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
