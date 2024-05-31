@@ -47,16 +47,19 @@ const LOADING_VARIANTS: Record<
 };
 
 const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
-  function GridLoadingOverlay(
-    { variant = 'circular-progress', noRowsVariant = 'circular-progress', sx, ...props },
-    ref,
-  ) {
+  function GridLoadingOverlay(props, ref) {
+    const {
+      variant = 'circular-progress',
+      noRowsVariant = 'circular-progress',
+      sx,
+      ...other
+    } = props;
     const apiRef = useGridApiContext();
     const rowsCount = apiRef.current.getRowsCount();
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
 
     return (
-      <GridOverlay ref={ref} sx={{ ...activeVariant.sx, ...sx }} {...props}>
+      <GridOverlay ref={ref} sx={{ ...activeVariant.sx, ...sx }} {...other}>
         <activeVariant.component />
       </GridOverlay>
     );
