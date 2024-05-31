@@ -18,6 +18,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 #### `@mui/x-data-grid@7.6.1`
 
 - [DataGrid] Fix column resize not working with special character (#13069) @oukunan
+- [DataGrid] Move `@mui/internal-test-utils` to dev dependency (#13318) @LukasTy
 
 #### `@mui/x-data-grid-pro@7.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -26,10 +27,6 @@ Same changes as in `@mui/x-data-grid@7.6.1`.
 #### `@mui/x-data-grid-premium@7.6.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.6.1`.
-
-### Core
-
-- [core] Move `@mui/internal-test-utils` to dev dependency (#13318) @LukasTy
 
 ## 7.6.0
 
