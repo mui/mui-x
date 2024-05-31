@@ -13,14 +13,15 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { HighlightProvider } from '../context/HighlightProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { HighlightedProvider, HighlightedProviderProps } from '../context';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     SeriesContextProviderProps &
     Omit<DrawingProviderProps, 'svgRef'> &
-    CartesianContextProviderProps,
+    CartesianContextProviderProps &
+    HighlightedProviderProps,
   'children'
 > & {
   children?: React.ReactNode;
@@ -40,6 +41,8 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     title,
     desc,
     disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
     children,
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -52,7 +55,10 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
       <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
           <InteractionProvider>
-            <HighlightProvider>
+            <HighlightedProvider
+              highlightedItem={highlightedItem}
+              onHighlightChange={onHighlightChange}
+            >
               <ChartsSurface
                 width={width}
                 height={height}
@@ -65,7 +71,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 <ChartsAxesGradients />
                 {children}
               </ChartsSurface>
-            </HighlightProvider>
+            </HighlightedProvider>
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>
@@ -76,7 +82,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
@@ -101,6 +107,13 @@ ChartContainer.propTypes = {
    */
   height: PropTypes.number.isRequired,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
@@ -112,6 +125,12 @@ ChartContainer.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
@@ -145,6 +164,15 @@ ChartContainer.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -159,15 +187,6 @@ ChartContainer.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -216,6 +235,15 @@ ChartContainer.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -230,15 +258,6 @@ ChartContainer.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,

@@ -8,16 +8,13 @@ export interface TreeViewItemMeta {
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView`.
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   */
+  depth?: number;
+  /**
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
    */
   label?: string;
-}
-
-export interface TreeViewItemRange {
-  start?: string | null;
-  end?: string | null;
-  next?: string | null;
-  current?: string;
 }
 
 export interface TreeViewModel<TValue> {
@@ -31,3 +28,7 @@ export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSigna
 
 export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   MergePluginsProperty<TSignatures, 'publicAPI'>;
+
+export type TreeViewExperimentalFeatures<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> = { [key in MergePluginsProperty<TSignatures, 'experimentalFeatures'>]?: boolean };

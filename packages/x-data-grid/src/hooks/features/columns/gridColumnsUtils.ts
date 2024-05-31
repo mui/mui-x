@@ -22,6 +22,7 @@ import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -161,7 +162,7 @@ export function computeFlexColumnsWidth({
  */
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
-  viewportInnerWidth: number,
+  dimensions: GridDimensions | undefined,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
   let totalFlexUnits = 0;
@@ -170,36 +171,46 @@ export const hydrateColumnsWidth = (
   const flexColumns: GridStateColDef[] = [];
 
   // For the non-flex columns, compute their width
-  // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
+  // For the flex columns, compute their minimum width and how much width must be allocated during the flex allocation
   rawState.orderedFields.forEach((columnField) => {
-    const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
-    if (rawState.columnVisibilityModel[columnField] === false) {
-      newColumn.computedWidth = 0;
-    } else {
-      let computedWidth: number;
-      if (newColumn.flex && newColumn.flex > 0) {
-        totalFlexUnits += newColumn.flex;
-        computedWidth = 0;
-        flexColumns.push(newColumn);
+    let column = rawState.lookup[columnField] as GridStateColDef;
+    let computedWidth = 0;
+    let isFlex = false;
+
+    if (rawState.columnVisibilityModel[columnField] !== false) {
+      if (column.flex && column.flex > 0) {
+        totalFlexUnits += column.flex;
+        isFlex = true;
       } else {
         computedWidth = clamp(
-          newColumn.width || GRID_STRING_COL_DEF.width!,
-          newColumn.minWidth || GRID_STRING_COL_DEF.minWidth!,
-          newColumn.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+          column.width || GRID_STRING_COL_DEF.width!,
+          column.minWidth || GRID_STRING_COL_DEF.minWidth!,
+          column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
         );
       }
 
       widthAllocatedBeforeFlex += computedWidth;
-      newColumn.computedWidth = computedWidth;
     }
 
-    columnsLookup[columnField] = newColumn;
+    if (column.computedWidth !== computedWidth) {
+      column = { ...column, computedWidth };
+    }
+
+    if (isFlex) {
+      flexColumns.push(column);
+    }
+
+    columnsLookup[columnField] = column;
   });
 
-  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
+  const availableWidth =
+    dimensions === undefined
+      ? 0
+      : dimensions.viewportOuterSize.width - (dimensions.hasScrollY ? dimensions.scrollbarSize : 0);
+  const initialFreeSpace = Math.max(availableWidth - widthAllocatedBeforeFlex, 0);
 
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+  if (totalFlexUnits > 0 && availableWidth > 0) {
     const computedColumnWidths = computeFlexColumnsWidth({
       initialFreeSpace,
       totalFlexUnits,
@@ -377,7 +388,7 @@ export const createColumnsState = ({
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep![field]) {
+      if (!columnsToKeep[field]) {
         delete columnsState.lookup[field];
       }
     });
@@ -395,7 +406,7 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
+    apiRef.current.getRootDimensions?.() ?? undefined,
   );
 };
 

@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { TreeViewPlugin, TreeViewItemRange } from '../../models';
+import { TreeViewPlugin } from '../../models';
+import { TreeViewItemId } from '../../../models';
 import {
+  findOrderInTremauxTree,
+  getAllNavigableItems,
   getFirstNavigableItem,
   getLastNavigableItem,
-  getNavigableItemsInRange,
+  getNonDisabledItemsInRange,
 } from '../../utils/tree';
-import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import {
+  UseTreeViewSelectionInstance,
+  UseTreeViewSelectionSignature,
+} from './useTreeViewSelection.types';
+import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -13,8 +20,20 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   models,
 }) => {
   const lastSelectedItem = React.useRef<string | null>(null);
-  const lastSelectionWasRange = React.useRef(false);
-  const currentRangeSelection = React.useRef<string[]>([]);
+  const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
+
+  const selectedItemsMap = React.useMemo(() => {
+    const temp = new Map<TreeViewItemId, boolean>();
+    if (Array.isArray(models.selectedItems.value)) {
+      models.selectedItems.value.forEach((id) => {
+        temp.set(id, true);
+      });
+    } else if (models.selectedItems.value != null) {
+      temp.set(models.selectedItems.value, true);
+    }
+
+    return temp;
+  }, [models.selectedItems.value]);
 
   const setSelectedItems = (
     event: React.SyntheticEvent,
@@ -53,122 +72,121 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     models.selectedItems.setControlledValue(newSelectedItems);
   };
 
-  const isItemSelected = (itemId: string) =>
-    Array.isArray(models.selectedItems.value)
-      ? models.selectedItems.value.indexOf(itemId) !== -1
-      : models.selectedItems.value === itemId;
+  const isItemSelected = (itemId: string) => selectedItemsMap.has(itemId);
 
-  const selectItem = (event: React.SyntheticEvent, itemId: string, multiple = false) => {
-    if (params.disableSelection) {
-      return;
-    }
-
-    if (multiple) {
-      if (Array.isArray(models.selectedItems.value)) {
-        let newSelected: string[];
-        if (models.selectedItems.value.indexOf(itemId) !== -1) {
-          newSelected = models.selectedItems.value.filter((id) => id !== itemId);
-        } else {
-          newSelected = [itemId].concat(models.selectedItems.value);
-        }
-
-        setSelectedItems(event, newSelected);
-      }
-    } else {
-      const newSelected = params.multiSelect ? [itemId] : itemId;
-      setSelectedItems(event, newSelected);
-    }
-    lastSelectedItem.current = itemId;
-    lastSelectionWasRange.current = false;
-    currentRangeSelection.current = [];
-  };
-
-  const handleRangeArrowSelect = (event: React.SyntheticEvent, items: TreeViewItemRange) => {
-    let base = (models.selectedItems.value as string[]).slice();
-    const { start, next, current } = items;
-
-    if (!next || !current) {
-      return;
-    }
-
-    if (currentRangeSelection.current.indexOf(current) === -1) {
-      currentRangeSelection.current = [];
-    }
-
-    if (lastSelectionWasRange.current) {
-      if (currentRangeSelection.current.indexOf(next) !== -1) {
-        base = base.filter((id) => id === start || id !== current);
-        currentRangeSelection.current = currentRangeSelection.current.filter(
-          (id) => id === start || id !== current,
-        );
-      } else {
-        base.push(next);
-        currentRangeSelection.current.push(next);
-      }
-    } else {
-      base.push(next);
-      currentRangeSelection.current.push(current, next);
-    }
-    setSelectedItems(event, base);
-  };
-
-  const handleRangeSelect = (
-    event: React.SyntheticEvent,
-    items: { start: string; end: string },
+  const selectItem: UseTreeViewSelectionInstance['selectItem'] = (
+    event,
+    itemId,
+    keepExistingSelection,
+    newValue,
   ) => {
-    let base = (models.selectedItems.value as string[]).slice();
-    const { start, end } = items;
-    // If last selection was a range selection ignore items that were selected.
-    if (lastSelectionWasRange.current) {
-      base = base.filter((id) => currentRangeSelection.current.indexOf(id) === -1);
-    }
-
-    let range = getNavigableItemsInRange(instance, start, end);
-    range = range.filter((item) => !instance.isItemDisabled(item));
-    currentRangeSelection.current = range;
-    let newSelected = base.concat(range);
-    newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
-    setSelectedItems(event, newSelected);
-  };
-
-  const selectRange = (event: React.SyntheticEvent, items: TreeViewItemRange, stacked = false) => {
     if (params.disableSelection) {
       return;
     }
 
-    const { start = lastSelectedItem.current, end, current } = items;
-    if (stacked) {
-      handleRangeArrowSelect(event, { start, next: end, current });
-    } else if (start != null && end != null) {
-      handleRangeSelect(event, { start, end });
+    let newSelected: typeof models.selectedItems.value;
+    if (keepExistingSelection) {
+      const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
+      const isSelectedBefore = instance.isItemSelected(itemId);
+      if (isSelectedBefore && (newValue === false || newValue == null)) {
+        newSelected = cleanSelectedItems.filter((id) => id !== itemId);
+      } else if (!isSelectedBefore && (newValue === true || newValue == null)) {
+        newSelected = [itemId].concat(cleanSelectedItems);
+      } else {
+        newSelected = cleanSelectedItems;
+      }
+    } else {
+      // eslint-disable-next-line no-lonely-if
+      if (newValue === false) {
+        newSelected = params.multiSelect ? [] : null;
+      } else {
+        newSelected = params.multiSelect ? [itemId] : itemId;
+      }
     }
-    lastSelectionWasRange.current = true;
+
+    setSelectedItems(event, newSelected);
+    lastSelectedItem.current = itemId;
+    lastSelectedRange.current = {};
   };
 
-  const rangeSelectToFirst = (event: React.KeyboardEvent, itemId: string) => {
-    if (!lastSelectedItem.current) {
-      lastSelectedItem.current = itemId;
+  const selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {
+    if (params.disableSelection || !params.multiSelect) {
+      return;
     }
 
-    const start = lastSelectionWasRange.current ? lastSelectedItem.current : itemId;
+    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
 
-    instance.selectRange(event, {
-      start,
-      end: getFirstNavigableItem(instance),
-    });
+    // If the last selection was a range selection,
+    // remove the items that were part of the last range from the model
+    if (Object.keys(lastSelectedRange.current).length > 0) {
+      newSelectedItems = newSelectedItems.filter((id) => !lastSelectedRange.current[id]);
+    }
+
+    // Add to the model the items that are part of the new range and not already part of the model.
+    const selectedItemsLookup = getLookupFromArray(newSelectedItems);
+    const range = getNonDisabledItemsInRange(instance, start, end);
+    const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
+    newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
+
+    setSelectedItems(event, newSelectedItems);
+    lastSelectedRange.current = getLookupFromArray(range);
   };
 
-  const rangeSelectToLast = (event: React.KeyboardEvent, itemId: string) => {
-    if (!lastSelectedItem.current) {
-      lastSelectedItem.current = itemId;
+  const expandSelectionRange = (event: React.SyntheticEvent, itemId: string) => {
+    if (lastSelectedItem.current != null) {
+      const [start, end] = findOrderInTremauxTree(instance, itemId, lastSelectedItem.current);
+      selectRange(event, [start, end]);
+    }
+  };
+
+  const selectRangeFromStartToItem = (event: React.SyntheticEvent, itemId: string) => {
+    selectRange(event, [getFirstNavigableItem(instance), itemId]);
+  };
+
+  const selectRangeFromItemToEnd = (event: React.SyntheticEvent, itemId: string) => {
+    selectRange(event, [itemId, getLastNavigableItem(instance)]);
+  };
+
+  const selectAllNavigableItems = (event: React.SyntheticEvent) => {
+    if (params.disableSelection || !params.multiSelect) {
+      return;
     }
 
-    const start = lastSelectionWasRange.current ? lastSelectedItem.current : itemId;
+    const navigableItems = getAllNavigableItems(instance);
+    setSelectedItems(event, navigableItems);
 
-    instance.selectRange(event, {
-      start,
-      end: getLastNavigableItem(instance),
-    });
+    lastSelectedRange.current = getLookupFromArray(navigableItems);
+  };
+
+  const selectItemFromArrowNavigation = (
+    event: React.SyntheticEvent,
+    currentItem: string,
+    nextItem: string,
+  ) => {
+    if (params.disableSelection || !params.multiSelect) {
+      return;
+    }
+
+    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+
+    if (Object.keys(lastSelectedRange.current).length === 0) {
+      newSelectedItems.push(nextItem);
+      lastSelectedRange.current = { [currentItem]: true, [nextItem]: true };
+    } else {
+      if (!lastSelectedRange.current[currentItem]) {
+        lastSelectedRange.current = {};
+      }
+
+      if (lastSelectedRange.current[nextItem]) {
+        newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
+        delete lastSelectedRange.current[currentItem];
+      } else {
+        newSelectedItems.push(nextItem);
+        lastSelectedRange.current[nextItem] = true;
+      }
+    }
+
+    setSelectedItems(event, newSelectedItems);
   };
 
   return {
@@ -178,13 +196,17 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     instance: {
       isItemSelected,
       selectItem,
-      selectRange,
-      rangeSelectToLast,
-      rangeSelectToFirst,
+      selectAllNavigableItems,
+      expandSelectionRange,
+      selectRangeFromStartToItem,
+      selectRangeFromItemToEnd,
+      selectItemFromArrowNavigation,
     },
     contextValue: {
       selection: {
         multiSelect: params.multiSelect,
+        checkboxSelection: params.checkboxSelection,
+        disableSelection: params.disableSelection,
       },
     },
   };
@@ -202,6 +224,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
+  checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
 });
@@ -209,6 +232,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
 useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
+  checkboxSelection: true,
   defaultSelectedItems: true,
   selectedItems: true,
   onSelectedItemsChange: true,

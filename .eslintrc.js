@@ -1,38 +1,91 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
-const buildPackageRestrictedImports = (packageName, root) => ({
-  files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
-  excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: packageName,
-            message: 'Use relative import instead',
-          },
-          {
-            name: '@mui/material',
-            message: 'Use @mui/utils or a more specific import instead',
-          },
-        ],
-        patterns: [
-          // TODO move rule into main repo to allow deep @mui/monorepo imports
-          {
-            group: ['@mui/*/*/*'],
-            message: 'Use less deep import instead',
-          },
-          {
-            group: [`${packageName}/*`, `${packageName}/**`],
-            message: 'Use relative import instead',
-          },
-        ],
-      },
-    ],
+// TODO move this helper to @mui/monorepo/.eslintrc
+// It needs to know about the parent "no-restricted-imports" to not override them.
+const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
+  {
+    files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
+    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: packageName,
+              message: 'Use relative import instead',
+            },
+            {
+              name: '@mui/material',
+              message: 'Use @mui/utils or a more specific import instead',
+            },
+          ],
+          patterns: [
+            // TODO move rule into main repo to allow deep @mui/monorepo imports
+            {
+              group: ['@mui/*/*/*'],
+              message: 'Use less deep import instead',
+            },
+            {
+              group: [`${packageName}/*`, `${packageName}/**`],
+              message: 'Use relative import instead',
+            },
+          ],
+        },
+      ],
+    },
   },
-});
+  ...(allowRootImports
+    ? []
+    : [
+        {
+          files: [
+            `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
+            `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
+            'docs/data/**/*{.ts,.tsx,.js}',
+          ],
+          excludedFiles: ['*.d.ts'],
+          rules: {
+            'no-restricted-imports': [
+              'error',
+              {
+                paths: [
+                  {
+                    name: '@mui/x-charts',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-charts-pro',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-codemod',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-date-pickers',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-date-pickers-pro',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-tree-view',
+                    message: 'Use deeper import instead',
+                  },
+                  {
+                    name: '@mui/x-tree-view-pro',
+                    message: 'Use deeper import instead',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ]),
+];
 
 module.exports = {
   ...baseline,
@@ -50,10 +103,12 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
+    // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
+    // TODO move to @mui/monorepo/.eslintrc
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
@@ -75,7 +130,10 @@ module.exports = {
     ],
     // Fixes false positive when using both `inputProps` and `InputProps` on the same example
     // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
+    // TODO move to @mui/monorepo/.eslintrc
+    // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
+    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
@@ -114,17 +172,13 @@ module.exports = {
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },
+    // TODO remove, shouldn't disable prop-type generation rule.
+    // lot of public components are missing it.
     {
       files: ['*.tsx'],
       excludedFiles: '*.spec.tsx',
       rules: {
         'react/prop-types': 'off',
-      },
-    },
-    {
-      files: ['docs/data/**/*.js', 'docs/data/**/*.tsx'],
-      rules: {
-        'filenames/match-exported': ['error'],
       },
     },
     {
@@ -156,15 +210,17 @@ module.exports = {
         ],
       },
     },
-    buildPackageRestrictedImports('@mui/x-charts', 'x-charts'),
-    buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
-    buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
-    buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
-    buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-    buildPackageRestrictedImports('@mui/x-pickers', 'x-pickers'),
-    buildPackageRestrictedImports('@mui/x-pickers-pro', 'x-pickers-pro'),
-    buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view'),
-    buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro'),
-    buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+    ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
+    ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
+    ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
+    ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
+    ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
+    ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
+    ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers', false),
+    ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
+    ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ],
 };

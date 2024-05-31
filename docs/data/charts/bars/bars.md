@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler
+components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
 ---
 
 # Charts - Bars
@@ -98,7 +98,34 @@ The bar charts use by priority:
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScaleNoSnap.js"}}
+{{"demo": "ColorScale.js"}}
+
+### Border Radius
+
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+
+It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
+
+{{"demo": "BorderRadius.js"}}
+
+## Labels
+
+You can display labels on the bars.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+It can either get a function that gets the bar item and some context.
+Or you can pass `'value'` to display the raw value of the bar.
+
+{{"demo": "BarLabel.js"}}
+
+### Custom Labels
+
+You can display, change or hide labels based on conditional logic.
+To do so, provide a function to the `barLabel`.
+Labels are not displayed if the function returns `null`.
+
+In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+
+{{"demo": "CustomLabels.js"}}
 
 ## Click event
 

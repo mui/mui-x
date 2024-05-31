@@ -17,10 +17,13 @@ export interface BarSeriesType
    */
   data?: (number | null)[];
   /**
-   * The key used to retrive data from the dataset.
+   * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
-  label?: string;
+  /**
+   * The label to display on the tooltip or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
    * Layout of the bars. All bar should have the same layout.
    * @default 'vertical'

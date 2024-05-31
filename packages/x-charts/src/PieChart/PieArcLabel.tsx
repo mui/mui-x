@@ -11,7 +11,7 @@ import { PieItemId } from '../models/seriesType/pie';
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -54,10 +54,11 @@ const PieArcLabelRoot = styled(animated.text, {
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
   dominantBaseline: 'middle',
+  pointerEvents: 'none',
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
@@ -71,7 +72,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
 
 /**
  * Helper to compute label position.
- * It's not an inline function because we need it in inerpolation.
+ * It's not an inline function because we need it in interpolation.
  */
 const getLabelPosition =
   (formattedArcLabel: string | null | undefined, variable: 'x' | 'y') =>
@@ -150,9 +151,10 @@ function PieArcLabel(props: PieArcLabelProps) {
 PieArcLabel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
   formattedArcLabel: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,

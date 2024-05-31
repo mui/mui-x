@@ -159,7 +159,6 @@ function MarkPlot(props: MarkPlotProps) {
                       color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      highlightScope={series[seriesId].highlightScope}
                       skipAnimation={skipAnimation}
                       onClick={
                         onItemClick &&
@@ -181,7 +180,7 @@ function MarkPlot(props: MarkPlotProps) {
 MarkPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line mark item is clicked.

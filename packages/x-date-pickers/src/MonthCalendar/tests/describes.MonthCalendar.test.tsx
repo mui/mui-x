@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { userEvent, screen } from '@mui-internal/test-utils';
+import { userEvent, screen } from '@mui/internal-test-utils';
 import {
   wrapPickerMount,
   createPickerRenderer,

@@ -144,6 +144,21 @@ For more details on these options, please visit the [`csvOptions` API page](/x/a
 />
 ```
 
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the CSV file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGrid slotProps={{ toolbar: { csvOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport csvOptions={{ escapeFormulas: false }} />
+```
+
 ## Print export
 
 ### Modify the data grid style
@@ -394,6 +409,21 @@ setupExcelExportWebWorker({
 ```
 
 :::
+
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGridPremium slotProps={{ toolbar: { excelOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport excelOptions={{ escapeFormulas: false }} />
+```
 
 ## Clipboard
 
