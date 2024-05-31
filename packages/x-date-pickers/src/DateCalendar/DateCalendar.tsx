@@ -368,6 +368,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
               referenceDate={referenceDate}
+              slots={slots}
+              slotProps={slotProps}
             />
           )}
 

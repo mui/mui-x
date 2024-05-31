@@ -199,6 +199,12 @@
       "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
       "default": "PickersDay",
       "class": null
+    },
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view .",
+      "default": "MonthCalendarButton",
+      "class": null
     }
   ],
   "classes": [

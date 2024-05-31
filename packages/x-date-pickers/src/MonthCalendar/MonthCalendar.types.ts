@@ -1,8 +1,23 @@
+import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
 import { PickerValidDate, TimezoneProps } from '../models';
+import type { PickersMonthProps } from './PickersMonth';
+
+export interface MonthCalendarSlots {
+  /**
+   * Button displayed to render a single month in the "month" view .
+   * @default MonthCalendarButton
+   */
+  monthButton?: React.ElementType<React.HTMLAttributes<HTMLButtonElement>, 'button'>;
+}
+
+export interface MonthCalendarSlotProps {
+  monthButton?: SlotComponentProps<'button', {}, PickersMonthProps>;
+}
 
 export interface ExportedMonthCalendarProps {
   /**
@@ -22,6 +37,16 @@ export interface MonthCalendarProps<TDate extends PickerValidDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthCalendarClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: MonthCalendarSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: MonthCalendarSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

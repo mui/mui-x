@@ -273,6 +273,12 @@
       "class": null
     },
     {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view .",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar",

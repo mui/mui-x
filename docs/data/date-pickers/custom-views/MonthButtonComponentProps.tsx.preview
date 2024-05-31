@@ -1,0 +1,9 @@
+<DateCalendar
+  slotProps={{
+    monthButton: (ownerState) => ({
+      title: ownerState['aria-label'],
+    }),
+  }}
+  views={['month', 'day']}
+  openTo="month"
+/>

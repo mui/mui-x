@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -27,7 +27,7 @@ import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps, SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface DayCalendarSlots<TDate extends PickerValidDate> {
   /**
@@ -39,8 +39,8 @@ export interface DayCalendarSlots<TDate extends PickerValidDate> {
 }
 
 export interface DayCalendarSlotProps<TDate extends PickerValidDate> {
-  day?: SlotComponentProps<
-    typeof PickersDay,
+  day?: SlotComponentPropsFromProps<
+    PickersDayProps<TDate>,
     {},
     DayCalendarProps<TDate> & { day: TDate; selected: boolean }
   >;

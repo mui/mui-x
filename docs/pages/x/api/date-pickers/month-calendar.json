@@ -29,6 +29,12 @@
         "returned": "boolean"
       }
     },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -51,6 +57,14 @@
     "import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';",
     "import { MonthCalendar } from '@mui/x-date-pickers';",
     "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
+  ],
+  "slots": [
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view .",
+      "default": "MonthCalendarButton",
+      "class": null
+    }
   ],
   "classes": [
     {

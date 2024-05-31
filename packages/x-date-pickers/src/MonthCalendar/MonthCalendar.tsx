@@ -106,6 +106,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     monthsPerRow = 3,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -285,12 +287,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && monthNumber === focusedMonth}
             disabled={isDisabled}
-            tabIndex={monthNumber === focusedMonth ? 0 : -1}
+            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
             aria-label={monthLabel}
             monthsPerRow={monthsPerRow}
+            slots={slots}
+            slotProps={slotProps}
           >
             {monthText}
           </PickersMonth>
@@ -374,6 +378,16 @@ MonthCalendar.propTypes = {
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
