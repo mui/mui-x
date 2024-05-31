@@ -88,7 +88,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.19",
     "@mui/internal-markdown": "^1.0.4",
-    "@mui/internal-test-utils": "1.0.0-dev.20240529-082515-213b5e33ab",
+    "@mui/internal-test-utils": "1.0.0",
     "@mui/material": "^5.15.19",
     "@mui/monorepo": "github:mui/material-ui#70327ca89c820bd60683dda36532c775be134a4d",
     "@mui/utils": "^5.15.14",
