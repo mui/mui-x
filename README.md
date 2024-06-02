@@ -5,7 +5,7 @@
 
 <h1 align="center">MUI X</h1>
 
-MUI X is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
+[MUI X](https://mui.com/x/) is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
 They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
 
 <div align="center">
