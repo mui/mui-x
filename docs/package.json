@@ -88,7 +88,7 @@
     "react-router-dom": "^6.23.1",
     "react-runner": "^1.0.3",
     "react-simple-code-editor": "^0.13.1",
-    "recast": "^0.23.7",
+    "recast": "^0.23.9",
     "rimraf": "^5.0.7",
     "rxjs": "^7.8.1",
     "styled-components": "^6.1.11",
