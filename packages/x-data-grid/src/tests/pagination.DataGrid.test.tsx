@@ -751,4 +751,10 @@ describe('<DataGrid /> - Pagination', () => {
       ].join('\n'),
     );
   });
+
+  it('should not log an error if paginationMode is set to undefined', () => {
+    expect(() => {
+      render(<BaselineTestCase paginationMode={undefined} />);
+    }).not.toErrorDev();
+  });
 });
