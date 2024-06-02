@@ -108,6 +108,7 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     () => ({
       ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
+      paginationMode: themedProps.paginationMode ?? DATA_GRID_PROPS_DEFAULT_VALUES.paginationMode,
       localeText,
       slots,
       ...DATA_GRID_FORCED_PROPS,
