@@ -10,13 +10,11 @@ They feature state-of-the-art functionality and complex UX workflows for data-ri
 
 <div align="center">
 
-<!-- #default-branch-switch -->
-
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mui/mui-x/blob/HEAD/LICENSE)
 [![npm latest package](https://img.shields.io/npm/v/@mui/x-data-grid/latest.svg)](https://www.npmjs.com/package/@mui/x-data-grid)
 [![npm downloads](https://img.shields.io/npm/dm/@mui/x-data-grid.svg)](https://www.npmjs.com/package/@mui/x-data-grid)
-[![GitHub branch status](https://img.shields.io/github/checks-status/mui/mui-x/master)](https://github.com/mui/mui-x/commits/master/)
-[![Coverage status](https://img.shields.io/codecov/c/github/mui/mui-x/master.svg)](https://codecov.io/gh/mui/mui-x/branch/master)
+[![GitHub branch status](https://img.shields.io/github/checks-status/mui/mui-x/HEAD)](https://github.com/mui/mui-x/commits/HEAD/)
+[![Coverage status](https://img.shields.io/codecov/c/github/mui/mui-x.svg)](https://codecov.io/gh/mui/mui-x/)
 [![Follow on X](https://img.shields.io/twitter/follow/MUI_X_.svg?label=follow+MUI+X)](https://x.com/MUI_X_)
 [![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
