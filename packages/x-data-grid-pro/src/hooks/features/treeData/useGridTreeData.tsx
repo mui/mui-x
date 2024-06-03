@@ -23,7 +23,8 @@ export const useGridTreeData = (
         if (params.rowNode.type !== 'group') {
           return;
         }
-        if (props.unstable_dataSource) {
+
+        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
           apiRef.current.enqueueChildrenFetch(params.id);
           return;
         }
