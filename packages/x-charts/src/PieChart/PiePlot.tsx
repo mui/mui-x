@@ -58,7 +58,6 @@ function PiePlot(props: PiePlotProps) {
           cy: cyParam,
           highlighted,
           faded,
-          highlightScope,
         } = series[seriesId];
 
         const { cx, cy, availableRadius } = getPieCoordinates(
@@ -81,7 +80,6 @@ function PiePlot(props: PiePlotProps) {
               id={seriesId}
               data={data}
               skipAnimation={skipAnimation}
-              highlightScope={highlightScope}
               highlighted={highlighted}
               faded={faded}
               onItemClick={onItemClick}
@@ -103,7 +101,6 @@ function PiePlot(props: PiePlotProps) {
           data,
           cx: cxParam,
           cy: cyParam,
-          highlightScope,
         } = series[seriesId];
 
         const { cx, cy, availableRadius } = getPieCoordinates(
@@ -135,7 +132,6 @@ function PiePlot(props: PiePlotProps) {
               skipAnimation={skipAnimation}
               arcLabel={arcLabel}
               arcLabelMinAngle={arcLabelMinAngle}
-              highlightScope={highlightScope}
               slots={slots}
               slotProps={slotProps}
             />
@@ -149,7 +145,7 @@ function PiePlot(props: PiePlotProps) {
 PiePlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a pie item is clicked.

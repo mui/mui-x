@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,

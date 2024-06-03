@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, userEvent, fireEvent } from '@mui-internal/test-utils';
+import { act, userEvent, fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,

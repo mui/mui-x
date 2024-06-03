@@ -68,16 +68,6 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   ],
 });
 
-DayCalendarSkeletonDay.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.shape({
-    day: PropTypes.number.isRequired,
-  }).isRequired,
-} as any;
-
 const monthMap = [
   [0, 1, 1, 1, 1, 1, 1],
   [1, 1, 1, 1, 1, 1, 1],
@@ -128,7 +118,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
 DayCalendarSkeleton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

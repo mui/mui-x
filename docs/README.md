@@ -10,7 +10,11 @@ pnpm i && pnpm docs:dev
 
 If you do not have pnpm installed, follow the instructions on the [pnpm website](https://pnpm.io/installation).
 
+<!-- vale MUI.CorrectReferenceAllCases = NO -->
+
 _DO NOT USE NPM, use pnpm to install the dependencies._
+
+<!-- vale MUI.CorrectReferenceAllCases = YES -->
 
 ## How can I add a new demo to the documentation?
 

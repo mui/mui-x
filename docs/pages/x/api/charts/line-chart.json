@@ -30,6 +30,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+      }
+    },
     "leftAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"
@@ -48,6 +54,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | AxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "onLineClick": { "type": { "name": "func" } },

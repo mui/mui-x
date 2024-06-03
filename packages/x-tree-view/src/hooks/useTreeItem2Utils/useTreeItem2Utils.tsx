@@ -14,6 +14,13 @@ interface UseTreeItem2UtilsReturnValue {
   status: UseTreeItem2Status;
 }
 
+const isItemExpandable = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+  }
+  return Boolean(reactChildren);
+};
+
 export const useTreeItem2Utils = ({
   itemId,
   children,
@@ -27,7 +34,7 @@ export const useTreeItem2Utils = ({
   } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const status: UseTreeItem2Status = {
-    expandable: Boolean(Array.isArray(children) ? children.length : children),
+    expandable: isItemExpandable(children),
     expanded: instance.isItemExpanded(itemId),
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
