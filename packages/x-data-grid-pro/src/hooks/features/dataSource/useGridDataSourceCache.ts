@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -49,7 +50,7 @@ export const useGridDataSourceCache = (
     'unstable_dataSource' | 'disableDataSourceCache' | 'unstable_dataSourceCache'
   >,
 ): void => {
-  const defaultCache = React.useRef(getDefaultCache(new SimpleServerSideCache()));
+  const defaultCache = useLazyRef<GridDataSourceCache, void>(() => getDefaultCache(new SimpleServerSideCache()));
   const cache = React.useRef<GridDataSourceCache>(
     props.unstable_dataSourceCache || defaultCache.current,
   );

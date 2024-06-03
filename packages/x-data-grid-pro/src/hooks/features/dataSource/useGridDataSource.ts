@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import {
   useGridApiEventHandler,
   gridRowsLoadingSelector,
@@ -47,8 +48,8 @@ export const useGridDataSource = (
     | 'treeData'
   >,
 ) => {
-  const nestedDataManager = React.useRef<NestedDataManager>(
-    new NestedDataManager(privateApiRef),
+  const nestedDataManager = useLazyRef<NestedDataManager, void>(
+    () => new NestedDataManager(privateApiRef),
   ).current;
   const groupsToAutoFetch = useGridSelector(privateApiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
