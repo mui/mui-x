@@ -5,7 +5,7 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['title', 'company', 'director', 'year', 'cinematicUniverse'];
 
-export default function QuickFilteringGrid() {
+export default function QuickFilteringInitialize() {
   const data = useMovieData();
 
   // Otherwise filter will be applied on fields such as the hidden column id

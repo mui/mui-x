@@ -12,7 +12,7 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['title', 'company', 'director', 'year', 'cinematicUniverse'];
 
-export default function QuickFilteringGrid() {
+export default function QuickFilteringExcludeHiddenColumns() {
   const data = useMovieData();
 
   const columns = React.useMemo(
