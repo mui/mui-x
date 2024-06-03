@@ -24,7 +24,7 @@ type GetDataGridProForcedProps = (
   themedProps: GetDataGridPremiumPropsDefaultValues,
 ) => DataGridProForcedProps;
 
-const GET_DATA_GRID_PREMIUM_FORCED_PROPS: GetDataGridProForcedProps = (themedProps) => ({
+const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: 'DataGridPremium',
   ...(themedProps.unstable_dataSource
     ? {
@@ -55,7 +55,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   },
 };
 
-const GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: (
+const getDataGridPremiumDefaultProps: (
   themedProps: GetDataGridPremiumPropsDefaultValues,
 ) => DataGridPremiumPropsWithDefaultValue = (themedProps) => ({
   ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
@@ -91,11 +91,11 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
-      ...GET_DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES(themedProps),
+      ...getDataGridPremiumDefaultProps(themedProps),
       ...themedProps,
       localeText,
       slots,
-      ...GET_DATA_GRID_PREMIUM_FORCED_PROPS(themedProps),
+      ...getDataGridPremiumForcedProps(themedProps),
     }),
     [themedProps, localeText, slots],
   );

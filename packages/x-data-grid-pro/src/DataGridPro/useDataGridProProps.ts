@@ -21,7 +21,7 @@ type GetDataGridProForcedProps = (
   themedProps: GetDataGridProPropsDefaultValues,
 ) => DataGridProForcedProps;
 
-const GET_DATA_GRID_PRO_FORCED_PROPS: GetDataGridProForcedProps = (themedProps) => ({
+const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: 'DataGridPro',
   ...(themedProps.unstable_dataSource
     ? {
@@ -53,7 +53,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   headerFilters: false,
 };
 
-const GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES: (
+const getDataGridProDefaultProps: (
   themedProps: GetDataGridProPropsDefaultValues,
 ) => DataGridProPropsWithDefaultValue = (themedProps) => ({
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
@@ -89,11 +89,11 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
 
   return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({
-      ...GET_DATA_GRID_PRO_PROPS_DEFAULT_VALUES(themedProps),
+      ...getDataGridProDefaultProps(themedProps),
       ...themedProps,
       localeText,
       slots,
-      ...GET_DATA_GRID_PRO_FORCED_PROPS(themedProps),
+      ...getDataGridProForcedProps(themedProps),
     }),
     [themedProps, localeText, slots],
   );
