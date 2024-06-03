@@ -46,6 +46,6 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "yearButton": "Button displayed to render a single month in the &quot;month&quot; view ."
+    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view ."
   }
 }

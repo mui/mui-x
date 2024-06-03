@@ -134,6 +134,6 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "yearButton": "Button displayed to render a single month in the &quot;month&quot; view ."
+    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view ."
   }
 }
