@@ -40,7 +40,7 @@ export const useGridDataSource = (
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
-    | 'unstable_onServerSideError'
+    | 'unstable_onDataSourceError'
     | 'sortingMode'
     | 'filterMode'
     | 'paginationMode'
@@ -52,7 +52,7 @@ export const useGridDataSource = (
   ).current;
   const groupsToAutoFetch = useGridSelector(privateApiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
-  const onError = props.unstable_onServerSideError;
+  const onError = props.unstable_onDataSourceError;
 
   const fetchTopLevelRows = React.useCallback(async () => {
     const getRows = props.unstable_dataSource?.getRows;
@@ -61,7 +61,7 @@ export const useGridDataSource = (
     }
 
     nestedDataManager.clearPendingRequests();
-    
+
     scheduledGroups.current = 0;
     const serverSideState = privateApiRef.current.state.serverSideData;
     if (serverSideState !== INITIAL_STATE) {

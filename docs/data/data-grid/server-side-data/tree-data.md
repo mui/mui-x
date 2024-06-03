@@ -52,7 +52,7 @@ The demo above uses a utility `msw` to create a mock server that intercepts the 
 
 ## Error handling
 
-For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `unstable_onServerSideError` is also triggered with the error and the fetch params.
+For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `unstable_onDataSourceError` is also triggered with the error and the fetch params.
 
 The demo below shows a toast apart from the default error message in the grouping cell. Cache has been disabled in this demo for simplicity.
 
@@ -68,7 +68,7 @@ The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all the l
 
 ## Custom cache
 
-The data source uses a cache by default to store the fetched data. Use `unstable_serverSideCache` to provide a custom cache to the data source to manage the cache as per your requirements. See more about caching in the [overview section](/x/react-data-grid/server-side-data/#data-caching).
+The data source uses a cache by default to store the fetched data. Use `unstable_dataSourceCache` to provide a custom cache to the data source to manage the cache as per your requirements. See more about caching in the [overview section](/x/react-data-grid/server-side-data/#data-caching).
 
 The following demo uses `QueryClient` from `@tanstack/react-core` to provide a custom cache to the Grid which could be manipulated on the userland.
 

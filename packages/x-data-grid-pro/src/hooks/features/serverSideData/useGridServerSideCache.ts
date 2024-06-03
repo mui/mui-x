@@ -46,42 +46,42 @@ export const useGridServerSideCache = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'unstable_dataSource' | 'disableServerSideCache' | 'unstable_serverSideCache'
+    'unstable_dataSource' | 'disableDataSourceCache' | 'unstable_dataSourceCache'
   >,
 ): void => {
   const defaultCache = React.useRef(getDefaultCache(new SimpleServerSideCache()));
   const cache = React.useRef<GridServerSideCache>(
-    props.unstable_serverSideCache || defaultCache.current,
+    props.unstable_dataSourceCache || defaultCache.current,
   );
 
   const getCacheData = React.useCallback(
     (params: GridGetRowsParams) => {
-      if (props.disableServerSideCache) {
+      if (props.disableDataSourceCache) {
         return undefined;
       }
       const key = cache.current.getKey(params);
       return cache.current.get(key);
     },
-    [props.disableServerSideCache],
+    [props.disableDataSourceCache],
   );
 
   const setCacheData = React.useCallback(
     (params: GridGetRowsParams, data: GridGetRowsResponse) => {
-      if (props.disableServerSideCache) {
+      if (props.disableDataSourceCache) {
         return;
       }
       const key = cache.current.getKey(params);
       cache.current.set(key, data);
     },
-    [props.disableServerSideCache],
+    [props.disableDataSourceCache],
   );
 
   const clearCache = React.useCallback(() => {
-    if (props.disableServerSideCache) {
+    if (props.disableDataSourceCache) {
       return;
     }
     cache.current.clear();
-  }, [props.disableServerSideCache]);
+  }, [props.disableDataSourceCache]);
 
   const serverSideCacheApi: GridServerSideCacheApi = {
     getCacheData,
@@ -97,8 +97,8 @@ export const useGridServerSideCache = (
       isFirstRender.current = false;
       return;
     }
-    if (props.unstable_serverSideCache) {
-      cache.current = props.unstable_serverSideCache;
+    if (props.disableDataSourceCache) {
+      cache.current = props.disableDataSourceCache;
     }
-  }, [props.unstable_serverSideCache]);
+  }, [props.disableDataSourceCache]);
 };

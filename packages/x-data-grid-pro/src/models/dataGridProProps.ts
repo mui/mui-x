@@ -17,7 +17,7 @@ import type {
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
-  GridServerSideCache,
+  GridDataSourceCache,
   GridGetRowsParams,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
@@ -116,7 +116,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * If `true`, the server-side cache will be disabled.
    * @default false
    */
-  disableServerSideCache: boolean;
+  disableDataSourceCache: boolean;
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -145,8 +145,8 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 }
 
 interface DataGridProDataSourceProps {
-  unstable_serverSideCache?: GridServerSideCache;
-  unstable_onServerSideError?: (error: Error, params: GridGetRowsParams) => void;
+  unstable_dataSourceCache?: GridDataSourceCache;
+  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
   getGroupKey?: (row: GridValidRowModel) => string;
   hasChildren?: (row: GridValidRowModel) => boolean;
   getChildrenCount?: (row: GridValidRowModel) => number;

@@ -37,7 +37,7 @@ const GET_DATA_GRID_PRO_FORCED_PROPS: GetDataGridProForcedProps = (themedProps) 
  */
 export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
-  disableServerSideCache: false,
+  disableDataSourceCache: false,
   scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,

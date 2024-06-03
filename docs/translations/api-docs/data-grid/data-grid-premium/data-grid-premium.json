@@ -81,6 +81,9 @@
     "disableColumnSorting": {
       "description": "If <code>true</code>, the column sorting feature will be disabled."
     },
+    "disableDataSourceCache": {
+      "description": "If <code>true</code>, the server-side cache will be disabled."
+    },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled."
     },
@@ -99,9 +102,6 @@
     "disableRowGrouping": { "description": "If <code>true</code>, the row grouping is disabled." },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
-    },
-    "disableServerSideCache": {
-      "description": "If <code>true</code>, the server-side cache will be disabled."
     },
     "disableVirtualization": {
       "description": "If <code>true</code>, the virtualization is disabled."

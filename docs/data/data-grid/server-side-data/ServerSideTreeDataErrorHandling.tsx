@@ -96,7 +96,7 @@ export default function ServerSideTreeDataErrorHandling() {
               {...props}
               treeData
               unstable_dataSource={dataSource}
-              unstable_onServerSideError={(e, params) => {
+              unstable_onDataSourceError={(e, params) => {
                 if (!params.groupKeys || params.groupKeys.length === 0) {
                   setRootError(e.message);
                 } else {
@@ -105,7 +105,7 @@ export default function ServerSideTreeDataErrorHandling() {
                   );
                 }
               }}
-              disableServerSideCache
+              disableDataSourceCache
               apiRef={apiRef}
               pagination
               pageSizeOptions={pageSizeOptions}

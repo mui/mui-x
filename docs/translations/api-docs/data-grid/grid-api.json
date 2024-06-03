@@ -10,7 +10,6 @@
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
-    "enqueueChildrenFetch": { "description": "Enqueues the fetch of the children of a row." },
     "exportDataAsCsv": { "description": "Downloads and exports a CSV of the grid&#39;s data." },
     "exportDataAsExcel": {
       "description": "Downloads and exports an Excel file of the grid&#39;s data."
@@ -126,6 +125,7 @@
     "isRowSelected": { "description": "Determines if a row is selected or not." },
     "pinColumn": { "description": "Pins a column to the left or right side of the grid." },
     "publishEvent": { "description": "Emits an event." },
+    "queueChildrenFetch": { "description": "Adds the fetch of the children of a row to queue." },
     "removeRowGroupingCriteria": { "description": "Remove the field from the row grouping model." },
     "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
     "resize": {

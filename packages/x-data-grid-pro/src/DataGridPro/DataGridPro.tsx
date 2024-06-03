@@ -223,6 +223,11 @@ DataGridProRaw.propTypes = {
    */
   disableColumnSorting: PropTypes.bool,
   /**
+   * If `true`, the server-side cache will be disabled.
+   * @default false
+   */
+  disableDataSourceCache: PropTypes.bool,
+  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -253,11 +258,6 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   disableRowSelectionOnClick: PropTypes.bool,
-  /**
-   * If `true`, the server-side cache will be disabled.
-   * @default false
-   */
-  disableServerSideCache: PropTypes.bool,
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -955,11 +955,11 @@ DataGridProRaw.propTypes = {
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
-  unstable_onServerSideError: PropTypes.func,
-  unstable_serverSideCache: PropTypes.shape({
+  unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
     getKey: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  unstable_onDataSourceError: PropTypes.func,
 } as any;

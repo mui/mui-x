@@ -28,11 +28,6 @@
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
     },
-    "enqueueChildrenFetch": {
-      "type": { "description": "(id: GridRowId) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "exportDataAsCsv": {
       "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" },
       "required": true
@@ -256,6 +251,11 @@
       "isProPlan": true
     },
     "publishEvent": { "type": { "description": "GridEventPublisher" }, "required": true },
+    "queueChildrenFetch": {
+      "type": { "description": "(id: GridRowId) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "removeRowGroupingCriteria": {
       "type": { "description": "(groupingCriteriaField: string) =&gt; void" },
       "required": true,

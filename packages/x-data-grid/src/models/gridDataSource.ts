@@ -65,7 +65,7 @@ export interface GridDataSource {
   updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 
-export interface GridServerSideCache {
+export interface GridDataSourceCache {
   /**
    * Provide a key for the cache to be used in `set` and `get`
    * @param {GridGetRowsParams} params The parameters required to fetch the rows

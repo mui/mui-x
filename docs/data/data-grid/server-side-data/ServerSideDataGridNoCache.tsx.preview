@@ -3,7 +3,7 @@
     initialState={initialStateWithPagination}
     columns={columns}
     unstable_dataSource={dataSource}
-    disableServerSideCache
+    disableDataSourceCache
     pagination
     pageSizeOptions={pageSizeOptions}
   />
