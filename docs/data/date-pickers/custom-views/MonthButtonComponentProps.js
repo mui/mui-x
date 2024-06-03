@@ -11,11 +11,7 @@ export default function MonthButtonComponentProps() {
         <DateCalendar
           slotProps={{
             monthButton: {
-              sx: {
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'primary.main',
-              },
+              sx: { border: '1px red solid' },
             },
           }}
           views={['month', 'day']}
