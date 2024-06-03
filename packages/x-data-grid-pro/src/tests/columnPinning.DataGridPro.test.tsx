@@ -19,7 +19,7 @@ import {
   createEvent,
   act,
   userEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,

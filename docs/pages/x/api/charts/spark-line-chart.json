@@ -12,12 +12,25 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+      }
+    },
     "margin": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
       },
       "default": "{\n  top: 5,\n  bottom: 5,\n  left: 5,\n  right: 5,\n}"
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
     },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },

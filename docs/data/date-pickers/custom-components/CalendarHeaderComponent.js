@@ -56,7 +56,7 @@ function CustomCalendarHeader(props) {
 export default function CalendarHeaderComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
+      <DemoContainer components={['DateCalendar']}>
         <DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />
       </DemoContainer>
     </LocalizationProvider>

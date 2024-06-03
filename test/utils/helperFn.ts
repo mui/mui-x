@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act, screen } from '@mui-internal/test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { gridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';

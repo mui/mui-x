@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,

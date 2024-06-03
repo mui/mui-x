@@ -23,11 +23,6 @@ module.exports = {
         __dirname,
         './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
       ),
-
-      '@mui-internal/test-utils': path.resolve(
-        __dirname,
-        './node_modules/@mui/monorepo/packages/test-utils/src',
-      ),
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },

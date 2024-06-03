@@ -1,4 +1,4 @@
-import type { HighlightScope } from '../../context/HighlightProvider';
+import type { HighlightScope } from '../../context';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
@@ -25,6 +25,9 @@ export type CommonSeriesType<TValue> = {
    * @returns {string} The string to display.
    */
   valueFormatter?: SeriesValueFormatter<TValue>;
+  /**
+   * The scope to apply when the series is highlighted.
+   */
   highlightScope?: Partial<HighlightScope>;
 };
 

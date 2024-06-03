@@ -1,0 +1,10 @@
+<BarChart
+  {...barChartsProps}
+  highlightedItem={highlightedItem}
+  onHighlightChange={setHighLightedItem}
+/>
+<PieChart
+  {...pieChartProps}
+  highlightedItem={highlightedItem}
+  onHighlightChange={setHighLightedItem}
+/>
