@@ -5,7 +5,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { TreeViewPublicAPI } from '@mui/x-tree-view/internals';
+import { TreeViewPublicAPI, TreeViewExperimentalFeatures } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import {
   DefaultTreeViewProPluginParameters,
@@ -71,4 +71,10 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: RichTreeViewProApiRef;
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewProPlugins>;
 }

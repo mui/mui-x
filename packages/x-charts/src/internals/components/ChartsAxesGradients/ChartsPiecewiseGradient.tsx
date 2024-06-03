@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PiecewiseColorConfig } from '../../../models/colorMapping';
 
 type ChartsPiecewiseGradientProps = {
-  isReveresed?: boolean;
+  isReversed?: boolean;
   gradientId: string;
   size: number;
   direction: 'x' | 'y';
@@ -11,7 +11,7 @@ type ChartsPiecewiseGradientProps = {
 };
 
 export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientProps) {
-  const { isReveresed, gradientId, size, direction, scale, colorMap } = props;
+  const { isReversed, gradientId, size, direction, scale, colorMap } = props;
 
   return (
     <linearGradient
@@ -20,7 +20,7 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
       x2="0"
       y1="0"
       y2="0"
-      {...{ [`${direction}${isReveresed ? 1 : 2}`]: `${size}px` }}
+      {...{ [`${direction}${isReversed ? 1 : 2}`]: `${size}px` }}
       gradientUnits="userSpaceOnUse" // Use the SVG coordinate instead of the component ones.
     >
       {colorMap.thresholds.map((threshold, index) => {
@@ -29,7 +29,7 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
         if (x === undefined) {
           return null;
         }
-        const offset = isReveresed ? 1 - x / size : x / size;
+        const offset = isReversed ? 1 - x / size : x / size;
 
         return (
           <React.Fragment key={threshold.toString() + index}>

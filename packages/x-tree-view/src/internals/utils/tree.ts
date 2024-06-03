@@ -22,7 +22,7 @@ const getLastNavigableItemInArray = (
 export const getPreviousNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
-) => {
+): string | null => {
   const itemMeta = instance.getItemMeta(itemId);
   const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
   const itemIndex = instance.getItemIndex(itemId);
@@ -32,7 +32,27 @@ export const getPreviousNavigableItem = (
     return itemMeta.parentId;
   }
 
-  let currentItemId: string = siblings[itemIndex - 1];
+  // Finds the previous navigable sibling.
+  let previousNavigableSiblingIndex = itemIndex - 1;
+  while (
+    !instance.isItemNavigable(siblings[previousNavigableSiblingIndex]) &&
+    previousNavigableSiblingIndex >= 0
+  ) {
+    previousNavigableSiblingIndex -= 1;
+  }
+
+  if (previousNavigableSiblingIndex === -1) {
+    // If we are at depth 0, then it means all the items above the current item are not navigable.
+    if (itemMeta.parentId == null) {
+      return null;
+    }
+
+    // Otherwise, we can try to go up a level and find the previous navigable item.
+    return getPreviousNavigableItem(instance, itemMeta.parentId);
+  }
+
+  // Finds the last navigable ancestor of the previous navigable sibling.
+  let currentItemId: string = siblings[previousNavigableSiblingIndex];
   let lastNavigableChild = getLastNavigableItemInArray(
     instance,
     instance.getItemOrderedChildrenIds(currentItemId),

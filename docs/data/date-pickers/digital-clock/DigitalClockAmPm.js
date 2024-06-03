@@ -13,10 +13,10 @@ export default function DigitalClockAmPm() {
       <DemoContainer
         components={[
           'DigitalClock',
-          'MultiSectionDigitalClock',
+          'DigitalClock',
           'DigitalClock',
           'MultiSectionDigitalClock',
-          'DigitalClock',
+          'MultiSectionDigitalClock',
           'MultiSectionDigitalClock',
         ]}
       >

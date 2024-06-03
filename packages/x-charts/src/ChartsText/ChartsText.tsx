@@ -41,7 +41,7 @@ function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  const transforms = [];
+  const transforms: string[] = [];
   // if (scaleToFit) {
   //   const lineWidth = wordsByLines[0].width;
   //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
@@ -79,7 +79,7 @@ function ChartsText(props: ChartsTextProps) {
 ChartsText.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Height of a text line (in `em`).

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { axisClasses } from '@mui/x-charts';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const data1 = [
   { x: 100, y: 200, id: 1 },

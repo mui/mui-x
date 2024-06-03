@@ -39,7 +39,7 @@
     {
       "key": "referenceArc",
       "className": "MuiGauge-referenceArc",
-      "description": "Styles applied to the arc diplaying the range of available values.",
+      "description": "Styles applied to the arc displaying the range of available values.",
       "isGlobal": false
     },
     {
@@ -51,7 +51,7 @@
     {
       "key": "valueArc",
       "className": "MuiGauge-valueArc",
-      "description": "Styles applied to the arc diplaying the value.",
+      "description": "Styles applied to the arc displaying the value.",
       "isGlobal": false
     },
     {

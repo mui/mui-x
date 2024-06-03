@@ -10,7 +10,7 @@ import {
   adapterToUse,
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();

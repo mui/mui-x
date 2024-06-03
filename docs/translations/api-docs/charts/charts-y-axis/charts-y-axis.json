@@ -1,0 +1,66 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisId": {
+      "description": "The id of the axis to render. If undefined, it will be the first defined axis."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "disableLine": { "description": "If true, the axis line is disabled." },
+    "disableTicks": { "description": "If true, the ticks are disabled." },
+    "fill": { "description": "The fill color of the axis text." },
+    "label": { "description": "The label of the axis." },
+    "labelFontSize": { "description": "The font size of the axis label." },
+    "labelStyle": { "description": "The style applied to the axis label." },
+    "position": { "description": "Position of the axis." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "stroke": { "description": "The stroke color of the axis line." },
+    "tickFontSize": { "description": "The font size of the axis ticks text." },
+    "tickInterval": {
+      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."
+    },
+    "tickLabelInterval": {
+      "description": "Defines which ticks get its label displayed. Its value can be: - &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one. - a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones."
+    },
+    "tickLabelPlacement": {
+      "description": "The placement of ticks label. Can be the middle of the band, or the tick position. Only used if scale is &#39;band&#39;."
+    },
+    "tickLabelStyle": { "description": "The style applied to ticks text." },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points)."
+    },
+    "tickMinStep": {
+      "description": "Minimal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points)."
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranteed. Not supported by categorical axis (band, points)."
+    },
+    "tickPlacement": {
+      "description": "The placement of ticks in regard to the band interval. Only used if scale is &#39;band&#39;."
+    },
+    "tickSize": { "description": "The size of the ticks." }
+  },
+  "classDescriptions": {
+    "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group containing the axis label"
+    },
+    "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" },
+    "root": { "description": "Styles applied to the root element." },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
+  }
+}

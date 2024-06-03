@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,7 +16,7 @@ import {
 } from '../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
+export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -52,14 +51,3 @@ function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
 
   return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(colDef.field)!);
 }
-
-GridColumnMenuRowGroupItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  colDef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-} as any;
-
-export { GridColumnMenuRowGroupItem };
