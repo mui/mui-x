@@ -1,0 +1,12 @@
+<Card variant="outlined" sx={{ flexGrow: 1 }}>
+  <StaticDateRangePicker
+    calendars={1}
+    slotProps={{
+      shortcuts: {
+        items: shortcutsItems,
+      },
+      actionBar: { actions: [] },
+      toolbar: { sx: { display: 'none' } },
+    }}
+  />
+</Card>
