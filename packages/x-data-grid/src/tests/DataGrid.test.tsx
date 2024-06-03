@@ -74,18 +74,22 @@ describe('<DataGrid />', () => {
       { field: 'col1', headerName: 'Column 1', width: 150 },
       { field: 'col2', headerName: 'Column 2', width: 150 },
     ];
-    expect(
+    expect(() => {
       render(
         <DataGrid
-          rows={rows}
-          columns={columns}
-          {...Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES).reduce((acc, key) => {
+          {...(
+            Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+              keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
+            >
+          ).reduce((acc, key) => {
             // @ts-ignore
             acc[key] = undefined;
             return acc;
           }, {})}
+          rows={rows}
+          columns={columns}
         />,
-      ),
-    ).not.toErrorDev();
+      );
+    }).not.toErrorDev();
   });
 });
