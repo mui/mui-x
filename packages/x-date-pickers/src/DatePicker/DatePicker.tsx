@@ -51,7 +51,7 @@ const DatePicker = React.forwardRef(function DatePicker<
 DatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.

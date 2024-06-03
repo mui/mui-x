@@ -25,10 +25,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Alku',
   end: 'Loppu',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Alkamispäivämäärä',
+  startTime: 'Alkamisaika',
+  endDate: 'Päättymispäivämäärä',
+  endTime: 'Päättymisaika',
 
   // Action bar
   cancelButtonLabel: 'Peruuta',
@@ -47,7 +47,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
     `Valitse ${views[view]}. ${time === null ? 'Ei aikaa valittuna' : `Valittu aika on ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
-  secondsClockNumberText: (seconds) => `${seconds} sekunttia`,
+  secondsClockNumberText: (seconds) => `${seconds} sekuntia`,
 
   // Digital clock labels
   selectViewText: (view) => `Valitse ${views[view]}`,
@@ -67,7 +67,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Valitse aika, valittu aika on ${utils.format(value, 'fullTime')}`
       : 'Valitse aika',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Tyhjennä arvo',
 
   // Table labels
   timeTableLabel: 'valitse aika',
@@ -84,17 +84,17 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Vuosi',
+  month: 'Kuukausi',
+  day: 'Päivä',
+  weekDay: 'Viikonpäivä',
+  hours: 'Tunnit',
+  minutes: 'Minuutit',
+  seconds: 'Sekunnit',
+  meridiem: 'Iltapäivä',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Tyhjä',
 };
 
 export const fiFI = getPickersLocalization(fiFIPickers);

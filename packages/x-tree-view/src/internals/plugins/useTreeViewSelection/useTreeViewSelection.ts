@@ -8,7 +8,10 @@ import {
   getLastNavigableItem,
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
-import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import {
+  UseTreeViewSelectionInstance,
+  UseTreeViewSelectionSignature,
+} from './useTreeViewSelection.types';
 import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -71,21 +74,34 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const isItemSelected = (itemId: string) => selectedItemsMap.has(itemId);
 
-  const selectItem = (event: React.SyntheticEvent, itemId: string, multiple = false) => {
+  const selectItem: UseTreeViewSelectionInstance['selectItem'] = (
+    event,
+    itemId,
+    keepExistingSelection,
+    newValue,
+  ) => {
     if (params.disableSelection) {
       return;
     }
 
     let newSelected: typeof models.selectedItems.value;
-    if (multiple) {
+    if (keepExistingSelection) {
       const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
-      if (instance.isItemSelected(itemId)) {
+      const isSelectedBefore = instance.isItemSelected(itemId);
+      if (isSelectedBefore && (newValue === false || newValue == null)) {
         newSelected = cleanSelectedItems.filter((id) => id !== itemId);
-      } else {
+      } else if (!isSelectedBefore && (newValue === true || newValue == null)) {
         newSelected = [itemId].concat(cleanSelectedItems);
+      } else {
+        newSelected = cleanSelectedItems;
       }
     } else {
-      newSelected = params.multiSelect ? [itemId] : itemId;
+      // eslint-disable-next-line no-lonely-if
+      if (newValue === false) {
+        newSelected = params.multiSelect ? [] : null;
+      } else {
+        newSelected = params.multiSelect ? [itemId] : itemId;
+      }
     }
 
     setSelectedItems(event, newSelected);
@@ -189,6 +205,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     contextValue: {
       selection: {
         multiSelect: params.multiSelect,
+        checkboxSelection: params.checkboxSelection,
+        disableSelection: params.disableSelection,
       },
     },
   };
@@ -206,6 +224,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
+  checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
 });
@@ -213,6 +232,7 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
 useTreeViewSelection.params = {
   disableSelection: true,
   multiSelect: true,
+  checkboxSelection: true,
   defaultSelectedItems: true,
   selectedItems: true,
   onSelectedItemsChange: true,

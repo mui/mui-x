@@ -75,6 +75,7 @@ export function getComponentImports(name: string, filename: string) {
 
   const reExportPackage = [rootImportPath];
 
+  // TODO x-charts-pro uncomment when making the package public
   // if (rootImportPath === '@mui/x-charts') {
   //   reExportPackage.push('@mui/x-charts-pro');
   // }

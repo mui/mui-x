@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
+import { createRenderer, screen, userEvent, act, fireEvent } from '@mui/internal-test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';

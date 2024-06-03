@@ -99,7 +99,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: boolean;
@@ -735,7 +735,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   getRowId?: GridRowIdGetter<R>;
   /**
-   * If `true`, a  loading overlay is displayed.
+   * If `true`, a loading overlay is displayed.
    */
   loading?: boolean;
   /**

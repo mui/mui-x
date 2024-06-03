@@ -1,5 +1,7 @@
 {
   "props": {
+    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
+    "borderRadius": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -25,6 +27,12 @@
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
       "class": null
     }
   ],

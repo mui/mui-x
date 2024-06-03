@@ -11,6 +11,7 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
 import { isCartesianSeries, utcFormatter } from './utils';
+import { getLabel } from '../internals/getLabel';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;
@@ -46,6 +47,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
               if (formattedValue == null) {
                 return null;
               }
+              const formattedLabel = getLabel(label, 'tooltip');
               return (
                 <ChartsTooltipRow key={id} className={classes.row}>
                   <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
@@ -55,7 +57,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
                     />
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                    {label ? <Typography>{label}</Typography> : null}
+                    {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
                   </ChartsTooltipCell>
                   <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
                     <Typography>{formattedValue}</Typography>
@@ -72,7 +74,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
 DefaultChartsAxisTooltipContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The properties of the triggered axis.
@@ -96,7 +98,7 @@ DefaultChartsAxisTooltipContent.propTypes = {
   /**
    * The value associated to the current mouse position.
    */
-  axisValue: PropTypes.any.isRequired,
+  axisValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

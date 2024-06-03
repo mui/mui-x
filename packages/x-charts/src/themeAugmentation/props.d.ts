@@ -1,8 +1,10 @@
+import { BarLabelProps } from '../BarChart/BarLabel';
 import { BarChartProps } from '../BarChart/BarChart';
 import { BarElementProps } from '../BarChart/BarElement';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartsTooltipProps } from '../ChartsTooltip';
@@ -18,6 +20,7 @@ export interface ChartsComponentsPropsList {
   MuiChartsYAxis: ChartsYAxisProps;
   MuiChartsAxisHighlight: ChartsAxisHighlightProps;
   MuiChartsClipPath: ChartsClipPathProps;
+  MuiChartsGrid: ChartsGridProps;
   MuiChartsLegend: ChartsLegendProps;
   MuiChartsTooltip: ChartsTooltipProps;
   MuiChartsSurface: ChartsSurfaceProps;
@@ -25,6 +28,7 @@ export interface ChartsComponentsPropsList {
   // BarChart components
   MuiBarChart: BarChartProps;
   MuiBarElement: BarElementProps;
+  MuiBarLabel: BarLabelProps;
   // LineChart components
   MuiLineChart: LineChartProps;
   MuiAreaElement: AreaElementProps;

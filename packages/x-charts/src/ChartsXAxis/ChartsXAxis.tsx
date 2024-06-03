@@ -151,7 +151,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         fontSize: tickFontSize ?? 12,
         ...tickLabelStyle,
       },
-      className: classes.tickLabel,
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
     ownerState: {},
@@ -192,6 +191,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
+  const domain = xScale.domain();
+  if (domain.length === 0 || domain[0] === domain[1]) {
+    // Skip axis rendering if
+    // - the data is empty (for band and point axis)
+    // - No data is associated to the axis (other scale types)
+    return null;
+  }
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
@@ -243,7 +249,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 ChartsXAxis.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The id of the axis to render.
@@ -309,10 +315,12 @@ ChartsXAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
