@@ -72,7 +72,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.enqueueChildrenFetch(id);
+      apiRef.current.queueChildrenFetch(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }

@@ -60,10 +60,8 @@ export const useGridDataSource = (
       return;
     }
 
-    // Reset the nested data variables
-    if (nestedDataManager.getActiveRequestsCount() > 0) {
-      nestedDataManager.clearPendingRequests();
-    }
+    nestedDataManager.clearPendingRequests();
+    
     scheduledGroups.current = 0;
     const serverSideState = privateApiRef.current.state.serverSideData;
     if (serverSideState !== INITIAL_STATE) {
@@ -107,7 +105,7 @@ export const useGridDataSource = (
     }
   }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError]);
 
-  const enqueueChildrenFetch = React.useCallback(
+  const queueChildrenFetch = React.useCallback(
     (id: GridRowId) => {
       nestedDataManager.enqueue([id]);
     },
@@ -231,7 +229,7 @@ export const useGridDataSource = (
   }, [privateApiRef]);
 
   const dataSourceApi: GridDataSourceApi = {
-    enqueueChildrenFetch,
+    queueChildrenFetch,
     setChildrenLoading,
     setChildrenFetchError,
     fetchTopLevelRows,

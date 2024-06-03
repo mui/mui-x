@@ -253,7 +253,6 @@ export const useGridRows = (
         rows: { ...state.rows, loading },
       }));
       apiRef.current.caches.rows.loadingPropBeforePartialUpdates = loading;
-      apiRef.current.forceUpdate();
     },
     [props.loading, apiRef, logger],
   );

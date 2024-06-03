@@ -22,10 +22,10 @@ export interface GridDataSourceApi {
    */
   fetchTopLevelRows: () => void;
   /**
-   * Enqueues the fetch of the children of a row.
+   * Adds the fetch of the children of a row to queue.
    * @param {GridRowId} id The id of the rowNode belonging to the group to be fetched.
    */
-  enqueueChildrenFetch: (id: GridRowId) => void;
+  queueChildrenFetch: (id: GridRowId) => void;
 }
 
 export interface GridDataSourcePrivateApi {
