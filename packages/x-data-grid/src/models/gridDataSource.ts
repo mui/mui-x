@@ -63,6 +63,24 @@ export interface GridDataSource {
    * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache
    */
   updateRow?(updatedRow: GridRowModel): Promise<any>;
+  /**
+   * Used to group rows by their parent group. Replaces `getTreeDataPath` used in client side tree-data .
+   * @param {GridRowModel} row The row to get the group key of
+   * @returns {string} The group key for the row
+   */
+  getGroupKey?: (row: GridRowModel) => string;
+  /**
+   * Used to determine if a row has children on server.
+   * @param {GridRowModel} row The row to check if it has children
+   * @returns {boolean} A boolean indicating if the row has children
+   */
+  hasChildren?: (row: GridRowModel) => boolean;
+  /**
+   * Used to determine the number of children a row has on server.
+   * @param {GridRowModel} row The row to check the number of children
+   * @returns {number} The number of children the row has
+   */
+  getChildrenCount?: (row: GridRowModel) => number;
 }
 
 export interface GridDataSourceCache {

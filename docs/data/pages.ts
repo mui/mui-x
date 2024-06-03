@@ -126,8 +126,9 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data/infinite-loading',
             plan: 'pro',
+            planned: true,
           },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro', planned: true },
+          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
             plan: 'pro',

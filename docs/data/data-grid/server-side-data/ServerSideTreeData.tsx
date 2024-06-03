@@ -11,6 +11,11 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 import LoadingSlate from './LoadingSlateNoSnap';
 
 const pageSizeOptions = [5, 10, 50];
+const dataSetOptions = {
+  dataSet: 'Employee' as 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+};
 
 const dataSource: GridDataSource = {
   getRows: async (params) => {
@@ -29,21 +34,17 @@ const dataSource: GridDataSource = {
       rowCount: getRowsResponse.rowCount,
     };
   },
+  getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
+  hasChildren: (row) => row.hasChildren,
+  getChildrenCount: (row) => row.descendantCount,
 };
 
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, ...props } = useMockServer(
-    {
-      dataSet: 'Employee',
-      rowLength: 1000,
-      treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-    },
-    {
-      startServer: true,
-    },
-  );
+  const { isInitialized, ...props } = useMockServer(dataSetOptions, {
+    startServer: true,
+  });
 
   const initialState: GridInitialState = React.useMemo(
     () => ({

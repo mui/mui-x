@@ -320,7 +320,6 @@ DataGridProRaw.propTypes = {
    * @returns {string} The CSS class to apply to the cell.
    */
   getCellClassName: PropTypes.func,
-  getChildrenCount: PropTypes.func,
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -342,7 +341,6 @@ DataGridProRaw.propTypes = {
    * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
    */
   getEstimatedRowHeight: PropTypes.func,
-  getGroupKey: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
@@ -378,7 +376,6 @@ DataGridProRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  hasChildren: PropTypes.func,
   /**
    * Override the height of the header filters.
    */
@@ -952,7 +949,10 @@ DataGridProRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   unstable_dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
+    hasChildren: PropTypes.func,
     updateRow: PropTypes.func,
   }),
   unstable_dataSourceCache: PropTypes.shape({

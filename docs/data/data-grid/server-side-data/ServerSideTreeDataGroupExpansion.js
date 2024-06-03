@@ -4,22 +4,16 @@ import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
+const dataSetOptions = {
+  dataSet: 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+};
 
 export default function ServerSideTreeDataGroupExpansion() {
   const apiRef = useGridApiRef();
 
-  const {
-    fetchRows,
-    columns,
-    initialState,
-    getGroupKey,
-    getChildrenCount,
-    hasChildren,
-  } = useMockServer({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-  });
+  const { fetchRows, columns, initialState } = useMockServer(dataSetOptions);
 
   const dataSource = React.useMemo(
     () => ({
@@ -40,6 +34,9 @@ export default function ServerSideTreeDataGroupExpansion() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
+      hasChildren: (row) => row.hasChildren,
+      getChildrenCount: (row) => row.descendantCount,
     }),
     [fetchRows],
   );
@@ -64,9 +61,6 @@ export default function ServerSideTreeDataGroupExpansion() {
         <DataGridPro
           columns={columns}
           unstable_dataSource={dataSource}
-          getGroupKey={getGroupKey}
-          hasChildren={hasChildren}
-          getChildrenCount={getChildrenCount}
           treeData
           apiRef={apiRef}
           pagination

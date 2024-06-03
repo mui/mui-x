@@ -42,13 +42,11 @@ export const useGridServerSideTreeDataPreProcessors = (
     DataGridProProcessedProps,
     | 'treeData'
     | 'groupingColDef'
-    | 'getGroupKey'
     | 'disableChildrenSorting'
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'unstable_dataSource'
-    | 'hasChildren'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -133,22 +131,24 @@ export const useGridServerSideTreeDataPreProcessors = (
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      if (!props.getGroupKey) {
-        throw new Error('MUI X: No `getGroupKey` prop provided.');
+      const getGroupKey = props.unstable_dataSource?.getGroupKey;
+      if (!getGroupKey) {
+        throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      if (!props.hasChildren) {
-        throw new Error('MUI X: No `hasChildren` prop provided.');
+      const hasChildren = props.unstable_dataSource?.hasChildren;
+      if (!hasChildren) {
+        throw new Error('MUI X: No `hasChildren` method provided with the dataSource.');
       }
 
       const parentPath = privateApiRef.current.caches.dataSource?.groupKeys || [];
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
         id: rowId,
-        path: [...parentPath, props.getGroupKey!(params.dataRowIdToModelLookup[rowId])].map(
+        path: [...parentPath, getGroupKey!(params.dataRowIdToModelLookup[rowId])].map(
           (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
         ),
-        hasServerChildren: props.hasChildren!(params.dataRowIdToModelLookup[rowId]),
+        hasServerChildren: hasChildren!(params.dataRowIdToModelLookup[rowId]),
       });
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
@@ -187,8 +187,7 @@ export const useGridServerSideTreeDataPreProcessors = (
       });
     },
     [
-      props.getGroupKey,
-      props.hasChildren,
+      props.unstable_dataSource,
       props.defaultGroupingExpansionDepth,
       props.isGroupExpandedByDefault,
       privateApiRef,

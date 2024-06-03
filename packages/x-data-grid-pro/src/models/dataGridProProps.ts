@@ -147,9 +147,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 interface DataGridProDataSourceProps {
   unstable_dataSourceCache?: GridDataSourceCache;
   unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
-  getGroupKey?: (row: GridValidRowModel) => string;
-  hasChildren?: (row: GridValidRowModel) => boolean;
-  getChildrenCount?: (row: GridValidRowModel) => number;
 }
 
 interface DataGridProRegularProps<R extends GridValidRowModel> {

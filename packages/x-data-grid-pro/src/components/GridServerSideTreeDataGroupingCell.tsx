@@ -120,7 +120,7 @@ export function GridServerSideTreeDataGroupingCell(props: GridTreeDataGroupingCe
   const row = apiRef.current.getRow(rowNode.id);
   const ownerState: OwnerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  const descendantCount = rootProps.getChildrenCount?.(row) ?? 0;
+  const descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
 
   return (
     <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>

@@ -8,41 +8,29 @@ title: React Server-side tree data
 
 To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
-Additionally, you must supply the following required props, listed and explained below.
+The data source also requires some additional props to handle tree data, namely `getGroupKey` and `hasChildren`. The data source also supports and optional prop `getChildrenCount` to let the Data Grid print the children count next to each parent.
 
 ```tsx
-<DataGridPro
-  {...data}
-  unstable_dataSource={dataSource}
-  getGroupKey={getGroupKey}
-  hasChildren={hasChildren}
-  getChildrenCount={getChildrenCount}
-/>
+const customDataSource: GridDataSource = {
+  getRows: async (params) => {
+    // Fetch the data from the server
+  },
+  getGroupKey: (row) => {
+    // Return the group key for the row, e.g. `name`
+    return row.name;
+  },
+  hasChildren: (row) => {
+    // Return true if the row has children
+    return row.hasChildren;
+  },
+  getChildrenCount: (row) => {
+    // Return the number of children for the row
+    return row.childrenCount;
+  },
+};
 ```
 
-- `getGroupKey(row: GridRowModel): string`
-
-  Used to group rows by their parent group. Replaces `getTreeDataPath` used in client-side tree-data.
-  For example, consider this tree structure for tree data.
-
-  ```js
-  - (1) Sarah // groupKey 'Sarah'
-    - (2) Thomas // groupKey 'Thomas'
-  ```
-
-  When **(2) Thomas** is expanded, the `getRows` function will be called with group keys `['Sarah', 'Thomas']`.
-
-- `hasChildren(row: GridRowModel): boolean`
-
-  Used by the grid to check if a row has children on server
-
-- `getChildrenCount?: (row: GridRowModel) => number`
-
-  Used by the grid to determine the number of children of a row on server
-
-## Demo
-
-Following is a demo of the server-side tree data with the data source which supports filtering, sorting, and pagination on the server. It also caches the data by default.
+Following tree-data example supports filtering, sorting, and pagination on the server. It also caches the data by default.
 
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 

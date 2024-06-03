@@ -10,6 +10,11 @@ import LoadingSlate from './LoadingSlateNoSnap';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
+const dataSetOptions = {
+  dataSet: 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+};
 
 export default function ServerSideTreeDataErrorHandling() {
   const apiRef = useGridApiRef();
@@ -18,11 +23,7 @@ export default function ServerSideTreeDataErrorHandling() {
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { isInitialized, fetchRows, ...props } = useMockServer(
-    {
-      dataSet: 'Employee',
-      rowLength: 1000,
-      treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-    },
+    dataSetOptions,
     serverOptions,
     shouldRequestsFail,
   );
@@ -46,6 +47,9 @@ export default function ServerSideTreeDataErrorHandling() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
+      hasChildren: (row) => row.hasChildren,
+      getChildrenCount: (row) => row.descendantCount,
     }),
     [fetchRows],
   );

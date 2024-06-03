@@ -34,15 +34,16 @@ const cache = {
 };
 
 const pageSizeOptions = [5, 10, 50];
+const dataSetOptions = {
+  dataSet: 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
+};
 
 export default function ServerSideTreeDataCustomCache() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, fetchRows, ...props } = useMockServer({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-  });
+  const { isInitialized, fetchRows, ...props } = useMockServer(dataSetOptions);
 
   const dataSource = React.useMemo(
     () => ({
@@ -63,6 +64,9 @@ export default function ServerSideTreeDataCustomCache() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
+      hasChildren: (row) => row.hasChildren,
+      getChildrenCount: (row) => row.descendantCount,
     }),
     [fetchRows],
   );
