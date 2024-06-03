@@ -16,7 +16,7 @@ import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { GridStatePro } from '../models/gridStatePro';
 
-type OwnerState = { classes: DataGridProProcessedProps['classes'] };
+type OwnerState = DataGridProProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -56,14 +56,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const rootProps = useGridRootProps();
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = React.useCallback(
-    (state: GridStatePro) => state.dataSource.loading[id] ?? false,
-    [id],
-  );
-  const errorSelector = React.useCallback(
-    (state: GridStatePro) => state.dataSource.errors[id] ?? null,
-    [id],
-  );
+  const loadingSelector = (state: GridStatePro) => state.dataSource.loading[id] ?? false;
+  const errorSelector = (state: GridStatePro) => state.dataSource.errors[id];
   const isDataLoading = useGridSelector(apiRef, loadingSelector);
   const error = useGridSelector(apiRef, errorSelector);
 
@@ -117,9 +111,9 @@ export function GridServerSideTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const row = apiRef.current.getRow(rowNode.id);
-  const ownerState: OwnerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
+  const row = useGridSelector(apiRef, rowSelector);
+  const classes = useUtilityClasses(rootProps);
   const descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
 
   return (

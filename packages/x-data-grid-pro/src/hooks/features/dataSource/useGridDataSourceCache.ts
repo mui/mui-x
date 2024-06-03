@@ -50,7 +50,9 @@ export const useGridDataSourceCache = (
     'unstable_dataSource' | 'disableDataSourceCache' | 'unstable_dataSourceCache'
   >,
 ): void => {
-  const defaultCache = useLazyRef<GridDataSourceCache, void>(() => getDefaultCache(new SimpleServerSideCache()));
+  const defaultCache = useLazyRef<GridDataSourceCache, void>(() =>
+    getDefaultCache(new SimpleServerSideCache()),
+  );
   const cache = React.useRef<GridDataSourceCache>(
     props.unstable_dataSourceCache || defaultCache.current,
   );
