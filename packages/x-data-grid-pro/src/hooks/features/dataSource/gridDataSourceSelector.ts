@@ -30,14 +30,14 @@ export const gridGetRowsParamsSelector = createSelector(
   },
 );
 
-export const gridServerSideDataStateSelector = (state: GridStatePro) => state.serverSideData;
+export const gridDataSourceStateSelector = (state: GridStatePro) => state.dataSource;
 
-export const gridServerSideDataLoadingSelector = createSelector(
-  gridServerSideDataStateSelector,
-  (serverSideData) => serverSideData.loading,
+export const gridDataSourceLoadingSelector = createSelector(
+  gridDataSourceStateSelector,
+  (dataSource) => dataSource.loading,
 );
 
-export const gridServerSideDataErrorsSelector = createSelector(
-  gridServerSideDataStateSelector,
-  (serverSideData) => serverSideData.errors,
+export const gridDataSourceErrorsSelector = createSelector(
+  gridDataSourceStateSelector,
+  (dataSource) => dataSource.errors,
 );

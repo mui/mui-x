@@ -141,7 +141,7 @@ export const useGridServerSideTreeDataPreProcessors = (
         throw new Error('MUI X: No `hasChildren` prop provided.');
       }
 
-      const parentPath = privateApiRef.current.caches.serverSideData?.groupKeys || [];
+      const parentPath = privateApiRef.current.caches.dataSource?.groupKeys || [];
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
         id: rowId,

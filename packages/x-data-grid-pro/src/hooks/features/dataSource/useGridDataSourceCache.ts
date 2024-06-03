@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridGetRowsParams, GridGetRowsResponse, GridServerSideCache } from '../../../models';
-import { GridServerSideCacheApi } from './serverSideInterfaces';
+import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
+import { GridDataSourceCacheApi } from './interfaces';
 
 class SimpleServerSideCache {
   private cache: Record<string, GridGetRowsResponse>;
@@ -34,7 +34,7 @@ class SimpleServerSideCache {
   }
 }
 
-const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridServerSideCache => ({
+const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridDataSourceCache => ({
   getKey: SimpleServerSideCache.getKey,
   set: (key: string, value: GridGetRowsResponse) =>
     cacheInstance.set(key as string, value as GridGetRowsResponse),
@@ -42,7 +42,7 @@ const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridServerSideCa
   clear: () => cacheInstance.clear(),
 });
 
-export const useGridServerSideCache = (
+export const useGridDataSourceCache = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
@@ -50,7 +50,7 @@ export const useGridServerSideCache = (
   >,
 ): void => {
   const defaultCache = React.useRef(getDefaultCache(new SimpleServerSideCache()));
-  const cache = React.useRef<GridServerSideCache>(
+  const cache = React.useRef<GridDataSourceCache>(
     props.unstable_dataSourceCache || defaultCache.current,
   );
 
@@ -83,13 +83,13 @@ export const useGridServerSideCache = (
     cache.current.clear();
   }, [props.disableDataSourceCache]);
 
-  const serverSideCacheApi: GridServerSideCacheApi = {
+  const dataSourceCacheApi: GridDataSourceCacheApi = {
     getCacheData,
     setCacheData,
     clearCache,
   };
 
-  useGridApiMethod(privateApiRef, serverSideCacheApi, 'public');
+  useGridApiMethod(privateApiRef, dataSourceCacheApi, 'public');
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -97,8 +97,8 @@ export const useGridServerSideCache = (
       isFirstRender.current = false;
       return;
     }
-    if (props.disableDataSourceCache) {
-      cache.current = props.disableDataSourceCache;
+    if (props.unstable_dataSourceCache) {
+      cache.current = props.unstable_dataSourceCache;
     }
-  }, [props.disableDataSourceCache]);
+  }, [props.unstable_dataSourceCache]);
 };

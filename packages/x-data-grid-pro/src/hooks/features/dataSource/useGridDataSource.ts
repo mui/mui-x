@@ -13,10 +13,10 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   gridGetRowsParamsSelector,
-  gridServerSideDataLoadingSelector,
-  gridServerSideDataErrorsSelector,
-} from './gridServerSideDataSelector';
-import { GridDataSourceApi, GridDataSourcePrivateApi } from './serverSideInterfaces';
+  gridDataSourceLoadingSelector,
+  gridDataSourceErrorsSelector,
+} from './gridDataSourceSelector';
+import { GridDataSourceApi, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
 
 const INITIAL_STATE = {
@@ -25,13 +25,13 @@ const INITIAL_STATE = {
 };
 
 export const dataSourceStateInitializer: GridStateInitializer = (state, _, apiRef) => {
-  apiRef.current.caches.serverSideData = {
+  apiRef.current.caches.dataSource = {
     groupKeys: [],
   };
 
   return {
     ...state,
-    serverSideData: INITIAL_STATE,
+    dataSource: INITIAL_STATE,
   };
 };
 
@@ -63,9 +63,9 @@ export const useGridDataSource = (
     nestedDataManager.clearPendingRequests();
 
     scheduledGroups.current = 0;
-    const serverSideState = privateApiRef.current.state.serverSideData;
+    const serverSideState = privateApiRef.current.state.dataSource;
     if (serverSideState !== INITIAL_STATE) {
-      privateApiRef.current.resetServerSideState();
+      privateApiRef.current.resetDataSourceState();
     }
 
     const fetchParams = gridGetRowsParamsSelector(privateApiRef);
@@ -76,7 +76,7 @@ export const useGridDataSource = (
 
     if (cachedData != null) {
       const rows = cachedData.rows;
-      privateApiRef.current.caches.serverSideData.groupKeys = [];
+      privateApiRef.current.caches.dataSource.groupKeys = [];
       privateApiRef.current.setRows(rows);
       if (cachedData.rowCount) {
         privateApiRef.current.setRowCount(cachedData.rowCount);
@@ -95,7 +95,7 @@ export const useGridDataSource = (
       if (getRowsResponse.rowCount) {
         privateApiRef.current.setRowCount(getRowsResponse.rowCount);
       }
-      privateApiRef.current.caches.serverSideData.groupKeys = [];
+      privateApiRef.current.caches.dataSource.groupKeys = [];
       privateApiRef.current.setRows(getRowsResponse.rows);
       privateApiRef.current.setLoading(false);
     } catch (error) {
@@ -136,7 +136,7 @@ export const useGridDataSource = (
 
       if (cachedData != null) {
         const rows = cachedData.rows;
-        privateApiRef.current.caches.serverSideData.groupKeys = rowNode.path;
+        privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
         nestedDataManager.setRequestSettled(id);
         privateApiRef.current.updateRows(rows, false);
         if (cachedData.rowCount) {
@@ -146,12 +146,12 @@ export const useGridDataSource = (
         return;
       }
 
-      const isLoading = gridServerSideDataLoadingSelector(privateApiRef)[id] ?? false;
+      const isLoading = gridDataSourceLoadingSelector(privateApiRef)[id] ?? false;
       if (!isLoading) {
         privateApiRef.current.setChildrenLoading(id, true);
       }
 
-      const existingError = gridServerSideDataErrorsSelector(privateApiRef)[id] ?? null;
+      const existingError = gridDataSourceErrorsSelector(privateApiRef)[id] ?? null;
       if (existingError) {
         privateApiRef.current.setChildrenFetchError(id, null);
       }
@@ -174,7 +174,7 @@ export const useGridDataSource = (
         if (getRowsResponse.rowCount) {
           privateApiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        privateApiRef.current.caches.serverSideData.groupKeys = rowNode.path;
+        privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
         privateApiRef.current.updateRows(getRowsResponse.rows, false);
         privateApiRef.current.setRowChildrenExpansion(id, true);
         privateApiRef.current.setChildrenLoading(id, false);
@@ -194,9 +194,9 @@ export const useGridDataSource = (
       privateApiRef.current.setState((state) => {
         return {
           ...state,
-          serverSideData: {
-            ...state.serverSideData,
-            loading: { ...state.serverSideData.loading, [parentId]: isLoading },
+          dataSource: {
+            ...state.dataSource,
+            loading: { ...state.dataSource.loading, [parentId]: isLoading },
           },
         };
       });
@@ -209,9 +209,9 @@ export const useGridDataSource = (
       privateApiRef.current.setState((state) => {
         return {
           ...state,
-          serverSideData: {
-            ...state.serverSideData,
-            errors: { ...state.serverSideData.errors, [parentId]: error },
+          dataSource: {
+            ...state.dataSource,
+            errors: { ...state.dataSource.errors, [parentId]: error },
           },
         };
       });
@@ -219,11 +219,11 @@ export const useGridDataSource = (
     [privateApiRef],
   );
 
-  const resetServerSideState = React.useCallback(() => {
+  const resetDataSourceState = React.useCallback(() => {
     privateApiRef.current.setState((state) => {
       return {
         ...state,
-        serverSideData: INITIAL_STATE,
+        dataSource: INITIAL_STATE,
       };
     });
   }, [privateApiRef]);
@@ -237,7 +237,7 @@ export const useGridDataSource = (
 
   const dataSourcePrivateApi: GridDataSourcePrivateApi = {
     fetchRowChildren,
-    resetServerSideState,
+    resetDataSourceState,
   };
 
   useGridApiMethod(privateApiRef, dataSourceApi, 'public');

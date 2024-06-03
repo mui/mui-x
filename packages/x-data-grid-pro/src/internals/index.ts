@@ -40,8 +40,8 @@ export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/use
 export {
   useGridDataSource,
   dataSourceStateInitializer,
-} from '../hooks/features/serverSideData/useGridDataSource';
-export { useGridServerSideCache } from '../hooks/features/serverSideData/useGridServerSideCache';
+} from '../hooks/features/dataSource/useGridDataSource';
+export { useGridDataSourceCache } from '../hooks/features/dataSource/useGridDataSourceCache';
 
 export type {
   GridExperimentalProFeatures,

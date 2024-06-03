@@ -1,6 +1,15 @@
 import { GridRowId } from '@mui/x-data-grid';
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
+export interface GridDataSourceInternalCache {
+  groupKeys: any[];
+}
+
+export interface GridDataSourceState {
+  loading: Record<GridRowId, boolean>;
+  errors: Record<GridRowId, any>;
+}
+
 /**
  * The dataSource API interface that is available in the grid [[apiRef]].
  */
@@ -35,15 +44,15 @@ export interface GridDataSourcePrivateApi {
    */
   fetchRowChildren: (id: GridRowId) => void;
   /**
-   * Resets the server side state.
+   * Resets the data source state.
    */
-  resetServerSideState: () => void;
+  resetDataSourceState: () => void;
 }
 
 /**
- * The server side cache API interface that is available in the grid [[apiRef]].
+ * The data source cache API interface that is available in the grid [[apiRef]].
  */
-export interface GridServerSideCacheApi {
+export interface GridDataSourceCacheApi {
   /**
    * Get data from the cache
    * @param {GridGetRowsParams} params The params of type `GridGetRowsParams`.

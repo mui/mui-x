@@ -1,6 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "jsx": "react",
+    "jsx": "react",
+    "jsx": "react",
+    "jsx": "react",
+    "jsx": "react",
     "types": [
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",

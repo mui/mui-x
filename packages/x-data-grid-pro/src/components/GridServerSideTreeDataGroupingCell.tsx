@@ -57,11 +57,11 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const { rowNode, id, field, descendantCount } = props;
 
   const loadingSelector = React.useCallback(
-    (state: GridStatePro) => state.serverSideData.loading[id] ?? false,
+    (state: GridStatePro) => state.dataSource.loading[id] ?? false,
     [id],
   );
   const errorSelector = React.useCallback(
-    (state: GridStatePro) => state.serverSideData.errors[id] ?? null,
+    (state: GridStatePro) => state.dataSource.errors[id] ?? null,
     [id],
   );
   const isDataLoading = useGridSelector(apiRef, loadingSelector);

@@ -4,7 +4,7 @@ import {
   useGridApiRef,
   GridInitialState,
   GridToolbar,
-  GridServerSideCache,
+  GridDataSourceCache,
   GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const cache: GridServerSideCache = {
+const cache: GridDataSourceCache = {
   set: (key: any[], value) => {
     queryClient.setQueryData(key, value);
   },
