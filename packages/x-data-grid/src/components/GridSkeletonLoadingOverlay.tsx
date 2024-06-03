@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
