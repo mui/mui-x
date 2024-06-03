@@ -7,7 +7,7 @@ import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
-type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' | 'skeleton';
+export type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' | 'skeleton';
 
 export interface GridLoadingOverlayProps extends GridOverlayProps {
   /**
@@ -39,10 +39,7 @@ const LOADING_VARIANTS: Record<
   },
   skeleton: {
     component: GridSkeletonLoadingOverlay,
-    sx: {
-      display: 'block',
-      background: 'var(--DataGrid-containerBackground)',
-    },
+    sx: { display: 'block' },
   },
 };
 

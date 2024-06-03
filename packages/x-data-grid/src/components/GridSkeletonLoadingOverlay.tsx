@@ -26,6 +26,9 @@ const SkeletonOverlay = styled('div', {
   overridesResolver: (props, styles) => styles.skeletonLoadingOverlay,
 })({
   display: 'grid',
+  width: 'max-content', // ensures overflow: hidden; does not cut off the x axis
+  minWidth: '100%', // ensures the filler column takes up the remaining space in a row
+  height: '100%',
   overflow: 'hidden',
   '& .MuiDataGrid-cellSkeleton': {
     borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
@@ -98,14 +101,6 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     },
     [{} as Record<string, string>, ''],
   );
-
-  // Sync the horizontal scroll of the overlay with the grid
-  const handleScrollChange: GridEventListener<'scrollPositionChange'> = (params) => {
-    if (ref.current) {
-      ref.current.scrollLeft = params.left;
-    }
-  };
-  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrollChange);
 
   // Sync the column resize of the overlay columns with the grid
   const handleColumnResize: GridEventListener<'columnResize'> = (params) => {

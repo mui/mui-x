@@ -145,7 +145,7 @@ export const GridRootStyles = styled('div', {
 
   const selectedHoverBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} + 
+                ${t.vars.palette.action.selectedOpacity} +
                 ${t.vars.palette.action.hoverOpacity}
               ))`
     : alpha(
@@ -650,6 +650,13 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['filler--borderTop']}`]: {
       borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+
+    /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
+    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
+      [`& .${c.virtualScrollerContent}, & .${c['scrollbar--vertical']}, & .${c.pinnedRows}`]: {
+        display: 'none',
+      },
     },
   };
 
