@@ -12,10 +12,10 @@ export const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => 
 };
 
 export enum RequestStatus {
-  INQUEUE,
+  QUEUED,
   PENDING,
   SETTLED,
-  UNKNOWN,
+  INVALID,
 }
 
 /**
@@ -110,12 +110,12 @@ export class NestedDataManager {
       return RequestStatus.PENDING;
     }
     if (this.queuedRequests.has(id)) {
-      return RequestStatus.INQUEUE;
+      return RequestStatus.QUEUED;
     }
     if (this.settledRequests.has(id)) {
       return RequestStatus.SETTLED;
     }
-    return RequestStatus.UNKNOWN;
+    return RequestStatus.INVALID;
   };
 
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;

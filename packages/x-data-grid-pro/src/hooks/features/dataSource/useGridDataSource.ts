@@ -164,8 +164,7 @@ export const useGridDataSource = (
           privateApiRef.current.setChildrenLoading(id, false);
           return;
         }
-        if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
-          // Unregistered or cancelled request
+        if (nestedDataManager.getRequestStatus(id) === RequestStatus.INVALID) {
           privateApiRef.current.setChildrenLoading(id, false);
           return;
         }
