@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
@@ -24,7 +23,7 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean; isRtl: boolean } }>({
+})<{ ownerState: PickersLayoutProps<any, any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -95,20 +94,18 @@ const PickersLayout = function PickersLayout<
   TView extends DateOrTimeViewWithMeridiem,
 >(inProps: PickersLayoutProps<TValue, TDate, TView>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
-  const isRtl = useRtl();
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref, wrapperVariant } = props;
 
-  const ownerState = { ...props, isRtl };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
-      ownerState={ownerState}
+      ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
