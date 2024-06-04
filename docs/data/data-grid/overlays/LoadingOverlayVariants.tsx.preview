@@ -1,0 +1,11 @@
+<DataGrid
+  {...data}
+  loading
+  slotProps={{
+    loadingOverlay: {
+      noRowsVariant: 'skeleton',
+      variant: 'linear-progress',
+    },
+  }}
+  rows={withRows ? data.rows : []}
+/>
