@@ -777,6 +777,21 @@ async function initializeEnvironment(
           // check that selecting a day doesn't change the day text
           expect(await day11.textContent()).to.equal('11');
         });
+
+        it('should close the picker and move focus to the text field when clicking it', async () => {
+          await renderFixture('DatePicker/DesktopPickerFocusManagement');
+
+          await page.getByRole('button').click();
+
+          const decoyInput = page.getByRole('textbox', { name: 'decoy' });
+          await decoyInput.click();
+
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+          // the input should be focused—the new active element
+          expect(await decoyInput.evaluate((node) => node === document.activeElement)).to.equal(
+            true,
+          );
+        });
       });
 
       describe('<MobileDatePicker />', () => {
