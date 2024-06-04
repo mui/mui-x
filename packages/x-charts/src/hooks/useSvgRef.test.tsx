@@ -26,17 +26,24 @@ describe('useSvgRef', () => {
     ]);
   });
 
-  it('should not throw an error when parent context is present', () => {
-    const ref = React.createRef<SVGSVGElement>();
-    // @ts-expect-error, we don't need to create an actual SVG element
-    ref.current = { id: 'test-id' } as SVGSVGElement;
+  it('should not throw an error when parent context is present', async () => {
+    function RenderDrawingProvider() {
+      const ref = React.useRef<SVGSVGElement | null>(null);
 
-    const { getByText } = render(
-      <DrawingProvider svgRef={ref} width={1} height={1}>
-        <UseSvgRef />
-      </DrawingProvider>,
-    );
+      return (
+        <svg ref={ref} id="test-id">
+          <DrawingProvider svgRef={ref} width={1} height={1}>
+            <UseSvgRef />
+          </DrawingProvider>
+        </svg>
+      );
+    }
 
-    expect(getByText('test-id')).toBeVisible();
+    const { findByText, forceUpdate } = render(<RenderDrawingProvider />);
+
+    // Ref is not available on first render.
+    forceUpdate();
+
+    expect(await findByText('test-id')).toBeVisible();
   });
 });

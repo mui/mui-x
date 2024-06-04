@@ -2,6 +2,7 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
+import { Initializable } from './context.types';
 
 export interface DrawingProviderProps extends LayoutConfig {
   children: React.ReactNode;
@@ -59,7 +60,14 @@ if (process.env.NODE_ENV !== 'production') {
   DrawingContext.displayName = 'DrawingContext';
 }
 
-export const SvgContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
+export type SvgContextState = {
+  svg: React.RefObject<SVGSVGElement>;
+};
+
+export const SvgContext = React.createContext<Initializable<SvgContextState>>({
+  isInitialized: false,
+  svg: { current: null },
+});
 
 if (process.env.NODE_ENV !== 'production') {
   SvgContext.displayName = 'SvgContext';
@@ -75,8 +83,10 @@ export function DrawingProvider(props: DrawingProviderProps) {
     [chartId, drawingArea],
   );
 
+  const refValue = React.useMemo(() => ({ isInitialized: true, svg: svgRef }), [svgRef]);
+
   return (
-    <SvgContext.Provider value={svgRef}>
+    <SvgContext.Provider value={refValue}>
       <DrawingContext.Provider value={value}>{children}</DrawingContext.Provider>
     </SvgContext.Provider>
   );
