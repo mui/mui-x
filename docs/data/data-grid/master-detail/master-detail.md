@@ -135,6 +135,27 @@ This approach can also be used to change the location of the toggle column, as s
 As any ordinary cell renderer, the `value` prop is also available, and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
 :::
 
+## Render a custom header for the detail panel column
+
+To render a custom header for the detail panel column, you can use the `renderHeader` prop in the column definition.
+This prop receives a [`GridRenderHeaderParams`](/x/api/data-grid/grid-render-header-params/) object, which contains the column and the grid API.
+The following example demonstrates how to render a custom header for the detail panel column:
+
+```tsx
+const columns = [
+    {
+      ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+      renderHeader: (params) => (
+        <div>
+          <span>{params.colDef.headerName}</span>
+          <button onClick={() => console.log('Custom action')}>Custom action</button>
+        </div>
+      ),
+    },
+    //... other columns
+];
+```
+
 ## Disable detail panel content scroll
 
 By default, the detail panel has a width that is the sum of the widths of all columns.
