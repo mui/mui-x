@@ -19,7 +19,7 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
     filter: {
       filterModel: {
         items: [],
-        quickFilterValues: ['quick', 'filter'],
+        quickFilterValues: ['Disney', 'Star'],
       },
     },
   }}
@@ -47,8 +47,8 @@ To include hidden columns in the quick filter, set `filterModel.quickFilterExclu
 />
 ```
 
-In the demo below, try hiding the `ID` column. You will see no results, because there are no visible columns that contain `1`.
-Once you disable the `Exclude hidden columns` switch, the rows with `ID` containing `1` will be shown, even though the column is hidden.
+In the demo below, the `company` column is hidden. You'll only see 5 results because rows where the `company` value is `'Warner Bros.'` are excluded.
+However, when you disable the `Exclude hidden columns` switch, the rows containing `'Warner'` in the `company` field will be displayed again, even though the column remains hidden.
 
 {{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
