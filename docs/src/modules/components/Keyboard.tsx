@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 // @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
+import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
@@ -444,6 +445,7 @@ export default function Keyboard() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Divider />
       <Stack direction="row" spacing={6} py={4}>
         <Stack spacing={2}>
           <SectionHeadline

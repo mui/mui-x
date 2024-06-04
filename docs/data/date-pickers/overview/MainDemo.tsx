@@ -2,13 +2,13 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import FlightPicker from './FlightPicker';
-import ThemeToggleGroup from './ThemeToggleGroup';
-import Clock from './Clock';
-import Birthday from './Birthday';
-import DigitalClock from './DigitalClock';
-import DateRangeWithShortcuts from './DateRangeWithShortcuts';
-import PickerButton from './PickerButton';
+import FlightPicker from './mainDemo/FlightPicker';
+import ThemeToggleGroup from './mainDemo/ThemeToggleGroup';
+import Clock from './mainDemo/Clock';
+import Birthday from './mainDemo/Birthday';
+import DigitalClock from './mainDemo/DigitalClock';
+import DateRangeWithShortcuts from './mainDemo/DateRangeWithShortcuts';
+import PickerButton from './mainDemo/PickerButton';
 
 export default function MainDemo() {
   return (
