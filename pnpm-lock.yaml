@@ -606,8 +606,8 @@ importers:
         specifier: ^0.13.1
         version: 0.13.1(react-dom@18.2.0)(react@18.2.0)
       recast:
-        specifier: ^0.23.7
-        version: 0.23.7
+        specifier: ^0.23.9
+        version: 0.23.9
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -14731,8 +14731,8 @@ packages:
       source-map: 0.6.1
       tslib: 2.6.2
 
-  /recast@0.23.7:
-    resolution: {integrity: sha512-MpQlLZVpqbbxYcqEjwpRWo88sGvjOYoXptySz710RuddNMHx+wPkoNX6YyLZJlXAh5VZr1qmPrTwcTuFMh0Lag==}
+  /recast@0.23.9:
+    resolution: {integrity: sha512-Hx/BGIbwj+Des3+xy5uAtAbdCyqK9y9wbBcDFDYanLS9JnMqf7OeF87HQwUimE87OEc72mr6tkKUKMBBL+hF9Q==}
     engines: {node: '>= 4'}
     dependencies:
       ast-types: 0.16.1
