@@ -1,0 +1,5 @@
+<Card variant="outlined" sx={{ padding: 0.8 }}>
+  <Button variant="contained" fullWidth>
+    Submit
+  </Button>
+</Card>

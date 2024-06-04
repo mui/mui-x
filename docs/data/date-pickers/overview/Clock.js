@@ -14,7 +14,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
   minWidth: 'fit-content',
   [`.${pickersLayoutClasses.toolbar}`]: {
-    padding: `2px 8px`,
+    padding: '4px 16px',
   },
   [`.${pickersLayoutClasses.contentWrapper}`]: {
     '& .MuiTimeClock-root': {

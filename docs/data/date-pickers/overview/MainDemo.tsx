@@ -9,7 +9,6 @@ import Birthday from './Birthday';
 import DigitalClock from './DigitalClock';
 import DateRangeWithShortcuts from './DateRangeWithShortcuts';
 import PickerButton from './PickerButton';
-import theme from './getCustomTheme';
 
 export default function MainDemo() {
   return (

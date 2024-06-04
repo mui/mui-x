@@ -11,6 +11,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 <p class="description">An intuitive component library that allows users to select dates and times without confusion</p>
 
-{{"component": "modules/components/Keyboard.tsx"}}
-
 {{"demo": "MainDemo.js", "bg": "playground"}}
+
+{{"component": "modules/components/Keyboard.tsx"}}
