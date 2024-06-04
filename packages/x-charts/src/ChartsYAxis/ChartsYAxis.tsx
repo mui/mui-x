@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import resolveProps from "@mui/utils/resolveProps";
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -53,7 +52,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = React.useContext(CartesianContext);
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
-  const defaultizedProps = resolveProps(defaultProps, themedProps)
+  const defaultizedProps = { ...defaultProps, ...themedProps };
   const {
     position,
     disableLine,
