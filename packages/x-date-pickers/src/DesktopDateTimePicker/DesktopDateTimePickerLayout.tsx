@@ -68,6 +68,10 @@ DesktopDateTimePickerLayout.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
