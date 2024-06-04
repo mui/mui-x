@@ -346,6 +346,8 @@ workflows:
             - checkout
 
   react-next:
+    when:
+      equal: [react-next, << pipeline.parameters.workflow >>]
     # triggers:
     #   - schedule:
     #       cron: '0 0 * * *'
