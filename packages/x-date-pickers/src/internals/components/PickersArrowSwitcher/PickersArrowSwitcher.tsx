@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { useTheme, styled, useThemeProps } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
@@ -62,9 +63,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   inProps: PickersArrowSwitcherProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
-
+  const isRtl = useRtl();
   const props = useThemeProps({ props: inProps, name: 'MuiPickersArrowSwitcher' });
 
   const {
@@ -163,7 +162,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       {...other}
     >
       <PreviousIconButton {...previousIconButtonProps}>
-        {isRTL ? (
+        {isRtl ? (
           <RightArrowIcon {...rightArrowIconProps} />
         ) : (
           <LeftArrowIcon {...leftArrowIconProps} />
@@ -177,7 +176,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
       <NextIconButton {...nextIconButtonProps}>
-        {isRTL ? (
+        {isRtl ? (
           <LeftArrowIcon {...leftArrowIconProps} />
         ) : (
           <RightArrowIcon {...rightArrowIconProps} />

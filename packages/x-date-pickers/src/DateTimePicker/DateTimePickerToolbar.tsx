@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
@@ -41,13 +42,15 @@ export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   ampmInClock?: boolean;
 }
 
-const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
-  const { classes, theme, isLandscape } = ownerState;
+const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {
+  const isRtl = useRtl();
+  const { classes, isLandscape } = ownerState;
+
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
-    timeContainer: ['timeContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
-    timeDigitsContainer: ['timeDigitsContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
+    timeContainer: ['timeContainer', isRtl && 'timeLabelReverse'],
+    timeDigitsContainer: ['timeDigitsContainer', isRtl && 'timeLabelReverse'],
     separator: ['separator'],
     ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
@@ -244,8 +247,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
   const isDesktop = toolbarVariant === 'desktop';
 
   const localeText = useLocaleText<TDate>();
-  const theme = useTheme();
-  const classes = useUtilityClasses({ ...ownerState, theme });
+  const classes = useUtilityClasses(ownerState);
   const toolbarTitle = inToolbarTitle ?? localeText.dateTimePickerToolbarTitle;
 
   const formatHours = (time: TDate) =>

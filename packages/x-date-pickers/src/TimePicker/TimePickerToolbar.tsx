@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -33,8 +34,9 @@ export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Theme }) => {
-  const { theme, isLandscape, classes } = ownerState;
+const useUtilityClasses = (ownerState: TimePickerToolbarProps<any>) => {
+  const isRtl = useRtl();
+  const { isLandscape, classes } = ownerState;
 
   const slots = {
     root: ['root'],
@@ -42,7 +44,7 @@ const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Th
     hourMinuteLabel: [
       'hourMinuteLabel',
       isLandscape && 'hourMinuteLabelLandscape',
-      theme.direction === 'rtl' && 'hourMinuteLabelReverse',
+      isRtl && 'hourMinuteLabelReverse',
     ],
     ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
@@ -158,7 +160,6 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
-  const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
@@ -166,7 +167,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
   const ownerState = props;
-  const classes = useUtilityClasses({ ...ownerState, theme });
+  const classes = useUtilityClasses(ownerState);
 
   const separator = (
     <TimePickerToolbarSeparator

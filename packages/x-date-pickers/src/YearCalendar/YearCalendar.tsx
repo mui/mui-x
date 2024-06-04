@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
@@ -127,7 +127,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   });
 
   const now = useNow<TDate>(timezone);
-  const theme = useTheme();
+  const isRtl = useRtl();
   const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
@@ -232,11 +232,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
+        focusYear(year + (isRtl ? 1 : -1));
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
+        focusYear(year + (isRtl ? -1 : 1));
         event.preventDefault();
         break;
       default:
