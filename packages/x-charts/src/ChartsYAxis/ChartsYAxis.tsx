@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import resolveProps from "@mui/utils/resolveProps";
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -44,15 +45,15 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
   const { yAxisIds } = React.useContext(CartesianContext);
   const {
     yAxis: {
-      [props.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
+      [inProps.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
+  const defaultizedProps = resolveProps(defaultProps, themedProps)
   const {
     position,
     disableLine,

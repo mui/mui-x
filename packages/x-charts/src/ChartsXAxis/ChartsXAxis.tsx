@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import resolveProps from "@mui/utils/resolveProps";
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
@@ -98,17 +99,17 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
   const { xAxisIds } = React.useContext(CartesianContext);
   const {
     xAxis: {
-      [props.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
+      [inProps.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
     },
   } = React.useContext(CartesianContext);
 
   const isMounted = useMounted();
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
+  const defaultizedProps = resolveProps(defaultProps, themedProps);
   const {
     position,
     disableLine,
