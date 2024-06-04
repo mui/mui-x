@@ -27,6 +27,11 @@ export interface TimePickerToolbarProps<TDate extends PickerValidDate>
   ampmInClock?: boolean;
 }
 
+interface TimePickerToolbarOwnerState<TDate extends PickerValidDate>
+  extends TimePickerToolbarProps<TDate> {
+  isRtl: boolean;
+}
+
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
    * Override or extend the styles applied to the component.
@@ -34,9 +39,8 @@ export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: TimePickerToolbarProps<any>) => {
-  const isRtl = useRtl();
-  const { isLandscape, classes } = ownerState;
+const useUtilityClasses = (ownerState: TimePickerToolbarOwnerState<any>) => {
+  const { isLandscape, classes, isRtl } = ownerState;
 
   const slots = {
     root: ['root'],
@@ -82,15 +86,18 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
     styles.hourMinuteLabel,
   ],
 })<{
-  ownerState: TimePickerToolbarProps<any>;
-}>(({ theme }) => ({
+  ownerState: TimePickerToolbarOwnerState<any>;
+}>({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-end',
-  ...(theme.direction === 'rtl' && {
-    flexDirection: 'row-reverse',
-  }),
   variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        flexDirection: 'row-reverse',
+      },
+    },
     {
       props: { isLandscape: true },
       style: {
@@ -98,7 +105,7 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
       },
     },
   ],
-}));
+});
 
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
@@ -159,6 +166,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
   } = props;
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
+  const isRtl = useRtl();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -166,7 +174,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
-  const ownerState = props;
+  const ownerState: TimePickerToolbarOwnerState<TDate> = { ...props, isRtl };
   const classes = useUtilityClasses(ownerState);
 
   const separator = (
