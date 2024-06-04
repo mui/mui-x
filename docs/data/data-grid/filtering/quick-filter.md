@@ -47,7 +47,7 @@ To include hidden columns in the quick filter, set `filterModel.quickFilterExclu
 />
 ```
 
-In the demo below, try hiding the `company` column. You'll only see 5 results because rows where the `company` value is `'Warner Bros.'` are excluded.
+In the demo below, the `company` column is hidden. You'll only see 5 results because rows where the `company` value is `'Warner Bros.'` are excluded.
 However, when you disable the `Exclude hidden columns` switch, the rows containing `'Warner'` in the `company` field will be displayed again, even though the column remains hidden.
 
 {{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
