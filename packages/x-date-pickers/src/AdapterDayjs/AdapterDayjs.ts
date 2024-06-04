@@ -323,8 +323,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
         return zone;
       }
     }
-
-    if (this.hasUTCPlugin() && value.isUTC()) {
+    
+    if (typeof value === 'string' && value.endsWith('Z')) {
+      // `value` can end up being a formatted ISO string
+      return 'UTC'
+    }
+    if (this.hasUTCPlugin() && typeof value.isUTC === 'function' && value.isUTC()) {
       return 'UTC';
     }
 
