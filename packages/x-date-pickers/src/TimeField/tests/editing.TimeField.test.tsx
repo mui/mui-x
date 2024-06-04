@@ -205,7 +205,7 @@ describe('<TimeField /> - Editing', () => {
   });
 
   describeAdapters('key: PageDown', TimeField, ({ adapter, testFieldKeyPress }) => {
-    describe('24 hours format', () => {
+    describe('24 hours format (PageDown)', () => {
       describe('Hours field', () => {
         it('should set hours field to maximal when no default value is provided', () => {
           testFieldKeyPress({
@@ -215,7 +215,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should decrement hours field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
@@ -225,7 +225,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should trespass hours field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
@@ -236,6 +236,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
       });
+
       describe('Minutes field', () => {
         it('should set minutes field to maximal when no default value is provided', () => {
           testFieldKeyPress({
@@ -244,7 +245,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '59',
           });
         });
-        
+
         it('should decrement minutes field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
@@ -253,7 +254,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '54',
           });
         });
-        
+
         it('should trespass minutes field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
@@ -274,7 +275,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '12',
           });
         });
-        
+
         it('should decrement hours field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
@@ -283,7 +284,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '05',
           });
         });
-        
+
         it('should trespass hours field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
@@ -293,6 +294,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
       });
+
       describe('Meridiem field', () => {
         it('should set meridiem to PM when no default value is provided', () => {
           testFieldKeyPress({
@@ -324,9 +326,9 @@ describe('<TimeField /> - Editing', () => {
   });
 
   describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
-    describe('24 hours format', () => {
+    describe('24 hours format (PageUp)', () => {
       describe('Hours field', () => {
-        it('should set hours field to minimal when no default value is provided', () => {
+        it('s', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
@@ -334,7 +336,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should increment hours field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
@@ -344,7 +346,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should trespass hours field when default value is higher than 19', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
@@ -355,6 +357,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
       });
+
       describe('Minutes field', () => {
         it('should set minutes field to minimal when no default value is provided', () => {
           testFieldKeyPress({
@@ -363,7 +366,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '00',
           });
         });
-        
+
         it('should increment minutes field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
@@ -372,7 +375,7 @@ describe('<TimeField /> - Editing', () => {
             expectedValue: '30',
           });
         });
-        
+
         it('should trespass minutes field when default value is higher than 55', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
@@ -393,7 +396,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should increment hours field by 5 when default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
@@ -403,7 +406,7 @@ describe('<TimeField /> - Editing', () => {
             selectedSection: 'hours',
           });
         });
-        
+
         it('should trespass hours field when default value is higher than 07', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
@@ -414,6 +417,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
       });
+
       describe('Meridiem field', () => {
         it('should set meridiem to AM when no default value is provided', () => {
           testFieldKeyPress({
