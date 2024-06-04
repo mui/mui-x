@@ -108,7 +108,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
-  const defaultizedProps = { ...defaultProps, ...themedProps, position: inProps.position };
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+    position: inProps.position || defaultProps.position,
+  };
   const {
     position,
     disableLine,
