@@ -24,7 +24,7 @@ export type ItemHighlightedState = {
 export function useItemHighlighted(item: HighlightItemData | null): ItemHighlightedState {
   const highlighted = React.useContext(HighlightedContext);
 
-  if (highlighted === undefined) {
+  if (!highlighted.isInitialized) {
     throw new Error(
       [
         'MUI X: Could not find the highlighted ref context.',

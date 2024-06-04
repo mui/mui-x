@@ -12,6 +12,7 @@ import { createIsHighlighted } from './createIsHighlighted';
 import { useSeries } from '../../hooks/useSeries';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { SeriesId } from '../../models/seriesType/common';
+import { Initializable } from '../context.types';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;
@@ -67,8 +68,9 @@ function HighlightedProvider({
       ? seriesById.get(highlightedItem.seriesId) ?? undefined
       : undefined;
 
-  const providerValue = React.useMemo<HighlightedState>(() => {
+  const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {
     return {
+      isInitialized: true,
       highlightScope,
       highlightedItem,
       setHighlighted: (itemData) => {
