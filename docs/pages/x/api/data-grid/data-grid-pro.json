@@ -1466,12 +1466,6 @@
       "isGlobal": false
     },
     {
-      "key": "main--hasSkeletonLoadingOverlay",
-      "className": "MuiDataGridPro-main--hasSkeletonLoadingOverlay",
-      "description": "Styles applied to the main container element when it has an active skeleton loading overlay.",
-      "isGlobal": false
-    },
-    {
       "key": "menu",
       "className": "MuiDataGridPro-menu",
       "description": "Styles applied to the menu element.",

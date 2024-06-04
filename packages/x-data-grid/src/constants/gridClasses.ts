@@ -369,6 +369,7 @@ export interface GridClasses {
   'main--hasPinnedRight': string;
   /**
    * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * @ignore - do not document.
    */
   'main--hasSkeletonLoadingOverlay': string;
   /**

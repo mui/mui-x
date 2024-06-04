@@ -927,11 +927,6 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
-    "main--hasSkeletonLoadingOverlay": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the main container element",
-      "conditions": "it has an active skeleton loading overlay"
-    },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
