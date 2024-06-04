@@ -774,6 +774,28 @@ async function initializeEnvironment(
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
+
+      it('should not change timezone when changing the start date from non DST to DST', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        const thrownErrors: string[] = [];
+        context.on('weberror', (webError) => {
+          thrownErrors.push(webError.error().message);
+        });
+
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        // open the picker
+        await page.getByRole('textbox').click();
+
+        await page.getByRole('textbox').press('ArrowDown');
+
+        expect(thrownErrors).not.to.contain(
+          'MUI X: The timezone of the start and the end date should be the same.',
+        );
+      });
     });
   });
 });
