@@ -52,7 +52,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = React.useContext(CartesianContext);
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
-  const defaultizedProps = { ...defaultProps, ...themedProps };
+  const defaultizedProps = { ...defaultProps, ...themedProps, position: inProps.position };
   const {
     position,
     disableLine,
