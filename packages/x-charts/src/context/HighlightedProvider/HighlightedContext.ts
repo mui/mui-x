@@ -60,14 +60,14 @@ export type HighlightScope = {
   fade?: FadeOptions;
 };
 
-export interface HighlightedState {
+export type HighlightedState = {
   highlightScope?: Partial<HighlightScope>;
   highlightedItem: HighlightItemData | null;
   setHighlighted: (item: HighlightItemData) => void;
   clearHighlighted: () => void;
   isHighlighted: (input: HighlightItemData) => boolean;
   isFaded: (input: HighlightItemData) => boolean;
-}
+};
 
 export const HighlightedContext = React.createContext<Initializable<HighlightedState>>({
   isInitialized: false,

@@ -12,10 +12,18 @@ function UseSeries() {
 describe('useSeries', () => {
   const { render } = createRenderer();
 
-  it('should throw an error when parent context not present', () => {
+  it('should throw an error when parent context not present', function test() {
+    if (!/jsdom/.test(window.navigator.userAgent)) {
+      // can't catch render errors in the browser for unknown reason
+      // tried try-catch + error boundary + window onError preventDefault
+      this.skip();
+    }
+
+    const errorRef = React.createRef<any>();
+
     expect(() =>
       render(
-        <ErrorBoundary>
+        <ErrorBoundary ref={errorRef}>
           <UseSeries />
         </ErrorBoundary>,
       ),
@@ -24,6 +32,11 @@ describe('useSeries', () => {
       'It looks like you rendered your component outside of a ChartsContainer parent component.',
       'The above error occurred in the <UseSeries> component:',
     ]);
+
+    expect((errorRef.current as any).errors).to.have.length(1);
+    expect((errorRef.current as any).errors[0].toString()).to.include(
+      'MUI X: Could not find the series ref context.',
+    );
   });
 
   it('should not throw an error when parent context is present', () => {
