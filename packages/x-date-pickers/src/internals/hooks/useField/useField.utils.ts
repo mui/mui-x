@@ -323,9 +323,9 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
 
     const currentOptionIndex = options.indexOf(section.value);
     const newOptionIndex = (currentOptionIndex + delta) % options.length;
-    const adjustedIndex = (newOptionIndex + options.length) % options.length;
+    const clampedIndex = (newOptionIndex + options.length) % options.length;
 
-    return options[adjustedIndex];
+    return options[clampedIndex];
   };
 
   if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
