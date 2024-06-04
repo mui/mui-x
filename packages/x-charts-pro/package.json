@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "7.5.1",
+  "version": "7.6.1",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.ts",

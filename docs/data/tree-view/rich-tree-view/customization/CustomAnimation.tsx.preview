@@ -1,7 +1,5 @@
 <RichTreeView
-  aria-label="customized"
-  defaultExpandedItems={['1']}
-  sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
+  defaultExpandedItems={['grid']}
   slotProps={{ item: { slots: { groupTransition: TransitionComponent } } }}
-  items={ITEMS}
+  items={MUI_X_PRODUCTS}
 />

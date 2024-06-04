@@ -34,7 +34,7 @@ const MUI_X_PRODUCTS = [
 
 export default function MultiSelectTreeView() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView multiSelect items={MUI_X_PRODUCTS} />
     </Box>
   );

@@ -24,6 +24,16 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
 export default function ApiMethodSetItemExpansion() {
@@ -38,14 +48,14 @@ export default function ApiMethodSetItemExpansion() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Stack sx={{ mb: 1 }} spacing={2} direction="row">
+    <Stack spacing={2}>
+      <Stack spacing={2} direction="row">
         <Button onClick={handleExpandClick}>Expand Data Grid</Button>
         <Button onClick={handleCollapseClick}>Collapse Data Grid</Button>
       </Stack>
-      <Box sx={{ minHeight: 220, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
       </Box>
-    </Box>
+    </Stack>
   );
 }

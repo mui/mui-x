@@ -19,6 +19,7 @@ import {
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
   findRightPinnedHeadersBeforeCol,
+  escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
 import {
   GridAutosizeOptions,
@@ -449,7 +450,7 @@ export const useGridColumnResize = (
     );
 
     const headerFilterElement = root.querySelector(
-      `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+      `.${gridClasses.headerFilterRow} [data-field="${escapeOperandAttributeSelector(colDef.field)}"]`,
     );
     if (headerFilterElement) {
       refs.headerFilterElement = headerFilterElement as HTMLDivElement;
