@@ -788,9 +788,9 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
 
         // open the picker
-        await page.getByRole('group').click();
+        await page.getByRole('textbox').click();
 
-        await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
+        await page.getByRole('textbox').press('ArrowDown');
 
         expect(thrownErrors).not.to.contain(
           'MUI X: The timezone of the start and the end date should be the same.',
