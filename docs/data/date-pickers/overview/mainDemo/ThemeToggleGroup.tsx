@@ -5,8 +5,8 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from '@mui/material/ToggleButtonGroup';
 import Paper from '@mui/material/Paper';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(1),
@@ -29,15 +29,19 @@ export default function ThemeToggleGroup() {
     >
       <StyledToggleButtonGroup
         orientation="vertical"
-        value="list"
+        value="custom"
         exclusive
         size="small"
       >
-        <ToggleButton value="list" aria-label="list" sx={{ flexGrow: 1 }}>
-          <ViewListIcon />
+        <ToggleButton value="custom" aria-label="custom-theme" sx={{ flexGrow: 1 }}>
+          <AutoFixHighIcon />
         </ToggleButton>
-        <ToggleButton value="module" aria-label="module" sx={{ flexGrow: 1 }}>
-          <ViewModuleIcon />
+        <ToggleButton
+          value="default"
+          aria-label="default-theme"
+          sx={{ flexGrow: 1 }}
+        >
+          <RestartAltIcon />
         </ToggleButton>
       </StyledToggleButtonGroup>
     </Paper>
