@@ -4,7 +4,7 @@ import { SvgContext } from '../context/DrawingProvider';
 export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
   const svgRef = React.useContext(SvgContext);
 
-  if (svgRef.current === undefined) {
+  if (svgRef.current === null) {
     throw new Error(
       [
         'MUI X: Could not find the svg ref context.',
