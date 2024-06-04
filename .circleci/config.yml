@@ -359,12 +359,16 @@ workflows:
       - test_unit:
           <<: *default-context
           react-version: next
+          name: test_unit-react@next
       - test_browser:
           <<: *default-context
           react-version: next
+          name: test_browser-react@next
       - test_regressions:
           <<: *default-context
           react-version: next
+          name: test_regressions-react@next
       - test_e2e:
           <<: *default-context
           react-version: next
+          name: test_e2e-react@next
