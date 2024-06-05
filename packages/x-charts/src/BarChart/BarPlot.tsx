@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
@@ -14,6 +13,7 @@ import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
+import { useBarSeries } from '../hooks/useSeries';
 
 /**
  * Solution of the equations
@@ -87,7 +87,7 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    React.useContext(SeriesContext).bar ??
+    useBarSeries() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
   const chartId = useChartId();
