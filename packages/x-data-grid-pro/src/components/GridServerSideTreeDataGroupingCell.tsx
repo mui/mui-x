@@ -114,7 +114,11 @@ export function GridServerSideTreeDataGroupingCell(props: GridTreeDataGroupingCe
   const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);
-  const descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
+
+  let descendantCount = 0;
+  if (row) {
+    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+  }
 
   return (
     <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>

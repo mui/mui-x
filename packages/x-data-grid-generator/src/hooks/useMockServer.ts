@@ -40,7 +40,6 @@ type UseMockServerResponse = {
   columns: GridColDef[];
   initialState: GridInitialState;
   getGroupKey?: (row: GridRowModel) => string;
-  hasChildren?: (row: GridRowModel) => boolean;
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
   isInitialized: boolean;
@@ -131,13 +130,6 @@ export const useMockServer = (
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options.treeData?.groupingField, isTreeData]);
-
-  const hasChildren = React.useMemo(() => {
-    if (isTreeData) {
-      return (row: GridRowModel): boolean => row.hasChildren;
-    }
-    return undefined;
-  }, [isTreeData]);
 
   const getChildrenCount = React.useMemo(() => {
     if (isTreeData) {
@@ -337,7 +329,6 @@ export const useMockServer = (
     columns: columnsWithDefaultColDef,
     initialState,
     getGroupKey,
-    hasChildren,
     getChildrenCount,
     fetchRows,
     isInitialized,

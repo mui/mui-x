@@ -136,19 +136,19 @@ export const useGridServerSideTreeDataPreProcessors = (
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const hasChildren = props.unstable_dataSource?.hasChildren;
-      if (!hasChildren) {
-        throw new Error('MUI X: No `hasChildren` method provided with the dataSource.');
+      const getChildrenCount = props.unstable_dataSource?.getChildrenCount;
+      if (!getChildrenCount) {
+        throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
       const parentPath = privateApiRef.current.caches.dataSource?.groupKeys || [];
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
         id: rowId,
-        path: [...parentPath, getGroupKey!(params.dataRowIdToModelLookup[rowId])].map(
+        path: [...parentPath, getGroupKey(params.dataRowIdToModelLookup[rowId])].map(
           (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
         ),
-        hasServerChildren: hasChildren!(params.dataRowIdToModelLookup[rowId]),
+        hasServerChildren: getChildrenCount(params.dataRowIdToModelLookup[rowId]) !== 0,
       });
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {

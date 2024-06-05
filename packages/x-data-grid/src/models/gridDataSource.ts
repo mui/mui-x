@@ -70,12 +70,6 @@ export interface GridDataSource {
    */
   getGroupKey?: (row: GridRowModel) => string;
   /**
-   * Used to determine if a row has children on server.
-   * @param {GridRowModel} row The row to check if it has children
-   * @returns {boolean} A boolean indicating if the row has children
-   */
-  hasChildren?: (row: GridRowModel) => boolean;
-  /**
    * Used to determine the number of children a row has on server.
    * @param {GridRowModel} row The row to check the number of children
    * @returns {number} The number of children the row has

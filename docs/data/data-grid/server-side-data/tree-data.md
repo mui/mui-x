@@ -8,7 +8,7 @@ title: React Server-side tree data
 
 To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
-The data source also requires some additional props to handle tree data, namely `getGroupKey` and `hasChildren`. The data source also supports and optional prop `getChildrenCount` to let the Data Grid print the children count next to each parent.
+The data source also requires some additional props to handle tree data, namely `getGroupKey` and `getChildrenCount`. If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -18,10 +18,6 @@ const customDataSource: GridDataSource = {
   getGroupKey: (row) => {
     // Return the group key for the row, e.g. `name`
     return row.name;
-  },
-  hasChildren: (row) => {
-    // Return true if the row has children
-    return row.hasChildren;
   },
   getChildrenCount: (row) => {
     // Return the number of children for the row

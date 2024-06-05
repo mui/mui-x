@@ -29,7 +29,6 @@ const dataSource = {
     };
   },
   getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
-  hasChildren: (row) => row.hasChildren,
   getChildrenCount: (row) => row.descendantCount,
 };
 

@@ -464,7 +464,7 @@ export const processTreeDataRows = (
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
     const descendantCount = descendants.length;
-    return { ...row, descendantCount, hasChildren: descendantCount > 0 } as GridRowModel;
+    return { ...row, descendantCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {

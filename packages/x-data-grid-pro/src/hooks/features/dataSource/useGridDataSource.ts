@@ -183,7 +183,7 @@ export const useGridDataSource = (
       } finally {
         privateApiRef.current.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
-      } 
+      }
     },
     [nestedDataManager, onError, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
