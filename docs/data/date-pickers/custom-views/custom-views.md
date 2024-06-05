@@ -38,7 +38,7 @@ The demo below shows how to navigate the months two by two:
 
 ## Year button
 
-This button allows users to change the selected month in the `year` view.
+This button allows users to change the selected year in the `year` view.
 
 ### Component props
 
