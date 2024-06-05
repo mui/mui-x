@@ -28,6 +28,7 @@ const SkeletonOverlay = styled('div', {
   slot: 'SkeletonLoadingOverlay',
   overridesResolver: (props, styles) => styles.skeletonLoadingOverlay,
 })({
+  minWidth: '100%',
   width: 'max-content', // prevents overflow: clip; cutting off the x axis
   height: '100%',
   overflow: 'clip', // y axis is hidden while the x axis is allowed to overflow
@@ -110,6 +111,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const sectionIndex = pinnedPosition
           ? pinnedColumns[pinnedPosition].findIndex((col) => col.field === column.field)
           : -1;
+        const style =
+          pinnedPosition && getPinnedStyle(column.computedWidth, colIndex, pinnedPosition);
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
         const showRightBorder = shouldCellShowRightBorder(
           pinnedPosition,
@@ -119,17 +122,18 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
           gridHasFiller,
         );
         const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, sectionIndex);
-        const style =
-          pinnedPosition && getPinnedStyle(column.computedWidth, colIndex, pinnedPosition);
-
+        const isLastColumn = colIndex === columns.length - 1;
         const isFirstPinnedRight = isPinnedRight && sectionIndex === 0;
+        const hasFillerBefore = isFirstPinnedRight && gridHasFiller;
+        const hasFillerAfter = isLastColumn && !isFirstPinnedRight && gridHasFiller;
+        const expandedWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth;
+        const emptyCellWidth = Math.max(0, expandedWidth);
+        const emptyCell = (
+          <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />
+        );
 
-        if (isFirstPinnedRight) {
-          const expandedWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth;
-          const emptyCellWidth = Math.max(0, expandedWidth);
-          rowCells.push(
-            <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />,
-          );
+        if (hasFillerBefore) {
+          rowCells.push(emptyCell);
         }
 
         rowCells.push(
@@ -148,6 +152,10 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
             style={style}
           />,
         );
+
+        if (hasFillerAfter) {
+          rowCells.push(emptyCell);
+        }
       }
 
       array.push(
