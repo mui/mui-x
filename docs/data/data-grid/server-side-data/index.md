@@ -177,6 +177,12 @@ The Data source supports caching the data it receives from the server by default
 
 The out-of-the-box cache is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
+:::info
+The demos on this page above use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
+
+Open info section of the browser console to see the requests being made and the data being fetched in response.
+:::
+
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 ### Custom cache

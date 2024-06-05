@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import LoadingSlate from './LoadingSlateNoSnap';
 
 function ServerSideDataGrid() {
-  const [verbose, setVerbose] = React.useState(false);
-
   const { isInitialized, columns, initialState, fetchRows } = useMockServer(
     {},
-    { useCursorPagination: false, verbose },
+    { useCursorPagination: false },
   );
 
   const dataSource: GridDataSource = React.useMemo(
@@ -47,31 +43,18 @@ function ServerSideDataGrid() {
   );
 
   return (
-    <div style={{ width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={verbose}
-              onChange={(e) => setVerbose(e.target.checked)}
-            />
-          }
-          label="Verbose"
+    <div style={{ width: '100%', height: 400 }}>
+      {isInitialized ? (
+        <DataGridPro
+          columns={columns}
+          unstable_dataSource={dataSource}
+          pagination
+          initialState={initialStateWithPagination}
+          pageSizeOptions={[10, 20, 50]}
         />
-      </div>
-      <div style={{ height: 400 }}>
-        {isInitialized ? (
-          <DataGridPro
-            columns={columns}
-            unstable_dataSource={dataSource}
-            pagination
-            initialState={initialStateWithPagination}
-            pageSizeOptions={[10, 20, 50]}
-          />
-        ) : (
-          <LoadingSlate />
-        )}
-      </div>
+      ) : (
+        <LoadingSlate />
+      )}
     </div>
   );
 }

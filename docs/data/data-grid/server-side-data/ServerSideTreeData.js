@@ -11,37 +11,15 @@ const dataSetOptions = {
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
 
-const dataSource = {
-  getRows: async (params) => {
-    const urlParams = new URLSearchParams({
-      paginationModel: encodeURIComponent(JSON.stringify(params.paginationModel)),
-      filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-      sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-      groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
-    });
-    const serverResponse = await fetch(
-      `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-    );
-    const getRowsResponse = await serverResponse.json();
-    return {
-      rows: getRowsResponse.rows,
-      rowCount: getRowsResponse.rowCount,
-    };
-  },
-  getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
-  getChildrenCount: (row) => row.descendantCount,
-};
-
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, ...props } = useMockServer(dataSetOptions, {
-    startServer: true,
-  });
+  const { isInitialized, fetchRows, columns, initialState } =
+    useMockServer(dataSetOptions);
 
-  const initialState = React.useMemo(
+  const initialStateWithPagination = React.useMemo(
     () => ({
-      ...props.initialState,
+      ...initialState,
       pagination: {
         paginationModel: {
           pageSize: 5,
@@ -49,7 +27,32 @@ export default function ServerSideTreeData() {
         rowCount: 0,
       },
     }),
-    [props.initialState],
+    [initialState],
+  );
+
+  const dataSource = React.useMemo(
+    () => ({
+      getRows: async (params) => {
+        const urlParams = new URLSearchParams({
+          paginationModel: encodeURIComponent(
+            JSON.stringify(params.paginationModel),
+          ),
+          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
+          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+          groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+        });
+        const getRowsResponse = await fetchRows(
+          `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+        );
+        return {
+          rows: getRowsResponse.rows,
+          rowCount: getRowsResponse.rowCount,
+        };
+      },
+      getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
+      getChildrenCount: (row) => row.descendantCount,
+    }),
+    [fetchRows],
   );
 
   return (
@@ -58,13 +61,13 @@ export default function ServerSideTreeData() {
       <div style={{ height: 400 }}>
         {isInitialized ? (
           <DataGridPro
-            {...props}
+            columns={columns}
             unstable_dataSource={dataSource}
             treeData
             apiRef={apiRef}
             pagination
             pageSizeOptions={pageSizeOptions}
-            initialState={initialState}
+            initialState={initialStateWithPagination}
             slots={{ toolbar: GridToolbar }}
             slotProps={{ toolbar: { showQuickFilter: true } }}
           />

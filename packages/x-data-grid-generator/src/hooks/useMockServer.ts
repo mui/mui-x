@@ -1,7 +1,5 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { http, HttpResponse } from 'msw';
-import { SetupWorkerApi } from 'msw/browser';
 import {
   getGridDefaultColumnTypes,
   GridRowModel,
@@ -81,11 +79,10 @@ const defaultColDef = getGridDefaultColumnTypes();
 
 export const useMockServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
-  serverOptions?: ServerOptions & { startServer?: boolean; verbose?: boolean },
+  serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse => {
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const [worker, setWorker] = React.useState<SetupWorkerApi>();
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
   const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
@@ -204,11 +201,11 @@ export const useMockServer = (
         });
       }
       const params = decodeParams(requestUrl);
-      const verbose = serverOptions?.verbose ?? false;
+      const verbose = serverOptions?.verbose ?? true;
       // eslint-disable-next-line no-console
       const print = console.info;
       if (verbose) {
-        print('MUI X: SERVER REQUEST RECIEVED WITH PARAMS', params);
+        print('MUI X: DATASOURCE REQUEST', params);
       }
       let getRowsResponse: GridGetRowsResponse;
       const serverOptionsWithDefault = {
@@ -223,7 +220,7 @@ export const useMockServer = (
         const delay = randomInt(minDelay, maxDelay);
         return new Promise<GridGetRowsResponse>((_, reject) => {
           if (verbose) {
-            print('MUI X: SERVER REQUEST FAILURE WITH PARAMS', params);
+            print('MUI X: DATASOURCE REQUEST FAILURE', params);
           }
           setTimeout(() => reject(new Error('Could not fetch the data')), delay);
         });
@@ -254,7 +251,7 @@ export const useMockServer = (
 
       return new Promise<GridGetRowsResponse>((resolve) => {
         if (verbose) {
-          print('MUI X: SERVER RESPONSE WITH PARAMS', params, getRowsResponse);
+          print('MUI X: DATASOURCE RESPONSE', params, getRowsResponse);
         }
         resolve(getRowsResponse);
       });
@@ -271,59 +268,10 @@ export const useMockServer = (
   );
 
   React.useEffect(() => {
-    if (!data || !serverOptions?.startServer) {
-      return;
-    }
-    async function startServer() {
-      if (typeof window !== 'undefined') {
-        // eslint-disable-next-line global-require
-        const { setupWorker } = require('msw/browser');
-        if (!setupWorker) {
-          return;
-        }
-        const handlers = [
-          http.get(BASE_URL, async ({ request }) => {
-            if (!request.url) {
-              return HttpResponse.json({ error: 'Bad request.' }, { status: 400 });
-            }
-            try {
-              if (shouldRequestsFail) {
-                return HttpResponse.json({ error: 'Could not fetch the data' }, { status: 500 });
-              }
-              const response = await fetchRows(request.url);
-              return HttpResponse.json(response);
-            } catch (error) {
-              return HttpResponse.json({ error }, { status: 500 });
-            }
-          }),
-        ];
-        const w = setupWorker(...handlers);
-        try {
-          await w.start({ quiet: true });
-          setWorker(w);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-    startServer();
-    // eslint-disable-next-line consistent-return
-    return () => {
-      if (worker) {
-        setWorker((prev) => {
-          prev?.stop();
-          return undefined;
-        });
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchRows, data, shouldRequestsFail, serverOptions?.startServer]);
-
-  React.useEffect(() => {
-    if (data && (!serverOptions?.startServer || worker) && !isInitialized) {
+    if (data && !isInitialized) {
       setIsInitialized(true);
     }
-  }, [data, worker, isInitialized, serverOptions?.startServer]);
+  }, [data, isInitialized]);
 
   return {
     columns: columnsWithDefaultColDef,

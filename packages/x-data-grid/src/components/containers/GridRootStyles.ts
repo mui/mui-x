@@ -115,7 +115,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
-    { [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer },
+    {
+      [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
+    },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
