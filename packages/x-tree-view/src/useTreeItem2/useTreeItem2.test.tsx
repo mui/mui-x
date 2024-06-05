@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, createEvent, fireEvent, screen } from '@mui/monorepo/packages/test-utils';
+import { act, createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   describeTreeView,
   DescribeTreeViewRendererUtils,
