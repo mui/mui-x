@@ -31,9 +31,8 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 
 ## Keyboard support
 
-The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components. 
+The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components.
 Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
-
 
 ### Fields
 
