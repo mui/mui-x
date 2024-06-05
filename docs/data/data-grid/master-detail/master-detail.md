@@ -143,16 +143,16 @@ The following example demonstrates how to render a custom header for the detail 
 
 ```tsx
 const columns = [
-    {
-      ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
-      renderHeader: (params) => (
-        <div>
-          <span>{params.colDef.headerName}</span>
-          <button onClick={() => console.log('Custom action')}>Custom action</button>
-        </div>
-      ),
-    },
-    //... other columns
+  {
+    ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+    renderHeader: (params) => (
+      <div>
+        <span>{params.colDef.headerName}</span>
+        <button onClick={() => console.log('Custom action')}>Custom action</button>
+      </div>
+    ),
+  },
+  //... other columns
 ];
 ```
 
