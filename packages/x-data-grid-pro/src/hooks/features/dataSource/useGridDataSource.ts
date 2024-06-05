@@ -107,9 +107,10 @@ export const useGridDataSource = (
 
   const queueChildrenFetch = React.useCallback(
     (id: GridRowId) => {
+      privateApiRef.current.setChildrenLoading(id, true);
       nestedDataManager.enqueue([id]);
     },
-    [nestedDataManager],
+    [privateApiRef, nestedDataManager],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
