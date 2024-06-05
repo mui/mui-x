@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  react-is: ^18.2.0
+  react-is: ^18.3.1
   '@types/node': ^18.19.33
 
 patchedDependencies:
@@ -588,8 +588,8 @@ importers:
         specifier: ^7.51.5
         version: 7.51.5(react@18.3.1)
       react-is:
-        specifier: ^18.2.0
-        version: 18.2.0
+        specifier: ^18.3.1
+        version: 18.3.1
       react-router:
         specifier: ^6.23.1
         version: 6.23.1(react@18.3.1)
@@ -8274,8 +8274,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
 
-  react-is@18.2.0:
-    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+  react-is@18.3.1:
+    resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
   react-reconciler@0.29.0:
     resolution: {integrity: sha512-wa0fGj7Zht1EYMRhKWwoo1H9GApxYLBuhoAuXN0TlltESAjDssB+Apf0T/DngVqaMyPypDmabL37vw/2aRM98Q==}
@@ -11172,7 +11172,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-is: 18.2.0
+      react-is: 18.3.1
       react-reconciler: 0.29.0(react@18.3.1)
       react-test-renderer: 18.2.0(react@18.3.1)
       semver: 5.7.2
@@ -11321,7 +11321,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-is: 18.2.0
+      react-is: 18.3.1
       react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     optionalDependencies:
       '@emotion/react': 11.11.4(@types/react@18.3.3)(react@18.3.1)
@@ -11412,7 +11412,7 @@ snapshots:
       '@types/prop-types': 15.7.12
       prop-types: 15.8.1
       react: 18.3.1
-      react-is: 18.2.0
+      react-is: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
 
@@ -12702,7 +12702,7 @@ snapshots:
       prop-types: 15.8.1
       prop-types-exact: 1.2.0
       react: 18.3.1
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   ajv-formats@2.1.1(ajv@8.12.0):
     optionalDependencies:
@@ -15468,7 +15468,7 @@ snapshots:
 
   hoist-non-react-statics@3.3.2:
     dependencies:
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   homedir-polyfill@1.0.3:
     dependencies:
@@ -17867,13 +17867,13 @@ snapshots:
     dependencies:
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   pretty-format@29.7.0:
     dependencies:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   pretty-ms@9.0.0:
     dependencies:
@@ -17937,7 +17937,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   protocols@2.0.1: {}
 
@@ -18048,7 +18048,7 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-is@18.2.0: {}
+  react-is@18.3.1: {}
 
   react-reconciler@0.29.0(react@18.3.1):
     dependencies:
@@ -18078,7 +18078,7 @@ snapshots:
     dependencies:
       object-assign: 4.1.1
       react: 18.3.1
-      react-is: 18.2.0
+      react-is: 18.3.1
 
   react-simple-code-editor@0.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -18088,7 +18088,7 @@ snapshots:
   react-test-renderer@18.2.0(react@18.3.1):
     dependencies:
       react: 18.3.1
-      react-is: 18.2.0
+      react-is: 18.3.1
       react-shallow-renderer: 16.15.0(react@18.3.1)
       scheduler: 0.23.2
 
