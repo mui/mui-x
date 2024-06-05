@@ -5,6 +5,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import clsx from 'clsx';
 import { fastMemo } from '../../utils/fastMemo';
 import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -22,9 +23,9 @@ const CONTENT_WIDTH_RANGE_BY_TYPE: Partial<Record<GridColType, [number, number]>
   singleSelect: [40, 80],
 } as const;
 
-export interface GridSkeletonCellProps {
+export interface GridSkeletonCellProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: GridColType;
-  width?: number;
+  width?: number | string;
   height?: number | 'auto';
   field?: string;
   align?: string;
@@ -35,19 +36,19 @@ export interface GridSkeletonCellProps {
   empty?: boolean;
 }
 
-type OwnerState = Pick<GridSkeletonCellProps, 'align'> & {
+type OwnerState = Pick<GridSkeletonCellProps, 'align' | 'empty'> & {
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, classes } = ownerState;
+  const { align, classes, empty } = ownerState;
 
   const slots = {
     root: [
       'cell',
       'cellSkeleton',
       `cell--text${align ? capitalize(align) : 'Left'}`,
-      'withBorderColor',
+      empty && 'cellEmpty',
     ],
   };
 
@@ -56,10 +57,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const randomNumberGenerator = createRandomNumberGenerator(12345);
 
-function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkeletonCellProps) {
-  const { field, type, align, width, height, empty = false, ...other } = props;
+function GridSkeletonCell(props: GridSkeletonCellProps) {
+  const { field, type, align, width, height, empty = false, style, className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes, align };
+  const ownerState = { classes: rootProps.classes, align, empty };
   const classes = useUtilityClasses(ownerState);
 
   // The width of the skeleton is a random number between the min and max values
@@ -85,7 +86,11 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
       } as const);
 
   return (
-    <div className={classes.root} style={{ height, maxWidth: width, minWidth: width }} {...other}>
+    <div
+      className={clsx(classes.root, className)}
+      style={{ height, maxWidth: width, minWidth: width, ...style }}
+      {...other}
+    >
       {!empty && <Skeleton {...skeletonProps} />}
     </div>
   );
@@ -114,7 +119,7 @@ GridSkeletonCell.propTypes = {
     'singleSelect',
     'string',
   ]),
-  width: PropTypes.number,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 } as any;
 
 const Memoized = fastMemo(GridSkeletonCell);

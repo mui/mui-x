@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Theme, SystemStyleObject } from '@mui/system';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -26,20 +25,20 @@ const LOADING_VARIANTS: Record<
   GridLoadingOverlayVariant,
   {
     component: React.ComponentType;
-    sx: SystemStyleObject<Theme>;
+    style: React.CSSProperties;
   }
 > = {
   'circular-progress': {
     component: CircularProgress,
-    sx: {},
+    style: {},
   },
   'linear-progress': {
     component: LinearProgress,
-    sx: { display: 'block' },
+    style: { display: 'block' },
   },
   skeleton: {
     component: GridSkeletonLoadingOverlay,
-    sx: { display: 'block' },
+    style: { display: 'block' },
   },
 };
 
@@ -48,7 +47,7 @@ const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayPr
     const {
       variant = 'circular-progress',
       noRowsVariant = 'circular-progress',
-      sx,
+      style,
       ...other
     } = props;
     const apiRef = useGridApiContext();
@@ -56,7 +55,7 @@ const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayPr
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
 
     return (
-      <GridOverlay ref={ref} sx={{ ...activeVariant.sx, ...sx }} {...other}>
+      <GridOverlay ref={ref} style={{ ...activeVariant.style, ...style }} {...other}>
         <activeVariant.component />
       </GridOverlay>
     );
