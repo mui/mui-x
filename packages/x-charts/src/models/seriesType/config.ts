@@ -59,10 +59,6 @@ export type CartesianChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return ['bar', 'line', 'scatter', 'heatmap'].includes(seriesType);
-}
-
 export type StackableChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
