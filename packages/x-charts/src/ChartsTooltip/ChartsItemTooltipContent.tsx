@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { ItemInteractionData } from '../context/InteractionProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import colorGetter from '../internals/colorGetter';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useSeries } from '../hooks/useSeries';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
   /**
@@ -42,9 +42,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 }) {
   const { content, itemData, sx, classes, contentProps } = props;
 
-  const series = React.useContext(SeriesContext)[itemData.type]!.series[
-    itemData.seriesId
-  ] as ChartSeriesDefaultized<T>;
+  const series = useSeries()[itemData.type]!.series[itemData.seriesId] as ChartSeriesDefaultized<T>;
 
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
