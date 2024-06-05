@@ -2,15 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import {
   DataGridPro,
-  GridColDef,
-  GridRowsProp,
-  GridRowParams,
   useGridApiContext,
   useGridSelector,
   gridDetailPanelExpandedRowIdsSelector,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+  gridDetailPanelExpandedRowsContentCacheSelector,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -19,9 +18,9 @@ import {
   randomPrice,
 } from '@mui/x-data-grid-generator';
 
-export default function DetailPanelCollapseAll() {
+export default function DetailPanelExpandCollapseAll() {
   const getDetailPanelContent = React.useCallback(
-    ({ row }: GridRowParams) => <Box sx={{ p: 2 }}>{`Order #${row.id}`}</Box>,
+    ({ row }) => <Box sx={{ p: 2 }}>{`Order #${row.id}`}</Box>,
     [],
   );
 
@@ -45,33 +44,41 @@ function CustomDetailPanelHeader() {
     apiRef,
     gridDetailPanelExpandedRowIdsSelector,
   );
-  const areDetailPanelsOpen = expandedRowIds.length > 0;
+  const rowsWithDetailPanels = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsContentCacheSelector,
+  );
 
-  const closeAllDetailPanels = () => apiRef.current.setExpandedDetailPanels([]);
+  // little hack to always receive the keys in the correct type
+  const allRowIdsWithDetailPanels = Object.keys(rowsWithDetailPanels).map((key) =>
+    Number.isNaN(+key) ? key : +key,
+  );
+
+  const noDetailPanelsOpen = expandedRowIds.length === 0;
+
+  const expandOrCollapseAll = () => {
+    apiRef.current.setExpandedDetailPanels(
+      noDetailPanelsOpen ? allRowIdsWithDetailPanels : [],
+    );
+  };
 
   return (
     <IconButton
       size="small"
       tabIndex={-1}
-      disabled={!areDetailPanelsOpen}
-      onClick={closeAllDetailPanels}
+      onClick={expandOrCollapseAll}
       aria-label={'Close All'}
     >
-      <UnfoldLessIcon
-        sx={{
-          opacity: `${areDetailPanelsOpen ? 1 : 0}`,
-          transition: (theme) =>
-            theme.transitions.create('opacity', {
-              duration: theme.transitions.duration.shortest,
-            }),
-        }}
-        fontSize="inherit"
-      />
+      {noDetailPanelsOpen ? (
+        <UnfoldMoreIcon fontSize="inherit" />
+      ) : (
+        <UnfoldLessIcon fontSize="inherit" />
+      )}
     </IconButton>
   );
 }
 
-const columns: GridColDef[] = [
+const columns = [
   {
     ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
     renderHeader: () => <CustomDetailPanelHeader />,
@@ -83,7 +90,7 @@ const columns: GridColDef[] = [
   { field: 'total', type: 'number', headerName: 'Total' },
 ];
 
-const rows: GridRowsProp = [
+const rows = [
   {
     id: 1,
     customer: 'Matheus',

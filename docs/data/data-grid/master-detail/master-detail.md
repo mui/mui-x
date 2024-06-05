@@ -174,7 +174,7 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 More examples of how to customize the detail panel:
 
 - [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
-- [Collapse all detail panels with a custom header](/x/react-data-grid/row-recipes/#collapse-all-detail-panels-with-a-custom-header)
+- [Expand or collapse all detail panels with a custom header](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels-with-a-custom-header)
 
 ## apiRef
 
