@@ -7,9 +7,10 @@ import {
   DataGridPro,
   useGridApiContext,
   useGridSelector,
+  gridRowsLookupSelector,
   gridDetailPanelExpandedRowIdsSelector,
-  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   gridDetailPanelExpandedRowsContentCacheSelector,
+  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -53,9 +54,9 @@ function CustomDetailPanelHeader() {
   const noDetailPanelsOpen = expandedRowIds.length === 0;
 
   const expandOrCollapseAll = () => {
-    // This section of code ensures that the keys are always returned in their original data type.
+    const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
     const allRowIdsWithDetailPanels = Object.keys(rowsWithDetailPanels).map((key) =>
-      Number.isNaN(+key) ? key : +key,
+      apiRef.current.getRowId(dataRowIdToModelLookup[key]),
     );
 
     apiRef.current.setExpandedDetailPanels(

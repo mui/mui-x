@@ -21,8 +21,8 @@ This feature allows you to create a custom header element that expands or collap
 Here is how it works:
 
 - Clicking the custom header triggers a expand/collapse action on all detail panels.
+- For getting all rows that have a detail panel it uses the `gridRowsLookupSelector`.
 - It checks the status of open panels using the [`useGridSelector` hook](/x/react-data-grid/state/#with-usegridselector) to access the grid's state.
-- For getting all rows that have a detail panel it uses the [`useGridSelector` hook](/x/react-data-grid/state/#with-usegridselector) as well.
 - The example then leverages [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 
 {{"demo": "DetailPanelExpandCollapseAll.js", "bg": "inline", "defaultCodeOpen": false}}

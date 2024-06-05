@@ -10,9 +10,10 @@ import {
   GridRowParams,
   useGridApiContext,
   useGridSelector,
+  gridRowsLookupSelector,
   gridDetailPanelExpandedRowIdsSelector,
-  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   gridDetailPanelExpandedRowsContentCacheSelector,
+  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
@@ -57,10 +58,10 @@ function CustomDetailPanelHeader() {
   const noDetailPanelsOpen = expandedRowIds.length === 0;
 
   const expandOrCollapseAll = () => {
-    // This section of code ensures that the keys are always returned in their original data type.
+    const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
     const allRowIdsWithDetailPanels: GridRowId[] = Object.keys(
       rowsWithDetailPanels,
-    ).map((key) => (Number.isNaN(+key) ? key : +key));
+    ).map((key) => apiRef.current.getRowId(dataRowIdToModelLookup[key]));
 
     apiRef.current.setExpandedDetailPanels(
       noDetailPanelsOpen ? allRowIdsWithDetailPanels : [],
