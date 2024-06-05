@@ -29,9 +29,14 @@ The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/tree
 ## Keyboard interactions
 
 :::info
-The following key assignments apply to Windows and Linux users.
+The key assignments in the table below apply to Windows and Linux users.
 
 On macOS replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
+- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
 
 :::
 

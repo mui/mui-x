@@ -33,7 +33,6 @@ import {
 import {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
-  DateRangePosition,
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
@@ -43,7 +42,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -239,7 +238,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     onRangePositionChange: inOnRangePositionChange,
   });
 
-  const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
+  const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
       onRangePositionChange(position);
     }
@@ -460,7 +459,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
       const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
-      let datePosition: DateRangePosition | undefined;
+      let datePosition: RangePosition | undefined;
       if (isSelectedStartDate) {
         datePosition = 'start';
       } else if (isSelectedEndDate) {

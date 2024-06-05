@@ -198,12 +198,12 @@ yargs
       return command
         .option('watch', {
           default: false,
-          description: 'transpiles demos as soon as they changed',
+          description: 'Transpile demos as soon as they change',
           type: 'boolean',
         })
         .option('disable-cache', {
           default: false,
-          description: 'transpiles all demos even if they didnt change',
+          description: "Transpile all demos even if they didn't change",
           type: 'boolean',
         });
     },

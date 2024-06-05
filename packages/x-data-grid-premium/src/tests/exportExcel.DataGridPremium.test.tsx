@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, screen, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';

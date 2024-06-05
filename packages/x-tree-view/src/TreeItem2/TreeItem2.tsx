@@ -56,7 +56,7 @@ export const TreeItem2Content = styled('div', {
     {
       props: { indentationAtItemLevel: true },
       style: {
-        paddingLeft: `calc(${theme.spacing(1)} + 12px * var(--TreeView-itemDepth))`,
+        paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
       },
     },
     {
@@ -141,7 +141,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
 })<{ indentationAtItemLevel?: true }>({
   margin: 0,
   padding: 0,
-  paddingLeft: 12,
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation)',
   variants: [
     {
       props: { indentationAtItemLevel: true },

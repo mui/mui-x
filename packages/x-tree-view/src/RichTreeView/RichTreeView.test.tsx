@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { RichTreeView, richTreeViewClasses as classes } from '@mui/x-tree-view/RichTreeView';
 import { describeConformance } from 'test/utils/describeConformance';
 

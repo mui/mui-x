@@ -97,9 +97,6 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   padding: theme.spacing(0.5),
   paddingRight: theme.spacing(1),
   fontWeight: 500,
-  [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: theme.spacing(2),
-  },
   [`&.Mui-expanded `]: {
     '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
       color:
@@ -259,7 +256,6 @@ export default function FileExplorer() {
   return (
     <RichTreeView
       items={ITEMS}
-      aria-label="file explorer"
       defaultExpandedItems={['1', '1.1']}
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
