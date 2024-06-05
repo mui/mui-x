@@ -166,22 +166,16 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The demos used with server-side data use a utility `useMockServer` coming from the `@mui/x-data-grid-generator` package to simulate the server-side data fetching.
+The data source demos use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
 
-It supports a property called `verbose`, in the demos below, you can set it using a checkbox. Set it checked to observe the request parameters and the response data coming from the `useMockServer` in the info section of the browser console.
+Open info section of the browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Data caching
 
 The Data source supports caching the data it receives from the server by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `SimpleServerSideCache` is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
-
-:::info
-The demos on this page above use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
-
-Open info section of the browser console to see the requests being made and the data being fetched in response.
-:::
+The `SimpleServerSideCache` is the cache used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
@@ -219,9 +213,9 @@ The following demo uses cache used by a popular library [`swr`](https://github.c
 
 {{"demo": "ServerSideDataGridWithSWR.js", "bg": "inline"}}
 
-### Disable caching
+### Disable cache
 
-To disable the caching on the server-side data, pass the `unstable_dataSourceCache={null}` prop.
+To disable the caching on the server-side data, pass `null` to the `unstable_dataSourceCache` prop.
 
 ```tsx
 <DataGridPro
@@ -249,13 +243,13 @@ The first argument of this function is the error object, and the second argument
 />
 ```
 
-The demo below uses the `useDemoDataSource` utility to simulate the server-side error. Change the value of success rate to make the server-side error occur randomly.
-
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
 
 ## Updating data 🚧
 
 This feature is yet to be implemented, when completed, the method `dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row. It will work in a similar way as the `processRowUpdate` prop.
+
+Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
 
 ## API
 

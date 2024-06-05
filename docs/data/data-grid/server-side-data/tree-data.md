@@ -31,7 +31,7 @@ Following tree-data example supports filtering, sorting, and pagination on the s
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The demos on this page above use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
+The data source demos use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
 
 Open info section of the browser console to see the requests being made and the data being fetched in response.
 :::
