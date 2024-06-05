@@ -80,7 +80,6 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {boolean} `true` if the item should be editable.
    */
   isItemEditable: (item: R) => boolean;
-  updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends {}> {

@@ -53,7 +53,11 @@ export const useTreeItem2Utils = ({
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+    if (
+      status.expandable &&
+      !(multiple && instance.isItemExpanded(itemId)) &&
+      !instance.isItemBeingEdited(itemId)
+    ) {
       instance.toggleItemExpansion(event, itemId);
     }
   };

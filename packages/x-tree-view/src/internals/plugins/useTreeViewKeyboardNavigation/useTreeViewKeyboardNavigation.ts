@@ -89,7 +89,6 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     itemId: string,
   ) => {
     if (event.defaultMuiPrevented) {
-      console.log('prevent');
       return;
     }
 

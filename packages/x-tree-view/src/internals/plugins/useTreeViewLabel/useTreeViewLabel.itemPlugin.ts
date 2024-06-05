@@ -28,10 +28,8 @@ const getItemsLabels = (items: readonly any[], getItemLabel): {} => {
 };
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
-  instance,
   state,
   setState,
-  params,
 }) => {
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
     setState((prevState) => ({ ...prevState, editedItemId }));

@@ -57,11 +57,13 @@ const updateItemsState = ({
     }
 
     const editable = isItemEditable ? isItemEditable(item) : false;
+    const isBeingEdited = isItemBeingEdited ? isItemBeingEdited(id) && editable : false;
+    // console.log('change state', editable, isItemBeingEdited(id));
 
     itemMetaMap[id] = {
       id,
       parentId,
-      isBeingEdited: isItemBeingEdited ? isItemBeingEdited(id) && editable : false,
+      isBeingEdited,
       editable,
       idAttribute: undefined,
       expandable: !!item.children?.length,
@@ -219,7 +221,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.isItemDisabled,
     params.getItemId,
     params.isItemEditable,
-    state.labels,
     state.editedItemId,
   ]);
 

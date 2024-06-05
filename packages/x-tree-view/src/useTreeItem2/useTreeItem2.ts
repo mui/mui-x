@@ -18,6 +18,30 @@ import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
+const useTreeItemLabelInput = (inLabel: string) => {
+  const [label, setLabel] = React.useState(inLabel);
+  const [initialLabel, setInitialLabel] = React.useState(inLabel);
+
+  const resetInitialLabel = (newLabel: string) => {
+    setInitialLabel(newLabel);
+    setLabel(newLabel);
+  };
+
+  const resetLabel = () => {
+    setLabel(initialLabel);
+  };
+
+  React.useEffect(() => {
+    resetInitialLabel(inLabel);
+  }, [inLabel]);
+
+  return {
+    label,
+    setLabel,
+    resetLabel,
+  };
+};
+
 export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
   parameters: UseTreeItem2Parameters,
 ): UseTreeItem2ReturnValue<TPlugins> => {
@@ -31,7 +55,8 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   } = useTreeViewContext<TPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const { id, itemId, label, children, rootRef, isBeingEdited } = parameters;
+  const { id, itemId, label: inLabel, children, rootRef, isBeingEdited } = parameters;
+  const { label, setLabel, resetLabel } = useTreeItemLabelInput(inLabel as string);
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
@@ -61,11 +86,10 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (event.relatedTarget === inputRef.current) {
-        console.log('blur');
+
+      if (event.relatedTarget?.className === 'MuiTreeItem-labelInput') {
         return;
       }
-
       instance.removeFocusedItem();
     };
 
@@ -78,6 +102,17 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       }
 
       instance.handleItemKeyDown(event, itemId);
+    };
+  const createCotentHandleDoubleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      otherHandlers.onDoubleClick?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      if (!checkboxSelection) {
+        interactions.handleSelection(event);
+      }
+      instance.setEditedItemId(itemId);
     };
 
   const createContentHandleClick =
@@ -122,12 +157,33 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       interactions.handleCheckboxSelection(event);
     };
 
-  const createInputHandleKeydown = (event: any) => {
+  const createInputHandleKeydown = (otherHandlers: EventHandlers) => (event: any) => {
+    otherHandlers.onKeyDown?.(event);
     event.stopPropagation();
-    if (event.key === 'Enter' && event.target?.value) {
-      instance.updateItemLabel(itemId, event.target.value);
+    if (event.key === 'Enter') {
+      if (event.target?.value) {
+        instance.updateItemLabel(itemId, event.target.value);
+      } else {
+        resetLabel();
+      }
+      instance.focusItem(event, itemId);
+    } else if (event.key === 'Escape') {
+      resetLabel();
+      instance.focusItem(event, itemId);
     }
   };
+  const createInputHandleBlur =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onBlur?.(event);
+      resetLabel();
+    };
+  const createInputHandleChange =
+    (otherHandlers: EventHandlers) =>
+    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onChange?.(event);
+      setLabel(event.target.value);
+    };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
@@ -154,7 +210,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canItemBeTabbed(itemId) ? 0 : -1,
+      tabIndex: instance.canItemBeTabbed(itemId) && !instance.isItemBeingEdited(itemId) ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
@@ -185,6 +241,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalProps,
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
+      onDoubleClick: createCotentHandleDoubleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
@@ -238,7 +295,10 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ...externalProps,
       ref: inputRef,
       visible: isBeingEdited,
-      onKeyDown: createInputHandleKeydown,
+      onKeyDown: createInputHandleKeydown(externalEventHandlers),
+      onChange: createInputHandleChange(externalEventHandlers),
+      onBlur: createInputHandleBlur(externalEventHandlers),
+      value: label,
     };
   };
 

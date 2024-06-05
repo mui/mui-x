@@ -14,10 +14,12 @@ export interface UseTreeViewLabelInstance {
    * @returns {void}.
    */
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
+  updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
 }
 
 export interface UseTreeViewLabelParameters<R extends {}> {
   items: readonly R[];
+  getItemLabel?: (item: R) => string;
 }
 
 export interface UseTreeViewLabelState {
