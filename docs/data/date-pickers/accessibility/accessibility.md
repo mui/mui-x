@@ -61,12 +61,12 @@ All the available [views](/x/react-date-pickers/date-calendar/#views) implement 
 
 In addition to the basic keyboard support above, the day view component implements its own keyboard interactions:
 
-|                             Keys | Description                                                       |
-| -------------------------------: | :---------------------------------------------------------------- |
-|   <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day       |
-| <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day   |
-|      <kbd class="key">Home</kbd> | Moves focus to the first day of the week within the current month |
-|       <kbd class="key">End</kbd> | Moves focus to the last day of the week within the current month  |
+|                             Keys | Description                                                     |
+| -------------------------------: | :-------------------------------------------------------------- |
+|   <kbd class="key">Page Up</kbd> | Moves calendar to next month, keeping focus on the same day     |
+| <kbd class="key">Page Down</kbd> | Moves calendar to previous month, keeping focus on the same day |
+|      <kbd class="key">Home</kbd> | Moves focus to the first day of the week                        |
+|       <kbd class="key">End</kbd> | Moves focus to the last day of the week                         |
 
 ### Date Picker
 
@@ -78,13 +78,13 @@ Depending on which component is in focus, the Picker will provide the correspond
 
 The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements a similar keyboard support as the day view of the [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the arrows in the calendar header.
 
-|                                                                                                                                          Keys | Description                               |
-| --------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------- |
-| <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values    |
-|                                                                                                                <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month  |
-|                                                                                                              <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month |
-|                                                                                                                   <kbd class="key">Home</kbd> | Moves focus to first day of the week      |
-|                                                                                                                    <kbd class="key">End</kbd> | Moves focus to last day of the week       |
+|                                                                                                                                          Keys | Description                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------ |
+| <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values                        |
+|                                                                                                                <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month                      |
+|                                                                                                              <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month                     |
+|                                                                                                                   <kbd class="key">Home</kbd> | Moves focus to first day of the week within the current month |
+|                                                                                                                    <kbd class="key">End</kbd> | Moves focus to last day of the week within the current month  |
 
 ### Date Range Picker
 
