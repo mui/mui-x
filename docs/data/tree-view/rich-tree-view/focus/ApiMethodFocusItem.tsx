@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
@@ -42,13 +43,13 @@ export default function ApiMethodFocusItem() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
+    <Stack spacing={2}>
+      <div>
         <Button onClick={handleButtonClick}>Focus pickers item</Button>
-      </Box>
-      <Box sx={{ height: 264, flexGrow: 1 }}>
+      </div>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
       </Box>
-    </Box>
+    </Stack>
   );
 }

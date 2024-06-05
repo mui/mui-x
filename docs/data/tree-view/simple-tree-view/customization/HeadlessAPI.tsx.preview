@@ -1,8 +1,4 @@
-<SimpleTreeView
-  aria-label="icon expansion"
-  sx={{ position: 'relative' }}
-  defaultExpandedItems={['3']}
->
+<SimpleTreeView defaultExpandedItems={['3']}>
   <CustomTreeItem itemId="1" label="Amelia Hart">
     <CustomTreeItem itemId="2" label="Jane Fisher" />
   </CustomTreeItem>

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "7.5.1",
+  "version": "7.6.1",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.ts",
@@ -39,9 +39,9 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.14",
+    "@mui/system": "^5.15.15",
     "@mui/utils": "^5.15.14",
     "@mui/x-charts": "workspace:*",
     "@mui/x-license": "workspace:*",
