@@ -981,8 +981,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       lru-cache:
-        specifier: ^7.18.3
-        version: 7.18.3
+        specifier: ^10.2.2
+        version: 10.2.2
       react:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0
@@ -7063,8 +7063,8 @@ packages:
   lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
 
-  lru-cache@10.2.0:
-    resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
+  lru-cache@10.2.2:
+    resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
     engines: {node: 14 || >=16.14}
 
   lru-cache@4.1.5:
@@ -11491,7 +11491,7 @@ snapshots:
       agent-base: 7.1.0
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       socks-proxy-agent: 8.0.2
     transitivePeerDependencies:
       - supports-color
@@ -11503,7 +11503,7 @@ snapshots:
   '@npmcli/git@5.0.4':
     dependencies:
       '@npmcli/promise-spawn': 7.0.1
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       npm-pick-manifest: 9.0.0
       proc-log: 3.0.0
       promise-inflight: 1.0.1
@@ -12320,7 +12320,7 @@ snapshots:
 
   '@types/lru-cache@7.10.10':
     dependencies:
-      lru-cache: 7.18.3
+      lru-cache: 10.2.2
 
   '@types/luxon@3.4.2': {}
 
@@ -13326,7 +13326,7 @@ snapshots:
       '@npmcli/fs': 3.1.0
       fs-minipass: 3.0.3
       glob: 10.3.10
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       minipass: 7.0.4
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
@@ -15495,7 +15495,7 @@ snapshots:
 
   hosted-git-info@7.0.1:
     dependencies:
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
 
   html-element-map@1.3.1:
     dependencies:
@@ -16637,7 +16637,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  lru-cache@10.2.0: {}
+  lru-cache@10.2.2: {}
 
   lru-cache@4.1.5:
     dependencies:
@@ -17753,7 +17753,7 @@ snapshots:
 
   path-scurry@1.10.1:
     dependencies:
-      lru-cache: 10.2.0
+      lru-cache: 10.2.2
       minipass: 7.0.4
 
   path-to-regexp@0.1.7: {}
