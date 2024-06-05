@@ -14,7 +14,7 @@ import {
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { AxisConfig } from '../models/axis';
+import { AxisConfig, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
 import { CardinalDirections } from '../models/layout';
@@ -45,7 +45,7 @@ export interface SparkLineChartProps
    * The xAxis configuration.
    * Notice it is a single configuration object, not an array of configuration.
    */
-  xAxis?: MakeOptional<AxisConfig, 'id'>;
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>;
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   /**

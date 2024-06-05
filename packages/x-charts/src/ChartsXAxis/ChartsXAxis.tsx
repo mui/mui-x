@@ -111,7 +111,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const defaultizedProps = {
     ...defaultProps,
     ...themedProps,
-    position: inProps.position || defaultProps.position,
   };
   const {
     position,
