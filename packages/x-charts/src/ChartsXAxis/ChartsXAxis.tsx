@@ -98,8 +98,7 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds } = React.useContext(CartesianContext);
-  const { xAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
