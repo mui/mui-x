@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled } from '@mui/system';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import {
@@ -24,6 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['treeDataGroupingCell'],
     toggle: ['treeDataGroupingCellToggle'],
+    loadingContainer: ['treeDataGroupingCellLoadingContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -44,16 +44,10 @@ interface GridTreeDataGroupingCellIconProps
   descendantCount: number;
 }
 
-const LoadingContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100%',
-});
-
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
   const loadingSelector = (state: GridStatePro) => state.dataSource.loading[id] ?? false;
@@ -80,9 +74,9 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
 
   if (isDataLoading) {
     return (
-      <LoadingContainer>
+      <div className={classes.loadingContainer}>
         <CircularProgress size="1rem" color="inherit" />
-      </LoadingContainer>
+      </div>
     );
   }
   return descendantCount > 0 || hasServerChildren ? (

@@ -115,6 +115,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    { [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
@@ -620,6 +621,12 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
+    [`& .${c.treeDataGroupingCellLoadingContainer}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
     [`& .${c.groupingCriteriaCell}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -651,6 +658,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['filler--borderTop']}`]: {
       borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
+    [`& .${c['datasource--loadingContainer']}`]: {},
   };
 
   return gridStyle;
