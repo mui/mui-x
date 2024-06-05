@@ -1,9 +1,7 @@
 import { GridRowId } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
-// Make these configurable using dedicated props?
 const MAX_CONCURRENT_REQUESTS = Infinity;
-const QUEUE_PROCESS_INTERVAL_MS = 300;
 
 export const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
   if (modeProp === 'server') {
@@ -15,7 +13,7 @@ export enum RequestStatus {
   QUEUED,
   PENDING,
   SETTLED,
-  INVALID,
+  UNKNOWN,
 }
 
 /**
@@ -34,40 +32,32 @@ export class NestedDataManager {
 
   private maxConcurrentRequests: number;
 
-  private queueProcessInterval: number;
-
-  private timer?: string | number | NodeJS.Timeout;
-
   constructor(
     privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
-    queueProcessInterval = QUEUE_PROCESS_INTERVAL_MS,
   ) {
     this.api = privateApiRef.current;
     this.maxConcurrentRequests = maxConcurrentRequests;
-    this.queueProcessInterval = queueProcessInterval;
   }
 
   private processQueue = async () => {
-    if (this.queuedRequests.size === 0) {
-      clearInterval(this.timer);
+    if (this.queuedRequests.size === 0 || this.pendingRequests.size >= this.maxConcurrentRequests) {
       return;
     }
-    if (this.pendingRequests.size >= this.maxConcurrentRequests) {
+    const loopLength = Math.min(
+      this.maxConcurrentRequests - this.pendingRequests.size,
+      this.queuedRequests.size,
+    );
+    if (loopLength === 0) {
       return;
     }
     const fetchQueue = Array.from(this.queuedRequests);
 
-    const availableSlots = this.maxConcurrentRequests - this.pendingRequests.size;
-    for (let i = 0; i < availableSlots; i += 1) {
-      const nextId = fetchQueue[i];
-      if (typeof nextId === 'undefined') {
-        clearInterval(this.timer);
-        return;
-      }
-      this.queuedRequests.delete(nextId);
-      this.api.fetchRowChildren(nextId);
-      this.pendingRequests.add(nextId);
+    for (let i = 0; i < loopLength; i += 1) {
+      const id = fetchQueue[i];
+      this.queuedRequests.delete(id);
+      this.api.fetchRowChildren(id);
+      this.pendingRequests.add(id);
     }
   };
 
@@ -79,23 +69,16 @@ export class NestedDataManager {
       } else {
         this.queuedRequests.add(id);
       }
-
-      if (this.queuedRequests.size > 0) {
-        if (this.timer) {
-          clearInterval(this.timer);
-        }
-        this.timer = setInterval(this.processQueue, this.queueProcessInterval);
-      }
     });
   };
 
   public setRequestSettled = (id: GridRowId) => {
     this.pendingRequests.delete(id);
     this.settledRequests.add(id);
+    this.processQueue();
   };
 
   public clearPendingRequests = () => {
-    clearInterval(this.timer);
     this.queuedRequests.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
@@ -103,6 +86,7 @@ export class NestedDataManager {
   public clearPendingRequest = (id: GridRowId) => {
     this.api.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
+    this.processQueue();
   };
 
   public getRequestStatus = (id: GridRowId) => {
@@ -115,7 +99,7 @@ export class NestedDataManager {
     if (this.settledRequests.has(id)) {
       return RequestStatus.SETTLED;
     }
-    return RequestStatus.INVALID;
+    return RequestStatus.UNKNOWN;
   };
 
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;

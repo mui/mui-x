@@ -62,10 +62,9 @@ export const useGridDataSource = (
     }
 
     nestedDataManager.clearPendingRequests();
-
     scheduledGroups.current = 0;
-    const serverSideState = privateApiRef.current.state.dataSource;
-    if (serverSideState !== INITIAL_STATE) {
+    const dataSourceState = privateApiRef.current.state.dataSource;
+    if (dataSourceState !== INITIAL_STATE) {
       privateApiRef.current.resetDataSourceState();
     }
 
@@ -165,7 +164,7 @@ export const useGridDataSource = (
           privateApiRef.current.setChildrenLoading(id, false);
           return;
         }
-        if (nestedDataManager.getRequestStatus(id) === RequestStatus.INVALID) {
+        if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
           privateApiRef.current.setChildrenLoading(id, false);
           return;
         }
@@ -177,14 +176,14 @@ export const useGridDataSource = (
         privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
         privateApiRef.current.updateRows(getRowsResponse.rows, false);
         privateApiRef.current.setRowChildrenExpansion(id, true);
-        privateApiRef.current.setChildrenLoading(id, false);
       } catch (error) {
         const e = error as Error;
-        nestedDataManager.setRequestSettled(id);
-        privateApiRef.current.setChildrenLoading(id, false);
         privateApiRef.current.setChildrenFetchError(id, e);
         onError?.(e, fetchParams);
-      }
+      } finally {
+        privateApiRef.current.setChildrenLoading(id, false);
+        nestedDataManager.setRequestSettled(id);
+      } 
     },
     [nestedDataManager, onError, privateApiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
