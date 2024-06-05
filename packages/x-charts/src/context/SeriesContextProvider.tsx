@@ -35,6 +35,7 @@ export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type
 
 export const SeriesContext = React.createContext<Initializable<FormattedSeries>>({
   isInitialized: false,
+  data: {},
 });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -98,7 +99,7 @@ function SeriesContextProvider(props: SeriesContextProviderProps) {
   const formattedSeries = React.useMemo(
     () => ({
       isInitialized: true,
-      ...formatSeries(
+      data: formatSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
         dataset as DatasetType<number>,

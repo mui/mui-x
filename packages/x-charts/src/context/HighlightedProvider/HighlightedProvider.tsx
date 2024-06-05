@@ -71,18 +71,20 @@ function HighlightedProvider({
   const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {
     return {
       isInitialized: true,
-      highlightScope,
-      highlightedItem,
-      setHighlighted: (itemData) => {
-        setHighlightedItem(itemData);
-        onHighlightChange?.(itemData);
+      data: {
+        highlightScope,
+        highlightedItem,
+        setHighlighted: (itemData) => {
+          setHighlightedItem(itemData);
+          onHighlightChange?.(itemData);
+        },
+        clearHighlighted: () => {
+          setHighlightedItem(null);
+          onHighlightChange?.(null);
+        },
+        isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
+        isFaded: createIsFaded(highlightScope, highlightedItem),
       },
-      clearHighlighted: () => {
-        setHighlightedItem(null);
-        onHighlightChange?.(null);
-      },
-      isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
-      isFaded: createIsFaded(highlightScope, highlightedItem),
     };
   }, [highlightedItem, highlightScope, setHighlightedItem, onHighlightChange]);
 

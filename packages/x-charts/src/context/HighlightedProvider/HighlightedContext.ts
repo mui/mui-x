@@ -71,11 +71,13 @@ export type HighlightedState = {
 
 export const HighlightedContext = React.createContext<Initializable<HighlightedState>>({
   isInitialized: false,
-  highlightedItem: null,
-  setHighlighted: () => {},
-  clearHighlighted: () => {},
-  isHighlighted: () => false,
-  isFaded: () => false,
+  data: {
+    highlightedItem: null,
+    setHighlighted: () => {},
+    clearHighlighted: () => {},
+    isHighlighted: () => false,
+    isFaded: () => false,
+  },
 });
 
 if (process.env.NODE_ENV !== 'production') {

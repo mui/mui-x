@@ -8,7 +8,7 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
  * @returns FormattedSeries series
  */
 export function useSeries(): FormattedSeries {
-  const { isInitialized, ...series } = React.useContext(SeriesContext);
+  const { isInitialized, data } = React.useContext(SeriesContext);
 
   if (!isInitialized) {
     throw new Error(
@@ -19,7 +19,7 @@ export function useSeries(): FormattedSeries {
     );
   }
 
-  return series;
+  return data;
 }
 
 /**

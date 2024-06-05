@@ -9,7 +9,7 @@ import { HighlightedContext, HighlightedState } from './HighlightedContext';
  * @returns {HighlightedState} the state of the chart
  */
 export function useHighlighted(): HighlightedState {
-  const { isInitialized, ...highlighted } = React.useContext(HighlightedContext);
+  const { isInitialized, data } = React.useContext(HighlightedContext);
 
   if (!isInitialized) {
     throw new Error(
@@ -20,5 +20,5 @@ export function useHighlighted(): HighlightedState {
     );
   }
 
-  return highlighted;
+  return data;
 }

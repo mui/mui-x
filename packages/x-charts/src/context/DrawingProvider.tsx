@@ -60,13 +60,11 @@ if (process.env.NODE_ENV !== 'production') {
   DrawingContext.displayName = 'DrawingContext';
 }
 
-export type SvgContextState = {
-  svg: React.RefObject<SVGSVGElement>;
-};
+export type SvgContextState = React.RefObject<SVGSVGElement>;
 
 export const SvgContext = React.createContext<Initializable<SvgContextState>>({
   isInitialized: false,
-  svg: { current: null },
+  data: { current: null },
 });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -83,7 +81,7 @@ export function DrawingProvider(props: DrawingProviderProps) {
     [chartId, drawingArea],
   );
 
-  const refValue = React.useMemo(() => ({ isInitialized: true, svg: svgRef }), [svgRef]);
+  const refValue = React.useMemo(() => ({ isInitialized: true, data: svgRef }), [svgRef]);
 
   return (
     <SvgContext.Provider value={refValue}>

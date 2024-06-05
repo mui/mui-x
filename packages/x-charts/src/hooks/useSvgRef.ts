@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SvgContext } from '../context/DrawingProvider';
 
 export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
-  const { isInitialized, svg } = React.useContext(SvgContext);
+  const { isInitialized, data } = React.useContext(SvgContext);
 
   if (!isInitialized) {
     throw new Error(
@@ -13,5 +13,5 @@ export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
     );
   }
 
-  return svg as React.MutableRefObject<SVGSVGElement>;
+  return data as React.MutableRefObject<SVGSVGElement>;
 }
