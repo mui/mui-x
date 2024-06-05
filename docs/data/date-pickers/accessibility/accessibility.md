@@ -23,7 +23,7 @@ WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA meets the most commonly encountered conformance guidelines.
 This is the most common target for organizations so it is what we aim to support.
 
-The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) that provide valuable information on how to optimize the accessibility of the Date and Time Pickers.
+The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) patterns, which provide valuable information on how to optimize the accessibility of these components.
 
 ## Screen reader compatibility
 
@@ -31,13 +31,13 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 
 ## Keyboard support
 
-The Date and Time Pickers consist of different associations of Fields, Calendar, and Clock components. Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
+The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components. 
+Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
 
-The following sections explain in detail the keyboard support for various components:
 
 ### Fields
 
-The following table describes the keyboard support for all [field components](/x/react-date-pickers/fields/)
+The following table describes the keyboard support for all [field components](/x/react-date-pickers/fields/):
 
 |                                                                  Keys | Description                                  |
 | --------------------------------------------------------------------: | :------------------------------------------- |
