@@ -34,16 +34,16 @@ export type MergeSignaturesProperty<
 export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
   TPlugins extends readonly [plugin: infer P, ...otherPlugin: infer R]
     ? P extends TreeViewPlugin<infer TSignature>
-      ? [TSignature, ...ConvertPluginsIntoSignatures<R>]
+      ? readonly [TSignature, ...ConvertPluginsIntoSignatures<R>]
       : ConvertPluginsIntoSignatures<R>
-    : [];
+    : readonly [];
 
 export type ConvertSignaturesIntoPlugins<TSignatures extends readonly any[]> =
   TSignatures extends readonly [plugin: infer S, ...otherPlugin: infer R]
     ? S extends TreeViewAnyPluginSignature
-      ? [TreeViewPlugin<S>, ...ConvertSignaturesIntoPlugins<R>]
+      ? readonly [TreeViewPlugin<S>, ...ConvertSignaturesIntoPlugins<R>]
       : ConvertSignaturesIntoPlugins<R>
-    : [];
+    : readonly [];
 
 export interface MergePluginsSignature<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   state: MergeSignaturesProperty<TSignatures, 'state'>;

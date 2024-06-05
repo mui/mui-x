@@ -36,15 +36,11 @@ export function useTreeViewApiInitialization<T>(
   return fallbackPublicApiRef.current;
 }
 
-export const useTreeView = <
-  TPlugins extends readonly TreeViewPlugin<any>[],
->(
-  inParams: UseTreeViewParameters<ConvertPluginsIntoSignatures<TPlugins>>,
-): UseTreeViewReturnValue<ConvertPluginsIntoSignatures<TPlugins>> => {
+export const useTreeView = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  inParams: UseTreeViewParameters<TSignatures>,
+): UseTreeViewReturnValue<TSignatures> => {
   const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins];
-
-  type TSignatures = ConvertPluginsIntoSignatures<TPlugins>
-  type SignaturesWithCorePlugins = ConvertPluginsIntoSignatures<typeof plugins>;
+  type TSignaturesWithCorePlugins = ConvertPluginsIntoSignatures<typeof plugins>;
 
   const params = plugins.reduce((acc, plugin) => {
     if (plugin.getDefaultizedParams) {
@@ -52,18 +48,18 @@ export const useTreeView = <
     }
 
     return acc;
-  }, inParams) as unknown as UseTreeViewDefaultizedParameters<TSignatures>;
+  }, inParams) as unknown as UseTreeViewDefaultizedParameters<TSignaturesWithCorePlugins>;
 
   const models = useTreeViewModels(
     plugins,
-    params as MergeSignaturesProperty<SignaturesWithCorePlugins, 'defaultizedParams'>,
+    params as MergeSignaturesProperty<TSignaturesWithCorePlugins, 'defaultizedParams'>,
   );
-  const instanceRef = React.useRef<TreeViewInstance<SignaturesWithCorePlugins>>(
-    {} as TreeViewInstance<SignaturesWithCorePlugins>,
+  const instanceRef = React.useRef<TreeViewInstance<TSignaturesWithCorePlugins>>(
+    {} as TreeViewInstance<TSignaturesWithCorePlugins>,
   );
-  const instance = instanceRef.current as TreeViewInstance<SignaturesWithCorePlugins>;
+  const instance = instanceRef.current as TreeViewInstance<TSignaturesWithCorePlugins>;
 
-  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<SignaturesWithCorePlugins>>(
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignaturesWithCorePlugins>>(
     inParams.apiRef,
   );
 
@@ -71,7 +67,7 @@ export const useTreeView = <
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
   const [state, setState] = React.useState(() => {
-    const temp = {} as MergeSignaturesProperty<SignaturesWithCorePlugins, 'state'>;
+    const temp = {} as MergeSignaturesProperty<TSignaturesWithCorePlugins, 'state'>;
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
         Object.assign(
@@ -91,7 +87,7 @@ export const useTreeView = <
     publicAPI,
     instance: instance as TreeViewInstance<any>,
     rootRef: innerRootRef,
-  } as TreeViewContextValue<SignaturesWithCorePlugins>;
+  } as TreeViewContextValue<TSignaturesWithCorePlugins>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({

@@ -97,7 +97,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     plugins: TREE_VIEW_PLUGINS,
   });
 
-  const { getRootProps, contextValue, instance } = useTreeView<typeof TREE_VIEW_PLUGINS>(pluginParams);
+  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
 
   const rootProps = useSlotProps({
     elementType: RichTreeViewRoot,

@@ -6,12 +6,12 @@ import { useSlotProps } from '@mui/base/utils';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import {
   SimpleTreeViewProps,
-  SimpleTreeViewSlotProps,
   SimpleTreeViewSlots,
+  SimpleTreeViewSlotProps,
 } from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
+import { SIMPLE_TREE_VIEW_PLUGINS, SimpleTreeViewPluginSignatures } from './SimpleTreeView.plugins';
 import { buildWarning } from '../internals/utils/warning';
 import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
@@ -74,7 +74,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof SIMPLE_TREE_VIEW_PLUGINS,
+    SimpleTreeViewPluginSignatures,
     SimpleTreeViewSlots,
     SimpleTreeViewSlotProps,
     SimpleTreeViewProps<Multiple> & { items: any }
@@ -84,7 +84,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     rootRef: ref,
   });
 
-  const { getRootProps, contextValue } = useTreeView<typeof SIMPLE_TREE_VIEW_PLUGINS>(pluginParams);
+  const { getRootProps, contextValue } = useTreeView(pluginParams);
 
   const classes = useUtilityClasses(props);
 

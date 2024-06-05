@@ -26,17 +26,17 @@ export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewIcons,
 ] as const;
 
-export type DefaultTreeViewProPlugins = ConvertPluginsIntoSignatures<
+export type DefaultTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
   typeof DEFAULT_TREE_VIEW_PRO_PLUGINS
 >;
 
 export type DefaultTreeViewProPluginSlots = MergeSignaturesProperty<
-  DefaultTreeViewProPlugins,
+  DefaultTreeViewProPluginSignatures,
   'slots'
 >;
 
 export type DefaultTreeViewProPluginSlotProps = MergeSignaturesProperty<
-  DefaultTreeViewProPlugins,
+  DefaultTreeViewProPluginSignatures,
   'slotProps'
 >;
 

@@ -10,17 +10,13 @@ import {
   TreeViewExperimentalFeatures,
 } from '../models';
 
-export type UseTreeViewParameters<
-    TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = UseTreeViewBaseParameters<TSignatures> &
-  MergeSignaturesProperty<TSignatures, 'params'>;
+export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
+  UseTreeViewBaseParameters<TSignatures> & MergeSignaturesProperty<TSignatures, 'params'>;
 
 export interface UseTreeViewBaseParameters<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
 > {
-  apiRef:
-    | React.MutableRefObject<TreeViewPublicAPI<TSignatures>>
-    | undefined;
+  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures>> | undefined;
   rootRef?: React.Ref<HTMLUListElement> | undefined;
   plugins: ConvertSignaturesIntoPlugins<TSignatures>;
   slots: MergeSignaturesProperty<TSignatures, 'slots'>;
@@ -29,7 +25,7 @@ export interface UseTreeViewBaseParameters<
 }
 
 export type UseTreeViewDefaultizedParameters<
-    TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
 > = UseTreeViewBaseParameters<TSignatures> &
   MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
 
