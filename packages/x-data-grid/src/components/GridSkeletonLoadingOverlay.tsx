@@ -153,7 +153,11 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
       array.push(
         <div
           key={`skeleton-row-${i}`}
-          className={clsx(gridClasses.row, i === 0 && gridClasses['row--firstVisible'])}
+          className={clsx(
+            gridClasses.row,
+            gridClasses.rowSkeleton,
+            i === 0 && gridClasses['row--firstVisible'],
+          )}
         >
           {rowCells}
         </div>,

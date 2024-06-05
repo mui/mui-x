@@ -433,6 +433,9 @@ export const GridRootStyles = styled('div', {
           backgroundColor: 'transparent',
         },
       },
+      [`&.${c.rowSkeleton}:hover`]: {
+        backgroundColor: 'transparent',
+      },
       '&.Mui-selected': selectedStyles,
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
