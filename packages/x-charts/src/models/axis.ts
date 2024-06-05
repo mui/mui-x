@@ -261,7 +261,11 @@ export type AxisValueFormatterContext = {
   location: 'tick' | 'tooltip';
 };
 
-export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
   /**
    * Id used to identify the axis.
    */
@@ -299,14 +303,15 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
+} & Partial<AxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams;
 
-export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
-  AxisConfig<S, V>,
-  'scaleType'
-> &
+export type AxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
