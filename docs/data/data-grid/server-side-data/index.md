@@ -175,7 +175,7 @@ It supports a property called `verbose`, in the demos below, you can set it usin
 
 The Data source supports caching the data it receives from the server by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The out-of-the-box cache is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
+The `SimpleServerSideCache` is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
 :::info
 The demos on this page above use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
@@ -184,6 +184,24 @@ Open info section of the browser console to see the requests being made and the 
 :::
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+
+### Customize the cache ttl
+
+The `SimpleServerSideCache` has a default `ttl` of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `SimpleServerSideCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
+
+```tsx
+import { SimpleServerSideCache } from '@mui/x-data-grid-pro';
+
+const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 60 * 1 }); // 1 minute
+
+<DataGridPro
+  columns={columns}
+  unstable_dataSource={customDataSource}
+  unstable_dataSourceCache={lowTTLCache}
+/>;
+```
+
+{{"demo": "ServerSideDataGridTTL.js", "bg": "inline"}}
 
 ### Custom cache
 

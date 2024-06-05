@@ -223,11 +223,6 @@ DataGridProRaw.propTypes = {
    */
   disableColumnSorting: PropTypes.bool,
   /**
-   * If `true`, the server-side cache will be disabled.
-   * @default false
-   */
-  disableDataSourceCache: PropTypes.bool,
-  /**
    * If `true`, the density selector is disabled.
    * @default false
    */
@@ -952,7 +947,6 @@ DataGridProRaw.propTypes = {
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
-    hasChildren: PropTypes.func,
     updateRow: PropTypes.func,
   }),
   unstable_dataSourceCache: PropTypes.shape({

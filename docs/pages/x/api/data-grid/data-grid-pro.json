@@ -45,7 +45,6 @@
     "disableColumnResize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
-    "disableDataSourceCache": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableEval": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" }, "default": "false" },
@@ -1740,6 +1739,12 @@
       "key": "treeDataGroupingCell",
       "className": "MuiDataGridPro-treeDataGroupingCell",
       "description": "Styles applied to the root of the grouping column of the tree data.",
+      "isGlobal": false
+    },
+    {
+      "key": "treeDataGroupingCellLoadingContainer",
+      "className": "MuiDataGridPro-treeDataGroupingCellLoadingContainer",
+      "description": "Styles applied to the loading container of the grouping cell of the tree data.",
       "isGlobal": false
     },
     {

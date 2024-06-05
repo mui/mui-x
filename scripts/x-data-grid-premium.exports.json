@@ -645,6 +645,7 @@
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
   { "name": "setupExcelExportWebWorker", "kind": "Function" },
+  { "name": "SimpleServerSideCache", "kind": "Class" },
   { "name": "SkeletonCellPropsOverrides", "kind": "Interface" },
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },

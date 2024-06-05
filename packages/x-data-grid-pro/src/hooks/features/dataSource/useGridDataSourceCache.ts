@@ -5,38 +5,10 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheApi } from './interfaces';
-
-class SimpleServerSideCache {
-  private cache: Record<string, GridGetRowsResponse>;
-
-  constructor() {
-    this.cache = {};
-  }
-
-  static getKey(params: GridGetRowsParams) {
-    return JSON.stringify([
-      params.paginationModel,
-      params.filterModel,
-      params.sortModel,
-      params.groupKeys,
-    ]);
-  }
-
-  set(key: string, value: GridGetRowsResponse) {
-    this.cache[key] = value;
-  }
-
-  get(key: string) {
-    return this.cache[key];
-  }
-
-  clear() {
-    this.cache = {};
-  }
-}
+import { SimpleServerSideCache } from './cache';
 
 const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridDataSourceCache => ({
-  getKey: SimpleServerSideCache.getKey,
+  getKey: cacheInstance.getKey,
   set: (key: string, value: GridGetRowsResponse) =>
     cacheInstance.set(key as string, value as GridGetRowsResponse),
   get: (key: string) => cacheInstance.get(key as string),
@@ -45,46 +17,37 @@ const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridDataSourceCa
 
 export const useGridDataSourceCache = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<
-    DataGridProProcessedProps,
-    'unstable_dataSource' | 'disableDataSourceCache' | 'unstable_dataSourceCache'
-  >,
+  props: Pick<DataGridProProcessedProps, 'unstable_dataSource' | 'unstable_dataSourceCache'>,
 ): void => {
   const defaultCache = useLazyRef<GridDataSourceCache, void>(() =>
-    getDefaultCache(new SimpleServerSideCache()),
+    getDefaultCache(new SimpleServerSideCache({})),
   );
-  const cache = React.useRef<GridDataSourceCache>(
+  const cache = React.useRef<GridDataSourceCache | null>(
     props.unstable_dataSourceCache || defaultCache.current,
   );
 
-  const getCacheData = React.useCallback(
-    (params: GridGetRowsParams) => {
-      if (props.disableDataSourceCache) {
-        return undefined;
-      }
-      const key = cache.current.getKey(params);
-      return cache.current.get(key);
-    },
-    [props.disableDataSourceCache],
-  );
+  const getCacheData = React.useCallback((params: GridGetRowsParams) => {
+    if (!cache.current) {
+      return undefined;
+    }
+    const key = cache.current.getKey(params);
+    return cache.current.get(key);
+  }, []);
 
-  const setCacheData = React.useCallback(
-    (params: GridGetRowsParams, data: GridGetRowsResponse) => {
-      if (props.disableDataSourceCache) {
-        return;
-      }
-      const key = cache.current.getKey(params);
-      cache.current.set(key, data);
-    },
-    [props.disableDataSourceCache],
-  );
+  const setCacheData = React.useCallback((params: GridGetRowsParams, data: GridGetRowsResponse) => {
+    if (!cache.current) {
+      return;
+    }
+    const key = cache.current.getKey(params);
+    cache.current.set(key, data);
+  }, []);
 
   const clearCache = React.useCallback(() => {
-    if (props.disableDataSourceCache) {
+    if (!cache.current) {
       return;
     }
     cache.current.clear();
-  }, [props.disableDataSourceCache]);
+  }, []);
 
   const dataSourceCacheApi: GridDataSourceCacheApi = {
     getCacheData,
@@ -100,7 +63,7 @@ export const useGridDataSourceCache = (
       isFirstRender.current = false;
       return;
     }
-    if (props.unstable_dataSourceCache) {
+    if (props.unstable_dataSourceCache !== undefined) {
       cache.current = props.unstable_dataSourceCache;
     }
   }, [props.unstable_dataSourceCache]);

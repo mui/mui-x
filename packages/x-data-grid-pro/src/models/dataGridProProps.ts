@@ -113,11 +113,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   disableChildrenSorting: boolean;
   /**
-   * If `true`, the server-side cache will be disabled.
-   * @default false
-   */
-  disableDataSourceCache: boolean;
-  /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number | string} The height in pixels or "auto" to use the content height.
@@ -145,7 +140,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 }
 
 interface DataGridProDataSourceProps {
-  unstable_dataSourceCache?: GridDataSourceCache;
+  unstable_dataSourceCache?: GridDataSourceCache | null;
   unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
 }
 
