@@ -21,7 +21,7 @@ You can pass props to the calendar header as shown below:
 
 ### Component
 
-You can pass custom components to replace the header, as shown below:
+You can pass a custom component to replace the header, as shown below:
 
 {{"demo": "CalendarHeaderComponent.js"}}
 
@@ -48,7 +48,7 @@ You can pass props to the year button as shown below:
 
 ### Component
 
-You can pass custom component to replace the year button, as shown below:
+You can pass a custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
@@ -68,6 +68,6 @@ You can pass props to the month button as shown below:
 
 ### Component
 
-You can pass custom components to replace the month button, as shown below:
+You can pass a custom component to replace the month button, as shown below:
 
 {{"demo": "MonthButtonComponent.js"}}

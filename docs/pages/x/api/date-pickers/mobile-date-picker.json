@@ -240,13 +240,13 @@
     },
     {
       "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view .",
+      "description": "Button displayed to render a single month in the \"month\" view.",
       "default": "MonthCalendarButton",
       "class": null
     },
     {
       "name": "yearButton",
-      "description": "Button displayed to render a single year in the \"year\" view .",
+      "description": "Button displayed to render a single year in the \"year\" view.",
       "default": "YearCalendarButton",
       "class": null
     },
