@@ -98,20 +98,18 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds } = React.useContext(CartesianContext);
-  const {
-    xAxis: {
-      [inProps.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
+  const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
+
   const defaultizedProps = {
     ...defaultProps,
     ...themedProps,
   };
+
   const {
     position,
     disableLine,
