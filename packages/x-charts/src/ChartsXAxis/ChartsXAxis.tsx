@@ -98,17 +98,18 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
-  const { xAxisIds } = React.useContext(CartesianContext);
-  const {
-    xAxis: {
-      [props.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
+  const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
   const {
     position,
     disableLine,
@@ -315,10 +316,12 @@ ChartsXAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),

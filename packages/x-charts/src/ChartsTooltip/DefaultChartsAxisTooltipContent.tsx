@@ -10,8 +10,9 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
-import { isCartesianSeries, utcFormatter } from './utils';
+import { utcFormatter } from './utils';
 import { getLabel } from '../internals/getLabel';
+import { isCartesianSeries } from '../internals/isCartesian';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;

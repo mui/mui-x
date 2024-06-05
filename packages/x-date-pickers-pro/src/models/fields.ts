@@ -9,9 +9,11 @@ import {
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { SxProps } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import { RangePosition } from './range';
 
 export interface RangeFieldSection extends FieldSection {
-  dateName: 'start' | 'end';
+  dateName: RangePosition;
 }
 
 export type FieldType = 'single-input' | 'multi-input';
@@ -86,9 +88,9 @@ export interface BaseMultiInputFieldProps<
       Record<string, any>
     >;
     textField?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotTextFieldProps>,
+      typeof TextField,
       {},
-      { position?: 'start' | 'end' } & Record<string, any>
+      { position?: RangePosition } & Record<string, any>
     >;
   };
 }
