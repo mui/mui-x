@@ -353,6 +353,9 @@ importers:
       remark:
         specifier: ^13.0.0
         version: 13.0.0
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.7
       serve:
         specifier: ^14.2.3
         version: 14.2.3
