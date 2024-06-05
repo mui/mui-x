@@ -40,6 +40,7 @@ export default function DetailPanelExpandCollapseAll() {
 
 function CustomDetailPanelHeader() {
   const apiRef = useGridApiContext();
+
   const expandedRowIds = useGridSelector(
     apiRef,
     gridDetailPanelExpandedRowIdsSelector,
@@ -49,31 +50,29 @@ function CustomDetailPanelHeader() {
     gridDetailPanelExpandedRowsContentCacheSelector,
   );
 
-  // little hack to always receive the keys in the correct type
-  const allRowIdsWithDetailPanels = Object.keys(rowsWithDetailPanels).map((key) =>
-    Number.isNaN(+key) ? key : +key,
-  );
-
   const noDetailPanelsOpen = expandedRowIds.length === 0;
 
   const expandOrCollapseAll = () => {
+    // This section of code ensures that the keys are always returned in their original data type.
+    const allRowIdsWithDetailPanels = Object.keys(rowsWithDetailPanels).map((key) =>
+      Number.isNaN(+key) ? key : +key,
+    );
+
     apiRef.current.setExpandedDetailPanels(
       noDetailPanelsOpen ? allRowIdsWithDetailPanels : [],
     );
   };
+
+  const Icon = noDetailPanelsOpen ? UnfoldMoreIcon : UnfoldLessIcon;
 
   return (
     <IconButton
       size="small"
       tabIndex={-1}
       onClick={expandOrCollapseAll}
-      aria-label={'Close All'}
+      aria-label={noDetailPanelsOpen ? 'Expand All' : 'Collapse All'}
     >
-      {noDetailPanelsOpen ? (
-        <UnfoldMoreIcon fontSize="inherit" />
-      ) : (
-        <UnfoldLessIcon fontSize="inherit" />
-      )}
+      <Icon fontSize="inherit" />
     </IconButton>
   );
 }

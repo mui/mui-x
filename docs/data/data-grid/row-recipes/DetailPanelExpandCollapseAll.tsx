@@ -54,14 +54,14 @@ function CustomDetailPanelHeader() {
     gridDetailPanelExpandedRowsContentCacheSelector,
   );
 
-  // This section of code ensures that the keys are always returned in their original data type.
-  const allRowIdsWithDetailPanels: GridRowId[] = Object.keys(
-    rowsWithDetailPanels,
-  ).map((key) => (Number.isNaN(+key) ? key : +key));
-
   const noDetailPanelsOpen = expandedRowIds.length === 0;
 
   const expandOrCollapseAll = () => {
+    // This section of code ensures that the keys are always returned in their original data type.
+    const allRowIdsWithDetailPanels: GridRowId[] = Object.keys(
+      rowsWithDetailPanels,
+    ).map((key) => (Number.isNaN(+key) ? key : +key));
+
     apiRef.current.setExpandedDetailPanels(
       noDetailPanelsOpen ? allRowIdsWithDetailPanels : [],
     );
