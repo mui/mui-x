@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SeriesId } from '../../models/seriesType/common';
+import { Initializable } from '../context.types';
 
 /**
  * The data of the highlighted item.
@@ -68,12 +69,15 @@ export type HighlightedState = {
   isFaded: (input: HighlightItemData) => boolean;
 };
 
-export const HighlightedContext = React.createContext<HighlightedState>({
-  highlightedItem: null,
-  setHighlighted: () => {},
-  clearHighlighted: () => {},
-  isHighlighted: () => false,
-  isFaded: () => false,
+export const HighlightedContext = React.createContext<Initializable<HighlightedState>>({
+  isInitialized: false,
+  data: {
+    highlightedItem: null,
+    setHighlighted: () => {},
+    clearHighlighted: () => {},
+    isHighlighted: () => false,
+    isFaded: () => false,
+  },
 });
 
 if (process.env.NODE_ENV !== 'production') {

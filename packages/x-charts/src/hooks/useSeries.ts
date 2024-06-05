@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 
 /**
  * Get access to the internal state of series.
@@ -7,10 +7,10 @@ import { SeriesContext } from '../context/SeriesContextProvider';
  * { seriesType?: { series: { id1: precessedValue, ... }, seriesOrder: [id1, ...] } }
  * @returns FormattedSeries series
  */
-export function useSeries() {
-  const series = React.useContext(SeriesContext);
+export function useSeries(): FormattedSeries {
+  const { isInitialized, data } = React.useContext(SeriesContext);
 
-  if (series === undefined) {
+  if (!isInitialized) {
     throw new Error(
       [
         'MUI X: Could not find the series ref context.',
@@ -19,7 +19,7 @@ export function useSeries() {
     );
   }
 
-  return series;
+  return data;
 }
 
 /**
@@ -29,7 +29,7 @@ export function useSeries() {
  * - seriesOrder: the array of series ids.
  * @returns { series: Record<SeriesId, DefaultizedPieSeriesType>; seriesOrder: SeriesId[]; } | undefined pieSeries
  */
-export function usePieSeries() {
+export function usePieSeries(): FormattedSeries['pie'] {
   const series = useSeries();
 
   return React.useMemo(() => series.pie, [series.pie]);
@@ -42,7 +42,7 @@ export function usePieSeries() {
  * - seriesOrder: the array of series ids.
  * @returns { series: Record<SeriesId, DefaultizedLineSeriesType>; seriesOrder: SeriesId[]; } | undefined lineSeries
  */
-export function useLineSeries() {
+export function useLineSeries(): FormattedSeries['line'] {
   const series = useSeries();
 
   return React.useMemo(() => series.line, [series.line]);
@@ -55,7 +55,7 @@ export function useLineSeries() {
  * - seriesOrder: the array of series ids.
  * @returns { series: Record<SeriesId, DefaultizedBarSeriesType>; seriesOrder: SeriesId[]; } | undefined barSeries
  */
-export function useBarSeries() {
+export function useBarSeries(): FormattedSeries['bar'] {
   const series = useSeries();
 
   return React.useMemo(() => series.bar, [series.bar]);
@@ -68,7 +68,7 @@ export function useBarSeries() {
  * - seriesOrder: the array of series ids.
  * @returns { series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined scatterSeries
  */
-export function useScatterSeries() {
+export function useScatterSeries(): FormattedSeries['scatter'] {
   const series = useSeries();
 
   return React.useMemo(() => series.scatter, [series.scatter]);

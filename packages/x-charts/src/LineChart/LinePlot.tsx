@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { line as d3Line } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import {
   LineElement,
@@ -14,6 +13,7 @@ import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
+import { useLineSeries } from '../hooks/useSeries';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -34,7 +34,7 @@ export interface LinePlotProps
 }
 
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
+  const seriesData = useLineSeries();
   const axisData = React.useContext(CartesianContext);
 
   if (seriesData === undefined) {

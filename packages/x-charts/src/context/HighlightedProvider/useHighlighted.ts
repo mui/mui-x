@@ -9,9 +9,9 @@ import { HighlightedContext, HighlightedState } from './HighlightedContext';
  * @returns {HighlightedState} the state of the chart
  */
 export function useHighlighted(): HighlightedState {
-  const highlighted = React.useContext(HighlightedContext);
+  const { isInitialized, data } = React.useContext(HighlightedContext);
 
-  if (highlighted === undefined) {
+  if (!isInitialized) {
     throw new Error(
       [
         'MUI X: Could not find the highlighted ref context.',
@@ -20,5 +20,5 @@ export function useHighlighted(): HighlightedState {
     );
   }
 
-  return highlighted;
+  return data;
 }
