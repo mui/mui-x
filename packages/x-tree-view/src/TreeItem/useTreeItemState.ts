@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { DefaultTreeViewPluginSignatures } from '../internals/plugins';
 
 export function useTreeItemState(itemId: string) {
   const {
     instance,
     selection: { multiSelect, checkboxSelection, disableSelection },
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+  } = useTreeViewContext<DefaultTreeViewPluginSignatures>();
 
   const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);

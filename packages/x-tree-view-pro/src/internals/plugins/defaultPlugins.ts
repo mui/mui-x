@@ -13,7 +13,7 @@ import {
   useTreeViewIcons,
   UseTreeViewIconsParameters,
   ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
 } from '@mui/x-tree-view/internals';
 
 export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
@@ -30,12 +30,12 @@ export type DefaultTreeViewProPlugins = ConvertPluginsIntoSignatures<
   typeof DEFAULT_TREE_VIEW_PRO_PLUGINS
 >;
 
-export type DefaultTreeViewProPluginSlots = MergePluginsProperty<
+export type DefaultTreeViewProPluginSlots = MergeSignaturesProperty<
   DefaultTreeViewProPlugins,
   'slots'
 >;
 
-export type DefaultTreeViewProPluginSlotProps = MergePluginsProperty<
+export type DefaultTreeViewProPluginSlotProps = MergeSignaturesProperty<
   DefaultTreeViewProPlugins,
   'slotProps'
 >;

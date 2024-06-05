@@ -22,12 +22,12 @@ export type OptionalIfEmpty<A extends string, B> = keyof B extends never
     ? Partial<Record<A, B>>
     : Record<A, B>;
 
-export type MergePluginsProperty<
-  TPlugins extends readonly any[],
+export type MergeSignaturesProperty<
+  TSignatures extends readonly any[],
   TProperty extends keyof TreeViewAnyPluginSignature,
-> = TPlugins extends readonly [plugin: infer P, ...otherPlugin: infer R]
+> = TSignatures extends readonly [plugin: infer P, ...otherPlugin: infer R]
   ? P extends TreeViewAnyPluginSignature
-    ? P[TProperty] & MergePluginsProperty<R, TProperty>
+    ? P[TProperty] & MergeSignaturesProperty<R, TProperty>
     : {}
   : {};
 
@@ -38,17 +38,24 @@ export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
       : ConvertPluginsIntoSignatures<R>
     : [];
 
-export interface MergePlugins<TPlugins extends readonly any[]> {
-  state: MergePluginsProperty<TPlugins, 'state'>;
-  instance: MergePluginsProperty<TPlugins, 'instance'>;
-  publicAPI: MergePluginsProperty<TPlugins, 'publicAPI'>;
-  params: MergePluginsProperty<TPlugins, 'params'>;
-  defaultizedParams: MergePluginsProperty<TPlugins, 'defaultizedParams'>;
-  dependantPlugins: MergePluginsProperty<TPlugins, 'dependantPlugins'>;
-  contextValue: MergePluginsProperty<TPlugins, 'contextValue'>;
-  slots: MergePluginsProperty<TPlugins, 'slots'>;
-  slotProps: MergePluginsProperty<TPlugins, 'slotProps'>;
-  events: MergePluginsProperty<TPlugins, 'events'>;
-  models: MergePluginsProperty<TPlugins, 'models'>;
-  experimentalFeatures: MergePluginsProperty<TPlugins, 'experimentalFeatures'>;
+export type ConvertSignaturesIntoPlugins<TSignatures extends readonly any[]> =
+  TSignatures extends readonly [plugin: infer S, ...otherPlugin: infer R]
+    ? S extends TreeViewAnyPluginSignature
+      ? [TreeViewPlugin<S>, ...ConvertSignaturesIntoPlugins<R>]
+      : ConvertSignaturesIntoPlugins<R>
+    : [];
+
+export interface MergePluginsSignature<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  state: MergeSignaturesProperty<TSignatures, 'state'>;
+  instance: MergeSignaturesProperty<TSignatures, 'instance'>;
+  publicAPI: MergeSignaturesProperty<TSignatures, 'publicAPI'>;
+  params: MergeSignaturesProperty<TSignatures, 'params'>;
+  defaultizedParams: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
+  dependantPlugins: MergeSignaturesProperty<TSignatures, 'dependantPlugins'>;
+  contextValue: MergeSignaturesProperty<TSignatures, 'contextValue'>;
+  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
+  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
+  events: MergeSignaturesProperty<TSignatures, 'events'>;
+  models: MergeSignaturesProperty<TSignatures, 'models'>;
+  experimentalFeatures: MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>;
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeViewExperimentalFeatures,
   TreeViewPlugin,
   TreeViewPublicAPI,
@@ -10,8 +10,8 @@ import { UseTreeViewBaseParameters } from '../useTreeView/useTreeView.types';
 
 export const extractPluginParamsFromProps = <
   TPlugins extends readonly TreeViewPlugin<any>[],
-  TSlots extends MergePluginsProperty<TPlugins, 'slots'>,
-  TSlotProps extends MergePluginsProperty<TPlugins, 'slotProps'>,
+  TSlots extends MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slots'>,
+  TSlotProps extends MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slotProps'>,
   TProps extends {
     slots?: TSlots;
     slotProps?: TSlotProps;
@@ -29,7 +29,8 @@ export const extractPluginParamsFromProps = <
   plugins: TPlugins;
   rootRef?: React.Ref<HTMLUListElement>;
 }) => {
-  type PluginParams = MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+  type Signatures = ConvertPluginsIntoSignatures<TPlugins>;
+  type PluginParams = MergeSignaturesProperty<Signatures, 'params'>;
 
   const paramsLookup = {} as Record<keyof PluginParams, true>;
   plugins.forEach((plugin) => {
@@ -43,7 +44,7 @@ export const extractPluginParamsFromProps = <
     slotProps: slotProps ?? {},
     experimentalFeatures: experimentalFeatures ?? {},
     apiRef,
-  } as UseTreeViewBaseParameters<TPlugins> & PluginParams;
+  } as UseTreeViewBaseParameters<Signatures> & PluginParams;
   const otherProps = {} as Omit<TProps, keyof PluginParams>;
 
   Object.keys(props).forEach((propName) => {

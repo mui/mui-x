@@ -3,7 +3,7 @@ import {
   TreeViewAnyPluginSignature,
   TreeViewPlugin,
   ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
 } from '../models';
 
 /**
@@ -14,9 +14,9 @@ export const useTreeViewModels = <
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 >(
   plugins: TPlugins,
-  props: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
+  props: MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
 ) => {
-  type DefaultizedParams = MergePluginsProperty<
+  type DefaultizedParams = MergeSignaturesProperty<
     ConvertPluginsIntoSignatures<TPlugins>,
     'defaultizedParams'
   >;
@@ -65,7 +65,7 @@ export const useTreeViewModels = <
         },
       ];
     }),
-  ) as MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'models'>;
+  ) as MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'models'>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */

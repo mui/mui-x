@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
-export type DescribeTreeViewTestRunner<TPlugins extends TreeViewAnyPluginSignature[]> = (
-  params: DescribeTreeViewTestRunnerParams<TPlugins>,
+export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
+  params: DescribeTreeViewTestRunnerParams<TSignatures>,
 ) => void;
 
 export interface DescribeTreeViewRendererUtils {
@@ -85,17 +85,18 @@ export interface DescribeTreeViewRendererUtils {
   getSelectedTreeItems: () => string[];
 }
 
-export interface DescribeTreeViewRendererReturnValue<TPlugins extends TreeViewAnyPluginSignature[]>
-  extends DescribeTreeViewRendererUtils {
+export interface DescribeTreeViewRendererReturnValue<
+  TSignatures extends TreeViewAnyPluginSignature[],
+> extends DescribeTreeViewRendererUtils {
   /**
    * The ref object that allows Tree View manipulation.
    */
-  apiRef: { current: TreeViewPublicAPI<TPlugins> };
+  apiRef: { current: TreeViewPublicAPI<TSignatures> };
   /**
    * Passes new props to the Tree View.
-   * @param {Partial<TreeViewUsedParams<TPlugin>>} props A subset of the props accepted by the Tree View.
+   * @param {Partial<TreeViewUsedParams<TSignatures>>} props A subset of the props accepted by the Tree View.
    */
-  setProps: (props: Partial<MergePluginsProperty<TPlugins, 'params'>>) => void;
+  setProps: (props: Partial<MergeSignaturesProperty<TSignatures, 'params'>>) => void;
   /**
    * Passes new items to the Tree View.
    * @param {readyonly DescribeTreeViewItem[]} items The new items.
@@ -103,7 +104,7 @@ export interface DescribeTreeViewRendererReturnValue<TPlugins extends TreeViewAn
   setItems: (items: readonly DescribeTreeViewItem[]) => void;
 }
 
-export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature[]> = <
+export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignature[]> = <
   R extends DescribeTreeViewItem,
 >(
   params: {
@@ -112,15 +113,15 @@ export type DescribeTreeViewRenderer<TPlugins extends TreeViewAnyPluginSignature
      * If `true`, the Tree View will be wrapped with an error boundary.
      */
     withErrorBoundary?: boolean;
-  } & Omit<MergePluginsProperty<TPlugins, 'params'>, 'slots' | 'slotProps'> & {
-      slots?: MergePluginsProperty<TPlugins, 'slots'> & {
+  } & Omit<MergeSignaturesProperty<TSignatures, 'params'>, 'slots' | 'slotProps'> & {
+      slots?: MergeSignaturesProperty<TSignatures, 'slots'> & {
         item?: React.ElementType<TreeItemProps | TreeItem2Props>;
       };
-      slotProps?: MergePluginsProperty<TPlugins, 'slotProps'> & {
+      slotProps?: MergeSignaturesProperty<TSignatures, 'slotProps'> & {
         item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
       };
     },
-) => DescribeTreeViewRendererReturnValue<TPlugins>;
+) => DescribeTreeViewRendererReturnValue<TSignatures>;
 
 export type DescribeTreeViewJSXRenderer = (
   element: React.ReactElement,
@@ -129,7 +130,7 @@ export type DescribeTreeViewJSXRenderer = (
 type TreeViewComponentName = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
 type TreeItemComponentName = 'TreeItem' | 'TreeItem2';
 
-interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSignature[]> {
+interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPluginSignature[]> {
   /**
    * Render the Tree View with its props and items defined as parameters of the "render" function as follows:
    *
@@ -140,7 +141,7 @@ interface DescribeTreeViewTestRunnerParams<TPlugins extends TreeViewAnyPluginSig
    * });
    * ```
    */
-  render: DescribeTreeViewRenderer<TPlugins>;
+  render: DescribeTreeViewRenderer<TSignatures>;
   /**
    * Render the Tree View by passing the JSX element to the renderFromJSX function as follows:
    *

@@ -99,7 +99,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
   });
 
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
+  const { getRootProps, contextValue, instance } = useTreeView<typeof DEFAULT_TREE_VIEW_PLUGINS>(pluginParams);
 
   const classes = useUtilityClasses(props);
 

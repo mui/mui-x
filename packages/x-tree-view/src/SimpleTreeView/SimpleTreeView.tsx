@@ -84,7 +84,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     rootRef: ref,
   });
 
-  const { getRootProps, contextValue } = useTreeView(pluginParams);
+  const { getRootProps, contextValue } = useTreeView<typeof SIMPLE_TREE_VIEW_PLUGINS>(pluginParams);
 
   const classes = useUtilityClasses(props);
 
