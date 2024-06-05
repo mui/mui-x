@@ -660,7 +660,6 @@ export const GridRootStyles = styled('div', {
     [`& .${c['filler--borderTop']}`]: {
       borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
-    [`& .${c['datasource--loadingContainer']}`]: {},
   };
 
   return gridStyle;

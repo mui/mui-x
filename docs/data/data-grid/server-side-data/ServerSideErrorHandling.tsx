@@ -119,7 +119,7 @@ export default function ServerSideErrorHandling() {
             {...props}
             unstable_dataSource={dataSource}
             unstable_onDataSourceError={(e) => setError(e.message)}
-            disableDataSourceCache
+            unstable_dataSourceCache={null}
             apiRef={apiRef}
             pagination
             pageSizeOptions={pageSizeOptions}

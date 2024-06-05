@@ -53,7 +53,7 @@ export default function ServerSideDataGridNoCache() {
           initialState={initialStateWithPagination}
           columns={columns}
           unstable_dataSource={dataSource}
-          disableDataSourceCache
+          unstable_dataSourceCache={null}
           pagination
           pageSizeOptions={pageSizeOptions}
         />

@@ -103,7 +103,7 @@ export default function ServerSideTreeDataErrorHandling() {
                   );
                 }
               }}
-              disableDataSourceCache
+              unstable_dataSourceCache={null}
               apiRef={apiRef}
               pagination
               pageSizeOptions={pageSizeOptions}

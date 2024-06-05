@@ -221,13 +221,13 @@ The following demo uses cache used by a popular library [`swr`](https://github.c
 
 ### Disable caching
 
-To disable the caching on the server-side data, pass the `disableDataSourceCache` prop.
+To disable the caching on the server-side data, pass the `unstable_dataSourceCache={null}` prop.
 
 ```tsx
 <DataGridPro
   columns={columns}
   unstable_dataSource={customDataSource}
-  disableDataSourceCache
+  unstable_dataSourceCache={null}
 />
 ```
 
