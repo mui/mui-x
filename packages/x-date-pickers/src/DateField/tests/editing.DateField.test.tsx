@@ -517,7 +517,7 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
-    describe('day section', () => {
+    describe('day section (PageUp)', () => {
       it('should set day to minimal when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
@@ -545,7 +545,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('weekday section', () => {
+    describe('weekday section (PageUp)', () => {
       it('should set weekday to Sunday when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.weekday,
@@ -573,7 +573,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('month section', () => {
+    describe('month section (PageUp)', () => {
       it('should set month to January when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.month,
@@ -601,7 +601,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('year section', () => {
+    describe('year section (PageUp)', () => {
       it('should set year to current year when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.year,
@@ -628,11 +628,10 @@ describe('<DateField /> - Editing', () => {
         });
       });
     });
-
   });
 
   describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
-    describe('day section', () => {
+    describe('day section (PageDown)', () => {
       it('should set day to maximal when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
@@ -660,7 +659,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('weekday section', () => {
+    describe('weekday section (PageDown)', () => {
       it('should set weekday to Saturday when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.weekday,
@@ -688,7 +687,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('month section', () => {
+    describe('month section (PageDown)', () => {
       it('should set month to December when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.month,
@@ -716,7 +715,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    describe('year section', () => {
+    describe('year section (PageDown)', () => {
       it('should set year to current year when no value is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.year,
