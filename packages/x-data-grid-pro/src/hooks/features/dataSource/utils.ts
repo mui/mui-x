@@ -56,20 +56,16 @@ export class NestedDataManager {
     for (let i = 0; i < loopLength; i += 1) {
       const id = fetchQueue[i];
       this.queuedRequests.delete(id);
-      this.api.fetchRowChildren(id);
       this.pendingRequests.add(id);
+      this.api.fetchRowChildren(id);
     }
   };
 
   public enqueue = async (ids: GridRowId[]) => {
     ids.forEach((id) => {
-      if (this.pendingRequests.size < this.maxConcurrentRequests) {
-        this.pendingRequests.add(id);
-        this.api.fetchRowChildren(id);
-      } else {
-        this.queuedRequests.add(id);
-      }
+      this.queuedRequests.add(id);
     });
+    this.processQueue();
   };
 
   public setRequestSettled = (id: GridRowId) => {
@@ -78,7 +74,7 @@ export class NestedDataManager {
     this.processQueue();
   };
 
-  public clearPendingRequests = () => {
+  public clear = () => {
     this.queuedRequests.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };

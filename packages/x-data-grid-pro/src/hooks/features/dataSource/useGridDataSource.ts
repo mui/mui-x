@@ -9,7 +9,6 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
-import { GridGetRowsResponse } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -61,7 +60,7 @@ export const useGridDataSource = (
       return;
     }
 
-    nestedDataManager.clearPendingRequests();
+    nestedDataManager.clear();
     scheduledGroups.current = 0;
     const dataSourceState = privateApiRef.current.state.dataSource;
     if (dataSourceState !== INITIAL_STATE) {
@@ -70,9 +69,7 @@ export const useGridDataSource = (
 
     const fetchParams = gridGetRowsParamsSelector(privateApiRef);
 
-    const cachedData = privateApiRef.current.getCacheData(fetchParams) as
-      | GridGetRowsResponse
-      | undefined;
+    const cachedData = privateApiRef.current.getCacheData(fetchParams);
 
     if (cachedData != null) {
       const rows = cachedData.rows;
@@ -135,6 +132,7 @@ export const useGridDataSource = (
 
       const cachedData = privateApiRef.current.getCacheData(fetchParams);
 
+      const isLoading = gridDataSourceLoadingSelector(privateApiRef)[id] ?? false;
       if (cachedData != null) {
         const rows = cachedData.rows;
         privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
@@ -144,10 +142,12 @@ export const useGridDataSource = (
           privateApiRef.current.setRowCount(cachedData.rowCount);
         }
         privateApiRef.current.setRowChildrenExpansion(id, true);
+        if (isLoading) {
+          privateApiRef.current.setChildrenLoading(id, false);
+        }
         return;
       }
 
-      const isLoading = gridDataSourceLoadingSelector(privateApiRef)[id] ?? false;
       if (!isLoading) {
         privateApiRef.current.setChildrenLoading(id, true);
       }
