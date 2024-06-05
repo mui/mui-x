@@ -48,7 +48,7 @@ You can pass props to the year button as shown below:
 
 ### Component
 
-You can pass custom components to replace the year button, as shown below:
+You can pass custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
