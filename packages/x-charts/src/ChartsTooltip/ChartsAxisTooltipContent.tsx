@@ -8,7 +8,7 @@ import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/co
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
-import { isCartesianSeriesType } from './utils';
+import { isCartesianSeriesType } from '../internals/isCartesian';
 import colorGetter from '../internals/colorGetter';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useSeries } from '../hooks/useSeries';
