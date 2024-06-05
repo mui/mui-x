@@ -45,18 +45,17 @@ const defaultProps = {
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { yAxisIds } = React.useContext(CartesianContext);
-  const {
-    yAxis: {
-      [inProps.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { yAxis } = React.useContext(CartesianContext);
+  const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
+
   const defaultizedProps = {
     ...defaultProps,
     ...themedProps,
-    position: inProps.position || defaultProps.position,
+    position: inProps.position ?? defaultProps.position,
   };
+
   const {
     position,
     disableLine,
