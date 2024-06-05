@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
+import barFormatter from '../BarChart/formatter';
 import { SeriesContextProvider } from '../context/SeriesContextProvider';
 
 function UseSeries() {
@@ -41,7 +42,10 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesContextProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
+      <SeriesContextProvider
+        series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}
+        seriesFormatters={{ bar: barFormatter }}
+      >
         <UseSeries />
       </SeriesContextProvider>,
     );

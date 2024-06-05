@@ -19,6 +19,9 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
+    "plugins": {
+      "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
+    },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
     },

@@ -147,6 +147,42 @@ ChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['bar']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['line']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['scatter']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        colorProcessor: PropTypes.func.isRequired,
+        seriesFormatter: PropTypes.func.isRequired,
+        seriesType: PropTypes.oneOf(['pie']).isRequired,
+        xExtremumGetter: PropTypes.func,
+        yExtremumGetter: PropTypes.func,
+      }),
+    ]).isRequired,
+  ),
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
