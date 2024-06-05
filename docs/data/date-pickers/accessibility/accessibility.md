@@ -51,15 +51,7 @@ The following table describes the keyboard support for all [field components](/x
 
 ### Date Calendar
 
-All the available [views](/x/react-date-pickers/date-calendar/#views) implement the same basic keyboard support:
-
-|                                                                                                                                          Keys | Description                            |
-| --------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------- |
-|                                                                                                                    <kbd class="key">Tab</kbd> | Moves focus to the next element        |
-|                                                                                       <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus to the previous element    |
-| <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values |
-
-In addition to the basic keyboard support above, the day view component implements its own keyboard interactions:
+Among the [available view components](https://mui.com/x/react-date-pickers/date-calendar/#views), `day` is the only one that implements specific keyboard support:
 
 |                             Keys | Description                                                     |
 | -------------------------------: | :-------------------------------------------------------------- |
