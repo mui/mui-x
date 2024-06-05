@@ -138,7 +138,7 @@ As any ordinary cell renderer, the `value` prop is also available, and it corres
 ## Render a custom header for the detail panel column
 
 To render a custom header for the detail panel column, you can use the `renderHeader` prop in the column definition.
-This prop receives a [`GridRenderHeaderParams`](/x/api/data-grid/grid-render-header-params/) object, which contains the column definition and the `field`.
+This prop receives a `GridRenderHeaderParams` object, which contains `coDef` (the column definition) and `field`.
 The following example demonstrates how to render a custom header for the detail panel column:
 
 ```tsx
