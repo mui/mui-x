@@ -548,9 +548,6 @@ importers:
       markdown-to-jsx:
         specifier: ^7.4.7
         version: 7.4.7(react@18.2.0)
-      marked:
-        specifier: ^5.1.2
-        version: 5.1.2
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -12455,6 +12452,7 @@ packages:
     resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
     engines: {node: '>= 16'}
     hasBin: true
+    dev: true
 
   /mdast-util-from-markdown@0.8.5:
     resolution: {integrity: sha512-2hkTXtYYnr+NubD/g6KGBS/0mFmBcifAsI0yIWRiRo0PjVs6SSOSOdtzbp6kSGnShDN6G5aWZpKQ2lWRy27mWQ==}
