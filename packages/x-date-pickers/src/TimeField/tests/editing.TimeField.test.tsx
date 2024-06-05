@@ -226,7 +226,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass hours field when default value is lower than 5', () => {
+        it('should flip hours field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageDown',
@@ -255,7 +255,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass minutes field when default value is lower than 5', () => {
+        it('should flip minutes field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageDown',
@@ -266,7 +266,7 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    describe('12 hours format', () => {
+    describe('12 hours format (PageDown)', () => {
       describe('Hours field', () => {
         it('should set hours field to maximal when no default value is provided', () => {
           testFieldKeyPress({
@@ -285,7 +285,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass hours field when default value is lower than 5', () => {
+        it('should flip hours field when default value is lower than 5', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageDown',
@@ -328,7 +328,7 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (PageUp)', () => {
       describe('Hours field', () => {
-        it('s', () => {
+        it('should set hours field to minimal when no default value is provided', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
@@ -347,7 +347,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass hours field when default value is higher than 19', () => {
+        it('should flip hours field when default value is higher than 19', () => {
           testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
@@ -376,7 +376,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass minutes field when default value is higher than 55', () => {
+        it('should flip minutes field when default value is higher than 55', () => {
           testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageUp',
@@ -386,7 +386,7 @@ describe('<TimeField /> - Editing', () => {
         });
       });
     });
-    describe('12 hours format', () => {
+    describe('12 hours format (PageUp)', () => {
       describe('Hours field', () => {
         it('should set hours field to minimal when no default value is provided', () => {
           testFieldKeyPress({
@@ -407,7 +407,7 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should trespass hours field when default value is higher than 07', () => {
+        it('should flip hours field when default value is higher than 07', () => {
           testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageUp',
