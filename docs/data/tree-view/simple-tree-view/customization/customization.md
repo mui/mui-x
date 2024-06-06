@@ -60,7 +60,7 @@ The demo below shows how to add a tooltip on the Tree Item label:
 Use the `useTreeItem2` hook to create your own component.
 The demo below shows how to add an avatar and custom typography elements.
 
-{{"demo": "CustomContentTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}
 
 ## Common examples
 

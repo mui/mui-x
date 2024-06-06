@@ -3,18 +3,15 @@ import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import {
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-  isCartesianSeriesType,
-} from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../hooks/useColor';
+import { isCartesianSeriesType } from '../internals/isCartesian';
+import { useSeries } from '../hooks/useSeries';
 
 type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
   getColor: (dataIndex: number) => string;
@@ -64,7 +61,8 @@ function ChartsAxisTooltipContent(props: {
 
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
   const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
-  const series = React.useContext(SeriesContext);
+  const series = useSeries();
+
   const colorProcessors = useColorProcessor();
 
   const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];

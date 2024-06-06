@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/base/utils';
-import { PickersActionBarProps } from '../PickersActionBar';
+import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
-import { ExportedPickersShortcutProps } from '../PickersShortcuts/PickersShortcuts';
+import {
+  ExportedPickersShortcutProps,
+  PickersShortcuts,
+} from '../PickersShortcuts/PickersShortcuts';
 import { PickerValidDate } from '../models';
 
 export interface ExportedPickersLayoutSlots<
@@ -56,20 +59,14 @@ export interface ExportedPickersLayoutSlotProps<
    * Props passed down to the action bar component.
    */
   actionBar?: SlotComponentProps<
-    React.ComponentType<
-      Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>
-    >,
+    typeof PickersActionBar,
     {},
     PickersLayoutActionBarOwnerState<TValue, TDate, TView>
   >;
   /**
    * Props passed down to the shortcuts component.
    */
-  shortcuts?: SlotComponentProps<
-    React.ComponentType<PickersShortcutsProps<TValue>>,
-    {},
-    PickersShortcutsOwnerState<TValue>
-  >;
+  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersShortcutsOwnerState<TValue>>;
   /**
    * Props passed down to the layoutRoot component.
    */

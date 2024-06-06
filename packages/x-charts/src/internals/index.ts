@@ -7,6 +7,7 @@ export { useSeries } from '../hooks/useSeries';
 
 // utils
 export * from './defaultizeValueFormatter';
+export * from './configInit';
 
 // contexts
 

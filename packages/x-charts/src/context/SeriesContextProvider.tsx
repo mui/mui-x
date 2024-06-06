@@ -9,6 +9,7 @@ import {
   FormatterResult,
 } from '../models/seriesType/config';
 import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
+import { Initializable } from './context.types';
 
 export type SeriesFormatterType<T extends ChartSeriesType> = (
   series: AllSeriesType<T>[],
@@ -38,7 +39,10 @@ export type SeriesContextProviderProps<T extends ChartSeriesType = ChartSeriesTy
 
 export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type> };
 
-export const SeriesContext = React.createContext<FormattedSeries>({});
+export const SeriesContext = React.createContext<Initializable<FormattedSeries>>({
+  isInitialized: false,
+  data: {},
+});
 
 if (process.env.NODE_ENV !== 'production') {
   SeriesContext.displayName = 'SeriesContext';
@@ -100,13 +104,15 @@ function SeriesContextProvider<T extends ChartSeriesType>(props: SeriesContextPr
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
-    () =>
-      preprocessSeries(
+    () => ({
+      isInitialized: true,
+      data: preprocessSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
         seriesFormatters,
         dataset as DatasetType<number>,
       ),
+    }),
     [series, colors, theme.palette.mode, seriesFormatters, dataset],
   );
 

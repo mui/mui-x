@@ -1,4 +1,4 @@
-import { ChartSeriesType, ExtremumGetter, Formatter } from '../internals';
+import { ChartSeriesType, ExtremumGetter, Formatter } from './seriesType/config';
 import { AxisDefaultized } from './axis';
 import { DefaultizedSeriesType } from './seriesType';
 import { ZAxisDefaultized } from './z-axis';
