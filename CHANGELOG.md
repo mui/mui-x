@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 6.20.1
+
 _Jun 6, 2024_
 
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
