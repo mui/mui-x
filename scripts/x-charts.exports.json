@@ -93,7 +93,6 @@
   { "name": "ChartsOnAxisClickHandlerProps", "kind": "Interface" },
   { "name": "ChartsPieSorting", "kind": "TypeAlias" },
   { "name": "ChartsPluginType", "kind": "TypeAlias" },
-  { "name": "ChartsPluginTypes", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },

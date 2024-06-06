@@ -15,11 +15,11 @@ import {
 } from '../context/CartesianContextProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { HighlightedProvider, HighlightedProviderProps } from '../context';
-import { ChartsPluginTypes } from '../models/plugin';
+import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { usePluginsMerge } from './usePluginsMerge';
 
-export type ChartContainerProps<T extends ChartSeriesType = ChartSeriesType> = Omit<
+export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
@@ -32,7 +32,7 @@ export type ChartContainerProps<T extends ChartSeriesType = ChartSeriesType> = O
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
-  plugins?: ChartsPluginTypes<T>[];
+  plugins?: ChartsPluginType<ChartSeriesType>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
