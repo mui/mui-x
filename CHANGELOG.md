@@ -21,6 +21,10 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [fields] Fix new index calculation on letter section (#13310) @arthurbalduini
 - [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
+- 
+#### `@mui/x-date-pickers-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.7.0`.
 
 ### Charts
 
