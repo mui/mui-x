@@ -210,7 +210,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters(`key: Delete`, DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
+  describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
     it('should clear the selected section when only this section is completed', () => {
       // Test with v7 input
       const v7Response = renderWithProps({
@@ -513,6 +513,234 @@ describe('<DateField /> - Editing', () => {
 
       userEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
+    });
+  });
+
+  describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
+    describe('day section (PageUp)', () => {
+      it('should set day to minimal when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          key: 'PageUp',
+          expectedValue: '01',
+        });
+      });
+
+      it('should increment day by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: '20',
+        });
+      });
+
+      it('should flip day field when value is higher than 27', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-28'),
+          key: 'PageUp',
+          expectedValue: '02',
+        });
+      });
+    });
+
+    describe('weekday section (PageUp)', () => {
+      it('should set weekday to Sunday when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          key: 'PageUp',
+          expectedValue: 'Sunday',
+        });
+      });
+
+      it('should increment weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-03'),
+          key: 'PageUp',
+          expectedValue: 'Saturday',
+        });
+      });
+
+      it('should flip weekday field when value is higher than 3', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-07'),
+          key: 'PageUp',
+          expectedValue: 'Wednesday',
+        });
+      });
+    });
+
+    describe('month section (PageUp)', () => {
+      it('should set month to January when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          key: 'PageUp',
+          expectedValue: 'January',
+        });
+      });
+
+      it('should increment month by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: 'June',
+        });
+      });
+
+      it('should flip month field when value is higher than 7', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-08-15'),
+          key: 'PageUp',
+          expectedValue: 'January',
+        });
+      });
+    });
+
+    describe('year section (PageUp)', () => {
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          key: 'PageUp',
+          expectedValue: new Date().getFullYear().toString(),
+        });
+      });
+
+      it('should increment year by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: '2027',
+        });
+      });
+
+      it('should flip year field when value is higher than 9995', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('9996-01-15'),
+          key: 'PageUp',
+          expectedValue: '0001',
+        });
+      });
+    });
+  });
+
+  describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
+    describe('day section (PageDown)', () => {
+      it('should set day to maximal when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          key: 'PageDown',
+          expectedValue: '31',
+        });
+      });
+
+      it('should decrement day by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageDown',
+          expectedValue: '10',
+        });
+      });
+
+      it('should flip day field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-04'),
+          key: 'PageDown',
+          expectedValue: '30',
+        });
+      });
+    });
+
+    describe('weekday section (PageDown)', () => {
+      it('should set weekday to Saturday when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          key: 'PageDown',
+          expectedValue: 'Saturday',
+        });
+      });
+
+      it('should decrement weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-22'),
+          key: 'PageDown',
+          expectedValue: 'Monday',
+        });
+      });
+
+      it('should flip weekday field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-23'),
+          key: 'PageDown',
+          expectedValue: 'Tuesday',
+        });
+      });
+    });
+
+    describe('month section (PageDown)', () => {
+      it('should set month to December when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          key: 'PageDown',
+          expectedValue: 'December',
+        });
+      });
+
+      it('should decrement month by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-10-15'),
+          key: 'PageDown',
+          expectedValue: 'May',
+        });
+      });
+
+      it('should flip month field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-04-15'),
+          key: 'PageDown',
+          expectedValue: 'November',
+        });
+      });
+    });
+
+    describe('year section (PageDown)', () => {
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          key: 'PageDown',
+          expectedValue: new Date().getFullYear().toString(),
+        });
+      });
+
+      it('should decrement year by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageDown',
+          expectedValue: '2017',
+        });
+      });
+
+      it('should flip year field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('0003-01-15'),
+          key: 'PageDown',
+          expectedValue: adapter.lib === 'dayjs' ? '1898' : '9998',
+        });
+      });
     });
   });
 
