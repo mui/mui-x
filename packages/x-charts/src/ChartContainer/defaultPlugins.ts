@@ -5,7 +5,7 @@ import { plugin as piePlugin } from '../PieChart/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsPluginType } from '../models';
 
-export const defaultPlugins: ChartsPluginType<ChartSeriesType>[] = [
+export const defaultPlugins: ChartsPluginType<'bar' | 'scatter' | 'line' | 'pie'>[] = [
   barPlugin,
   scatterPlugin,
   linePlugin,
