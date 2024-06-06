@@ -20,6 +20,12 @@ export interface UseTreeViewLabelInstance {
 export interface UseTreeViewLabelParameters<R extends {}> {
   items: readonly R[];
   getItemLabel?: (item: R) => string;
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange?: (itemId: TreeViewItemId, newLabel: string) => void;
 }
 
 export interface UseTreeViewLabelState {
