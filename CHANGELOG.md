@@ -9,6 +9,7 @@ _Jun 6, 2024_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- 📚 Date and Time Pickers accessibility page has been added
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -57,7 +58,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [docs] Update twitter.com to x.com @oliviertassinari
 - [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
 - [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen
-- [docs] Create pickers accessibility page (#13274) @arthurbalduini
+- [docs] Create Pickers accessibility page (#13274) @arthurbalduini
 
 ### Core
 
