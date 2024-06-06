@@ -150,7 +150,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
+const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
   {
     visible = false,
     ownerState,
@@ -334,7 +334,6 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     getSlotProps: getLabelInputProps,
     externalSlotProps: slotProps.labelInput,
     ownerState: {},
-
     className: classes.labelInput,
   });
 
@@ -346,9 +345,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-
           <LabelInput value={label as string} {...labelInputProps} />
-
           {!labelInputProps.visible && <Label {...labelProps} />}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
@@ -380,6 +377,7 @@ TreeItem2.propTypes = {
    * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
+  isBeingEdited: PropTypes.bool.isRequired,
   /**
    * The id of the item.
    * Must be unique.

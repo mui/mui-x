@@ -45,6 +45,7 @@
     "icon": "The icon to display next to the tree item&#39;s label.",
     "iconContainer": "The component that renders the icon.",
     "label": "The component that renders the item label.",
+    "labelInput": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
     "root": "The component that renders the root."
   }
 }

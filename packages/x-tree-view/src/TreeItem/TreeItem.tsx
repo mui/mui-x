@@ -422,6 +422,7 @@ TreeItem.propTypes = {
    * @default false
    */
   disabled: PropTypes.bool,
+  isBeingEdited: PropTypes.bool.isRequired,
   /**
    * The id of the item.
    */
