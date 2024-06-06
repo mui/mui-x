@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {
   TreeViewAnyPluginSignature,
-  TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
+  ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
 } from '../models';
 
@@ -10,16 +9,11 @@ import {
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state, and the state is only updated if the model is not controlled.
  */
-export const useTreeViewModels = <
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
->(
-  plugins: TPlugins,
-  props: MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
+export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  plugins: ConvertSignaturesIntoPlugins<TSignatures>,
+  props: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>,
 ) => {
-  type DefaultizedParams = MergeSignaturesProperty<
-    ConvertPluginsIntoSignatures<TPlugins>,
-    'defaultizedParams'
-  >;
+  type DefaultizedParams = MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
 
   const modelsRef = React.useRef<{
     [modelName: string]: {
@@ -65,7 +59,7 @@ export const useTreeViewModels = <
         },
       ];
     }),
-  ) as MergeSignaturesProperty<ConvertPluginsIntoSignatures<TPlugins>, 'models'>;
+  ) as MergeSignaturesProperty<TSignatures, 'models'>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */

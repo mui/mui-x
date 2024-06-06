@@ -11,7 +11,8 @@ import {
 } from '../models';
 
 export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  UseTreeViewBaseParameters<TSignatures> & MergeSignaturesProperty<TSignatures, 'params'>;
+  UseTreeViewBaseParameters<TSignatures> &
+    Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>;
 
 export interface UseTreeViewBaseParameters<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
