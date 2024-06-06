@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.7.0
+
+_Jun 6, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Introduced plugins system in the Charts @alexfauquette
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.7.0`
+
+- [fields] Fix new index calculation on letter section (#13310) @arthurbalduini
+- [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.7.0`
+
+- [charts] Add `Initializable` type and behaviour to allow checking if a complex context has been initialized. (#13365) @JCQuintas
+- [charts] Fix some props not working in xAxis/yAxis (#13372) @Valyok26
+- [charts] Harmonize charts Types (#13366) @alexfauquette
+- [charts] Introduce plugins system (#13367) @alexfauquette
+
+### Docs
+
+- [docs] Add badges like in Material UI @oliviertassinari
+- [docs] Update twitter.com to x.com @oliviertassinari
+- [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
+- [docs] adjusted the code example for `quickFilterValues` (#12919) @michelengelen
+
+### Core
+
+- [core] Comment on `CSS.escape` for the future @oliviertassinari
+- [core] Fix `l10n` action setup (#13382) @LukasTy
+- [core] Fixes in preparation for React 18.3 (#13378) @LukasTy
+- [core] Remove explicit `marked` dependency (#13383) @LukasTy
+- [core] Remove unused `@types/prettier` dependency (#13389) @LukasTy
+- [core] add docs .env.local to .gitignore (#13377) @KenanYusuf
+- [data grid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
+
 ## 7.6.1
 
 _May 31, 2024_
