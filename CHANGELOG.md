@@ -14,6 +14,21 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
+### Data Grid
+
+#### `@mui/x-data-grid@7.70`
+
+- [data grid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
+
+#### `@mui/x-data-grid-pro@7.70` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.70`.
+
+
+#### `@mui/x-data-grid-premium@7.70` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.70`.
+
 ### Date and Time Pickers
 
 #### `@mui/x-date-pickers@7.7.0`
@@ -49,7 +64,6 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 - [core] Remove explicit `marked` dependency (#13383) @LukasTy
 - [core] Remove unused `@types/prettier` dependency (#13389) @LukasTy
 - [core] add docs .env.local to .gitignore (#13377) @KenanYusuf
-- [data grid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
 
 ## 7.6.1
 
