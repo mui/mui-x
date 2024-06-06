@@ -12,7 +12,7 @@ packageName: '@mui/x-tree-view'
 
 ## Guidelines
 
-The most commonly encountered conformance guidelines for accessibility are:
+Common conformance guidelines for accessibility include:
 
 - Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 - US:
@@ -21,8 +21,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations, so we aim to support it very well.
+Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) provide valuable information on how to optimize the accessibility of a Tree View.
 
