@@ -33,8 +33,9 @@ Same changes as in `@mui/x-data-grid-pro@7.70`.
 
 #### `@mui/x-date-pickers@7.7.0`
 
-- [fields] Fix new index calculation on letter section (#13310) @arthurbalduini
+- [fields] Fix `PageUp` and `PageDown` editing on letter sections (#13310) @arthurbalduini
 - [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
+- [pickers] Use `useRtl` instead of `useTheme` to access direction (#13363) @flaviendelangle 
 - 
 #### `@mui/x-date-pickers-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -45,8 +46,8 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 #### `@mui/x-charts@7.7.0`
 
 - [charts] Add `Initializable` type and behaviour to allow checking if a complex context has been initialized. (#13365) @JCQuintas
-- [charts] Fix some props not working in xAxis/yAxis (#13372) @Valyok26
-- [charts] Harmonize charts Types (#13366) @alexfauquette
+- [charts] Fix some props not working in `xAxis` and `yAxis` (#13372) @Valyok26
+- [charts] Harmonize charts types (#13366) @alexfauquette
 - [charts] Introduce plugins system (#13367) @alexfauquette
 
 ### Docs
