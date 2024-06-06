@@ -49,6 +49,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [charts] Fix some props not working in `xAxis` and `yAxis` (#13372) @Valyok26
 - [charts] Harmonize charts types (#13366) @alexfauquette
 - [charts] Introduce plugins system (#13367) @alexfauquette
+- [charts] Simplify plugin types (#13396) @JCQuintas
 
 ### Docs
 
