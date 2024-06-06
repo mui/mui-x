@@ -31,12 +31,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "plugins": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ colorProcessor: func, seriesFormatter: func, seriesType: 'bar', xExtremumGetter?: func, yExtremumGetter?: func }<br>&#124;&nbsp;{ colorProcessor: func, seriesFormatter: func, seriesType: 'line', xExtremumGetter?: func, yExtremumGetter?: func }<br>&#124;&nbsp;{ colorProcessor: func, seriesFormatter: func, seriesType: 'scatter', xExtremumGetter?: func, yExtremumGetter?: func }<br>&#124;&nbsp;{ colorProcessor: func, seriesFormatter: func, seriesType: 'pie', xExtremumGetter?: func, yExtremumGetter?: func }&gt;"
-      }
-    },
+    "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
