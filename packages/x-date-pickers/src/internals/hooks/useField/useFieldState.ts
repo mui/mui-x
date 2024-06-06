@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
@@ -88,8 +88,7 @@ export const useFieldState = <
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const {
     valueManager,
@@ -144,7 +143,7 @@ export const useFieldState = <
           formatDensity,
           shouldRespectLeadingZeros,
           enableAccessibleFieldDOMStructure,
-          isRTL,
+          isRtl,
         }),
       ),
     [
@@ -152,7 +151,7 @@ export const useFieldState = <
       format,
       localeText,
       localizedDigits,
-      isRTL,
+      isRtl,
       shouldRespectLeadingZeros,
       utils,
       formatDensity,
@@ -293,7 +292,7 @@ export const useFieldState = <
         formatDensity,
         shouldRespectLeadingZeros,
         enableAccessibleFieldDOMStructure,
-        isRTL,
+        isRtl,
       });
       return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
     };
@@ -385,7 +384,7 @@ export const useFieldState = <
       ...prevState,
       sections,
     }));
-  }, [format, utils.locale, isRTL]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale, isRtl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     let shouldUpdate: boolean;
