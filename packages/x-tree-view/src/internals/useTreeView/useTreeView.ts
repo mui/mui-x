@@ -54,7 +54,7 @@ export const useTreeView = <TSignatures extends readonly TreeViewAnyPluginSignat
     }
 
     return acc;
-  }, inParams) as unknown as UseTreeViewDefaultizedParameters<TSignaturesWithCorePluginSignatures>;
+  }, inParams) as unknown as UseTreeViewDefaultizedParameters<TSignatures>;
 
   const models = useTreeViewModels<TSignaturesWithCorePluginSignatures>(plugins, params);
   const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);

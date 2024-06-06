@@ -9,6 +9,7 @@ import {
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
+import { TreeViewCorePluginSignatures } from '@mui/x-tree-view/internals/corePlugins';
 
 export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   UseTreeViewBaseParameters<TSignatures> &
@@ -28,7 +29,7 @@ export interface UseTreeViewBaseParameters<
 export type UseTreeViewDefaultizedParameters<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
 > = UseTreeViewBaseParameters<TSignatures> &
-  MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
+  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'defaultizedParams'>;
 
 export interface UseTreeViewRootSlotProps
   extends Pick<
