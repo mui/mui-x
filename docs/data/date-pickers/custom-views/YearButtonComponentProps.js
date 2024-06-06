@@ -12,7 +12,13 @@ export default function YearButtonComponentProps() {
           openTo="year"
           slotProps={{
             yearButton: {
-              sx: { border: '1px red solid' },
+              sx: {
+                color: '#1565c0',
+                borderRadius: '2px',
+                borderColor: '#2196f3',
+                border: '1px solid',
+                backgroundColor: '#90caf9',
+              },
             },
           }}
         />
