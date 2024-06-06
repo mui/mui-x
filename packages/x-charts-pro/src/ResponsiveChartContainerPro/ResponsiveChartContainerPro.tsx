@@ -1,46 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { ChartContainer, ChartContainerProps } from '@mui/x-charts/ChartContainer';
-import { useChartContainerDimensions } from './useChartContainerDimensions';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
+import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
-export interface ResponsiveChartContainerProps
-  extends Omit<ChartContainerProps, 'width' | 'height'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
-}
-
-const ResizableContainer = styled('div', {
-  name: 'MuiResponsiveChart',
-  slot: 'Container',
-})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexGrow: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
-}));
+export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
 const releaseInfo = getReleaseInfo();
 
-const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
-  props: ResponsiveChartContainerProps,
+const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartContainerPro(
+  props: ResponsiveChartContainerProProps,
   ref,
 ) {
   const { width: inWidth, height: inHeight, ...other } = props;
@@ -58,7 +29,7 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   );
 });
 
-ResponsiveChartContainer.propTypes = {
+ResponsiveChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -281,4 +252,4 @@ ResponsiveChartContainer.propTypes = {
   ),
 } as any;
 
-export { ResponsiveChartContainer };
+export { ResponsiveChartContainerPro };

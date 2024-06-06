@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
+import { ResizableContainer } from './ResizableContainer';
 
 export interface ResponsiveChartContainerProps
   extends Omit<ChartContainerProps, 'width' | 'height'> {
@@ -15,25 +15,6 @@ export interface ResponsiveChartContainerProps
    */
   height?: number;
 }
-
-const ResizableContainer = styled('div', {
-  name: 'MuiResponsiveChart',
-  slot: 'Container',
-})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexGrow: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
-}));
 
 const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
   props: ResponsiveChartContainerProps,

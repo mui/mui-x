@@ -2,16 +2,16 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
-import { ResponsiveChartContainer } from './ResponsiveChartContainer';
+import { ResponsiveChartContainerPro } from './ResponsiveChartContainerPro';
 
-describe('<ResponsiveChartContainer /> - License', () => {
+describe('<ResponsiveChartContainerPro /> - License', () => {
   const { render } = createRenderer();
 
   it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() =>
-      render(<ResponsiveChartContainer series={[]} width={100} height={100} />),
+      render(<ResponsiveChartContainerPro series={[]} width={100} height={100} />),
     ).toErrorDev(['MUI X: Missing license key.']);
 
     await waitFor(() => {
