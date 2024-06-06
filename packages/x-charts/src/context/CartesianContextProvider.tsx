@@ -25,6 +25,7 @@ import { getScale } from '../internals/getScale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
   CartesianChartSeriesType,
+  ChartSeriesType,
   ChartSeries,
   DatasetType,
   ExtremumGetter,
@@ -36,6 +37,10 @@ import { useDrawingArea } from '../hooks/useDrawingArea';
 import { SeriesId } from '../models/seriesType/common';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 import { useSeries } from '../hooks/useSeries';
+
+export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
+  [K in T]?: ExtremumGetter<K>;
+};
 
 export type CartesianContextProviderProps = {
   /**

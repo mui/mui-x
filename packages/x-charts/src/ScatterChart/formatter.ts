@@ -1,4 +1,4 @@
-import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
+import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { Formatter } from '../models/seriesType/config';
 
 const formatter: Formatter<'scatter'> = ({ series, seriesOrder }) => {

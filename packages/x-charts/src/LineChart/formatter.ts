@@ -6,7 +6,7 @@ import {
   DatasetType,
   Formatter,
 } from '../models/seriesType/config';
-import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
+import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
 
