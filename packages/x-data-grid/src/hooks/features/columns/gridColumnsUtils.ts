@@ -171,30 +171,36 @@ export const hydrateColumnsWidth = (
   const flexColumns: GridStateColDef[] = [];
 
   // For the non-flex columns, compute their width
-  // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
+  // For the flex columns, compute their minimum width and how much width must be allocated during the flex allocation
   rawState.orderedFields.forEach((columnField) => {
-    const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
-    if (rawState.columnVisibilityModel[columnField] === false) {
-      newColumn.computedWidth = 0;
-    } else {
-      let computedWidth: number;
-      if (newColumn.flex && newColumn.flex > 0) {
-        totalFlexUnits += newColumn.flex;
-        computedWidth = 0;
-        flexColumns.push(newColumn);
+    let column = rawState.lookup[columnField] as GridStateColDef;
+    let computedWidth = 0;
+    let isFlex = false;
+
+    if (rawState.columnVisibilityModel[columnField] !== false) {
+      if (column.flex && column.flex > 0) {
+        totalFlexUnits += column.flex;
+        isFlex = true;
       } else {
         computedWidth = clamp(
-          newColumn.width || GRID_STRING_COL_DEF.width!,
-          newColumn.minWidth || GRID_STRING_COL_DEF.minWidth!,
-          newColumn.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+          column.width || GRID_STRING_COL_DEF.width!,
+          column.minWidth || GRID_STRING_COL_DEF.minWidth!,
+          column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
         );
       }
 
       widthAllocatedBeforeFlex += computedWidth;
-      newColumn.computedWidth = computedWidth;
     }
 
-    columnsLookup[columnField] = newColumn;
+    if (column.computedWidth !== computedWidth) {
+      column = { ...column, computedWidth };
+    }
+
+    if (isFlex) {
+      flexColumns.push(column);
+    }
+
+    columnsLookup[columnField] = column;
   });
 
   const availableWidth =
@@ -382,7 +388,7 @@ export const createColumnsState = ({
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep![field]) {
+      if (!columnsToKeep[field]) {
         delete columnsState.lookup[field];
       }
     });

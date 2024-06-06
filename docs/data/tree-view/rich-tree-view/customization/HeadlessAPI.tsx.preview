@@ -1,6 +1,4 @@
 <RichTreeView
-  aria-label="icon expansion"
-  sx={{ position: 'relative' }}
   defaultExpandedItems={['3']}
   items={ITEMS}
   slots={{ item: CustomTreeItem }}

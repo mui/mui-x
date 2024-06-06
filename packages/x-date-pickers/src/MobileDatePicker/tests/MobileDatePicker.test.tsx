@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, userEvent } from '@mui-internal/test-utils';
+import { fireEvent, screen, userEvent } from '@mui/internal-test-utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';

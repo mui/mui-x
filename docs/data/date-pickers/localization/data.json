@@ -67,7 +67,7 @@
     "languageTag": "fi-FI",
     "importName": "fiFI",
     "localeName": "Finnish",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/fiFI.ts"
   },

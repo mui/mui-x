@@ -64,7 +64,7 @@ export interface LineChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface LineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
@@ -165,6 +165,8 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     slotProps,
     skipAnimation,
     loading,
+    highlightedItem,
+    onHighlightChange,
   } = props;
 
   const id = useId();
@@ -203,6 +205,8 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         axisHighlight?.y === 'none' &&
         !onAxisClick
       }
+      highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
@@ -299,6 +303,13 @@ LineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -346,6 +357,12 @@ LineChart.propTypes = {
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a line element is clicked.
    */
@@ -463,7 +480,7 @@ LineChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -534,7 +551,7 @@ LineChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,

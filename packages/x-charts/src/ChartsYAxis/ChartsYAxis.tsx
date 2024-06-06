@@ -44,15 +44,16 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
-  const { yAxisIds } = React.useContext(CartesianContext);
-  const {
-    yAxis: {
-      [props.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
   const {
     position,
     disableLine,
@@ -255,10 +256,12 @@ ChartsYAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),

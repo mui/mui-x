@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { SvgContext } from '../context/DrawingProvider';
-import {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../models/seriesType/config';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { useSvgRef } from '../hooks';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
   if (mousePosition === null) {
@@ -41,7 +37,7 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
 }
 
 export function useMouseTracker() {
-  const svgRef = React.useContext(SvgContext);
+  const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
@@ -93,21 +89,6 @@ export function getTooltipHasData(
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
 
   return hasAxisXData || hasAxisYData;
-}
-
-export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return ['bar', 'line', 'scatter'].includes(seriesType);
-}
-
-export function isCartesianSeries(
-  series: ChartSeriesDefaultized<ChartSeriesType> & { getColor: (dataIndex: number) => string },
-): series is ChartSeriesDefaultized<CartesianChartSeriesType> & {
-  getColor: (dataIndex: number) => string;
-};
-export function isCartesianSeries(
-  series: ChartSeriesDefaultized<ChartSeriesType>,
-): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
-  return isCartesianSeriesType(series.type);
 }
 
 export function utcFormatter(v: string | number | Date): string {

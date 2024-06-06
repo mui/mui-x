@@ -8,13 +8,9 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
-import { HighlightScope } from '../context/HighlightProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
+import { useItemHighlighted } from '../context';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -79,7 +75,6 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
-    highlightScope?: Partial<HighlightScope>;
   };
 
 /**
@@ -101,27 +96,22 @@ function MarkElement(props: MarkElementProps) {
     color,
     shape,
     dataIndex,
-    highlightScope,
     onClick,
     skipAnimation,
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item, axis } = React.useContext(InteractionContext);
-
-  const isHighlighted =
-    axis.x?.index === dataIndex ||
-    getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId: id,
+  });
+  const { axis } = React.useContext(InteractionContext);
 
   const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted,
+    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
     isFaded,
     color,
   };
@@ -154,10 +144,6 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The shape of the marker.

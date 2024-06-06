@@ -107,12 +107,19 @@ renderCell: (params) => (
 ### Navigation
 
 :::info
-The following key assignments apply to Windows and Linux users.
+The key assignments in the table below apply to Windows and Linux users.
 
 On macOS replace:
 
 - <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
 - <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
+- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
+- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
+- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
 
 :::
 

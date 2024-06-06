@@ -175,6 +175,12 @@ SimpleTreeView.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */

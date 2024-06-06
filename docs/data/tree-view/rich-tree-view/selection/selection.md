@@ -82,7 +82,7 @@ Automatically select an item when all of its children are selected and automatic
 :::warning
 This feature isn't implemented yet. It's coming.
 
-👍 Upvote [issue #12883](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
+👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
 
 Don't hesitate to leave a comment on the same issue to influence what gets built.
 Especially if you already have a use case for this component,

@@ -8,6 +8,7 @@ import {
   useGridApiRef,
   GridActionsCellItem,
   GridColDef,
+  gridClasses,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
@@ -17,25 +18,28 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { darken } from '@mui/material/styles';
 
-export default function BulkEditingNoSnap() {
+const visibleFields = [
+  'id',
+  'commodity',
+  'traderName',
+  'traderEmail',
+  'quantity',
+  'filledQuantity',
+];
+
+export default function BulkEditingPremiumNoSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 7,
     editable: true,
-    visibleFields: [
-      'id',
-      'commodity',
-      'traderName',
-      'traderEmail',
-      'quantity',
-      'filledQuantity',
-    ],
+    visibleFields,
   });
 
   const apiRef = useGridApiRef();
 
   const [hasUnsavedRows, setHasUnsavedRows] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
   const unsavedChangesRef = React.useRef<{
     unsavedRows: Record<GridRowId, GridValidRowModel>;
     rowsBeforeChange: Record<GridRowId, GridValidRowModel>;
@@ -43,7 +47,6 @@ export default function BulkEditingNoSnap() {
     unsavedRows: {},
     rowsBeforeChange: {},
   });
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const columns = React.useMemo<GridColDef[]>(() => {
     return [
@@ -89,10 +92,9 @@ export default function BulkEditingNoSnap() {
     ];
   }, [data.columns, unsavedChangesRef, apiRef]);
 
-  const processRowUpdate: NonNullable<DataGridPremiumProps['processRowUpdate']> = (
-    newRow,
-    oldRow,
-  ) => {
+  const processRowUpdate = React.useCallback<
+    NonNullable<DataGridPremiumProps['processRowUpdate']>
+  >((newRow, oldRow) => {
     const rowId = newRow.id;
 
     unsavedChangesRef.current.unsavedRows[rowId] = newRow;
@@ -101,9 +103,9 @@ export default function BulkEditingNoSnap() {
     }
     setHasUnsavedRows(true);
     return newRow;
-  };
+  }, []);
 
-  const discardChanges = () => {
+  const discardChanges = React.useCallback(() => {
     setHasUnsavedRows(false);
     apiRef.current.updateRows(
       Object.values(unsavedChangesRef.current.rowsBeforeChange),
@@ -112,9 +114,9 @@ export default function BulkEditingNoSnap() {
       unsavedRows: {},
       rowsBeforeChange: {},
     };
-  };
+  }, [apiRef]);
 
-  const saveChanges = async () => {
+  const saveChanges = React.useCallback(async () => {
     try {
       // Persist updates in the database
       setIsSaving(true);
@@ -138,7 +140,20 @@ export default function BulkEditingNoSnap() {
     } catch (error) {
       setIsSaving(false);
     }
-  };
+  }, [apiRef]);
+
+  const getRowClassName = React.useCallback<
+    NonNullable<DataGridPremiumProps['getRowClassName']>
+  >(({ id }) => {
+    const unsavedRow = unsavedChangesRef.current.unsavedRows[id];
+    if (unsavedRow) {
+      if (unsavedRow._action === 'delete') {
+        return 'row--removed';
+      }
+      return 'row--edited';
+    }
+    return '';
+  }, []);
 
   return (
     <div style={{ width: '100%' }}>
@@ -170,7 +185,7 @@ export default function BulkEditingNoSnap() {
           processRowUpdate={processRowUpdate}
           ignoreValueFormatterDuringExport
           sx={{
-            '& .MuiDataGrid-row.row--removed': {
+            [`& .${gridClasses.row}.row--removed`]: {
               backgroundColor: (theme) => {
                 if (theme.palette.mode === 'light') {
                   return 'rgba(255, 170, 170, 0.3)';
@@ -178,7 +193,7 @@ export default function BulkEditingNoSnap() {
                 return darken('rgba(255, 170, 170, 1)', 0.7);
               },
             },
-            '& .MuiDataGrid-row.row--edited': {
+            [`& .${gridClasses.row}.row--edited`]: {
               backgroundColor: (theme) => {
                 if (theme.palette.mode === 'light') {
                   return 'rgba(255, 254, 176, 0.3)';
@@ -188,16 +203,7 @@ export default function BulkEditingNoSnap() {
             },
           }}
           loading={isSaving}
-          getRowClassName={({ id }) => {
-            const unsavedRow = unsavedChangesRef.current.unsavedRows[id];
-            if (unsavedRow) {
-              if (unsavedRow._action === 'delete') {
-                return 'row--removed';
-              }
-              return 'row--edited';
-            }
-            return '';
-          }}
+          getRowClassName={getRowClassName}
         />
       </div>
     </div>

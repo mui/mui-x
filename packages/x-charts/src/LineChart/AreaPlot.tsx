@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { area as d3Area } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import {
   AreaElement,
@@ -14,6 +13,7 @@ import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
+import { useLineSeries } from '../hooks/useSeries';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -34,7 +34,7 @@ export interface AreaPlotProps
 }
 
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
+  const seriesData = useLineSeries();
   const axisData = React.useContext(CartesianContext);
 
   if (seriesData === undefined) {
@@ -130,7 +130,7 @@ function AreaPlot(props: AreaPlotProps) {
   return (
     <g {...other}>
       {completedData.map(
-        ({ d, seriesId, color, highlightScope, area, gradientUsed }) =>
+        ({ d, seriesId, color, area, gradientUsed }) =>
           !!area && (
             <AreaElement
               key={seriesId}
@@ -138,7 +138,6 @@ function AreaPlot(props: AreaPlotProps) {
               d={d}
               color={color}
               gradientId={gradientUsed && getGradientId(...gradientUsed)}
-              highlightScope={highlightScope}
               slots={slots}
               slotProps={slotProps}
               onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}

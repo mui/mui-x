@@ -57,7 +57,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
-      .filter((key) => (theme.vars ?? theme).palette[key].main)
+      .filter((key) => (theme.vars ?? theme).palette[key]?.main ?? false)
       .map((color) => ({
         props: { color },
         style: {

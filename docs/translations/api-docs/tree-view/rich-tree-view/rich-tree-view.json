@@ -42,6 +42,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "itemChildrenIndentation": {
+      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },

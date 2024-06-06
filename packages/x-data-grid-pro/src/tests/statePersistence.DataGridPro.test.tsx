@@ -10,7 +10,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, screen, act } from '@mui-internal/test-utils';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   getColumnHeaderCell,
