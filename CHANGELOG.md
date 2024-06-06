@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.20.1
+_Jun 6, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid-premium@6.20.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+- [DataGridPremium] Fix clipboard paste not working when cell loses focus (#12737) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.20.1`
+
+- [pickers] Fix `AdapterDayjs` timezone behavior (#13373) @LukasTy
+
+### Docs
+
+- [docs] Fix Pickers FAQ callout (#13243) @LukasTy
+
+### Core
+
+- [core] Stop publishing v6 under latest tag (#13269) @cherniavskii
+
 ## 6.20.0
 
 _May 24, 2024_
