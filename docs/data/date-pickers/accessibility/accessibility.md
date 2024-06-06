@@ -11,7 +11,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Guidelines
 
-The most commonly encountered conformance guidelines for accessibility are:
+Common conformance guidelines for accessibility include:
 
 - Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 - US:
@@ -20,8 +20,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations so it is what we aim to support.
+Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) patterns, which provide valuable information on how to optimize the accessibility of these components.
 
@@ -79,6 +78,4 @@ The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements
 
 ### Date Range Picker
 
-When interacting with the keyboard, the [Date Range Picker](/x/react-date-pickers/date-range-picker/) keep the focus on the Field component, thereby offering the same keyboard navigation support as the [Date Range Field](/x/react-date-pickers/accessibility/#fields).
-
-To ensure a more fluid and accessible user experience, Date Range Picker supports the same keyboard navigation and interactions of the [Field](/x/react-date-pickers/accessibility/#fields) components, having the changes consistently updated on the calendar component.
+When interacting with the keyboard, the [Date Range Picker](/x/react-date-pickers/date-range-picker/) keeps the focus on the Field component, thereby offering the same keyboard navigation support as the [Date Range Field](/x/react-date-pickers/accessibility/#fields), having the changes consistently updated on the calendar component.
