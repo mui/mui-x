@@ -9,7 +9,7 @@ _Jun 6, 2024_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 📚 Date and Time Pickers accessibility page has been added
+- 📚 Adds Date and Time Pickers accessibility page
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
