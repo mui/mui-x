@@ -22,6 +22,10 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [pickers] Fix `AdapterDayjs` timezone behavior (#13373) @LukasTy
 
+#### `@mui/x-data-grid-pro@6.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers-pro@7.20.1`.
+
 ### Docs
 
 - [docs] Fix Pickers FAQ callout (#13243) @LukasTy
