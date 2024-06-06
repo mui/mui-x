@@ -44,15 +44,16 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
-  const { yAxisIds } = React.useContext(CartesianContext);
-  const {
-    yAxis: {
-      [props.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
   const {
     position,
     disableLine,
