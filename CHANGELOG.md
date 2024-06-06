@@ -56,6 +56,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [docs] Update twitter.com to x.com @oliviertassinari
 - [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
 - [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen
+- [docs] Create pickers accessibility page (#13274) @arthurbalduini
 
 ### Core
 
