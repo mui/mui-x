@@ -19,6 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### `@mui/x-data-grid@7.6.2`
 
 - [DataGrid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
+- [DataGrid] Clean up IE remnants from the codebase (#13390) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -34,7 +35,8 @@ Same changes as in `@mui/x-data-grid-pro@7.6.2`.
 
 - [fields] Fix `PageUp` and `PageDown` editing on letter sections (#13310) @arthurbalduini
 - [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
-- [pickers] Use `useRtl` instead of `useTheme` to access direction (#13363) @flaviendelangle 
+- [pickers] Use `useRtl` instead of `useTheme` to access direction (#13363) @flaviendelangle
+
 #### `@mui/x-date-pickers-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.6.2`.
