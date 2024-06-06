@@ -9,7 +9,7 @@ import {
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
-import { TreeViewCorePluginSignatures } from '@mui/x-tree-view/internals/corePlugins';
+import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   UseTreeViewBaseParameters<TSignatures> &
