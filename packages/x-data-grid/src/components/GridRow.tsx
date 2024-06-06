@@ -178,13 +178,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const classes = useUtilityClasses(ownerState);
 
   React.useLayoutEffect(() => {
-    if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
-      // Fallback for IE
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
-    }
-  }, [apiRef, rowHeight, rowId]);
-
-  React.useLayoutEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
       // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
