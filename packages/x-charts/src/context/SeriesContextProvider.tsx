@@ -13,6 +13,7 @@ import {
   FormatterResult,
 } from '../models/seriesType/config';
 import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
+import { Initializable } from './context.types';
 
 export type SeriesContextProviderProps = {
   dataset?: DatasetType;
@@ -32,7 +33,10 @@ export type SeriesContextProviderProps = {
 
 export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type> };
 
-export const SeriesContext = React.createContext<FormattedSeries>({});
+export const SeriesContext = React.createContext<Initializable<FormattedSeries>>({
+  isInitialized: false,
+  data: {},
+});
 
 if (process.env.NODE_ENV !== 'production') {
   SeriesContext.displayName = 'SeriesContext';
@@ -93,12 +97,14 @@ function SeriesContextProvider(props: SeriesContextProviderProps) {
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
-    () =>
-      formatSeries(
+    () => ({
+      isInitialized: true,
+      data: formatSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
         dataset as DatasetType<number>,
       ),
+    }),
     [series, colors, theme.palette.mode, dataset],
   );
 
