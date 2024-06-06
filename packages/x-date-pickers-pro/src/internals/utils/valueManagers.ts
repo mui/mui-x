@@ -144,12 +144,12 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
       ...dateRangeSections.endDate,
     ]);
   },
-  getV6InputValueFromSections: (sections, localizedDigits, isRTL) => {
+  getV6InputValueFromSections: (sections, localizedDigits, isRtl) => {
     const dateRangeSections = splitDateRangeSections(sections);
     return createDateStrForV6InputFromSections(
       [...dateRangeSections.startDate, ...dateRangeSections.endDate],
       localizedDigits,
-      isRTL,
+      isRtl,
     );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {

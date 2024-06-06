@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
@@ -33,17 +33,17 @@ const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: TSection[],
   localizedDigits: string[],
-  isRTL: boolean,
+  isRtl: boolean,
 ): FieldSectionWithPositions<TSection>[] => {
   let position = 0;
-  let positionInInput = isRTL ? 1 : 0;
+  let positionInInput = isRtl ? 1 : 0;
   const newSections: FieldSectionWithPositions<TSection>[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const renderedValue = getSectionVisibleValue(
       section,
-      isRTL ? 'input-rtl' : 'input-ltr',
+      isRtl ? 'input-rtl' : 'input-ltr',
       localizedDigits,
     );
     const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
@@ -75,8 +75,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 };
 
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
@@ -111,8 +110,8 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const handleRef = useForkRef(inputRefProp, inputRef);
 
   const sections = React.useMemo(
-    () => addPositionPropertiesToSections(state.sections, localizedDigits, isRTL),
-    [state.sections, localizedDigits, isRTL],
+    () => addPositionPropertiesToSections(state.sections, localizedDigits, isRtl),
+    [state.sections, localizedDigits, isRtl],
   );
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
@@ -333,7 +332,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       keyPressed = cleanValueStr;
     } else {
       const prevValueStr = cleanString(
-        fieldValueManager.getV6InputValueFromSections(sections, localizedDigits, isRTL),
+        fieldValueManager.getV6InputValueFromSections(sections, localizedDigits, isRtl),
       );
 
       let startOfDiffIndex = -1;
@@ -397,7 +396,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     return fieldValueManager.getV6InputValueFromSections(
       getSectionsFromValue(valueManager.emptyValue),
       localizedDigits,
-      isRTL,
+      isRtl,
     );
   }, [
     inPlaceholder,
@@ -405,14 +404,14 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     getSectionsFromValue,
     valueManager.emptyValue,
     localizedDigits,
-    isRTL,
+    isRtl,
   ]);
 
   const valueStr = React.useMemo(
     () =>
       state.tempValueStrAndroid ??
-      fieldValueManager.getV6InputValueFromSections(state.sections, localizedDigits, isRTL),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRTL],
+      fieldValueManager.getV6InputValueFromSections(state.sections, localizedDigits, isRtl),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, localizedDigits, isRtl],
   );
 
   React.useEffect(() => {

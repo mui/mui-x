@@ -134,6 +134,10 @@ export interface PickersLayoutProps<
    * @default {}
    */
   slotProps?: PickersLayoutSlotProps<TValue, TDate, TView>;
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: boolean;
 }
 
 export interface SubComponents<TValue> {

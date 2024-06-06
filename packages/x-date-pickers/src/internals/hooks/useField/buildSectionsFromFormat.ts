@@ -12,7 +12,7 @@ interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
   utils: MuiPickersAdapter<TDate>;
   format: string;
   formatDensity: 'dense' | 'spacious';
-  isRTL: boolean;
+  isRtl: boolean;
   timezone: PickersTimezone;
   shouldRespectLeadingZeros: boolean;
   localeText: PickersLocaleText<TDate>;
@@ -278,7 +278,7 @@ const buildSections = <TDate extends PickerValidDate>(
 };
 
 const postProcessSections = <TDate extends PickerValidDate>({
-  isRTL,
+  isRtl,
   formatDensity,
   sections,
 }: BuildSectionsFromFormatParams<TDate> & {
@@ -287,7 +287,7 @@ const postProcessSections = <TDate extends PickerValidDate>({
   return sections.map((section) => {
     const cleanSeparator = (separator: string) => {
       let cleanedSeparator = separator;
-      if (isRTL && cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
+      if (isRtl && cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
         cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
 
@@ -309,7 +309,7 @@ export const buildSectionsFromFormat = <TDate extends PickerValidDate>(
   params: BuildSectionsFromFormatParams<TDate>,
 ) => {
   let expandedFormat = expandFormat(params);
-  if (params.isRTL && params.enableAccessibleFieldDOMStructure) {
+  if (params.isRtl && params.enableAccessibleFieldDOMStructure) {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 
