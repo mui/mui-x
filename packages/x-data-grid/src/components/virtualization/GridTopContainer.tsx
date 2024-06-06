@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 
 const useUtilityClasses = () => {

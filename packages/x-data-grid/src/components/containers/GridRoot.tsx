@@ -1,12 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_capitalize as capitalize,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import capitalize from '@mui/utils/capitalize';
+import composeClasses from '@mui/utils/composeClasses';
 import { SxProps, styled } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridRootStyles } from './GridRootStyles';

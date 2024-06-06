@@ -5,6 +5,7 @@ import { LicenseInfo as LicenseInfoExport } from '@mui/x-license';
  */
 export class LicenseInfo extends LicenseInfoExport {}
 
+// eslint-disable-next-line no-restricted-imports
 export * from '@mui/x-date-pickers';
 
 export * from './DateRangePickerDay';

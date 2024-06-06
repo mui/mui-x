@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -82,10 +81,9 @@ const TREE_VIEW_PLUGINS = [
 ] as const;
 
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<R, Multiple>,
+  props: TreeViewProps<R, Multiple>,
 ) {
-  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps as TreeViewProps<any, any>;
+  const ownerState = props as TreeViewProps<any, any>;
 
   const { pluginParams, otherProps } = extractPluginParamsFromProps<
     typeof TREE_VIEW_PLUGINS,
@@ -93,7 +91,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     DefaultTreeViewPluginSlotProps,
     TreeViewProps<R, Multiple>
   >({
-    props: themeProps,
+    props,
     plugins: TREE_VIEW_PLUGINS,
   });
 

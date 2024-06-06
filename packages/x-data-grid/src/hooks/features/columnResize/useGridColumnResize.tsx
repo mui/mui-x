@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
