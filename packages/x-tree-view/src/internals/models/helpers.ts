@@ -31,16 +31,22 @@ export type MergeSignaturesProperty<
     : {}
   : {};
 
-export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
-  TPlugins extends readonly [plugin: infer P, ...otherPlugin: infer R]
-    ? P extends TreeViewPlugin<infer TSignature>
+export type ConvertPluginsIntoSignatures<
+  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
+> = TPlugins extends readonly [plugin: infer TPlugin, ...otherPlugin: infer R]
+  ? R extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]
+    ? TPlugin extends TreeViewPlugin<infer TSignature>
       ? readonly [TSignature, ...ConvertPluginsIntoSignatures<R>]
-      : ConvertPluginsIntoSignatures<R>
-    : readonly [];
+      : never
+    : never
+  : never;
 
-export type ConvertSignaturesIntoPlugins<TSignatures extends readonly any[]> =
-  TSignatures extends readonly [plugin: infer S, ...otherPlugin: infer R]
-    ? S extends TreeViewAnyPluginSignature
-      ? readonly [TreeViewPlugin<S>, ...ConvertSignaturesIntoPlugins<R>]
-      : ConvertSignaturesIntoPlugins<R>
-    : readonly [];
+export type ConvertSignaturesIntoPlugins<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> = TSignatures extends readonly [signature: infer TSignature, ...otherSignatures: infer R]
+  ? R extends readonly TreeViewAnyPluginSignature[]
+    ? TSignature extends TreeViewAnyPluginSignature
+      ? readonly [TreeViewPlugin<TSignature>, ...ConvertSignaturesIntoPlugins<R>]
+      : never
+    : never
+  : never;
