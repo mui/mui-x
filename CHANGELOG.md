@@ -9,7 +9,6 @@ _Jun 6, 2024_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ Introduced plugins system in the Charts
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
