@@ -57,7 +57,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   const svgRef = React.useRef<SVGSVGElement>(null);
   const handleRef = useForkRef(ref, svgRef);
 
-  const { seriesFormatters } = usePluginsMerge(plugins);
+  const { xExtremumGetters, yExtremumGetters, seriesFormatters } = usePluginsMerge(plugins);
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
@@ -68,7 +68,13 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
         dataset={dataset}
         seriesFormatters={seriesFormatters}
       >
-        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
+        <CartesianContextProvider
+          xAxis={xAxis}
+          yAxis={yAxis}
+          dataset={dataset}
+          xExtremumGetters={xExtremumGetters}
+          yExtremumGetters={yExtremumGetters}
+        >
           <InteractionProvider>
             <HighlightedProvider
               highlightedItem={highlightedItem}
