@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { scaleBand, scalePoint } from 'd3-scale';
-import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ChartsYAxisProps, ScaleName, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import {
+  AxisConfig,
+  AxisDefaultized,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ScaleName,
+  isBandScaleConfig,
+  isPointScaleConfig,
+} from '../models/axis';
 import { getScale } from '../internals/getScale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
