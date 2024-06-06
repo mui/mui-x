@@ -260,9 +260,10 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     }
 
     const currentOptionIndex = options.indexOf(section.value);
-    const newOptionIndex = (currentOptionIndex + options.length + delta) % options.length;
+    const newOptionIndex = (currentOptionIndex + delta) % options.length;
+    const clampedIndex = (newOptionIndex + options.length) % options.length;
 
-    return options[newOptionIndex];
+    return options[clampedIndex];
   };
 
   if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
