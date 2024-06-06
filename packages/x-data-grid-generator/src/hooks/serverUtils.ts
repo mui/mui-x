@@ -367,7 +367,7 @@ const getTreeDataFilteredRows: GetTreeDataFilteredRows = (
   if (filterModel && filterModel.quickFilterValues?.length! > 0) {
     filteredRows = getQuicklyFilteredRows(rows, filterModel, columnsWithDefaultColDef);
   }
-  if (filterModel?.items.length === 0) {
+  if ((filterModel?.items.length ?? 0) > 0) {
     filteredRows = getFilteredRows(filteredRows, filterModel, columnsWithDefaultColDef);
   }
 
