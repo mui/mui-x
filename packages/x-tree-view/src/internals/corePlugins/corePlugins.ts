@@ -1,5 +1,5 @@
 import { useTreeViewInstanceEvents } from './useTreeViewInstanceEvents';
-import { ConvertPluginsIntoSignatures, MergePluginsSignature } from '../models';
+import { ConvertPluginsIntoSignatures } from '../models';
 
 /**
  * Internal plugins that create the tools used by the other plugins.
@@ -7,6 +7,6 @@ import { ConvertPluginsIntoSignatures, MergePluginsSignature } from '../models';
  */
 export const TREE_VIEW_CORE_PLUGINS = [useTreeViewInstanceEvents] as const;
 
-export type TreeViewCorePluginsSignature = MergePluginsSignature<
-  ConvertPluginsIntoSignatures<typeof TREE_VIEW_CORE_PLUGINS>
+export type TreeViewCorePluginSignatures = ConvertPluginsIntoSignatures<
+  typeof TREE_VIEW_CORE_PLUGINS
 >;

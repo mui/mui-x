@@ -3,7 +3,7 @@ import { EventHandlers } from '@mui/base/utils';
 import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
-import type { TreeViewCorePluginsSignature } from '../corePlugins';
+import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemId } from '../../models';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
@@ -86,7 +86,7 @@ export type TreeViewAnyPluginSignature = {
 };
 
 type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
-  TreeViewCorePluginsSignature,
+  ...TreeViewCorePluginSignatures,
   ...TSignature['dependantPlugins'],
 ];
 

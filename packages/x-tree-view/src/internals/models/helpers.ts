@@ -44,18 +44,3 @@ export type ConvertSignaturesIntoPlugins<TSignatures extends readonly any[]> =
       ? readonly [TreeViewPlugin<S>, ...ConvertSignaturesIntoPlugins<R>]
       : ConvertSignaturesIntoPlugins<R>
     : readonly [];
-
-export interface MergePluginsSignature<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  state: MergeSignaturesProperty<TSignatures, 'state'>;
-  instance: MergeSignaturesProperty<TSignatures, 'instance'>;
-  publicAPI: MergeSignaturesProperty<TSignatures, 'publicAPI'>;
-  params: MergeSignaturesProperty<TSignatures, 'params'>;
-  defaultizedParams: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
-  dependantPlugins: MergeSignaturesProperty<TSignatures, 'dependantPlugins'>;
-  contextValue: MergeSignaturesProperty<TSignatures, 'contextValue'>;
-  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
-  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
-  events: MergeSignaturesProperty<TSignatures, 'events'>;
-  models: MergeSignaturesProperty<TSignatures, 'models'>;
-  experimentalFeatures: MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>;
-}
