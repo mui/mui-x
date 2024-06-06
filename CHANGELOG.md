@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### `@mui/x-data-grid@7.6.2`
 
-- [data grid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
+- [DataGrid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
 
 #### `@mui/x-data-grid-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -35,7 +35,6 @@ Same changes as in `@mui/x-data-grid-pro@7.6.2`.
 - [fields] Fix `PageUp` and `PageDown` editing on letter sections (#13310) @arthurbalduini
 - [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
 - [pickers] Use `useRtl` instead of `useTheme` to access direction (#13363) @flaviendelangle 
-- 
 #### `@mui/x-date-pickers-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.6.2`.
@@ -54,7 +53,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [docs] Add badges like in Material UI @oliviertassinari
 - [docs] Update twitter.com to x.com @oliviertassinari
 - [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
-- [docs] adjusted the code example for `quickFilterValues` (#12919) @michelengelen
+- [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen
 
 ### Core
 
@@ -63,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [core] Fixes in preparation for React 18.3 (#13378) @LukasTy
 - [core] Remove explicit `marked` dependency (#13383) @LukasTy
 - [core] Remove unused `@types/prettier` dependency (#13389) @LukasTy
-- [core] add docs .env.local to .gitignore (#13377) @KenanYusuf
+- [core] Add `docs/.env.local` to `.gitignore` (#13377) @KenanYusuf
 
 ## 7.6.1
 
