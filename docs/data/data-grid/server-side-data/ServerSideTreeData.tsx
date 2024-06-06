@@ -8,7 +8,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlateNoSnap';
 
 const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
@@ -20,8 +19,7 @@ const dataSetOptions = {
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, fetchRows, columns, initialState } =
-    useMockServer(dataSetOptions);
+  const { fetchRows, columns, initialState } = useMockServer(dataSetOptions);
 
   const initialStateWithPagination: GridInitialState = React.useMemo(
     () => ({
@@ -65,21 +63,17 @@ export default function ServerSideTreeData() {
     <div style={{ width: '100%' }}>
       <Button onClick={() => apiRef.current?.clearCache()}>Reset cache</Button>
       <div style={{ height: 400 }}>
-        {isInitialized ? (
-          <DataGridPro
-            columns={columns}
-            unstable_dataSource={dataSource}
-            treeData
-            apiRef={apiRef}
-            pagination
-            pageSizeOptions={pageSizeOptions}
-            initialState={initialStateWithPagination}
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{ toolbar: { showQuickFilter: true } }}
-          />
-        ) : (
-          <LoadingSlate />
-        )}
+        <DataGridPro
+          columns={columns}
+          unstable_dataSource={dataSource}
+          treeData
+          apiRef={apiRef}
+          pagination
+          pageSizeOptions={pageSizeOptions}
+          initialState={initialStateWithPagination}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { showQuickFilter: true } }}
+        />
       </div>
     </div>
   );

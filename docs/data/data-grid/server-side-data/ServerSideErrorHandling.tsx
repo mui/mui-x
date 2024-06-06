@@ -11,7 +11,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlateNoSnap';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
@@ -51,7 +50,7 @@ export default function ServerSideErrorHandling() {
   const [error, setError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { isInitialized, fetchRows, ...props } = useMockServer(
+  const { fetchRows, ...props } = useMockServer(
     datasetOptions,
     serverOptions,
     shouldRequestsFail,
@@ -114,21 +113,17 @@ export default function ServerSideErrorHandling() {
         />
       </div>
       <div style={{ height: 400, position: 'relative' }}>
-        {isInitialized ? (
-          <DataGridPro
-            {...props}
-            unstable_dataSource={dataSource}
-            unstable_onDataSourceError={(e) => setError(e.message)}
-            unstable_dataSourceCache={null}
-            apiRef={apiRef}
-            pagination
-            pageSizeOptions={pageSizeOptions}
-            initialState={initialState}
-            slots={{ toolbar: GridToolbar }}
-          />
-        ) : (
-          <LoadingSlate />
-        )}
+        <DataGridPro
+          {...props}
+          unstable_dataSource={dataSource}
+          unstable_onDataSourceError={(e) => setError(e.message)}
+          unstable_dataSourceCache={null}
+          apiRef={apiRef}
+          pagination
+          pageSizeOptions={pageSizeOptions}
+          initialState={initialState}
+          slots={{ toolbar: GridToolbar }}
+        />
         {error && <ErrorOverlay error={error} />}
       </div>
     </div>

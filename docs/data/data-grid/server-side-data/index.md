@@ -179,14 +179,14 @@ The `SimpleServerSideCache` is the cache used by default which is a simple in-me
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
-### Customize the cache ttl
+### Customize the cache lifetime
 
-The `SimpleServerSideCache` has a default `ttl` of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `SimpleServerSideCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
+The `SimpleServerSideCache` has a default Time To Live (`ttl`) of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `SimpleServerSideCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
 
 ```tsx
 import { SimpleServerSideCache } from '@mui/x-data-grid-pro';
 
-const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 60 * 1 }); // 1 minute
+const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 10 }); // 10 seconds
 
 <DataGridPro
   columns={columns}

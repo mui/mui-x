@@ -7,13 +7,12 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { useSWRConfig } from 'swr';
-import LoadingSlate from './LoadingSlateNoSnap';
 
 const serverOptions = { useCursorPagination: false };
 const dataSetOptions = {};
 
 function ServerSideDataGridWithSWR() {
-  const { isInitialized, fetchRows, columns, initialState } = useMockServer(
+  const { fetchRows, columns, initialState } = useMockServer(
     dataSetOptions,
     serverOptions,
   );
@@ -73,18 +72,14 @@ function ServerSideDataGridWithSWR() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      {isInitialized ? (
-        <DataGridPro
-          columns={columns}
-          unstable_dataSource={dataSource}
-          unstable_dataSourceCache={cache}
-          pagination
-          initialState={initialStateWithPagination}
-          pageSizeOptions={[10, 20, 50]}
-        />
-      ) : (
-        <LoadingSlate />
-      )}
+      <DataGridPro
+        columns={columns}
+        unstable_dataSource={dataSource}
+        unstable_dataSourceCache={cache}
+        pagination
+        initialState={initialStateWithPagination}
+        pageSizeOptions={[10, 20, 50]}
+      />
     </div>
   );
 }

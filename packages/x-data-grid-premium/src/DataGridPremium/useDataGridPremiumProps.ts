@@ -34,6 +34,7 @@ const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) =
       }
     : {}),
 });
+
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
@@ -54,15 +55,6 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
 };
-
-const getDataGridPremiumDefaultProps: (
-  themedProps: GetDataGridPremiumPropsDefaultValues,
-) => DataGridPremiumPropsWithDefaultValue = (themedProps) => ({
-  ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
-  filterDebounceMs: themedProps.unstable_dataSource
-    ? 1000
-    : DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES.filterDebounceMs,
-});
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
@@ -91,7 +83,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
-      ...getDataGridPremiumDefaultProps(themedProps),
+      ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
       slots,

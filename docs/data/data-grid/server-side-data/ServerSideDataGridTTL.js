@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { DataGridPro, SimpleServerSideCache } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlateNoSnap';
 
-const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 60 * 1 }); // 1 minute
+const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 10 }); // 10 seconds
 
 function ServerSideDataGridTTL() {
-  const { isInitialized, columns, initialState, fetchRows } = useMockServer(
+  const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: false },
   );
@@ -46,18 +45,14 @@ function ServerSideDataGridTTL() {
 
   return (
     <div style={{ width: '100%', height: 400 }}>
-      {isInitialized ? (
-        <DataGridPro
-          columns={columns}
-          unstable_dataSource={dataSource}
-          unstable_dataSourceCache={lowTTLCache}
-          pagination
-          initialState={initialStateWithPagination}
-          pageSizeOptions={[10, 20, 50]}
-        />
-      ) : (
-        <LoadingSlate />
-      )}
+      <DataGridPro
+        columns={columns}
+        unstable_dataSource={dataSource}
+        unstable_dataSourceCache={lowTTLCache}
+        pagination
+        initialState={initialStateWithPagination}
+        pageSizeOptions={[10, 20, 50]}
+      />
     </div>
   );
 }

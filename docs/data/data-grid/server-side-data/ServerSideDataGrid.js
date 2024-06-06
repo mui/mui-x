@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import LoadingSlate from './LoadingSlateNoSnap';
 
 function ServerSideDataGrid() {
-  const { isInitialized, columns, initialState, fetchRows } = useMockServer(
+  const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: false },
   );
@@ -44,17 +43,13 @@ function ServerSideDataGrid() {
 
   return (
     <div style={{ width: '100%', height: 400 }}>
-      {isInitialized ? (
-        <DataGridPro
-          columns={columns}
-          unstable_dataSource={dataSource}
-          pagination
-          initialState={initialStateWithPagination}
-          pageSizeOptions={[10, 20, 50]}
-        />
-      ) : (
-        <LoadingSlate />
-      )}
+      <DataGridPro
+        columns={columns}
+        unstable_dataSource={dataSource}
+        pagination
+        initialState={initialStateWithPagination}
+        pageSizeOptions={[10, 20, 50]}
+      />
     </div>
   );
 }

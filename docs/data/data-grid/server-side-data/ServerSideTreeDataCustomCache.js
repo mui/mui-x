@@ -3,7 +3,6 @@ import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { QueryClient } from '@tanstack/query-core';
-import LoadingSlate from './LoadingSlateNoSnap';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +42,7 @@ const dataSetOptions = {
 export default function ServerSideTreeDataCustomCache() {
   const apiRef = useGridApiRef();
 
-  const { isInitialized, fetchRows, ...props } = useMockServer(dataSetOptions);
+  const { fetchRows, ...props } = useMockServer(dataSetOptions);
 
   const dataSource = React.useMemo(
     () => ({
@@ -87,22 +86,18 @@ export default function ServerSideTreeDataCustomCache() {
     <div style={{ width: '100%' }}>
       <Button onClick={() => queryClient.clear()}>Reset cache</Button>
       <div style={{ height: 400 }}>
-        {isInitialized ? (
-          <DataGridPro
-            {...props}
-            unstable_dataSource={dataSource}
-            unstable_dataSourceCache={cache}
-            treeData
-            apiRef={apiRef}
-            pagination
-            pageSizeOptions={pageSizeOptions}
-            initialState={initialState}
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{ toolbar: { showQuickFilter: true } }}
-          />
-        ) : (
-          <LoadingSlate />
-        )}
+        <DataGridPro
+          {...props}
+          unstable_dataSource={dataSource}
+          unstable_dataSourceCache={cache}
+          treeData
+          apiRef={apiRef}
+          pagination
+          pageSizeOptions={pageSizeOptions}
+          initialState={initialState}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { showQuickFilter: true } }}
+        />
       </div>
     </div>
   );

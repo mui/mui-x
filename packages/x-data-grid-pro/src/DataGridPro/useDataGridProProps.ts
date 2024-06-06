@@ -52,15 +52,6 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   headerFilters: false,
 };
 
-const getDataGridProDefaultProps: (
-  themedProps: GetDataGridProPropsDefaultValues,
-) => DataGridProPropsWithDefaultValue = (themedProps) => ({
-  ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-  filterDebounceMs: themedProps.unstable_dataSource
-    ? 1000
-    : DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs,
-});
-
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
@@ -88,7 +79,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
 
   return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({
-      ...getDataGridProDefaultProps(themedProps),
+      ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
       slots,

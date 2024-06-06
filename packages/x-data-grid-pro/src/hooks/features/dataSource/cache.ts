@@ -2,8 +2,9 @@ import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
 type SimpleServerSideCacheConfig = {
   /**
-   * The ttl for each cache entry in milliseconds.
-   * @default 300000 (Five minutes)
+   * Time To Live for each cache entry in milliseconds.
+   * After this time the cache entry will become stale and the next query will result in cache miss.
+   * @default 300000 (5 minutes)
    */
   ttl?: number;
 };

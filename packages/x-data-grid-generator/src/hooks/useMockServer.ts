@@ -40,7 +40,6 @@ type UseMockServerResponse = {
   getGroupKey?: (row: GridRowModel) => string;
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
-  isInitialized: boolean;
   loadNewData: () => void;
 };
 
@@ -82,7 +81,6 @@ export const useMockServer = (
   serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse => {
-  const [isInitialized, setIsInitialized] = React.useState(false);
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
   const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
@@ -267,19 +265,12 @@ export const useMockServer = (
     ],
   );
 
-  React.useEffect(() => {
-    if (data && !isInitialized) {
-      setIsInitialized(true);
-    }
-  }, [data, isInitialized]);
-
   return {
     columns: columnsWithDefaultColDef,
     initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,
-    isInitialized,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
