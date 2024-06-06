@@ -10,5 +10,4 @@ export type { MonthCalendarClasses, MonthCalendarClassKey } from './monthCalenda
 
 export { pickersMonthClasses } from './pickersMonthClasses';
 export type { PickersMonthClassKey, PickersMonthClasses } from './pickersMonthClasses';
-export { PickersMonthButton } from './PickersMonth';
 export type { ExportedPickersMonthProps } from './PickersMonth';

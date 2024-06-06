@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom views
-components: PickersCalendarHeader, PickersRangeCalendarHeader, PickersMonth, PickersYear
+components: PickersCalendarHeader, PickersRangeCalendarHeader, MonthCalendar, YearCalendar
 ---
 
 # Custom views

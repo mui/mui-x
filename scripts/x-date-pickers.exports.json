@@ -206,7 +206,6 @@
   { "name": "PickersLayoutSlotProps", "kind": "Interface" },
   { "name": "PickersLayoutSlots", "kind": "Interface" },
   { "name": "PickersLocaleText", "kind": "Interface" },
-  { "name": "PickersMonthButton", "kind": "Variable" },
   { "name": "pickersMonthClasses", "kind": "Variable" },
   { "name": "PickersMonthClasses", "kind": "Interface" },
   { "name": "PickersMonthClassKey", "kind": "TypeAlias" },

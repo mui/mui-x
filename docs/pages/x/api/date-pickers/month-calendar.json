@@ -80,6 +80,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-views/\">Custom views</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "cssComponent": false
 }

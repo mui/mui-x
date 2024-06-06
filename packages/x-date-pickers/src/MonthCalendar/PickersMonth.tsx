@@ -59,7 +59,7 @@ const PickersMonthRoot = styled('div', {
   variants: [{ props: { monthsPerRow: 4 }, style: { flexBasis: '25%' } }],
 });
 
-export const PickersMonthButton = styled('button', {
+const MonthCalendarButton = styled('button', {
   name: 'MuiPickersMonth',
   slot: 'MonthButton',
   overridesResolver: (_, styles) => [
@@ -146,7 +146,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
     }
   }, [autoFocus]);
 
-  const MonthButton = slots?.monthButton ?? PickersMonthButton;
+  const MonthButton = slots?.monthButton ?? MonthCalendarButton;
   const monthButtonProps = useSlotProps({
     elementType: MonthButton,
     externalSlotProps: slotProps?.monthButton,
