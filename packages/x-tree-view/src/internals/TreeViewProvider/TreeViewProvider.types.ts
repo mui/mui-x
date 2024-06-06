@@ -9,6 +9,10 @@ import {
   TreeViewPublicAPI,
 } from '../models';
 
+export type TreeViewItemPluginsRunner = <TProps extends {}>(
+  props: TProps,
+) => Required<TreeViewItemPluginResponse>;
+
 export type TreeViewContextValue<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
   MergeSignaturesProperty<TSignatures, 'contextValue'> & {
     instance: TreeViewInstance<TSignatures>;
@@ -16,7 +20,7 @@ export type TreeViewContextValue<TSignatures extends readonly TreeViewAnyPluginS
     rootRef: React.RefObject<HTMLUListElement>;
     wrapItem: TreeItemWrapper<TSignatures>;
     wrapRoot: TreeRootWrapper<TSignatures>;
-    runItemPlugins: <TProps extends {}>(props: TProps) => Required<TreeViewItemPluginResponse>;
+    runItemPlugins: TreeViewItemPluginsRunner;
   };
 
 export interface TreeViewProviderProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {

@@ -18,7 +18,7 @@ import {
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
 import { useTreeViewModels } from './useTreeViewModels';
-import { TreeViewContextValue } from '../TreeViewProvider';
+import { TreeViewContextValue, TreeViewItemPluginsRunner } from '../TreeViewProvider';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 
 export function useTreeViewApiInitialization<T>(
@@ -79,15 +79,72 @@ export const useTreeView = <TSignatures extends readonly TreeViewAnyPluginSignat
     return temp;
   });
 
-  const rootPropsGetters: (<TOther extends EventHandlers = {}>(
-    otherHandlers: TOther,
-  ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
+  const itemWrappers = plugins
+    .map((plugin) => plugin.wrapItem)
+    .filter((wrapItem): wrapItem is TreeItemWrapper<any> => !!wrapItem);
+  const wrapItem: TreeItemWrapper<TSignatures> = ({ itemId, children }) => {
+    let finalChildren: React.ReactNode = children;
+    itemWrappers.forEach((itemWrapper) => {
+      finalChildren = itemWrapper({ itemId, children: finalChildren, instance });
+    });
+
+    return finalChildren;
+  };
+
+  const rootWrappers = plugins
+    .map((plugin) => plugin.wrapRoot)
+    .filter((wrapRoot): wrapRoot is TreeRootWrapper<any> => !!wrapRoot)
+    // The wrappers are reversed to ensure that the first wrapper is the outermost one.
+    .reverse();
+  const wrapRoot: TreeRootWrapper<TSignatures> = ({ children }) => {
+    let finalChildren: React.ReactNode = children;
+    rootWrappers.forEach((rootWrapper) => {
+      finalChildren = rootWrapper({ children: finalChildren, instance });
+    });
+
+    return finalChildren;
+  };
+
+  const runItemPlugins: TreeViewItemPluginsRunner = (itemPluginProps) => {
+    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
+    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
+
+    plugins.forEach((plugin) => {
+      if (!plugin.itemPlugin) {
+        return;
+      }
+
+      const itemPluginResponse = plugin.itemPlugin({
+        props: itemPluginProps,
+        rootRef: finalRootRef,
+        contentRef: finalContentRef,
+      });
+      if (itemPluginResponse?.rootRef) {
+        finalRootRef = itemPluginResponse.rootRef;
+      }
+      if (itemPluginResponse?.contentRef) {
+        finalContentRef = itemPluginResponse.contentRef;
+      }
+    });
+
+    return {
+      contentRef: finalContentRef,
+      rootRef: finalRootRef,
+    };
+  };
+
   const contextValue = {
     publicAPI,
+    wrapItem,
+    wrapRoot,
+    runItemPlugins,
     instance: instance as TreeViewInstance<any>,
     rootRef: innerRootRef,
   } as TreeViewContextValue<TSignatures>;
 
+  const rootPropsGetters: (<TOther extends EventHandlers = {}>(
+    otherHandlers: TOther,
+  ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
@@ -119,61 +176,6 @@ export const useTreeView = <TSignatures extends readonly TreeViewAnyPluginSignat
   };
 
   plugins.forEach(runPlugin);
-
-  contextValue.runItemPlugins = (itemPluginProps) => {
-    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
-    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
-
-    plugins.forEach((plugin) => {
-      if (!plugin.itemPlugin) {
-        return;
-      }
-
-      const itemPluginResponse = plugin.itemPlugin({
-        props: itemPluginProps,
-        rootRef: finalRootRef,
-        contentRef: finalContentRef,
-      });
-      if (itemPluginResponse?.rootRef) {
-        finalRootRef = itemPluginResponse.rootRef;
-      }
-      if (itemPluginResponse?.contentRef) {
-        finalContentRef = itemPluginResponse.contentRef;
-      }
-    });
-
-    return {
-      contentRef: finalContentRef,
-      rootRef: finalRootRef,
-    };
-  };
-
-  const itemWrappers = plugins
-    .map((plugin) => plugin.wrapItem)
-    .filter((wrapItem): wrapItem is TreeItemWrapper<any> => !!wrapItem);
-  contextValue.wrapItem = ({ itemId, children }) => {
-    let finalChildren: React.ReactNode = children;
-    itemWrappers.forEach((itemWrapper) => {
-      finalChildren = itemWrapper({ itemId, children: finalChildren, instance });
-    });
-
-    return finalChildren;
-  };
-
-  const rootWrappers = plugins
-    .map((plugin) => plugin.wrapRoot)
-    .filter((wrapRoot): wrapRoot is TreeRootWrapper<any> => !!wrapRoot)
-    // The wrappers are reversed to ensure that the first wrapper is the outermost one.
-    .reverse();
-
-  contextValue.wrapRoot = ({ children }) => {
-    let finalChildren: React.ReactNode = children;
-    rootWrappers.forEach((rootWrapper) => {
-      finalChildren = rootWrapper({ children: finalChildren, instance });
-    });
-
-    return finalChildren;
-  };
 
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,

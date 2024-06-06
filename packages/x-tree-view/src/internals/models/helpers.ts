@@ -34,12 +34,12 @@ export type MergeSignaturesProperty<
 export type ConvertPluginsIntoSignatures<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 > = TPlugins extends readonly [plugin: infer TPlugin, ...otherPlugin: infer R]
-  ? R extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]
+  ? R extends readonly TreeViewPlugin<any>[]
     ? TPlugin extends TreeViewPlugin<infer TSignature>
       ? readonly [TSignature, ...ConvertPluginsIntoSignatures<R>]
       : never
     : never
-  : never;
+  : [];
 
 export type ConvertSignaturesIntoPlugins<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
@@ -49,4 +49,4 @@ export type ConvertSignaturesIntoPlugins<
       ? readonly [TreeViewPlugin<TSignature>, ...ConvertSignaturesIntoPlugins<R>]
       : never
     : never
-  : never;
+  : [];
