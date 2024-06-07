@@ -287,8 +287,11 @@
   { "name": "useHighlighted", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
+  { "name": "useXColorScale", "kind": "Function" },
   { "name": "useXScale", "kind": "Function" },
+  { "name": "useYColorScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" },
+  { "name": "useZColorScale", "kind": "Function" },
   { "name": "ZAxisContextProvider", "kind": "Function" },
   { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" }
 ]

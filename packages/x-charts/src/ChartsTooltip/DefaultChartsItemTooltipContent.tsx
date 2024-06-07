@@ -28,7 +28,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
           displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
-          color: getColor(itemData.dataIndex) ?? series.color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: getLabel(series.label, 'tooltip'),
         };
 

@@ -7,8 +7,8 @@ import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/co
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import colorGetter from '../internals/colorGetter';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useColorProcessor } from '../hooks/useColor';
 import { useSeries } from '../hooks/useSeries';
 
 export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
@@ -46,32 +46,19 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const colorProcessors = useColorProcessor();
 
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
-  const defaultZAxisId = zAxisIds[0];
+  const xAxisKey = (series as any).xAxisKey ?? xAxisIds[0];
+  const yAxisKey = (series as any).yAxisKey ?? yAxisIds[0];
+  const zAxisKey = (series as any).zAxisKey ?? zAxisIds[0];
 
-  let getColor: (index: number) => string;
-  switch (series.type) {
-    case 'pie':
-      getColor = colorGetter(series);
-      break;
-    case 'scatter':
-      getColor = colorGetter(
-        series,
-        xAxis[series.xAxisKey ?? defaultXAxisId],
-        yAxis[series.yAxisKey ?? defaultYAxisId],
-        zAxis[series.zAxisKey ?? defaultZAxisId],
-      );
-      break;
-    default:
-      getColor = colorGetter(
-        series,
-        xAxis[series.xAxisKey ?? defaultXAxisId],
-        yAxis[series.yAxisKey ?? defaultYAxisId],
-      );
-      break;
-  }
+  const getColor =
+    colorProcessors[series.type]?.(
+      series as any,
+      xAxisKey && xAxis[xAxisKey],
+      yAxisKey && yAxis[yAxisKey],
+      zAxisKey && zAxis[zAxisKey],
+    ) ?? (() => '');
 
   const Content = content ?? DefaultChartsItemTooltipContent;
   const chartTooltipContentProps = useSlotProps({

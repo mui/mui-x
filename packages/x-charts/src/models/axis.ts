@@ -214,7 +214,7 @@ export interface AxisScaleConfig {
   };
 }
 
-interface AxisScaleComputedConfig {
+export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
