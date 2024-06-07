@@ -238,15 +238,14 @@ const getFilteredRows = (
       ({ value }: GridFilterOperator) => operator === value,
     );
 
-    const parsedValue = filterItem.value;
+    let parsedValue = filterItem.value;
 
-    // TODO: Fix value parser impl.
-    // if (colDef.valueParser) {
-    //   const parser = colDef.valueParser;
-    //   parsedValue = Array.isArray(filterItem.value)
-    //     ? filterItem.value?.map((x) => parser(x))
-    //     : parser(filterItem.value);
-    // }
+    if (colDef.valueParser) {
+      const parser = colDef.valueParser;
+      parsedValue = Array.isArray(filterItem.value)
+        ? filterItem.value?.map((x) => parser(x, {}, colDef, apiRef))
+        : parser(filterItem.value, {}, colDef, apiRef);
+    }
 
     return filterOperator.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
   });
