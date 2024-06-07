@@ -56,6 +56,10 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
                     message: 'Use deeper import instead',
                   },
                   {
+                    name: '@mui/x-charts-pro',
+                    message: 'Use deeper import instead',
+                  },
+                  {
                     name: '@mui/x-codemod',
                     message: 'Use deeper import instead',
                   },
@@ -207,6 +211,7 @@ module.exports = {
       },
     },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
+    ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
     ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
     ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),

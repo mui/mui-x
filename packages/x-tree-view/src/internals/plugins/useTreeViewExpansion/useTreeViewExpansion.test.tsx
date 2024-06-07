@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
-import { act, fireEvent } from '@mui-internal/test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';

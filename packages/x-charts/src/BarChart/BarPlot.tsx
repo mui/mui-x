@@ -1,17 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement, BarElementProps, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { AxisDefaultized } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
+import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { BarLabelPlot } from './BarLabel/BarLabelPlot';
+import { checkScaleErrors } from './checkScaleErrors';
+import { useBarSeries } from '../hooks/useSeries';
 
 /**
  * Solution of the equations
@@ -45,11 +47,11 @@ function getBandSize({
   };
 }
 
-export interface BarPlotSlots extends BarElementSlots {}
+export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
-export interface BarPlotSlotProps extends BarElementSlotProps {}
+export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {
+export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default false
@@ -68,6 +70,16 @@ export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarPlotSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarPlotSlots;
 }
 
 const useAggregatedData = (): {
@@ -75,7 +87,7 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    React.useContext(SeriesContext).bar ??
+    useBarSeries() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
   const axisData = React.useContext(CartesianContext);
   const chartId = useChartId();
@@ -96,68 +108,12 @@ const useAggregatedData = (): {
       const yAxisConfig = yAxis[yAxisKey];
 
       const verticalLayout = series[seriesId].layout === 'vertical';
-      let baseScaleConfig: AxisDefaultized<'band'>;
 
-      if (verticalLayout) {
-        if (!isBandScaleConfig(xAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should be of type "band" to display the bar series of id "${seriesId}".`,
-          );
-        }
-        if (xAxis[xAxisKey].data === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should have data property.`,
-          );
-        }
-        baseScaleConfig = xAxisConfig as AxisDefaultized<'band'>;
-        if (isBandScaleConfig(yAxisConfig) || isPointScaleConfig(yAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should be a continuous type to display the bar series of id "${seriesId}".`,
-          );
-        }
-      } else {
-        if (!isBandScaleConfig(yAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should be of type "band" to display the bar series of id "${seriesId}".`,
-          );
-        }
+      checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
 
-        if (yAxis[yAxisKey].data === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              yAxisKey === DEFAULT_Y_AXIS_KEY
-                ? 'The first `yAxis`'
-                : `The y-axis with id "${yAxisKey}"`
-            } should have data property.`,
-          );
-        }
-        baseScaleConfig = yAxisConfig as AxisDefaultized<'band'>;
-        if (isBandScaleConfig(xAxisConfig) || isPointScaleConfig(xAxisConfig)) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should be a continuous type to display the bar series of id "${seriesId}".`,
-          );
-        }
-      }
+      const baseScaleConfig = (
+        verticalLayout ? xAxisConfig : yAxisConfig
+      ) as AxisDefaultized<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
@@ -197,7 +153,6 @@ const useAggregatedData = (): {
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
-          highlightScope: series[seriesId].highlightScope,
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
@@ -272,7 +227,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, ...other } = props;
+  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -305,13 +260,12 @@ function BarPlot(props: BarPlotProps) {
           />
         );
       })}
-      {transition((style, { seriesId, dataIndex, color, highlightScope, maskId }) => {
+      {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
-            highlightScope={highlightScope}
             {...other}
             onClick={
               onItemClick &&
@@ -329,6 +283,14 @@ function BarPlot(props: BarPlotProps) {
 
         return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
       })}
+      {barLabel && (
+        <BarLabelPlot
+          bars={completedData}
+          skipAnimation={skipAnimation}
+          barLabel={barLabel}
+          {...other}
+        />
+      )}
     </React.Fragment>
   );
 }
@@ -338,6 +300,14 @@ BarPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   /**
    * Defines the border radius of the bar element.
    */

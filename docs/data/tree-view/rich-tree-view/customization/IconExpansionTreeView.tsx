@@ -6,23 +6,33 @@ import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-const ITEMS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
-    id: '1',
-    label: 'Applications',
-    children: [{ id: '2', label: 'Calendar' }],
+    id: 'grid',
+    label: 'Data Grid',
+    children: [
+      { id: 'grid-community', label: '@mui/x-data-grid' },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
+    ],
   },
   {
-    id: '3',
-    label: 'Documents',
+    id: 'pickers',
+    label: 'Date and Time Pickers',
     children: [
-      { id: '6', label: 'OSS' },
-      {
-        id: '4',
-        label: 'MUI',
-        children: [{ id: '5', label: 'index.js' }],
-      },
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
+  },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
@@ -58,12 +68,8 @@ const CustomTreeItem = React.forwardRef(function MyTreeItem(
 
 export default function IconExpansionTreeView() {
   return (
-    <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
-      <RichTreeView
-        aria-label="icon expansion"
-        items={ITEMS}
-        slots={{ item: CustomTreeItem }}
-      />
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <RichTreeView items={MUI_X_PRODUCTS} slots={{ item: CustomTreeItem }} />
     </Box>
   );
 }

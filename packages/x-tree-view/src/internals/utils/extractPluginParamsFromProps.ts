@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
+  TreeViewExperimentalFeatures,
   TreeViewPlugin,
   TreeViewPublicAPI,
 } from '../models';
@@ -17,9 +18,10 @@ export const extractPluginParamsFromProps = <
     apiRef?: React.MutableRefObject<
       TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>> | undefined
     >;
+    experimentalFeatures?: TreeViewExperimentalFeatures<ConvertPluginsIntoSignatures<TPlugins>>;
   },
 >({
-  props: { slots, slotProps, apiRef, ...props },
+  props: { slots, slotProps, apiRef, experimentalFeatures, ...props },
   plugins,
   rootRef,
 }: {
@@ -39,6 +41,7 @@ export const extractPluginParamsFromProps = <
     rootRef,
     slots: slots ?? {},
     slotProps: slotProps ?? {},
+    experimentalFeatures: experimentalFeatures ?? {},
     apiRef,
   } as UseTreeViewBaseParameters<TPlugins> & PluginParams;
   const otherProps = {} as Omit<TProps, keyof PluginParams>;

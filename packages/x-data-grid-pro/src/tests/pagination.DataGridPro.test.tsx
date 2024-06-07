@@ -1,4 +1,4 @@
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';

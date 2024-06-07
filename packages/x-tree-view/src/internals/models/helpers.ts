@@ -50,4 +50,5 @@ export interface MergePlugins<TPlugins extends readonly any[]> {
   slotProps: MergePluginsProperty<TPlugins, 'slotProps'>;
   events: MergePluginsProperty<TPlugins, 'events'>;
   models: MergePluginsProperty<TPlugins, 'models'>;
+  experimentalFeatures: MergePluginsProperty<TPlugins, 'experimentalFeatures'>;
 }

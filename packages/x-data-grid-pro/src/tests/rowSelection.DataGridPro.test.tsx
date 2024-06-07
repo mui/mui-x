@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,

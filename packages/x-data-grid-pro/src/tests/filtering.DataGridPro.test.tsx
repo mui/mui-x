@@ -15,8 +15,9 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
   GridColDef,
+  getGridStringOperators,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -1056,6 +1057,46 @@ describe('<DataGridPro /> - Filter', () => {
       );
 
       expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
+    });
+
+    // See https://github.com/mui/mui-x/issues/13217
+    it('should not throw when custom filter operator is used with an initilaized value', () => {
+      expect(() => {
+        render(
+          <TestCase
+            columns={[
+              {
+                field: 'brand',
+                headerName: 'Brand',
+                filterOperators: [
+                  ...getGridStringOperators(),
+                  {
+                    value: 'looksLike',
+                    label: 'Looks Like',
+                    headerLabel: 'Looks Like',
+                    getApplyFilterFn: () => () => true,
+                    InputComponent: () => <div>Custom Input</div>,
+                  },
+                ],
+              },
+            ]}
+            initialState={{
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      field: 'brand',
+                      operator: 'looksLike',
+                      value: 'a',
+                    },
+                  ],
+                },
+              },
+            }}
+            headerFilters
+          />,
+        );
+      }).not.toErrorDev();
     });
   });
 

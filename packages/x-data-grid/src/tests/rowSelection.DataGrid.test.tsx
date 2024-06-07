@@ -8,7 +8,7 @@ import {
   act,
   userEvent,
   waitFor,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,

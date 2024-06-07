@@ -195,6 +195,14 @@ RichTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
+  /**
    * Used to determine the id of a given item.
    *
    * @template R
@@ -224,6 +232,12 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,
+  /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   items: PropTypes.array.isRequired,
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.

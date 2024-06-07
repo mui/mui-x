@@ -8,7 +8,7 @@ import {
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
- * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
+ * The controlled models are never stored in the state, and the state is only updated if the model is not controlled.
  */
 export const useTreeViewModels = <
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],

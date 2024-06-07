@@ -24,21 +24,13 @@ const MUI_X_PRODUCTS = [
   {
     id: 'charts',
     label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+    children: [{ id: 'charts-community', label: '@mui/x-charts', disabled: true }],
   },
   {
     id: 'tree-view',
     label: 'Tree View',
-    children: [
-      { id: 'tree-view-community', label: '@mui/x-tree-view' },
-      { id: 'tree-view-pro', label: '@mui/x-tree-view-pro', disabled: true },
-    ],
-  },
-  {
-    id: 'scheduler',
-    label: 'Scheduler',
     disabled: true,
-    children: [{ id: 'scheduler-community', label: '@mui/x-scheduler' }],
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
@@ -46,7 +38,7 @@ const isItemDisabled = (item) => !!item.disabled;
 
 export default function DisabledPropItem() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView items={MUI_X_PRODUCTS} isItemDisabled={isItemDisabled} />
     </Box>
   );
