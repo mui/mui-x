@@ -135,10 +135,10 @@ This approach can also be used to change the location of the toggle column, as s
 As any ordinary cell renderer, the `value` prop is also available, and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
 :::
 
-## Render a custom header for the detail panel column
+## Custom header for detail panel column
 
-To render a custom header for the detail panel column, you can use the [`renderHeader`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
-This property receives a `GridRenderHeaderParams` object, which contains `colDef` (the column definition) and `field`.
+To render a custom header for the detail panel column, use the [`renderHeader`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
+This property receives a `GridRenderHeaderParams` object that contains `colDef` (the column definition) and `field`.
 The following example demonstrates how to render a custom header for the detail panel column:
 
 ```tsx
