@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ChartsPluginTypes, ColorProcessorsConfig } from '../models';
+import { ChartsPluginType, ColorProcessorsConfig } from '../models';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ExtremumGettersConfig } from '../context/CartesianContextProvider';
 import { SeriesFormatterConfig } from '../context/SeriesContextProvider';
 import { defaultPlugins } from './defaultPlugins';
 
-export function usePluginsMerge<T extends ChartSeriesType>(plugins?: ChartsPluginTypes<T>[]) {
+export function usePluginsMerge<T extends ChartSeriesType>(plugins?: ChartsPluginType<T>[]) {
   const defaultizedPlugins = plugins ?? defaultPlugins;
 
   return React.useMemo(() => {

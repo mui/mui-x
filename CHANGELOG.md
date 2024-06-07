@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.6.2
+
+_Jun 6, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Adds Date and Time Pickers accessibility page
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.6.2`
+
+- [DataGrid] Add the `areElementSizesEqual` utility to improve code readability (#13254) @layerok
+- [DataGrid] Clean up IE remnants from the codebase (#13390) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.6.2`.
+
+#### `@mui/x-data-grid-premium@7.6.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.6.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.6.2`
+
+- [fields] Fix `PageUp` and `PageDown` editing on letter sections (#13310) @arthurbalduini
+- [pickers] Fix `AdapterDayjs` timezone behavior (#13362) @LukasTy
+- [pickers] Use `useRtl` instead of `useTheme` to access direction (#13363) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.6.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.6.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.6.2`
+
+- [charts] Add `Initializable` type and behaviour to allow checking if a complex context has been initialized. (#13365) @JCQuintas
+- [charts] Fix some props not working in `xAxis` and `yAxis` (#13372) @Valyok26
+- [charts] Harmonize charts types (#13366) @alexfauquette
+- [charts] Introduce plugins system (#13367) @alexfauquette
+- [charts] Simplify plugin types (#13396) @JCQuintas
+
+### Docs
+
+- [docs] Add badges like in Material UI @oliviertassinari
+- [docs] Update twitter.com to x.com @oliviertassinari
+- [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
+- [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen
+- [docs] Create Pickers accessibility page (#13274) @arthurbalduini
+
+### Core
+
+- [core] Comment on `CSS.escape` for the future @oliviertassinari
+- [core] Fix `l10n` action setup (#13382) @LukasTy
+- [core] Fixes in preparation for React 18.3 (#13378) @LukasTy
+- [core] Remove explicit `marked` dependency (#13383) @LukasTy
+- [core] Remove unused `@types/prettier` dependency (#13389) @LukasTy
+- [core] Add `docs/.env.local` to `.gitignore` (#13377) @KenanYusuf
+
 ## 7.6.1
 
 _May 31, 2024_
