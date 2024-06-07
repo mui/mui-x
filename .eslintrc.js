@@ -1,13 +1,39 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+// Enable React Compiler Plugin rules globally
+const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
+
+// Enable React Compiler Plugin rules per package
+const ENABLE_REACT_COMPILER_PLUGIN_CHARTS =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_CHARTS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? false;
+
+const isAnyReactCompilerPluginEnabled =
+  ENABLE_REACT_COMPILER_PLUGIN ||
+  ENABLE_REACT_COMPILER_PLUGIN_CHARTS ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ||
+  ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW;
+
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
-const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
+const buildPackageRestrictedImports = (
+  packageName,
+  root,
+  allowRootImports = true,
+  enableReactCompilerRules = false,
+) => [
   {
     files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
     excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
     rules: {
+      ...(enableReactCompilerRules ? { 'react-compiler/react-compiler': 'error' } : {}),
       'no-restricted-imports': [
         'error',
         {
@@ -89,7 +115,11 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'eslint-plugin-jsdoc'],
+  plugins: [
+    ...baseline.plugins,
+    'eslint-plugin-jsdoc',
+    ...(isAnyReactCompilerPluginEnabled ? ['eslint-plugin-react-compiler'] : []),
+  ],
   settings: {
     'import/resolver': {
       webpack: {
@@ -103,6 +133,7 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
+    ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
@@ -210,17 +241,62 @@ module.exports = {
         ],
       },
     },
-    ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
-    ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
+    ...buildPackageRestrictedImports(
+      '@mui/x-charts',
+      'x-charts',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_CHARTS,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-charts-pro',
+      'x-charts-pro',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_CHARTS,
+    ),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
-    ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
-    ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
-    ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
+    ...buildPackageRestrictedImports(
+      '@mui/x-data-grid',
+      'x-data-grid',
+      true,
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-data-grid-pro',
+      'x-data-grid-pro',
+      true,
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-data-grid-premium',
+      'x-data-grid-premium',
+      true,
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
     ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-    ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers', false),
-    ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro', false),
-    ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
-    ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
-    ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+    ...buildPackageRestrictedImports(
+      '@mui/x-date-pickers',
+      'x-date-pickers',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-date-pickers-pro',
+      'x-date-pickers-pro',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-tree-view',
+      'x-tree-view',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+    ),
+    ...buildPackageRestrictedImports(
+      '@mui/x-tree-view-pro',
+      'x-tree-view-pro',
+      false,
+      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+    ),
+    ...buildPackageRestrictedImports('@mui/x-license', 'x-license', true),
   ],
 };
