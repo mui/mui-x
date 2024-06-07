@@ -53,7 +53,7 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
 };
 
 describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature]>(
-  'useTreeViewKeyboardNavigation',
+  'useTreeViewItemsReordering',
   ({ render, treeViewComponentName }) => {
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
       return;
