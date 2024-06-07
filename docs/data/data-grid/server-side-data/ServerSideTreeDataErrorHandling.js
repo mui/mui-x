@@ -96,7 +96,7 @@ export default function ServerSideTreeDataErrorHandling() {
               setRootError(e.message);
             } else {
               setChildrenError(
-                `${e.message} (Requested level: ${params.groupKeys.join(', ')})`,
+                `${e.message} (Requested level: ${params.groupKeys.join(' > ')})`,
               );
             }
           }}
