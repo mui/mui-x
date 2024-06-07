@@ -20,7 +20,7 @@ The following demo shows how to create a custom header element that expands or c
 
 Here's how it works:
 
-The custom header uses `gridRowsLookupSelector` to find all rows with a detail panel. 
+The custom header uses `gridRowsLookupSelector` to find all rows with a detail panel.
 It checks the status of open panels using the [`useGridSelector` hook](/x/react-data-grid/state/#with-usegridselector) to access the grid's state.
 When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 

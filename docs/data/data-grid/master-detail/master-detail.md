@@ -156,6 +156,10 @@ const columns = [
 ];
 ```
 
+:::info
+For a more advanced example check out the [Expand or collapse all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels) recipe.
+:::
+
 ## Disable detail panel content scroll
 
 By default, the detail panel has a width that is the sum of the widths of all columns.
@@ -174,7 +178,7 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 More examples of how to customize the detail panel:
 
 - [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
-- [Expand or collapse all detail panels with a custom header](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels-with-a-custom-header)
+- [Expand or collapse all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels)
 
 ## apiRef
 
