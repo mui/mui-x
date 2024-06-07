@@ -14,7 +14,7 @@ export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;
 };
 
-export type ChartsPluginType<T extends ChartSeriesType> = T extends ChartSeriesType
+export type ChartsPluginType<T> = T extends ChartSeriesType
   ? {
       seriesType: T;
       seriesFormatter: Formatter<T>;

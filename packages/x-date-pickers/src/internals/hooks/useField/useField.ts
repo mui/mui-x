@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -64,8 +64,7 @@ export const useField = <
     validator,
   } = params;
 
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const stateResponse = useFieldState(params);
   const {
@@ -104,8 +103,8 @@ export const useField = <
   ) as UseFieldTextField<TEnableAccessibleFieldDOMStructure>;
 
   const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRTL && !enableAccessibleFieldDOMStructure),
-    [state.sections, isRTL, enableAccessibleFieldDOMStructure],
+    () => getSectionOrder(state.sections, isRtl && !enableAccessibleFieldDOMStructure),
+    [state.sections, isRtl, enableAccessibleFieldDOMStructure],
   );
 
   const { returnedValue, interactions } = useFieldTextField({
