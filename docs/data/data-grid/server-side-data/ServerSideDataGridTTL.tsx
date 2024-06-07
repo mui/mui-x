@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridDataSource,
-  SimpleServerSideCache,
+  GridDataSourceDefaultCache,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 10 }); // 10 seconds
+const lowTTLCache = new GridDataSourceDefaultCache({ ttl: 1000 * 10 }); // 10 seconds
 
 function ServerSideDataGridTTL() {
   const { columns, initialState, fetchRows } = useMockServer(

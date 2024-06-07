@@ -5,9 +5,9 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridGetRowsParams, GridGetRowsResponse, GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheApi } from './interfaces';
-import { SimpleServerSideCache } from './cache';
+import { GridDataSourceDefaultCache } from './cache';
 
-const getDefaultCache = (cacheInstance: SimpleServerSideCache): GridDataSourceCache => ({
+const getDefaultCache = (cacheInstance: GridDataSourceDefaultCache): GridDataSourceCache => ({
   getKey: cacheInstance.getKey,
   set: (key: string, value: GridGetRowsResponse) =>
     cacheInstance.set(key as string, value as GridGetRowsResponse),
@@ -20,7 +20,7 @@ export const useGridDataSourceCache = (
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource' | 'unstable_dataSourceCache'>,
 ): void => {
   const defaultCache = useLazyRef<GridDataSourceCache, void>(() =>
-    getDefaultCache(new SimpleServerSideCache({})),
+    getDefaultCache(new GridDataSourceDefaultCache({})),
   );
   const cache = React.useRef<GridDataSourceCache | null>(
     props.unstable_dataSourceCache || defaultCache.current,

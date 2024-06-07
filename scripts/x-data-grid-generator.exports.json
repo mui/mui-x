@@ -21,6 +21,7 @@
   { "name": "GridDemoData", "kind": "Interface" },
   { "name": "loadServerRows", "kind": "Variable" },
   { "name": "Movie", "kind": "TypeAlias" },
+  { "name": "QueryOptions", "kind": "Interface" },
   { "name": "random", "kind": "Variable" },
   { "name": "randomAddress", "kind": "Variable" },
   { "name": "randomArrayItem", "kind": "Variable" },

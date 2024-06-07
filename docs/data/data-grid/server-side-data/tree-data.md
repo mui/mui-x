@@ -46,17 +46,18 @@ The demo below shows a toast apart from the default error message in the groupin
 
 ## Group expansion
 
-The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section. The difference is that the data is not readily available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
+The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section. The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
 
-The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all the level of the tree by default.
+The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all levels of the tree by default.
 
 {{"demo": "ServerSideTreeDataGroupExpansion.js", "bg": "inline"}}
 
 ## Custom cache
 
-The data source uses a cache by default to store the fetched data. Use `unstable_dataSourceCache` to provide a custom cache to the data source to manage the cache as per your requirements. See more about caching in the [overview section](/x/react-data-grid/server-side-data/#data-caching).
+The data source uses a cache by default to store the fetched data. Use the `unstable_dataSourceCache` prop to provide a custom cache if necessary.
+See [Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
-The following demo uses `QueryClient` from `@tanstack/react-core` to provide a custom cache to the Grid which could be manipulated on the userland.
+The following demo uses `QueryClient` from `@tanstack/react-core` as a data source cache.
 
 {{"demo": "ServerSideTreeDataCustomCache.js", "bg": "inline"}}
 

@@ -1,6 +1,6 @@
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
-type SimpleServerSideCacheConfig = {
+type GridDataSourceDefaultCacheConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
@@ -9,12 +9,12 @@ type SimpleServerSideCacheConfig = {
   ttl?: number;
 };
 
-export class SimpleServerSideCache {
+export class GridDataSourceDefaultCache {
   private cache: Record<string, { value: GridGetRowsResponse; expiry: number }>;
 
   private ttl: number;
 
-  constructor({ ttl = 300000 }: SimpleServerSideCacheConfig) {
+  constructor({ ttl = 300000 }: GridDataSourceDefaultCacheConfig) {
     this.cache = {};
     this.ttl = ttl;
   }

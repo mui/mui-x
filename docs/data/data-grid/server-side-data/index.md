@@ -10,7 +10,7 @@ title: React Data Grid - Server-side data
 
 Server-side data management in React can become complex with growing datasets. Challenges include manual data fetching, pagination, sorting, filtering, and performance optimization. A dedicated module can help abstract these complexities, improving user experience.
 
-Consider a data grid displaying a list of users. It supports pagination, sorting by column headers, and filtering. The grid fetches data from the server when the user changes the page or updates filtering or sorting.
+Consider a Data Grid displaying a list of users. It supports pagination, sorting by column headers, and filtering. The Data Grid fetches data from the server when the user changes the page or updates filtering or sorting.
 
 ```tsx
 const [rows, setRows] = React.useState([]);
@@ -64,7 +64,9 @@ Trying to solve these problems one after the other can make the code complex and
 
 ## Data source
 
-The idea for a centralized data source is to simplify server-side data fetching. It's an abstraction layer between the data grid and the server, providing a simple interface for interacting with server. Think of it like a middle-man handling the communication between the Data Grid (client) and the actual data source (server).
+The idea for a centralized data source is to simplify server-side data fetching.
+It's an abstraction layer between the Data Grid and the server, providing a simple interface for interacting with the server.
+Think of it like a middleman handling the communication between the Data Grid (client) and the actual data source (server).
 
 :::warning
 
@@ -173,20 +175,20 @@ Open info section of the browser console to see the requests being made and the 
 
 ## Data caching
 
-The Data source supports caching the data it receives from the server by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
+The data source caches fetched data by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `SimpleServerSideCache` is the cache used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
+The `GridDataSourceDefaultCache` is used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 ### Customize the cache lifetime
 
-The `SimpleServerSideCache` has a default Time To Live (`ttl`) of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `SimpleServerSideCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
+The `GridDataSourceDefaultCache` has a default Time To Live (`ttl`) of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `GridDataSourceDefaultCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
 
 ```tsx
-import { SimpleServerSideCache } from '@mui/x-data-grid-pro';
+import { GridDataSourceDefaultCache } from '@mui/x-data-grid-pro';
 
-const lowTTLCache = new SimpleServerSideCache({ ttl: 1000 * 10 }); // 10 seconds
+const lowTTLCache = new GridDataSourceDefaultCache({ ttl: 1000 * 10 }); // 10 seconds
 
 <DataGridPro
   columns={columns}
@@ -215,7 +217,7 @@ The following demo uses cache used by a popular library [`swr`](https://github.c
 
 ### Disable cache
 
-To disable the caching on the server-side data, pass `null` to the `unstable_dataSourceCache` prop.
+To disable the data source cache, pass `null` to the `unstable_dataSourceCache` prop.
 
 ```tsx
 <DataGridPro

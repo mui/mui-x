@@ -115,10 +115,5 @@
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "gm": "^1.25.0",
     "serve": "^14.2.3"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
   }
 }

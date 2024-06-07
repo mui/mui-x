@@ -11,7 +11,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
-  dataSet: 'Employee' as 'Employee',
+  dataSet: 'Employee' as const,
   rowLength: 1000,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
