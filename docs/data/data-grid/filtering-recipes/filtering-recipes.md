@@ -13,3 +13,7 @@ Currently if you want to use the [Quick filter](/x/react-data-grid/filtering/qui
 A common use case is to have certain components positioned outside of the grid. Because of the way the grid context works this might not be a straightforward thing to do. The example below illustrates how this use case can be achieved.
 
 {{"demo": "QuickFilterOutsideOfGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Calculating row count in advance
+
+{{"demo": "FilteredRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
