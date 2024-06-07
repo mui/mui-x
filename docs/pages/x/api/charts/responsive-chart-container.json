@@ -31,7 +31,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "plugins": { "type": { "name": "array" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
