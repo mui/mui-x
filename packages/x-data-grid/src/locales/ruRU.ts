@@ -2,6 +2,26 @@ import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
+type PluralForm = {
+  one: string;
+  few: string;
+  many: string;
+};
+
+function getPluralForm(count: number, options: PluralForm) {
+  const penultimateDigit = Math.floor(count / 10) % 10;
+  const lastDigit = count % 10;
+
+  let pluralForm = options.many;
+  if (penultimateDigit !== 1 && lastDigit > 1 && lastDigit < 5) {
+    pluralForm = options.few;
+  } else if (penultimateDigit !== 1 && lastDigit === 1) {
+    pluralForm = options.one;
+  }
+
+  return `${count} ${pluralForm}`;
+}
+
 const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
@@ -23,16 +43,12 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Показать фильтры',
   toolbarFiltersTooltipHide: 'Скрыть фильтры',
   toolbarFiltersTooltipShow: 'Показать фильтры',
-  toolbarFiltersTooltipActive: (count) => {
-    let pluralForm = 'активных фильтров';
-    const lastDigit = count % 10;
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'активных фильтра';
-    } else if (lastDigit === 1) {
-      pluralForm = 'активный фильтр';
-    }
-    return `${count} ${pluralForm}`;
-  },
+  toolbarFiltersTooltipActive: (count) =>
+    getPluralForm(count, {
+      one: 'активный фильтр',
+      few: 'активных фильтра',
+      many: 'активных фильтров',
+    }),
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Поиск…',
@@ -122,30 +138,22 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Сортировать по убыванию',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => {
-    let pluralForm = 'активных фильтров';
-    const lastDigit = count % 10;
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'активных фильтра';
-    } else if (lastDigit === 1) {
-      pluralForm = 'активный фильтр';
-    }
-    return `${count} ${pluralForm}`;
-  },
+  columnHeaderFiltersTooltipActive: (count) =>
+    getPluralForm(count, {
+      one: 'активный фильтр',
+      few: 'активных фильтра',
+      many: 'активных фильтров',
+    }),
   columnHeaderFiltersLabel: 'Показать фильтры',
   columnHeaderSortIconLabel: 'Сортировать',
 
   // Rows selected footer text
-  footerRowSelected: (count) => {
-    let pluralForm = 'строк выбрано';
-    const lastDigit = count % 10;
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'строки выбраны';
-    } else if (lastDigit === 1) {
-      pluralForm = 'строка выбрана';
-    }
-    return `${count} ${pluralForm}`;
-  },
+  footerRowSelected: (count) =>
+    getPluralForm(count, {
+      one: 'строка выбрана',
+      few: 'строки выбраны',
+      many: 'строк выбрано',
+    }),
 
   // Total row amount footer text
   footerTotalRows: 'Всего строк:',
