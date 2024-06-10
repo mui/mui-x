@@ -11,9 +11,9 @@ export interface GridDataSourceState {
 }
 
 /**
- * The dataSource API interface that is available in the grid [[apiRef]].
+ * The base data source API interface that is available in the grid [[apiRef]].
  */
-export interface GridDataSourceApi {
+export interface GridDataSourceApiBase {
   /**
    * Set the loading state of a parent row.
    * @param {string} parentId The id of the parent node.
@@ -34,6 +34,9 @@ export interface GridDataSourceApi {
   fetchRows: (parentId?: GridRowId) => void;
 }
 
+export interface GridDataSourceApi {
+  unstable_dataSource: GridDataSourceApiBase;
+}
 export interface GridDataSourcePrivateApi {
   /**
    * Initiates the fetch of the children of a row.

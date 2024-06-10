@@ -64,7 +64,7 @@ export class NestedDataManager {
   public enqueue = async (ids: GridRowId[]) => {
     ids.forEach((id) => {
       this.queuedRequests.add(id);
-      this.api.setChildrenLoading(id, true);
+      this.api.unstable_dataSource.setChildrenLoading(id, true);
     });
     this.processQueue();
   };
@@ -81,7 +81,7 @@ export class NestedDataManager {
   };
 
   public clearPendingRequest = (id: GridRowId) => {
-    this.api.setChildrenLoading(id, false);
+    this.api.unstable_dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };

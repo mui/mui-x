@@ -246,6 +246,7 @@
   { "name": "gridDataRowIdsSelector", "kind": "Variable" },
   { "name": "GridDataSource", "kind": "Interface" },
   { "name": "GridDataSourceApi", "kind": "Interface" },
+  { "name": "GridDataSourceApiBase", "kind": "Interface" },
   { "name": "GridDataSourceCache", "kind": "Interface" },
   { "name": "GridDataSourceCacheApi", "kind": "Interface" },
   { "name": "GridDataSourceCacheDefault", "kind": "Class" },

@@ -40,11 +40,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "fetchRows": {
-      "type": { "description": "(parentId?: GridRowId) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "forceUpdate": { "type": { "description": "() =&gt; void" }, "required": true },
     "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" }, "required": true },
     "getAllGroupDetails": {
@@ -299,16 +294,6 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "setChildrenFetchError": {
-      "type": { "description": "(parentId: GridRowId, error: Error | null) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
-    "setChildrenLoading": {
-      "type": { "description": "(parentId: GridRowId, loading: boolean) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "setColumnHeaderFilterFocus": {
       "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" },
       "required": true
@@ -473,6 +458,11 @@
     },
     "unpinColumn": {
       "type": { "description": "(field: string) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_dataSource": {
+      "type": { "description": "GridDataSourceApiBase" },
       "required": true,
       "isProPlan": true
     },
