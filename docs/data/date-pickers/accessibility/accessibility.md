@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 
 # Accessibility
 
-<p class="description">Learn how the Date and Time Pickers implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
+<p class="description">Learn how the Date and Time Pickers implement accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
