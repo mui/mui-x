@@ -55,7 +55,7 @@ export default function ServerSideTreeDataGroupExpansion() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.unstable_dataSourceCache?.clear()}>
+      <Button onClick={() => apiRef.current.unstable_dataSourceCache.clear()}>
         Reset cache
       </Button>
       <div style={{ height: 400 }}>

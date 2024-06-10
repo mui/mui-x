@@ -7,8 +7,14 @@ import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheApi } from './interfaces';
 import { GridDataSourceCacheDefault } from './cache';
 
+const noopCache = {
+  clear: () => {},
+  get: () => undefined,
+  set: () => {},
+};
+
 export const useGridDataSourceCache = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource' | 'unstable_dataSourceCache'>,
 ): void => {
   const defaultCache = useLazyRef<GridDataSourceCache, void>(
@@ -20,10 +26,10 @@ export const useGridDataSourceCache = (
   );
 
   const dataSourceCacheApi: GridDataSourceCacheApi = {
-    unstable_dataSourceCache: cache,
+    unstable_dataSourceCache: cache ?? noopCache,
   };
 
-  useGridApiMethod(privateApiRef, dataSourceCacheApi, 'public');
+  useGridApiMethod(apiRef, dataSourceCacheApi, 'public');
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {

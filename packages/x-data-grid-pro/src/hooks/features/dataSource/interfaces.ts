@@ -52,5 +52,5 @@ export interface GridDataSourceCacheApi {
   /**
    * The data source cache object.
    */
-  unstable_dataSourceCache: GridDataSourceCache | null;
+  unstable_dataSourceCache: GridDataSourceCache;
 }
