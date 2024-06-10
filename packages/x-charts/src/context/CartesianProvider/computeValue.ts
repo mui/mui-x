@@ -90,7 +90,8 @@ export const computeValue = (
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
+    // Gotta remove ".nice" here to avoid jittering in zoom
+    const niceScale = getScale(scaleType, extremums, range);
     const niceDomain = niceScale.domain();
     const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
 
