@@ -8,7 +8,8 @@ title: React Server-side tree data
 
 To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
-The data source also requires some additional props to handle tree data, namely `getGroupKey` and `getChildrenCount`. If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
+The data source also requires some additional props to handle tree data, namely `getGroupKey` and `getChildrenCount`.
+If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -26,14 +27,16 @@ const customDataSource: GridDataSource = {
 };
 ```
 
-Following tree-data example supports filtering, sorting, and pagination on the server. It also caches the data by default.
+The following tree data example supports filtering, sorting, and pagination on the server.
+It also caches the data by default.
 
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
+The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
+In a real-world scenario, you would replace this with your own server-side data fetching logic.
 
-Open info section of the browser console to see the requests being made and the data being fetched in response.
+Open the info section of the browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Error handling
@@ -54,7 +57,8 @@ The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all level
 
 ## Custom cache
 
-The data source uses a cache by default to store the fetched data. Use the `unstable_dataSourceCache` prop to provide a custom cache if necessary.
+The data source uses a cache by default to store the fetched data.
+Use the `unstable_dataSourceCache` prop to provide a custom cache if necessary.
 See [Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
 The following demo uses `QueryClient` from `@tanstack/react-core` as a data source cache.
