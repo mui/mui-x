@@ -71,7 +71,7 @@ export default function ServerSideTreeDataErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current.fetchTopLevelRows();
+            apiRef.current.unstable_dataSource.fetchRows();
           }}
         >
           Refetch rows
