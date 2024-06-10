@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
-import { isCartesianSeriesType } from './utils';
-import colorGetter from '../internals/colorGetter';
+import { isCartesianSeriesType } from '../internals/isCartesian';
+import { useColorProcessor } from '../hooks/useColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useSeries } from '../hooks/useSeries';
 
 type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
   getColor: (dataIndex: number) => string;
@@ -61,7 +61,9 @@ function ChartsAxisTooltipContent(props: {
 
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
   const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
-  const series = React.useContext(SeriesContext);
+  const series = useSeries();
+
+  const colorProcessors = useColorProcessor();
 
   const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
 
@@ -76,31 +78,33 @@ function ChartsAxisTooltipContent(props: {
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
             const seriesToAdd = series[seriesType]!.series[seriesId];
 
-            let getColor: (index: number) => string;
-            switch (seriesToAdd.type) {
-              case 'scatter':
-                getColor = colorGetter(
-                  seriesToAdd,
-                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
-                );
-                break;
-              default:
-                getColor = colorGetter(
-                  seriesToAdd,
-                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                );
-                break;
-            }
+            const zAxisKey = (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+
+            const getColor =
+              colorProcessors[seriesType]?.(
+                seriesToAdd as any,
+                xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                zAxisKey && zAxis[zAxisKey],
+              ) ?? (() => '');
 
             rep.push({ ...seriesToAdd, getColor });
           }
         });
       });
     return rep;
-  }, [USED_AXIS_ID, isXaxis, series, xAxis, xAxisIds, yAxis, yAxisIds, zAxis, zAxisIds]);
+  }, [
+    USED_AXIS_ID,
+    colorProcessors,
+    isXaxis,
+    series,
+    xAxis,
+    xAxisIds,
+    yAxis,
+    yAxisIds,
+    zAxis,
+    zAxisIds,
+  ]);
 
   const relevantAxis = React.useMemo(() => {
     return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];
@@ -127,7 +131,7 @@ function ChartsAxisTooltipContent(props: {
 ChartsAxisTooltipContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   axisData: PropTypes.shape({
     x: PropTypes.shape({

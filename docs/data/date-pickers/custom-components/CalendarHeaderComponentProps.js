@@ -7,7 +7,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 export default function CalendarHeaderComponentProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
+      <DemoContainer components={['DateCalendar']}>
         <DateCalendar
           slotProps={{ calendarHeader: { sx: { border: '1px red solid' } } }}
         />

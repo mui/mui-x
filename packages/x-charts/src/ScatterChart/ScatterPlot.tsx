@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import getColor from './getColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useScatterSeries } from '../hooks/useSeries';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -39,7 +39,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = React.useContext(SeriesContext).scatter;
+  const seriesData = useScatterSeries();
   const axisData = React.useContext(CartesianContext);
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
 
@@ -89,7 +89,7 @@ function ScatterPlot(props: ScatterPlotProps) {
 ScatterPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when clicking on a scatter item.

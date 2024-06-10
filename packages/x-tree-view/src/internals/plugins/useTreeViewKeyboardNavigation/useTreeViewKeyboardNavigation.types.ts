@@ -5,12 +5,25 @@ import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
+import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewKeyboardNavigationInstance {
+  /**
+   * Updates the `firstCharMap` to add/remove the first character of some item's labels.
+   * This map is used to navigate the tree using type-ahead search.
+   * This method is only used by the `useTreeViewJSXItems` plugin, otherwise the updates are handled internally.
+   * @param {(map: TreeViewFirstCharMap) => TreeViewFirstCharMap} updater The function to update the map.
+   */
   updateFirstCharMap: (updater: (map: TreeViewFirstCharMap) => TreeViewFirstCharMap) => void;
+  /**
+   * Callback fired when a key is pressed on an item.
+   * Handles all the keyboard navigation logic.
+   * @param {React.KeyboardEvent<HTMLElement> & MuiCancellableEvent} event The keyboard event that triggered the callback.
+   * @param {TreeViewItemId} itemId The id of the item that the event was triggered on.
+   */
   handleItemKeyDown: (
     event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
-    itemId: string,
+    itemId: TreeViewItemId,
   ) => void;
 }
 

@@ -121,16 +121,14 @@ export function useGridDimensions(
 
     const computedStyle = ownerWindow(element).getComputedStyle(element);
 
-    const height = parseFloat(computedStyle.height) || 0;
-    const width = parseFloat(computedStyle.width) || 0;
+    const newSize = {
+      width: parseFloat(computedStyle.width) || 0,
+      height: parseFloat(computedStyle.height) || 0,
+    };
 
-    const hasHeightChanged = height !== previousSize.current?.height;
-    const hasWidthChanged = width !== previousSize.current?.width;
-
-    if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
-      const size = { width, height };
-      apiRef.current.publishEvent('resize', size);
-      previousSize.current = size;
+    if (!previousSize.current || !areElementSizesEqual(previousSize.current, newSize)) {
+      apiRef.current.publishEvent('resize', newSize);
+      previousSize.current = newSize;
     }
   }, [apiRef]);
 
@@ -263,10 +261,7 @@ export function useGridDimensions(
     const prevDimensions = apiRef.current.state.dimensions;
     setDimensions(newDimensions);
 
-    if (
-      newDimensions.viewportInnerSize.width !== prevDimensions.viewportInnerSize.width ||
-      newDimensions.viewportInnerSize.height !== prevDimensions.viewportInnerSize.height
-    ) {
+    if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
 
@@ -412,4 +407,8 @@ function measureScrollbarSize(
 // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
 function roundToDecimalPlaces(value: number, decimals: number) {
   return Math.round(value * 10 ** decimals) / 10 ** decimals;
+}
+
+function areElementSizesEqual(a: ElementSize, b: ElementSize) {
+  return a.width === b.width && a.height === b.height;
 }

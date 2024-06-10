@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["@mui/material/themeCssVarsAugmentation"]
+    "types": ["@mui/material/themeCssVarsAugmentation", "chai-dom", "mocha"]
   },
   "include": ["src/**/*"]
 }

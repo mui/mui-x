@@ -12,20 +12,25 @@ import {
   UseTreeItem2CheckboxSlotProps,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
+import { DefaultTreeViewPluginSignatures } from '../internals/plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
-export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
+export const useTreeItem2 = <
+  TSignatures extends DefaultTreeViewPluginSignatures = DefaultTreeViewPluginSignatures,
+>(
   parameters: UseTreeItem2Parameters,
-): UseTreeItem2ReturnValue<TPlugins> => {
+): UseTreeItem2ReturnValue<TSignatures> => {
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
     disabledItemsFocusable,
+    indentationAtItemLevel,
     instance,
     publicAPI,
-  } = useTreeViewContext<TPlugins>();
+  } = useTreeViewContext<TSignatures>();
+  const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -134,7 +139,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       ariaSelected = true;
     }
 
-    return {
+    const response: UseTreeItem2RootSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
@@ -148,6 +153,15 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
     };
+
+    if (indentationAtItemLevel) {
+      response.style = {
+        '--TreeView-itemDepth':
+          typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+      } as React.CSSProperties;
+    }
+
+    return response;
   };
 
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
@@ -155,7 +169,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const response: UseTreeItem2ContentSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       ...externalProps,
       ref: contentRef,
@@ -163,6 +177,12 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
+
+    if (indentationAtItemLevel) {
+      response.indentationAtItemLevel = true;
+    }
+
+    return response;
   };
 
   const getCheckboxProps = <ExternalProps extends Record<string, any> = {}>(
@@ -213,7 +233,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const response: UseTreeItem2GroupTransitionSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
@@ -222,6 +242,12 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       children,
       ...externalProps,
     };
+
+    if (indentationAtItemLevel) {
+      response.indentationAtItemLevel = true;
+    }
+
+    return response;
   };
 
   return {

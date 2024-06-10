@@ -28,7 +28,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
           displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
-          color: getColor(itemData.dataIndex) ?? series.color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: getLabel(series.label, 'tooltip'),
         };
 
@@ -66,7 +66,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
 DefaultChartsItemTooltipContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

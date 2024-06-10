@@ -19,11 +19,11 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-const PickersLayoutRoot = styled('div', {
+export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean } }>(({ theme }) => ({
+})<{ ownerState: PickersLayoutProps<any, any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -33,10 +33,18 @@ const PickersLayoutRoot = styled('div', {
       props: { isLandscape: true },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridColumn: 1,
           gridRow: '2 / 3',
         },
         [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
+      },
+    },
+    {
+      props: { isLandscape: true, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: 3,
+        },
       },
     },
     {
@@ -44,31 +52,21 @@ const PickersLayoutRoot = styled('div', {
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
         [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridColumn: 1,
           gridRow: '2 / 3',
         },
       },
     },
+    {
+      props: { isLandscape: false, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 3,
+        },
+      },
+    },
   ],
-}));
-
-PickersLayoutRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    isLandscape: PropTypes.bool.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
-export { PickersLayoutRoot };
+});
 
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
@@ -100,15 +98,14 @@ const PickersLayout = function PickersLayout<
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, ref, wrapperVariant } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
-      ownerState={ownerState}
+      ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
@@ -133,7 +130,7 @@ const PickersLayout = function PickersLayout<
 PickersLayout.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   /**
@@ -143,6 +140,10 @@ PickersLayout.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

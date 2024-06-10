@@ -41,7 +41,10 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    newDeps['@mui/material'] = versions['@mui/material'];
+    // #default-branch-switch
+    // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
+    newDeps['@mui/material'] =
+      versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
 
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
@@ -58,6 +61,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+      '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       exceljs: 'latest',

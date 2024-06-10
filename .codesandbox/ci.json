@@ -11,6 +11,7 @@
     "packages/x-date-pickers",
     "packages/x-date-pickers-pro",
     "packages/x-charts",
+    "packages/x-charts-pro",
     "packages/x-tree-view"
   ],
   "publishDirectory": {
@@ -22,6 +23,7 @@
     "@mui/x-date-pickers": "packages/x-date-pickers/build",
     "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build",
     "@mui/x-charts": "packages/x-charts/build",
+    "@mui/x-charts-pro": "packages/x-charts-pro/build",
     "@mui/x-tree-view": "packages/x-tree-view/build",
     "@mui/x-tree-view-pro": "packages/x-tree-view-pro/build"
   },

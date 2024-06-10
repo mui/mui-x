@@ -4,23 +4,38 @@ import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
 import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
+import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewFocusPublicAPI {
   /**
-   * Focuses the item with the given id.
+   * Focus the item with the given id.
    *
    * If the item is the child of a collapsed item, then this method will do nothing.
    * Make sure to expand the ancestors of the item before calling this method if needed.
    * @param {React.SyntheticEvent} event The event source of the action.
-   * @param {string} itemId The id of the item to focus.
+   * @param {TreeViewItemId} itemId The id of the item to focus.
    */
   focusItem: (event: React.SyntheticEvent, itemId: string) => void;
 }
 
 export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
-  isItemFocused: (itemId: string) => boolean;
-  canItemBeTabbed: (itemId: string) => boolean;
-  focusDefaultItem: (event: React.SyntheticEvent | null) => void;
+  /**
+   * Check if an item is the currently focused item.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is focused, `false` otherwise.
+   */
+  isItemFocused: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Check if an item should be sequentially focusable (usually with the Tab key).
+   * At any point in time, there is a single item that can be sequentially focused in the Tree View.
+   * This item is the first selected item (that is both visible and navigable), if any, or the first navigable item if no item is selected.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item can be sequentially focusable, `false` otherwise.
+   */
+  canItemBeTabbed: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Remove the focus from the currently focused item (both from the internal state and the DOM).
+   */
   removeFocusedItem: () => void;
 }
 

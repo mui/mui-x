@@ -40,6 +40,10 @@ export interface UseTreeItem2RootSlotOwnProps {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  style?: React.CSSProperties;
 }
 
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
@@ -50,6 +54,10 @@ export interface UseTreeItem2ContentSlotOwnProps {
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
@@ -85,6 +93,10 @@ export interface UseTreeItem2GroupTransitionSlotOwnProps {
   component: 'ul';
   role: 'group';
   children: React.ReactNode;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItem2GroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
@@ -98,7 +110,9 @@ export interface UseTreeItem2Status {
   disabled: boolean;
 }
 
-export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeItem2ReturnValue<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot
@@ -158,5 +172,5 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TPlugins>;
+  publicAPI: TreeViewPublicAPI<TSignatures>;
 }
