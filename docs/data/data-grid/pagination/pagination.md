@@ -16,7 +16,7 @@ To apply pagination to exported files, review the available [row selectors](/x/r
 
 ### Community plan
 
-{{"demo": "PaginationCommunity.js", "bg": "inline"}}
+{{"demo": "PaginationCommunityNoSnap.js", "bg": "inline"}}
 
 ### Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and Premium [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
