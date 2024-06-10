@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 # MUI X Data Grid
 
-<p class="description">A fast and extendable React data table and React data grid. It's a feature-rich component available with MIT or Commercial licenses.</p>
+<p class="description">A fast and extendable React data table and React data grid. It's a feature-rich component available with MIT or commercial licenses.</p>
 
 The Data Grid component is built with React and TypeScript to provide a smooth UX for manipulating an unlimited set of data.
 It features an intuitive API for real-time updates as well as theming and custom templates—all with blazing-fast performance.
@@ -27,8 +27,8 @@ The component comes in three different versions, one available under MIT license
 
 ## MIT license (free forever)
 
-The MIT licensed version (also referred to as the "Community version") is a stronger alternative to [plain data tables](/material-ui/react-table/#sorting-amp-selecting).
-It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
+The MIT-licensed version (also referred to as the "Community version") is a stronger alternative to [plain data tables](/material-ui/react-table/#sorting-amp-selecting).
+It's a clean abstraction with basic features like editing, pagination, column grouping, and single-column sorting and filtering.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
@@ -42,7 +42,7 @@ The commercially licensed versions are available in two plans: Pro and Premium.
 
 ### Pro plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The Pro plan includes and extends the features available in the Community version to support more complex use cases.
+The Pro plan extends the features available in the Community version to support more complex use cases.
 It adds features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle bigger datasets.
 
 The demo below displays 31 columns and 100,000 rows—over 3 million cells in total.
