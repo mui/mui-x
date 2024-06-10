@@ -318,6 +318,14 @@ export type AxisDefaultized<
      * An indication of the expected number of ticks.
      */
     tickNumber: number;
+    /**
+     * Extremums of the axis.
+     */
+    extremums?: (number | Date | null)[];
+    /**
+     * Domain of the axis.
+     */
+    domain?: (number | Date)[];
   };
 
 export function isBandScaleConfig(

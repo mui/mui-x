@@ -1,12 +1,7 @@
 import { scaleBand, scalePoint } from 'd3-scale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
 import { AxisConfig, ChartsXAxisProps, ScaleName } from '../../models';
-import {
-  AxisDefaultized,
-  ChartsYAxisProps,
-  isBandScaleConfig,
-  isPointScaleConfig,
-} from '../../models/axis';
+import { ChartsYAxisProps, isBandScaleConfig, isPointScaleConfig } from '../../models/axis';
 import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
@@ -85,23 +80,25 @@ export const computeValue = (
       return;
     }
 
-    const scaleType = axis.scaleType ?? 'linear';
+    const scaleType = axis.scaleType ?? ('linear' as const);
 
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
     // Gotta remove ".nice" here to avoid jittering in zoom
-    const niceScale = getScale(scaleType, extremums, range);
-    const niceDomain = niceScale.domain();
-    const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+    const scale = getScale(scaleType, extremums, range);
+    const [minDomain, maxDomain] = scale.domain();
+    const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completedXAxis[axis.id] = {
       ...axis,
-      scaleType,
-      scale: niceScale.domain(domain),
+      scaleType: scaleType as any,
+      scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-    } as AxisDefaultized<typeof scaleType, any, ChartsXAxisProps>;
+      extremums,
+      domain,
+    };
   });
 
   const allYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[] = [
@@ -158,22 +155,25 @@ export const computeValue = (
       return;
     }
 
-    const scaleType = axis.scaleType ?? 'linear';
+    const scaleType = axis.scaleType ?? ('linear' as const);
 
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    const niceScale = getScale(scaleType, extremums, range).nice(tickNumber);
-    const niceDomain = niceScale.domain();
-    const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+    // Gotta remove ".nice" here to avoid jittering in zoom
+    const scale = getScale(scaleType, extremums, range);
+    const [minDomain, maxDomain] = scale.domain();
+    const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completedYAxis[axis.id] = {
       ...axis,
-      scaleType,
-      scale: niceScale.domain(domain),
+      scaleType: scaleType as any,
+      scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-    } as AxisDefaultized<typeof scaleType, any, ChartsYAxisProps>;
+      extremums,
+      domain,
+    };
   });
 
   return {
