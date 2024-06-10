@@ -108,9 +108,6 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
 
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
     (row, colDef) => {
-      if (!row) {
-        return null;
-      }
       const field = colDef.field;
 
       if (!colDef || !colDef.valueGetter) {

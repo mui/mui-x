@@ -1742,12 +1742,6 @@
       "isGlobal": false
     },
     {
-      "key": "treeDataGroupingCellLoadingContainer",
-      "className": "MuiDataGridPro-treeDataGroupingCellLoadingContainer",
-      "description": "Styles applied to the loading container of the grouping cell of the tree data.",
-      "isGlobal": false
-    },
-    {
       "key": "treeDataGroupingCellToggle",
       "className": "MuiDataGridPro-treeDataGroupingCellToggle",
       "description": "Styles applied to the toggle of the grouping cell of the tree data.",

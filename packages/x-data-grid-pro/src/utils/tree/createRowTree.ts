@@ -22,7 +22,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
     [GRID_ROOT_GROUP_ID]: buildRootGroup(),
   };
   const treeDepths: GridRowTreeCreationValue['treeDepths'] = {};
-  const groupsToFetch = new Set([]);
+  const groupsToFetch = new Set<GridRowId>();
 
   for (let i = 0; i < params.nodes.length; i += 1) {
     const node = params.nodes[i];

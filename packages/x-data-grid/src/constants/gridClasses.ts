@@ -580,6 +580,7 @@ export interface GridClasses {
   treeDataGroupingCellToggle: string;
   /**
    * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
    */
   treeDataGroupingCellLoadingContainer: string;
   /**

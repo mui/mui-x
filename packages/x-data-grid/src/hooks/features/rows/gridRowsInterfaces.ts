@@ -50,7 +50,7 @@ export interface GridRowsState {
   treeDepths: GridTreeDepths;
   dataRowIds: GridRowId[];
   /**
-   * Depicts if the rows are loading.
+   * The loading status of the rows.
    */
   loading?: boolean;
   /**
