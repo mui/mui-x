@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
+import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 
 export interface DescribePickerOptions {
   fieldType: 'single-input' | 'multi-input';

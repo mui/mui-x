@@ -77,6 +77,13 @@ commands:
                 name: Restore playwright cache
                 keys:
                   - v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
+      - when:
+          condition:
+            not: << parameters.browsers >>
+          steps:
+            # See https://stackoverflow.com/a/73411601
+            - run: corepack enable --install-directory ~/bin
+
       - run:
           name: View install environment
           command: |
@@ -193,7 +200,7 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.43.1-focal
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -226,7 +233,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.43.1-focal
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -239,7 +246,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.43.1-focal
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -254,7 +261,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.43.1-focal
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -270,18 +277,17 @@ jobs:
   run_danger:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.43.1-focal
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
       - install_js:
+          # TODO remove, no needed
           browsers: true
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_DISABLE_TRANSPILATION: 'true'
 workflows:
   version: 2
   pipeline:

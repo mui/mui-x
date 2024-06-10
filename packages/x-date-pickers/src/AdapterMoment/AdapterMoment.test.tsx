@@ -1,6 +1,6 @@
 import moment, { Moment } from 'moment';
 import momentTZ from 'moment-timezone';
-import { DateTimeField } from '@mui/x-date-pickers';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';

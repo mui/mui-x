@@ -173,15 +173,11 @@ export class AdapterMomentJalaali
   };
 
   public isSameYear = (value: Moment, comparing: Moment) => {
-    // `isSame` seems to mutate the date on `moment-jalaali`
-    // @ts-ignore
-    return value.clone().isSame(comparing, 'jYear');
+    return value.jYear() === comparing.jYear();
   };
 
   public isSameMonth = (value: Moment, comparing: Moment) => {
-    // `isSame` seems to mutate the date on `moment-jalaali`
-    // @ts-ignore
-    return value.clone().isSame(comparing, 'jMonth');
+    return value.jYear() === comparing.jYear() && value.jMonth() === comparing.jMonth();
   };
 
   public isAfterYear = (value: Moment, comparing: Moment) => {

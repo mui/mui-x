@@ -43,25 +43,22 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
 ];
 
 const warnedOnceCache = new Set();
-const warnOnce = (message: string) => {
+function warnOnce(message: string) {
   if (!warnedOnceCache.has(message)) {
     console.error(message);
     warnedOnceCache.add(message);
   }
-};
+}
 
-export const validateProps = <TProps>(props: TProps, validators: PropValidator<TProps>[]) => {
-  if (process.env.NODE_ENV === 'production') {
-    return;
-  }
+export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
   validators.forEach((validator) => {
     const warning = validator(props);
     if (warning) {
       warnOnce(warning);
     }
   });
-};
+}
 
-export const clearWarningsCache = () => {
+export function clearWarningsCache() {
   warnedOnceCache.clear();
-};
+}

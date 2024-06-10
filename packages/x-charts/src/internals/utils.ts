@@ -14,7 +14,7 @@ export type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U,
  * @param svg The SVG element
  * @param event The mouseEvent to transform
  */
-export function getSVGPoint(svg: SVGSVGElement, event: MouseEvent) {
+export function getSVGPoint(svg: SVGSVGElement, event: Pick<MouseEvent, 'clientX' | 'clientY'>) {
   const pt = svg.createSVGPoint();
   pt.x = event.clientX;
   pt.y = event.clientY;

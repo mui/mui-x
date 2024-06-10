@@ -1,5 +1,6 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergePluginsProperty } from './helpers';
+import type { MergeSignaturesProperty } from './helpers';
+import type { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export interface TreeViewItemMeta {
   id: string;
@@ -8,7 +9,11 @@ export interface TreeViewItemMeta {
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView`.
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   */
+  depth?: number;
+  /**
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
    */
   label?: string;
 }
@@ -20,7 +25,11 @@ export interface TreeViewModel<TValue> {
 }
 
 export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'instance'>;
+  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'>;
 
 export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'publicAPI'>;
+  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'>;
+
+export type TreeViewExperimentalFeatures<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> = { [key in MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>]?: boolean };

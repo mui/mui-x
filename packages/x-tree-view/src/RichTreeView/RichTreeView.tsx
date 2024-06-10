@@ -1,16 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps, RichTreeViewSlotProps, RichTreeViewSlots } from './RichTreeView.types';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { DEFAULT_TREE_VIEW_PLUGINS, DefaultTreeViewPluginSignatures } from '../internals/plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
 import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
+
+const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProps<R, Multiple>,
@@ -89,7 +91,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof DEFAULT_TREE_VIEW_PLUGINS,
+    DefaultTreeViewPluginSignatures,
     RichTreeViewSlots,
     RichTreeViewSlotProps<R, Multiple>,
     RichTreeViewProps<R, Multiple>
@@ -145,7 +147,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 RichTreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
@@ -157,6 +159,11 @@ RichTreeView.propTypes = {
       setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -190,6 +197,14 @@ RichTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
+  /**
    * Used to determine the id of a given item.
    *
    * @template R
@@ -219,9 +234,15 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,
+  /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   items: PropTypes.array.isRequired,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,

@@ -51,6 +51,12 @@ import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'date-fns': Date;
+  }
+}
+
 /**
  * Based on `@date-io/date-fns`
  *

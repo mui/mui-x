@@ -40,6 +40,10 @@ export interface UseTreeItem2RootSlotOwnProps {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  style?: React.CSSProperties;
 }
 
 export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
@@ -50,6 +54,10 @@ export interface UseTreeItem2ContentSlotOwnProps {
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
@@ -67,12 +75,28 @@ export interface UseTreeItem2LabelSlotOwnProps {
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2LabelSlotOwnProps;
 
+export interface UseTreeItem2CheckboxSlotOwnProps {
+  visible: boolean;
+  checked: boolean;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
+  ref: React.RefObject<HTMLButtonElement>;
+  tabIndex: -1;
+}
+
+export type UseTreeItem2CheckboxSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2CheckboxSlotOwnProps;
+
 export interface UseTreeItem2GroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
   component: 'ul';
   role: 'group';
   children: React.ReactNode;
+  /**
+   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
+   */
+  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItem2GroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
@@ -86,7 +110,9 @@ export interface UseTreeItem2Status {
   disabled: boolean;
 }
 
-export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeItem2ReturnValue<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot
@@ -111,6 +137,14 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2LabelSlotProps<ExternalProps>;
+  /**
+   * Resolver for the checkbox slot's props.
+   * @param {ExternalProps} externalProps Additional props for the checkbox slot
+   * @returns {UseTreeItem2CheckboxSlotProps<ExternalProps>} Props that should be spread on the checkbox slot
+   */
+  getCheckboxProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItem2CheckboxSlotProps<ExternalProps>;
   /**
    * Resolver for the iconContainer slot's props.
    * @param {ExternalProps} externalProps Additional props for the iconContainer slot
@@ -138,5 +172,5 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TPlugins>;
+  publicAPI: TreeViewPublicAPI<TSignatures>;
 }

@@ -86,8 +86,8 @@ const usePickerLayout = <
       onSetToday,
       actions:
         wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
-      className: classes.actionBar,
     },
+    className: classes.actionBar,
     ownerState: { ...props, wrapperVariant },
   });
   const actionBar = <ActionBar {...actionBarProps} />;
@@ -107,8 +107,8 @@ const usePickerLayout = <
       views,
       disabled,
       readOnly,
-      className: classes.toolbar,
     },
+    className: classes.toolbar,
     ownerState: { ...props, wrapperVariant },
   });
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
@@ -135,13 +135,12 @@ const usePickerLayout = <
       isValid,
       isLandscape,
       onChange: onSelectShortcut,
-      className: classes.shortcuts,
     },
+    className: classes.shortcuts,
     ownerState: {
       isValid,
       isLandscape,
       onChange: onSelectShortcut,
-      className: classes.shortcuts,
       wrapperVariant,
     },
   });

@@ -4,6 +4,9 @@
     "apiRef": {
       "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
     },
+    "checkboxSelection": {
+      "description": "If <code>true</code>, the tree view renders a checkbox at the left of its label that allows selecting it."
+    },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
@@ -17,6 +20,9 @@
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
+    },
+    "experimentalFeatures": {
+      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
     },
     "getItemId": {
       "description": "Used to determine the id of a given item.",
@@ -36,8 +42,11 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "itemChildrenIndentation": {
+      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
     "multiSelect": {
-      "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
     "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",

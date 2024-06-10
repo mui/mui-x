@@ -2,7 +2,8 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
@@ -371,8 +372,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
 
   const now = useNow<TDate>(timezone);
   const classes = useUtilityClasses(props);
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -428,14 +428,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           event.preventDefault();
           break;
         case 'ArrowLeft': {
-          const newFocusedDayDefault = utils.addDays(day, isRTL ? 1 : -1);
-          const nextAvailableMonth = utils.addMonths(day, isRTL ? 1 : -1);
+          const newFocusedDayDefault = utils.addDays(day, isRtl ? 1 : -1);
+          const nextAvailableMonth = utils.addMonths(day, isRtl ? 1 : -1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate: isRTL ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
-            maxDate: isRTL ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            minDate: isRtl ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
+            maxDate: isRtl ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             isDateDisabled,
             timezone,
           });
@@ -444,14 +444,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           break;
         }
         case 'ArrowRight': {
-          const newFocusedDayDefault = utils.addDays(day, isRTL ? -1 : 1);
-          const nextAvailableMonth = utils.addMonths(day, isRTL ? -1 : 1);
+          const newFocusedDayDefault = utils.addDays(day, isRtl ? -1 : 1);
+          const nextAvailableMonth = utils.addMonths(day, isRtl ? -1 : 1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate: isRTL ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
-            maxDate: isRTL ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
+            minDate: isRtl ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            maxDate: isRtl ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
             isDateDisabled,
             timezone,
           });

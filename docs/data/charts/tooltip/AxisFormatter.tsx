@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const dataset = [
   { name: 'Austria', code: 'AT', gdp: 471 },

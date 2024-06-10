@@ -26,6 +26,10 @@ const apiPages: MuiPage[] = [
     title: 'BarElement',
   },
   {
+    pathname: '/x/api/charts/bar-label',
+    title: 'BarLabel',
+  },
+  {
     pathname: '/x/api/charts/bar-plot',
     title: 'BarPlot',
   },
@@ -84,6 +88,14 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-voronoi-handler',
     title: 'ChartsVoronoiHandler',
+  },
+  {
+    pathname: '/x/api/charts/charts-x-axis',
+    title: 'ChartsXAxis',
+  },
+  {
+    pathname: '/x/api/charts/charts-y-axis',
+    title: 'ChartsYAxis',
   },
   {
     pathname: '/x/api/charts/default-charts-axis-tooltip-content',

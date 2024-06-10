@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui-internal/test-utils';
+import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {

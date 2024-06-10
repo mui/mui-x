@@ -10,7 +10,10 @@ export type PieValueType = {
    */
   id: PieItemId;
   value: number;
-  label?: string;
+  /**
+   * The label to display on the tooltip, arc, or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend' | 'arc') => string);
   color?: string;
 };
 
@@ -19,9 +22,9 @@ export type DefaultizedPieValueType = PieValueType &
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
-export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Tdata> {
+export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData> {
   type: 'pie';
-  data: Tdata[];
+  data: TData[];
   /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -72,7 +75,11 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   /**
    * The label displayed into the arc.
    */
-  arcLabel?: 'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) => string);
+  arcLabel?:
+    | 'formattedValue'
+    | 'label'
+    | 'value'
+    | ((item: Omit<DefaultizedPieValueType, 'label'> & { label?: string }) => string);
   /**
    * The minimal angle required to display the arc label.
    * @default 0

@@ -5,7 +5,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function DisabledJSXItem() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 320, minWidth: 250 }}>
       <SimpleTreeView>
         <TreeItem itemId="grid" label="Data Grid">
           <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
@@ -17,14 +17,10 @@ export default function DisabledJSXItem() {
           <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
         </TreeItem>
         <TreeItem itemId="charts" label="Charts">
-          <TreeItem itemId="charts-community" label="@mui/x-charts" />
+          <TreeItem itemId="charts-community" label="@mui/x-charts" disabled />
         </TreeItem>
-        <TreeItem itemId="tree-view" label="Tree View">
+        <TreeItem itemId="tree-view" label="Tree View" disabled>
           <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
-          <TreeItem itemId="tree-view-pro" label="@mui/x-tree-view-pro" disabled />
-        </TreeItem>
-        <TreeItem itemId="scheduler" label="Scheduler" disabled>
-          <TreeItem itemId="scheduler-community" label="@mui/x-scheduler" />
         </TreeItem>
       </SimpleTreeView>
     </Box>

@@ -1,33 +1,33 @@
 import * as React from 'react';
 import {
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
-  TreeViewPlugin,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
+  TreeViewAnyPluginSignature,
+  TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
 } from '../models';
 import { UseTreeViewBaseParameters } from '../useTreeView/useTreeView.types';
 
 export const extractPluginParamsFromProps = <
-  TPlugins extends readonly TreeViewPlugin<any>[],
-  TSlots extends MergePluginsProperty<TPlugins, 'slots'>,
-  TSlotProps extends MergePluginsProperty<TPlugins, 'slotProps'>,
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TSlots extends MergeSignaturesProperty<TSignatures, 'slots'>,
+  TSlotProps extends MergeSignaturesProperty<TSignatures, 'slotProps'>,
   TProps extends {
     slots?: TSlots;
     slotProps?: TSlotProps;
-    apiRef?: React.MutableRefObject<
-      TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>> | undefined
-    >;
+    apiRef?: React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined>;
+    experimentalFeatures?: TreeViewExperimentalFeatures<TSignatures>;
   },
 >({
-  props: { slots, slotProps, apiRef, ...props },
+  props: { slots, slotProps, apiRef, experimentalFeatures, ...props },
   plugins,
   rootRef,
 }: {
   props: TProps;
-  plugins: TPlugins;
+  plugins: ConvertSignaturesIntoPlugins<TSignatures>;
   rootRef?: React.Ref<HTMLUListElement>;
 }) => {
-  type PluginParams = MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+  type PluginParams = MergeSignaturesProperty<TSignatures, 'params'>;
 
   const paramsLookup = {} as Record<keyof PluginParams, true>;
   plugins.forEach((plugin) => {
@@ -39,8 +39,9 @@ export const extractPluginParamsFromProps = <
     rootRef,
     slots: slots ?? {},
     slotProps: slotProps ?? {},
+    experimentalFeatures: experimentalFeatures ?? {},
     apiRef,
-  } as UseTreeViewBaseParameters<TPlugins> & PluginParams;
+  } as UseTreeViewBaseParameters<TSignatures> & PluginParams;
   const otherProps = {} as Omit<TProps, keyof PluginParams>;
 
   Object.keys(props).forEach((propName) => {

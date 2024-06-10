@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { ScaleLinear } from 'd3-scale';
 import { styled } from '@mui/material/styles';
-import {
-  ResponsiveChartContainer,
-  LinePlot,
-  ChartsYAxis,
-  useDrawingArea,
-  useYScale,
-} from '@mui/x-charts';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { useDrawingArea, useYScale } from '@mui/x-charts/hooks';
 
 const StyledPath = styled('path')(({ theme }) => ({
   fill: 'none',

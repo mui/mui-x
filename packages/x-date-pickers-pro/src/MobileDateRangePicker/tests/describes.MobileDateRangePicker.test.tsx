@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, fireDiscreteEvent } from '@mui-internal/test-utils';
+import { screen, userEvent, fireDiscreteEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,

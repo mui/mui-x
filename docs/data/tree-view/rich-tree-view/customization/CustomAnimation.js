@@ -1,36 +1,38 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 import { useSpring, animated } from '@react-spring/web';
 
-const ITEMS = [
+const MUI_X_PRODUCTS = [
   {
-    id: '1',
-    label: 'Main',
+    id: 'grid',
+    label: 'Data Grid',
     children: [
-      { id: '2', label: 'Hello' },
-      {
-        id: '3',
-        label: 'Subtree with children',
-        children: [
-          { id: '6', label: 'Hello' },
-          {
-            id: '7',
-            label: 'Sub-subtree with children',
-            children: [
-              { id: '9', label: 'Child 1' },
-              { id: '10', label: 'Child 2' },
-              { id: '11', label: 'Child 3' },
-            ],
-          },
-          { id: '8', label: 'Hello' },
-        ],
-      },
-      { id: '4', label: 'World' },
-      { id: '5', label: 'Something something' },
+      { id: 'grid-community', label: '@mui/x-data-grid' },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
     ],
+  },
+  {
+    id: 'pickers',
+    label: 'Date and Time Pickers',
+    children: [
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
+    ],
+  },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
@@ -51,12 +53,12 @@ function TransitionComponent(props) {
 
 export default function CustomAnimation() {
   return (
-    <RichTreeView
-      aria-label="customized"
-      defaultExpandedItems={['1']}
-      sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
-      slotProps={{ item: { slots: { groupTransition: TransitionComponent } } }}
-      items={ITEMS}
-    />
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <RichTreeView
+        defaultExpandedItems={['grid']}
+        slotProps={{ item: { slots: { groupTransition: TransitionComponent } } }}
+        items={MUI_X_PRODUCTS}
+      />
+    </Box>
   );
 }
