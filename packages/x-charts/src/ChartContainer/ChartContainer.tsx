@@ -19,6 +19,7 @@ import { HighlightedProvider, HighlightedProviderProps } from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { usePluginsMerge } from './usePluginsMerge';
+import { ZoomProvider } from '../context/ZoomProvider';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
@@ -63,44 +64,46 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
+    <ZoomProvider>
+      <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
+        <ColorProvider colorProcessors={colorProcessors}>
+          <SeriesContextProvider
+            series={series}
+            colors={colors}
             dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
+            seriesFormatters={seriesFormatters}
           >
-            <InteractionProvider>
-              <HighlightedProvider
-                highlightedItem={highlightedItem}
-                onHighlightChange={onHighlightChange}
-              >
-                <ChartsSurface
-                  width={width}
-                  height={height}
-                  ref={handleRef}
-                  sx={sx}
-                  title={title}
-                  desc={desc}
-                  disableAxisListener={disableAxisListener}
+            <CartesianContextProvider
+              xAxis={xAxis}
+              yAxis={yAxis}
+              dataset={dataset}
+              xExtremumGetters={xExtremumGetters}
+              yExtremumGetters={yExtremumGetters}
+            >
+              <InteractionProvider>
+                <HighlightedProvider
+                  highlightedItem={highlightedItem}
+                  onHighlightChange={onHighlightChange}
                 >
-                  <ChartsAxesGradients />
-                  {children}
-                </ChartsSurface>
-              </HighlightedProvider>
-            </InteractionProvider>
-          </CartesianContextProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
-    </DrawingProvider>
+                  <ChartsSurface
+                    width={width}
+                    height={height}
+                    ref={handleRef}
+                    sx={sx}
+                    title={title}
+                    desc={desc}
+                    disableAxisListener={disableAxisListener}
+                  >
+                    <ChartsAxesGradients />
+                    {children}
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </CartesianContextProvider>
+          </SeriesContextProvider>
+        </ColorProvider>
+      </DrawingProvider>
+    </ZoomProvider>
   );
 });
 

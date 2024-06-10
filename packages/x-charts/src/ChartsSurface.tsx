@@ -2,6 +2,7 @@ import { styled, SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useAxisEvents } from './hooks/useAxisEvents';
+import { useSetupZoom } from './context/ZoomProvider';
 
 type ViewBox = {
   x?: number;
@@ -55,6 +56,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
   useAxisEvents(disableAxisListener);
+  useSetupZoom();
 
   return (
     <ChartChartsSurfaceStyles
