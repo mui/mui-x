@@ -10,7 +10,7 @@ The default pagination behavior depends on your plan:
 - For the Pro and Premium Data Grid, pagination is disabled by default; use the `pagination` prop to enable it.
 
 :::info
-Exported CSV and Excel files include all data and disregard pagination by default. 
+Exported CSV and Excel files include all data and disregard pagination by default.
 To apply pagination to exported files, review the available [row selectors](/x/react-data-grid/export/#exported-rows).
 :::
 
