@@ -79,23 +79,17 @@ export interface GridDataSource {
 
 export interface GridDataSourceCache {
   /**
-   * Provide a key for the cache to be used in `set` and `get`
-   * @param {GridGetRowsParams} params The parameters required to fetch the rows
-   * @returns {any} The key for the cache to be used in `set` and `get`
-   */
-  getKey: (params: GridGetRowsParams) => any;
-  /**
    * Set the cache entry for the given key
-   * @param {any} key The key for the cache
+   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`
    * @param {GridGetRowsResponse} value The value to be stored in the cache
    */
-  set: (key: any, value: GridGetRowsResponse) => void;
+  set: (key: GridGetRowsParams, value: GridGetRowsResponse) => void;
   /**
    * Get the cache entry for the given key
-   * @param {any} key The key for the cache
+   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`
    * @returns {GridGetRowsResponse} The value stored in the cache
    */
-  get: (key: any) => GridGetRowsResponse | undefined;
+  get: (key: GridGetRowsParams) => GridGetRowsResponse | undefined;
   /**
    * Clear the cache
    */

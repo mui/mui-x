@@ -183,7 +183,7 @@ The `GridDataSourceDefaultCache` is used by default which is a simple in-memory 
 
 ### Customize the cache lifetime
 
-The `GridDataSourceDefaultCache` has a default Time To Live (`ttl`) of 5 minutes. You can customize this by passing the `ttl` option in milliseconds to the `GridDataSourceDefaultCache` constructor, and then passing it to the `unstable_dataSourceCache` prop.
+The `GridDataSourceDefaultCache` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceDefaultCache` constructor, and then pass it as the `unstable_dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceDefaultCache } from '@mui/x-data-grid-pro';
@@ -205,10 +205,10 @@ To provide a custom cache, use `unstable_dataSourceCache` prop, which could be e
 
 ```tsx
 export interface GridDataSourceCache {
-  getKey: (params: GridGetRowsParams) => any;
-  set: (key: any, value: GridGetRowsResponse) => void;
-  get: (key: any) => GridGetRowsResponse | undefined;
+  set: (key: GridGetRowsParams, value: GridGetRowsResponse) => void;
+  get: (key: GridGetRowsParams) => GridGetRowsResponse | undefined;
   clear: () => void;
+}
 ```
 
 The following demo uses cache used by a popular library [`swr`](https://github.com/vercel/swr) to cache the server-side data.
@@ -249,7 +249,7 @@ The first argument of this function is the error object, and the second argument
 
 ## Updating data 🚧
 
-This feature is yet to be implemented, when completed, the method `dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row. It will work in a similar way as the `processRowUpdate` prop.
+This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row. It will work in a similar way as the `processRowUpdate` prop.
 
 Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
 

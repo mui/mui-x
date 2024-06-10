@@ -12,23 +12,26 @@ const queryClient = new QueryClient({
   },
 });
 
+function getKey(params) {
+  return [
+    params.paginationModel,
+    params.sortModel,
+    params.filterModel,
+    params.groupKeys,
+  ];
+}
+
 const cache = {
   set: (key, value) => {
-    queryClient.setQueryData(key, value);
+    const queryKey = getKey(key);
+    queryClient.setQueryData(queryKey, value);
   },
   get: (key) => {
-    return queryClient.getQueryData(key);
+    const queryKey = getKey(key);
+    return queryClient.getQueryData(queryKey);
   },
   clear: () => {
     queryClient.clear();
-  },
-  getKey: (params) => {
-    return [
-      params.paginationModel,
-      params.sortModel,
-      params.filterModel,
-      params.groupKeys,
-    ];
   },
 };
 

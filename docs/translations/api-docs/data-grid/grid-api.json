@@ -6,7 +6,6 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
-    "clearCache": { "description": "Clear the cache" },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
@@ -27,7 +26,6 @@
     },
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
-    "getCacheData": { "description": "Get data from the cache" },
     "getCellElement": {
       "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>."
     },
@@ -149,7 +147,6 @@
     "setAggregationModel": {
       "description": "Sets the aggregation model to the one given by <code>model</code>."
     },
-    "setCacheData": { "description": "Set data in the cache" },
     "setCellFocus": {
       "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>."
     },
@@ -250,6 +247,7 @@
     },
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
+    "unstable_dataSourceCache": { "description": "Data source cache object." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },

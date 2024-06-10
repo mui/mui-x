@@ -69,7 +69,7 @@ export const useGridDataSource = (
 
     const fetchParams = gridGetRowsParamsSelector(privateApiRef);
 
-    const cachedData = privateApiRef.current.getCacheData(fetchParams);
+    const cachedData = privateApiRef.current.unstable_dataSourceCache?.get(fetchParams);
 
     if (cachedData != null) {
       const rows = cachedData.rows;
@@ -88,7 +88,7 @@ export const useGridDataSource = (
 
     try {
       const getRowsResponse = await getRows(fetchParams);
-      privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
+      privateApiRef.current.unstable_dataSourceCache?.set(fetchParams, getRowsResponse);
       if (getRowsResponse.rowCount) {
         privateApiRef.current.setRowCount(getRowsResponse.rowCount);
       }
@@ -130,7 +130,7 @@ export const useGridDataSource = (
 
       const fetchParams = { ...gridGetRowsParamsSelector(privateApiRef), groupKeys: rowNode.path };
 
-      const cachedData = privateApiRef.current.getCacheData(fetchParams);
+      const cachedData = privateApiRef.current.unstable_dataSourceCache?.get(fetchParams);
 
       const isLoading = gridDataSourceLoadingSelector(privateApiRef)[id] ?? false;
       if (cachedData != null) {
@@ -170,7 +170,7 @@ export const useGridDataSource = (
           return;
         }
         nestedDataManager.setRequestSettled(id);
-        privateApiRef.current.setCacheData(fetchParams, getRowsResponse);
+        privateApiRef.current.unstable_dataSourceCache?.set(fetchParams, getRowsResponse);
         if (getRowsResponse.rowCount) {
           privateApiRef.current.setRowCount(getRowsResponse.rowCount);
         }
@@ -267,7 +267,7 @@ export const useGridDataSource = (
    */
   React.useEffect(() => {
     if (props.unstable_dataSource) {
-      privateApiRef.current.clearCache();
+      privateApiRef.current.unstable_dataSourceCache?.clear();
       privateApiRef.current.fetchTopLevelRows();
     }
   }, [privateApiRef, props.unstable_dataSource]);

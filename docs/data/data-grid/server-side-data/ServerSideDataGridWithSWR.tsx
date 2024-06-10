@@ -43,12 +43,13 @@ function ServerSideDataGridWithSWR() {
 
   const cache = React.useMemo(
     () => ({
-      getKey: (params: GridGetRowsParams) => JSON.stringify(params),
-      set: (key: unknown, value: GridGetRowsResponse) => {
-        swrCache.set(key as string, { data: value });
+      set: (key: GridGetRowsParams, value: GridGetRowsResponse) => {
+        const keyString = JSON.stringify(key);
+        swrCache.set(keyString, { data: value });
       },
-      get: (key: unknown) => {
-        return swrCache.get(key as string)?.data;
+      get: (key: GridGetRowsParams) => {
+        const keyString = JSON.stringify(key);
+        return swrCache.get(keyString)?.data;
       },
       clear: () => {
         const keys = swrCache.keys();

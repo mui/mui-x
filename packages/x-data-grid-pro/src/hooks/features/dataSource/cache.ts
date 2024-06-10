@@ -9,6 +9,15 @@ type GridDataSourceDefaultCacheConfig = {
   ttl?: number;
 };
 
+function getKey(params: GridGetRowsParams) {
+  return JSON.stringify([
+    params.paginationModel,
+    params.filterModel,
+    params.sortModel,
+    params.groupKeys,
+  ]);
+}
+
 export class GridDataSourceDefaultCache {
   private cache: Record<string, { value: GridGetRowsResponse; expiry: number }>;
 
@@ -19,28 +28,20 @@ export class GridDataSourceDefaultCache {
     this.ttl = ttl;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getKey(params: GridGetRowsParams) {
-    return JSON.stringify([
-      params.paginationModel,
-      params.filterModel,
-      params.sortModel,
-      params.groupKeys,
-    ]);
-  }
-
-  set(key: string, value: GridGetRowsResponse) {
+  set(key: GridGetRowsParams, value: GridGetRowsResponse) {
+    const keyString = getKey(key);
     const expiry = Date.now() + this.ttl;
-    this.cache[key] = { value, expiry };
+    this.cache[keyString] = { value, expiry };
   }
 
-  get(key: string): GridGetRowsResponse | undefined {
-    const entry = this.cache[key];
+  get(key: GridGetRowsParams): GridGetRowsResponse | undefined {
+    const keyString = getKey(key);
+    const entry = this.cache[keyString];
     if (!entry) {
       return undefined;
     }
     if (Date.now() > entry.expiry) {
-      delete this.cache[key];
+      delete this.cache[keyString];
       return undefined;
     }
     return entry.value;

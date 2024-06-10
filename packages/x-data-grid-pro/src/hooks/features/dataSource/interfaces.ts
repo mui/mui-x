@@ -1,5 +1,5 @@
 import { GridRowId } from '@mui/x-data-grid';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { GridDataSourceCache } from '../../../models';
 
 export interface GridDataSourceInternalCache {
   groupKeys: any[];
@@ -54,19 +54,7 @@ export interface GridDataSourcePrivateApi {
  */
 export interface GridDataSourceCacheApi {
   /**
-   * Get data from the cache
-   * @param {GridGetRowsParams} params The params of type `GridGetRowsParams`.
-   * @returns {GridGetRowsResponse | undefined} The data of type `GridGetRowsResponse` or `undefined` for cache miss.
+   * Data source cache object.
    */
-  getCacheData: (params: GridGetRowsParams) => GridGetRowsResponse | undefined;
-  /**
-   * Set data in the cache
-   * @param {GridGetRowsParams} params The params of type [[GridGetRowsParams]].
-   * @param {GridGetRowsResponse} data The data of type [[GridGetRowsResponse]].
-   */
-  setCacheData: (params: GridGetRowsParams, data: GridGetRowsResponse) => void;
-  /**
-   * Clear the cache
-   */
-  clearCache: () => void;
+  unstable_dataSourceCache: GridDataSourceCache | null;
 }

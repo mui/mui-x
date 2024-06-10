@@ -1053,7 +1053,6 @@ DataGridPremiumRaw.propTypes = {
   unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
-    getKey: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
   unstable_onDataSourceError: PropTypes.func,

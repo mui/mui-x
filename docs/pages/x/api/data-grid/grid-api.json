@@ -19,11 +19,6 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
-    "clearCache": {
-      "type": { "description": "() =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
@@ -57,13 +52,6 @@
       "required": true
     },
     "getAllRowIds": { "type": { "description": "() =&gt; GridRowId[]" }, "required": true },
-    "getCacheData": {
-      "type": {
-        "description": "(params: GridGetRowsParams) =&gt; GridGetRowsResponse | undefined"
-      },
-      "required": true,
-      "isProPlan": true
-    },
     "getCellElement": {
       "type": { "description": "(id: GridRowId, field: string) =&gt; HTMLDivElement | null" },
       "required": true
@@ -307,13 +295,6 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "setCacheData": {
-      "type": {
-        "description": "(params: GridGetRowsParams, data: GridGetRowsResponse) =&gt; void"
-      },
-      "required": true,
-      "isProPlan": true
-    },
     "setCellFocus": {
       "type": { "description": "(id: GridRowId, field: string) =&gt; void" },
       "required": true
@@ -497,6 +478,11 @@
     },
     "unpinColumn": {
       "type": { "description": "(field: string) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_dataSourceCache": {
+      "type": { "description": "GridDataSourceCache | null" },
       "required": true,
       "isProPlan": true
     },

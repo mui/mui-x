@@ -3,4 +3,5 @@ export * from './useBasicDemoData';
 export * from './useMovieData';
 export * from './useQuery';
 export * from './useMockServer';
-export { loadServerRows, QueryOptions } from './serverUtils';
+export { loadServerRows } from './serverUtils';
+export type { QueryOptions } from './serverUtils';

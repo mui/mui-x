@@ -6,6 +6,7 @@ import {
   GridToolbar,
   GridDataSourceCache,
   GridDataSource,
+  GridGetRowsParams,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
@@ -19,23 +20,26 @@ const queryClient = new QueryClient({
   },
 });
 
+function getKey(params: GridGetRowsParams) {
+  return [
+    params.paginationModel,
+    params.sortModel,
+    params.filterModel,
+    params.groupKeys,
+  ];
+}
+
 const cache: GridDataSourceCache = {
-  set: (key: any[], value) => {
-    queryClient.setQueryData(key, value);
+  set: (key: GridGetRowsParams, value) => {
+    const queryKey = getKey(key);
+    queryClient.setQueryData(queryKey, value);
   },
-  get: (key: any[]) => {
-    return queryClient.getQueryData(key);
+  get: (key: GridGetRowsParams) => {
+    const queryKey = getKey(key);
+    return queryClient.getQueryData(queryKey);
   },
   clear: () => {
     queryClient.clear();
-  },
-  getKey: (params) => {
-    return [
-      params.paginationModel,
-      params.sortModel,
-      params.filterModel,
-      params.groupKeys,
-    ];
   },
 };
 
