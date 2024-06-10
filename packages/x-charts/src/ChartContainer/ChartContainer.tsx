@@ -20,6 +20,7 @@ import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { usePluginsMerge } from './usePluginsMerge';
 import { ZoomProvider } from '../context/ZoomProvider';
+import { CartesianContextProviderPro } from '../context/CartesianProvider/CartesianProviderPro';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
@@ -74,33 +75,41 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
             dataset={dataset}
             seriesFormatters={seriesFormatters}
           >
-            <CartesianContextProvider
+            <CartesianContextProviderPro
               xAxis={xAxis}
               yAxis={yAxis}
               dataset={dataset}
               xExtremumGetters={xExtremumGetters}
               yExtremumGetters={yExtremumGetters}
             >
-              <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
+              <CartesianContextProvider
+                xAxis={xAxis}
+                yAxis={yAxis}
+                dataset={dataset}
+                xExtremumGetters={xExtremumGetters}
+                yExtremumGetters={yExtremumGetters}
+              >
+                <InteractionProvider>
+                  <HighlightedProvider
+                    highlightedItem={highlightedItem}
+                    onHighlightChange={onHighlightChange}
                   >
-                    <ChartsAxesGradients />
-                    {children}
-                  </ChartsSurface>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </CartesianContextProvider>
+                    <ChartsSurface
+                      width={width}
+                      height={height}
+                      ref={handleRef}
+                      sx={sx}
+                      title={title}
+                      desc={desc}
+                      disableAxisListener={disableAxisListener}
+                    >
+                      <ChartsAxesGradients />
+                      {children}
+                    </ChartsSurface>
+                  </HighlightedProvider>
+                </InteractionProvider>
+              </CartesianContextProvider>
+            </CartesianContextProviderPro>
           </SeriesContextProvider>
         </ColorProvider>
       </DrawingProvider>
