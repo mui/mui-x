@@ -1284,6 +1284,9 @@ importers:
       '@mui/utils':
         specifier: ^5.15.14
         version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
+      '@mui/x-telemetry':
+        specifier: workspace:*
+        version: link:../x-telemetry/build
       react:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0
@@ -1291,6 +1294,41 @@ importers:
       '@mui/internal-test-utils':
         specifier: 1.0.0
         version: 1.0.0(@babel/core@7.24.6)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.7
+    publishDirectory: build
+
+  packages/x-telemetry:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.6
+        version: 7.24.6
+      '@mui/utils':
+        specifier: ^5.15.14
+        version: 5.15.14(@types/react@18.2.60)(react@18.2.0)
+      react:
+        specifier: ^17.0.0 || ^18.0.0
+        version: 18.2.0
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 1.0.0
+        version: 1.0.0(@babel/core@7.24.6)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      ci-info:
+        specifier: 4.0.0
+        version: 4.0.0
+      conf:
+        specifier: 5.0.0
+        version: 5.0.0
+      is-docker:
+        specifier: 3.0.0
+        version: 3.0.0
+      node-machine-id:
+        specifier: 1.1.12
+        version: 1.1.12
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -7306,6 +7344,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /ci-info@4.0.0:
+    resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
+    engines: {node: '>=8'}
+    dev: true
+
   /class-utils@0.3.6:
     resolution: {integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==}
     engines: {node: '>=0.10.0'}
@@ -7612,6 +7655,19 @@ packages:
       supports-color: 8.1.1
       tree-kill: 1.2.2
       yargs: 17.7.2
+    dev: true
+
+  /conf@5.0.0:
+    resolution: {integrity: sha512-lRNyt+iRD4plYaOSVTxu1zPWpaH0EOxgFIR1l3mpC/DGZ7XzhoGFMKmbl54LAgXcSu6knqWgOwdINkqm58N85A==}
+    engines: {node: '>=8'}
+    dependencies:
+      ajv: 6.12.6
+      dot-prop: 5.3.0
+      env-paths: 2.2.1
+      json-schema-typed: 7.0.3
+      make-dir: 3.1.0
+      pkg-up: 3.1.0
+      write-file-atomic: 3.0.3
     dev: true
 
   /confusing-browser-globals@1.0.11:
@@ -10922,6 +10978,12 @@ packages:
     hasBin: true
     dev: true
 
+  /is-docker@3.0.0:
+    resolution: {integrity: sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    hasBin: true
+    dev: true
+
   /is-electron@2.2.2:
     resolution: {integrity: sha512-FO/Rhvz5tuw4MCWkpMzHFKWD2LsfHzIb7i6MdPYZ/KW7AlxawyLkqdy+jPZP1WubqEADE3O4FUENlJHDfQASRg==}
     dev: true
@@ -11510,6 +11572,10 @@ packages:
 
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
+    dev: true
+
+  /json-schema-typed@7.0.3:
+    resolution: {integrity: sha512-7DE8mpG+/fVw+dTpjbxnx47TaMnDfOI1jwft9g1VybltZCduyRQPJPvc+zzKY9WPHxhPWczyFuYa6I8Mw4iU5A==}
     dev: true
 
   /json-stable-stringify-without-jsonify@1.0.1:
