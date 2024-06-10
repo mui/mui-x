@@ -42,7 +42,7 @@ export interface SparkLineChartSlotProps
 export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'margin' | 'plugins'> {
   /**
-   * The xAxis configuration. 
+   * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>;

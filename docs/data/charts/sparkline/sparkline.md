@@ -35,6 +35,8 @@ If you need more advanced customization, you can provide custom props for `toolt
 
 ## Axis management
 
+### X-axis data
+
 By default, the sparkline assigns `xAxis` values as an ascending integer sequence starting from 0 (0, 1, 2,...). These values are, in this case, hidden in the tooltip.
 You can override this behavior if your data are not evenly distributed, or if you need to label them.
 
@@ -47,3 +49,11 @@ Whereas most of the other charts expect an array of axis configuration objects.
 ```
 
 {{"demo": "CustomAxis.js"}}
+
+### Y-axis range
+
+You can fix the y-range of the sparkline by providing `min`/`max` values to the `yAxis` configuration.
+
+The following demo shows two sparklines with small and large values, on the first row with the default y-range, and with fixed range on the second row.
+
+{{"demo": "CustomYAxis.js"}}
