@@ -11,6 +11,7 @@
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
+    "onKeyDown": { "type": { "name": "func" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -41,7 +42,7 @@
     },
     {
       "name": "groupTransition",
-      "description": "The component that animates to appearance / disappearance of the item's children.",
+      "description": "The component that animates the appearance / disappearance of the item's children.",
       "default": "TreeItem2Group",
       "class": "MuiTreeItem-groupTransition"
     }

@@ -7,8 +7,12 @@
     "id": { "description": "The id attribute of the item. If not provided, it will be generated." },
     "itemId": { "description": "The id of the item. Must be unique." },
     "label": { "description": "The label of the item." },
+    "onBlur": { "description": "Callback fired when the item root is blurred." },
     "onFocus": {
-      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
+      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor an item&#39;s focus."
+    },
+    "onKeyDown": {
+      "description": "Callback fired when a key is pressed on the keyboard and the tree is in focus."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
