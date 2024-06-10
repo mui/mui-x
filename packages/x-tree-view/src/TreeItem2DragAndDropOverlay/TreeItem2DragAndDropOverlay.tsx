@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { TreeItem2DragAndDropOverlayProps } from './TreeItem2DragAndDropOverlay.types';
 import { TreeViewItemsReorderingAction } from '../models';
+import { styled } from '../internals/zero-styled';
 
 const TreeItem2DragAndDropOverlayRoot = styled('div', {
   name: 'MuiTreeItem2DragAndDropOverlay',
