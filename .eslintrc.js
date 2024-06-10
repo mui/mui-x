@@ -1,6 +1,36 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+// Enable React Compiler Plugin rules globally
+const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
+
+// Enable React Compiler Plugin rules per package
+const ENABLE_REACT_COMPILER_PLUGIN_CHARTS =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_CHARTS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? false;
+
+const isAnyReactCompilerPluginEnabled =
+  ENABLE_REACT_COMPILER_PLUGIN ||
+  ENABLE_REACT_COMPILER_PLUGIN_CHARTS ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ||
+  ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW;
+
+const addReactCompilerRule = (packagesNames, isEnabled) =>
+  !isEnabled
+    ? []
+    : packagesNames.map((packageName) => ({
+        files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
+        rules: {
+          'react-compiler/react-compiler': 'error',
+        },
+      }));
+
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
@@ -89,7 +119,11 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'eslint-plugin-jsdoc'],
+  plugins: [
+    ...baseline.plugins,
+    'eslint-plugin-jsdoc',
+    ...(isAnyReactCompilerPluginEnabled ? ['eslint-plugin-react-compiler'] : []),
+  ],
   settings: {
     'import/resolver': {
       webpack: {
@@ -103,6 +137,7 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
+    ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
@@ -222,5 +257,19 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+
+    ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(
+      ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
+    ...addReactCompilerRule(
+      ['x-date-pickers', 'x-date-pickers-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+    ),
+    ...addReactCompilerRule(
+      ['x-tree-view', 'x-tree-view-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+    ),
   ],
 };
