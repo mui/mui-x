@@ -2,8 +2,24 @@ import * as React from 'react';
 import { useSvgRef } from '../../hooks';
 import { useZoom } from './useZoom';
 
+const zoomAtPoint = (point: number, scale: number, currentRange: [number, number]) => {
+  const [minRange, maxRange] = currentRange;
+
+  // m = minRange, M = maxRange, z = scale, P = point
+  // [(m+(z−1)P)/z,((z−1)P+M)/z]
+  const newMinRange = Math.max(0, (minRange + (scale - 1) * (point - minRange)) / scale);
+  const newMaxRange = Math.min(100, ((point - maxRange) * (scale - 1) + maxRange) / scale);
+
+  return [newMinRange, newMaxRange];
+};
+
+const centerOfRange = (range: [number, number]) => {
+  const [min, max] = range;
+  return (max - min) / 2;
+};
+
 export const useSetupZoom = () => {
-  const { scaleX, setScaleX } = useZoom();
+  const { zoomRange, setZoomRange } = useZoom();
 
   const svgRef = useSvgRef();
 
@@ -21,14 +37,22 @@ export const useSetupZoom = () => {
 
       const { deltaY } = event;
 
-      const scale = deltaY < 0 ? 0.99 : 1.01;
+      // TODO: make step a config option.
+      const scale = deltaY < 0 ? 0.995 : 1.005;
 
-      const maxScale = 10;
-      const minScale = 1;
+      const centerPoint = centerOfRange(zoomRange);
 
-      const newZoom = Math.min(Math.max(scaleX * scale, minScale), maxScale);
+      // TODO: zoom at cursor position.
+      const [newMinRange, newMaxRange] = zoomAtPoint(centerPoint, scale, zoomRange);
 
-      setScaleX(newZoom);
+      const newSpanPercent = newMaxRange - newMinRange;
+
+      // TODO: make span a config option.
+      if (newSpanPercent < 10) {
+        return;
+      }
+
+      setZoomRange([newMinRange, newMaxRange]);
     };
 
     element.addEventListener('wheel', handleZoom);
@@ -36,5 +60,5 @@ export const useSetupZoom = () => {
     return () => {
       element.removeEventListener('wheel', handleZoom);
     };
-  }, [svgRef, scaleX, setScaleX]);
+  }, [svgRef, setZoomRange, zoomRange]);
 };

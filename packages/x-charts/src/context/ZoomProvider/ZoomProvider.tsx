@@ -16,20 +16,17 @@ export function ZoomProvider({ children }: ZoomProviderProps) {
 }
 
 function ZoomProviderReal({ children }: ZoomProviderProps) {
-  const [scaleX, setScaleX] = React.useState(1);
-  const [scaleY, setScaleY] = React.useState(1);
+  const [zoomRange, setZoomRange] = React.useState<[number, number]>([0, 100]);
 
   const value = React.useMemo(
     () => ({
       isInitialized: true,
       data: {
-        scaleX,
-        scaleY,
-        setScaleX,
-        setScaleY,
+        zoomRange,
+        setZoomRange,
       },
     }),
-    [scaleX, scaleY, setScaleX, setScaleY],
+    [zoomRange, setZoomRange],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;

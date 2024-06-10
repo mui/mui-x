@@ -18,12 +18,35 @@ function CartesianContextProviderPro(props: CartesianContextProviderProps) {
   return <CartesianContextProviderReal {...props} />;
 }
 
-const calculateZoom = (value: number | null, zoom: number) => {
-  if (value === null) {
-    return null;
-  }
+const calculateZoom = (
+  data: [number | null, number | null],
+  zoom: [number, number],
+): [number | null, number | null] => {
+  const [min, max] = data;
+  const [minZoom, maxZoom] = zoom;
 
-  return value / zoom;
+  if (min === null || max === null || !Number.isFinite(min) || !Number.isFinite(max)) {
+    return [null, null];
+  }
+  const diff = max - min;
+  const newMin = min + (diff * minZoom) / 100;
+  const newMax = min + (diff * maxZoom) / 100;
+
+  return [newMin, newMax];
+};
+
+const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, number]) => {
+  return Object.fromEntries(
+    Object.entries(getters).map(([key, value]) => [
+      key,
+      (...getterProp: any[]) => {
+        // @ts-ignore
+        const data = value(...getterProp);
+        const result = calculateZoom(data, zoom);
+        return result;
+      },
+    ]),
+  );
 };
 
 function CartesianContextProviderReal(props: CartesianContextProviderProps) {
@@ -38,25 +61,11 @@ function CartesianContextProviderReal(props: CartesianContextProviderProps) {
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
-  const { scaleX } = useZoom();
+  const { zoomRange } = useZoom();
 
   const xAxis = React.useMemo(() => normalizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
 
   const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
-
-  const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: number) => {
-    return Object.fromEntries(
-      Object.entries(getters).map(([key, value]) => [
-        key,
-        (...getterProp: any[]) => {
-          // @ts-ignore
-          const [min, max] = value(...getterProp);
-          const result = [calculateZoom(min, zoom), calculateZoom(max, zoom)];
-          return result;
-        },
-      ]),
-    );
-  };
 
   const value = React.useMemo(
     () =>
@@ -65,10 +74,10 @@ function CartesianContextProviderReal(props: CartesianContextProviderProps) {
         formattedSeries,
         xAxis,
         yAxis,
-        zoomExtremumGetter(xExtremumGetters, scaleX),
+        zoomExtremumGetter(xExtremumGetters, zoomRange),
         yExtremumGetters,
       ),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, scaleX],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, zoomRange],
   );
 
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
