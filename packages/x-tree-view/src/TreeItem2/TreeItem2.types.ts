@@ -76,7 +76,7 @@ export interface TreeItem2Props
    */
   onBlur?: MuiCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
   /**
-   * Callback fired when a key of the keyboard is pressed on the item root.
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
    */
   onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
