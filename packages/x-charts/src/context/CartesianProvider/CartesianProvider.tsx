@@ -24,6 +24,7 @@ import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale'
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext, DefaultizedAxisConfig } from './CartesianContext';
 import { getScale } from '../../internals/getScale';
+import { normalizeAxis } from './normalizeAxis';
 
 export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
   [K in T]?: ExtremumGetter<K>;
@@ -72,41 +73,9 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
 
-  const xAxis = React.useMemo(
-    () =>
-      inXAxis?.map((axisConfig) => {
-        const dataKey = axisConfig.dataKey;
-        if (dataKey === undefined || axisConfig.data !== undefined) {
-          return axisConfig;
-        }
-        if (dataset === undefined) {
-          throw Error('MUI X Charts: x-axis uses `dataKey` but no `dataset` is provided.');
-        }
-        return {
-          ...axisConfig,
-          data: dataset.map((d) => d[dataKey]),
-        };
-      }),
-    [inXAxis, dataset],
-  );
+  const xAxis = React.useMemo(() => normalizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
 
-  const yAxis = React.useMemo(
-    () =>
-      inYAxis?.map((axisConfig) => {
-        const dataKey = axisConfig.dataKey;
-        if (dataKey === undefined || axisConfig.data !== undefined) {
-          return axisConfig;
-        }
-        if (dataset === undefined) {
-          throw Error('MUI X Charts: y-axis uses `dataKey` but no `dataset` is provided.');
-        }
-        return {
-          ...axisConfig,
-          data: dataset.map((d) => d[dataKey]),
-        };
-      }),
-    [inYAxis, dataset],
-  );
+  const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
 
   const value = React.useMemo(() => {
     const axisExtremumCallback = <T extends keyof typeof xExtremumGetters>(
