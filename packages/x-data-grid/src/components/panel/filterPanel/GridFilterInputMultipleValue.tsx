@@ -113,7 +113,6 @@ GridFilterInputMultipleValue.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  type: PropTypes.oneOf(['number', 'text', 'date', 'datetime-local']),
 } as any;
 
 export { GridFilterInputMultipleValue };
