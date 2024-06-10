@@ -3,6 +3,7 @@ import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
+  TreeViewPlugin,
 } from '../models';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 
@@ -26,7 +27,7 @@ export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPlugin
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
     const initialState: { [modelName: string]: any } = {};
 
-    plugins.forEach((plugin) => {
+    plugins.forEach((plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
       if (plugin.models) {
         Object.entries(plugin.models).forEach(([modelName, modelInitializer]) => {
           modelsRef.current[modelName] = {

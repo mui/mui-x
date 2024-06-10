@@ -348,10 +348,18 @@ TreeItem2.propTypes = {
    */
   label: PropTypes.node,
   /**
+   * Callback fired when the item root is blurred.
+   */
+  onBlur: PropTypes.func,
+  /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

@@ -49,9 +49,12 @@ export type SimpleTreeViewPluginSlotProps = MergeSignaturesProperty<
 >;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
-export interface SimpleTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
+export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
   extends UseTreeViewIdParameters,
-    Omit<UseTreeViewItemsParameters<R>, 'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'>,
+    Omit<
+      UseTreeViewItemsParameters<any>,
+      'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+    >,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,

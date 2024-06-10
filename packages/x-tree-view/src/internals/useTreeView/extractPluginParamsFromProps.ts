@@ -2,6 +2,7 @@ import {
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
+  TreeViewPlugin,
   TreeViewPluginSignature,
 } from '../models';
 import { UseTreeViewBaseProps } from './useTreeView.types';
@@ -53,13 +54,16 @@ export const extractPluginParamsFromProps = <
     }
   });
 
-  const defaultizedPluginParams = plugins.reduce((acc, plugin) => {
-    if (plugin.getDefaultizedParams) {
-      return plugin.getDefaultizedParams(acc);
-    }
+  const defaultizedPluginParams = plugins.reduce(
+    (acc, plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
+      if (plugin.getDefaultizedParams) {
+        return plugin.getDefaultizedParams(acc);
+      }
 
-    return acc;
-  }, pluginParams) as unknown as MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
+      return acc;
+    },
+    pluginParams,
+  ) as unknown as MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
 
   return {
     apiRef,

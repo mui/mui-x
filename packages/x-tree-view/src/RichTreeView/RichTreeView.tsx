@@ -29,7 +29,7 @@ export const RichTreeViewRoot = styled('ul', {
   name: 'MuiRichTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: RichTreeViewProps<any, any> }>({
+})({
   padding: 0,
   margin: 0,
   listStyle: 'none',
