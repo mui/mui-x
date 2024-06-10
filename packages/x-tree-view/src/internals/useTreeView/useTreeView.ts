@@ -5,11 +5,11 @@ import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeItemWrapper,
   TreeRootWrapper,
   TreeViewPublicAPI,
+  ConvertSignaturesIntoPlugins,
 } from '../models';
 import {
   UseTreeViewDefaultizedParameters,
@@ -18,8 +18,8 @@ import {
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
 import { useTreeViewModels } from './useTreeViewModels';
-import { TreeViewContextValue } from '../TreeViewProvider';
-import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+import { TreeViewContextValue, TreeViewItemPluginsRunner } from '../TreeViewProvider';
+import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T> | undefined,
@@ -36,36 +36,37 @@ export function useTreeViewApiInitialization<T>(
   return fallbackPublicApiRef.current;
 }
 
-export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
-  inParams: UseTreeViewParameters<Plugins>,
-): UseTreeViewReturnValue<ConvertPluginsIntoSignatures<Plugins>> => {
-  const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins];
-  type Signatures = ConvertPluginsIntoSignatures<typeof plugins>;
+export const useTreeView = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  inParams: UseTreeViewParameters<TSignatures>,
+): UseTreeViewReturnValue<TSignatures> => {
+  type TSignaturesWithCorePluginSignatures = readonly [
+    ...TreeViewCorePluginSignatures,
+    ...TSignatures,
+  ];
+  const plugins = [
+    ...TREE_VIEW_CORE_PLUGINS,
+    ...inParams.plugins,
+  ] as unknown as ConvertSignaturesIntoPlugins<TSignaturesWithCorePluginSignatures>;
 
   const params = plugins.reduce((acc, plugin) => {
     if (plugin.getDefaultizedParams) {
-      return plugin.getDefaultizedParams(acc);
+      return plugin.getDefaultizedParams(acc) as typeof acc;
     }
 
     return acc;
-  }, inParams) as unknown as UseTreeViewDefaultizedParameters<Plugins>;
+  }, inParams) as unknown as UseTreeViewDefaultizedParameters<TSignatures>;
 
-  const models = useTreeViewModels(
-    plugins,
-    params as MergePluginsProperty<Signatures, 'defaultizedParams'>,
-  );
-  const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
-    {} as TreeViewInstance<Signatures>,
-  );
-  const instance = instanceRef.current as TreeViewInstance<Signatures>;
+  const models = useTreeViewModels<TSignaturesWithCorePluginSignatures>(plugins, params);
+  const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
+  const instance = instanceRef.current as TreeViewInstance<TSignatures>;
 
-  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(inParams.apiRef);
 
   const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
   const [state, setState] = React.useState(() => {
-    const temp = {} as MergePluginsProperty<Signatures, 'state'>;
+    const temp = {} as MergeSignaturesProperty<TSignaturesWithCorePluginSignatures, 'state'>;
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
         Object.assign(
@@ -78,15 +79,72 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return temp;
   });
 
+  const itemWrappers = plugins
+    .map((plugin) => plugin.wrapItem)
+    .filter((wrapItem): wrapItem is TreeItemWrapper<any> => !!wrapItem);
+  const wrapItem: TreeItemWrapper<TSignatures> = ({ itemId, children }) => {
+    let finalChildren: React.ReactNode = children;
+    itemWrappers.forEach((itemWrapper) => {
+      finalChildren = itemWrapper({ itemId, children: finalChildren, instance });
+    });
+
+    return finalChildren;
+  };
+
+  const rootWrappers = plugins
+    .map((plugin) => plugin.wrapRoot)
+    .filter((wrapRoot): wrapRoot is TreeRootWrapper<any> => !!wrapRoot)
+    // The wrappers are reversed to ensure that the first wrapper is the outermost one.
+    .reverse();
+  const wrapRoot: TreeRootWrapper<TSignatures> = ({ children }) => {
+    let finalChildren: React.ReactNode = children;
+    rootWrappers.forEach((rootWrapper) => {
+      finalChildren = rootWrapper({ children: finalChildren, instance });
+    });
+
+    return finalChildren;
+  };
+
+  const runItemPlugins: TreeViewItemPluginsRunner = (itemPluginProps) => {
+    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
+    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
+
+    plugins.forEach((plugin) => {
+      if (!plugin.itemPlugin) {
+        return;
+      }
+
+      const itemPluginResponse = plugin.itemPlugin({
+        props: itemPluginProps,
+        rootRef: finalRootRef,
+        contentRef: finalContentRef,
+      });
+      if (itemPluginResponse?.rootRef) {
+        finalRootRef = itemPluginResponse.rootRef;
+      }
+      if (itemPluginResponse?.contentRef) {
+        finalContentRef = itemPluginResponse.contentRef;
+      }
+    });
+
+    return {
+      contentRef: finalContentRef,
+      rootRef: finalRootRef,
+    };
+  };
+
+  const contextValue = {
+    publicAPI,
+    wrapItem,
+    wrapRoot,
+    runItemPlugins,
+    instance: instance as TreeViewInstance<any>,
+    rootRef: innerRootRef,
+  } as TreeViewContextValue<TSignatures>;
+
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  const contextValue = {
-    publicAPI,
-    instance: instance as TreeViewInstance<any>,
-    rootRef: innerRootRef,
-  } as TreeViewContextValue<Signatures>;
-
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
@@ -119,61 +177,6 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   plugins.forEach(runPlugin);
 
-  contextValue.runItemPlugins = (itemPluginProps) => {
-    let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
-    let finalContentRef: React.RefCallback<HTMLElement> | null = null;
-
-    plugins.forEach((plugin) => {
-      if (!plugin.itemPlugin) {
-        return;
-      }
-
-      const itemPluginResponse = plugin.itemPlugin({
-        props: itemPluginProps,
-        rootRef: finalRootRef,
-        contentRef: finalContentRef,
-      });
-      if (itemPluginResponse?.rootRef) {
-        finalRootRef = itemPluginResponse.rootRef;
-      }
-      if (itemPluginResponse?.contentRef) {
-        finalContentRef = itemPluginResponse.contentRef;
-      }
-    });
-
-    return {
-      contentRef: finalContentRef,
-      rootRef: finalRootRef,
-    };
-  };
-
-  const itemWrappers = plugins
-    .map((plugin) => plugin.wrapItem)
-    .filter((wrapItem): wrapItem is TreeItemWrapper<any> => !!wrapItem);
-  contextValue.wrapItem = ({ itemId, children }) => {
-    let finalChildren: React.ReactNode = children;
-    itemWrappers.forEach((itemWrapper) => {
-      finalChildren = itemWrapper({ itemId, children: finalChildren, instance });
-    });
-
-    return finalChildren;
-  };
-
-  const rootWrappers = plugins
-    .map((plugin) => plugin.wrapRoot)
-    .filter((wrapRoot): wrapRoot is TreeRootWrapper<any> => !!wrapRoot)
-    // The wrappers are reversed to ensure that the first wrapper is the outermost one.
-    .reverse();
-
-  contextValue.wrapRoot = ({ children }) => {
-    let finalChildren: React.ReactNode = children;
-    rootWrappers.forEach((rootWrapper) => {
-      finalChildren = rootWrapper({ children: finalChildren, instance });
-    });
-
-    return finalChildren;
-  };
-
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,
   ) => {
@@ -193,7 +196,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   return {
     getRootProps,
     rootRef: handleRootRef,
-    contextValue: contextValue as any,
-    instance: instance as any,
+    contextValue,
+    instance,
   };
 };

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
-import { DefaultTreeViewPlugins } from '../internals';
+import { DefaultTreeViewPluginSignatures } from '../internals';
 
 /**
  * Hook that instantiates a [[TreeViewApiRef]].
  */
 export const useTreeViewApiRef = <
-  TPlugins extends readonly TreeViewAnyPluginSignature[] = DefaultTreeViewPlugins,
->() => React.useRef(undefined) as React.MutableRefObject<TreeViewPublicAPI<TPlugins> | undefined>;
+  TSignatures extends readonly TreeViewAnyPluginSignature[] = DefaultTreeViewPluginSignatures,
+>() =>
+  React.useRef(undefined) as React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined>;

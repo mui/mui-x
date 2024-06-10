@@ -8,8 +8,8 @@ import { TreeViewAnyPluginSignature } from '../models';
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<TPlugins extends readonly TreeViewAnyPluginSignature[]>(
-  props: TreeViewProviderProps<TPlugins>,
+export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  props: TreeViewProviderProps<TSignatures>,
 ) {
   const { value, children } = props;
 

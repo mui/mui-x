@@ -21,6 +21,7 @@ import {
   extractPluginParamsFromProps,
   useTreeView,
   TreeViewProvider,
+  ConvertPluginsIntoSignatures,
 } from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
@@ -88,7 +89,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
   const ownerState = themeProps as TreeViewProps<any, any>;
 
   const { pluginParams, otherProps } = extractPluginParamsFromProps<
-    typeof TREE_VIEW_PLUGINS,
+    ConvertPluginsIntoSignatures<typeof TREE_VIEW_PLUGINS>,
     DefaultTreeViewPluginSlots,
     DefaultTreeViewPluginSlotProps,
     TreeViewProps<R, Multiple>

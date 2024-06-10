@@ -16,7 +16,10 @@ import {
   RichTreeViewProSlotProps,
   RichTreeViewProSlots,
 } from './RichTreeViewPro.types';
-import { DEFAULT_TREE_VIEW_PRO_PLUGINS } from '../internals/plugins';
+import {
+  DEFAULT_TREE_VIEW_PRO_PLUGINS,
+  DefaultTreeViewProPluginSignatures,
+} from '../internals/plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
@@ -100,7 +103,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof DEFAULT_TREE_VIEW_PRO_PLUGINS,
+    DefaultTreeViewProPluginSignatures,
     RichTreeViewProSlots,
     RichTreeViewProSlotProps<R, Multiple>,
     RichTreeViewProProps<R, Multiple>

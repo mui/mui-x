@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeItemWrapper,
   TreeRootWrapper,
   TreeViewAnyPluginSignature,
@@ -9,17 +9,21 @@ import {
   TreeViewPublicAPI,
 } from '../models';
 
-export type TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TPlugins, 'contextValue'> & {
-    instance: TreeViewInstance<TPlugins>;
-    publicAPI: TreeViewPublicAPI<TPlugins>;
+export type TreeViewItemPluginsRunner = <TProps extends {}>(
+  props: TProps,
+) => Required<TreeViewItemPluginResponse>;
+
+export type TreeViewContextValue<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
+  MergeSignaturesProperty<TSignatures, 'contextValue'> & {
+    instance: TreeViewInstance<TSignatures>;
+    publicAPI: TreeViewPublicAPI<TSignatures>;
     rootRef: React.RefObject<HTMLUListElement>;
-    wrapItem: TreeItemWrapper<TPlugins>;
-    wrapRoot: TreeRootWrapper<TPlugins>;
-    runItemPlugins: <TProps extends {}>(props: TProps) => Required<TreeViewItemPluginResponse>;
+    wrapItem: TreeItemWrapper<TSignatures>;
+    wrapRoot: TreeRootWrapper<TSignatures>;
+    runItemPlugins: TreeViewItemPluginsRunner;
   };
 
-export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
-  value: TreeViewContextValue<TPlugins>;
+export interface TreeViewProviderProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  value: TreeViewContextValue<TSignatures>;
   children: React.ReactNode;
 }

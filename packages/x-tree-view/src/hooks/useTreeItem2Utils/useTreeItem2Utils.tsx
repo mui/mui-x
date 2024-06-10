@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../../internals/plugins';
+import { DefaultTreeViewPluginSignatures } from '../../internals/plugins';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 
 interface UseTreeItem2Interactions {
@@ -31,7 +31,7 @@ export const useTreeItem2Utils = ({
   const {
     instance,
     selection: { multiSelect },
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+  } = useTreeViewContext<DefaultTreeViewPluginSignatures>();
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),

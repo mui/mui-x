@@ -12,7 +12,9 @@ export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewJSXItems,
 ] as const;
 
-export type SimpleTreeViewPlugins = ConvertPluginsIntoSignatures<typeof SIMPLE_TREE_VIEW_PLUGINS>;
+export type SimpleTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof SIMPLE_TREE_VIEW_PLUGINS
+>;
 
 export type SimpleTreeViewPluginSlots = DefaultTreeViewPluginSlots;
 
