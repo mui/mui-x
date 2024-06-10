@@ -96,8 +96,6 @@ export const computeValue = (
       scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      extremums,
-      domain,
     };
   });
 
@@ -171,8 +169,6 @@ export const computeValue = (
       scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      extremums,
-      domain,
     };
   });
 
